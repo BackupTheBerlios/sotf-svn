@@ -555,26 +555,60 @@ if ($install_createdb)			//if create node db button pressed
 
 //////////////////////////Test 6
 	$id = 6;	
-	if (RunTest($id, "DB connection to SelfAdmin", 5))		//////////////////////////Test 5 should be OK to run this test
+	if (RunTest($id, "DB connection to User Database", 5))		//////////////////////////Test 5 should be OK to run this test
 	  {
 		 dbug("TEST 6: user database");
-		 dbug("pg_connect: host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
-		 
-		 $conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
-		 if (!$conn) {
-			dbug("Connection failed");
-			dbug("pg_connect host=$install_sadm_host port=$install_sadm_port dbname=template1 user=$install_sadm_user password=$install_sadm_pass");
-			$conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=template1 user=$install_sadm_user password=$install_sadm_pass");
-			if (!$conn) {
+		 if($config['selfUserDb']) {
+			// we use the node database for user management
+			$install_test_result[$id] = "OK";
+			$install_color[$id] = $install_green;
+		 } elseif($config['userDbType'] == 'mysql') {
+			// we have a mysql user database
+			dbug("mysql_connect $install_sadm_host:$install_sadm_port, $install_sadm_user, $install_sadm_pass");
+			$conn = mysql_connect("$install_sadm_host:$install_sadm_port", $install_sadm_user, $install_sadm_pass);
+			if(!$conn) {
 			  dbug("Could not connect");
 			  $install_test_result[$id] = "Could not connect.";
 			  $install_color[$id] = $install_red;
 			} else {
-			  dbug("Database sadm not found");
-			  $install_test_result[$id] = "Database 'sadm' not found, please install SADM.";
-			  $install_color[$id] = $install_red;
+			  if(!mysql_select_db($install_sadm_db_name)) {
+				 dbug("Database '$install_sadm_db_name' not found.");
+				 $install_test_result[$id] = "Database '$install_sadm_db_name' not found.";
+				 $install_color[$id] = $install_red;
+			  } else {
+				 $install_test_result[$id] = "OK";
+				 $install_color[$id] = $install_green;
+			  }
+			  mysql_close();
+			}
+		 } elseif($config['userDbType'] == 'pgsql') {
+			// we have a postgres user database
+			dbug("connect: host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
+			$conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
+			if (!$conn) {
+			  dbug("Connection failed");
+			  dbug("pg_connect host=$install_sadm_host port=$install_sadm_port dbname=template1 user=$install_sadm_user password=$install_sadm_pass");
+			  $conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=template1 user=$install_sadm_user password=$install_sadm_pass");
+			  if (!$conn) {
+				 dbug("Could not connect");
+				 $install_test_result[$id] = "Could not connect.";
+				 $install_color[$id] = $install_red;
+			  } else {
+				 dbug("Database sadm not found");
+				 $install_test_result[$id] = "Database '$install_sadm_db_name' not found.";
+				 $install_color[$id] = $install_red;
+				 pg_close($conn);
+			  }
+			} else {
+			  $install_test_result[$id] = "OK";
+			  $install_color[$id] = $install_green;
+			  pg_close($conn);
 			}
 		 } else {
+			$install_test_result[$id] = "Cannot handle database type:" . $config['userDbType'] . "Please ask support from developers" ;
+			$install_color[$id] = $install_red;
+		 }
+		 if($install_test_result[$id] == "OK") {
 			// initialize user DB
 			if(!include_once($config['classdir'] . '/' . $config['userDbClass'] . '.class.php')) {
 			  dbug("include user db handler class failed");
@@ -584,12 +618,13 @@ if ($install_createdb)			//if create node db button pressed
 			  $install_test_result[$id] = "OK";
 			  $install_color[$id] = $install_green;
 			}
-		}
-		pg_close($conn);
+		 }
 	}
 //$install_writeback_sadm
 	PrintTitle($id);
 	print('
+   Connector class: node/code/classes/' . $config['userDbClass'] . '.class.php <BR />
+	Type: ' . $config['userDbType'] . '<BR />
 	Username: <INPUT type="text" name="sadm_user" value="'.$install_sadm_user.'"><BR />
 	Password: <INPUT type="password" name="sadm_pass" value="'.$install_sadm_pass.'"><BR />
 	Hostname: <INPUT type="text" name="sadm_host" value="'.$install_sadm_host.'"> Port: <INPUT type="text" name="sadm_port" value="'.$install_sadm_port.'" SIZE=5><BR />
@@ -753,6 +788,10 @@ if (RunTest($id, "Node administrator", 7)) // OR isset($install_node_admin))
 {
   dbug("TEST 8");
   require_once("../init.inc.php");
+
+  // this will most probably cause an error if the connector class is configured properly!
+  $res = sotf_User::findUsers("a");
+  $res = NULL;
 
   $adminId = $db->getOne("SELECT user_id FROM sotf_user_permissions WHERE object_id='node' AND permission_id='1'");
 

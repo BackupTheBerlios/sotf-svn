@@ -90,11 +90,59 @@ identifier,format+,language+,rights )>
 <!ATTLIST Metadata version NMTOKEN #REQUIRED >
 
 
-
 <?xml version="1.0"?>
 <sotfPublish>
-<title>A station called 0009</title>
-<alternative></alternative>
-<series><id>45</id><title>Radio Augustin</title><description>latest news from boulevard</description>
-</series>
-<stationid>1121</stationid><language>eng</language><rights>none</rights><genre>1</genre><topic>000td2</topic><description>A station called 0009</description><contributor></contributor><identifier>3316</identifier><creator><entity type="organisation"><name type="organizationname">Radio Tienes</name><name type="organizationacronym">RT</name><e-mail>radio@tienes.com</e-mail><address>Vienna is a big city</address><logo>http://www.pvl.at/logo.gif</logo><uri>http://www.pvl.at/</uri></entity></creator><publisher><entity type="organisation"><name type="organizationname">Radio Tienes</name><name type="organizationacronym">RT</name><e-mail>radio@tienes.com</e-mail><address>Vienna is a big city</address><logo>http://www.pvl.at/logo.gif</logo><uri>http://www.pvl.at/</uri></entity></publisher><date type="created">2003-06-06</date><date type="issued">2003-06-06</date><date type="available"></date><date type="modified"></date><owner><auth_id>28</auth_id><login>augustin</login><name>augustin</name><role>1</role></owner><publishedby><auth_id>28</auth_id><login>augustin</login><name>augustin</name><role>1</role></publishedby></sotfPublish> 
+  <title>xbmf test</title>
+	<alternative>
+	  just a test for xbmf
+	</alternative>
+	<series>
+	  <id>200se2</id>
+		<title>zeit</title>
+		<description></description>
+	</series>
+	<stationid>200st2</stationid>
+	<language>ger</language>
+	<rights>admin</rights>
+	<genre>1</genre>
+	<topic>000td2</topic>
+	<description></description>
+	<contributor>www.pvl.at</contributor>
+	<identifier>700</identifier>
+	<creator>
+	  <entity type="organisation">
+		  <name type="organizationname">PublicVoiceLAB</name>
+			<name type="organizationacronym">PVL</name>
+			<e-mail>js@pvl.at</e-mail>
+			<address>Vienna</address>
+			<logo>http://www.pvl.at/logo.gif</logo>
+			<uri>http://www.pvl.at/</uri>
+		</entity>
+	</creator>
+	<publisher>
+		<entity type="organisation">
+		  <name type="organizationname">PublicVoiceLAB</name>
+			<name type="organizationacronym">PVL</name>
+			<e-mail>js@pvl.at</e-mail>
+			<address>Vienna</address>
+			<logo>http://www.pvl.at/logo.gif</logo>
+			<uri>http://www.pvl.at/</uri>
+		</entity>
+	</publisher>
+	<date type="created">2003-11-19</date>
+	<date type="issued">2003-11-19</date>
+	<date type="available"></date>
+	<date type="modified"></date>
+	<owner>
+	  <auth_id>1157</auth_id>
+		<login>admin</login>
+		<name>Admin</name>
+		<role>1</role>
+	</owner>
+	<publishedby>
+	  <auth_id>1157</auth_id>
+		<login>admin</login>
+		<name>Admin</name>
+		<role>1</role>
+	</publishedby>
+</sotfPublish> 

@@ -39,8 +39,35 @@ Creating custom user management class:
 - set this class in config.inc.php
 
 For external database connectors I suggest to use userdb_sadm as a starting point.
+
 In this way you can connect sotf even with LDAP or PAM (in theory) :-).
 
 
+USING TYPO3 FOR USER MANAGEMENT:
 
+- change config.inc.php to fit your typo3 database connection. 
+  Important: for Port use 3306 (Standart mysql port)
+  Select the typo3 class for userdb.
+- in typo3 adminpanel go to phpmyadmin and create a new table:
 
+# Table structure for table `fe_users_sotf`
+CREATE TABLE fe_users_sotf (
+  uid int(11) NOT NULL default '0',
+  language varchar(6) default NULL,
+  last_visit timestamp(12) NOT NULL,
+  num_logins int(11) NOT NULL default '0',
+  PRIMARY KEY  (uid)
+) TYPE=MyISAM;
+
+- that's it. now you should be able to register new user trough the node frontend.
+
+Some known issues:
+
+- if you create users in typo3, they don't get an entry in the table
+'fe_users_sotf' automatically, only after the visit the page
+"preferences (someuser)", then they get an entry in the table - or you
+create an entry with defaults manually.
+
+- if you delete a user in typo3, its entry in 'fe_users_sotf' DOESN'T
+get deleted automatically - you have to delete it manually (via
+phpMyAdmin in the Backend)
