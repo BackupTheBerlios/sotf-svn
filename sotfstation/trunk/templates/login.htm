@@ -7,18 +7,18 @@
             <td colspan="2" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr> 
                   <td width="20" nowrap><strong><img src="{$root}img/login.gif" width="27" height="21"></strong></td>
-                  <td class=title><strong>Login</strong></td>
+                  <td class=title><strong>{#login#}</strong></td>
                 </tr>
               </table></td>
           </tr>
           <tr bgcolor="#eeeeee"> 
-            <td width="30%" nowrap> <div align="right">User Name</div></td>
-            <td width="70%"> <input name="user" type="text" id="user" class="myinput"> 
+            <td width="30%" nowrap> <div align="right">{#user#}</div></td>
+            <td width="70%"> <input name="user" type="text" class="myinput" id="user" value="{$user}" maxlength="32"> 
             </td>
           </tr>
           <tr bgcolor="#eeeeee"> 
-            <td><div align="right">Password</div></td>
-            <td><input name="pass" type="password" id="pass" class="myinput"></td>
+            <td><div align="right">{#password#}</div></td>
+            <td><input name="pass" type="password" class="myinput" id="pass" maxlength="32"></td>
           </tr>
           {section name=error_cell show=$error_out} 
             <tr bgcolor="#FFCCCC"> 
@@ -31,7 +31,7 @@
           <tr bgcolor="#eeeeee"> 
             <td colspan="2"><div align="center"> 
                 <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
-                <input type="hidden" name="login">
+                <input type="hidden" name="login" value="do">
               </div></td>
           </tr>
         </table></td>
@@ -49,7 +49,7 @@
               <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td width="20" nowrap><strong><img src="{$root}img/info.gif" width="27" height="21"></strong></td>
-                  <td class=title><strong>Help</strong> </td>
+                  <td class=title><strong>{#help#}</strong></td>
                 </tr>
               </table></td>
           </tr>

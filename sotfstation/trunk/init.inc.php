@@ -31,7 +31,28 @@
 	$myNav = new navBar(HOME_NAME,SRC_ROOT);		# Create an instance of the navigation bar
 	$smarty = new Smarty;												# Initialize Template Parser
 	
-	$db = DB::connect(array(										# Start a connection to the database
+	//initialization of private error handling routine
+	set_error_handler('eh');
+	
+	//session stuff
+	session_start();
+	
+	//smarty global assignments
+	$smarty->assign("root",SRC_ROOT . TPL_DIR . "/");					# assigning where the path to templates
+	$smarty->assign("server_root",SRC_ROOT);									# assigning the path to root links
+	
+	if($_SERVER['HTTP_ACCEPT_LANGUAGE']=='en'){								# choosing the right language file
+		$smarty->assign("lang","en");
+		include("configs/errors.en.php");
+	}else{
+		$smarty->assign("lang","en");
+		include("configs/errors.en.php");
+	}
+	
+	$smarty->assign("build_id","4");													# assigning a 'build id'
+	
+	//build database connections
+	$db = DB::connect(array(																	# Start a connection to the database
     'phptype'  => DB_TYPE,
     'dbsyntax' => false,
     'protocol' => false,
@@ -41,16 +62,12 @@
     'password' => DB_PASS
 	));
 	
-	//initialization of private error handling routine
-	set_error_handler('eh');
+	//did the connection to local database fail?
+	if(DB::isError($db)){
+		trigger_error($ERR[3]);		# trigger error
+		exit;											# stop page processing
+	}
 	
-	//session stuff
-	session_start();
-	
-	//smarty global assignments
-	$smarty->assign("root",SRC_ROOT . TPL_DIR . "/");
-	$smarty->assign("server_root",SRC_ROOT);
-	
-	//start page generation times
+	//start page generation timer
 	startTiming();
 ?>

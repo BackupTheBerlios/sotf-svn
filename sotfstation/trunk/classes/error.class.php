@@ -26,7 +26,7 @@
 		 * 
 		 * Koulikov Alexey 31.01.2002
 		 */
-		function addError($e_message){
+		function add($e_message){
 			array_push($this->e_list, $e_message);
 		}
 		
@@ -38,7 +38,7 @@
 		 * 
 		 * Koulikov Alexey 31.01.2002
 		 */
-		function getError($n=0){
+		function get($n=0){
 			return $this->e_list[$n];
 		}
 		
@@ -183,7 +183,7 @@
 		 * 
 		 * Koulikov Alexey :: 31.01.2002	
 		 */
-		function cleanInput($some_input){
+		function clean($some_input){
 			while(list($key,$val) = each($some_input)){
 				$some_input[$key] = trim(htmlspecialchars($val));
 			}
