@@ -118,7 +118,9 @@ $db->debug = $config['debug'];
 $success = $db->makeConnection($config['sqlDSN'], false, 'node');
 if (DB::isError($success))
 {
-  die ("Node DB connection to " . $config['sqlDSN'] . " failed: \n" . $success->getMessage());
+  echo "Node DB connection failed: " . $success->getMessage();
+	logError("Node DB connection failed", $config['sqlDSN']);
+	die();
 } 
 $db->setFetchmode(DB_FETCHMODE_ASSOC);
 
@@ -137,7 +139,9 @@ if($config['selfUserDb']) {
 	$success = $userdb->makeConnection($config['sqlUserDSN'], false, 'user');
 	if (DB::isError($success))
 		{
-			die ("User DB connection to " . $config['sqlUserDSN'] . " failed: \n" . $success->getMessage());
+			echo "User DB connection failed: " . $success->getMessage();
+			logError("User DB connection failed", $config['sqlUserDSN']);
+			die();
 		}
 	$userdb->setFetchmode(DB_FETCHMODE_ASSOC);
 }

@@ -64,6 +64,9 @@ $config['nodeName'] = "XYZ";
 // whether imported files are published by default
 $config['publishXbmf'] = false;
 
+// regexp determining the hostnames from which admin tasks (such as cron.php) can be run
+//$config['adminDomain'] = '\.my\.domain\.hu$';
+
 //////////////////////////////////////////////////////////////////////////
 // FILE LOCATIONS  --------------------------------------------
 //////////////////////////////////////////////////////////////////////////

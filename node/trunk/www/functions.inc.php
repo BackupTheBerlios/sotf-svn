@@ -198,4 +198,14 @@ function excludeRobots() {
 	$smarty->append('META_TAGS', '<META NAME="ROBOTS" CONTENT="NOINDEX,NOFOLLOW">');
 }
 
+function checkAdminAccess() {
+	global $config;
+	$host = getHostName();
+	debug('admin check', $config['adminDomain']);
+	if(!preg_match('/' . $config['adminDomain'] . '/i', $host))
+		raiseError("no access", "to admin page: " . myGetenv("REQUEST_URI"));
+	else
+		debug("admin access OK for", $host); 
+}
+
 ?>

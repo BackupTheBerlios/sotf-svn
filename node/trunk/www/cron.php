@@ -10,6 +10,7 @@
 require("init.inc.php");
 require_once($config['classdir'] . "/rpc_Utils.class.php");
 
+checkAdminAccess();
 excludeRobots();
 
 /** This page has to be called periodically (e.g. using wget) and it
