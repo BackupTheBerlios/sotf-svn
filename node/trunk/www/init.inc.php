@@ -41,7 +41,7 @@ if($config['debug']) {
 //logger('debug', $config['debug']);
 
 // the base URL for the whole site
-$config['rootUrl'] = 'http://' . $_SERVER['HTTP_HOST'] . $config['localPrefix'];
+$config['rootUrl'] = 'http://' . myGetenv('SERVER_NAME') . $config['localPrefix'];
 //$config['rootUrl'] = $config['localPrefix'];
 
 // The base URL for images
