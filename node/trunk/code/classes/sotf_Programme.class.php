@@ -520,7 +520,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     debug("untar result", $result);
 	
     //parse the xml file
-    $myPack = new unpackXML($pathToFile . $folderName . "/metadata.xml");	//note that the unpacker needs AN ABSOLUTE path to the file
+    $myPack = new unpackXML($pathToFile . $folderName . "/XBMF/Metadata.xml");	//note that the unpacker needs AN ABSOLUTE path to the file
     if(!$myPack->error){		//if the file has been found
       $metadata = $myPack->process();	//process it into an associative array
     }
