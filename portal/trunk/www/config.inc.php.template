@@ -46,6 +46,36 @@ $wwwdir = $basedir . '/www';
 // The URL prefix for code/www subdir
 $localPrefix = '/portal/www';
 
+
+//////////////////////////////////////////////////////////////////////////
+// CACHE SETTINGS --------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// the time in seconds after refresh query and programme informations in the cache
+$REFRESH_TIME = 1800;
+
+// the time in seconds after a connection error wait so much and then to try to connect again
+// so the node won't be overloaded in the first seconds after a stop
+$ERROR_REFRESH_TIME = 600;
+
+//////////////////////////////////////////////////////////////////////////
+// EVENT AND STATISTICAL SETTINGS ----------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// a programme or query is marked removed when not appearing on the portal
+// for so long time (value must be bigger than 60!!!)
+$MIN_REMOVAL_TIME = 3600;
+
+// minimum time between two event sendings to the node (send statistical information)
+$MIN_EVENT_SENDING = 1800;
+
+//a new user must activate his username (read the email with the activation code)
+//within this time default 1 day = 86400 sec
+$WAIT_TO_ACTIVATE = 86400;
+
+//quota for a portal in kilobytes (they can use this much of space for uploading files)
+$QUOTA = 1024;
+
 //////////////////////////////////////////////////////////////////////////
 // DEBUGGING, LOGGING & ERROR HANDLING -----------------------------------
 //////////////////////////////////////////////////////////////////////////
@@ -54,6 +84,9 @@ $logFile = "$basedir/logs/log";
 
 // Temp. solution for debugging after install
 $debug = true;
+
+//the max depth to display by the comments on the programmes page
+$MAX_COMMENT_DEPTH = 4;
 
 //////////////////////////////////////////////////////////////////////////
 // LANGUAGE SETUP  --------------------------------------------
