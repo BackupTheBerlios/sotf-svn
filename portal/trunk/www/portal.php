@@ -20,8 +20,12 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 
 	////settings for the portal, table and others
 	$settings = $_SESSION["settings"];			//load current settings from session
-	if ($settings["table"] == "") $settings = $portal->loadSettings();	//if not found load saved portal
-		else $portal->setSettings($settings);				//if found init portal object with it
+	if ($settings["table"] == "")
+	{
+		$settings = $portal->loadSettings();	//if not found load saved portal
+		$_SESSION['old_settings'] = $settings;	//save as old settings
+	}
+	else $portal->setSettings($settings);				//if found init portal object with it
 }
 else $settings = $portal->loadSettings();	//if not admin load saved portal settings
 
@@ -74,7 +78,7 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		if (sotf_Utils::getParameter('chat')) $settings["chat"] = true;
 			else $settings["chat"] = false;
 	
-		$portal->saveSettings($settings);
+		if ($portal->saveSettings($settings) == 1) $_SESSION['old_settings'] = $settings;	//if saved delete from session
 	}
 	elseif (sotf_Utils::getParameter('insert_row_x'))		//insert row button pressed
 	{
@@ -129,7 +133,6 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 					else $values[$fields[$key]] = $value;
 			$item[title] = $result['title'];
 			$item[id] = $result[id];
-var_dump($result['icon']);
 			$item['icon'] = $result['icon'];
 			$item[values] = $values;
 			$selected_result[] = $item;
@@ -225,11 +228,21 @@ var_dump($result['icon']);
 	  $smarty->assign('RATING', $rating->getInstantRating($id));
 	}
 
-	////save cuttent portal table to the session
-	$settings["table"] = $portal->getTable();		//save current table
-	$_SESSION["settings"] = $settings;			//save current settings
+	if ($_SESSION['old_settings'] != $settings)		//if there is unsaved information save to session
+	{
+		////save cuttent portal table to the session
+		$settings["table"] = $portal->getTable();		//save current table
+		$_SESSION["settings"] = $settings;			//save current settings
+		$smarty->assign("unsaved", true);			//set in smary as well
+	}
+	else
+	{
+		unset($_SESSION["settings"]);		//else destroy settings in session
+		session_unregister("settings");		//unregister it from session
+	}
 
 }	//end of admin section
+
 
 ////SMARTY variables
 $smarty->assign("table", $portal->getTable());		//current layout table
@@ -264,6 +277,9 @@ $smarty->assign("rating", $settings["rating"]);			//rating enabled
 
 $smarty->assign("colors", $portal->getColors());
 $smarty->assign("files", $portal->getUploadedFiles());
+
+if ($settings["css"] == true) $smarty->assign("home_css", $settings["home"]["css"]);
+
 
 //$smarty->assign("settings", $settings);		//*********************DEBUG
 //$smarty->assign("numbers", $portal->getNumbers());		//OLD finction

@@ -3,7 +3,7 @@
 <head>
 <title>{#portal_editor#}</title>
 </head>
-<body {if $view OR $edit}bgcolor="#{$home.bg}" background="{$home.wall}" text="#{$home.font}" link="#{$home.link}" alink="#{$home.alink}" vlink="#{$home.vlink}"{elseif $id}bgcolor="#{$programmes.bg}" background="{$programmes.wall}" text="#{$programmes.font}" link="#{$programmes.link}" alink="#{$programmes.alink}" vlink="#{$programmes.vlink}"{else}bgcolor="#{$portal.bg2}"{/if} topmargin="0" leftmargin="0" marginwidth="0" marginheight="0">
+<body {if $view OR $edit}bgcolor="#{$home.bg}" background="{$home.wall}" text="#{$home.font}" link="#{$home.link}" alink="#{$home.alink}" vlink="#{$home.vlink}"{elseif $id}bgcolor="#{$programmes.bg}" background="{$programmes.wall}" text="#{$programmes.font}" link="#{$programmes.link}" alink="#{$programmes.alink}" vlink="#{$programmes.vlink}"{else}bgcolor="#{$portal.bg2}"{/if} topmargin="0" leftmargin="0" rightmargin="0" marginwidth="0" marginheight="0">
 <form action="{$php_self}{if $edit}?edit=1{/if}" method="post" name="myform">
 <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
 	<tr align="center">
@@ -11,11 +11,12 @@
 		<table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#{$portal.bg1}" align="center">
 		<tr align="center">
 		{if $is_admin}
-			<td width="20%"{if $playlist} bgcolor="#{$portal.bg2}"{/if}>{if !$playlist}<a href="{$php_self}?playlist=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#programmes_editor#}{if $css}</span>{else}</font>{/if}</b>{if !$playlist}</a>{/if}</td>
-			<td width="20%"{if $style} bgcolor="#{$portal.bg2}"{/if}>{if !$style}<a href="{$php_self}?style=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#style_editor#}{if $css}</span>{else}</font>{/if}</b>{if !$style}</a>{/if}</td>
-			<td width="20%"{if $edit} bgcolor="#{$portal.bg2}"{/if}>{if !$edit}<a href="{$php_self}?edit=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#edit_homepage#}{if $css}</span>{else}</font>{/if}</b>{if !$edit}</a>{/if}</td>
-			<td width="20%"{if $view} bgcolor="#{$portal.bg2}"{/if}>{if !$view}<a href="{$php_self}">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#view_result#}{if $css}</span>{else}</font>{/if}</b>{if !$view}</a>{/if}</td>
-			<td width="20%"{if $admin} bgcolor="#{$portal.bg2}"{/if}>{if !$admin}<a href="{$php_self}?admin=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#admin_page#}{if $css}</span>{else}</font>{/if}</b>{if !$admin}</a>{/if}</td>
+			<td width="17%"{if $playlist} bgcolor="#{$portal.bg2}"{/if}>{if !$playlist}<a href="{$php_self}?playlist=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#programmes_editor#}{if $css}</span>{else}</font>{/if}</b>{if !$playlist}</a>{/if}</td>
+			<td width="17%"{if $style} bgcolor="#{$portal.bg2}"{/if}>{if !$style}<a href="{$php_self}?style=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#style_editor#}{if $css}</span>{else}</font>{/if}</b>{if !$style}</a>{/if}</td>
+			<td width="17%"{if $edit} bgcolor="#{$portal.bg2}"{/if}>{if !$edit}<a href="{$php_self}?edit=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#edit_homepage#}{if $css}</span>{else}</font>{/if}</b>{if !$edit}</a>{/if}</td>
+			<td width="17%"{if $view} bgcolor="#{$portal.bg2}"{/if}>{if !$view}<a href="{$php_self}">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#view_result#}{if $css}</span>{else}</font>{/if}</b>{if !$view}</a>{/if}</td>
+			<td width="17%"{if $admin} bgcolor="#{$portal.bg2}"{/if}>{if !$admin}<a href="{$php_self}?admin=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#admin_page#}{if $css}</span>{else}</font>{/if}</b>{if !$admin}</a>{/if}</td>
+			<td width="17%"><a href="{$php_self}?save_changes=1"><b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#save#}{if $unsaved} ({#needed#}){/if}{if $css}</span>{else}</font>{/if}</b>{if !$admin}</a>{/if}</td>
 		{else}
 			<td width="33%"{if $view} bgcolor="#{$portal.bg2}"{/if}>{if !$view}<a href="{$php_self}">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#home#}{if $css}</span>{else}</font>{/if}</b>{if !$view}</a>{/if}</td>
 			{if $is_logged_in}<td width="33%"><a href="{$php_self}?logout=1"><b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#Logout#} {$username}{if $css}</span>{else}</font>{/if}</b></a></td>
@@ -200,7 +201,7 @@
 			</td>
 			<td align="center">
 				<div align="center"><b>{#change_portal_template#}</b></div><br>
-				<a href="#" onclick="javascript:window.open('portal_template.php','','width=640,height=480,left=0,top=0')"><img src="../static/portals/1.gif"></a>
+				<a href="#" onclick="javascript:window.open('{$rootdir}/portal_template.php/{$portal_name}','','width=640,height=480,left=0,top=0')"><img src="../static/portals/1.gif"></a>
 			</td>
 			</tr>
 			<tr>
@@ -245,7 +246,7 @@
 		</td>
 		{elseif $admin}
 		<td align="center">
-		<input type="submit" name="save_changes" value="{#save#}"> {#changes_made#}<br><br>
+		{if $unsaved}<input type="submit" name="save_changes" value="{#save#}"> <b>{#changes_made#}</b><br><br>{/if}
 		<input type="submit" name="logout" value="{#logout#}"><br><br>
 		<input type="hidden" name="admin" value="1">
 			<table border="0" cellpadding="10" cellspacing="0" align="center">
@@ -273,6 +274,7 @@
 		{elseif $id}
 		<td align="center">{include file="portal_progpage.htm"}</td>
 		{else}
+		{if $home_css}<link rel=stylesheet HREF="{$home_css}" TYPE="text/css">{/if}
 		<td align="center">{include file="portal_htm.htm"}</td>
 		{/if}
 	</tr>

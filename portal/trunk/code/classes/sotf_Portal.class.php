@@ -105,7 +105,7 @@ class sotf_Portal
 		$a = base64_encode(serialize($settings));
 		$sql="UPDATE portal_settings SET settings='$a' WHERE id='$this->portal_id'";
 //		$sql="INSERT INTO portal_templates(name, settings, published) values('Under construction', '$a', false)";
-		$result = $db->query($sql);
+		return $db->query($sql);
 	}
 
 	function setSettings($settings)		//set settings in the object
@@ -361,11 +361,6 @@ class sotf_Portal
 		$this->settings['table'] = $rows;
 	}
 
-//	function getNumbers()
-//	{
-//		return array(1=>1, 2=>2, 3=>3, 4=>4, 5=>5, 6=>6, 7=>7);
-//	}
-
 	function getResources()
 	{
 		return array(	'text'=>'text',
@@ -381,6 +376,7 @@ class sotf_Portal
 		$files = array(	"static/next.png" => "next.png",
 				"http://www.pbs.org/kratts/world/aust/kangaroo/images/kangaroo.jpg" => "kangaroo.jpg",
 				"http://www.dsd.sztaki.hu/~mate/pm205/bg.jpg" => "bg.jpg",
+				"http://dsd.sztaki.hu/belsolap_components/belsolap.css" => "dsd.css",
 				"http://members.iinet.net.au/~oneilg/scouts/pix/badges/scout/patrol/kangaroo.jpg" => "kangaroo2.jpg");
 //		return $files;
 		return array_merge(array("none" => $page->getlocalized("choose")), $files);
@@ -505,6 +501,15 @@ class sotf_Portal
 		}
 
 		return true;
+	}
+
+	function getPortals()
+	{
+		global $db;
+
+		$sql="SELECT name FROM portal_settings WHERE true";
+		$portals = $db->getAll($sql);
+		return $portals;
 	}
 
 }

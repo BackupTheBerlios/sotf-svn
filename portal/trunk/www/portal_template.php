@@ -7,8 +7,7 @@ $t1 = sotf_Utils::getParameter('t1');
 $t2 = sotf_Utils::getParameter('t2');
 $t3 = sotf_Utils::getParameter('t3');
 
-//$settings = $_SESSION["settings"];
-//$portal = new sotf_Portal($settings["table"]);
+if (!isset($_SESSION["settings"])) $_SESSION["settings"] = $_SESSION["old_settings"];
 
 $portal = new sotf_Portal("1");	//TODO:xxxxxx
 $portal->setSettings($_SESSION["settings"]);
@@ -19,7 +18,7 @@ if (isset($t1))
 	$result = $db->getOne($sql);
 	$settings = unserialize(base64_decode($result));
 	$_SESSION["settings"] = $settings;	//save result
-	$page->redirect("closeAndRefresh.php");		//close window and go back to edit mode
+	$page->redirect($rootdir."/closeAndRefresh.php");		//close window and go back to edit mode
 }
 elseif (isset($t2))
 {

@@ -22,18 +22,21 @@ $portal_name = substr($_SERVER["PATH_INFO"], 1);
 
 $portal = new sotf_Portal($portal_name);
 $portal_id = $portal->getId();
-if ($portal_id == NULL) $page->redirect($rootdir."/portals.php");
+if ( $portal_id == NULL AND !(strpos($_SERVER['PHP_SELF'], "portals.php")) ) $page->redirect($rootdir."/portals.php");	//redirect if no such portal AND not called from there
 
 ////user login and logout////
 $username = sotf_Utils::getParameter('username');	//get username if sended
 $password = sotf_Utils::getParameter('password');	//get password if sended
 
-if (isset($username) AND isset($password))
+if (isset($portal_id))
 {
-	$user = new portal_user($portal_id, $username, $password);	//create user object with given data
-	if ($user->loggedIn()) $page->redirect($_SERVER["PHP_SELF"]);	//redirect page
-	else $page->redirect($_SERVER["PHP_SELF"]."?login=1");		//redirect to login page
+	if ( isset($username) AND isset($password) )
+	{
+		$user = new portal_user($portal_id, $username, $password);	//create user object with given data
+		if ($user->loggedIn()) $page->redirect($_SERVER["PHP_SELF"]);	//redirect page
+		else $page->redirect($_SERVER["PHP_SELF"]."?login=1");		//redirect to login page
+	}
+	else $user = new portal_user($portal_id);			//create user object with (in session) saved username
 }
-else $user = new portal_user($portal_id);			//create user object with (in session) saved username
 
 ?>

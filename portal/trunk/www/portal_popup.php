@@ -6,6 +6,7 @@ $row = sotf_Utils::getParameter('row');
 $col = sotf_Utils::getParameter('col');
 
 //$portal = new sotf_Portal("1");	//TODO:xxxxxx
+if (!isset($_SESSION["settings"])) $_SESSION["settings"] = $_SESSION["old_settings"];
 $portal->setSettings($_SESSION["settings"]);
 
 $cell["resource"] = sotf_Utils::getParameter('resource');
