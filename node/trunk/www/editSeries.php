@@ -76,9 +76,7 @@ if($uploadIcon) {
 $seticon = sotf_Utils::getParameter('seticon');
 if($seticon) {
   $filename = sotf_Utils::getParameter('filename');
-  $path_parts = pathinfo(realpath($filename));
-  $filename = $path_parts['basename'];
-  $file = $user->getUserDir().'/'.$filename;
+  $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
   if ($series->setIcon($file)) {
     //$page->addStatusMsg("ok_icon");
   } else {

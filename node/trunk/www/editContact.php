@@ -15,11 +15,6 @@ $delperm = sotf_Utils::getParameter('delperm');
 $username = sotf_Utils::getParameter('username');
 
 $view = sotf_Utils::getParameter('view');
-$seticon = sotf_Utils::getParameter('seticon');
-$filename = sotf_Utils::getParameter('filename');
-
-$path_parts = pathinfo(realpath($filename));
-$filename = $path_parts['basename'];
 
 $contact = & new sotf_Contact($contactId);
 $smarty->assign('CONTACT_ID',$contactId);
@@ -64,8 +59,10 @@ if($save || $finish1 || $finish2) {
   exit;
 }
 
+$seticon = sotf_Utils::getParameter('seticon');
 if($seticon) {
-  $file = $user->getUserDir() . '/' . $filename;
+  $filename = sotf_Utils::getParameter('filename');
+  $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
   if ($contact->setIcon($file)) {
     //$page->addStatusMsg("icon_ok");
   } else {
