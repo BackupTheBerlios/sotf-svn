@@ -1,0 +1,9 @@
+You have been allocated an access password at the Station Management Console.
+
+	User Name: {user_name}
+	Access Password: {access_pass}
+	Station Management Console Address: {station_address}
+
+Best regards,
+
+Mailbot

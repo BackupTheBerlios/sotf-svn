@@ -38,8 +38,10 @@
 			$myError->add($ERR[6]);
 		}
 		
-		if($db->getOne("SELECT count(*) FROM user_map WHERE access_id = 1")<=1){
-			$myError->add($ERR[7]);
+		if($db->getOne("SELECT access_id FROM user_map WHERE auth_id = '$_GET[id]'") == 1){
+			if($db->getOne("SELECT count(*) FROM user_map WHERE access_id = 1")<=1){
+				$myError->add($ERR[7]);
+			}
 		}
 		
 		if($myError->getLength()==0){

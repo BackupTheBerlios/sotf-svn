@@ -1,0 +1,70 @@
+<form name="form1" method="post" action="usersnew.php">
+  <table width="100%" border="0" cellspacing="0" cellpadding="2">
+    <tr> 
+      <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr> 
+            <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+                <tr bgcolor="#ddddff"> 
+                  <td colspan="2" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr> 
+                        <td width="20" nowrap><strong><img src="{$root}img/i-users.gif" width="27" height="21"></strong></td>
+                        <td class=title><strong>Create New User</strong></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr bgcolor="#dddddd"> 
+                  <td colspan="2" nowrap class=whitesmall> <strong>Access Details</strong></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td width="10%" nowrap> <div align="right">Login Name:</div></td>
+                  <td nowrap><input name="login" type="text" class="myinput" id="login" value="{$submit_login}" maxlength="32"></td>
+                </tr>
+                <tr bgcolor="#F4F4F4"> 
+                  <td nowrap> <div align="right">User's E-Mail:</div></td>
+                  <td nowrap><input name="mail" type="text" class="myinput" id="mail" maxlength="100" value="{$submit_mail}"></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">Access Level:</div></td>
+                  <td nowrap><select name="access_level" id="access_level">
+				  {html_options options=$access_levels selected=$submit_access_level}
+                    </select></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="2" nowrap bgcolor="#dddddd" class=whitesmall><strong>Access Password </strong>
+                    (if left empty, a password will be generated and e-mailed 
+                    to the above e-mail)</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">Password:</div></td>
+                  <td nowrap><input name="pass" type="text" class="myinput" id="pass" maxlength="32" value="{$submit_pass}"></td>
+                </tr>
+                <tr bgcolor="#dddddd"> 
+                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>Formal Data</strong></div></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">Real Name:</div></td>
+                  <td nowrap><input name="name" type="text" class="myinput" id="name" maxlength="64" value="{$submit_name}"></td>
+                </tr>
+                {section name=error_cell show=$error_out} 
+                <tr bgcolor="#FFCCCC"> 
+                  <td colspan="2">{section name=errors loop=$error_list show=$error_out} 
+                    <div align=center> 
+                      <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
+                    {/section}</td>
+                </tr>
+                {/section} 
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="2" nowrap><div align="center"> 
+                      <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
+                      <input name="Submit" type="hidden" id="Submit" value="do">
+                    </div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr> 
+            <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+</form>

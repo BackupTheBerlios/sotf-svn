@@ -51,10 +51,14 @@
 	define('SADM_SERVER','/work/sadm3/server.php');						# location of the XMLRPS SADM Server
 	define('SADM_PORT',80);																		# SADM XMLRPC Access Port
 	
+	define('SADM_GROUP',40);																	# This is the default member id, to which all the station users will belong to
+	
 	/*
 	* The critical settings are now configured, below you will find other data to play with that
 	* controls the way your station looks and behaves
 	*/
+	//Mail Settings
+	define('MAILBOT','alex@pvl.at');													# from this address all notifications will be sent
 	
 	//Names
 	define('STATION_NAME','Da Station');											# Name of this station

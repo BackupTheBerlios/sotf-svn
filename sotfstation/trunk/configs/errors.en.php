@@ -21,7 +21,13 @@
 		'4'		=> 'Unable to connect to SADM Database',
 		'5'		=> 'An XMLRPC Error has occured',
 		'6'		=> 'Cannot delete user, the specified user is still running series on the station, please move to other users!',
-		'7'		=> 'Cannot delete user, The specified user is the last admin of the station, and hence cannot be deleted!'
+		'7'		=> 'Cannot delete user, The specified user is the last admin of the station, and hence cannot be deleted!',
+		'8'		=> 'Please enter a valid unix-like login name!',
+		'9'		=> 'Please enter a valid e-mail address for the new user!',
+		'10'	=> 'Please specify a valid password that is made of alphanumeric charachters only!',
+		'11'	=> 'Please enter some user name for identification purposes!',
+		'12'	=> 'This login is already taken, please choose another login name',
+		'13'	=> 'The specified group does not exist, please change the Station Management configuration settings!'
 	);
 	
 	//section names, used for building the navigation bar
@@ -31,11 +37,21 @@
 		'403'			=> 'No Access',
 		'INSIDE'	=> 'Day Overview',
 		'USERS'		=> 'Users',
+		'USERSNEW'=> 'Add New User',
 		'SETTINGS'=> 'Settings',
-		'SERIES'	=> 'Series'
+		'SERIES'	=> 'Series',
+		'CONFIRM'	=> 'Confirmation'
 	);
 	
 	$ACTION = array(
 		0			=> 'Logged In'
+	);
+	
+	$STRING = array(
+		'NEWUSER'	=> 'Access Password To Station'
+	);
+	
+	$CONFIRM = array(
+		'1'				=> 'A new user has been created, you will be shortly redirected to the user management page!'
 	);
 ?>
