@@ -1,7 +1,7 @@
 
 <h3>{#edit_series#}</h3>
 
-{if hasPerm($SERIES_ID, 'change') }
+{if hasPerm($SERIES_DATA, 'change') }
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#general_data#}</td>
@@ -99,7 +99,7 @@
 {/if}
 <p></p>
 
-{if hasPerm($SERIES_ID, 'authorize') }
+{if hasPerm($SERIES_DATA, 'authorize') }
 <a name="perms"></a>
 <table class="tab">
   <tr> 
@@ -114,40 +114,38 @@
         <table>
           <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
           {cycle name="perms" values="list1,list2" print=false advance=false}
-          {foreach item=user key=username from=$PERMISSIONS}
+          {foreach item=user key=userid from=$PERMISSIONS}
           <tr class="{cycle name=perms}">
-            <td>{$username}</td>
+            <td>{$user.name}</td>
             <td>
-              {section name=i loop=$user}
-              {$user[i]}{if ! $smarty.section.i.last}, {/if}
+              {section name=i loop=$user.permissions}
+              {$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
               {/section}
             </td>
             <td nowrap>
-                {if $USERNAME ne $username}
-                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES}&username={$username|escape}','Permissions',350,400,false)" />
-                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editSeries.php?delperm=1&username={$username|escape}&seriesid={$SERIES_ID}')" />
+                {if $USERNAME ne $user.name}
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES}&userid={$userid}','Permissions',350,400,false)" />
+                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editSeries.php?delperm=1&userid={$userid}&seriesid={$SERIES_ID}')" />
                 {/if}
             </td>
           </tr>
           {/foreach}
+          <tr class="{cycle name=perms}">
+            <td colspan="3">{#inherited_perms#}</td>
+          </tr>
         </table>
         </form>
         {else}
-        <p>{#no_users#}</p>
+        <p>{#inherited_perms#}</p>
         {/if}
-        <form method="post" name="form1">
-          <input type="hidden" name="seriesid" value="{$SERIES_ID}">
-            {#username#}: <input name="username"> 
-              <input type="button" name="addperm" value="{#change_perm#}" onClick="if(checkIfEmpty(this.form.username,'{#select_user#}')) popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
-                <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
-        </form>
+        <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES|escape}','{#Permissions#}',450,450, false)">
       </td>
     </tr>
 </table>
 {/if}
 <p></p>
 
-{if hasPerm($SERIES_ID, 'change') }
+{if hasPerm($SERIES_DATA, 'change') }
         <a name="icon"></a>
 <table class="tab">
   <tr> 
@@ -165,7 +163,7 @@
               <tr>
                 <td>
                   {if $ICON}
-                  <img src="getIcon.php/icon.png?id={$SERIES_ID}" border="1">
+                  <img src="{$CACHE_URL}/{$SERIES_ID}.png" border="1">
                   {else}
                   <p>{#no_icon#}</p>
                   {/if}

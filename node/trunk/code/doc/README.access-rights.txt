@@ -1,12 +1,14 @@
+
 There are the following general permissions:
 
-- OWNER
-- CHANGE
-- CREATE
-- DELETE
-- AUTHORIZE
+- OWNER (all rights and more!)
+- CHANGE (change settings and subelements)
+- CREATE (create new subelements)
+- DELETE (delete subelements)
+- AUTHORIZE (grant permissions to other people)
 
-OWNER means all the permissions (including those that are introduced later)
+OWNER means all the permissions (including those that might be
+introduced after the end of the project :-)
 
 These rights has the following meaning in different contexts:
 
@@ -18,6 +20,7 @@ on programme level:
 - delete (DELETE)
 
 Inherited rights:
+- CHANGE, DELETE, AUTHORIZE, OWNER from node level
 - CHANGE, DELETE, AUTHORIZE, OWNER from station level
 - CHANGE, DELETE, AUTHORIZE, OWNER from series level
 
@@ -29,6 +32,7 @@ on contact records:
 - delete (DELETE)
 
 Inherited rights:
+- CHANGE, DELETE, AUTHORIZE, OWNER from node level
 - CHANGE, DELETE, AUTHORIZE, OWNER from station level
 
 on series level:
@@ -40,6 +44,7 @@ on series level:
 - delete programmes (DELETE)
 
 Inherited rights:
+- CREATE, CHANGE, DELETE, AUTHORIZE, OWNER from node level
 - CREATE, CHANGE, DELETE, AUTHORIZE, OWNER from station level
 
 on station level:
@@ -52,20 +57,20 @@ on station level:
 - delete series (DELETE)
 - authorize persons (AUTHORIZE)
 
+Inherited rights:
+- CREATE, CHANGE, DELETE, AUTHORIZE, OWNER from node level
+
 on node level:
 --------------
 
-general read & browse access
+general read & browse access: normally everyone can read anything published.
 
-normally everyone can read anything published.
 Unpublished materials can only be seen/read by those who have CHANGE permission on
 that programme
 
-node manager
-
 - create stations (CREATE)
 - delete stations (DELETE)
-- authorize and deauthorize station managers (AUTHORIZE)
+- add/remove node managers (AUTHORIZE)
 - change node configuration (CHANGE)
 
 on the level of controlled vocabularies:

@@ -101,17 +101,19 @@
         <table>
           <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
           {cycle name="perms" values="list1,list2" print=false advance=false}
-          {foreach item=user key=username from=$PERMISSIONS}
+          {foreach item=user key=userid from=$PERMISSIONS}
           <tr class="{cycle name=perms}">
-            <td>{$username}</td>
+            <td>{$user.name}</td>
             <td>
-              {section name=i loop=$user}
-              {$user[i]}{if ! $smarty.section.i.last}, {/if}
+              {section name=i loop=$user.permissions}
+              {$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
               {/section}
             </td>
             <td nowrap>
-                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=node&objectid=node&objectname={#node#}&username={$username|escape}','Permissions',350,400,false)" />
-                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'admin.php?delperm=1&username={$username|escape}')" />              
+                {if $USERNAME ne $user.name}
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=node&objectid=node&objectname={#node#}&userid={$userid}','Permissions',350,400,false)" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'admin.php?delperm=1&userid={$userid}')" />
+                {/if}
             </td>
           </tr>
           {/foreach}
@@ -120,12 +122,7 @@
         {else}
         <p>{#no_users#}</p>
         {/if}
-        <form method="post" name="form1">
-          <input type="hidden" name="stationid" value="{$STATION_ID}">
-            {#username#}: <input name="username"> 
-              <input type="button" name="addperm" value="{#change_perm#}" onClick="if(checkIfEmpty(this.form.username,'{#select_user#}')) popup('editPermissions.php?context=node&objectid=node&objectname={#node#}&username='+escape(this.form['username'].value),'{#Permissions#}',350,400, false)">
-                <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
-        </form>
+        <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=node&objectid=node&objectname={#node#}','{#Permissions#}',450,450, false)">
       </td>
     </tr>
 </table>

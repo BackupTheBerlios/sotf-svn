@@ -1,26 +1,40 @@
 
 <form>
 
-{if hasPerm('node', 'create') or hasPerm('node', 'change')}
   <table width="100%" border="0" cellspacing="0" cellpadding="2">
     <tr> 
-      <td align="right" nowrap bgcolor="{#adminBgColor#}">
-          <strong>{#admin_tasks#}</strong>
+        <td>
+          <h3>{#stations#}</h3>
+        </td>
+      <td width="25%" align="right" nowrap>
+          <!-- <strong>{#admin_tasks#}</strong> -->
           {if hasPerm('node', 'create') }
           <input class="action" type="button" name="b1" value="{#create_station#}" onClick="redir(this.form, '{$ROOT_URL}/createStation.php')" />
           {/if}
+<!--
           {if hasPerm('node', 'change') }
           <input class="action" type="button" name="b1" value="{#edit_node_rights#}" onClick="redir(this.form, '{$ROOT_URL}/admin.php#perms')" />
           {/if}
+-->
       </td>
     </tr>
   </table>
-{/if}
-
-<h3>{#stations#}</h3>
 
 <table width="100%">
 	<tr class="listhead">
+    <td>
+          <select name="mode">
+            <option value="newest" {if $MODE eq 'newest'} SELECTED {/if}>{#newest_first#}</option>
+            <option value="name" {if $MODE eq 'name'} SELECTED {/if}>{#by_name#}</option>
+          </select>
+          <select name="language">
+            <option value="none" {if $LANGUAGE eq 'none'} SELECTED {/if} >{#any_language#}</option>
+            {foreach key=langCode item=langName from=$STATION_LANGS}
+              <option value="{$langCode}" {if $LANGUAGE eq $langCode} SELECTED {/if} >{$langName}</option>
+            {/foreach}
+          </select>
+          <input type="submit" name="change_mode" value="{#change_mode#}">
+    </td>
 		<td>{include file="splitList.htm"}</td>
 	</tr>
 </table>
@@ -38,7 +52,10 @@
         <td width="6">&nbsp;</td>
 			<td><a class="goto_object" href="{$ROOT_URL}/showStation.php/{$STATIONS[station].id}">{$STATIONS[station].name}</a> ({$STATIONS[station].numProgs})
       {if $STATIONS[station].managers}
-          <p>{#managed_by#} {foreach from=$STATIONS[station].managers item=manager}{$manager.name} {/foreach}</p>
+          <br />{#managed_by#} {foreach from=$STATIONS[station].managers item=manager}{$manager.name} {/foreach}
+      {/if}
+      {if $STATIONS[station].languages}
+          <br />{#languages#} {$STATIONS[station].languages}
       {/if}
       {if !empty($STATIONS[station].description)}
 			   <p>{$STATIONS[station].description}</p>
@@ -46,13 +63,13 @@
       </td>
         <td width="6">&nbsp;</td>
         <td width="1%" valign="bottom">
-			{if $STATIONS[station].isLocal and (hasPerm('node','delete') or hasPerm($STATIONS[station].id, 'admin')) }
+			{if $STATIONS[station].isLocal and hasPerm($STATIONS[station], 'delete') }
               <input class="action" type="button" name="b1" value="{#delete#}" onClick="if(deleteConfirm('{#delete_station_confirm#}'))redir(this.form, '{$ROOT_URL}/stations.php?delete=1&station={$STATIONS[station].id}')" />
 			{/if}
-			{if $STATIONS[station].isLocal and hasPerm($STATIONS[station].id, 'change') }
+			{if $STATIONS[station].isLocal and hasPerm($STATIONS[station], 'change') }
               <br/><input class="action" type="button" name="b1" value="{#edit#}" onClick="redir(this.form, '{$ROOT_URL}/editStation.php?stationid={$STATIONS[station].id}')" />
 			{/if}
-			{if $STATIONS[station].isLocal and hasPerm($STATIONS[station].id, 'add_prog') }
+			{if $STATIONS[station].isLocal and hasPerm($STATIONS[station], 'create') }
               <br/><input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, '{$ROOT_URL}/editor.php?stationid={$STATIONS[station].id}')" />
 			{/if}
       </td>

@@ -20,10 +20,14 @@ checkPerm('node','create');
 
 if ($new) {
 
-  $userid = $user->getUserid($manager);
-  if(empty($userid) || !is_numeric($userid)) {
-    $page->addStatusMsg('select_manager');
-    $problem = 1;
+  if($manager) {
+	 $userid = $user->getUserid($manager);
+	 if(empty($userid) || !is_numeric($userid)) {
+		$page->addStatusMsg('invalid_user');
+		$problem = 1;
+	 }
+  } else {
+	 $userid = $user->id;
   }
 
   $station_old = $station;
@@ -41,9 +45,13 @@ if ($new) {
 	if(!$problem)	{
     $st = & new sotf_Station();
     $st->create($station, $desc);
-    $permissions->addPermission($st->getID(), $userid, 'admin');
+	 if($manager || !hasPerm('node', 'change'))
+		$permissions->addPermission($st->getID(), $userid, 'admin');
     $page->addStatusMsg('station_created');
-    $page->redirect("stations.php");
+	 if(hasPerm('node', 'change') || !$manager)
+		$page->redirect("editStation.php?stationid=" . $st->id);
+	 else
+		$page->redirect("stations.php");
   }
 }
 

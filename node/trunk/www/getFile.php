@@ -45,6 +45,10 @@ if ($file->type != "none")
 else
 	raiseError("download_problem");
 
+// add this download to statistics
+$prg->addStat($file->id, "downloads");
+
+
 $page->logRequest();
 
 ?>

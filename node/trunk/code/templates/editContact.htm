@@ -69,6 +69,53 @@
 
 <p></p>
 
+{if hasPerm($CONTACT_DATA, 'authorize') }
+<a name="perms"></a>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#access_permissions#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $PERMISSIONS}
+        <form>
+        <table>
+          <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
+          {cycle name="perms" values="list1,list2" print=false advance=false}
+          {foreach item=user key=userid from=$PERMISSIONS}
+          <tr class="{cycle name=perms}">
+            <td>{$user.name}</td>
+            <td>
+              {section name=i loop=$user.permissions}
+              {$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
+              {/section}
+            </td>
+            <td nowrap>
+                {if $USERNAME ne $user.name}
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=contact&objectid={$CONTACT_ID}&objectname={$CONTACT_DATA.name|escape}&userid={$userid}','Permissions',350,400,false)" />
+                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editContact.php?delperm=1&userid={$userid}&id={$CONTACT_ID}')" />
+                {/if}
+            </td>
+          </tr>
+          {/foreach}
+          <tr class="{cycle name=perms}">
+            <td colspan="3">{#inherited_perms#}</td>
+          </tr>
+        </table>
+        </form>
+        {else}
+        <p>{#inherited_perms#}</p>
+        {/if}
+        <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=contact&objectid={$CONTACT_ID}&objectname={$CONTACT_DATA.name|escape}','{#Permissions#}',450,450, false)">
+      </td>
+    </tr>
+</table>
+{/if}
+
+<p></p>
+
 <a name="icon"></a>
 
 <table class="tab">
@@ -81,7 +128,7 @@
   <td class="tabarea">
 
 	{if $ICON}
-		<img align="left" src="getIcon.php/icon.png?id={$CONTACT_ID}" border="1">
+		<img align="left" src="{$CACHE_URL}/{$CONTACT_ID}.png" border="1">
 	{else}
 		<table><tr><td>{#no_icon#}</td></tr></table>
 	{/if}
@@ -117,5 +164,7 @@ function getSelected() {
       <input type="submit" name="finish2" value="{#finish#}">
   </form>
 -->
+
+
 </td></tr>
 </table>

@@ -186,6 +186,7 @@ if(!in_array($page->action, $pathinfoParamExceptions)) {
 
 // permissions object is for managing and asking for permissions
 $permissions = new sotf_Permission;
+$permissions->debug = true;
 
 // the repository of radio stations
 $repository = new sotf_Repository($config['repositoryDir'], $db);

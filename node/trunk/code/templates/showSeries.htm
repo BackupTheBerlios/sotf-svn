@@ -10,10 +10,10 @@
           <a href="#general">{#general#}</a>{if $PROGS}, <a href="#progs">{#programmes#}</a>{/if}
         </td>
         <td class="title2" width="10%" align="right" valign="bottom">
-          {if hasPerm($SERIES_DATA.id,'change') }
+          {if hasPerm($SERIES_DATA,'change') }
           <input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('{$ROOT_URL}/editSeries.php?seriesid={$SERIES_DATA.id}','{#series#}',550,550,true)">
             {/if}
-          {if hasPerm($SERIES_DATA.id, 'add_prog')}
+          {if hasPerm($SERIES_DATA, 'create')}
             <input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, '{$ROOT_URL}/editor.php?&stationid={$SERIES_DATA.station_id}')" />
           {/if}
         </td>
@@ -123,10 +123,10 @@
               {/if}
             </td>
             <td width="1%" valign="bottom">
-              {if hasPerm($item.id, 'change', 'authorize')}
+              {if hasPerm($item, 'change', 'authorize')}
               <input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, '{$ROOT_URL}/editMeta.php?id={$item.id}')" />
                   {/if}
-              {if hasPerm($item.id,'delete')}
+              {if hasPerm($item,'delete')}
               <input class="action" type="button" name="b1" value="{#delete_prog#}" onClick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, '{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}?delprog=1&prgid={$item.id}')" />
                 {/if}
             </td>

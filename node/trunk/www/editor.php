@@ -13,7 +13,6 @@ $smarty->assign("PAGETITLE", $page->getlocalized("EditorPage"));
 $page->forceLogin();
 $smarty->assign("OKURL", $_SERVER['PHP_SELF']);
 
-
 if (!$permissions->isEditor()) {
 	raiseError("You have no permission to upload to any station");
 	exit;
@@ -31,7 +30,7 @@ if(sotf_Utils::getParameter('delprog')) {
 if(sotf_Utils::getParameter('addprog')) {
   $fname = sotf_Utils::getParameter('fname');
   $station = sotf_Utils::getParameter('station');
-  checkPerm($station, 'add_prog');
+  checkPerm($station, 'create');
   $newPrg = new sotf_Programme();
   $track = preg_replace('/\.[^.]*$/','', $fname);
   debug("create with track", $track);
@@ -43,6 +42,12 @@ if(sotf_Utils::getParameter('addprog')) {
   exit;
 }
 
+$expiryDays = 7;
+$expiringIds = sotf_Programme::getMyExpiringProgrammes($expiryDays);
+if(count($expiringIds) > 0) {
+  $smarty->assign("WILL_EXPIRE", $page->getlocalizedWithParams('will_expire',count($expiringIds), $expiryDays) );
+}
+
 $stationId = sotf_Utils::getParameter('stationid');
 if($stationId)
 	  $smarty->assign('SELECTED_STATION', $stationId);
@@ -51,8 +56,30 @@ $userFtpUrl = str_replace('ftp://', "ftp://$user->name@", $config['userFTP']);
 	$smarty->assign("USERFTPURL", $userFtpUrl); 
 
 $stations = $permissions->listStationsForEditor();
+if($stationId) {
+  foreach($stations as $st) {
+	 if($st['id'] == $stationId)
+		$stFound = true;
+  }
+  if(!$stFound) {
+	 // push this into list
+	 $st = & $repository->getObject($stationId);
+	 if(get_class($st) == 'sotf_station') {
+		$stations[] = array('type' => 'station',
+								  'name' => $st->get('name'),
+								  'id' => $st->id);
+	 } elseif(get_class($st) == 'sotf_series') {
+		$stations[] = array('type' => 'series',
+								  'name' => $st->get('name'),
+								  'station_id' => $st->get('station_id'),
+								  'id' => $st->id);
+	 } else {
+		logError("bad stationid parameter: $stationId");
+	 }
+  }
+}
 if(!empty($stations)) {
-     $smarty->assign_by_ref("STATIONS",$stations);
+  $smarty->assign_by_ref("STATIONS",$stations);
 }
 
 $userAudioFiles = new sotf_FileList();

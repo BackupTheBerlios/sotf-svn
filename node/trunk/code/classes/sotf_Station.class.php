@@ -164,16 +164,36 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	}
 
 
+	/** Static: count stations for given language	*/
+	function countStations($language = 'none') {
+	  global $db;
+	  
+	  $language = sotf_Utils::magicQuotes($language);
+	  if($language != 'none')
+		 return $db->getOne("SELECT count(*) FROM sotf_stations WHERE language LIKE '%$language%'");
+	  else
+		 return $db->getOne("SELECT count(*) FROM sotf_stations");
+	}
+
 	/**
 	 * @method static listStations
 	 * @return array of sotf_Station objects
 	*/
-	function listStations($start, $hitsPerPage) {
-	global $db;
+	function listStations($start, $hitsPerPage, $mode='newest', $language = 'none') {
+	  global $db;
 
 		if(empty($start)) 
 			$start = 0;
-		$res = $db->limitQuery("SELECT * FROM sotf_stations ORDER BY name", $start, $hitsPerPage);
+		if($mode=='newest')
+		  $sortExpr = '  ORDER BY entry_date DESC ';
+		else
+		  $sortExpr = '  ORDER BY name ';
+		$language = sotf_Utils::magicQuotes($language);
+		if($language != 'none')
+		  $whereExpr = " WHERE language LIKE '%$language%' ";
+		else
+		  $whereExpr = "";
+		$res = $db->limitQuery("SELECT * FROM sotf_stations $whereExpr $sortExpr", $start, $hitsPerPage);
 		if(DB::isError($res))
 			raiseError($res);
 		while (DB_OK === $res->fetchInto($st)) {
@@ -194,6 +214,27 @@ class sotf_Station extends sotf_ComplexNodeObject {
 		//	$sql .= " WHERE node_id='$config['nodeId']' ";
 		$sql .= " ORDER BY name";
 		return $db->getAll($sql);
+	}
+
+	/**
+	 * @method static lists languages that are used by stations
+	 * @return array of lang ids
+	*/
+	function listStationLanguages() {
+	  global $db, $page;
+	  $llist = $db->getCol("SELECT DISTINCT(language) FROM sotf_stations");
+	  foreach($llist as $l1) {
+		 foreach(explode(',',$l1) as $l2) {
+			if(!empty($l2)) {
+			  $langs[$l2] = 1;
+			}
+		 }
+	  }
+	  reset($langs);
+	  while(list($k,)=each($langs)) {
+		 $langs[$k] = $page->getlocalized($k);
+	  }
+	  return $langs;
 	}
 
 	/**

@@ -35,10 +35,10 @@ if(!$prg->isLocal()) {
   raiseError("You can only edit programmes locally!");
 }
 
-checkPerm($prg->id, 'change', 'authorize');
+checkPerm($prg, 'change', 'authorize');
 
 if(sotf_Utils::getParameter('delfromseries')) {
-  checkPerm($prg->id, 'change');
+  checkPerm($prg, 'change');
   $prg->set("series_id", null);
   $prg->update();
   $page->redirect("editMeta.php?id=$prgId");
@@ -48,7 +48,7 @@ $finishpublish = sotf_Utils::getParameter('finishpublish');
 $finish = sotf_Utils::getParameter('finish');
 $save = sotf_Utils::getParameter('save');
 if($save || $finish || $finishpublish) {
-  checkPerm($prg->id, 'change');
+  checkPerm($prg, 'change');
   $params = array('title'=>'text',
                   'alternative_title'=>'text',
                   'episode_title'=>'text',
@@ -106,7 +106,7 @@ $smarty->assign('PRG_TITLE', $prg->get('title'));
 $delrole = sotf_Utils::getParameter('delrole');
 $roleid = sotf_Utils::getParameter('roleid');
 if($delrole) {
-  checkPerm($prg->id, 'change');
+  checkPerm($prg, 'change');
   $role = new sotf_NodeObject('sotf_object_roles', $roleid);
   $c = new sotf_Contact($role->get('contact_id'));
   $role->delete();
@@ -120,7 +120,7 @@ if($delrole) {
 $delright = sotf_Utils::getParameter('delright');
 $rid = sotf_Utils::getParameter('rid');
 if($delright) {
-  checkPerm($prg->id, 'change');
+  checkPerm($prg, 'change');
   $right = new sotf_NodeObject('sotf_rights', $rid);
   $right->delete();
   //$msg = $page->getlocalizedWithParams("deleted_", $c->get('name'));
@@ -131,12 +131,15 @@ if($delright) {
 
 // manage permissions
 $delperm = sotf_Utils::getParameter('delperm');
-$username = sotf_Utils::getParameter('username');
 if($delperm) {
-  checkPerm($prg->id, 'authorize');
-  $userid = $user->getUserid($username);
+  checkPerm($prg, 'authorize');
+  $userid = sotf_Utils::getParameter('userid');
   if(empty($userid) || !is_numeric($userid)) {
-    raiseError("Invalid username: $username");
+    raiseError("Invalid userid: $userid");
+  }
+  $username = $user->getUsername($userid);
+  if(empty($username)) {
+    raiseError("Invalid userid: $userid");
   }
   $permissions->delPermission($prg->id, $userid);
   $msg = $page->getlocalizedWithParams("deleted_permissions_for", $username);
@@ -150,7 +153,7 @@ if($delperm) {
 // upload icon
 $uploadIcon = sotf_Utils::getParameter('uploadicon');
 if($uploadIcon) {
-  checkPerm($prg->id, 'change');
+  checkPerm($prg, 'change');
   $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
   if ($prg->setIcon($file)) {
@@ -166,7 +169,7 @@ if($uploadIcon) {
 $seticon = sotf_Utils::getParameter('seticon');
 $filename = sotf_Utils::getParameter('filename');
 if($seticon) {
-  checkPerm($prg->id, 'change');
+  checkPerm($prg, 'change');
   $file = $user->getUserDir() . '/' . $filename;
   if ($prg->setIcon($file)) {
     //$page->addStatusMsg("ok_icon");
@@ -217,9 +220,7 @@ $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'
 // for icon
 $smarty->assign('USERFILES',$user->getUserFiles());
 
-if ($prg->getIcon()) {
-  $smarty->assign('ICON','1');
-}
+$smarty->assign('ICON', $prg->cacheIcon());
 
 //$smarty->assign('OKURL',$PHP_SELF . '?station=' . rawurlencode($station));
 

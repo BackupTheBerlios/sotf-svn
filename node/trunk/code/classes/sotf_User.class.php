@@ -131,6 +131,7 @@ class sotf_User
   /** static method: Register new user with given data. */
 	function register($password, $name, $realname, $language, $email) {
 		// TODO: check not to change user name!!
+	   /// TODO: check if user name is unique!
 		global $userdb, $db, $page;
 		if(strlen($name)==0) {
 			debug("USERDB", "attempt to register with empty userid");
@@ -141,6 +142,7 @@ class sotf_User
 		$passwd = sotf_Utils::magicQuotes($password);
 		$query = "INSERT INTO authenticate (username,passwd,general_id,user_type) VALUES('$name','$password',1,'member')";
 		$userdb->query($query);
+		// TODO: check if successful
 		$id = $userdb->getOne("SELECT auth_id FROM authenticate WHERE username='$name'");
 		//		$query = "INSERT INTO user_preferences (RealName,language,last_visit,num_logins) ";
     // RealName taken out 						. sotf_Utils::magicQuotes($realname) . "','" 
@@ -184,8 +186,14 @@ class sotf_User
   /** static: Returns the name of the user given with ID. */
 	function getUsername($user_id) {
 		global $userdb;
-		if (is_numeric($user_id))
-			return $userdb->getOne("SELECT username FROM authenticate WHERE auth_id = $user_id");
+		static $userNameCache;
+		if (is_numeric($user_id)) {
+		  if($userNameCache[$user_id])
+			 return $userNameCache[$user_id];
+		  $name = $userdb->getOne("SELECT username FROM authenticate WHERE auth_id = $user_id");
+		  $userNameCache[$user_id] = $name;
+		  return $name;
+		}
 		return false;
 	}
 
@@ -272,6 +280,18 @@ class sotf_User
 		return $userdb->getOne("SELECT count(*) FROM authenticate");
 	}
 
+  /** Search for users. */
+	function findUsers($pattern, $prefix = false) {
+		global $userdb;
+		$pattern = sotf_Utils::magicQuotes($pattern);
+		if($prefix)
+		  $res = $userdb->getAssoc("SELECT auth_id AS id, username AS name FROM authenticate WHERE username ~* '^$pattern' ORDER BY username");
+		else
+		  $res = $userdb->getAssoc("SELECT auth_id AS id, username AS name FROM authenticate WHERE username ~* '$pattern' ORDER BY username");
+		if(DB::isError($res))
+			raiseError($res);
+		return $res;
+	}
 
 }
 ?>

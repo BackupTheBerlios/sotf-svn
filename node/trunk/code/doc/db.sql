@@ -572,7 +572,7 @@ INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'admin');
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('2', 'change');
 SELECT nextval('sotf_permissions_id_seq');
-INSERT INTO "sotf_permissions" ("id", "permission") VALUES('3', 'add_prog');
+INSERT INTO "sotf_permissions" ("id", "permission") VALUES('3', 'add_prog'); -- not used any more!
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('4', 'create');
 SELECT nextval('sotf_permissions_id_seq');

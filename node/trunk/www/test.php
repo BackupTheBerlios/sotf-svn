@@ -10,7 +10,9 @@ require("init.inc.php");
 
 echo "<h1>" , htmlspecialchars("árvízt&#369;r&#337; tükörfúrógép", ENT_QUOTES), "</h1>";
 
-$v2 = str_replace(array('ee','ve'), array('ff','vv'), array('k'=>'bee', 'v'=>'vee'));
+//$v2 = str_replace(array('ee','ve'), array('ff','vv'), array('k'=>'bee', 'v'=>'vee'));
+
+$v2 = explode(',',NULL);
 
 dump($v2, V2);
 

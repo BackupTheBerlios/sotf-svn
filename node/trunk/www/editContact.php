@@ -34,12 +34,31 @@ if(!$contact->isLocal()) {
 
 // delete
 if(sotf_Utils::getParameter('delete')) {
-  checkPerm($contact->id, "delete");
+  checkPerm($contact, "delete");
   $contact->delete();
   $page->redirect("closeAndRefresh.php?anchor=roles");
 }
 
-checkPerm($contact->id, "change");
+// manage permissions
+$delperm = sotf_Utils::getParameter('delperm');
+if($delperm) {
+  checkPerm($contact, "authorize");
+  $userid = sotf_Utils::getParameter('userid');
+  if(empty($userid) || !is_numeric($userid)) {
+    raiseError("Invalid userid: $userid");
+  }
+  $username = $user->getUsername($userid);
+  if(empty($username)) {
+    raiseError("Invalid userid: $userid");
+  }
+  $permissions->delPermission($contact->id, $userid);
+  $msg = $page->getlocalizedWithParams("deleted_permissions_for", $username);
+  $page->addStatusMsg($msg, false);
+  $page->redirect("editContact.php?id=$contactId#perms");
+  exit;
+}
+
+checkPerm($contact, "change", "authorize");
 
 // upload icon
 $uploadicon = sotf_Utils::getParameter('uploadicon');
@@ -55,14 +74,14 @@ if($uploadicon) {
 if($save || $finish1 || $finish2) {
 
   if(!$finish2) {
-    $contact->set('alias', sotf_Utils::getParameter('alias'));
-    $contact->set('acronym', sotf_Utils::getParameter('acronym'));
-    $contact->set('intro', sotf_Utils::getParameter('intro'));
-    $contact->set('email', sotf_Utils::getParameter('email'));
-    $contact->set('address', sotf_Utils::getParameter('address'));
-    $contact->set('phone', sotf_Utils::getParameter('phone'));
-    $contact->set('cellphone', sotf_Utils::getParameter('cellphone'));
-    $contact->set('fax', sotf_Utils::getParameter('fax'));
+    $contact->setWithTextParam('alias');
+    $contact->setWithTextParam('acronym');
+    $contact->setWithTextParam('intro');
+    $contact->setWithTextParam('email');
+    $contact->setWithTextParam('address');
+    $contact->setWithTextParam('phone');
+    $contact->setWithTextParam('cellphone');
+    $contact->setWithTextParam('fax');
 	 $success = $contact->setWithUrlParam('url');
     $contact->update();
 	 if($save || !$success)
@@ -85,18 +104,16 @@ if($seticon) {
 }
 
 // general data
-$smarty->assign('CONTACT_DATA',$contact->data);
+$smarty->assign('CONTACT_DATA',$contact->getAllForHTML());
 
 // user permissions: editors and managers
-//$smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($st->id));
+$smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($contact->id));
 
 
 // icon and jingle
 $smarty->assign('USERFILES',$user->getUserFiles());
 
-if ($contact->getIcon()) {
-  $smarty->assign('ICON','1');
-}
+$smarty->assign('ICON', $contact->cacheIcon());
 
 $page->sendPopup();
 

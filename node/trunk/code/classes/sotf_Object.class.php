@@ -284,6 +284,14 @@ class sotf_Object {
 	 $this->set($prop_name, sotf_Utils::getParameter($param_name));
   }
 
+	/** similar to setWithParam, but parameter value may have text conversions (strip tags) */
+  function setWithTextParam($prop_name, $param_name='') {
+	 if(!$param_name)
+		$param_name = $prop_name;
+	 $this->set($prop_name, strip_tags(sotf_Utils::getParameter($param_name)));
+  }
+
+	/** similar to setWithParam, but parameter should be an URL here */
   function setWithUrlParam($prop_name, $param_name='') {
 		global $page;
 		if(!$param_name)

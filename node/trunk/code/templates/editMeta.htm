@@ -48,7 +48,7 @@ window.onload=myonload;
     </div>
 {/if}
 
-{if hasPerm($PRG_ID, 'change') }
+{if hasPerm($PRG_DATA, 'change') }
   <table class="tab">
     <tr> 
       <td nowrap class="tab">{#general_data#}</td>
@@ -297,7 +297,7 @@ window.onload=myonload;
 {/if}
 <p></p>
 
-{if hasPerm($PRG_ID, 'authorize') }
+{if hasPerm($PRG_DATA, 'authorize') }
 
   <a name="perms"></a>
 <table class="tab">
@@ -313,33 +313,31 @@ window.onload=myonload;
         <table>
           {cycle name="perms" values="list1,list2" print=false advance=false}
           <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
-          {foreach item=user key=username from=$PERMISSIONS}
+          {foreach item=user key=userid from=$PERMISSIONS}
           <tr class="{cycle name=perms}">
-            <td>{$username}</td>
+            <td>{$user.name}</td>
             <td>
-              {section name=i loop=$user}
-              {$user[i]}{if ! $smarty.section.i.last}, {/if}
+              {section name=i loop=$user.permissions}
+              {$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
               {/section}
             </td>
             <td>
-                {if $USERNAME ne $username}
-                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=station&objectid={$PRG_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)" />
-                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editMeta.php?delperm=1&username={$username|escape}&id={$PRG_ID}#perms')" />
+                {if $USERNAME ne $user.name}
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=station&objectid={$PRG_ID}&objectname={$STATION}&userid={$userid}','Permissions',350,400,false)" />
+                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editMeta.php?delperm=1&userid={$userid}&id={$PRG_ID}#perms')" />
                 {/if}
             </td>
           </tr>
           {/foreach}
+          <tr class="{cycle name=perms}">
+            <td colspan="3">{#inherited_perms#}</td>
+          </tr>
         </table>
         </form>
         {else}
-        <p>{#no_users#}</p>
+        <p>{#inherited_perms#}</p>
         {/if}
-        <form method="post" name="form1">
-          <input type="hidden" name="id" value="{$PRG_ID}">
-            {#username#}: <input name="username"> 
-              <input type="button" name="addperm" value="{#change_perm#}" onClick="if(checkIfEmpty(this.form.username,'{#select_user#}')) popup('editPermissions.php?context=programme&objectid={$PRG_ID}&objectname={$PRG_TITLE|escape}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
-                <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
-        </form>
+        <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=programme&objectid={$PRG_ID}&objectname={$PRG_TITLE|escape}','{#Permissions#}',450,450, false)">
       </td>
     </tr>
 </table>
@@ -347,7 +345,7 @@ window.onload=myonload;
 
 <p></p>
 
-{if hasPerm($PRG_ID, 'change') }
+{if hasPerm($PRG_DATA, 'change') }
 
         <a name="icon"></a>
 <table class="tab">
@@ -360,7 +358,7 @@ window.onload=myonload;
    <td class="tabarea"> 
 
         {if $ICON}
-         <img align="left" src="getIcon.php/icon.png?id={$PRG_ID}" border="1" />
+         <img align="left" src="{$CACHE_URL}/{$PRG_ID}.png" border="1" />
         {else}
           <table><tr><td>{#no_icon#}</td></tr></table>
         {/if}

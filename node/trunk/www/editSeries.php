@@ -22,16 +22,16 @@ if(!$seriesid) {
 
 $series = & new sotf_Series($seriesid);
 
-checkPerm($series->id, "change", 'authorize');
+checkPerm($series, "change", 'authorize');
 
 // save general data
 $save = sotf_Utils::getParameter('save');
 $finish = sotf_Utils::getParameter('finish');
 $finish2 = sotf_Utils::getParameter('finish2');
 if($save || $finish) {
-  checkPerm($series->id, "change");
-  $series->setWithParam('name');
-  $series->setWithParam('description');
+  checkPerm($series, "change");
+  $series->setWithTextParam('name');
+  $series->setWithTextParam('description');
   $succ = $series->setWithUrlParam('url');
   // language hack
   $series->setLanguageWithParams();
@@ -47,7 +47,7 @@ if($finish || $finish2) {
 // manage roles
 $delrole = sotf_Utils::getParameter('delrole');
 if($delrole) {
-  checkPerm($series->id, "change");
+  checkPerm($series, "change");
   $roleid = sotf_Utils::getParameter('roleid');
   $role = new sotf_NodeObject('sotf_object_roles', $roleid);
   $c = new sotf_Contact($role->get('contact_id'));
@@ -61,11 +61,14 @@ if($delrole) {
 // manage permissions
 $delperm = sotf_Utils::getParameter('delperm');
 if($delperm) {
-  checkPerm($series->id, "authorize");
-  $username = sotf_Utils::getParameter('username');
-  $userid = $user->getUserid($username);
+  checkPerm($series, "authorize");
+  $userid = sotf_Utils::getParameter('userid');
   if(empty($userid) || !is_numeric($userid)) {
-    raiseError("Invalid username: $username");
+    raiseError("Invalid userid: $userid");
+  }
+  $username = $user->getUsername($userid);
+  if(empty($username)) {
+    raiseError("Invalid userid: $userid");
   }
   $permissions->delPermission($series->id, $userid);
   $msg = $page->getlocalizedWithParams("deleted_permissions_for", $username);
@@ -81,7 +84,7 @@ $deljingle = sotf_Utils::getParameter('deljingle');
 $jingleIndex = sotf_Utils::getParameter('index');
 $jingleFile = sotf_Utils::getParameter('filename');
 if($deljingle) {
-  checkPerm($series->id, "change");
+  checkPerm($series, "change");
   $series->deleteJingle($jingleFile, $jingleIndex);
   $page->redirect("editSeries.php?seriesid=$seriesid#icon");
   exit;
@@ -90,7 +93,7 @@ if($deljingle) {
 // upload icon
 $uploadIcon = sotf_Utils::getParameter('uploadicon');
 if($uploadIcon) {
-  checkPerm($series->id, "change");
+  checkPerm($series, "change");
   $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
   if ($series->setIcon($file)) {
@@ -105,7 +108,7 @@ if($uploadIcon) {
 // upload jingle
 $uploadjingle = sotf_Utils::getParameter('uploadjingle');
 if($uploadjingle) {
-  checkPerm($series->id, "change");
+  checkPerm($series, "change");
   $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
   $series->setJingle($file);
@@ -118,12 +121,12 @@ $filename = sotf_Utils::getParameter('filename');
 $setjingle = sotf_Utils::getParameter('setjingle');
 $seticon = sotf_Utils::getParameter('seticon');
 if($setjingle) {
-  checkPerm($series->id, "change");
+  checkPerm($series, "change");
   $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
   $series->setJingle($file);
   $page->redirect("editSeries.php?seriesid=$seriesid#icon");
 } elseif($seticon) {
-  checkPerm($series->id, "change");
+  checkPerm($series, "change");
   $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
   //debug("FILE", $file);
   if ($series->setIcon($file)) {
@@ -142,7 +145,7 @@ if($setjingle) {
 $smarty->assign('SERIES_ID',$seriesid);
 $smarty->assign('SERIES',$series->get('name'));
 
-$smarty->assign('SERIES_DATA',$series->getAll());
+$smarty->assign('SERIES_DATA',$series->getAllForHTML());
 $smarty->assign('SERIES_MANAGER',true);
 $smarty->assign('ROLES', $series->getRoles());
 
@@ -156,9 +159,7 @@ $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($s
 $smarty->assign('USERFILES',$user->getUserFiles());
 
 // icon
-if ($series->getIcon()) {
-  $smarty->assign('ICON','1');
-}
+$smarty->assign('ICON', $series->cacheIcon());
 
 // jingle
 $jinglelist = & new sotf_FileList();

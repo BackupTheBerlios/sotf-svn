@@ -107,29 +107,27 @@ function noErrors() {
   return empty($page->errors);
 }
 
-/** shortcut for permission check: hasPerm(<objectId>, <permName1>, <permName2>, ...)
+/** shortcut for permission check: hasPerm(<mixed>, <permName1>, <permName2>, ...)
+where <mixed> can be objectId, object, or array of object data fields,
 will return true if the current user has at least one of the listed permissions for the object.
 Also used in smarty templates to check permissions. */
 function hasPerm($objectId) {
   global $permissions;
 	$perm_list = func_get_args();
 	for ($i = 1; $i <count($perm_list); $i++) {
-		$perm = $permissions->hasPermission($objectId, $perm_list[$i]);
-		debug("checking for permission " . $perm_list[$i] . " on " . $objectId, $perm);
-		if($perm)
+		if(hasPermPrivate($objectId, $perm_list[$i]))
 			return true;
 	}
 	return false;
 }
 
+/** same as hasPerm, except that it gives an error message and halts. */
 function checkPerm($objectId) {
   global $page, $permissions;
 	$perm_list = func_get_args();
 	for ($i = 1; $i <count($perm_list); $i++) {
 		$permName = $perm_list[$i];
-		$perm = $permissions->hasPermission($objectId, $permName);
-		debug("checking for permission " . $permName . " on " . $objectId, $perm);
-		if($perm)
+		if(hasPermPrivate($objectId, $permName))
 			return;
 	}
 	for ($i = 1; $i <count($perm_list); $i++) {
@@ -141,12 +139,37 @@ function checkPerm($objectId) {
 	raiseError($msg);
 }
 
-/** shortcut for permission check: hasAnyPerm(<objectId>)
-will return true if the current user has some kind of permission for the object.
-Also used in smarty templates to check permissions. */
-function hasAnyPerm($object) {
-  global $permissions;
-	return $permissions->hasAnyPermission($object);
+/** private!! */
+function hasPermPrivate($mixed, $permName) {
+  global $permissions, $repository;
+	// mixed can be object, field array or object_id or 'node'
+	if(is_object($mixed)) {
+		$fields = $mixed->getAll();
+	} elseif(is_array($mixed)) {
+		$fields = $mixed;
+	} elseif($mixed == 'node') {
+		return $permissions->hasPermission('node', $permName);
+	} else {
+		$obj = & $repository->getObject($mixed);
+		$fields = $obj->getAll();
+	}
+	// check perm on the object itself
+	if($permissions->hasPermission($fields['id'], $permName))
+		return true;
+	// inherited from station
+	if($fields['station_id']) {
+		if($permissions->hasPermission($fields['station_id'], $permName))
+			return true;
+	}
+	// inherited from series
+	if($fields['series_id']) {
+		if($permissions->hasPermission($fields['series_id'], $permName))
+			return true;
+	}
+	// node admins are quite like Unix root
+	if($permissions->hasPermission('node', $permName))
+		return true;
+	return false;
 }
 
 /** wrapper function for move_uploaded_file, because sometimes chmod is needed afterwards. */

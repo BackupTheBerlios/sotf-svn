@@ -13,18 +13,57 @@ function toggleAdmin()
 	}
 }
 
+function toggleEnable(yesno)
+{
+	var elts = document.form1.elements;
+	for (var i = 0; i < elts.length; i++) {
+    var elt = elts[i];
+		if (elt.type == "checkbox") {
+        	elt.disable = !yesno;
+		}
+	}
+}
+
 </script>
 {/literal}
 
 <h3>{#change_permissions#}</h3>
 
-{#target#}: {$OBJECT_NAME}, {#user#}: {$USER_NAME}
+{if $CONTEXT eq 'node'}
+<p>{#target#}: {$CONTEXT}</p>
+{else}
+<p>{#target#} {$CONTEXT}: {$OBJECT_NAME}</p>
+{/if}
 
-<form method=POST name="form1">
-<input type="hidden" name="username" value="{$USER_NAME|escape:"html"}" />
-<input type="hidden" name="userid" value="{$USER_ID|escape:"html"}" />
+<form method=GET name="form1">
+<!-- <input type="hidden" name="username" value="{$USER_NAME|escape:"html"}" /> -->
+<!-- <input type="hidden" name="userid" value="{$USER_ID|escape:"html"}" /> -->
 <input type="hidden" name="objectname" value="{$OBJECT_NAME|escape:"html"}" />
 <input type="hidden" name="objectid" value="{$OBJECT_ID|escape:"html"}" />
+<input type="hidden" name="context" value="{$CONTEXT}" />
+
+ {if not $USERS}
+     <nobr>{#find_user#}: <input name="pattern" value="{$PATTERN}" /> <input type="checkbox" name="prefix" /> {#prefix_search#}</nobr>
+ {/if}
+ {if $NO_MATCHES}
+     <div><font color="red">{#no_matches#} </font></div>
+ {/if}
+ {if $TOO_MANY_MATCHES}
+     <div><font color="red">{#too_many_matches#} {$TOO_MANY_MATCHES} </font></div>
+ {/if}
+
+
+{if $USERS}
+
+   <select name="userid">
+   {foreach from=$USERS item=name key=key}
+     <option value="{$key}"  {if $key eq $USER_SELECTED} SELECTED {/if} >{$name}</option>
+   {/foreach}
+  </select>
+
+<input type="submit" name="new" value="{#new_search#}" />
+
+<p></p>
 
 <table class="tabarea">
 <tr> 
@@ -46,17 +85,7 @@ function toggleAdmin()
                     {#change#} ({#change_expl#})
                   </td>
                 </tr>
-                {if $CONTEXT=='station' or $CONTEXT=='series' }
-                <tr>
-                  <td>
-                    <input name="perm_add_prog" type="checkbox"  {if in_array('add_prog', $PERMISSIONS) }CHECKED{/if} />
-                  </td>
-                  <td>
-                    {#add_prog#} ({#add_prog_expl#})
-                  </td>
-                </tr>
-                {/if}
-                {if $CONTEXT=='station' or $CONTEXT=='node' }
+                {if $CONTEXT eq 'station' or $CONTEXT eq 'node' or $CONTEXT eq 'series' }
                 <tr>
                   <td>
                     <input name="perm_create" type="checkbox"  {if in_array('create', $PERMISSIONS) }CHECKED{/if} />
@@ -86,10 +115,28 @@ function toggleAdmin()
             </td>
           </tr>
         </table>
-<p></p>
 
+<p>
+{#use_template#}: 
+  <select name="role" onchange="javascript:alert('If you think such feature would be useful, please tell!')" >
+     <option value="owner" onSelect="toggleEnable(1)" >{#owner#}</option>
+     {if $CONTEXT eq 'station' or $CONTEXT eq 'series'}
+       <option value="manager" onSelect="toggleEnable(1)" >{#manager#}</option>
+       <option value="editor" onSelect="toggleEnable(1)" >{#editor#}</option>
+     {/if}
+     <option value="special" onSelect="toggleEnable(0)" SELECTED >{#special_perms#}</option>
+  </select>
+
+</p>
+
+<p>
 <input type="submit" name="save" value="{#save#}" />
 <input type="button" onClick="window.close();" name="cancel" value="{#cancel#}" />
+</p>
+
+
+{/if}
+
 
 </form>
 

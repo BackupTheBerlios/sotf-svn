@@ -1,7 +1,7 @@
 
 <h3>{#edit_station#}</h3>
 
-{if hasPerm($STATION_ID, 'change') }
+{if hasPerm($STATION_DATA, 'change') }
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#general_data#}</td>
@@ -108,8 +108,10 @@
 
 <p></p>
 
-{if hasPerm($STATION_ID, 'authorize') }
+{if hasPerm($STATION_DATA, 'authorize') }
 <a name="perms"></a>
+
+<form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#access_permissions#}</td>
@@ -119,45 +121,42 @@
 <tr> 
   <td class="tabarea"> 
         {if $PERMISSIONS}
-        <form>
         <table>
           <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
           {cycle name="perms" values="list1,list2" print=false advance=false}
-          {foreach item=user key=username from=$PERMISSIONS}
+          {foreach item=user key=userid from=$PERMISSIONS}
           <tr class="{cycle name=perms}">
-            <td>{$username}</td>
+            <td>{$user.name}</td>
             <td>
-              {section name=i loop=$user}
-              {$user[i]}{if ! $smarty.section.i.last}, {/if}
+              {section name=i loop=$user.permissions}
+              {$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
               {/section}
             </td>
             <td nowrap>
-                {if $USERNAME ne $username}
-                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)" />
-                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?delperm=1&username={$username|escape}&stationid={$STATION_ID}')" />              
+                {if $USERNAME ne $user.name}
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&userid={$userid}','Permissions',350,400,false)" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?delperm=1&userid={$userid}&stationid={$STATION_ID}')" />              
                 {/if}
             </td>
           </tr>
           {/foreach}
+          <tr class="{cycle name=perms}">
+            <td colspan="3">{#inherited_perms#}</td>
+          </tr>
         </table>
-        </form>
         {else}
-        <p>{#no_users#}</p>
+        <p>{#inherited_perms#}</p>
         {/if}
-        <form method="post" name="form1">
-          <input type="hidden" name="stationid" value="{$STATION_ID}">
-            {#username#}: <input name="username"> 
-              <input type="button" name="addperm" value="{#change_perm#}" onClick="if(checkIfEmpty(this.form.username,'{#select_user#}')) popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username='+escape(this.form['username'].value),'{#Permissions#}',350,400, false)">
-                <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
-        </form>
+        <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}','{#Permissions#}',450,450, false)">
       </td>
     </tr>
 </table>
+</form>
 {/if}
 
 <p></p>
 
-{if hasPerm($STATION_ID, 'change') }
+{if hasPerm($STATION_DATA, 'change') }
 <a name="series"></a>
 
 <form>
@@ -177,10 +176,10 @@
           <tr class="{cycle name=perms}">
             <td><a href="showSeries.php/{$item.id}">{$item.name}</a></td>
             <td nowrap>
-                {if hasPerm($item.id, 'change') }
+                {if hasPerm($item, 'change') }
               <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
                 {/if}
-                {if hasPerm($STATION_ID, 'delete') or hasPerm($item.id, 'admin') }
+                {if hasPerm($STATION_DATA, 'delete') or hasPerm($item, 'admin') }
               <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?delseries=1&seriesid={$item.id}&stationid={$STATION_ID}')" />
                 {/if}
             </td>
@@ -217,7 +216,7 @@
           <tr>
             <td>
               {if $ICON}
-              <img src="getIcon.php/icon.png?id={$STATION_ID}" border="1">
+              <img src="{$CACHE_URL}/{$STATION_ID}.png" border="1">
               {else}
                 {#no_icon#}
               {/if}

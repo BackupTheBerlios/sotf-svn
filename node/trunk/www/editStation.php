@@ -30,8 +30,7 @@ checkPerm($st->id, "change", 'authorize');
 $save = sotf_Utils::getParameter('save');
 if($save) {
   checkPerm($st->id, "change");
-  $desc = sotf_Utils::getParameter('desc');
-  $st->set('description', $desc);
+  $st->setWithTextParam('description', 'desc');
   $st->setWithUrlParam('url');
   // language hack
   $st->setLanguageWithParams();
@@ -53,7 +52,7 @@ if($delseries) {
 // manage roles
 $delrole = sotf_Utils::getParameter('delrole');
 if($delrole) {
-  checkPerm($st->id, "change");
+  checkPerm($st, "change");
   $roleid = sotf_Utils::getParameter('roleid');
   $role = new sotf_NodeObject('sotf_object_roles', $roleid);
   $c = new sotf_Contact($role->get('contact_id'));
@@ -67,11 +66,14 @@ if($delrole) {
 // manage permissions
 $delperm = sotf_Utils::getParameter('delperm');
 if($delperm) {
-  checkPerm($st->id, "authorize");
-  $username = sotf_Utils::getParameter('username');
-  $userid = $user->getUserid($username);
+  checkPerm($st, "authorize");
+  $userid = sotf_Utils::getParameter('userid');
   if(empty($userid) || !is_numeric($userid)) {
-    raiseError("Invalid username: $username");
+    raiseError("Invalid userid: $userid");
+  }
+  $username = $user->getUsername($userid);
+  if(empty($username)) {
+    raiseError("Invalid userid: $userid");
   }
   $permissions->delPermission($st->id, $userid);
   $msg = $page->getlocalizedWithParams("deleted_permissions_for", $username);
@@ -87,7 +89,7 @@ $deljingle = sotf_Utils::getParameter('deljingle');
 $jingleIndex = sotf_Utils::getParameter('index');
 $jingleFile = sotf_Utils::getParameter('filename');
 if($deljingle) {
-  checkPerm($st->id, "change");
+  checkPerm($st, "change");
   $st->deleteJingle($jingleFile, $jingleIndex);
   $page->redirect("editStation.php?stationid=$stationid#icon");
   exit;
@@ -121,14 +123,14 @@ $setjingle = sotf_Utils::getParameter('setjingle');
 $seticon = sotf_Utils::getParameter('seticon');
 if($setjingle)
 {
-  checkPerm($st->id, "change");
+  checkPerm($st, "change");
   $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
   $st->setJingle($file);
   $page->redirect("editStation.php?stationid=$stationid#icon");
 }
 elseif($seticon)
 {
-  checkPerm($st->id, "change");
+  checkPerm($st, "change");
   $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
   //debug("FILE", $file);
   if ($st->setIcon($file)) {
@@ -142,7 +144,7 @@ elseif($seticon)
 // generate output
 
 // general data
-$smarty->assign('STATION_DATA',$st->data);
+$smarty->assign('STATION_DATA', $st->getAllForHTML());
 $smarty->assign('STATION_MANAGER',true);
 $smarty->assign('ROLES', $st->getRoles());
 $smarty->assign('SERIES', $st->listSeriesData());
@@ -156,9 +158,7 @@ $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($s
 // icon and jingle
 $smarty->assign('USERFILES',$user->getUserFiles());
 
-if ($st->getIcon()) {
-  $smarty->assign('ICON','1');
-}
+$smarty->assign('ICON', $st->cacheIcon());
 
 $jinglelist = & new sotf_FileList();
 $jinglelist->getAudioFromDir($st->getMetaDir(), 'jingle_');
