@@ -68,9 +68,9 @@ class sotf_Statistics extends sotf_Object {
     // update periodic stat
 
 	 $date = $data['date'];
-	 debug("date", $db->getTimestampTz($date));
+	 //debug("date", $db->getTimestampTz($date));
     $now = getdate($date);
-	 debug("now", $now);
+	 //debug("now", $now);
     $year = $now['year'];
     $month = $now['mon'];
     $day = $now['mday'];
@@ -78,6 +78,7 @@ class sotf_Statistics extends sotf_Object {
 	 $prgId = $data['prog_id'];
 	 $fileId = $data['file'];
     $where = " WHERE prog_id='$prgId' AND year='$year' AND month='$month' AND day='$day' AND week='$week'";
+	 $db->begin();
 	 $id = $db->getOne("SELECT id FROM sotf_stats $where");
 	 if($id) {
 		$obj = new sotf_Statistics($id);
@@ -87,6 +88,7 @@ class sotf_Statistics extends sotf_Object {
       $prg = $repository->getObject($prgId);
       if(!$prg) {
         // don't raiseError("addStat: no such programme: $prgId");
+		  $db->rollback();
 		  return null;
 		}
 		$obj->setAll(array('prog_id' => $prgId,
@@ -96,7 +98,15 @@ class sotf_Statistics extends sotf_Object {
                          'week' => $week,
                          'day' => $day,
                          $type => 1));
-		}
+	 }
+	 if($obj->exists()) {
+		$obj->update();
+	 } else {
+		$obj->create();
+		//debug("obj1", $obj);
+		$obj->find(); // to get the id
+		//debug("obj2", $obj);
+	 }
 
     // update uniqueness memory
     sotf_Statistics::addUniqueAccess($data['ip'], $prgId, $fileId, $type);
@@ -104,16 +114,10 @@ class sotf_Statistics extends sotf_Object {
     // would be too often: 
 	 if($update)
 		$obj->updateStats(false);
-	 if($obj->exists()) {
-		$obj->update();
-	 } else {
-		$obj->create();
-		debug("obj1", $obj);
-		$obj->find(); // to get the id
-		debug("obj2", $obj);
-	 }
-	 if(!$update)
+	 else
 		sotf_Object::addToUpdate('sotf_stats', $obj->id);
+
+	 $db->commit();
 	 return $obj;
   }
 

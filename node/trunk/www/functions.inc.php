@@ -40,7 +40,7 @@ function logError($msg, $private='') {
 	$email = $config['adminEmail'];
 	$host = getHostName();
   error_log("$host: ERROR: $msg. $private", 0);
-	if($email && $config['sendMailAboutErrors'])
+	if($email && $config['sendMailAboutErrors'] && $msg != 'no_such_object' )
 		mail($email, "SOTF error - $host", "$host: $msg\n$private");
 }
 

@@ -12,7 +12,15 @@ require("init.inc.php");
 $filename = sotf_Utils::getParameter('filename');
 $id = sotf_Utils::getParameter('id');
 $mainAudio = sotf_Utils::getParameter('audio');
-$prg = & new sotf_Programme($id);
+
+if(empty($id)) {
+  raiseError("Missing parameters!", 'id');
+}
+if(empty($filename)) {
+  raiseError("Missing parameters!", 'filename');
+}
+
+$prg = $repository->getObject($id);
 
 if(!$prg)
   raiseError("no_such_object", $id);
