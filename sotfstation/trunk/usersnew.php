@@ -91,7 +91,6 @@
  		  	'username' => SDB_USER,
  		  	'password' => SDB_PASS
 			));
-			$sdb = DB::connect("pgsql://mk:247spyz@xaos.grendelkom.com/SADM",false);
 			
 			//did the connection to SADM database fail?
 			if(DB::isError($sdb)){
