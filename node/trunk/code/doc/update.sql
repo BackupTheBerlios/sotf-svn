@@ -73,12 +73,14 @@ UPDATE sotf_roles SET creator='t' WHERE role_id=9;
 UPDATE sotf_roles SET creator='t' WHERE role_id=22;
 
 ALTER TABLE "sotf_prog_refs" ADD COLUMN "portal_name" varchar(200);
+ALTER TABLE "sotf_prog_refs" ADD COLUMN "portal_home" varchar(200);
 
 ALTER TABLE "sotf_comments" ADD COLUMN "comment_title" text;
 
 CREATE TABLE "sotf_portals" (
 -- list of portals connected to this node 
-	"id" serial PRIMARY KEY, 					-- just an id
+-- REPLICATED
+	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"name" varchar(50) NOT NULL,				-- name of portal
 	"url" varchar(255) UNIQUE NOT NULL,		-- url of portal (identifies portal)
 	"page_impression" int,						-- number of downloads of starting page 

@@ -597,7 +597,7 @@ class sotf_Repository {
       $obj->save();
       break;
     case 'page_impression':
-      $obj = new sotf_Object('sotf_portals');
+      $obj = new sotf_NodeObject('sotf_portals');
       $obj->set('url', $event['url']);
       $obj->find();
       $obj->set('name', $event['portal_name']);
@@ -606,7 +606,7 @@ class sotf_Repository {
       $obj->save();
       break;
     case 'portal_updated':
-      $obj = new sotf_Object('sotf_portals');
+      $obj = new sotf_NodeObject('sotf_portals');
       $obj->set('url', $event['url']);
       $obj->find();
       $obj->set('name', $event['portal_name']);
@@ -614,7 +614,7 @@ class sotf_Repository {
       $obj->save();
       break;
     case 'users':
-      $obj = new sotf_Object('sotf_portals');
+      $obj = new sotf_NodeObject('sotf_portals');
       $obj->set('url', $event['url']);
       $obj->find();
       //$obj->set('name', $event['portal_name']);
