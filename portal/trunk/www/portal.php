@@ -213,7 +213,15 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 
 			foreach($result as $key => $value)
 				if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
-					if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
+					if ($key == 'language' AND $value != "")
+					{
+						$languages = explode(',', $value);
+						foreach ($languages as $language)
+						{
+							if ($values[$fields[$key]] == "") $values[$fields[$key]] .= $page->getlocalized($language);
+							else $values[$fields[$key]] .= ", ".$page->getlocalized($language);
+						}
+					}
 					else $values[$fields[$key]] = htmlspecialchars($value);
 			foreach($result['audioFiles'] as $audioFiles)
 			{
@@ -371,7 +379,15 @@ if ($id)	//if programmes view
 
 	foreach($result as $key => $value)
 		if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
-			if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
+			if ($key == 'language' AND $value != "")			//language need to be translated
+			{
+				$languages = explode(',', $value);
+				foreach ($languages as $language)
+				{
+					if ($values[$fields[$key]] == "") $values[$fields[$key]] .= $page->getlocalized($language);
+					else $values[$fields[$key]] .= ", ".$page->getlocalized($language);
+				}
+			}
 			else $values[$fields[$key]] = $value;
 	foreach($result['audioFiles'] as $audioFiles)
 	{

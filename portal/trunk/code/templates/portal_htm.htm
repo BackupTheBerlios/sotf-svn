@@ -44,7 +44,7 @@
 							</a></b><br />
 							{foreach key=name item=value from=$item.values}{if $value != ""}
 								{if $cell.class != "none"}<span class="{$cell.class}.name">{/if}
-								{$name}
+								{$name}: 
 								{if $cell.class != "none"}</span><span class="{$cell.class}.value">{/if}
 								{$value}<br />
 								{if $cell.class != "none"}</span>{/if}
