@@ -1,10 +1,11 @@
-<?php //-*- tab-width: 3; indent-tabs-mode: 1; -*-
+<?php 
+// -*- tab-width: 3; indent-tabs-mode: 1; -*-
+// $Id$
 
 /**
 * This is a class for handling users
 *
-* @author Andras Micsik SZTAKI DSD <micsik@sztaki.hu>
-* @version 0.1
+* @author Andras Micsik SZTAKI DSD micsik@sztaki.hu
 */
 class sotf_User
 {
