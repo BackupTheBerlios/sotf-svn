@@ -1,0 +1,70 @@
+<br><br><br>
+<form name="form1" method="post" action="{$server_root}index.php">
+  <table width="300" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td><table width="300" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+          <tr bgcolor="#ddddff"> 
+            <td colspan="2" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr> 
+                  <td width="20" nowrap><strong><img src="{$root}img/login.gif" width="27" height="21"></strong></td>
+                  <td class=title><strong>Login</strong></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr bgcolor="#eeeeee"> 
+            <td width="30%" nowrap> <div align="right">User Name</div></td>
+            <td width="70%"> <input name="user" type="text" id="user" class="myinput"> 
+            </td>
+          </tr>
+          <tr bgcolor="#eeeeee"> 
+            <td><div align="right">Password</div></td>
+            <td><input name="pass" type="password" id="pass" class="myinput"></td>
+          </tr>
+          {section name=error_cell show=$error_out} 
+            <tr bgcolor="#FFCCCC"> 
+              <td colspan="2">{section name=errors loop=$error_list show=$error_out} 
+                <div align=center> 
+                  <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
+                {/section}</td>
+            </tr>
+            {/section} 
+          <tr bgcolor="#eeeeee"> 
+            <td colspan="2"><div align="center"> 
+                <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
+                <input type="hidden" name="login">
+              </div></td>
+          </tr>
+        </table></td>
+    </tr>
+    <tr>
+      <td><div align="right"><img src="{$root}img/shadow1.gif" width="289" height="9"></div></td>
+    </tr>
+  </table>
+  <br>
+  <table width="300" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td><table width="300" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+          <tr bgcolor="#eeeeee"> 
+            <td colspan="2" bgcolor="#eeFFee" class="title"> 
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="20" nowrap><strong><img src="{$root}img/info.gif" width="27" height="21"></strong></td>
+                  <td class=title><strong>Help</strong> </td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr bgcolor="#eeeeee"> 
+            <td colspan="2"> 
+              <div align="justify">In order to access all the Station Management 
+                tools you have to enter your username and password, which must 
+                have been preset for you by the station administrator.</div>
+              <div align="center"></div></td>
+          </tr>
+        </table></td>
+    </tr>
+    <tr> 
+      <td><div align="right"><img src="{$root}img/shadow1.gif" width="289" height="9"></div></td>
+    </tr>
+  </table>
+</form>
+<br><br><br>

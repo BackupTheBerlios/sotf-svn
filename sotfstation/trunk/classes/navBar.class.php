@@ -144,10 +144,11 @@
 		 */
 		function out(){
 			$tot = $this->length();
+			$toreturn = '';
 			for($x=0;$x<$tot - 1;$x++){				
-				$toreturn .= "<a href=\"" . $this->get_nav_link($x) . "\" class=\"time3\">" . $this->get_nav_name($x) . "</a> &raquo; ";
+				$toreturn .= "<a href=\"" . $this->getLink($x) . "\" class=\"menu1\">" . $this->getName($x) . "</a> &raquo; ";
 			}
-			$toreturn .= "<span class=\"time3\">" . $this->get_nav_name($x) . "</span>";
+			$toreturn .= "&nbsp;&nbsp;" . $this->getName($x);
 			return $toreturn;
 		}
 	}

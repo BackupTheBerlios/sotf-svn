@@ -14,6 +14,9 @@
 	function eh($type, $msg, $file, $line, $context)
 	{
 		//this function will need further development
-		echo $type . "<br>" . $msg . "<br>" . $file . "<br>" . $line . "<br>" . $context;
+		if($type==8){
+		}else{
+			echo $type . "<br>" . $msg . "<br>" . $file . "<br>" . $line . "<br>" . $context;
+		}
 	}
 ?>

@@ -4,9 +4,11 @@
 	 * 
 	 * @return 
 	 */
-	function pageFinish(){
-		global $smarty;
+	function pageFinish($action){
+		global $smarty,$myNav;
 		$smarty->assign("tot_time",stopTiming());
+		$smarty->assign("nav_bar",$myNav->out());
+		$smarty->assign("action",$action);
 		$smarty->display('index.htm');
 	}
 	

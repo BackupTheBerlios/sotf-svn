@@ -28,6 +28,33 @@
 	define('DB_USER','Dolce');																# Database User :: accepted (string)
 	define('DB_PASS','');																			# Database Access Password :: accepted (string)
 	
+	/*
+	* Now, there are TWO ways to get around the the user authentication database, in case it runs on
+	* your local server, then the ideal way will be to build a direct connection to it (SADM), otherwise
+	* a wise thing will be to specify an XML RPC verification routine.
+	* 
+	* Below are the settings for both
+	*/
+	define('DIRECTSADM_ACCESS',TRUE);													# specifies whether SADM runs on a local DB server: accepted (bool)
+	
+	//if the above is set to true, then the following
+	//have a meaning
+	define('SDB_TYPE','pgsql');																# Type of Database :: accepted (string)
+	define('SDB_HOST','localhost');														# Where the Database is located :: accepted (string)
+	define('SDB_NAME','temp');																# Database Name :: accepted (string)
+	define('SDB_USER','Dolce');																# Database User :: accepted (string)
+	define('SDB_PASS','');																		# Database Access Password :: accepted (string)
+	
+	//if SADM is accessed via XMLRPC then the
+	//following has a meaning
+	define('SADM_HOST','localhost');													# location of SADM
+	define('SADM_DERVER','/work/sadm/server.php');						# location of the XMLRPS SADM Server
+	
+	/*
+	* The critical settings are now configured, below you will find other data to play with that
+	* controls the way your station looks and behaves
+	*/
+	
 	//Names
 	define('STATION_NAME','Da Station');											# Name of this station
 	define('HOME_NAME','Home');																# Name of the homepage

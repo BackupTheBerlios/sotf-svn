@@ -16,18 +16,19 @@
 	************************/
 
 	//Massive Includer
+	include('config.inc.php');									# guest what this is ;)
 	include('classes/error.class.php');					# Error Collector
 	include('classes/user.class.php');					# User Session Wrapper
 	include('classes/navBar.class.php');				# Navigation Bar Processor
 	include('functions/eh.inc.php');						# Override PHP's Error's handling routines
 	include('functions/timers.inc.php');				# Timers to reveal bottlenecks
 	include('functions/prepend.inc.php');				# Smarty pre and postpend data for pop-up windows
-	require(SMARTY_PATH . 'Smarty.class.php');	# Template Processor
+	require(SMARTY_PATH . '/Smarty.class.php');	# Template Processor
 	require(PEAR_PATH . 'DB.php');							# Pear DB Object .::. http://pear.php.net/
 	
 	//Massive Initializer
 	$myError = new error();											# Initialize an empty 'error bin'
-	$myNav = new navBar(HOME,SRC_ROOT);					# Create an instance of the navigation bar
+	$myNav = new navBar(HOME_NAME,SRC_ROOT);		# Create an instance of the navigation bar
 	$smarty = new Smarty;												# Initialize Template Parser
 	
 	$db = DB::connect(array(										# Start a connection to the database
