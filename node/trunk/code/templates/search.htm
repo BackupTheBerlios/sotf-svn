@@ -1,0 +1,38 @@
+            <form name="searchform" method="post" action="search.php">
+              <table width="100%" border="0" cellspacing="0" cellpadding="2">
+                <tr> 
+                  <td width="60%"> 
+                    <input type="text" name="pattern" value="{$PATTERN}" style="width: 100%">
+                  </td>
+                  <td width="20%"> 
+                    <select name="language" style="width: 100%">
+                        {html_options values=$searchLangs selected=$LANGUAGE output=$langNames}
+                    </select>
+                  </td>
+                  <td width="1"> 
+                    <input type="submit" name="search" value="{#Search#}">
+                  </td>
+                </tr>
+                <tr>
+                    <td><font size=2><A href="advsearch.php">{#advSearch#}</a></font>
+                    </tr>
+              </table>
+            </form>
+
+<hr>
+
+{if count($RESULTS) gt 0 }
+
+<h3>{#Results#}</h3>
+
+		{section name=i loop=$RESULTS}
+				<a href=""><b>{$RESULTS[i]->data.title}</b></a>
+    {#by#}
+				<i>{$RESULTS[i]->data.author}</i>
+    - 
+				{$RESULTS[i]->data.production_date}
+		{/section}
+
+{else}
+    {#No_results#}
+{/if}

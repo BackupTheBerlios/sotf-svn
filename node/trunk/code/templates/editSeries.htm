@@ -1,0 +1,48 @@
+{if $SERIES_ITEM.series_id}
+	{if $lang == "de"}
+	<h3>Edit '{$SERIES_ITEM.series_id}'</h3>
+	{else}
+	<h3>Edit '{$SERIES_ITEM.series_id}'</h3>
+	{/if}
+{else}
+	<h3>{#new_series#}</h3>
+{/if}
+
+{if $EDIT_PERMISSION}
+	<form method="post">
+	<input type="hidden" name="station" value="{$STATION}">
+	{if $OKURL}<inpup type="hidden" name="okURL" value="{$OKURL|escape}">{/if}
+	<table>
+		<tr>
+			<td valign="top">{#series_name#}:</td>
+			{if $SERIES_ITEM.series_id}
+				<td><input type="hidden" name="series_id" value="{$SERIES_ITEM.series_id}">{$SERIES_ITEM.series_id}</td>
+			{else}
+				<td><input size="32" name="series_id"{if $SERIES_ITEM.series_id} value="{$SERIES_ITEM.series_id}"{/if}>
+				{if $ERRORSERIESID}<font color="red"><b>{#missing#}</b></font>{/if}</td>
+			{/if}
+		</tr>
+		<tr>
+			<td valign="top">{#series_title#}:</td>
+			<td><input size="60" name="title"{if $SERIES_ITEM.title} value="{$SERIES_ITEM.title}"{/if}>
+			{if $ERRORTITLE}<font color="red"><b>{#missing#}</b></font>{/if}</td>
+		</tr>
+		<tr>
+			<td valign="top">{#description#}:</td>
+			<td><textarea name="description" rows="8" cols="60">{$SERIES_ITEM.description}</textarea>
+			{if $ERRORDESCRIPTION}<font color="red"><b>{#missing#}</b></font>{/if}</td>
+		</tr>
+		<tr>
+			<td valign="top">{#series_editor#}:</td>
+			<td><input size="60" name="editor"{if $SERIES_ITEM.editor} value="{$SERIES_ITEM.editor}"{/if}>
+			{if $ERROREDITOR}<font color="red"><b>{#missing#}</b></font>{/if}</td>
+		</tr>
+		<tr>
+			<td valign="top">{#contact_email#}:</td>
+			<td><input size="60" name="contact_email"{if $SERIES_ITEM.contact_email} value="{$SERIES_ITEM.contact_email}"{/if}>
+			{if $ERRORCONTACTEMAIL}<font color="red"><b>{#missing#}</b></font>{/if}</td>
+		</tr>
+	</table>
+	<input type="submit" name="save" value="{#save#}">
+	</form>
+{/if}

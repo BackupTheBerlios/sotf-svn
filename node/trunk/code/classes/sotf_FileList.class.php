@@ -1,0 +1,167 @@
+<?php
+
+require_once($getid3dir . "/getid3.php");
+require_once("sotf_File.class.php");
+require_once("sotf_AudioFile.class.php");
+
+/**
+* This is a class for handling list of files.
+*
+* @author	Tamas Kezdi SZTAKI DSD <tbyte@sztaki.hu>
+* @package	StreamOnTheFly
+* @version	0.1
+*/
+class sotf_FileList
+{
+	/**
+	* List of sotf_File or sotf_AudioFile objects.
+	*
+	* @attribute 	array	$list
+	* @see	{@link sotf_File}, {@link sotf_AudioFile}
+	*/
+	var $list = array();
+
+	/**
+	* Checks whether the specified file is exist in the list.
+	*
+	* @param	string	$path	Path of the file to be checked
+	* @return	boolean	If there is a file in the list that has the same path returns true, else false
+	*/
+	function pathExist($path)
+	{
+		$path = realpath(trim($path));
+		reset($this->list);
+		for ($i=0;$i<count($this->list);$i++)
+		{
+			if ($this->list[$i]->getPath() == $path)
+				return true;
+		}
+		return false;
+	} // end func pathExist
+
+	/**
+	* Adds a file to the list.
+	*
+	* @param	string	$path	Path of the file to add to the list
+	* @return	boolean	If the file was successfully added to the list return true, else false
+	*/
+	function add($path)
+	{
+		$path = realpath(trim($path));
+		if (is_file($path))
+		{
+			if (!$this->pathExist($path))
+			{
+				$audioinfo = GetAllMP3info($path);
+				if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg')
+					$this->list[] = & new sotf_AudioFile($path);
+				else
+					$this->list[] = & new sotf_File($path);
+			}
+		}
+		return false;
+	} // end func add
+
+	/**
+	* Removes a file from the list.
+	*
+	* @param	string	$path	Path of the file to remove from the list
+	* @return	boolean	If the file was successfully removed from the list return true, else false
+	*/
+	function remove($path)
+	{
+		$path = realpath(trim($path));
+		$list = array();
+		$retval = false;
+		reset($this->list);
+		for ($i=0;$i<count($this->list);$i++)
+		{
+			if ($this->list[$i]->getPath() != $path)
+				$list[] = & $this->list[$i];
+			else
+				$retval = true;
+		}
+		if ($retval)
+			$this->list = & $list;
+		return $retval;
+	} // end func remove
+
+	/**
+	* Removes all non-audio files from the list.
+	*/
+	function removeNonAudio()
+	{
+		$paths = array();
+		for ($i=0;$i<count($this->list);$i++)
+			if (!$this->list[$i]->isAudio())
+				$paths[] = $this->list[$i]->getPath();
+		for ($i=0;$i<count($paths);$i++)
+			$this->remove($paths[$i]);
+	} // end func removeNotAudio
+
+	/**
+	* Creates the list from a directory.
+	*
+	* @param	string	$path	Path of the directory
+	* @return	boolean	If the list was successfully created return true, else false
+	*/
+	function getDir($path)
+	{
+		$path = realpath(trim($path));
+		$list = array();
+		$retval = false;
+		if (is_dir($path))
+			if ($handle = opendir($path))
+			{
+    			while (false !== ($filename = readdir($handle)))
+           			$this->add($path . '/' . $filename);
+			    closedir($handle); 
+				$retval = true;
+           	}
+		return $retval;
+	} // end func getDir
+
+	/**
+	* Creates the list from all audio files in the specified directory.
+	*
+	* @param	string	$path	Path of the directory
+	* @return	boolean	If the list was successfully created return true, else false
+	*/
+	function getAudioFromDir($path)
+	{
+		$retval = $this->getDir($path);
+		$this->removeNonAudio();
+
+		return $retval;
+	} // end func getDir
+
+	/**
+	* Unlink file and removes it from the list.
+	*
+	* @param	string	$path	Path of the file to be deleted
+	* @return	boolean	If the file was successfully deleted
+	*/
+	function unlink($path)
+	{
+		$path = realpath(trim($path));
+		if (unlink($path))
+			return $this->remove($path);
+		return false;
+	} // end func unlink
+
+	/**
+	* Gets the filenames
+	*
+	* @return	array	Array of name of files
+	*/
+	function getFileNames()
+	{
+		$list = array();
+		for ($i=0;$i<count($this->list);$i++)
+			$list[] = & $this->list[$i]->name;
+		sort($list);
+		return $list;
+	} // end func getFileNames
+} // end class sotf_FileList
+
+?>
