@@ -267,28 +267,15 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 global $vocabularies;
 	 $xml = domxml_new_xmldoc('1.0');
 	 $xbmf = domxml_add_root($xml, 'xbmf');
-	 $xbmf->new_child('title',$this->get('title'));
 	 $xbmf->new_child('type','audio');
+	 $xbmf->new_child('title',$this->get('title'));
 	 $xbmf->new_child('alternative',$this->get('alternative_title'));
 	 $xbmf->new_child('episodetitle',$this->get('episode_title'));
 	 $xbmf->new_child('episodesequence',$this->get('episode_sequence'));
-	 $xbmf->new_child('stationid', $this->get('station'));
-	 $xbmf->new_child('language', $this->get('language'));
-	 $xbmf->new_child('description', $this->get('description'));
 	 $xbmf->new_child('identifier', $this->getURL());
-	 $xbmf->new_child('genre', $vocabularies->getGenreName($this->get('genre_id')));
-	 $topics = $this->getTopics();
-	 foreach($topics as $topic) {
-		$xbmf->new_child('topic', $topic);
-	 }
-	 $nod = $xbmf->new_child('date', $this->get('production_date'));
-	 $nod->set_attribute('type','created');
-	 $nod = $xbmf->new_child('date', $this->get('broadcast_date'));
-	 $nod->set_attribute('type','issued');
-	 $nod = $xbmf->new_child('date', $this->get('entry_date'));
-	 $nod->set_attribute('type','available');
-	 $nod = $xbmf->new_child('date', $this->get('modify_date'));
-	 $nod->set_attribute('type','modified');
+	 $station = $xbmf->new_child('station', $this->stationName);
+	 $station->set_attribute('id', $this->get('station_id'));
+	 //$xbmf->new_child('stationid', $this->get('station_id'));
 	 // series
 	 $series = $this->getSeries();
 	 if($series) {
@@ -297,12 +284,37 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$se->new_child('title', $series->get('name'));
 		$se->new_child('description', $series->get('description'));
 	 }
+	 $lang = $xbmf->new_child('language', $this->getLanguagesLocalized($this->get('language')));
+	 $lang->set_attribute('codes',$this->get('language'));
+	 $xbmf->new_child('length', $this->get('length'));
+	 $xbmf->new_child('keywords', $this->get('keywords'));
+	 $xbmf->new_child('description', $this->get('abstract'));
+	 $xbmf->new_child('genre', $vocabularies->getGenreName($this->get('genre_id')));
+	 $topics = $this->getTopics();
+	 foreach($topics as $topic) {
+		$xbmf->new_child('topic', $topic['name']);
+	 }
+	 $xbmf->new_child('spatial_coverage', $this->get('spatial_coverage'));
+	 $nod = $xbmf->new_child('date', $this->get('temporal_coverage'));
+	 $nod->set_attribute('type','covering');
+	 $nod = $xbmf->new_child('date', $this->get('production_date'));
+	 $nod->set_attribute('type','created');
+	 $nod = $xbmf->new_child('date', $this->get('broadcast_date'));
+	 $nod->set_attribute('type','issued');
+	 $nod = $xbmf->new_child('date', $this->get('entry_date'));
+	 $nod->set_attribute('type','available');
+	 $nod = $xbmf->new_child('date', $this->get('modify_date'));
+	 $nod->set_attribute('type','modified');
 	 // rights
 	 $rights = $this->getAssociatedObjects('sotf_rights', 'start_time');
 	 foreach($rights as $right) {
 		$ri = $xbmf->new_child('right', $right['rights_text']);
-		$ri->set_attribute('from', $right['start_time']);
-		$ri->set_attribute('to', $right['stop_time']);
+		if(!$right['start_time'] && !$right['stop_time'])
+		  $ri->set_attribute('for', 'all');
+		else {
+		  $ri->set_attribute('from', $right['start_time']);
+		  $ri->set_attribute('to', $right['stop_time']);
+		}
 	 }
 	 // contacts
 	 $roles = $this->getRoles();
@@ -319,6 +331,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$entity->new_child('e-mail',$role['contact_data']['email']);
 		$entity->new_child('address',$role['contact_data']['address']);
 		$entity->new_child('uri', $role['contact_data']['url']);
+		$entity->new_child('phone', $role['contact_data']['phone']);
+		$entity->new_child('intro', $role['contact_data']['intro']);
 	 }
 	 // prepare xml
 	 $xmltext = $xml->dumpmem();

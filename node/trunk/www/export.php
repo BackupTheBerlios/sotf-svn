@@ -34,14 +34,26 @@ if ($type == 1) {
   echo $md;
 
 } elseif($type == 2) {
+  // actualize metadata
+  $prg->saveMetadataFile();
   // send XBMF
   $file =  tempnam($config['tmpDir'],'export');
   $dir = $prg->getDir();
   $dir1 = basename($dir);
-  system("cd $dir; cd ..; tar cf $file $dir1");
-  header("Content-type: application/tar\n");
+  $dir2 = dirname($dir);
+  $xdir = "XBMF_$dir1";
+  // TODO: this only works on Unix/Linux
+  chdir($dir2);
+  debug("chdir", $dir2);
+  if(!symlink($dir1, $xdir)) {
+	 raiseError("could not create hard link");
+  }
+  system("tar cfh $file $xdir");
+  unlink($xdir);
+  header("Content-type: application/x-tar\n");
   header("Content-transfer-encoding: binary\n"); 
   header("Content-length: " . filesize($file) . "\n");
+  header("Content-Disposition: attachment; filename=$xdir.tar");
   readfile($file);
   unlink($file);
 }
