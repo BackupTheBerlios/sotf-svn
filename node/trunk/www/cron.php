@@ -80,6 +80,8 @@ foreach($XBMF as $xbmfFile) {
 
 // remove m3us and pngs from tmpdir
 
+// update subject tree language availability
+
 
 
 stopTiming();

@@ -690,6 +690,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$o1 = & new sotf_NodeObject("sotf_topic_trees");
 			$o1->set('tree_id', 1);
 			$o1->set('name', 'SOTF general');
+			$o1->set('languages', 'en');
 			$o1->create();
 			$oid = $o1->getID();
 
@@ -710,6 +711,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$o1->set('tree_id', 2);
 			$o1->set('name', 'SOMA Metadata version 1');
 			$o1->set('url', 'http://soma-dev.sourceforge.net/');
+			$o1->set('languages', 'en');
 			$o1->create();
 			$oid = $o1->getID();
 

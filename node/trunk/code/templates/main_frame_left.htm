@@ -61,7 +61,9 @@
                       <a target="_top" class="menu" href="{$ROOT_URL}/">{#Home#}</a> 
                       | <a target="_top" class="menu" href="{$ROOT_URL}/advsearch.php">{#Search#}</a> 
                       | <a target="_top" class="menu" href="{$ROOT_URL}/stations.php">{#Stations#}</a> 
-                      | <a target="_top" class="menu" href="{$ROOT_URL}/playlist.php">{#Playlist#}</a>
+                      {if $loggedIn}
+                        | <a target="_top" class="menu" href="{$ROOT_URL}/playlist.php">{#Playlist#}</a>
+                      {/if}
                       {if $IS_EDITOR} | <a target="_top" class="menu" href="{$ROOT_URL}/editor.php">{#EditorPage#}</a> {/if} 
                       {if $loggedIn}
                       | <a target="_top" class="menu" href="{$ROOT_URL}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$USERNAME})</a>

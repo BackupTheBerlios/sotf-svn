@@ -34,7 +34,10 @@ INSTALLATION
   web server.
 
 - Copy node/www/config.inc.php.template into node/www/config.inc.php ,
-  and edit it according to your local settings.
+  and edit it according to your local settings. 
+  IMPORTANT: The nodeId is a number between 1 and 999. You should ask
+  the approval for your node id from the node network, in case of node
+  id clash you have to reinstall the database!
 
 - Run node/www/install/install.php from your browser.
 
@@ -59,7 +62,10 @@ We strongly suggest to set register_globals off in PHP.
 Uploading large audio files to the node via web will not work if you
 don't raise upload_max_filesize and post_max_size in PHP!
 
-You can set the session timeout for logged in users in php.ini.
+User sessions expire after the time defined for PHP, and users have to
+log in again! You can set the session timeout for logged in users in
+php.ini or in Apache via httpd.conf or .htaccess files. See
+session.cookie_lifetime and session.gc_maxlifetime in PHP manual.
 
 It is not recommended to put this directory structure under the root
 directory of the web server (e.g. htdocs), because then anyone might

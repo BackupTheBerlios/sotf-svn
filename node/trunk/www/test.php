@@ -1,17 +1,13 @@
 <?php
 
-echo 8 % 2;
-
-exit;
-
-
 require("init.inc.php");
 
 require_once($config['classdir'] . "/rpc_Utils.class.php");
 
 $rpc = new rpc_Utils;
 $rpc->debug = true;
-$response = $rpc->call($config['rootUrl'] . "/xmlrpcServer.php", 'sotf.cv.get', array('topics',1,1));
+//$response = $rpc->call($config['rootUrl'] . "/xmlrpcServer.php", 'sotf.cv.listnames', '');
+$response = $rpc->call($config['rootUrl'] . "/xmlrpcServer.php", 'sotf.cv.get', array('topics',1,'fr'));
 print "<pre>";
 print_r($response);
 print "</pre>";

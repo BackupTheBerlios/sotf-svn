@@ -42,7 +42,7 @@ $config['adminEmail'] = "nobody@nowhere.com";
 // NODE SETUP --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-// id (positive integer) of this node in the node network: you should negotiate this with others in the network
+// id (between 1-999) of this node in the node network: you should negotiate this with others in the network
 // otherwise choose a random number (later connecting to node network is impossible if this id is in use there)
 $config['nodeId'] = "";
 

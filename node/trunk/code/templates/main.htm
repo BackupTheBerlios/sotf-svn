@@ -75,7 +75,9 @@
                       | <a class="menu" href="{$ROOT_URL}/advsearch.php">{#Search#}</a> 
                       | <a class="menu" href="{$ROOT_URL}/stations.php">{#Stations#}</a> 
                       | <a class="menu" href="{$ROOT_URL}/topics.php">{#Topics#}</a> 
-                      | <a target="_top" class="menu" href="{$ROOT_URL}/playlist.php">{#Playlist#}</a>
+                      {if $loggedIn}
+                        | <a target="_top" class="menu" href="{$ROOT_URL}/playlist.php">{#Playlist#}</a>
+                      {/if}
                       {if $IS_EDITOR} | <a class="menu" href="{$ROOT_URL}/editor.php">{#EditorPage#}</a> {/if} 
                       {if hasPerm('node', 'change', 'authorize') } | <a class="menu" href="{$ROOT_URL}/admin.php">{#AdminPage#}</a> {/if}
                       {if $loggedIn}

@@ -319,6 +319,10 @@ class sotf_Repository {
 	 return $this->db->getAll("SELECT sotf_topics.*, tt.* FROM sotf_topic_tree_defs LEFT JOIN sotf_topics ON sotf_topics.topic_id = sotf_topic_tree_defs.id LEFT JOIN sotf_topic_trees tt ON sotf_topic_tree_defs.tree_id=tt.tree_id WHERE sotf_topics.language='$language' AND sotf_topic_tree_defs.supertopic=0");
   }
 
+  function listTrees() {
+	 return $this->db->getAll("SELECT * FROM sotf_topic_trees");
+  }
+
   /** return a topic tree */
   function getTree($treeId, $language, $withCounts = false) {
     $supertopics = $this->db->getCol("SELECT DISTINCT supertopic FROM sotf_topic_tree_defs WHERE tree_id='$treeId'");
@@ -403,23 +407,37 @@ class sotf_Repository {
    ************************************************/
 
   function getCVocabularyNames() {
-    // TODO: make this properly: check which languages are available
-    return array(
-                 array("roles","","en"),
-                 array("genres","","en"),
-                 array("topics","1","en")
-                 );
+	 global $sotfVars;
+	 // avail langs are stored in sotf_vars and refreshed by cron
+	 // roles
+	 $langs = explode(',', $sotfVars->get('roles_langs', 'en'));
+	 foreach($langs as $l) {
+		$retval[] = array("roles","",$l);
+	 }
+	 // genres
+	 $langs = explode(',', $sotfVars->get('genres_langs', 'en'));
+	 foreach($langs as $l) {
+		$retval[] = array("genres","",$l);
+	 }
+	 // subject trees
+	 $trees = $this->listTrees();
+	 foreach($trees as $t) {
+		$langs = explode(',', $t['languages']);
+		foreach($langs as $l) {
+		  $retval[] = array("topics", $t['tree_id'], $l);
+		}
+	 }
+	 return $retval;
   }
 
   /** type=(topics,roles,genres) */
   function getCVocabulary($type, $name, $language) {
     if($type=='topics') {
-      // TODO: select lang and topic tree!!
-      $retval = $this->getTree(1, 'en');
+      $retval = $this->getTree($name, $language);
     } elseif($type=='roles') {
-      $retval = $db->getAll("SELECT role_id AS id, name FROM sotf_role_names WHERE language='$language'");
+      $retval = $this->db->getAll("SELECT role_id AS id, name FROM sotf_role_names WHERE language='$language'");
     } elseif($type=='genres') {
-      $retval = $db->getAll("SELECT genre_id AS id, name FROM sotf_genres WHERE language='$language'");
+      $retval = $this->db->getAll("SELECT genre_id AS id, name FROM sotf_genres WHERE language='$language'");
     } else {
       logError("Unknown getCVocabulary request type: $type");
       return "Unknown getCVocabulary request type: $type";
