@@ -62,9 +62,10 @@ if($save || $finish || $finishpublish) {
         continue;
       }
     } elseif($type=='date') {
-      $value = sotf_Utils::getParameter($param . 'Year') . '-'
-        . sotf_Utils::getParameter($param . 'Month') . '-'
-        . sotf_Utils::getParameter($param . 'Day');
+      if (sotf_Utils::getParameter($param . '_radio1') != "unselected")
+	      $value = sotf_Utils::getParameter($param . 'Year') . '-'
+	        . sotf_Utils::getParameter($param . 'Month') . '-'
+	        . sotf_Utils::getParameter($param . 'Day');
     }
     $prg->set($param, $value);
   }

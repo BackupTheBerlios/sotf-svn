@@ -30,7 +30,7 @@ if($sync) {
   $nid = sotf_Utils::getParameter('nodeid');
   $neighbour = sotf_Neighbour::getById($nid);
   $neighbour->sync(true);
-  $page->redirect("admin.php#network");
+  //$page->redirect("admin.php#network");
   exit;
 }
 

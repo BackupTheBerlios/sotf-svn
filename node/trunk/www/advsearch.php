@@ -82,7 +82,6 @@ for ($i=0; $i < $max; $i++)			//go through all the values on the form
 }
 $advsearch->sotf_AdvSearch($SQLquery);			//set the inner variables of the class as well
 
-
 if($add)									////add term button pressed
 {
 	//nagyon kell figyelni a speci karektereket, nehogy SQL parancsot tegyen bele

@@ -67,7 +67,7 @@ class sotf_NodeObject extends sotf_Object {
 	 parent::update();
    if(!$this->lastChange)
      $this->lastChange = $this->db->getTimestampTz();
-	 $this->db->query("UPDATE sotf_node_objects SET last_change='$this->lastChange' WHERE id='" . $this->id . "'");
+	 $this->db->query("UPDATE sotf_node_objects SET last_change='$this->lastChange', arrived=CURRENT_TIMESTAMP WHERE id='" . $this->id . "'");
   }
 
   function delete() {
@@ -99,7 +99,7 @@ class sotf_NodeObject extends sotf_Object {
     // an ordering in which objects should be retrieved because of foreign keys
     $tableOrder = "no,co,st,se,pr,ri,ed,of,mf,li,td,tt,to,pt,ge,ro,rn,sr,de,ra,re,sx";
     if($date)
-      $whereClause .= "AND arrived >= '$date'";
+      $dateClause .= "AND arrived >= '$date'";
     $objects1 = $db->getAll("SELECT * FROM sotf_node_objects WHERE node_id != '$remoteNode' $dateClause ORDER BY strpos('$tableOrder', substring(id, 4, 2)), id");
     //debug("OBJECTS__1", $objects);
     $objects = array();
@@ -122,22 +122,29 @@ class sotf_NodeObject extends sotf_Object {
   function saveModifiedObjects($objects) {
     global $repository;
     $updatedObjects = array();
-    reset($objects);
-    while(list(,$objData) = each($objects)) {
-      debug("saving modified object", $objData['id']);
-      $tablename = $repository->getTable($objData['id']);
-      $obj = new sotf_NodeObject($tablename, $objData['id'], $objData['data']);
-      $obj->lastChange = $objData['last_change'];
-      $obj->nodeId = $objData['node_id'];
-      if($obj->saveReplica()) {
-        $updatedObjects[] = $objData['id'];
-        // handle deletions
-        if($tablename == 'sotf_deletions') {
-          $delId = $obj->get('del_id');
-          debug("deleting object", $delId);
-          $obj = $repository->getObject($delId);
-          if($obj)
-            $obj->delete();
+    if(count($objects) > 0) {
+      reset($objects);
+      while(list(,$objData) = each($objects)) {
+        debug("saving modified object", $objData['id']);
+        $tablename = $repository->getTable($objData['id']);
+        $obj = new sotf_NodeObject($tablename, $objData['id'], $objData['data']);
+        $obj->lastChange = $objData['last_change'];
+        $obj->nodeId = $objData['node_id'];
+        reset($obj->data);
+        // url decoding and else
+        while(list($k,$v) = each($obj->data)) {
+          $obj->data[$k] = urldecode($v);
+        }
+        if($obj->saveReplica()) {
+          $updatedObjects[] = $objData['id'];
+          // handle deletions
+          if($tablename == 'sotf_deletions') {
+            $delId = $obj->get('del_id');
+            debug("deleting object", $delId);
+            $obj = $repository->getObject($delId);
+            if($obj)
+              $obj->delete();
+          }
         }
       }
     }

@@ -60,12 +60,13 @@ class sotf_Neighbour extends sotf_Object {
   /** private */
   function log($console, $msg) {
     global $page;
-    logError($msg);
+    debug($msg);
     if($console)
       $page->addStatusMsg($msg);
   }
 
   function sync($console = false) {
+    set_time_limit(300);
     global $page;
     if(!$console && $this->get('use_for_outgoing')=='f') {
       debug("node $this->id is not used for outgoing sync");
@@ -79,13 +80,16 @@ class sotf_Neighbour extends sotf_Object {
       $url = substr($url, 0, -1);
     // collect local data to send
     $localNode = sotf_Node::getLocalNode();
-    debug("localNode", $localNode);
+    //debug("localNode", $localNode);
+    debug("neighbour", $this);
     $localNodeData = $localNode->getAll();
     // check if url is correct...
     $localNodeData['url'] = $rootdir;
-    $objs = array($this->get('last_sync'),
-                  $localNodeData,
-                  sotf_NodeObject::getModifiedObjects($remoteId, $this->get('last_sync')));
+    $lastSync = $this->get('last_sync');
+    debug("last sync", $lastSync);
+    $modifiedObjects = sotf_NodeObject::getModifiedObjects($remoteId, $lastSync);
+    debug("number of sent objects", count($modifiedObjects));
+    $objs = array($lastSync, $localNodeData, $modifiedObjects);
     $rpc = new rpc_Utils;
     $response = $rpc->call($url . '/xmlrpcServer.php', 'sotf.sync', $objs);
     // error handling
@@ -95,9 +99,10 @@ class sotf_Neighbour extends sotf_Object {
       return;
     }
     // save received data
+    debug("number of received objects", count($response));
     if(count($response) > 0) {
-      $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects);
-      $this->log($console, "number of updatd objects", count($updatedObjects));
+      $updatedObjects = sotf_NodeObject::saveModifiedObjects($response);
+      $this->log($console, "number of updated objects: " .count($updatedObjects));
     }
     
     // save last_sync
@@ -108,6 +113,7 @@ class sotf_Neighbour extends sotf_Object {
   }
 
   function syncResponse($lastSync, $nodeData, $objects) {
+    set_time_limit(300);
     // save modified objects
     $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects);
     debug("number of updatd objects", count($updatedObjects));

@@ -74,7 +74,7 @@ class sotf_Object {
 		reset($this->data);
 		while(list($key,$val)=each($this->data)){
 			if($key != $this->idKey && !in_array($key, $this->binaryFields)) {
-				if($val === NULL){
+				if($val === NULL || $val == ''){
 					$my_sql[] = $key . " = NULL";
 				}else{
 					$my_sql[] = $key . " = '" . sotf_Utils::magicQuotes($val) . "'";

@@ -70,12 +70,10 @@ class sotf_AdvSearch
 		$terms = explode("|A", $serial);
 		$max = count($terms);
 		$term = explode("|B", $terms[0]);		//sort order is the first array
-		
 		$pos1 = strpos($term[0], " DESC");			//SORT 1
 		$pos2 = strpos($term[1], " DESC");			//SORT 2
-		if ($pos1) $term[0] = substr($term[0], 0, $pos);		//remove DESC
-		if ($pos2) $term[1] = substr($term[1], 0, $pos);		//remove DESC
-		
+		if ($pos1) $term[0] = substr($term[0], 0, $pos1);		//remove DESC
+		if ($pos2) $term[1] = substr($term[1], 0, $pos2);		//remove DESC
 		if (array_key_exists($term[0], $this->getOrderFields()) AND array_key_exists($term[1], $this->getOrderFields())) $this->SetSortOrder($term[0], $term[1]);	//SetSortOrder
 		else $this->SetSortOrder();		//set default
 
