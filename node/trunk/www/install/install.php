@@ -23,6 +23,7 @@ function dbug($msg) {
   error_log($msg,0);
 }
 
+dbug("-------------------------");
 dbug("install.php started");
 
 function PrintTitle($number)		//'header' af all tests
@@ -52,7 +53,7 @@ function RunTest($number, $testname, $required = -1)		//returns if or not to run
 		$retval = (($install_run_test == "Run test ".$number) OR ($install_test_result[$number] == NULL));		//if button pressed or no results (not run yet)
 	else				//if a pervious test needs to be OK
 		$retval = ( ($install_run_test == "Run test ".$number) OR (($install_test_result[$number] == NULL) AND ($install_color[$required] == $install_green)) );	//same but the other test must be OK
-	error_log("RunTest $number: $retval", 0);
+   //dbug("RunTest $number: $retval");
 	return $retval;
 }
 
@@ -489,7 +490,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 //////////////////////////Test 6
 
 	$id = 6;	
-	if (RunTest($id, "DB connection to 'node'", 5))		//////////////////////////Test 5 should be OK to run this test
+	if (RunTest($id, "DB connection to 'node'", 5) && !$install_createdb)		//////////////////////////Test 5 should be OK to run this test
 	{
 	  dbug("TEST 6");
 
