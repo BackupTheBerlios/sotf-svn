@@ -126,6 +126,12 @@ class sotf_AdvSearch
 		$query.=" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id";
 		$query.=" LEFT JOIN sotf_series ON sotf_programmes.series_id = sotf_series.id";
 		$query.=" LEFT JOIN sotf_prog_rating ON sotf_programmes.id = sotf_prog_rating.id";
+		// added the topics as left join for performance reasons
+		if ($this->SQLquery[$i][1] == "topic")
+		{
+			$query .= "LEFT JOIN sotf_prog_topics ON sotf_programmes.id = sotf_prog_topics.prog_id";
+			$query .= "LEFT JOIN sotf_topics ON sotf_prog_topics.topic_id = sotf_topics.topic_id";
+		}
 		$query.=") as programmes WHERE published = 't'";
 		$max = count($this->SQLquery);					//all rows of the advsearch
 		for($i = 0; $i < $max ;$i++)		//go through all terms
@@ -146,10 +152,8 @@ class sotf_AdvSearch
 			}
 			elseif ($this->SQLquery[$i][1] == "topic")
 			{
-				$query .= " (programmes.id = sotf_prog_topics.prog_id".
-					" and sotf_prog_topics.topic_id = sotf_topics.topic_id".
-					" and sotf_topics.language = '$lang'".
-					" and sotf_topics.topic_name";
+				$query .= " (".
+					" programmes.topic_name";
 				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'");
 				$query .= ")";
 			}
