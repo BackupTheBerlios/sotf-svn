@@ -41,12 +41,12 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	}
 	
 	function delete() {
-	  if(!$this->isLocal())
-		 raiseError("operation_for_local_objects_only");
-	  // delete files from the repository
-	  debug("deleting: ", $this->getDir());
-	  sotf_Utils::erase($this->getDir());
-	  // delete from sql db
+	  if($this->isLocal()) {
+		 // delete files from the repository
+		 debug("deleting: ", $this->getDir());
+		 sotf_Utils::erase($this->getDir());
+		 // delete from sql db
+	  }
 	  return parent::delete();
 	}
 
