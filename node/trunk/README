@@ -54,3 +54,6 @@ After the installation completed you may want to protect the
 node/www/install subdir from unauthorized access.
 
 We strongly suggest to set register_globals off in PHP.
+
+Uploading large audio files to the node via web will not work if you
+don't raise upload_max_filesize and post_max_size in PHP!

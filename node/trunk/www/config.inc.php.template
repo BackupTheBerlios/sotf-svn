@@ -4,13 +4,14 @@
 // SQL SETUP --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-// the sql connection URL
+// the sql connection parameters for the node database
 $nodeDbUser = 'user';
 $nodeDbHost = 'host';
 $nodeDbPort = '5432';
 $nodeDbPasswd = '';
 $nodeDbName = 'node';
 
+// the sql connection parameters for the SelfAdmin database
 $userDbUser = 'user';
 $userDbHost = 'host';
 $userDbPort = '5432';
@@ -28,11 +29,12 @@ $mailFromAddress = "nobody@nowhere.com";
 // NODE SETUP --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-// id of this node in the node network: you should negotiate this with others in the network
+// id (positive integer) of this node in the node network: you should negotiate this with others in the network
+// otherwise choose a random number (later connecting to node network is impossible if this id is in use there)
 $nodeId = "";
 
-// the short name of this node in the network
-$nodeName = "XXd";
+// the short name of this node in the network, example: HU5, AT3
+$nodeName = "XYZ";
 
 // whether imported files are published by default
 $publishxbmf = false;
@@ -56,7 +58,7 @@ $userDirs = "$basedir/users";
 // the FTP URL for user directories (defined above), with a trailing slash
 $userFTP = 'ftp://foo.foo.org:8989/';
 
-// the directory where incoming programmes (XBMF) are from stations
+// the directory where incoming programmes (XBMF) arrive from stations
 $xbmfInDir = "$basedir/incoming";
 
 // where PEAR files are located
@@ -83,7 +85,8 @@ $xmlrpcdir = $basedir . '/code/xmlrpc';
 // path to PHP scripts and images
 $wwwdir = $basedir . '/www';
 
-// The URL prefix for code/www subdir
+// The URL prefix for code/www subdir 
+// i.e. http://<your-host>/$localPrefix will open the starting/home page of the node
 $localPrefix = '/node/www';
 
 //////////////////////////////////////////////////////////////////////////
