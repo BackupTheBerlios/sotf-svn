@@ -94,9 +94,8 @@ class sotf_Neighbour extends sotf_Object {
   var $objectsPerRPCRequest = 20;
 
   function sync($console = false) {
-	global $db;
+	 global $db, $page, $config;
 
-	 global $page;
 	 $remoteId = $this->get('node_id');
 	 if(!$console && $this->get('use_for_outgoing') != 't') {
 		debug("node $remoteId is not used for outgoing sync");
@@ -114,11 +113,14 @@ class sotf_Neighbour extends sotf_Object {
 		$url = substr($url, 0, -1);
 	 // collect local data to send
 	 $localNode = sotf_Node::getLocalNode();
-	 //debug("localNode", $localNode);
-	 debug("neighbour", $this);
-	 $localNodeData = $localNode->getAll();
 	 // check if url is correct...
-	 $localNodeData['url'] = $config['rootUrl'];
+	 if($localNode->get('url') != $config['rootUrl']) {
+		$localNode->set('url', $config['rootUrl']);
+		$localNode->update();
+	 }
+	 //debug("localNode", $localNode);
+	 //debug("neighbour", $this);
+	 $localNodeData = $localNode->getAll();
 	 // calculate chunking
 	 $thisChunk = 1;
 	 // do XML-RPC conversation
