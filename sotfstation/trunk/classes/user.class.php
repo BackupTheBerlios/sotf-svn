@@ -146,7 +146,7 @@
 		 */
 		function setAll($props){
 			if(is_array($props)){
-				$this->user_props = $props;
+				$this->user_props = array_merge($this->user_props,$props);
 				return true;
 			}
 			return false;

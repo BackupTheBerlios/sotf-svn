@@ -67,6 +67,9 @@
 			
 				//get additional local user related acces level data
 				$_SESSION['USER']->set("per_page",20);
+				
+				//get access permissions
+				$_SESSION['USER']->setAll($db->getRow("SELECT edit_series, edit_station, edit_users FROM user_map LEFT JOIN user_access ON (user_map.access_id = user_access.id) WHERE user_map.auth_id = '$res[auth_id]'",DB_FETCHMODE_ASSOC));
 			
 				//log info (mark the user that he logged in)
 				$myLog->add($res['auth_id'],0);

@@ -31,7 +31,8 @@
 		'14'	=> 'Cannot edit user access status, The specified user is the last admin of the station, and hence cannot be edited!',
 		'15'	=> 'Please enter a title for the series!',
 		'16'	=> 'Please enter a description for the series!',
-		'17'	=> 'Programme end time must be greater than programme start time!'
+		'17'	=> 'Programme end time must be greater than programme start time!',
+		'403'	=> 'You may not view this section of the Station Management Software! If you feel that this is a mistake, then please contact the Station Administrator'
 	);
 	
 	//section names, used for building the navigation bar
@@ -53,7 +54,10 @@
 	);
 	
 	$STRING = array(
-		'NEWUSER'	=> 'Access Password To Station'
+		'NEWUSER'	=> 'Access Password To Station',
+		'NA'			=> 'Needs Assistance',
+		'PP'			=> 'Pre Produced',
+		'NONE'		=> 'None'
 	);
 	
 	$CONFIRM = array(

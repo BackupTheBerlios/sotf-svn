@@ -32,21 +32,27 @@
                   <td nowrap><input name="programme_title" type="text" class="myinput" id="programme_title" maxlength="255" value="{$submit_programme_title}"></td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap> 
-                    <div align="right">*{#start_time#}:</div></td>
+                  <td nowrap> <div align="right">*{#start_date#}:</div></td>
                   <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=sd 
-                    time=$stime} {html_select_time time=$stime display_seconds=false prefix=sd} </td>
+                    time=$stime}</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*{#end_time#}:</div></td>
-                  <td nowrap>{html_select_date end_year=2010 field_order=DMY time=$time 
-                    prefix=ed} {html_select_time display_seconds=false time=$time 
-                    prefix=ed} </td>
+                  <td nowrap> 
+                    <div align="right">*{#start_time#}:</div></td>
+                  <td nowrap>{html_select_time time=$stime display_seconds=false 
+                    prefix=sd}</td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
                   <td nowrap> 
+                    <div align="right">*{#end_time#}:</div></td>
+                  <td nowrap>{html_select_time display_seconds=false time=$time 
+                    prefix=ed} ({#end_time_comm#})</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap> 
                     <div align="right">*{#spec_needs#}:</div></td>
-                  <td nowrap><select name="special_needs" id="special_needs">
+                  <td nowrap> 
+                    <select name="special_needs" id="special_needs">
                      {html_options options=$special_needs selected=$submit_special_needs}
                     </select></td>
                 </tr>

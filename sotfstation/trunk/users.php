@@ -17,7 +17,17 @@
 	include("init.inc.php");											# include the global framwork
 	include("classes/pageSplit.class.php");				# include the page splitting utility
 	$myNav->add($SECTION[USERS],'users.php');			# add entry to Navigation Bar Stack
+	authorize('edit_users');											# check access rights
 	
+	
+	/**
+	 * redirect()
+	 * 
+	 * cleans up GET parameters for redirect purposes.
+	 * 
+	 * @param $destination (string)
+	 * @return 
+	 */
 	function redirect($destination='index.php'){
 		global $_GET;
 		

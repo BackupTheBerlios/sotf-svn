@@ -1,6 +1,16 @@
 Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
 
 ************************************************************************************************
+ 21.11.2002
+************************************************************************************************
+
+Security Patch, now the access rights are distributed amongst users. Unauthorized access window
+introduced. Read Only mode now works fine, all the POST and GET data being simply reset and
+the user notified of the change. The programme data can now be viewed per request, all related
+data such as series and other programmes in the series is also shown.
+
+
+************************************************************************************************
  20.11.2002
 ************************************************************************************************
 

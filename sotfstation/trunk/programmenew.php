@@ -14,10 +14,25 @@
 	include("init.inc.php");												# include the global framwork
 	$myNav->add($SECTION[INSIDE],'inside.php');			# add entry to Navigation Bar Stack
 	$myNav->add($SECTION[ADDPROG],'usersnew.php');	# add entry to Navigation Bar Stack
+	authorize('edit_station');											# check access rights
 	
 	//work around POSTED data
 	if($_POST['Submit']){
-		$_POST = clean($_POST);				# clean bad inputs
+		$_POST = clean($_POST);												# clean bad inputs
+		
+		//figure out if times lie in the same day or not...
+		if(($_POST[edHour]>$_POST[sdHour]) or (($_POST[edHour] == $_POST[sdHour]) and ($_POST[edMinute]>$_POST[sdMinute]))){			
+			// if the end hour is after the start hour, then this is the same day, I presume there are no shows that take more than 24 hours
+			$_POST[edYear] = $_POST[sdYear];
+			$_POST[edMonth] = $_POST[sdMonth];
+			$_POST[edDay] = $_POST[sdDay];
+		}else{
+			//show must overlap through midnight!
+			$next_day = mktime(1,1,1,$_POST['sdMonth'],$_POST['sdDay'],$_POST['sdYear']) + 60*60*24;	# create +1 day timestamp
+			$_POST[edYear] = date("Y",$next_day);		# generate fake POST data ;)
+			$_POST[edMonth] = date("m",$next_day);
+			$_POST[edDay] = date("d",$next_day);
+		}
 		
 		########## check for errors ##########
 		//check if fields filled in
@@ -69,7 +84,7 @@
 	
 	//assign default data to drop down boxes
 	$smarty->assign(array(
-													"special_needs" => array(""=>"None","na"=>"Needs Assistance","pp"=>"Pre Produced"),
+													"special_needs" => array(""=>$STING['NONE'],"na"=>$STING['NA'],"pp"=>$STING['PP']),
 													"series_owner" => $db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name")
 												));
 												

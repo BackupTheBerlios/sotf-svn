@@ -13,6 +13,7 @@
 	* This is a popup from which you will be able to edit existing user's data
 	************************/
 	include("init.inc.php");	# include the global framwork
+	authorize('edit_users');	# check access rights
 	
 	//process submit
 	if($_POST['Submit']){

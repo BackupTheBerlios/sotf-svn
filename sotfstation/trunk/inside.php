@@ -17,6 +17,7 @@
 	include("classes/calendar.class.php");				# calendar handler
 	include("classes/dayview.class.php");					# current day calendar handler
 	$myNav->add($SECTION[INSIDE],'index.php');		# add entry to Navigation Bar Stack
+	authorize('edit_station');										# check access rights
 	
 	//fix missing date (if any)
 	if(!$_GET['date']){

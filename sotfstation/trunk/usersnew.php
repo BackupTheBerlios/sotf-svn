@@ -19,6 +19,7 @@
 	include("classes/sendMail.class.php");					# include the mail sender
 	$myNav->add($SECTION[USERS],'users.php');				# add entry to Navigation Bar Stack
 	$myNav->add($SECTION[USERSNEW],'usersnew.php');	# add entry to Navigation Bar Stack
+	authorize('edit_users');												# check access rights
 	
 	/**
 	 * random_char() - will return a random charachter
