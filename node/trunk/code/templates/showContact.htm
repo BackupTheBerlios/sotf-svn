@@ -69,7 +69,7 @@
                 <tr class="list2">
                   <td colspan="2">
                     {if $NUMPROGS gt 0}
-                    <a target="progs" href="showContactProgs.php?id={$CONTACT_ID}">{$PROGS}</a>
+                    <a target="progs" href="{$ROOT_URL}/showContactProgs.php/{$CONTACT_ID}">{$PROGS}</a>
                     {else}
                     {$PROGS}
                     {/if}
@@ -93,7 +93,7 @@
 
 <form>
     {if hasPerm($CONTACT_ID,'change') }
-    <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="redir(this.form, 'editContact.php?id={$CONTACT_ID}')">
+    <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="redir(this.form, '{$ROOT_URL}/editContact.php?id={$CONTACT_ID}')">
       {/if}
     <input class="action" type="button" onClick="window.close()" value="{#close#}">
 </form>

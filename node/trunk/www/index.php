@@ -11,7 +11,7 @@ require("init.inc.php");
 require($config['classdir'] . "/sotf_AdvSearch.class.php");
 
 if($_REQUEST['select_station']) {
-  $page->redirect("showStation.php?stationid=" . $_POST['station']);
+  $page->redirect($config['localPrefix'] . "/showStation.php/" . $_POST['station']);
 }
 
 

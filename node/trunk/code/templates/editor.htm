@@ -122,9 +122,9 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
                 <br><font size="-1">{$item.abstract|truncate:200}</font>
       </td>
       <td>
-                <a href="showStation.php?stationid={$item.station_id}">{$item.station}</a>
+                <a href="showStation.php/{$item.station_id}">{$item.station}</a>
                 {if $item.series_id}
-                <br /><a href="showSeries.php?seriesid={$item.series_id}">{$item.series}</a>
+                <br /><a href="showSeries.php/{$item.series_id}">{$item.series}</a>
                 {/if}
       </td>
       <td nowrap>{#entry_d#}:&nbsp;{$item.production_date|default:"&nbsp;"}

@@ -1,5 +1,10 @@
 <?php
 
+echo 8 % 2;
+
+exit;
+
+
 require("init.inc.php");
 
 require_once($config['classdir'] . "/rpc_Utils.class.php");

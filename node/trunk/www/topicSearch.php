@@ -28,7 +28,7 @@ $query="SELECT * FROM (".
 
 $max = $db->getOne("SELECT count(*) FROM (".$query.") as count");	//get the number of results
 
-$limit = $page->splitList($max, "$php_self?ID=$ID");
+$limit = $page->splitList($max, "?ID=$ID");
 //$result = $db->limitQuery($query, $limit["from"], $limit["maxresults"]);				//get results with limit
 $result = $db->getAll($query.$limit["limit"]);
 

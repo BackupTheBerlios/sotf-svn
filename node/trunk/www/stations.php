@@ -19,13 +19,13 @@ $delete = sotf_Utils::getParameter('delete');
 
 if ($delete) {
   checkPerm('node','delete');
-  $st = & new sotf_Station($station);
+  $st = & $repository->getObject($station);
   $st->delete();
   $page->addStatusMsg('delete_ok');
   $page->redirect($_SERVER["PHP_SELF"]);
 }
 
-$limit = $page->splitList(sotf_Station::countAll(), "$php_self");
+$limit = $page->splitList(sotf_Station::countAll(), $scriptUrl);
 
 //$result = $db->limitQuery($query, $limit["from"], $limit["maxresults"]);				//get results with limit
 

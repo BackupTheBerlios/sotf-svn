@@ -11,10 +11,10 @@
         </td>
         <td class="title2" width="10%" align="right" valign="bottom">
           {if hasPerm($STATION_ID,'change','authorize') }
-          <input class="action" type="button" name="b1" value="{#edit_station#}" onClick="redir(this.form, 'editStation.php?stationid={$STATION_ID}')">
+          <input class="action" type="button" name="b1" value="{#edit_station#}" onClick="redir(this.form, '{$ROOT_URL}/editStation.php?stationid={$STATION_ID}')">
             {/if}
           {if hasPerm($STATION_ID, 'add_prog')}
-            <input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, 'editor.php?&stationid={$STATION_ID}')" />
+            <input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, '{$ROOT_URL}/editor.php?&stationid={$STATION_ID}')" />
           {/if}
         </td>
       </tr>
@@ -51,14 +51,14 @@
                     {$item.role_name}
                   </td>
                   <td>
-                    <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">{$item.contact_data.name}</a>
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400)">{$item.contact_data.name}</a>
                     {if $item.contact_data.url}<br>(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
                     {elseif $item.contact_data.email}<br>(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
                     {/if}
                   </td>
                   <td>
                     {if $item.contact_data.icon }{strip}
-                    <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400)">
                       <img height="50" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
                     </a>{/strip}
                     {/if}
@@ -70,7 +70,7 @@
 
               {if hasPerm($STATION_ID,'create') }
               <p align="right">
-              <input class="action" type="button" name="b1" value="{#add_series#}" onClick="popup('createSeries.php?stationid={$STATION_ID}','{#series#}',550,550,true)" />
+              <input class="action" type="button" name="b1" value="{#add_series#}" onClick="popup('{$ROOT_URL}/createSeries.php?stationid={$STATION_ID}','{#series#}',550,550,true)" />
               </p>
               {/if}
             </td>
@@ -101,17 +101,17 @@
           <tr valign="top">
             <td width="1%">{if $item.icon }<img src="{$CACHE_URL}/{$item.id}.png">{else}<img src="{$IMAGE_URL}/noicon.png">{/if}</td>
             <td width="98%">
-              <a class="goto_object" href="showSeries.php?seriesid={$item.id}">{$item.title}</a> ({$item.count})
+              <a class="goto_object" href="{$ROOT_URL}/showSeries.php/{$item.id}">{$item.title}</a> ({$item.count})
               {if $item.description}
               <div class="abstract">{$item.description|truncate:300}</div>
               {/if}
             </td>
             <td width="1%" valign="bottom">
               {if hasPerm($item.id, 'change', 'authorize')}
-              <br/><input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
+              <br/><input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('{$ROOT_URL}/editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
                   {/if}
               {if hasPerm($item.id,'delete')}
-              <input class="action" type="button" name="b1" value="{#delete_series#}" onClick="if(deleteConfirm('{#delete_series_confirm#}'))redir(this.form, 'showStation.php?stationid={$STATION_ID}&delseries=1&seriesid={$item.id}')" />
+              <input class="action" type="button" name="b1" value="{#delete_series#}" onClick="if(deleteConfirm('{#delete_series_confirm#}'))redir(this.form, '{$PHP_SELF}?delseries=1&seriesid={$item.id}')" />
                 {/if}
             </td>
           </tr>
@@ -149,13 +149,13 @@
           <tr valign="top" class="{cycle name="progs"}">
             <td width="1%">
               {if $item.icon }
-                 <img src="{$CACHE_URL}/{$item.id}.png">
+                 <a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$CACHE_URL}/{$item.id}.png"></a>
               {else}
-                 <img src="{$IMAGE_URL}/noicon.png">
+                 <a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$IMAGE_URL}/noicon.png"></a>
               {/if}
             </td>
             <td width="98%">
-              <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> ({$item.entry_date})
+              <a class="goto_object" href="{$ROOT_URL}/get.php/{$item.id}">{$item.title}</a> ({$item.entry_date})
               {if $item.alternative_title}<br>{$item.alternative_title}{/if}
               {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
               {if $item.abstract}
@@ -164,10 +164,10 @@
             </td>
             <td width="1%" valign="bottom">
               {if hasPerm($item.id, 'change', 'authorize')}
-              <input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, 'editMeta.php?id={$item.id}')" />
+              <input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, '{$ROOT_URL}/editMeta.php?id={$item.id}')" />
                   {/if}
               {if hasPerm($item.id,'delete')}
-              <input class="action" type="button" name="b1" value="{#delete_prog#}" onClick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, 'showStation.php?stationid={$STATION_ID}&delprog=1&prgid={$item.id}')" />
+              <input class="action" type="button" name="b1" value="{#delete_prog#}" onClick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, '{$PHP_SELF}?delprog=1&prgid={$item.id}')" />
                 {/if}
             </td>
 

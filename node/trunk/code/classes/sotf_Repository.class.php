@@ -94,6 +94,11 @@ class sotf_Repository {
   }
 
   function getObject($objectId, $data='') {
+	 // get from cache if possible
+	 $object = $this->getFromCache($objectId);
+	 if(is_object($object))
+		return $object;
+	 // load it from db
     $tc = substr($objectId, 3,2);
     $class = $this->codeToClass[$tc];
     if($class) {
@@ -104,8 +109,8 @@ class sotf_Repository {
     }
     if( count($obj->getAll())==0 )
       return NULL;
-    else
-      return $obj;
+    $this->putInCache($obj);
+	 return $obj;
   }
 
   /** Tells if the given object id is for one of the global controlled vocabularies (roles, genres, topics). */

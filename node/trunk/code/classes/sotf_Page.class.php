@@ -295,33 +295,57 @@ class sotf_Page
 	/*
 	 * 1. param is the maximal number of results
 	 * 2. param is the url from the page
-	 * 3. anchor, where to go bach after reload
+	 * 3. anchor, where to go back after reload
 	 * return value is an associative array with 4 fields: from, to, maxresults, limit (string to the end of a query to limit a pgsql query)
 	*/
 	function splitList($rp_count, $rp_url, $anchor = "")
 	{
 		global $smarty, $sotfVars;
 		$rp_maxresults = $sotfVars->get("hitsPerPage", 10);		//display maximal so many results
-		//$rp_maxresults = 2;
-		$rp_from = sotf_Utils::getParameter('rp_from');
-		
-		$rp_button = sotf_Utils::getParameter('rp');
-	
-		if ($rp_button == "rp_first") $rp_from = 1;			//if first button pressed
-		if ($rp_button == "rp_prev") $rp_from -= $rp_maxresults;		//if prev button pressed
-		if ($rp_button == "rp_next") $rp_from += $rp_maxresults;		//if next button pressed
-		if ($rp_button == "rp_last") $rp_from = $rp_count - ($rp_count % $rp_maxresults) + 1;	//if last button pressed
-		
+		$rp_maxresults = 2;
+
+		$rp_from = sotf_Utils::getParameter('from');
 		if (!isset($rp_from)) $rp_from = 1;			//if first time on page
-		if ($rp_from > $rp_count) $rp_from -= $rp_maxresults;	//if no more results
-		
-		if ($rp_from < 1) $rp_from = 1;		//$from must bee min. 1
-		
+
+		// refresh link
+		$refresh_url = $this->splitListURL($rp_url, $rp_from);
+		if (strpos($refresh_url, "?") === false) {
+			$refresh_url .= "?t=" . time();
+		} else {
+			$refresh_url .= "&t=" . time();
+		}
+		if($anchor)
+			$refresh_url .= '#' . $anchor;
+		$smarty->assign("rp_refresh_url", $refresh_url);
+ 
+		// last item displayed
 		$rp_to = $rp_from + $rp_maxresults - 1;			//set 'to' field
 		if ($rp_to > $rp_count) $rp_to = $rp_count;			//if less then $maxresults
-		
-		if (strpos($rp_url, "?") === false) $rp_url .= "?rp_from=$rp_from";
-		else $rp_url .= "&rp_from=$rp_from";
+
+		if ($rp_from > 1) {
+			// url to first page
+			$smarty->assign("rp_first_url", $this->splitListURL($rp_url, 1, $anchor) );
+
+			// url to prev page
+			$rp_prev =  $rp_from - $rp_maxresults;
+			if($rp_prev >= 1)
+				$smarty->assign("rp_prev_url", $this->splitListURL($rp_url, $rp_prev, $anchor) );
+		}
+
+		$reminder = $rp_count % $rp_maxresults;
+		if($reminder==0)
+			$reminder = $rp_maxresults;
+		$rp_last = $rp_count - $reminder + 1;
+		if ($rp_from < $rp_last) {
+
+			// url to next page
+			$rp_next =  $rp_from + $rp_maxresults;
+			if($rp_next <= $rp_count)
+				$smarty->assign("rp_next_url", $this->splitListURL($rp_url, $rp_next, $anchor) );
+
+			// url to last page
+			$smarty->assign("rp_last_url", $this->splitListURL($rp_url, $rp_last, $anchor) );
+		}
 
 		$smarty->assign("rp_count", $rp_count);
 		$smarty->assign("rp_to", $rp_to);
@@ -338,6 +362,18 @@ class sotf_Page
 		$limit["limit"] = " LIMIT ".$rp_maxresults." OFFSET ".($rp_from - 1);
 		return $limit;
 		//print($query." LIMIT ".$maxresults." OFFSET ".($from - 1))
+	}
+
+	// private function to prepare an URL for prev/next/etc. page
+	function splitListURL($baseUrl, $from, $anchor='') {
+			if (strpos($baseUrl, "?") === false) {
+				$retval = $baseUrl . '/from__' . $from;
+			} else {
+				$retval = $baseUrl . '&from=' . $from;
+			}
+			if($anchor)
+				$retval .= '#' . $anchor;
+			return $retval;
 	}
 
 }

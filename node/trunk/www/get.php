@@ -15,7 +15,7 @@ if($id) {
 
   $smarty->assign('ID', $id);
 
-  $prg = & new sotf_Programme($id);
+  $prg = & $repository->getObject($id);
 
   $page->setTitle($prg->get('title'));
 

@@ -16,7 +16,7 @@
                 <table>
                   <tr>
                     <td>{#station_name#}:</td>
-                    <td><b><a href="showStation.php?stationid={$STATION_ID}">{$STATION}</a></b></td>
+                    <td><b><a href="showStation.php/{$STATION_ID}">{$STATION}</a></b></td>
                   </tr>
                   <tr>
                     <td>{#description#}:</td>
@@ -80,7 +80,7 @@
   <table>
     <tr>
       <td>{#station_name#}:</td>
-      <td><b><a href="showStation.php?stationid={$STATION_ID}">{$STATION}</a></b></td>
+      <td><b><a href="showStation.php/{$STATION_ID}">{$STATION}</a></b></td>
     </tr>
   </table>
 {/if}
@@ -152,7 +152,7 @@
           {cycle name="perms" values="list1,list2" print=false advance=false}
           {foreach item=item from=$SERIES}
           <tr class="{cycle name=perms}">
-            <td><a href="showSeries.php?seriesid={$item.id}">{$item.title}</a></td>
+            <td><a href="showSeries.php/{$item.id}">{$item.title}</a></td>
             <td nowrap>
                 {if hasPerm($item.id, 'change') }
               <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />

@@ -23,7 +23,7 @@ if($pattern) {
   $advsearch = new sotf_AdvSearch();						//create new search object object with this array
 
   $total = $advsearch->simpleSearch($pattern, $language, $station);
-  $limit = $page->splitList($total, $_SERVER["REQUEST_URI"]);
+  $limit = $page->splitList($total, "?pattern=" . urlencode($pattern) . "&language=$language");
   $result = $advsearch->getSimpleSearchResults($limit["from"] , $limit["to"]);
 
   // cache icons for results

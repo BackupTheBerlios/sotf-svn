@@ -7,10 +7,10 @@
       <td align="right" nowrap bgcolor="{#adminBgColor#}">
           <strong>{#admin_tasks#}</strong>
           {if hasPerm('node', 'create') }
-          <input class="action" type="button" name="b1" value="{#create_station#}" onClick="redir(this.form, 'createStation.php')" />
+          <input class="action" type="button" name="b1" value="{#create_station#}" onClick="redir(this.form, '{$ROOT_URL}/createStation.php')" />
           {/if}
           {if hasPerm('node', 'change') }
-          <input class="action" type="button" name="b1" value="{#edit_node_rights#}" onClick="redir(this.form, 'admin.php#perms')" />
+          <input class="action" type="button" name="b1" value="{#edit_node_rights#}" onClick="redir(this.form, '{$ROOT_URL}/admin.php#perms')" />
           {/if}
       </td>
     </tr>
@@ -31,12 +31,12 @@
 	{section name=station loop=$STATIONS }
 		<tr valign="top" class="{cycle}" height="{$ICON_HEIGHT}">
 			<td valign="middle" width="1%">{if $STATIONS[station].icon }
-				<a href="showStation.php?stationid={$STATIONS[station].id}"><img alt="{$STATIONS[station].name} {#logo#}" src="{$CACHE_URL}/{$STATIONS[station].id}.png" border="0"></a>
+				<a href="{$ROOT_URL}/showStation.php/{$STATIONS[station].id}"><img alt="{$STATIONS[station].name} {#logo#}" src="{$CACHE_URL}/{$STATIONS[station].id}.png" border="0"></a>
 			{else} <img src="{$IMAGE_URL}/transp.gif">
 			{/if}
       </td>
         <td width="6">&nbsp;</td>
-			<td><a class="goto_object" href="showStation.php?&stationid={$STATIONS[station].id}">{$STATIONS[station].name}</a> ({$STATIONS[station].numProgs})
+			<td><a class="goto_object" href="{$ROOT_URL}/showStation.php/{$STATIONS[station].id}">{$STATIONS[station].name}</a> ({$STATIONS[station].numProgs})
       {if $STATIONS[station].managers}
           <p>{#managed_by#} {foreach from=$STATIONS[station].managers item=manager}{$manager.name} {/foreach}</p>
       {/if}
@@ -47,13 +47,13 @@
         <td width="6">&nbsp;</td>
         <td width="1%" valign="bottom">
 			{if $STATIONS[station].isLocal and (hasPerm('node','delete') or hasPerm($STATIONS[station].id, 'admin')) }
-              <input class="action" type="button" name="b1" value="{#delete#}" onClick="if(deleteConfirm('{#delete_station_confirm#}'))redir(this.form, 'stations.php?delete=1&station={$STATIONS[station].id}')" />
+              <input class="action" type="button" name="b1" value="{#delete#}" onClick="if(deleteConfirm('{#delete_station_confirm#}'))redir(this.form, '{$ROOT_URL}/stations.php?delete=1&station={$STATIONS[station].id}')" />
 			{/if}
 			{if $STATIONS[station].isLocal and hasPerm($STATIONS[station].id, 'change') }
-              <br/><input class="action" type="button" name="b1" value="{#edit#}" onClick="redir(this.form, 'editStation.php?stationid={$STATIONS[station].id}')" />
+              <br/><input class="action" type="button" name="b1" value="{#edit#}" onClick="redir(this.form, '{$ROOT_URL}/editStation.php?stationid={$STATIONS[station].id}')" />
 			{/if}
 			{if $STATIONS[station].isLocal and hasPerm($STATIONS[station].id, 'add_prog') }
-              <br/><input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, 'editor.php?stationid={$STATIONS[station].id}')" />
+              <br/><input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, '{$ROOT_URL}/editor.php?stationid={$STATIONS[station].id}')" />
 			{/if}
       </td>
 		</tr>

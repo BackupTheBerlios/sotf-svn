@@ -166,6 +166,11 @@ $smarty->show_info_include = $sotfVars->get('debug_smarty', 0);
 // this object contains various utilities
 $utils = new sotf_Utils;
 
+// we need trick for making pages indexed by Google
+// therefore we pass some parameters in pathinfo
+// after this call getParameter can be used to get these parameters as well
+sotf_Utils::collectPathinfoParams();
+
 // page object is for request handling and page generation
 $page = new sotf_Page;
 
@@ -182,9 +187,11 @@ $repository = new sotf_Repository($config['repositoryDir'], $db);
 // $smarty->assign("CONFIG", $config);
 // add basic variables to Smarty
 $smarty->assign("NODEID", $config['nodeId']);
-$smarty->assign("ROOT_URL", $config['rootUrl']);
+//$smarty->assign("ROOT_URL", $config['rootUrl']);
+$smarty->assign("ROOT_URL", $config['localPrefix']);
 $smarty->assign("IMAGE_URL", $config['imageUrl']);
 $smarty->assign("CACHE_URL", $config['cacheUrl']);
+$smarty->assign("PHP_SELF", mygetenv('PHP_SELF'));
 $smarty->assign("ICON_HEIGHT", $config['iconHeight']);
 $smarty->assign("ICON_WIDTH", $config['iconWidth']);
 $smarty->assign("DEBUG", $config['debug']);
@@ -205,5 +212,9 @@ if($config['debug']) {
 debug("action", $page->action);
 debug("lang", $lang);
 debug("userid", $user->id);
+
+// for easier access
+$scriptUrl = mygetenv('SCRIPT_NAME');
+debug('scripturl', $scriptUrl);
 
 ?>

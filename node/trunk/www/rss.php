@@ -48,7 +48,7 @@ if($stationName) {
   // define channel
   $properties=array();
   $properties["description"]="New programmes at $stationName";
-  $properties["link"]=$config['rootUrl'] . "/showStation.php?stationid=" . $station->id;
+  $properties["link"]=$config['rootUrl'] . "/showStation.php/" . $station->id;
   $properties["title"]="$stationName";
   //$properties["language"]="en";
   $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
@@ -60,7 +60,7 @@ if($stationName) {
 	 // define icon for station
 	 $properties=array();
 	 $properties["url"]=$config['cacheUrl'] . "/$station->id.png";
-	 $properties["link"]=$config['rootUrl'] . "/showStation.php?stationid=" . $station->id;
+	 $properties["link"]=$config['rootUrl'] . "/showStation.php/" . $station->id;
 	 $properties["title"]="$stationName logo";
 	 //$properties["description"]="";
 	 $rss_writer_object->addimage($properties);

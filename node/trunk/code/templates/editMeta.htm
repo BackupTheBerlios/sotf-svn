@@ -60,11 +60,11 @@ window.onload=myonload;
           <table width="100%">
             <tr valign="top" class="list1">
               <td class="meta">{#station#}:</td>
-              <td><a class="goto_object" href="showStation.php?stationid={$STATION_DATA.id}">{$STATION_DATA.name}</a></td>
+              <td><a class="goto_object" href="showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a></td>
             </tr>
             <tr valign="top" class="list2">
               <td class="meta">{#series#}:</td>
-              <td>{if $SERIES_DATA}<a class="goto_object" href="showSeries.php?seriesid={$SERIES_DATA.id}">{$SERIES_DATA.title}</a>{else}{#not_in_series#}{/if}
+              <td>{if $SERIES_DATA}<a class="goto_object" href="showSeries.php/{$SERIES_DATA.id}">{$SERIES_DATA.title}</a>{else}{#not_in_series#}{/if}
                 {if !empty($MY_SERIES)}
                    <input class="action" type="button" name="b1" value="{#change_series#}" onClick="popup('addToSeries.php?prgid={$PRG_ID}','{#changeseries#}',120,400,false); return false;" />
                 {/if}

@@ -44,8 +44,8 @@ class sotf_Object {
 		// be careful because ''==0 in PHP :-(, so use NULL instead..
 		global $repository;
 		//debug("constructor", 'sotf_Object');
-		$this->repository=$repository;
-		$this->db = $repository->db;
+		$this->repository = &$repository;
+		$this->db = &$repository->db;
 		$this->tablename = $tablename;
 		$this->idKey = 'id';
 		if($id)
@@ -326,8 +326,8 @@ class sotf_Object {
 	 * purpose: turn debugging on
 	 * @return (void)
 	 */
-	function debug(){
-		echo "<br>====================== SOTF DEBUG ===========================<br>";
+	function debug($name=''){
+		echo "<br><b>$name</b>====================== SOTF DEBUG ===========================<br>";
 		echo "<b>Object ID:</b> " . $this->id . "<br>";
 		echo "<b>Object Data:</b> <pre>"; print_r($this->data); echo "</pre>";
 		echo "<b>Object Changed:</b> "; if($this->changed){ echo "TRUE"; }else{ echo "FALSE";} echo "<br>";

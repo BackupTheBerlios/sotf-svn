@@ -11,10 +11,10 @@
         </td>
         <td class="title2" width="10%" align="right" valign="bottom">
           {if hasPerm($SERIES_DATA.id,'change') }
-          <input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('editSeries.php?seriesid={$SERIES_DATA.id}','{#series#}',550,550,true)">
+          <input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('{$ROOT_URL}/editSeries.php?seriesid={$SERIES_DATA.id}','{#series#}',550,550,true)">
             {/if}
           {if hasPerm($SERIES_DATA.id, 'add_prog')}
-            <input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, 'editor.php?&stationid={$SERIES_DATA.station_id}')" />
+            <input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, '{$ROOT_URL}/editor.php?&stationid={$SERIES_DATA.station_id}')" />
           {/if}
         </td>
       </tr>
@@ -53,14 +53,14 @@
                     {$item.role_name}
                   </td>
                   <td>
-                    <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">{$item.contact_data.name}</a>
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400)">{$item.contact_data.name}</a>
                     {if $item.contact_data.url}<br>(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
                     {elseif $item.contact_data.email}<br>(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
                     {/if}
                   </td>
                   <td>
                     {if $item.contact_data.icon }{strip}
-                    <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400)">
                       <img height="50" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
                     </a>{/strip}
                     {/if}
@@ -75,7 +75,7 @@
               {if $STATION_DATA.icon}
               <img src="{$CACHE_URL}/{$STATION_DATA.id}.png"><br />
                 {/if}
-              <a href="showStation.php?stationid={$STATION_DATA.id}">{$STATION_DATA.name}</a>
+              <a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a>
             </td>
           </tr>
         </table>
@@ -115,7 +115,7 @@
               {/if}
             </td>
             <td width="98%">
-              <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> ({$item.entry_date})
+              <a class="goto_object" href="{$ROOT_URL}/get.php/{$item.id}">{$item.title}</a> ({$item.entry_date})
               {if $item.alternative_title}<br>{$item.alternative_title}{/if}
               {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
               {if $item.abstract}
@@ -124,10 +124,10 @@
             </td>
             <td width="1%" valign="bottom">
               {if hasPerm($item.id, 'change', 'authorize')}
-              <input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, 'editMeta.php?id={$item.id}')" />
+              <input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, '{$ROOT_URL}/editMeta.php?id={$item.id}')" />
                   {/if}
               {if hasPerm($item.id,'delete')}
-              <input class="action" type="button" name="b1" value="{#delete_prog#}" onClick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, 'showSeries.php?seriesid={$SERIES_DATA.id}&delprog=1&prgid={$item.id}')" />
+              <input class="action" type="button" name="b1" value="{#delete_prog#}" onClick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, '{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}?delprog=1&prgid={$item.id}')" />
                 {/if}
             </td>
           </tr>

@@ -216,14 +216,44 @@ class sotf_Utils
 		return sotf_Utils::clean(sotf_Utils::getParameter($name), true);
 	}
 	
+  function collectPathinfoParams() {
+    global $pathinfoParams;
+    $str = mygetenv('PATH_INFO');
+    if(!$str)
+      return;
+    $a = explode('/', $str);
+    while(list(,$v)=each($a)) {
+      $p = explode('__', $v);
+      if(count($p) == 1) {
+        $pathinfoParams['id'] = $v;
+      } else {
+        $pathinfoParams[$p[0]] = $p[1];
+      }
+    }
+    debug("PATHINFO PARAMS: ", $pathinfoParams);
+  }
+
+  /*
+  function getPathinfoOrParameter($name) {
+    $val = mygetenv('PATH_INFO');
+    if($val) {
+      return substr($val, 1);
+    } else {
+      return sotf_Utils::getParameter($name);
+    }
+  }
+  */
+
 	function getParameter($name)
 	{
-		global $HTTP_GET_VARS;
-		global $HTTP_POST_VARS;
-	
-		$val = $HTTP_POST_VARS[$name];
+    global $pathinfoParams;
+
+    $val = $pathinfoParams[$name];
+    if(isset($val))
+      return $val;
+		$val = $_POST[$name];
 		if(!isset($val))
-			$val = $HTTP_GET_VARS[$name];
+			$val = $_GET[$name];
 		return $val;
 	}
 	
