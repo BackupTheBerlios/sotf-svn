@@ -1,0 +1,47 @@
+{if not $ID}
+  <form action="get.php">
+    {if $POPUP}
+    <input type="hidden" name="popup" value="1">
+    {/if}
+      <h4>Please enter the ID of the selected radio show!</h4>
+      <input type="text" name="id" size="60" value="{$ID}">
+  </form>
+{else}
+
+{if $PRG->data.icon}
+  <img src="getIcon.php/icon.png?id={$ID|escape}" align="right">
+{/if}
+
+<!-- TODO: station and series icon as well !! -->
+
+	<h3>{$PRG->data.title}</h3>
+
+<form method="post">
+<table width="100%" cellspacing="10" border="0"><tr><td>
+<table width="100%" bgcolor="{#getBgColor1#}" border="0" cellspacing="0" cellpadding="2"> 
+	<tr bgcolor={#getTitleColor#}><td><b>{#General_metadata#}:</b></td><td align="right">{if $EDIT_PERMISSION}<a href="editMeta.php?id={$ID|escape}">{#Edit#}</a>{else}&nbsp;{/if}</td></tr>
+	<tr>
+		<td valign="top">
+		<table width="100%">
+			<tr><td valign="top"><b>{#Title#}:</b></td><td><input name="title" value="{$PRG->data.title}" size="{#editTextW#}"></td></tr>
+			<tr><td valign="top"><b>{#Author#}:</b></td><td><input name="author" value="{$PRG->data.author}" size="{#editMetaTextW#}"></td></tr>
+			<tr><td valign="top"><b>{#Production_date#}:</b></td><td>{html_select_date time="$PRODUCTION_DATE" start_year="$PRODUCTION_START" end_year="$PRODUCTION_END" prefix="Production" month_format="%m" field_order="YMD" field_separator="-"} {#Date_help#}</td></tr>
+			<tr><td valign="top"><b>{#Expiry_date#}:</b></td><td>{html_select_date time="$EXPIRY_DATE" start_year="$EXPIRY_START" end_year="$EXPIRY_END" prefix="Expiry" month_format="%m" field_order="YMD" field_separator="-"} {#Date_help#}</td></tr>
+			<tr><td valign="top"><b>{#Keywords#}:</b></td><td><input name="keywords" value="{$PRG->data.keywords}" size="{#editMetaTextW#}"></td></tr>
+			<tr><td valign="top"><b>{#Contact_email#}:</b></td><td><input name="contact_email" value="{$PRG->data.contact_email}" size="{#editMetaTextW#}"></td></tr>
+			<tr><td valign="top"><b>{#Contact_phone#}:</b></td><td><input name="contact_phone" value="{$PRG->data.contact_phone}" size="{#editMetaTextW#}"></td></tr>
+			<tr><td valign="top"><b>{#Abstract#}:</b></td><td><textarea name="abstract" rows="{#editMetaTextR#}" cols="{#editMetaTextW#}">{$PRG->data.abstract}</textarea></td></tr>
+		</table>
+		</td>
+	</tr>
+</table>
+</td></tr></table>
+<p align="center"><input type="submit" name="finishpublish" value="{#finish_publish#}"> <input type="submit" name="finishnotpublish" value="{#finish_not_publish#}"></p>
+</form>
+{if false}
+	{else} <!-- if count MD gt 0 -->
+		{if $lang == "en"} No such ID...
+		{elseif $lang == "de"} Bitte keine gefunden haben werden konnen mussen....
+		{/if}
+	{/if}
+{/if}

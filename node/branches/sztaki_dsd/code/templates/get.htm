@@ -1,0 +1,90 @@
+{if not $ID}
+  <form action="get.php">
+    {if $POPUP}
+    <input type="hidden" name="popup" value="1">
+    {/if}
+      <h4>Please enter the ID of the selected radio show!</h4>
+      <input type="text" name="id" size="60" value="{$ID}">
+  </form>
+{else}
+
+{if $PRG->data.icon}
+  <img src="getIcon.php/icon.png?id={$ID|escape}" align="right">
+{/if}
+
+<!-- TODO: station and series icon as well !! -->
+
+	<h3>{$PRG->data.title}</h3>
+
+<table width="100%" cellspacing="10" border="0"><tr><td>
+<table width="100%" bgcolor="{#getBgColor1#}" border="0" cellspacing="0" cellpadding="2"> 
+	<tr bgcolor={#getTitleColor#}><td><b>{#Metadata#}:</b></td><td align="right">{if $EDIT_PERMISSION}<a href="editMeta.php?id={$ID|escape}&okURL={$OKURL|escape}">{#Edit#}</a>{else}&nbsp;{/if}</td></tr>
+	<tr>
+		<td valign="top"><font id="text"> 
+			<b>{#Title#}:</b> {if $PRG->data.title}{$PRG->data.title}{else}-{/if}<br> 
+			<b>{#Author#}:</b> {if $PRG->data.author}{$PRG->data.author}{else}-{/if}<br>
+			<b>{#Production_date#}:</b> {if $PRG->data.production_date}{$PRG->data.production_date}{else}-{/if}<br>
+			<b>{#Entry_date#}:</b> {if $PRG->data.entry_date}{$PRG->data.entry_date}{else}-{/if}<br> 
+			<b>{#Expiry_date#}:</b> {if $PRG->data.expiry_date}{$PRG->data.expiry_date}{else}-{/if}<br> 
+			<b>{#Topics#}:</b> {if $PRG->data.topics}{$PRG->data.topics}{else}-{/if}<br>
+			<b>{#Keywords#}:</b> {if $PRG->data.keywords}{$PRG->data.keywords}{else}-{/if}</font>
+		</td> 
+		<td valign="top"><font id="text"> 
+			<b>{#Abstract#}:</b> {if $PRG->data.abstract}{$PRG->data.abstract}{else}-{/if}</font>
+		</td>
+	</tr>
+</table>
+</td></tr></table>
+<table width="100%" cellspacing="10" border="0"><tr>
+<td valign="top" width="50%">
+	<table width="100%" bgcolor="{#getBgColor2#}" border="0" cellspacing="0" cellpadding="2"> 
+		<tr bgcolor={#getTitleColor#}><td colspan="3"><b>{#Content#}:</b></td></tr>
+		<td colspan="3">
+			{section name=i loop=$AUDIOFILES}
+				<a href="getFile.php/{$AUDIOFILES[i]|escape}?id={$ID|escape}&filename={$AUDIOFILES[i]|escape}">{$AUDIOFILES[i]}</a><br>
+			{/section}
+		</td>
+	</table>
+</td>
+<td valign="top" width="50%">
+	<table width="100%" bgcolor="{#getBgColor2#}" border="0" cellspacing="0" cellpadding="2"> 
+		<tr bgcolor={#getTitleColor#}><td><b>{#Files#}:</b></td><td align="right">{if $EDIT_PERMISSION}<a href="editFiles.php?id={$ID|escape}&okURL={$OKURL|escape}">{#Edit#}</a>{else}&nbsp;{/if}</td></tr>
+		<td>
+			{section name=i loop=$OTHERFILES}
+				<a href="getFile.php/{$OTHERFILES[i]|escape}?id={$ID|escape}&filename={$OTHERFILES[i]|escape}">{$OTHERFILES[i]}</a><br>
+			{/section}
+		</td>
+	</table>
+</td>
+</tr></table>
+
+<table width="100%" cellspacing="10" border="0"><tr>
+<td valign="top" width="50%">
+	<table width="100%" bgcolor="{#getBgColor1#}" border="0" cellspacing="0" cellpadding="2"> 
+		<tr bgcolor={#getTitleColor#}><td colspan="3"><b>{#Statistics#}:</b></td></tr>
+		<td valign="top">
+			<b>{#Listens#}:</b> {if $PRG->data.listens}{$PRG->data.listens}{else}0{/if}<br>
+			<b>{#Downloads#}:</b> {if $PRG->data.downloads}{$PRG->data.downloads}{else}0{/if}<br>
+			<b>{#Rating#}:</b> {if $PRG->data.rating_value}{$PRG->data.rating_value}{else}0{/if}<br>
+		</td>
+		<td valign="top"><b>{#References#}</b>:</td>
+		<td valign="top">
+			{section name=i loop=$REFERENCES}
+				<a href="{$REFERENCES[i].url}">{$REFERENCES[i].url}</a> ({$REFERENCES[i].comments} {#Comments#})
+			{sectionelse}
+				{#no_references#}
+			{/section}
+		</td>
+	</table>
+</td>
+<td valign="bottom" align="right" width="50%">
+<a href="editor.php">{#Cancel#}</a>
+</td>
+</tr></table>
+{if false}
+	{else} <!-- if count MD gt 0 -->
+		{if $lang == "en"} No such ID...
+		{elseif $lang == "de"} Bitte keine gefunden haben werden konnen mussen....
+		{/if}
+	{/if}
+{/if}

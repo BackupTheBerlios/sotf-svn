@@ -1,0 +1,31 @@
+.menu {
+	FONT-WEIGHT: bold; FONT-SIZE: xx-small; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
+}
+A.menu:link {
+	COLOR: #000000; TEXT-DECORATION: none
+}
+A.menu:active {
+	COLOR: #000000; TEXT-DECORATION: none
+}
+A.menu:visited {
+	COLOR: #000000; TEXT-DECORATION: none
+}
+A.menu:hover {
+	COLOR: #ff0000; TEXT-DECORATION: underline
+}
+.date {
+	FONT-WEIGHT: bold; FONT-SIZE: x-large; COLOR: #666666; FONT-FAMILY: Tahoma, Verdana, Arial
+}
+.date2 {
+	FONT-WEIGHT: bold; FONT-SIZE: small; COLOR: #666666; FONT-FAMILY: Arial, Helvetica, sans-serif
+}
+TD {
+	FONT-SIZE: x-small; FONT-FAMILY: Tahoma, Verdana, Arial
+}
+TH {
+	FONT-SIZE: x-small; FONT-FAMILY: Tahoma, Verdana, Arial
+}
+.tablebg {
+	background-image: url(top_r2_c1.gif);
+	background-position: right;
+}

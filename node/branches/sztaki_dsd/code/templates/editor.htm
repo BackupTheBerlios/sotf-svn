@@ -1,0 +1,109 @@
+
+{if $USER_AUDIO_FILES}
+
+<div align="left"><b>{#create_new_prg#}</b></div>
+<table width="100%" bgcolor="{#editorBgColor1#}">
+<tr><td>
+<form method="post">
+
+{#pending_audio#}: 
+
+<select name="fname">
+      {html_options values=$USER_AUDIO_FILES|escape output=$USER_AUDIO_FILES selected=$FNAME}
+</select>
+
+<select name="station">
+    {html_options values=$STATIONS output=$STATIONS selected=$STATION}
+</select>
+
+<input type="submit" name="addprog" value="{#add_programme#}">
+
+</form>
+</td></tr>
+</table>
+
+{/if}
+
+<p></p>
+<div align="left"><b>{#manage_files#}</b></div>
+<table width="100%" bgcolor="{#editorBgColor1#}">
+<tr><td>
+<a target="ftp" href="{$USERFTPURL}">{#user_ftp_access#}</a>
+
+</td><td>
+
+<form method="get">
+<input type="submit" name="refresh" value="{#refresh#}">
+</form>
+
+</td><td>
+
+<form enctype="multipart/form-data" method="post">
+<input type="hidden" name="MAX_FILE_SIZE" value="15000000">
+<input name="userfile" type="file">
+<input type="submit" name="upload" value="{#upload_file#}">
+</form>
+
+</td></tr></table>
+
+<p></p>
+<div align="left"><b>{#my_progs#}</b></div>
+<table width="100%" bgcolor="{#editorBgColor2#}">
+<tr>
+      <td>
+        <select name="series">
+          <option name="s1">Series 1</option>
+          <option name="s2">Series 2</option>
+        </select>
+      </td>
+      <td>{#Filter#} 
+        <select name="filter">
+          <option name="all">All</option>
+          <option name="unpub">Unpublished</option>
+        </select>
+      </td>
+      <td>{#sortby#}
+        <select name="sort">
+          <option name="all">Prod. date - Station - Status</option>
+          <option name="unpub">Status - Station - Entry date</option>
+        </select>
+      </td>
+</tr></table>
+<table border="1" width="100%" bgcolor="{#editorBgColor1#}">
+<tr>
+      <th>{#Flag#}</th>
+      <th>{#Title_abs#}</th>
+      <th>{#Station#}</th>
+      <th>{#Series#}</th>
+      <th>{#Prod_date#}</th>
+      <th>{#Exp_date#}</th>
+      <th>{#Stats#}</th>
+      <th>{#Access#}</th>
+      <th>{#Actions#}</th>
+</tr>
+
+    {section name=i loop=$MYPROGS}
+    <tr>
+      <td>&nbsp;</td>
+      <td><a href="get.php?id={$MYPROGS[i]->id|escape}"><b>{$MYPROGS[i]->data.title}</b></a>
+        <br><font size="-1">{$MYPROGS[i]->data.abstract|truncate:200}</font>
+      </td>
+      <td><a href="listStation.php?station={$MYPROGS[i]->data.station}">{$MYPROGS[i]->data.station}</a></td>
+      <td>
+        {if $MYPROGS[i]->data.series}
+        <a href="listSeries.php?series={$MYPROGS[i]->data.series}">{$MYPROGS[i]->data.series}</a></td>
+        {else}
+        &nbsp;
+        {/if}
+      <td>{$MYPROGS[i]->data.production_date|default:"&nbsp;"}</td>
+      <td>{$MYPROGS[i]->data.expiry_date|default:"&nbsp;"}</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>
+        <a href="editFiles.php?id={$MYPROGS[i]->id|escape}&okURL={$OKURL|escape}">{#Edit_files#}</a>
+        <br><a href="editMeta.php?id={$MYPROGS[i]->id}">{#Edit#}</a>
+      </td>
+    </tr>
+		{/section}
+
+</table>
