@@ -1,0 +1,49 @@
+{config_load file="$LANG.conf"}
+<html>
+<head>
+<title>{#portal_creator#}</title>
+</head>
+<body bgcolor="#44FF44">
+<form action="{$php_self}" method="post">
+
+{#all_portals#}:<br>
+{foreach item=portal from=$portals}
+	<a href="portal.php/{$portal.name}">{$portal.name}</a><br>
+{/foreach}
+
+<br>Create your own portal:<br><br>
+{if $error}{$error}<br>{/if}
+<table border="0">
+	<tr>
+	<td align="center" colspan="2">Portal details:</td>
+	</tr>
+	<tr>
+	<td align="right">Portal name:</td>
+	<td align="left"><input type="text" value="{$name}" name="name"></td>
+	</tr>
+	<tr>
+	<td align="right">Portal password:</td>
+	<td align="left"><input type="password" name="portal_password"></td>
+	</tr>
+	<tr>
+	<td align="center" colspan="2">Portal admin details:</td>
+	</tr>
+	<tr>
+	<td align="right">User name:</td>
+	<td align="left"><input type="text" value="{$username}" name="username"></td>
+	</tr>
+	<tr>
+	<td align="right">User password:</td>
+	<td align="left"><input type="password" name="user_password"></td>
+	</tr>
+	<tr>
+	<td align="right">Email:</td>
+	<td align="left"><input type="text" name="email" value="{$email}"></td>
+	</tr>
+	<tr>
+	<td align="center" colspan="2"><input type="submit" name="create_new_portal" value="{#create_new_portal#}"></td>
+	</tr>
+</table>
+</form>
+</body>
+</html>

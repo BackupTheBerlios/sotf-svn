@@ -20,16 +20,25 @@
 	</tr>
 	{if $resource != "space"}
 	<tr>
+		{if $resource == "query" OR $resource == "playlist"}
+		<td align="right"></td>
+		<td align="left"><input type="hidden" name="value" va;ue="{$value}"></td>
+		{else}
 		<td align="right">Value:&nbsp;</td>
 		<td align="left"><textarea name="value" rows=4 cols=40>{$value}</textarea></td>
+		{/if}
+	</tr>
+	<tr>
+		<td align="right">{if $resource == "query"}Queries:{elseif $resource == "playlist"}Programme lists:{/if}&nbsp;</td>
+		<td align="left">
+			{if $resource == "picture"}Uploaded files:&nbsp;<select name="file" onchange="javascript:this.form.value.value = this.value">{html_options options=$files selected=$file}</select>{/if}
+			{if $resource == "query"}<select name="file" onchange="javascript:this.form.value.value = this.value"><option value="none">Choose...</option>{html_options options=$queries}</select>{/if}
+			{if $resource == "playlist"}<select name="file" onchange="javascript:this.form.value.value = this.value">{html_options options=$playlists}</select>{/if}
+		</td>
 	</tr>
 	<tr>
 		<td align="right">&nbsp;</td>
-		<td align="left">
-			{if $resource == "picture"}Uploaded files:&nbsp;<select name="file" onchange="javascript:this.form.value.value = this.value">{html_options options=$files selected=$file}</select><br><br>{/if}
-			{if $resource == "query"}Queries:&nbsp;<select name="file" onchange="javascript:this.form.value.value = this.value"><option value="none">Choose...</option>{html_options options=$queries}</select><br><br>{/if}
-			{if $resource == "playlist"}Programme lists:&nbsp;<select name="file" onchange="javascript:this.form.value.value = this.value">{html_options options=$playlists}</select><br><br>{/if}
-		</td>
+		<td align="right">&nbsp;</td>
 	</tr>
 	{if $resource == "picture" OR $resource == "text"}
 	<tr>
@@ -53,6 +62,10 @@
 		</td>
 	</tr>
 	{/if}
+	<tr>
+		<td align="right">&nbsp;</td>
+		<td align="right">&nbsp;</td>
+	</tr>
 	<tr>
 		<td align="right">Box:&nbsp;</td>
 		<td align="left">

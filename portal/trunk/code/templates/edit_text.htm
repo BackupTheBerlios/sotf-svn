@@ -1,0 +1,17 @@
+{config_load file="$LANG.conf"}
+<html>
+<head>
+<title>{$title}</title>
+</head>
+<body bgcolor="#{$portal.bg2}">
+<form action="{$rootdir}/edit_text.php/{$portal_name}?id={$id}{if $text}&text=1{else}&teaser=1{/if}" method="post">
+
+{if $text}Edit text{else}Edit teaser{/if}
+<textarea name="value" rows=15 cols=60>{$value}</textarea>
+<br>
+<input type="submit" value="{#save#}" name="save">
+
+</form>
+
+</body>
+</html>

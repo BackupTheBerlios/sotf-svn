@@ -33,6 +33,7 @@ CREATE TABLE "portal_users" (
    "name" varchar NOT NULL,
    "password" varchar NOT NULL,
    "email" varchar,
+   "activate" int4
 );
 
 CREATE TABLE "portal_prglist" (
@@ -51,9 +52,7 @@ CREATE TABLE "programmes_description" (
 "portal_id" int4 REFERENCES "portal_settings"("id") NOT NULL,
 "progid" varchar (20) NOT NULL,
 "teaser" varchar,
-"teaser_uploaded" bool,
-"text" varchar,
-"text_uploaded" bool);
+"text" varchar);
 
 
 CREATE TABLE "portal_queries" (
@@ -62,13 +61,32 @@ CREATE TABLE "portal_queries" (
 "name" varchar NOT NULL,
 "query" varchar);
 
+CREATE TABLE "portal_files" (
+"id" SERIAL PRIMARY KEY,
+"portal_id" int4 REFERENCES "portal_settings"("id") NOT NULL,
+"progid" varchar (20),
+"file_location" varchar NOT NULL,
+"filename" varchar);
+
+CREATE TABLE programmes_comments (
+"id" SERIAL PRIMARY KEY,
+"portal_id" int4 REFERENCES portal_settings(id) NOT NULL,
+"progid" varchar (20),
+"user_id" int4 REFERENCES portal_users(id) NOT NULL,
+"reply_to" int4 REFERENCES programmes_comments(id),
+"path" varchar,
+"timestamp" datetime DEFAULT date('now'::datetime) NOT NULL,
+"title" varchar,
+"comment" varchar,
+"level" int2);
+
 */
 
 require_once("$classdir/rpc_Utils.class.php");
 
 class sotf_Portal
 {
-	var $settings, $portal_id, $portal_name, $portal_admin, $portal_password;
+	var $settings, $portal_id, $portal_name, $portal_admin, $portal_password, $programmes_on_portal;
 	
 	function sotf_Portal($portal_name)			//constuctor
 	{
@@ -104,7 +122,12 @@ class sotf_Portal
 		return $this->settings['table'][$row][$col];
 	}
 
-
+	function getProgrammesOnPortal()
+	{
+		if (count($this->programmes_on_portal) > 0) return $this->programmes_on_portal;
+		return array();
+	}
+	
 	function loadSettings()	//load from fatabase
 	{
 		global $db;
@@ -203,39 +226,40 @@ class sotf_Portal
 				$html .= ">";
 			}
 			if ($cell["link"] != "none") $html .= "<a href=\"".$cell["link"]."\">";
-			$html .= str_replace("\n", "<br>", $cell["value"]);
+			$html .= nl2br($cell["value"]);
 			if ($cell["link"] != "none") $html .= "</a>";
 			if ($cell["style"] != "none") $html .= "</font>";
 			if ($cell["class"] != "none") $html .= "</span>";
 		}
-		elseif ($cell["resource"] == "query")
+		elseif (($cell["resource"] == "query") OR ($cell["resource"] == "playlist"))
 		{
 			global $IMAGEDIR, $db, $page;
 
-			$results = $this->runQuery($cell["value"]);
+			if ($cell["resource"] == "query") $results = $this->runQuery($cell["value"]);
+			else  $results = $this->runPlaylist($cell["value"]);
 			if (!(count($results) > 0)) $results = array();		//if no results create empty array();
 
 			$selected_result = array();
 
-			$fields[title] = $page->getlocalized("title");
-			$fields[alternative_title] = $page->getlocalized("alternative_title");
-			$fields[episode_title] = $page->getlocalized("episode_title");
-			$fields[seriestitle] = $page->getlocalized("seriestitle");
-			$fields[broadcast_date] = $page->getlocalized("broadcast_date");
-			$fields[station] = $page->getlocalized("station");
-			$fields[language] = $page->getlocalized("language");
-			$fields[length] = $page->getlocalized("length");
+			$fields = $this->getAllFieldnames();
+
 
 			foreach($results as $result)
 			{
+				$this->programmes_on_portal[$result['id']] = $result;		//collecting for programmes editor page
+				$prgprop = $this->getPrgProperties($result['id']);
+				$item['teaser'] = $prgprop['teaser'];
+				$item['text'] = $prgprop['text'];
+				$item['files'] = $prgprop['files'];
+
 				foreach($result as $key => $value)
 					if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
 						if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
 						else $values[$fields[$key]] = $value;
-				$item[title] = $result['title'];
-				$item[id] = $result['id'];
+				$item['title'] = $result['title'];
+				$item['id'] = $result['id'];
 				$item['icon'] = $result['icon'];
-				$item[values] = $values;
+				$item['values'] = $values;
 				$selected_result[] = $item;
 				$item = "";
 				$values = "";
@@ -247,7 +271,6 @@ class sotf_Portal
 				if ($item[icon])
 				{
 					$html .= "<img src=\"".$item['icon']."\"";
-//					$html .= "<img src=\"getIcon.php/icon.png?id=$item[id]\"";
 					if ($cell["class"] != "none") $html .= " class=\"".$cell["class"]."icon\"";
 					$html .= ">";
 				}
@@ -257,7 +280,7 @@ class sotf_Portal
 					if ($cell["class"] != "none") $html .= " class=\"".$cell["class"]."icon\"";
 					$html .= ">";
 				}
-				$html .= "</td><td><b><a href=\"portal.php?id=$item[id]\">";
+				$html .= "</td><td><b><a href=\"$php_self?id=$item[id]\">";
 				if ($cell["class"] != "none") $html .= "<span class=\"".$cell["class"]."title\">";
 				$html .= $item["title"];
 				if ($cell["class"] != "none") $html .= "</span>";
@@ -271,6 +294,14 @@ class sotf_Portal
 						$html .= "$value<br>";
 						if ($cell["class"] != "none") $html .= "</span>";
 					}
+				if (count($item['files']) > 0)
+				{
+					$html .= "<b>".$page->getlocalized("uploaded_files")."</b>:";
+					foreach ($item['files'] as $filename => $file_location)
+						$html .= "&nbsp;&nbsp;<a href=\"$file_location\">$filename</a>,";
+					$html = substr($html, 0, -1);		//delete last ,
+				}
+				if ($item['teaser']) $html .= "<br>".$item['teaser']."<br>";
 				$html .= "<small>&nbsp;<br></small><b>LISTEN</b> 24MP3 | 64OGG | 0 COMMENTS | RATING<br><br>";
 				$html .= "</td></tr>";
 			}
@@ -377,14 +408,57 @@ class sotf_Portal
 				'space'=>'space');
 	}
 
+	function uploadFile($filename, $name, $prg_id = NULL, $custom_name = NULL)
+	{
+		global $db;
+		if (!file_exists($filename)) return false;
+		$newdirname = $_SERVER['DOCUMENT_ROOT'].str_replace('portal.php', "", $_SERVER["SCRIPT_NAME"]).$this->portal_name;
+		$newfilename = $newdirname."/".$name;
+		$i = 0;
+		$dot = strrpos($name, '.');
+		$ext = substr($name, $dot);
+		$base = substr($name, 0, $dot);
+		while(file_exists($newfilename))
+		{
+			$i++;
+			$name = $base."_".(string)$i.$ext;
+			$newfilename = $newdirname."/".$name;
+		}
+		if (!file_exists($newdirname)) mkdir($newdirname, 0755);
+		move_uploaded_file($filename, $newfilename);
+		chmod($newfilename, 0755);
+		$url = str_replace($_SERVER["DOCUMENT_ROOT"], '', $newfilename);
+
+		if ($custom_name != NULL) $name = $custom_name;
+		if ($prg_id != NULL AND file_exists($newfilename))
+		{
+			$sql="INSERT INTO portal_files(portal_id, progid, file_location, filename) values('$this->portal_id', '$prg_id', '$url', '$name')";
+			$db->query($sql);
+		}
+		if ($prg_id == NULL AND file_exists($newfilename))
+		{
+			$sql="INSERT INTO portal_files(portal_id, file_location, filename) values('$this->portal_id', '$url', '$name')";
+			$db->query($sql);
+		}
+
+	}
+
 	function getUploadedFiles()
 	{
-		global $page;
-		$files = array(	"static/next.png" => "next.png",
-				"http://www.pbs.org/kratts/world/aust/kangaroo/images/kangaroo.jpg" => "kangaroo.jpg",
-				"http://www.dsd.sztaki.hu/~mate/pm205/bg.jpg" => "bg.jpg",
-				"http://dsd.sztaki.hu/belsolap_components/belsolap.css" => "dsd.css",
-				"http://members.iinet.net.au/~oneilg/scouts/pix/badges/scout/patrol/kangaroo.jpg" => "kangaroo2.jpg");
+		global $page, $db;
+
+		$sql="SELECT file_location, filename FROM portal_files WHERE portal_id = '$this->portal_id'";
+		$result = $db->getAll($sql);
+
+		$files = array();
+		if ($result == NULL) return $files;
+		foreach ($result as $file) $files[$file['file_location']] = $file['filename'];
+
+//		$files = array(	"static/next.png" => "next.png",
+//				"http://www.pbs.org/kratts/world/aust/kangaroo/images/kangaroo.jpg" => "kangaroo.jpg",
+//				"http://www.dsd.sztaki.hu/~mate/pm205/bg.jpg" => "bg.jpg",
+//				"http://dsd.sztaki.hu/belsolap_components/belsolap.css" => "dsd.css",
+//				"http://members.iinet.net.au/~oneilg/scouts/pix/badges/scout/patrol/kangaroo.jpg" => "kangaroo2.jpg");
 //		return $files;
 		return array_merge(array("none" => $page->getlocalized("choose")), $files);
 	}
@@ -437,6 +511,20 @@ class sotf_Portal
 		return $queries;
 	}
 
+	function getAllFieldnames()
+	{
+		global $page;
+		$fields[title] = $page->getlocalized("title");
+		$fields[alternative_title] = $page->getlocalized("alternative_title");
+		$fields[episode_title] = $page->getlocalized("episode_title");
+		$fields[seriestitle] = $page->getlocalized("seriestitle");
+		$fields[broadcast_date] = $page->getlocalized("broadcast_date");
+		$fields[station] = $page->getlocalized("station");
+		$fields[language] = $page->getlocalized("language");
+		//$fields[length] = $page->getlocalized("length");
+		return $fields;
+	}
+
 	function runQuery($query)
 	{
 		global $sotfSite;
@@ -461,24 +549,38 @@ class sotf_Portal
 
 	function runPlaylist($name)
 	{
-		global $sotfSite, $db;
+		global $db;
 
 		if ($name == "unsorted")
 		{
 			$sql="SELECT progid FROM portal_programmes WHERE portal_id = '$this->portal_id' and prglist_id is NULL";
 			$list = $db->getCol($sql);
 		}
-		else
+		elseif ($name != "")	//if not empty
 		{
+			$name = (string)(int)$name;
 			$sql="SELECT progid FROM portal_programmes WHERE portal_id = '$this->portal_id' and prglist_id = $name";
 			$list = $db->getCol($sql);
 		}
+		else return array();
 
 		if ($list == NULL) return array();	//if no result
 
+		return $this->getProgrammes($list);
+//		$rpc = new rpc_Utils;			//load xmlrpc
+//		$url = $sotfSite."xmlrpcServer.php";
+//		$objs = array($list);
+//
+//		return $rpc->call($url, 'portal.playlist', $objs);	//return the result
+	}
+
+	function getProgrammes($ids)
+	{
+		global $sotfSite;
+
 		$rpc = new rpc_Utils;			//load xmlrpc
 		$url = $sotfSite."xmlrpcServer.php";
-		$objs = array($list);
+		$objs = array($ids);
 
 		return $rpc->call($url, 'portal.playlist', $objs);	//return the result
 	}
@@ -505,8 +607,28 @@ class sotf_Portal
 	{
 		global $db;
 		$sql="SELECT teaser, text FROM programmes_description WHERE portal_id = '$this->portal_id' AND progid = '$progid'";
+		$properties = $db->getRow($sql);
+
+		$sql="SELECT file_location, filename FROM portal_files WHERE portal_id = '$this->portal_id' AND progid = '$progid'";
+		$files = $db->getAll($sql);
+
+		$properties['files'] = array();
+
+		if (count($files) > 0) foreach($files as $file)
+		{
+			$properties['files'][$file['filename']] = $file['file_location'];
+		}
+		return $properties;
+	}
+
+	function setPrgProperties($progid, $text, $teaser)
+	{
+		global $db;
+		$sql="SELECT teaser, text FROM programmes_description WHERE portal_id = '$this->portal_id' AND progid = '$progid'";
 		$result = $db->getRow($sql);
-		return $result;
+		if ($result == NULL) $sql="INSERT INTO programmes_description(portal_id, progid, text, teaser) VALUES('$this->portal_id', '$progid', '$text', '$teaser')";
+			else $sql="UPDATE programmes_description SET text='$text', teaser='$teaser' WHERE portal_id='$this->portal_id' AND progid='$progid'";
+		$db->query($sql);
 	}
 
 
@@ -593,7 +715,7 @@ class sotf_Portal
 		}
 	}
 
-	function uploadData($type, $data, $portal_password)
+	function uploadData($type, $data, $portal_password)		//for upload programmes and queries from the node
 	{
 		global $db;
 		if ($this->portal_password != $portal_password) return false;	//if password not right
@@ -633,9 +755,86 @@ class sotf_Portal
 	{
 		global $db;
 
-		$sql="SELECT name FROM portal_settings WHERE true";
+		$sql="SELECT name, id FROM portal_settings WHERE true";
 		$portals = $db->getAll($sql);
 		return $portals;
+	}
+
+	function addComment($progid, $user_id, $reply_to, $title, $comment)
+	{
+		global $db;
+		$comment = nl2br(htmlentities($comment));
+		$title = htmlentities(substr($title, 0, 30));
+		if (($title == "") OR ($comment == "")) return false;		//if not filled out
+		$level = 0;
+		$path = "0";
+		if ($reply_to == "") $reply_to = "NULL";
+		else	//check if parent exists and get data
+		{
+			$sql="SELECT level, path FROM programmes_comments WHERE id = $reply_to";
+			$data = $db->getRow($sql);
+			if ($data == NULL) return false;
+			$level = $data['level']+1;	//the reply must be one level higher
+			$path = $data['path'];
+		}
+		$sql="SELECT path FROM programmes_comments WHERE portal_id=$this->portal_id AND progid = '$progid' AND path LIKE '$path.____' ORDER BY path DESC";
+		$c = (int)substr($db->getOne($sql), -4);	//get highest number on this level
+		if ($c > 9998) return false;	//can not store more than 9999 subcomments
+		$counter = (string)($c+1);		//increase with one
+		if (strlen($counter) == 1) $counter = "000".$counter;
+		if (strlen($counter) == 2) $counter = "00".$counter;
+		if (strlen($counter) == 3) $counter = "0".$counter;
+
+		$sql="INSERT INTO programmes_comments(portal_id, progid, user_id, reply_to, title, comment, level, path) values($this->portal_id, '$progid', $user_id, $reply_to, '$title', '$comment', $level, '$path.$counter')";
+		return $db->query($sql);
+	}
+
+	function deleteComment($progid, $user_id, $comment_id)
+	{
+		global $db;
+		$sql="SELECT path FROM programmes_comments WHERE id=$comment_id";
+		$path = $db->getOne($sql);		//path of the comment to delete
+		if ($path == NULL) return false;
+		$sql="DELETE FROM programmes_comments WHERE path LIKE '$path%'";
+		return $db->query($sql);
+	}
+
+	function getComments($progid)
+	{
+		global $db, $MAX_COMMENT_DEPTH;
+		$sql="SELECT id, path, portal_users.name, timestamp, title, comment, level FROM programmes_comments WHERE portal_id=$this->portal_id AND progid = '$progid' AND user_id=portal_users.id ORDER BY path";
+		$result = $db->getAll($sql);
+		$comments = array();
+		if ($result == NULL) return $comments;
+
+		$oldlevel = 0;
+		foreach ($result as $comment)
+		{
+			$level = $comment['level'];
+			if ($level > $MAX_COMMENT_DEPTH) $level = $MAX_COMMENT_DEPTH;
+			if ($level > $oldlevel) while ($level > $oldlevel)
+			{
+				$oldlevel++;
+				$comment['ul'] .= "<ul>";
+			}
+			else while ($level < $oldlevel)
+			{
+				$oldlevel--;
+				$comment['ul'] .= "</ul>";
+			}
+			$comments[$comment['id']] = $comment;
+			$oldlevel = $level;
+		}
+
+		while (0 < $oldlevel)
+		{
+			$oldlevel--;
+			$comment['last'] .= "</ul>";
+		}
+		$comments[$comment['id']] = $comment;
+
+
+		return $comments;
 	}
 
 }
@@ -643,7 +842,7 @@ class sotf_Portal
 
 class portal_user
 {
-	var $id = -1, $name = "", $email = "";
+	var $id = -1, $name = "", $email = "", $activate = false;
 	
 	function portal_user($portal_id, $username = NULL, $password = NULL)			//constuctor
 	{
@@ -654,18 +853,76 @@ class portal_user
 			$password = $_SESSION['password'];
 		}
 
-		$query = "SELECT id, email, name FROM portal_users"
-			." WHERE name = '$username' AND password = '$password' AND portal_id = $portal_id";
+		$query = "SELECT id, email, name, activate FROM portal_users WHERE name='$username' AND password='$password' AND portal_id=$portal_id";	// AND activate IS NULL
 		$result = $db->getRow($query);
 		if ($result != NULL)		//if logged in
 		{
-			$this->id = $result['id'];		//set user_id
-			$this->name =  $result['name'];		//set name
-			$this->email = $result['email'];	//set email
-			$_SESSION['username'] = $username;	//save username and password to session
-			$_SESSION['password'] = $password;
+			if ($result['activate'] != NULL) $this->activate = $result['activate'];
+			else
+			{
+				$this->id = $result['id'];		//set user_id
+				$this->name =  $result['name'];		//set name
+				$this->email = $result['email'];	//set email
+				$_SESSION['username'] = $username;	//save username and password to session
+				$_SESSION['password'] = $password;
+			}
 		}
 		//else $this->id = -1;		//-1 if not logged in
+	}
+
+	function sendMail($portal_id, $username, $type = "password")
+	{
+		global $db, $page;
+		$sql = "SELECT email, activate, password FROM portal_users WHERE portal_id=$portal_id AND name='$username'";
+		$data = $db->getRow($sql);
+		if ($email == NULL)		//if not exsist
+		{
+			$email = $data['email'];
+			$activate = $data['activate'];
+			$password = $data['password'];
+			if ($type == "password")
+			{
+				mail($email, $page->getlocalized("your_password"), $page->getlocalized("your_password2")." $password");
+			}
+			if ($type == "activate")
+			{
+				mail($email, $page->getlocalized("activation_code"), $page->getlocalized("activation_code2")." $activate");
+			}
+			else return false;
+		}
+		else return false;
+		return true;
+	}
+
+	function addNewUser($portal_id, $username, $user_password, $email)
+	{
+		global $db, $page;
+		if (($username =="") OR ($user_password =="") OR ($email == ""));
+		$sql = "SELECT id FROM portal_users WHERE portal_id=$portal_id AND name='$username'";
+		if ($db->getOne($sql) == NULL)		//if not exsist
+		{
+			srand();
+			$activate = rand(1, 30000);
+			$sql="INSERT INTO portal_users (portal_id, name, password, email, activate) VALUES ('$portal_id', '$username', '$user_password', '$email', $activate)";
+			$result = $db->query($sql);
+			$sql = "SELECT id FROM portal_users WHERE portal_id=$portal_id AND name='$username' AND password='$user_password'";
+			$user_id = $db->getOne($sql);
+			$this->sendMail($portal_id, $username, "activate");
+			return $user_id;
+		}
+		else return false;
+	}
+
+	function activateUser($portal_id, $username, $user_password, $activate)
+	{
+		global $db;
+		$activate = (int)$activate;
+		$query = "SELECT id FROM portal_users WHERE name='$username' AND password='$user_password' AND portal_id=$portal_id AND activate=$activate";
+		$id = $db->getOne($query);
+		if ($id == NULL) return false;	//not activated, bad password or name or act-code
+
+		$query="UPDATE portal_users SET activate=NULL WHERE id=$id";
+		return ($db->query($query));
 	}
 
 	function logout()
@@ -677,6 +934,11 @@ class portal_user
 		//destroy data saved in sesson
 		$_SESSION["username"] = "";			//delete username
 		$_SESSION["password"] = "";			//delete password
+	}
+
+	function getActivated()
+	{
+		return $this->activate;	//return activated status ot number
 	}
 
 	function getId()

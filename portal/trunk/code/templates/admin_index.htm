@@ -1,0 +1,15 @@
+{config_load file="$LANG.conf"}
+<html>
+<head>
+<title>{#portal_creator#}</title>
+</head>
+<body bgcolor="#44FF44">
+<form action="{$php_self}" method="post">
+
+
+Copy template from
+<select name="portal">{html_options options=$portals}</select> save as <input type="text" name="save_template">
+<input type="submit" name="{#send#}" value="{#send#}">
+</form>
+</body>
+</html>
