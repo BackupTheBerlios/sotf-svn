@@ -15,11 +15,14 @@ header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 // TODO: cache dir letrehozasa!!
 // TODO chekc imagemagick installed
 
+error_log("install.php started",0);
+
+
 function PrintTitle($number)		//'header' af all tests
 {
 	set_time_limit(30);		//extends the time limit for the next 30 seconds (every test has so max. 30 seconds to run)
 	global $install_test_name, $install_color;
-	print('<TR><TD BGCOLOR="'.$install_color[$number].'">');		//begin new table row, color is set here
+	print('<TABLE width="100%"><TR><TD BGCOLOR="'.$install_color[$number].'">');		//begin new table row, color is set here
 	print('<DIV ALIGN="center"><B>'.$install_test_name[$number].'<BR /><BR /></B></DIV>');		//prints the name of the test
 }
 
@@ -30,7 +33,7 @@ function PrintButton($number)		//'footer' of all tests
 	print('<INPUT type="hidden" name="test_result[]" value="'.htmlentities($install_test_result[$number]).'">');	//stores the result string in a hidden field (no need to rerun the test)
 	print('<INPUT type="hidden" name="color[]" value="'.$install_color[$number].'">');		//stores the color value	-||-
 	print('<BR /><DIV ALIGN="center"><INPUT type="submit" name="run_test" value="Run test '.$number.'"></DIV>');	//prints a run test button user can run this test again
-	print('</TD></TR>');		//end new table row
+	print('</TD></TR></TABLE>');		//end new table row
 	flush();			//writes out the row (if no buffer the user can see it)
 }
 
@@ -83,7 +86,7 @@ function GetPerm($filename, $option)		//tries to write or read files and directo
 	{
 		if (file_exists($filename))
 		{
-			if (!$dir = @opendir($filename))	//read files in dir
+			if (!$dir = opendir($filename))	//read files in dir
 			{
 				return("read ERROR");
 			}
@@ -160,6 +163,7 @@ $install_blue =	 "0000FF";				//blue for not tested
 $install_test_name = "";				//array for the name of the tests
 
 
+/*
 $install_user = $HTTP_POST_VARS["user"];		//username for DB
 $install_pass = $HTTP_POST_VARS["pass"];		//password for DB
 $install_host = $HTTP_POST_VARS["host"];		//host for DB
@@ -176,6 +180,7 @@ $install_node_pass = $HTTP_POST_VARS["node_pass"];		//password for DB
 $install_node_host = $HTTP_POST_VARS["node_host"];		//host for DB
 $install_node_port = $HTTP_POST_VARS["node_port"];		//port for DB
 $install_node_db_name = $HTTP_POST_VARS["node_db_name"];	//DB name
+*/
 
 $install_run_test = $HTTP_POST_VARS["run_test"];	//Run test X buttons
 $install_run_all = $HTTP_POST_VARS["RUN_ALL"];		//Run all button
@@ -221,9 +226,9 @@ if ($install_run_all != NULL)		//if run_all button pressed
 
 
 if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if test 2 passed and not already included
-	@include("../config.inc.php");
+	include("../config.inc.php");
 
-//@include "install_tests.php";
+//include "install_tests.php";
 
 ?>
 
@@ -238,7 +243,8 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 <INPUT type="hidden" name="test_result[]" value="<?php print($install_test_result[0]) ?>">
 <INPUT type="hidden" name="color[]" value="FFFFFF">
 <DIV ALIGN="center">
-<TABLE BORDER=1 CELLPADDING=5 CELLSPACING=0 WIDTH="60%" BGCOLOR="<?php print($install_color[0]) ?>">
+<!-- <TABLE BORDER=1 CELLPADDING=5 CELLSPACING=0 WIDTH="60%" BGCOLOR="<?php print($install_color[0]) ?>">
+-->
 
 <?php
 	$id = 1;	//////////////////////////Test 1
@@ -295,7 +301,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		}
 		else
 		{
-			@include("../config.inc.php");
+			include("../config.inc.php");
 			if ($nodeDbHost != NULL)		//in iclude successfull
 			{
 					//set default parameter if first time successfull or reload button pressed
@@ -341,41 +347,41 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		$install_test_result[$id] = "";
 
 		//log file
-		$install_test_result[$id] .= "logFile ($logFile) ".@GetPerm($logFile, "append")."<BR />";
+		$install_test_result[$id] .= "logFile ($logFile) ".GetPerm($logFile, "append")."<BR />";
 
 		//directories with write permission
-		$install_test_result[$id] .= "repositoryDir ($repositoryDir) ".@GetPerm($repositoryDir."/pmppmp.pmp", "write")."<BR />";
-		$install_test_result[$id] .= "userDirs ($userDirs) ".@GetPerm($userDirs."/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "repositoryDir ($repositoryDir) ".GetPerm($repositoryDir."/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "userDirs ($userDirs) ".GetPerm($userDirs."/pmppmp.pmp", "write")."<BR />";
 
-		$install_test_result[$id] .= "logs ($basedir/logs) ".@GetPerm($basedir."/logs/pmppmp.pmp", "write")."<BR />";
-		$install_test_result[$id] .= "templates_c ($basedir/code/templates_c) ".@GetPerm($basedir."/code/templates_c/pmppmp.pmp", "write")."<BR />";
-		$install_test_result[$id] .= "tmp (../tmp) ".@GetPerm("../tmp/pmppmp.pmp", "write")."<BR />";
-//		$install_test_result[$id] .= " ($basedir) ".@GetPerm($basedir."/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "logs ($basedir/logs) ".GetPerm($basedir."/logs/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "templates_c ($basedir/code/templates_c) ".GetPerm($basedir."/code/templates_c/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "tmp (../tmp) ".GetPerm("../tmp/pmppmp.pmp", "write")."<BR />";
+//		$install_test_result[$id] .= " ($basedir) ".GetPerm($basedir."/pmppmp.pmp", "write")."<BR />";
 
 		//other directories
-		$install_test_result[$id] .= "basedir ($basedir) ".@GetPerm($basedir, "dir")."<BR />";
-		$install_test_result[$id] .= "getid3dir ($getid3dir) ".@GetPerm($getid3dir, "dir")."<BR />";
-		$install_test_result[$id] .= "musicDir ($musicDir) ".@GetPerm($musicDir, "dir")."<BR />";
+		$install_test_result[$id] .= "basedir ($basedir) ".GetPerm($basedir, "dir")."<BR />";
+		$install_test_result[$id] .= "getid3dir ($getid3dir) ".GetPerm($getid3dir, "dir")."<BR />";
+		$install_test_result[$id] .= "musicDir ($musicDir) ".GetPerm($musicDir, "dir")."<BR />";
 
-		$install_test_result[$id] .= "classes ($basedir/code) ".@GetPerm($basedir."/code", "dir")."<BR />";
-		$install_test_result[$id] .= "classes ($basedir/code/classes) ".@GetPerm($basedir."/code/classes", "dir")."<BR />";
+		$install_test_result[$id] .= "classes ($basedir/code) ".GetPerm($basedir."/code", "dir")."<BR />";
+		$install_test_result[$id] .= "classes ($basedir/code/classes) ".GetPerm($basedir."/code/classes", "dir")."<BR />";
 
 		//files that are required by init.inc.php
-		$install_test_result[$id] .= "peardir ($peardir/DB.php) ".@GetPerm($peardir."/DB.php", "read")."<BR />";					//require($peardir . '/DB.php');
-		$install_test_result[$id] .= "smartydir ($smartydir/Smarty.class.php) ".@GetPerm($smartydir."/Smarty.class.php", "read")."<BR />";		//require($smartydir . '/Smarty.class.php');
-		$install_test_result[$id] .= "smartydir ($smartydir/Config_File.class.php) ".@GetPerm($smartydir."/Config_File.class.php", "read")."<BR />";	//require($smartydir . '/Config_File.class.php');
+		$install_test_result[$id] .= "peardir ($peardir/DB.php) ".GetPerm($peardir."/DB.php", "read")."<BR />";					//require($peardir . '/DB.php');
+		$install_test_result[$id] .= "smartydir ($smartydir/Smarty.class.php) ".GetPerm($smartydir."/Smarty.class.php", "read")."<BR />";		//require($smartydir . '/Smarty.class.php');
+		$install_test_result[$id] .= "smartydir ($smartydir/Config_File.class.php) ".GetPerm($smartydir."/Config_File.class.php", "read")."<BR />";	//require($smartydir . '/Config_File.class.php');
 
-		$install_test_result[$id] .= "classdir ($classdir/db_Wrap.class.php) ".@GetPerm($classdir."/db_Wrap.class.php", "read")."<BR />";		//require($classdir . '/db_Wrap.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Utils.class.php) ".@GetPerm($classdir."/sotf_Utils.class.php", "read")."<BR />";		//require($classdir . '/sotf_Utils.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_User.class.php) ".@GetPerm($classdir."/sotf_User.class.php", "read")."<BR />";		//require($classdir . '/sotf_User.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Page.class.php) ".@GetPerm($classdir."/sotf_Page.class.php", "read")."<BR />";		//require($classdir . '/sotf_Page.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Permission.class.php) ".@GetPerm($classdir."/sotf_Permission.class.php", "read")."<BR />";	//require($classdir . '/sotf_Permission.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Vars.class.php) ".@GetPerm($classdir."/sotf_Vars.class.php", "read")."<BR />";		//require($classdir . '/sotf_Vars.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Repository.class.php) ".@GetPerm($classdir."/sotf_Repository.class.php", "read")."<BR />";	//require($classdir . '/sotf_Repository.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_FileList.class.php) ".@GetPerm($classdir."/sotf_FileList.class.php", "read")."<BR />";	//require($classdir . '/sotf_FileList.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_AudioCheck.class.php) ".@GetPerm($classdir."/sotf_AudioCheck.class.php", "read")."<BR />";	//require($classdir . '/sotf_AudioCheck.class.php'); 
+		$install_test_result[$id] .= "classdir ($classdir/db_Wrap.class.php) ".GetPerm($classdir."/db_Wrap.class.php", "read")."<BR />";		//require($classdir . '/db_Wrap.class.php');
+		$install_test_result[$id] .= "classdir ($classdir/sotf_Utils.class.php) ".GetPerm($classdir."/sotf_Utils.class.php", "read")."<BR />";		//require($classdir . '/sotf_Utils.class.php');
+		$install_test_result[$id] .= "classdir ($classdir/sotf_User.class.php) ".GetPerm($classdir."/sotf_User.class.php", "read")."<BR />";		//require($classdir . '/sotf_User.class.php');
+		$install_test_result[$id] .= "classdir ($classdir/sotf_Page.class.php) ".GetPerm($classdir."/sotf_Page.class.php", "read")."<BR />";		//require($classdir . '/sotf_Page.class.php');
+		$install_test_result[$id] .= "classdir ($classdir/sotf_Permission.class.php) ".GetPerm($classdir."/sotf_Permission.class.php", "read")."<BR />";	//require($classdir . '/sotf_Permission.class.php');
+		$install_test_result[$id] .= "classdir ($classdir/sotf_Vars.class.php) ".GetPerm($classdir."/sotf_Vars.class.php", "read")."<BR />";		//require($classdir . '/sotf_Vars.class.php');
+		$install_test_result[$id] .= "classdir ($classdir/sotf_Repository.class.php) ".GetPerm($classdir."/sotf_Repository.class.php", "read")."<BR />";	//require($classdir . '/sotf_Repository.class.php');
+		$install_test_result[$id] .= "classdir ($classdir/sotf_FileList.class.php) ".GetPerm($classdir."/sotf_FileList.class.php", "read")."<BR />";	//require($classdir . '/sotf_FileList.class.php');
+		$install_test_result[$id] .= "classdir ($classdir/sotf_AudioCheck.class.php) ".GetPerm($classdir."/sotf_AudioCheck.class.php", "read")."<BR />";	//require($classdir . '/sotf_AudioCheck.class.php'); 
 
-//		$install_test_result[$id] .= "rosszdir (C:/temp/temp) ".@GetPerm("C:/temp/temp/pmppmp.pmp", "read")."<BR />";
+//		$install_test_result[$id] .= "rosszdir (C:/temp/temp) ".GetPerm("C:/temp/temp/pmppmp.pmp", "read")."<BR />";
 //		$install_test_result[$id] .= " () ".GetPerm(."/pmppmp.pmp")."<BR />";
 	
 		if (strpos($install_test_result[$id], "ERROR"))
@@ -394,7 +400,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	$id = 4;	//////////////////////////Test 4
 	if (RunTest($id, "PostGresql connection"))
 	{
-		$conn = @pg_connect("host=$install_host port=$install_port user=$install_user dbname=template1 password=$install_pass");
+		$conn = pg_connect("host=$install_host port=$install_port user=$install_user dbname=template1 password=$install_pass");
 		if (!$conn)
 		{
 			$install_test_result[$id] = "Connecting to PostGreSQL failed";
@@ -405,7 +411,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$install_test_result[$id] = "OK";
 			$install_color[$id] = $install_green;
 		}
-		@pg_close($conn);
+		pg_close($conn);
 	}
 	PrintTitle($id);
 	print('
@@ -420,10 +426,10 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	$id = 5;	//////////////////////////Test 5
 	if (RunTest($id, "DB connection to SelfAdmin", 4))		//////////////////////////Test 4 should be OK to run this test
 	{
-		$conn = @pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
+		$conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
 		if (!$conn)
 		{
-			$conn = @pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=template1 user=$install_sadm_user password=$install_sadm_pass");
+			$conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=template1 user=$install_sadm_user password=$install_sadm_pass");
 			if (!$conn)
 			{
 				$install_test_result[$id] = "Could not connect.";
@@ -438,8 +444,8 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		else
 		{
 			$sql = "select count(*) from authenticate where username = 'admin'";
-			$result = @pg_query($conn, $sql);
-			$a = @pg_fetch_row($result, 0);
+			$result = pg_exec($conn, $sql);
+			$a = pg_fetch_row($result, 0);
 			if ( $a[0] != 1)
 			{
 				$install_test_result[$id] = "Admin user in table authenticate not found.";
@@ -451,7 +457,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 				$install_color[$id] = $install_green;
 			}
 		}
-		@pg_close($conn);
+		pg_close($conn);
 	}
 //$install_writeback_sadm
 	PrintTitle($id);
@@ -471,7 +477,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	$id = 6;	
 	if (RunTest($id, "DB connection to 'node'", 5))		//////////////////////////Test 5 should be OK to run this test
 	{
-		$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
+		$conn = pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
 		if (!$conn)
 		{
 			$install_test_result[$id] = "Database '".$install_node_db_name."' not found";
@@ -482,11 +488,11 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$install_test_result[$id] = "OK";
 			$install_color[$id] = $install_green;
 		}
-		@pg_close($conn);
+		pg_close($conn);
 	}
 	if ($install_createdb)			//if create node db button pressed
 	{
-		$conn = @pg_connect("host=$install_host port=$install_port user=$install_user dbname=template1 password=$install_pass");	//connect
+		$conn = pg_connect("host=$install_host port=$install_port user=$install_user dbname=template1 password=$install_pass");	//connect
 		if (!$conn)
 		{
 			$install_test_result[$id] = "Could not connect.";
@@ -495,7 +501,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		else
 		{
 			$sql = "CREATE DATABASE ".$install_node_db_name;		//create new db
-			$result = @pg_query($conn, $sql);
+			$result = pg_exec($conn, $sql);
 			if (!$result)
 			{
 				$install_test_result[$id] = "Could not create db.";
@@ -503,8 +509,8 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			}
 			else
 			{
-				@pg_close($conn);		//close old connection
-				$conn = @pg_connect("host=$install_host port=$install_port user=$install_user dbname=$install_node_db_name password=$install_pass");	//Connect to the new DB
+				pg_close($conn);		//close old connection
+				$conn = pg_connect("host=$install_host port=$install_port user=$install_user dbname=$install_node_db_name password=$install_pass");	//Connect to the new DB
 				if (!$conn)
 				{
 					$install_test_result[$id] = "Could not connect to the new db.";
@@ -513,7 +519,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 				else
 				{
 					//Read SQL commands from db.sql and execute them
-					$fd = @fopen ($basedir."/code/doc/db.sql", "r");
+					$fd = fopen ($basedir."/code/doc/db.sql", "r");
 					if (!$fd)
 					{
 						$install_test_result[$id] = "Sql file ($basedir/code/doc/db.sql) not found.";
@@ -539,7 +545,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 						$install_test_result[$id] = "";				//delete pervious results
 						for($i=0; $i<$max; $i++) if ($sql[$i] != '')		//execute all commands if not empty
 						{
-							$result = @pg_query($conn, $sql[$i]);
+							$result = pg_exec($conn, $sql[$i]);
 							//$result = $db->query();
 							if (!$result)
 								{
@@ -669,11 +675,11 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 			/*
 			$sql = "DELETE FROM sotf_topic_tree_defs";
-			$result = @pg_query($conn, $sql);
+			$result = pg_exec($conn, $sql);
 			$sql = "DELETE FROM sotf_topic_trees";
-			$result = @pg_query($conn, $sql);
+			$result = pg_exec($conn, $sql);
 			$sql = "DELETE FROM sotf_topics";
-			$result = @pg_query($conn, $sql);
+			$result = pg_exec($conn, $sql);
 			*/
 
 			// create topic tree
@@ -794,45 +800,45 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
       
 			 // delete topics 
 
-			 $conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
-			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
-			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
-			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
-			 $result = @pg_query($conn, "SELECT setval('sotf_topics_seq', 1, false)");
-			 $result = @pg_query($conn, "SELECT setval('sotf_topic_trees_seq', 1, false)");
-			 $result = @pg_query($conn, "SELECT setval('sotf_topic_tree_defs_seq', 1, false)");
+			 $conn = pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
+			 $result = pg_exec($conn, "SELECT setval('sotf_topics_seq', 1, false)");
+			 $result = pg_exec($conn, "SELECT setval('sotf_topic_trees_seq', 1, false)");
+			 $result = pg_exec($conn, "SELECT setval('sotf_topic_tree_defs_seq', 1, false)");
 			 /*
 			$sql = "DELETE FROM sotf_topic_tree_defs";
-			$result = @pg_query($conn, $sql);
+			$result = pg_exec($conn, $sql);
 			$sql = "DELETE FROM sotf_topic_trees";
-			$result = @pg_query($conn, $sql);
+			$result = pg_exec($conn, $sql);
 			$sql = "DELETE FROM sotf_topics";
-			$result = @pg_query($conn, $sql);
+			$result = pg_exec($conn, $sql);
 			 */
 
 			 // delete roles
 
-			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
-			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
-			 $result = @pg_query($conn, "DELETE FROM sotf_roles");
-			 $result = @pg_query($conn, "DELETE FROM sotf_role_names");
-			 $result = @pg_query($conn, "SELECT setval('sotf_roles_seq', 1, false)");
-			 $result = @pg_query($conn, "SELECT setval('sotf_role_names_seq', 1, false)");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_roles");
+			 $result = pg_exec($conn, "DELETE FROM sotf_role_names");
+			 $result = pg_exec($conn, "SELECT setval('sotf_roles_seq', 1, false)");
+			 $result = pg_exec($conn, "SELECT setval('sotf_role_names_seq', 1, false)");
 
 			 // delete genres
       
-			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
-			 $result = @pg_query($conn, "DELETE FROM sotf_genres");
-			 $result = @pg_query($conn, "SELECT setval('sotf_genres_seq', 1, false)");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_genres");
+			 $result = pg_exec($conn, "SELECT setval('sotf_genres_seq', 1, false)");
 
-			 //@pg_close($conn);		//close old connection
+			 //pg_close($conn);		//close old connection
 
 		  }
-		$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
+		$conn = pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
 		$sql = "SELECT COUNT(*) as rows FROM sotf_topic_tree_defs";
-		$result = @pg_query($conn, $sql);
+		$result = pg_exec($conn, $sql);
 		$count = pg_fetch_array ($result);
-		@pg_close($conn);		//close old connection
+		pg_close($conn);		//close old connection
 		if ($count["rows"] == 0)
 		  {
 			 $install_test_result[$id] = "Topic tree is empty";
@@ -912,7 +918,7 @@ print('<br /><br /><DIV ALIGN="center">
 
 ?>
 
-</TABLE>
+<!-- </TABLE> -->
 </DIV>
 <?php
 	$install_erroronpage = false;			//test if any errors on page
