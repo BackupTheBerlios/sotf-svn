@@ -21,6 +21,7 @@ CREATE TABLE "portal_templates" (
    "id" SERIAL PRIMARY KEY,
    "name" varchar NOT NULL,
    "settings" varchar,
+   "picture" varchar,
    "published" bool NOT NULL
 );
 
@@ -756,6 +757,16 @@ class sotf_Portal
 		global $db;
 
 		$sql="SELECT name, id FROM portal_settings WHERE true";
+		$portals = $db->getAll($sql);
+		return $portals;
+	}
+
+	function getTemplates($published = true)	//default is only piblished templates
+	{
+		global $db;
+
+		if ($published) $sql="SELECT id, name, picture FROM portal_templates WHERE published = true";	//only published
+		else $sql="SELECT id, name, picture FROM portal_templates WHERE true";		//all templates
 		$portals = $db->getAll($sql);
 		return $portals;
 	}

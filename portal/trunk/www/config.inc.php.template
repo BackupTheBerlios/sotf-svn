@@ -67,4 +67,11 @@ $defaultLanguage = "en";
 // languages appearing in language select boxes
 $languages = array("en", "de", "hu", "it", "es", "cz", "fr", "ro", "ru");
 
+//////////////////////////////////////////////////////////////////////////
+// MISC  --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+//the max depth to display by the comments on the programmes page
+$MAX_COMMENT_DEPTH = 4;
+
 ?>

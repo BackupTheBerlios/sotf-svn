@@ -262,7 +262,7 @@
 			</td>
 			<td align="center">
 				<div align="center"><b>{#change_portal_template#}</b></div><br>
-				<a href="#" onclick="javascript:window.open('{$rootdir}/portal_template.php/{$portal_name}','','width=640,height=480,left=0,top=0')"><img src="../static/portals/1.gif"></a>
+				<a href="#" onclick="javascript:window.open('{$rootdir}/portal_template.php/{$portal_name}','','scrollbars=yes,resizeable=yes,width=640,height=480,left=0,top=0')"><img src="../static/portals/1.gif"></a>
 			</td>
 			</tr>
 			<tr>
@@ -299,8 +299,8 @@
 				{if $css}{#CSS_file#}: <input type="text" name="programmes_css" value="{$programmes.css}" size="25" /><select name="file" onchange="javascript:this.form.programmes_css.value = this.value">{html_options options=$files}</select>{/if}
 			</td>
 			<td align="center">
-				<div align="center"><b>{#change_programmes_template#}</b></div><br>
-				<a href="#"><img src="../static/portals/2.gif"></a>
+				<!--<div align="center"><b>{#change_programmes_template#}</b></div><br>
+				<a href="#"><img src="../static/portals/2.gif"></a>-->
 			</td>
 			</tr>
 			</table>

@@ -3,11 +3,16 @@
 require("init.inc.php");
 require("$classdir/sotf_Portal.class.php");
 
+//Create new portal
 $name = sotf_Utils::getParameter('name');
 $portal_password = sotf_Utils::getParameter('portal_password');
 $username = sotf_Utils::getParameter('username');
 $user_password = sotf_Utils::getParameter('user_password');
 $email = sotf_Utils::getParameter('email');
+
+//Create new template (copy from an existing portal))
+$portal_id = sotf_Utils::getParameter('portal_id');
+$save_template = sotf_Utils::getParameter('save_template');
 
 //var_dump($name);
 //var_dump($portal_password);
@@ -15,6 +20,10 @@ $email = sotf_Utils::getParameter('email');
 //var_dump($user_password);
 //var_dump($email);
 
+var_dump($portal_id);
+var_dump($save_template);
+
+if (sotf_Utils::getParameter('create_portal'))		//if create portal button pressed
 if ($name != "" AND $portal_password != "" AND $username != "" AND $user_password != "" AND $email != "")
 {
 	$sql= "SELECT id FROM portal_settings WHERE name='$name'";
@@ -44,11 +53,16 @@ if ($name != "" AND $portal_password != "" AND $username != "" AND $user_passwor
 }
 else $smarty->assign("error", "All fields are required!");
 
+$portal = new sotf_Portal("");			//get list af all portals, create portal object
+$portals = $portal->getPortals();		//get array
+$portal_list = array();				//create new array
+foreach($portals as $p) $portal_list[$p['id']] = $p['name'];	//extract information from array
 
 $smarty->assign("php_self", $_SERVER['PHP_SELF']);		//php self for the form submit and hrefs
 $smarty->assign("name", $name);
 $smarty->assign("username", $username);
 $smarty->assign("email", $email);
+$smarty->assign("portals", $portal_list);			//list of all portals
 
 $page->send("admin.htm");
 

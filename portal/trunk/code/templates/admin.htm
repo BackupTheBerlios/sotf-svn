@@ -2,21 +2,22 @@
 <head>
 <title>{#portal_admin#}</title>
 </head>
-<body>
+<body bgcolor="#CEDDFC">
 <form action="{$php_self}" method="post">
 {$error}<br>
 <br>
-Create new portal:<br>
+<b>Create new portal:</b><br>
 Portal name:<input type="text" value="{$name}" name="name"><br>
 Portal password:<input type="password" name="portal_password"><br><br>
 Portal admin details:<br>
 User name:<input type="text" value="{$username}" name="username"><br>
 User password:<input type="password" name="user_password"><br>
 Email:<input type="text" name="email" value="{$email}"><br><br>
-<input type="submit" name="Sned" value="Sned">
+<input type="submit" name="create_portal" value="Send"><br><br><br>
 
-Copy template<br><br>
-From <> save as <inpu type="text" name="save_template">
+<b>Create new template:</b><br>
+Copy template from <select name="portal_id">{html_options options=$portals}</select> save as <input type="text" name="save_template">
+<input type="submit" name="create_template" value="Create"><br><br><br>
 
 </form>
 
