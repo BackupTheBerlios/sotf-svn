@@ -102,10 +102,14 @@
 				if($this->encoding == $this->outencoding){	//don't convert
 					$data = $reference->get_content();
 				}else{
-					$data = iconv($this->encoding,$this->outencoding,$reference->get_content());	//convert
+					if(!$data = iconv($this->encoding,$this->outencoding,$reference->get_content())){
+						$data = $reference->get_content();
+					}	//convert
 				}
 				$data = str_replace("%%rgt%%",">",$data);
 				$data = str_replace("%%lgt%%","<",$data);
+				$data = ereg_replace("[\r\n]{2,}","<br />",$data);
+				//$data = nl2br($data);
 			}
 		}
 	}
