@@ -128,9 +128,7 @@
 </html>
 
 <script language="Javascript">
-  {if $STATUS_MESSAGES}
-    {foreach from=$STATUS_MESSAGES item=MSG}
-       alert("{$MSG}");
-    {/foreach}
+  {if $STATUS_MESSAGES or $ERROR_MESSAGES }
+       alert("{foreach from=$ERROR_MESSAGES item=MSG}{$MSG}\n{/foreach}{foreach from=$STATUS_MESSAGES item=MSG}{$MSG}\n{/foreach}");
   {/if}
 </script>

@@ -76,9 +76,11 @@ class sotf_Page
 	    $loc_msg = $langConf->get("$lang.conf", $this->action, $msg);
       if(empty($loc_msg))
         $loc_msg = $langConf->get("$lang.conf", NULL, $msg);
-	    if(empty($loc_msg))
-	      $loc_msg = "[[$msg]]";
-	    return $loc_msg;
+		if(empty($loc_msg)) {
+		  debug("Missing localization for", $msg); 
+		  $loc_msg = $msg;
+		}
+		return $loc_msg;
 	  }
 
 	/**
@@ -100,6 +102,7 @@ class sotf_Page
 	  }
 
 	function addStatusMsg($msg, $localized = true) {
+	  debug("status msg", $msg);
 	  if($localized)
 		 $msg = $this->getlocalized($msg);
 	  $_SESSION['statusMsgs'][] = $msg; 
@@ -128,11 +131,20 @@ class sotf_Page
 
 	function redirect($url)
 	{
-		header ("Location: $url");
-		debug("REDIRECT", $url);
-		stopTiming();
-		$this->logRequest();
-		exit;
+	  if($this->errors) {
+		 $_SESSION['errorMsgs'] = $this->errors;
+	  }
+	  header ("Location: $url");
+	  debug("REDIRECT", $url);
+	  stopTiming();
+	  $this->logRequest();
+	  exit;
+	}
+
+	function redirectSelf()
+	{
+	  $url = getenv('REQUEST_URI');
+	  $this->redirect($url);
 	}
 
 	function logRequest()
@@ -147,9 +159,12 @@ class sotf_Page
 	function send($template = 'main.htm'){
 		global $smarty, $totalTime;
 
+		unset($_SESSION['halted']);
 		// handle status messages
 		$smarty->assign('STATUS_MESSAGES', $_SESSION['statusMsgs']);
 		unset($_SESSION['statusMsgs']);
+		$smarty->assign('ERROR_MESSAGES', $_SESSION['errorMsgs']);
+		unset($_SESSION['errorMsgs']);
 		
 		stopTiming();
 		$smarty->assign("totalTime", $totalTime);
@@ -160,12 +175,22 @@ class sotf_Page
 	
 	function sendPopup(){
 	  $this->send('main_popup.htm');
-	}	
+	}
 
 	function halt($msg='') {
-	  global $smarty;
-	  $smarty->assign("ERRORS", $this->errors);
-	  $this->send('error.htm');
+	  global $smarty, $localPrefix;
+	  if($this->errors) {
+		 $_SESSION['errorMsgs'] = $this->errors;
+	  }
+	  $url = getenv('HTTP_REFERER');
+	  debug("referer", $url);
+	  if($_SESSION['halted'] || !$url || !strstr($url, $localPrefix)) {
+		 $smarty->assign("ERRORS", $this->errors);
+		 $this->send('error.htm');
+	  } else {
+		 $_SESSION['halted'] = 1;
+		 $this->redirect($url);
+	  }
 	  exit;
 	}
 

@@ -108,6 +108,7 @@ $rootdir = 'http://' . $_SERVER['HTTP_HOST'] . $localPrefix;
 // The base URL for images
 $imagedir = $rootdir . '/static';
 
+$tmpdir = $wwwdir . '/tmp';
 $cachedir = $wwwdir . '/tmp';
 $cacheprefix =  $rootdir . '/tmp';
 
@@ -153,7 +154,7 @@ function addError($msg) {
   if(DB::isError($msg)) 
     $msg = "SQL error: " . $msg->getMessage();
   debug("added error", $msg);
-  $page->errors[] = $msg;
+  $page->errors[] = $page->getlocalized($msg);
 }
 
 function raiseError($msg) {
@@ -161,9 +162,13 @@ function raiseError($msg) {
   if(DB::isError($msg)) 
     $msg = "SQL error: " . $msg->getMessage();
   debug("raised error", $msg);
-  $page->errors[] = $msg;
+  $page->errors[] = $page->getlocalized($msg);
   $page->halt();
   exit;
+}
+
+function noErrors() {
+  return empty($page->errors);
 }
 
 // this one is used from smarty to check permissions

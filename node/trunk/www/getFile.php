@@ -4,10 +4,15 @@ require("init.inc.php");
 
 $filename = sotf_Utils::getParameter('filename');
 $id = sotf_Utils::getParameter('id');
+$mainAudio = sotf_Utils::getParameter('audio');
 $prg = & new sotf_Programme($id);
 
 $filename = sotf_Utils::getFileFromPath($filename);
-$filename = $prg->getOtherFilesDir() . '/' . $filename;
+if($mainAudio)
+     $filename = $prg->getAudioDir() . '/' . $filename;
+else
+     $filename = $prg->getOtherFilesDir() . '/' . $filename;
+
 
 $file = & new sotf_File($filename);
 if ($file->type != "none")

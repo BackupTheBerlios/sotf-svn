@@ -15,7 +15,7 @@ $delperm = sotf_Utils::getParameter('delperm');
 $username = sotf_Utils::getParameter('username');
 
 $view = sotf_Utils::getParameter('view');
-$setlogo = sotf_Utils::getParameter('setlogo');
+$seticon = sotf_Utils::getParameter('seticon');
 $filename = sotf_Utils::getParameter('filename');
 
 $path_parts = pathinfo(realpath($filename));
@@ -36,7 +36,7 @@ if (!hasPerm($contact->id, "change")) {
 $upload = sotf_Utils::getParameter('upload');
 if($upload) {
   move_uploaded_file($_FILES['userfile']['tmp_name'], $user->getUserDir() . '/' . $_FILES['userfile']['name']);
-  $page->redirect("editContact.php?id=$contactId#logo");
+  $page->redirect("editContact.php?id=$contactId#icon");
   exit;
 }
 
@@ -64,14 +64,14 @@ if($save || $finish1 || $finish2) {
   exit;
 }
 
-if($setlogo) {
-  $file = & new sotf_File($user->getUserDir().'/'.$filename);
-  if ($contact->setLogo($file)) {
+if($seticon) {
+  $file = $user->getUserDir() . '/' . $filename;
+  if ($contact->setIcon($file)) {
     //$page->addStatusMsg("icon_ok");
   } else {
     $page->addStatusMsg("icon_error");
   }
-  $page->redirect("editContact.php?id=$contactId#logo");
+  $page->redirect("editContact.php?id=$contactId#icon");
 }
 
 // general data
@@ -81,11 +81,11 @@ $smarty->assign('CONTACT_DATA',$contact->data);
 //$smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($st->id));
 
 
-// logo and jingle
+// icon and jingle
 $smarty->assign('USERFILES',$user->getUserFiles());
 
-if ($contact->getLogo()) {
-  $smarty->assign('LOGO','1');
+if ($contact->getIcon()) {
+  $smarty->assign('ICON','1');
 }
 
 $page->sendPopup();

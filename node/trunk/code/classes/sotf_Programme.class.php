@@ -96,6 +96,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $this->saveMetadataFile();
   }
 
+	function isLocal() {
+		return is_dir($this->getDir()); 
+	}
+
   function getAssociatedObjects($tableName, $orderBy) {
     $objects = $this->db->getAll("SELECT * FROM $tableName WHERE prog_id='$this->id' ORDER BY $orderBy");
     return $objects;
@@ -165,6 +169,18 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     $this->data['published'] = 'f';
     $this->save();
   }
+
+  /** sets icon for programme */
+	function setIcon($file)
+	{
+    if(parent::setIcon($file)) {
+      $iconFile = $this->getDir() . '/icon.png';
+      sotf_Utils::save($iconFile, $this->getBlob('icon'));
+      return true;
+		} else
+      return false;
+	} // end func setIcon
+
 
   function deleteStats() {
     $id = $this->id;
@@ -351,23 +367,22 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   function setAudio($filename, $copy=false) {
     global $user;
-	 $filename = sotf_Utils::getFileFromPath($filename);
+    $filename = sotf_Utils::getFileFromPath($filename);
     $source = $user->getUserDir().'/'. $filename;
     if(!is_file($source))
       raiseError("no such file: $source");
     $srcFile = new sotf_AudioFile($source);
-	 $target = $this->getAudioDir() .  '/' . 'prg_' . $srcFile->getFormatFilename();
-    if($srcFile->type == audio) {
-      if($copy)
-		  $success = copy($source,$target);
-      else
-        $success = rename($source,$target);
-      if(!$success)
-        raiseError("could not copy/move $source");
-      return true;
-    }
-    return false;
-    //$this->audioFiles->add($target);
+    $target = $this->getAudioDir() .  '/' . $this->track . '_' . $srcFile->getFormatFilename();
+    if($srcFile->type != 'audio')
+      raiseError("this is not an audio file");
+    if($copy)
+      $success = copy($source,$target);
+    else
+      $success = rename($source,$target);
+    if(!$success)
+      raiseError("could not copy/move $source");
+    // save into database
+    $this->saveFileInfo($target, false);
   }
 
   function getAudio($filename, $copy=false) {
@@ -392,7 +407,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   function setOtherFile($filename, $copy=false) {
     global $user;
-	$filename = sotf_Utils::getFileFromPath($filename);
+    $filename = sotf_Utils::getFileFromPath($filename);
     $source = $user->getUserDir().'/'. $filename;
     $target = $this->getOtherFilesDir() . '/' . $filename;
     while (file_exists($target)) {
@@ -401,10 +416,43 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     if (is_file($source))
       {
         if($copy)
-          copy($source,$target);
+          $success = copy($source,$target);
         else
-          rename($source,$target);
+          $success = rename($source,$target);
       }
+    if(!$success)
+      raiseError("could not copy/move $source to $target");
+    // save into database
+    $this->saveFileInfo($target, false);
+  }
+
+  function saveFileInfo($filepath, $mainContent = false) {
+    // convert boolean into pgsql format
+    if($mainContent)
+      $mainContent = 'true';
+    else 
+      $mainContent = 'false';
+    // save file info into database
+    $file = new sotf_AudioFile($filepath);
+    if($file->isAudio()) {
+      $fileInfo = new sotf_NodeObject('sotf_media_files');
+      $fileInfo->set('play_length', round($file->duration));
+      $fileInfo->set('type', $file->type);
+      $fileInfo->set('format', $file->getFormatFilename());
+      $fileInfo->set('main_content', 'false');
+    } else {
+      $fileInfo = new sotf_NodeObject('sotf_other_files');
+
+    }
+    $fileInfo->set('prog_id', $this->id);
+    $fileInfo->set('filename', $file->name);
+    $fstat = stat($filepath);
+    $fileInfo->set('filesize', $fstat['size']);
+    $fileInfo->set('last_modified', $this->db->getTimestampTz($fstat['mtime']));
+    $fileInfo->set('mime_type', $file->mimetype);
+    $success = $fileInfo->create();
+    if(!$success)
+      raiseError("could not write into database");
   }
 
   function getOtherFile($filename, $copy=false) {

@@ -6,7 +6,7 @@ $id = sotf_Utils::getParameter('id');
 
 $obj = $repository->getObject($id);
 
-$image = $obj->getLogo();
+$image = $obj->getIcon();
 
 if($image)
 {

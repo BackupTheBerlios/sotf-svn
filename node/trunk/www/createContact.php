@@ -13,8 +13,8 @@ if($contactName) {
   // create a new contact
   $contact = new sotf_Contact();
   $status = $contact->create($contactName);
-  if($status == ERROR_NAME_USED) {
-    $page->addStatusMsg('contact_name_exists');
+  if(!$status) {
+    $page->addStatusMsg('contact_create_failed');
   } else {
     $permissions->addPermission($contact->id, $user->id, 'admin');
     $page->redirect("editContact.php?id=" . $contact->id);

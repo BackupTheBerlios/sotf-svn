@@ -100,7 +100,7 @@
       </td>
 </tr></table>
 <table border="1" width="100%" bgcolor="{#editorBgColor1#}">
-<tr>
+<tr class="listhead">
       <th>{#Flag#}</th>
       <th>{#Title_abs#}</th>
       <th>{#Station#}</th>
@@ -112,8 +112,9 @@
       <th>{#Actions#}</th>
 </tr>
 
+    {cycle values="list1,list2" print=false advance=false}
     {section name=i loop=$MYPROGS}
-    <tr>
+    <tr class="{cycle}">
       <td>&nbsp;</td>
       <td><a href="get.php?id={$MYPROGS[i]->id|escape}"><b>{$MYPROGS[i]->data.title}</b></a>
         <br><font size="-1">{$MYPROGS[i]->data.abstract|truncate:200}</font>

@@ -1,47 +1,267 @@
-{if not $ID}
-  <form action="get.php">
-    {if $POPUP}
-    <input type="hidden" name="popup" value="1">
-    {/if}
-      <h4>Please enter the ID of the selected radio show!</h4>
-      <input type="text" name="id" size="60" value="{$ID}">
-  </form>
-{else}
 
-{if $PRG->data.icon}
-  <img src="getIcon.php/icon.png?id={$ID|escape}" align="right">
-{/if}
+<h3>{#editmeta#}</h3>
 
-<!-- TODO: station and series icon as well !! -->
-
-	<h3>{$PRG->data.title}</h3>
-
-<form method="post">
-<table width="100%" cellspacing="10" border="0"><tr><td>
-<table width="100%" bgcolor="{#getBgColor1#}" border="0" cellspacing="0" cellpadding="2"> 
-	<tr bgcolor={#getTitleColor#}><td><b>{#General_metadata#}:</b></td><td align="right">{if $EDIT_PERMISSION}<a href="editMeta.php?id={$ID|escape}">{#Edit#}</a>{else}&nbsp;{/if}</td></tr>
-	<tr>
-		<td valign="top">
-		<table width="100%">
-			<tr><td valign="top"><b>{#Title#}:</b></td><td><input name="title" value="{$PRG->data.title}" size="{#editTextW#}"></td></tr>
-			<tr><td valign="top"><b>{#Author#}:</b></td><td><input name="author" value="{$PRG->data.author}" size="{#editMetaTextW#}"></td></tr>
-			<tr><td valign="top"><b>{#Production_date#}:</b></td><td>{html_select_date time="$PRODUCTION_DATE" start_year="$PRODUCTION_START" end_year="$PRODUCTION_END" prefix="Production" month_format="%m" field_order="YMD" field_separator="-"} {#Date_help#}</td></tr>
-			<tr><td valign="top"><b>{#Expiry_date#}:</b></td><td>{html_select_date time="$EXPIRY_DATE" start_year="$EXPIRY_START" end_year="$EXPIRY_END" prefix="Expiry" month_format="%m" field_order="YMD" field_separator="-"} {#Date_help#}</td></tr>
-			<tr><td valign="top"><b>{#Keywords#}:</b></td><td><input name="keywords" value="{$PRG->data.keywords}" size="{#editMetaTextW#}"></td></tr>
-			<tr><td valign="top"><b>{#Contact_email#}:</b></td><td><input name="contact_email" value="{$PRG->data.contact_email}" size="{#editMetaTextW#}"></td></tr>
-			<tr><td valign="top"><b>{#Contact_phone#}:</b></td><td><input name="contact_phone" value="{$PRG->data.contact_phone}" size="{#editMetaTextW#}"></td></tr>
-			<tr><td valign="top"><b>{#Abstract#}:</b></td><td><textarea name="abstract" rows="{#editMetaTextR#}" cols="{#editMetaTextW#}">{$PRG->data.abstract}</textarea></td></tr>
-		</table>
-		</td>
-	</tr>
-</table>
-</td></tr></table>
-<p align="center"><input type="submit" name="finishpublish" value="{#finish_publish#}"> <input type="submit" name="finishnotpublish" value="{#finish_not_publish#}"></p>
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#general_data#}</td>
+    </tr>
+  </table>
+  <table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
+        
+        <form method="post">
+          <table width="100%">
+            <tr>
+              <td class="meta">{#title#}:</td>
+              <td><input name="title" value="{$PRG_DATA.title}" size="60" maxlength="255"></td>
+            </tr>
+            <tr>
+              <td class="meta">{#alternative_title#}:</td>
+              <td><input name="alternative_title" value="{$PRG_DATA.alternative_title}" size="60" maxlength="255"></td>
+            </tr>
+            <tr>
+              <td class="meta">{#episode_title#}:</td>
+              <td><input name="episode_title" value="{$PRG_DATA.episode_title}" size="60" maxlength="255"></td>
+            </tr>
+            <tr>
+              <td class="meta">{#episode_sequence#}:</td>
+              <td><input name="episode_sequence" value="{$PRG_DATA.episode_sequence}" size="5" maxlength="5"></td>
+            </tr>
+            <tr>
+              <td class="meta">{#production_date#}:</td>
+              <td>{html_select_date time=$PRG_DATA.production_date start_year="-5" prefix="production_date" month_format="%m" field_order="YMD" field_separator="-"}</td>
+            </tr>
+            <tr>
+              <td class="meta">{#broadcast_date#}:</td>
+              <td>{html_select_date time=$PRG_DATA.broadcast_date start_year="-5" prefix="broadcast_date" month_format="%m" field_order="YMD" field_separator="-"}</td>
+            </tr>
+            <tr>
+              <td class="meta">{#expiry_date#}:</td>
+              <td>{html_select_date time=$PRG_DATA.expiry_date end_year="+5" prefix="expiry_date" month_format="%m" field_order="YMD" field_separator="-"}</td>
+            </tr>
+            <tr>
+              <td class="meta">{#keywords#}:</td>
+              <td><textarea name="keywords" rows="3" cols="50">{$PRG_DATA.keywords}</textarea></td>
+            </tr>
+            <tr>
+              <td class="meta">{#abstract#}:</td>
+              <td><textarea name="abstract" rows="6" cols="50">{$PRG_DATA.abstract}</textarea></td>
+            </tr>
+            <tr>
+              <td class="meta">{#language#}:</td>
+              <td>
+                <select name="language">
+                  {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_DATA.language}
+                </select>
+              </td>
+            </tr>		
+            <tr>
+              <td class="meta">{#genre#}</td>
+              <td>
+                <select name="genre_id">
+                  {foreach from=$GENRES_LIST item=item}
+                  <option value="{$item.id}"  {if $item.id eq $$PRG_DATA.genre_id} SELECTED {/if} >{$item.name}</option>
+                  {/foreach}
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td class="meta">{#spatial_coverage#}:</td>
+              <td><input name="spatial_coverage" value="{$PRG_DATA.spatial_coverage}" size="60" maxlength="255"></td>
+            </tr>
+            <tr>
+              <td class="meta">{#temporal_coverage#}:</td>
+              <td>{html_select_date time=$PRG_DATA.temporal_coverage start_year="1900" prefix="temporal_coverage" month_format="%m" field_order="YMD" field_separator="-"}</td>
+            </tr>
+          </table>
+	<input type="submit" name="save" value="{#save#}">
 </form>
-{if false}
-	{else} <!-- if count MD gt 0 -->
-		{if $lang == "en"} No such ID...
-		{elseif $lang == "de"} Bitte keine gefunden haben werden konnen mussen....
-		{/if}
-	{/if}
-{/if}
+
+</td>
+</tr>
+</table>
+
+<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Roles#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea">
+        <a name="roles"></a>
+        {if $ROLES}
+        <table>
+          <tr class="listhead"><th>{#Role#}</th><th>{#Contact#}</th><th>{#actions#}</th></tr>
+          {cycle name="roles" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$ROLES}
+          <tr class="{cycle name=roles}">
+            <td>
+              {$item.role_name}
+            </td>
+            <td>
+              {$item.contact_data.name}
+            </td>
+            <td>
+              <a class="action" href="javascript:popup('editRole.php?roleid={$item.id}&objectid={$PRG_ID}','{#edit_role#}',350,400,false)">{#change#}</a>
+              <a class="action" href="javascript:popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)">{#edit_contact#}</a>
+              <a class="action" href="editMeta.php?delrole=1&roleid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_roles#}</p>
+        {/if}
+        <p>
+          <a class="action" href="javascript:popup('editRole.php?new=1&objectid={$PRG_ID}','{#edit_role#}',400,400,false)">{#add_new_role#}</a>
+        </p>
+      </td>
+    </tr>
+</table>
+
+<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Rights#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea">
+        <a name="rights"></a>
+        {if $RIGHTS}
+        <table>
+          <tr class="listhead"><th>{#start_time#}</th><th>{#stop_time#}</th><th>{#rights_text#}</th><th></th></tr>
+          {cycle name="rights" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$RIGHTS}
+          <tr class="{cycle name=rights}">
+            {if empty($item.start_time) and empty($item.stop_time) }
+               <td colspan="2">{#for_whole_prg#}</td>
+            {else}
+               <td>
+                 {$item.start_time}
+               </td>
+               <td>
+                 {$item.stop_time}
+               </td>
+            {/if}
+            <td>
+              {$item.rights_text}
+            </td>
+            <td nowrap>
+              <a class="action" href="javascript:popup('editRight.php?rid={$item.id}&objectid={$PRG_ID}','{#edit_right#}',300,500,false)">{#change#}</a>
+              <a class="action" href="editMeta.php?delright=1&rid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_rights#}</p>
+        {/if}
+        <p>
+          <a class="action" href="javascript:popup('editRight.php?new=1&objectid={$PRG_ID}','{#edit_right#}',300,500,false)">{#add_new_right#}</a>
+        </p>
+      </td>
+    </tr>
+</table>
+
+<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#access_permissions#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        <a name="perms"></a>
+        {if $PERMISSIONS}
+        <table>
+          {cycle name="perms" values="list1,list2" print=false advance=false}
+          <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
+          {foreach item=user key=username from=$PERMISSIONS}
+          <tr class="{cycle name=perms}">
+            <td>{$username}</td>
+            <td>
+              {section name=i loop=$user}
+              {$user[i]}{if ! $smarty.section.i.last}, {/if}
+              {/section}
+            </td>
+            <td>
+              <a class="action" href="javascript:popup('editPermissions.php?context=station&objectid={$PRG_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)">{#change#}</a>
+              <a class="action" href="editMeta.php?delperm=1&username={$username|escape}&id={$PRG_ID}">{#delete#}</a>
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_users#}</p>
+        {/if}
+        <form method="post" name="form1">
+          <input type="hidden" name="id" value="{$PRG_ID}">
+            {#username#}: <input name="username"> 
+              <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=programme&objectid={$PRG_ID}&objectname={$PRG_TITLE|escape}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
+                <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
+        </form>
+      </td>
+    </tr>
+</table>
+
+<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#icon#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+   <td class="tabarea"> 
+
+        {if $ICON}
+         <img align="left" src="getIcon.php/icon.png?id={$PRG_ID}" border="1" />
+        {else}
+          <table><tr><td>{#no_icon#}</td></tr></table>
+        {/if}
+        <a name="icon"></a>
+
+        {if $USERFILES}
+{literal}
+<script language="javascript">
+function getSelected() {
+     return document.userfiles['filename'].options[document.userfiles['filename'].selectedIndex].value;
+}
+</script>
+{/literal}
+
+        <form method="post" name="userfiles">
+          <input type="hidden" name="id" value="{$PRG_ID}">
+          <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
+          <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
+          <input type="submit" name="seticon" value="{#set_icon#}">
+          <br \><small>{#userfiles_expl#}</small>
+        </form>
+        {else}
+        <p>{#no_files#}</p>
+        {/if}
+        <small>
+          <form enctype="multipart/form-data" method="post">
+            <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+            <input type="hidden" name="id" value="{$PRG_ID}" />
+            <input name="userfile" type="file" />
+            <input type="submit" name="uploadicon" value="{#set_icon#}" />
+            <!-- <input type="submit" name="upload" value="{#upload_file#}" /> -->
+            <br />{#upload_expl#}
+          </form>
+        </small>
+        
+      </td>
+    </tr>
+  </table>
+

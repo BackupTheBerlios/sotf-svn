@@ -34,16 +34,44 @@ TH {
 	background-image: url(top_r2_c1.gif);
 	background-position: right;
 }
+
 TD.tab {
-  FONT-WEIGHT: bold; background-color: #CCCCCC;
+  FONT-WEIGHT: bold; background-color: #A8C3F7;
 }
 TD.tabarea {
-  background-color: #EEEEEE;
+  background-color: #EFF4FE;
+}
+TR.listhead {
+  background-color: #D3ECF5;
+}
+TR.list2 {
+  background-color: #D3ECF5;
+}
+TR.list1 {
+  background-color: #EFF4FE;
 }
 
+
 TABLE.tabarea {
-  background: #CCCCCC; width: 100%;
+  background: #D3ECF5; width: 100%;
 }
+
 TABLE.tab {
-  background: #CCCCCC; width: 20%;
+  background: #A8C3F7; width: 20%;
+}
+
+A.action {
+ COLOR: #000000; border: outset; border-width: thin; background-color: #DDDDDD; TEXT-DECORATION: none; padding: 2pt; margin: 3pt;
+}
+
+A {
+  COLOR: #000000; TEXT-DECORATION: underline;
+}
+
+.subheader {
+
+}
+
+.meta {
+ FONT-WEIGHT: bold; 
 }

@@ -1,112 +1,184 @@
 <?php
 require("init.inc.php");
 
-// todo id must be  sql safe
-$id = sotf_Utils::getParameter('id');
-$title = sotf_Utils::getParameter('title');
-$author = sotf_Utils::getParameter('author');
-$ProductionYear = sotf_Utils::getParameter('ProductionYear');
-$ProductionMonth = sotf_Utils::getParameter('ProductionMonth');
-$ProductionDay = sotf_Utils::getParameter('ProductionDay');
-$ExpiryYear = sotf_Utils::getParameter('ExpiryYear');
-$ExpiryMonth = sotf_Utils::getParameter('ExpiryMonth');
-$ExpiryDay = sotf_Utils::getParameter('ExpiryDay');
-$keywords = sotf_Utils::getParameter('keywords');
-$contact_email = sotf_Utils::getParameter('contact_email');
-$contact_phone = sotf_Utils::getParameter('contact_phone');
-$abstract = sotf_Utils::getParameter('abstract');
-		
-$production_date = sprintf("%04d-%02d-%02d", $ProductionYear, $ProductionMonth, $ProductionDay);
-$expiry_date = sprintf("%04d-%02d-%02d", $ExpiryYear, $ExpiryMonth ,$ExpiryDay);
+$smarty->assign("PAGETITLE", $page->getlocalized("editmeta"));
+//////$smarty->assign("OKURL", $_SERVER['PHP_SELF'] . "?id=" . rawurlencode($id));
+
+$page->forceLogin();
+
+$prgId = sotf_Utils::getParameter('id');
 
 $finishpublish = sotf_Utils::getParameter('finishpublish');
 $finishnotpublish = sotf_Utils::getParameter('finishnotpublish');
 
 $okURL = sotf_Utils::getParameter('okURL');
 
-$prg = & new sotf_Programme($id);
+$prg = & new sotf_Programme($prgId);
 
-// admins or owners can change files
-if(!$prg->isEditable()) {
+if(!$prg->isLocal()) {
+  raiseError("You can only edit programmes locally!");
+}
+if(!hasPerm($prgId, 'change')) {
   raiseError("no permission to change files in this programme");
   exit;
 }
 
-if ($title)
-	$prg->set('title',$title);
-if ($author)
-	$prg->set('author',$author);
-if ($keywords)
-	$prg->set('keywords',$keywords);
-if ($contact_email)
-	$prg->set('contact_email',$contact_email);
-if ($contact_phone)
-	$prg->set('contact_phone',$contact_phone);
-if ($abstract)
-	$prg->set('abstract',$abstract);
-if ($production_date)
-	$prg->set('production_date',$production_date);
-if ($expiry_date)
-	$prg->set('expiry_date',$expiry_date);
-
-$smarty->assign("PAGETITLE", $page->getlocalized("editmeta"));
-$smarty->assign("OKURL", $_SERVER['PHP_SELF'] . "?id=" . rawurlencode($id));
-
-if($id) {
+$save = sotf_Utils::getParameter('save');
+if($save) {
+  $params = array('title'=>'text',
+                  'alternative_title'=>'text',
+                  'episode_title'=>'text',
+                  'episode_sequence'=>'number',
+                  'keywords'=>'text',
+                  'abstract'=>'text',
+                  'language'=>'text',
+                  'genre_id'=>'number',
+                  'spatial_coverage'=>'text',
+                  'temporal_coverage'=>'date',
+                  'production_date'=>'date',
+                  'broadcast_date'=>'date',
+                  'expiry_date'=>'date'
+                  );
+  foreach($params as $param=>$type) {
+    $value = sotf_Utils::getParameter($param);
+    if($type=='text') {
+      $value = strip_tags($value);
+    } elseif($type=='number') {
+      if(!is_numeric($value)) {
+        addError($page->getlocalized('not_a_number') . ": $value");
+        continue;
+      }
+    } elseif($type=='date') {
+      $value = sotf_Utils::getParameter($param . 'Year') . '-'
+        . sotf_Utils::getParameter($param . 'Month') . '-'
+        . sotf_Utils::getParameter($param . 'Day');
+    }
+    $prg->set($param, $value);
+  }
+  $prg->update();
+  $page->redirect("editMeta.php?id=$prg->id");
+  /*
   if ($finishpublish) {
-	$prg->publish();
-	if ($okURL)
-	  $page->redirect($okURL);
-	else
-	  $page->redirect("editor.php");
+    $prg->publish();
+    if ($okURL)
+      $page->redirect($okURL);
+    else
+      $page->redirect("editor.php");
   }
   if ($finishnotpublish) {
-	$prg->withDraw();
-	if ($okURL)
-	  $page->redirect($okURL);
-	else
-	  $page->redirect("editor.php");
-  }
-  $smarty->assign('ID', $id);
-
-  $prg = & new sotf_Programme($id);
-  $smarty->assign_by_ref('PRG', $prg);
-  
-  if($prg->isEditable()) {
-    $smarty->assign('EDIT_PERMISSION', true);
-  }
-
-  /* rights have to be get from sotf_files table
-  $smarty->assign('RIGHT_DOWNLOAD',$right_download);
-  $smarty->assign('RIGHT_DOWNLOAD24',$right_download24);
-  $smarty->assign('RIGHT_LISTEN',$right_listen);
-  $smarty->assign('RIGHT_LISTEN24',$right_listen24);
-  */
-  // ??? $smarty->assign('UPLOAD_PERMISSION',$page->getPermission('upload',$idObj->stationId));
-
-  $smarty->assign('OTHERFILES', $prg->listOtherFiles());
-  $smarty->assign('AUDIOFILES', $prg->listAudioFiles());
-
-  $smarty->assign('PAGETITLE', htmlspecialchars($prg->get('title')));
-
-  $expiry_date = $prg->get['expiry_date'];
-  $production_date = $prg->get['production_date'];
-
-  $smarty->assign('PRODUCTION_DATE',$production_date); //TODO normalisan megcsinalni
-  $smarty->assign('PRODUCTION_START',date('Y')-30);
-  $smarty->assign('PRODUCTION_END',date('Y'));
-  $smarty->assign('EXPIRY_DATE',$expiry_date); //TODO normalisan megcsinalni
-  $smarty->assign('EXPIRY_START',date('Y'));
-  $smarty->assign('EXPIRY_END',date('Y')+10);
-
-  /* stats and refs are collected via xml-rpc ??
-  if($localItem) {
-    $smarty->assign($repo->getStats($idObj));
-    $smarty->assign('REFS', $repo->getRefs($idObj));
+    $prg->withDraw();
+    if ($okURL)
+      $page->redirect($okURL);
+    else
+      $page->redirect("editor.php");
   }
   */
-
 }
+
+$smarty->assign('PRG_ID', $prgId);
+$smarty->assign('PRG_TITLE', $prg->get('title'));
+
+
+// upload to my files
+$uploadIcon = sotf_Utils::getParameter('uploadicon');
+if($uploadIcon) {
+  $file = $user->getUserDir() . '/' . $_FILES['userfile']['name'];
+  move_uploaded_file($_FILES['userfile']['tmp_name'], $file);
+  if ($prg->setIcon($file)) {
+    //$page->addStatusMsg("ok_icon");
+  } else {
+    $page->addStatusMsg("error_icon");
+  }  
+  $page->redirect("editMeta.php?id=$prgId#icon");
+  exit;
+}
+
+// delete role
+$delrole = sotf_Utils::getParameter('delrole');
+$roleid = sotf_Utils::getParameter('roleid');
+if($delrole) {
+  $role = new sotf_NodeObject('sotf_object_roles', $roleid);
+  $c = new sotf_Contact($role->get('contact_id'));
+  $role->delete();
+  $msg = $page->getlocalizedWithParams("deleted_contact", $c->get('name'));
+  $page->addStatusMsg($msg, false);
+  $page->redirect("editMeta.php?id=$prgId#roles");
+  exit;
+}
+
+// delete right
+$delright = sotf_Utils::getParameter('delright');
+$rid = sotf_Utils::getParameter('rid');
+if($delright) {
+  $right = new sotf_NodeObject('sotf_rights', $rid);
+  $right->delete();
+  //$msg = $page->getlocalizedWithParams("deleted_", $c->get('name'));
+  //$page->addStatusMsg($msg, false);
+  $page->redirect("editMeta.php?id=$prgId#rights");
+  exit;
+}
+
+// manage permissions
+$delperm = sotf_Utils::getParameter('delperm');
+$username = sotf_Utils::getParameter('username');
+if($delperm) {
+  $userid = $user->getUserid($username);
+  if(empty($userid) || !is_numeric($userid)) {
+    raiseError("Invalid username: $username");
+  }
+  $permissions->delPermission($prg->id, $userid);
+  $msg = $page->getlocalizedWithParams("deleted_permissions_for", $username);
+  $page->addStatusMsg($msg, false);
+  $page->redirect("editMeta.php?id=$prgId#perms");
+  exit;
+}
+
+// icon and jingle
+$seticon = sotf_Utils::getParameter('seticon');
+$filename = sotf_Utils::getParameter('filename');
+if($seticon) {
+  $file = $user->getUserDir() . '/' . $filename;
+  if ($prg->setIcon($file)) {
+    //$page->addStatusMsg("ok_icon");
+  } else {
+    //$page->addStatusMsg("error_icon");
+  }
+  $page->redirect("editMeta.php?id=$prgId#icon");
+}
+
+// generate output
+
+// general data
+$smarty->assign('PRG_DATA', $prg->getAll());
+
+// roles and contacts
+$smarty->assign('ROLES', $prg->getRoles());
+
+// user permissions: editors and managers
+$smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($prg->id));
+
+// genres
+$smarty->assign('GENRES_LIST', $repository->getGenres());
+
+// languages
+for($i=0; $i<count($languages); $i++) {
+  $langNames[$i] = $page->getlocalized($languages[$i]);
+}
+$smarty->assign('LANG_CODES', $languages);
+$smarty->assign('LANG_NAMES', $langNames);
+
+// rights sections
+$smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
+
+// for icon
+$smarty->assign('USERFILES',$user->getUserFiles());
+
+if ($prg->getIcon()) {
+  $smarty->assign('ICON','1');
+}
+
+//$smarty->assign('OKURL',$PHP_SELF . '?station=' . rawurlencode($station));
+
 $page->send();
 
 ?>

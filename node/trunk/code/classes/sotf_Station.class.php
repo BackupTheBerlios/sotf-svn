@@ -99,49 +99,15 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	* @use	$iconWidth
 	* @use	$iconHeight
 	*/
-	function setLogo($file)
+	function setIcon($file)
 	{
-		global $db,$iconWidth,$iconHeight;
-
-		if ($file->type != "none")
-		{
-			$info = GetAllMP3info($file->getPath());
-			if (($info['png']['width'] <= $iconWidth) && ($info['png']['height'] <= $iconHeight))
-				if ($fp = fopen($file->getPath(),'rb'))
-				{
-					$data = fread($fp,filesize($file->getPath()));
-					fclose($fp);
-          // save into DB
-					$this->setBlob("icon",$data);
-          // save into file system
-
-          if(!copy($file->getPath(), $this->getStationDir() . '/icon.png'))
-            raiseError("could not copy icon file!");
-					return true;
-				} else
-          raiseError("could not open icon file!");
-		}
-		return false;
-	} // end func setLogo
-
-	/**
-	* Gets logo of the station
-	*
-	* @return	string	Binary data contains the logo
-	* @use	$db
-	*/
-	function getLogo()
-	{
-		return $this->getBlob("icon");
-	} // end func getLogo
-
-  /** this places the icon into the www/tmp, so that you can refer to it with <img src=
-  function cacheLogo() {
-    global $cachedir, $cacheprefix;
-    $fname = "$cachedir/" . $this->id . "
-    if(is_readable($fname))
-  }
-  */
+    if(parent::setIcon($file)) {
+      $iconFile = $this->getStationDir() . '/icon.png';
+      sotf_Utils::save($iconFile, $this->getBlob('icon'));
+      return true;
+		} else
+      return false;
+	} // end func setIcon
 
 	/**
 	* Sets jingle of the station.

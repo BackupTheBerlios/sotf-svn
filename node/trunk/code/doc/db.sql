@@ -28,7 +28,7 @@ CREATE TABLE "sotf_user_history" (
 	"user_id" int, -- cannot reference to sadm.authenticate(auth_id)
 	"action" varchar(30), -- type of action the user did with object
 	"object_id" varchar(12),
-	"when" datetime
+	"when" timestamptz
 );
 
 CREATE TABLE "sotf_node_objects" (
@@ -175,8 +175,8 @@ CREATE TABLE "sotf_rights" (
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"prog_id" varchar(12) NOT NULL,
-	"start_time" int4 NOT NULL,   --starting second of the rightcontrolled part
-	"stop_time"  int4 NOT NULL,  -- ending second. Both may be empty. If so, the rights text is valid for the complete programme
+	"start_time" int4,   --starting second of the rightcontrolled part
+	"stop_time"  int4,  -- ending second. Both may be empty. If so, the rights text is valid for the complete programme
 	"rights_text" text,
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
@@ -204,10 +204,11 @@ CREATE TABLE "sotf_other_files" (
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"prog_id" varchar(12) NOT NULL,
-	"filename" varchar(32) NOT NULL,
+	"filename" varchar(255) NOT NULL,
 	"caption" varchar(255),
+	"mime_type" varchar(50),
 	"filesize" int,
-	"last_modified" datetime,
+	"last_modified" timestamptz,
 	"public_access" bool DEFAULT 'f'::bool,
 	CONSTRAINT "sotf_other_files_u" UNIQUE ("prog_id", "filename"),
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
@@ -220,12 +221,13 @@ CREATE TABLE "sotf_media_files" (
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"prog_id" varchar(12) NOT NULL,
-	"filename" varchar(32) NOT NULL,
+	"filename" varchar(255) NOT NULL,
 	"caption" varchar(255),
 	"filesize" int,
-	"last_modified" datetime,
+	"last_modified" timestamptz,
 	"play_length" int,
 	"type" varchar(10),		-- e.g. audio, video
+	"mime_type" varchar(50),
 	"format" varchar(70),	-- e.g. mp3,24kbps,44100hz,stereo
 	"stream_access" bool DEFAULT 't'::bool,	-- if users may view it as a stream
 	"download_access" bool DEFAULT 'f'::bool,	-- if users may download it
@@ -367,7 +369,7 @@ CREATE TABLE "sotf_ratings" (
 	-- todo: delete ratings of a deleted user or not?
 	"rate" SMALLINT NOT NULL DEFAULT '0',
 	"host" varchar(100) NOT NULL,									-- host from where the rating arrived
-	"entered" datetime NOT NULL DEFAULT '-infinity',		-- date when rating arrived
+	"entered" timestamptz NOT NULL DEFAULT '-infinity',		-- date when rating arrived
 	"auth_key" varchar(50),											-- anti-abuse thingie
 	"problem" varchar(50) default NULL,							-- if any suspicious thing occurred during rating
 	CONSTRAINT "sotf_ratings_uniq" UNIQUE ("prog_id", "entered", "auth_key"), -- this is not perfect

@@ -26,14 +26,14 @@ $stations = sotf_Station::listStations($start, $hitsPerPage);
 for($i=0; $i<count($stations); $i++)
 {
 	
-	if ($stations[$i]->getLogo())
-    $hasLogo = true;
+	if ($stations[$i]->getIcon())
+    $hasIcon = true;
   
 	 $sprops = array('id'		=> $stations[$i]->id,
                    'name'	=> $stations[$i]->get('name'),
                    'description'	=> $stations[$i]->get('description'),
                    'numProgs'		=> $stations[$i]->numProgrammes(),
-                   'hasLogo'			=> $hasLogo,
+                   'hasIcon'			=> $hasIcon,
                    'isLocal'			=> $stations[$i]->isLocal());
    if(hasPerm('node','delete')) {
      $sprops['managers'] = $permissions->listUsersWithPermission($stations[$i]->id, 'admin');

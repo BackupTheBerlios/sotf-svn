@@ -23,15 +23,23 @@ $smarty->assign('PRG_ID',$prgId);
 $upload = sotf_Utils::getParameter('upload');
 if($upload) {
   move_uploaded_file($_FILES['userfile']['tmp_name'], $user->getUserDir() . '/' . $_FILES['userfile']['name']);
-  $page->redirect("editStation.php?stationid=$stationid#logo");
+  $page->redirect("addFiles.php?prgid=$prgId");
   exit;
 }
 
-// save general data
-if($save) {
-  $st->set('description', $desc);
-  $st->update();
-  $page->redirect("editStation.php?stationid=$stationid");
+// add files
+if($add) {
+  $copy = sotf_Utils::getParameter('copy');
+  $prg = new sotf_Programme($prgId);
+  reset ($_POST);
+  while(list($k,$fname) = each($_POST)) {
+    debug("P", $k);
+    if(substr($k, 0, 4) == 'sel_') {
+      debug("adding", "'$fname', '$copy'");
+      $prg->setOtherFile($fname, $copy);
+    }
+  }
+  $page->redirect("closeAndRefresh.php");
   exit;
 }
 
@@ -40,6 +48,8 @@ if($save) {
 // general data
 $smarty->assign('USERFILES',$user->getUserFiles());
 
+$userFtpUrl = str_replace('ftp://', "ftp://".$user->name."@", "$userFTP$userid");
+$smarty->assign("USERFTPURL", $userFtpUrl); 
 
 $page->sendPopup();
 

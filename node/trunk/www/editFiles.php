@@ -19,13 +19,29 @@ $selectedOtherFiles = sotf_Utils::getParameter('otherfiles');
 $delLink = sotf_Utils::getParameter('dellink');
 $addLink = sotf_Utils::getParameter('addlink');
 $delother = sotf_Utils::getParameter('delother');
-
-$itemtoftp = sotf_Utils::getParameter('itemtoftp');
-$ftptoaudio = sotf_Utils::getParameter('ftptoaudio');
-$ftptoother = sotf_Utils::getParameter('ftptoother');
-$ftptoicon = sotf_Utils::getParameter('ftptoicon');
+$capid =  sotf_Utils::getParameter('capid');
+$capvalue =  sotf_Utils::getParameter('capvalue');
+$capurl =  sotf_Utils::getParameter('capurl');
+$capname =  sotf_Utils::getParameter('capname');
 
 $smarty->assign("OKURL",$okURL);
+
+if ($capname == "ofiles")
+{
+	$x = new sotf_NodeObject("sotf_other_files", $capid);
+	$x->set('caption', addslashes($capvalue));
+	$x->update();
+	if (!strstr($capurl, "#")) $capurl .= "#ofiles";
+	$page->redirect($capurl);
+}
+elseif ($capname == "mfiles")
+{
+	$x = new sotf_NodeObject("sotf_media_files", $capid);
+	$x->set('caption', addslashes($capvalue));
+	$x->update();
+	if (!strstr($capurl, "#")) $capurl .= "#mfiles";
+	$page->redirect($capurl);
+}
 
 $prg = & new sotf_Programme($id);
 
@@ -42,74 +58,82 @@ if($delLink) {
   exit;
 }
 
-
-if ($ok)
-	if ($okURL)
-		$page->redirect($okURL);
-if ($delother)
-{
-	for($i=0;$i<count($selectedOtherFiles);$i++)
-		$retval = $prg->deleteFile($selectedOtherFiles[$i]);
-}
-elseif ($deluser)
-{
-	for($i=0;$i<count($selectedUserFiles);$i++)
-		$retval = $user->deleteFile($selectedUserFiles[$i]);
-}
-elseif ($send)
-{
-	$success = move_uploaded_file($_FILES['userfile']['tmp_name'], $user->getUserDir() . '/' . $_FILES['userfile']['name']);
-	if (!$success)
-	{
-		$status = "&uploaderror=1";
-	}
-	$page->redirect($_SERVER['PHP_SELF'] . "?id=".rawurlencode($id)."&okURL=".rawurlencode($okURL).$status);
-}
-elseif ($ok)
-{
-	$page->redirect($okURL);
-}
-elseif ($itemtoftp)
-{
-	foreach($_POST as $name => $value)
-		if (substr($name,0,6) == 'tosel-')
-		{
-			$postvar = sotf_Utils::getParameter($name);
-			for($i=0;$i<count($postvar);$i++)
-				$retval = $prg->getAudio($postvar[$i],$copy);
-		}
-	for($i=0;$i<count($selectedOtherFiles);$i++)
-		$retval = $prg->getOtherFile($selectedOtherFiles[$i],$copy);
-	$page->redirect($PHP_SELF . "?id=".rawurlencode($id)."&okURL=".rawurlencode($okURL));
-}
-elseif ($ftptoaudio)
-{
-	for($i=0;$i<count($selectedUserFiles);$i++)
-		$retval = $prg->setAudio($selectedUserFiles[$i],$copy);
-	$page->redirect($PHP_SELF . "?id=".rawurlencode($id)."&okURL=".rawurlencode($okURL));
-}
-elseif ($ftptoother)
-{
-	for($i=0;$i<count($selectedUserFiles);$i++)
-		$retval = $prg->setOtherFile($selectedUserFiles[$i],$copy);
-	$page->redirect($PHP_SELF . "?id=".rawurlencode($id)."&okURL=".rawurlencode($okURL));
-}
-if ($status)
-{
-	$smarty->assign("STATUS",$status);
-}
-
 $smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));
-$smarty->assign('OTHERFILES', $prg->listOtherFiles());
-$smarty->assign('AUDIOFILES', $prg->listAudioFiles());
+
+// TODO: compare directory and SQL data for correctness
+
+// other files
+$otherFiles = $prg->getAssociatedObjects('sotf_other_files', 'filename');
+$smarty->assign('OTHER_FILES', $otherFiles);
+
+// audio files which does not contain the main programme
+$mainAudio = array();
+$audioFiles = $prg->getAssociatedObjects('sotf_media_files', 'main_content, filename');
+for ($i=0;$i<count($audioFiles);$i++) {
+  if($audioFiles[$i]['main_content']=='t') {
+    $mainAudio[$audioFiles[$i]['filename']] = $audioFiles[$i];
+    unset($audioFiles[$i]);
+  }
+}
+$smarty->assign('AUDIO_FILES', $audioFiles);
+
+// audio files for programme
+$prgAudiolist = & new sotf_FileList();
+$prgAudiolist->getAudioFromDir($prg->getAudioDir());
+
+// check SQL validity
+if($prgAudiolist->count() != count($mainAudio)) {
+  $page->addStatusMsg("main_audio_count_mismatch");
+}
+ 
+$files = $prgAudiolist->getFiles();
+for ($i=0;$i<count($files);$i++) {
+  if(!$mainAudio[$files[$i]->name]) {
+    // missing from SQL!
+    $missing = 1;
+    $prg->saveFileInfo($files[$i]->path, true);
+    $msg = $page->getlocalizedWithParams("missing_from_sql", $files[$i]->name);
+    $page->addStatusMsg($msg, false);
+  }
+  // TODO: check all fields
+}
+
+if($missing) {
+  // there was a missing file description, so we have to restart the whole process
+  $page->redirectSelf();
+  exit;
+}
+
+// compare with required formats
+$checker = & new sotf_AudioCheck($prgAudiolist);
+
+$PRG_AUDIO = array();
+for ($i=0;$i<count($audioFormats);$i++)
+{
+  $PRG_AUDIO[$i] = array("format" => $checker->getFormatFileName($i),
+                         "index" => $i);
+  if ($checker->reqs[$i][0]) {
+    $fname = $prgAudiolist->list[$checker->reqs[$i][1]]->name;
+    $PRG_AUDIO[$i] = array_merge($PRG_AUDIO[$i], $mainAudio[$fname]);
+    //$PRG_AUDIO[$i]['name'] = $fname;
+    unset($mainAudio[$fname]);
+  } else {
+    $PRG_AUDIO[$i]['missing'] = 1;
+  }
+}
+
+debug("mainAudio", $mainAudio);
+while(list($fn,$finfo) = each($mainAudio)) {
+  $PRG_AUDIO[] = array('name' => $fn,
+                       'format' => $finfo['format']);
+}
+
+$smarty->assign('PRG_AUDIO',$PRG_AUDIO);
+
 $smarty->assign("USERFILES",$user->getUserFiles());
 
-$userFtpUrl = str_replace('ftp://', "ftp://".$user->name."@", "$userFTP$userid");
-$smarty->assign("USERFTPURL", $userFtpUrl); 
-
-$smarty->assign('ID',$id);
+$smarty->assign('PRG_ID',$id);
 
 $page->send();
-
 
 ?>

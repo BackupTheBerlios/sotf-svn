@@ -39,6 +39,12 @@ class sotf_FileList
 		return false;
 	} // end func pathExist
 
+
+  /** Returns the count of files in list */
+  function count() {
+    return count($this->list);
+  }
+
 	/**
 	* Adds a file to the list.
 	*
@@ -162,6 +168,18 @@ class sotf_FileList
 		sort($list);
 		return $list;
 	} // end func getFileNames
+
+	/**
+	* Gets the files
+	*
+	* @return	array	Array of sotf_File objects
+	*/
+	function getFiles()
+	{
+    return $this->list;
+	} // end func getFiles
+
+
 } // end class sotf_FileList
 
 ?>

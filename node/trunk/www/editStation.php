@@ -12,7 +12,7 @@ $delperm = sotf_Utils::getParameter('delperm');
 $delrole = sotf_Utils::getParameter('delrole');
 $view = sotf_Utils::getParameter('view');
 $setjingle = sotf_Utils::getParameter('setjingle');
-$setlogo = sotf_Utils::getParameter('setlogo');
+$seticon = sotf_Utils::getParameter('seticon');
 $filename = sotf_Utils::getParameter('filename');
 $roleid = sotf_Utils::getParameter('roleid');
 $desc = sotf_Utils::getParameter('desc');
@@ -35,7 +35,7 @@ if (!hasPerm($st->id, "change")) {
 $upload = sotf_Utils::getParameter('upload');
 if($upload) {
   move_uploaded_file($_FILES['userfile']['tmp_name'], $user->getUserDir() . '/' . $_FILES['userfile']['name']);
-  $page->redirect("editStation.php?stationid=$stationid#logo");
+  $page->redirect("editStation.php?stationid=$stationid#icon");
   exit;
 }
 
@@ -79,26 +79,16 @@ if($setjingle)
     $page->addStatusMsg("ok_jingle");
   else
     $page->addStatusMsg("error_jingle");
-  $page->redirect("editStation.php?stationid=$stationid#logo");
+  $page->redirect("editStation.php?stationid=$stationid#icon");
 }
-elseif($setlogo)
+elseif($seticon)
 {
-//  $file = & new sotf_File($user->getUserDir().'/'.$filename);
-  $oldfile = $user->getUserDir().'/'.$filename;
-  $newfile = $user->getUserDir().'/'.time().".img";
-  if (!sotf_Utils::resizeImage($oldfile, $newfile, $iconWidth, $iconHeight))
-    $page->addStatusMsg("error_logo");
+  $file = $user->getUserDir().'/'.$filename;
+  if ($st->setIcon($file))
+    $page->addStatusMsg("ok_icon");
   else
-  {
-	  $file = & new sotf_File($newfile);
-	  if ($st->setLogo($file))
-	    $page->addStatusMsg("ok_logo");
-	  else
-	    $page->addStatusMsg("error_logo");
-  }
-  if(is_file($newfile))
-    unlink($newfile);
-  $page->redirect("editStation.php?stationid=$stationid#logo");
+    $page->addStatusMsg("error_icon");
+  $page->redirect("editStation.php?stationid=$stationid#icon");
 }
 
 // generate output
@@ -111,11 +101,11 @@ $smarty->assign('ROLES', $st->getRoles());
 // user permissions: editors and managers
 $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($st->id));
 
-// logo and jingle
+// icon and jingle
 $smarty->assign('USERFILES',$user->getUserFiles());
 
-if ($st->getLogo()) {
-  $smarty->assign('LOGO','1');
+if ($st->getIcon()) {
+  $smarty->assign('ICON','1');
 }
 
 $jinglelist = & new sotf_FileList();

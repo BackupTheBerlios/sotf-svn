@@ -13,13 +13,12 @@ class sotf_Utils
 
 	function save($filename, $contents)
 	{
-		if(!is_writeable($filename))
-		{
-			warning("$filename not writeable!");
-			return;
-		}
-		$fp = fopen($filename, "w");
-		fwrite($fp, $contents);
+    if (!$fp = fopen($filename, 'wb')) {
+      raiseError("Cannot open file ($filename)");
+    }
+    if (!fwrite($fp, $contents)) {
+      raiseError("Cannot write to file ($filename)");
+    }
 		fclose($fp);
 	}
 
@@ -293,15 +292,34 @@ class sotf_Utils
 	function resizeImage($imgfile, $newfile, $iconWidth = 100, $iconHeight = 100)
 	{
 		global $magickDir;
-		if ($imgfile == "") return false;
-		if (!file_exists($imgfile)) return false;
-		if (!copy($imgfile, $newfile)) return false;
+		if ($imgfile == "") { 
+      addError("No image file specified");
+      return false;
+    }
+		if (!file_exists($imgfile)) {
+      addError("File does not exist: $imgfile");
+      return false;
+    }
+		if (!copy($imgfile, $newfile)) {
+      addError("Could not copy image to $newfile");
+      return false;
+    }
 	
+		//$info = GetAllMP3info($file->getPath());
+		//if (($info['png']['width'] == $iconWidth) && ($info['png']['height'] == $iconHeight))
+
 		$currentimagesize = getimagesize($newfile);
+    if(!$currentimagesize || ($currentimagesize[0]==0 && $currentimagesize[1]==0)) {
+      addError("not_an_image");
+      return false;
+    }
 		$image_width = $currentimagesize[0];
 		$image_height= $currentimagesize[1];
 		$sizefactor = 1;
-		
+
+		if(($image_height == $iconHeight) && ($image_width == $iconWidth))
+      return true;
+
 		if (($image_height > $iconHeight) || ($image_width > $iconWidth)) 
 		{   
 			$sizefactor = min((double)($iconHeight / $image_height), (double)($iconWidth / $image_width));
@@ -310,6 +328,8 @@ class sotf_Utils
 		$newheight = (int) ($image_height * $sizefactor); 
 
 		$newsize = $newwidth . "x" . $newheight;
+
+    debug("resizing image", $newsize);
 
 		$cmd = "\"$magickDir/mogrify\" -resize $newsize ".
 		 "$newfile 2>&1";     

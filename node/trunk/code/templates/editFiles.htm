@@ -1,36 +1,17 @@
 {literal}
 <SCRIPT language="javascript">
 <!--
-function selectAllUser()
-{
-	for(var i=0;i<document.filesform['userfiles[]'].options.length; i++)
-	{
-		document.filesform['userfiles[]'].options[i].selected = true;
-	}
+function setvalue(name, id, value){
+var popurl="updatedb.php?name="+name+"&id="+id+"&value="+value
+winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 }
 
-function deselectAllUser()
-{
-	for(var i=0;i<document.filesform['userfiles[]'].options.length; i++)
-	{
-		document.filesform['userfiles[]'].options[i].selected = false;
-	}
-}
-
-function selectAllOther()
-{
-	for(var i=0;i<document.filesform['otherfiles[]'].options.length; i++)
-	{
-		document.filesform['otherfiles[]'].options[i].selected = true;
-	}
-}
-
-function deselectAllOther()
-{
-	for(var i=0;i<document.filesform['otherfiles[]'].options.length; i++)
-	{
-		document.filesform['otherfiles[]'].options[i].selected = false;
-	}
+function setcaption(name, id, value){
+var str = prompt('Caption: ', value);
+url = this.location.href;
+if (url.indexOf('#') > 0) url = url.substring(0, url.indexOf('#'));
+if(str) window.location.href = url+"&capname="+name+"&capid="+id+"&capvalue="+str+"&capurl="+escape(url)
+else  window.location.href = this.location.href
 }
 // -->
 </SCRIPT>
@@ -38,13 +19,9 @@ function deselectAllOther()
 
 <H3>{#Edit_files#}</H3>
 
-<form name="filesform" method="post">
-<input type="hidden" name="okURL" value="{$OKURL}">
-<input type="hidden" name="id" value="{$ID}">
-
 <table class="tab">
   <tr> 
-    <td nowrap class="tab">{#Audio_files#}</td>
+    <td nowrap class="tab">{#Prg_files#}</td>
   </tr>
 </table>
 <table class="tabarea">
@@ -52,30 +29,175 @@ function deselectAllOther()
   <td class="tabarea"> 
 
     <table>
-       <tr>
+       <tr class="listhead">
+          <th>{#filename#}</th>
+          <th>{#format#}</th>
+          <th>{#filesize#}</th>
+          <th>{#last_modified#}</th>
+          <th>{#play_length#}</th>
+          <th>{#stream_access#}</th>
+          <th>{#download_access#}</th>
+       </tr>
+       {cycle name="prg" values="list1,list2" print=false advance=false}
+       {foreach item=item from=$PRG_AUDIO}
+          <tr class="{cycle name=prg}">
+            <td>
+              {if !empty($item.filename) }
+              <a target="link" href="getFile.php/{$item.filename}?audio=1&id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
+              { else }
+              {#missing#}
+              {/if}
+            </td>
+            <td>
+              {$item.format}
+            </td>
+            <td>
+              {$item.filesize}
+            </td>
+            <td>
+              {$item.last_modified}
+            </td>
+            <td>
+              { if $item.play_length }
+              {$item.play_length} {#sec#}
+              {/if}
+            </td>
+            <td>
+              <input type="checkbox" onclick="javascript:setvalue('audiofilesa', '{$item.id}', this.checked);return true;"{ if $item.stream_access eq 't' } CHECKED="1" {/if} />
+            </td>
+            <td>
+              <input type="checkbox" onclick="javascript:setvalue('audiofilesd', '{$item.id}', this.checked);return true;"{ if $item.download_access eq 't' } CHECKED="1" {/if} />
+            </td>
+            <td nowrap>
+              {if empty($item.filename) }
+              <a class="action" href="">{#convert#}</a>
+              {else}
+              <a class="action" href="editFiles.php?delmfile=1&objectid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+              {/if}
+            </td>
+          </tr>
+          {/foreach}    
+    </table>
+
+
+   <a class="action" href="javascript:popup('addFiles.php?new=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)">{#add_files#}</a>
+ 
+ </td>
+</tr>
+</table>
+
+<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Files#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+   {if $AUDIO_FILES }
+        <div class="subheader">{#audio_file_list#}</div>
+	<a name="mfiles"></a>
+    <table>
+       <tr class="listhead">
           <th>{#filename#}</th>
           <th>{#caption#}</th>
           <th>{#filesize#}</th>
+          <th>{#last_modified#}</th>
+          <th>{#play_length#}</th>
+          <th>{#format#}</th>
           <th>{#stream_access#}</th>
           <th>{#download_access#}</th>
-          <th>{#filename#}</th>
-          <th>{#filename#}</th>
-          <th>{#filename#}</th>
        </tr>
+       {cycle name="audio" values="list1,list2" print=false advance=false}
+       {foreach item=item from=$AUDIO_FILES}
+          <tr class="{cycle name=audio}">
+            <td>
+              <a target="link" href="getFile.php/{$item.filename}?id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
+            </td>
+            <td>
+              {$item.caption}
+            </td>
+            <td>
+              {$item.filesize}
+            </td>
+            <td>
+              {$item.last_modified}
+            </td>
+            <td>
+              {$item.play_length} {#sec#}
+            </td>
+            <td>
+              {$item.format}
+            </td>
+            <td>
+              <input type="checkbox" onclick="javascript:setvalue('audiofilesa', '{$item.id}', this.checked);return true;"{ if $item.stream_access eq 't' } CHECKED="1" {/if} />
+            </td>
+            <td>
+              <input type="checkbox" onclick="javascript:setvalue('audiofilesd', '{$item.id}', this.checked);return true;"{ if $item.download_access eq 't' } CHECKED="1" {/if} />
+            </td>
+            <td nowrap>
+              <a  class="action" href="javascript:setcaption('mfiles', '{$item.id}', '{$item.caption}');">{#change_caption#}</a>
+              <a class="action" href="editFiles.php?delofile=1&objectid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+            </td>
+          </tr>
+          {/foreach}    
     </table>
-              <p>
-              <a href="javascript:popup('addFiles.php?new=1&prgid={$ID}','{#addfiles#}',500,500,true)">{#add_files#}</a>
-              </p>
+   {/if}
+   {if $OTHER_FILES }
+        <div class="subheader">{#other_file_list#}</div>
+	<a name="ofiles"></a>
+        <table>
+       <tr class="listhead">
+          <th>{#filename#}</th>
+          <th>{#caption#}</th>
+          <th>{#filesize#}</th>
+          <th>{#last_modified#}</th>
+          <th>{#mime_type#}</th>
+          <th>{#public_access#}</th>
+       </tr>
+       {cycle name=other values="list1,list2" print=false advance=false}
+       {foreach item=item from=$OTHER_FILES}
+          <tr class="{cycle name=other}">
+            <td>
+              <a target="link" href="getFile.php/{$item.filename}?id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
+            </td>
+            <td>
+              {$item.caption}
+            </td>
+            <td>
+              {$item.filesize}
+            </td>
+            <td>
+              {$item.last_modified}
+            </td>
+            <td>
+              {$item.mime_type}
+            </td>
+            <td>
+              <input type="checkbox" onclick="javascript:setvalue('otherfiles', '{$item.id}', this.checked);return true;"{ if $item.public_access eq 't' } CHECKED="1" {/if} />
+            </td>
+            <td nowrap>
+              <a  class="action" href="javascript:setcaption('ofiles', '{$item.id}', '{$item.caption}');">{#change_caption#}</a>
+              <a  class="action" href="editFiles.php?delofile=1&objectid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+            </td>
+          </tr>
+          {/foreach}    
+    </table>
+   {/if}
+   {if !$AUDIO_FILES and !$OTHER_FILES }
+        <p>{#no_files#}</p>
+   {/if}
+   <a class="action"  href="javascript:popup('addFiles.php?new=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)">{#add_files#}</a>
  
   </td>
 </tr>
 </table>
-</form>
 
-<form name="linksform" method="post">
-<input type="hidden" name="okURL" value="{$OKURL}">
-<input type="hidden" name="id" value="{$ID}">
+<p></p>
 
+<form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#Links#}</td>
@@ -86,15 +208,15 @@ function deselectAllOther()
   <td class="tabarea">
    {if $LINKS } 
     <table>
-       {cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
-       <tr bgcolor="{cycle}">
+       <tr class="listhead">
           <th>{#url#}</th>
           <th>{#caption#}</th>
           <th>{#public#}</th>
           <th>{#actions#}</th>
        </tr>
+       {cycle name="links" values="list1,list2" print=false advance=false}
        {foreach item=item from=$LINKS}
-          <tr bgcolor="{cycle}">
+          <tr class="{cycle name="links"}">
             <td>
               <a target="link" href="{$item.url}">{$item.url}</a>
             </td>
@@ -102,11 +224,13 @@ function deselectAllOther()
               {$item.caption}
             </td>
             <td>
-              <input type="checkbox" { if $item.public_access eq 't' } CHECKED="1" {/if} />
+              <input type="checkbox" onclick="javascript:setvalue('links', '{$item.id}', this.checked);return true;"{ if $item.public_access eq 't' } CHECKED="1"{/if} />
             </td>
-            <td>
-              <a href="javascript:popup('editLink.php?linkid={$item.id}&prgid={$ID}','{#edit_link#}',350,400,false)">{#change#}</a>
-              <a href="editFiles.php?dellink=1&linkid={$item.id}&id={$ID}">{#delete#}</a>
+            <td nowrap>
+<!--                    <input type="button" name="i1" value="{#change#}">
+                      <input type="button" name="i2" value="{#delete#}">-->
+              <a class="action" href="javascript:popup('editLink.php?linkid={$item.id}&prgid={$PRG_ID}','{#edit_link#}',350,400,false)">{#change#}</a>
+              <a class="action" href="editFiles.php?dellink=1&linkid={$item.id}&id={$PRG_ID}">{#delete#}</a>
             </td>
           </tr>
           {/foreach}    
@@ -114,115 +238,9 @@ function deselectAllOther()
     {else}
                 {#no_links#}
     {/if}
-              <p>
-              <a href="javascript:popup('editLink.php?new=1&prgid={$ID}','{#edit_link#}',400,400,false)">{#add_link#}</a>
-              </p>
+              <a class="action" href="javascript:popup('editLink.php?new=1&prgid={$PRG_ID}','{#edit_link#}',400,400,false)">{#add_link#}</a>
   </td>
 </tr>
 </table>
-</form>
 
-
-<table width="100%" cellspacing=5>
-<tr><td>{#prgfiles#}:</td><td>&nbsp;</td><td>{#userfiles#}:</td></tr>
-<tr><td>
-
-{if $AUDIOFILES}
-{#Audio_files#}
-{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
-<table border="1" cellspacing="0" cellpadding="2">
-{section name=i loop=$AUDIOFILES}
-	<tr bgcolor="{cycle}"><td><input type="checkbox" name="tosel-{$AUDIOFILES[i]}[]" value="{$AUDIOFILES[i]}"></td><td><a href="getFile.php/{$AUDIOFILES[i]}?id={$ID|escape}&file={$AUDIOFILES[i]|escape}">{$AUDIOFILES[i]}</a></td></tr>
-{/section}
-</table>
-{else}
-	<p>{#no_audio_files#}</p>
-{/if}
-
-
-{if $OTHERFILES}
-{#Other_files#}
-{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
-<table border="1" cellspacing="0" cellpadding="2">
-<select name="otherfiles[]" multiple="1">
-	{html_options values=$OTHERFILES output=$OTHERFILES}
-</select>
-</table>
-{else}
-	<p>{#no_other_files#}</p>
-{/if}
-
-
-
-</td>
-<td>
-{if $OTHERFILES or $AUDIOFILES}<br><input type="submit" name="itemtoftp" value="{#Move_back_to_user#}">{/if}
-{if $USERFILES}<br><input type="submit" name="ftptoaudio" value="{#Add_to_audio#}">{/if}
-{if $USERFILES}<br><input type="submit" name="ftptoother" value="{#Add_to_other#}">{/if}
-{if $USERFILES}<br><input type="submit" name="ftptoicon" value="{#Add_as_icon#}">{/if}
-</td>
-<td>
-{if $USERFILES}
-<input type="hidden" name="okURL" value="{$OKURL}">
-<input type="hidden" name="id" value="{$ID}">
-
-{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
-<table border="1" cellspacing="0" cellpadding="2">
-<select name="userfiles[]" multiple="1">
-	{html_options values=$USERFILES output=$USERFILES}
-</select>
-</table>
-{else}
-	<p>{#no_user_files#}</p>
-{/if}
-</td>
-</tr>
-<tr>
-<td>
-{if $OTHERFILES}
-<p><script language="javascript">
-<!--
-document.write("<input type='button' value='{#select_all#}' onClick='selectAllOther()'> ");
-document.write("<input type='button' value='{#deselect_all#}' onClick='deselectAllOther()'>");
-// -->
-</script></p>
-<p><input type="submit" name="delother" value="{#delete_selected#}"></p>
-{else}
-&nbsp;
-{/if}
-</td>
-<td width="100">
-<input type="radio" name="copy" value="1" checked >{#copy#}
-<br><input type="radio" name="copy" value="0">{#move#}
-</td>
-<td>
-{if $USERFILES}
-<p><script language="javascript">
-<!--
-document.write("<input type='button' value='{#select_all#}' onClick='selectAllUser()'> ");
-document.write("<input type='button' value='{#deselect_all#}' onClick='deselectAllUser()'>");
-// -->
-</script></p>
-<p><input type="submit" name="deluser" value="{#delete_selected#}"></p>
-{else}
-&nbsp;
-{/if}
-</td>
-</tr>
-</table>
-</form>
-<hr>
-<p>{#user_dir_ftp_access#}: <a target="ftp" href="{$USERFTPURL}">{$USERFTPURL}</a></p>
-<form enctype="multipart/form-data" method="post">
-<input type="hidden" name="MAX_FILE_SIZE" value="10000000">
-<input type="hidden" name="okURL" value="{$OKURL}">
-<input type="hidden" name="id" value="{$ID}">
-{#upload_file#}: <input name="file" type="file">
-<input type="submit" name="send" value="{#send_file#}">
-</form>
-<hr>
-<form method="post">
-<input type="hidden" name="okURL" value="{$OKURL}">
-<input type="hidden" name="id" value="{$ID}">
-<input type="submit" name="ok" value="{#ok#}">
 </form>
