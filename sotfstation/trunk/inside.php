@@ -24,9 +24,9 @@
 	}
 	
 	//create calendar
-	$myCal = new calendar($_GET['date']);
-	$myCal->select($_GET['date']);			
-	$myDay = new dayView();
+	$myCal = new calendar($_GET['date']);					# create new calendar object (the month overview thing)
+	$myCal->select($_GET['date']);								# selects the selected day (default: today)
+	$myDay = new dayView();												# create the new day representer
 	
 	//##############################################################################################
 	//mark full calendar days
