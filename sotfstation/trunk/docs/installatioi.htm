@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Untitled Document</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body>
+<h2>StreamOnTheFly Station Management Installation Instructions </h2>
+<h3>Hardware Requirements</h3>
+<p>&#8226; Either an Intel or AMD based chipset at min 1 GHz operating frequency.<br>
+  &#8226; Min 256 Mb of RAM.<br>
+  &#8226; 120 Gb of disk space available for storing 40 days of recorded audio.<br>
+  &#8226; Any *nix compliant sound card. </p>
+<h3>System Requirements</h3>
+<p>&#8226; *nix compliant server with Apache 1.3.12 or above installed as a system 
+  service.<br>
+  &#8226; PostgreSQL Database, preferably version 7.2.x, setup to accept connections 
+  from httpd processes. Database needs to be configured with a trusted procedural 
+  language 'plpgsql'<br>
+  &#8226; PHP, preferably version 4.2.3, compiled with DOM XML and IConv extensions. 
+  Pear (http://pear.php.net) must be included with the default installation, please 
+  do not disable. Make sure PHP is not run in safe mode.<br>
+  &#8226; Perl 5 or later.<br>
+  &#8226; An FTP Server.<br>
+  &#8226; IceCast version 2 or above installed as a service. (http://www.icecast.org)<br>
+  &#8226; LiveIce installed as a service. (http://star.arm.ac.uk/~spm/software/liveice.html)<br>
+  &#8226; LAME 3.0 and later installed as a service and available through a global 
+  path.<br>
+  &#8226; Mp3 Split, installed and setup to be available through a global path. 
+  (http://mp3splt.sourceforge.net/)<br>
+  &#8226; Mp3 Wrap, installed and setup to be available thorough a global path. 
+  (http://mp3wrap.sourceforge.net/)<br>
+  &#8226; PhpPgAdmin version 2.4.x (http://phppgadmin.sourceforge.net)</p>
+<h3>SysAdmin Requirements</h3>
+<p>&#8226; The SysAdmin must be capable of setting up the above system<br>
+  &#8226; Controlling CRON Tab jobs<br>
+  &#8226; Tuning RSync to shift XBMF Files to the node.<br>
+  &#8226; Maintaining the overall integrity of the system.</p>
+<h2><br>
+  Software Installation</h2>
+<p>In order to setup a working station one needs as a prerequisite a fully functional 
+  system described above. As a second step, one needs to install a copy of SelfAdmin 
+  (version 3 or above) which will be the primary tool for user management.</p>
+<h3>Setting Up SADM</h3>
+<h4>Step 1 &#8211; preparing the database</h4>
+<blockquote>
+  <p>&#8226; Create a new database called &#8220;sadm&#8221;.</p>
+</blockquote>
+<h4>Step 2 &#8211; preparing the web-end</h4>
+<blockquote>
+  <p>&#8226; Either, create a virtual host on your web server, or just use a subdir 
+    on the main host and upload the whole sadm distribution into that dir.<br>
+    &#8226; Set chmod 777 on the &#8220;templates_c&#8221; and &#8220;cache&#8221; 
+    directories within the sadm distribution.</p>
+</blockquote>
+<h4>Step 3 &#8211; configuring sadm</h4>
+<blockquote>
+  <p>&#8226; Open the file install.php in your web-browser and fill in all the 
+    appropriate values.<br>
+    &#8226; After the installation script has been executed you will be able to 
+    login into sadm with the default user/password combination which is admin:admin</p>
+</blockquote>
+<h3><br>
+  Setting Up the Station</h3>
+<h4>Step 1 &#8211; preparing the database</h4>
+<blockquote>
+  <p>&#8226; Create a new database called &#8220;sotfstation&#8221;<br>
+    &#8226; Execute the file station.sql found in the station distribution. This 
+    will setup the whole database structure.</p>
+</blockquote>
+<h4>Step 2 &#8211; preparing the web-end</h4>
+<blockquote>
+  <p align="left">&#8226; Either, create a virtual host on your web server, or 
+    just use a subdir on the main host and upload the whole station distribution 
+    into that dir.<br>
+    &#8226; Set chmod 777 on the &#8220;templates_c&#8221;, &#8220;progs&#8221;, 
+    &#8220;sync&#8221; and &#8220;uncutaudio&#8221; directories within the station 
+    distribution.</p>
+</blockquote>
+<h4>Step 3 &#8211; configuring the station</h4>
+<blockquote>
+  <p>&#8226; Edit the file config.temp.php and fill in all the appropriate database 
+    access parameters and paths. The minimum set of configuration parameters is: 
+    SADM Database Access Parameters, Station Database Access Parameters, SADM 
+    User Group (default 1), web path to station.<br>
+    &#8226; Save the file as config.inc.php<br>
+    &#8226; The station web-end is now accessible from the web browser with a 
+    default user/password combination admin:admin</p>
+</blockquote>
+<h4>Step 4 &#8211; preparing live-audio recording</h4>
+<blockquote>
+  <p>//not yet fully described. </p>
+  <p>&#8226; Uses LiveIce to record a whole day of audio into the station subdir 
+    &#8220;uncutaudio&#8221; in the format YYYYMMDD_lo.mp3</p>
+</blockquote>
+<h4>Step 5 &#8211; CRON Tab jobs</h4>
+<blockquote>
+  <p>&#8226; The whole day recordings need to be cut into smaller mp3s as soon 
+    as the day feed is available. Ideally, the script cutter.php has to be run 
+    at 4 o&#8217;clock every morning. It will cut the audio for the day before.</p>
+</blockquote>
+<h4>Step 6 &#8211; Communication with the node</h4>
+<blockquote>
+  <p>&#8226; Obtain a station ID from the nearest node and define this ID in your 
+    config.inc.php file. Also obtain RSync access data to the nearest node.<br>
+    &#8226; Now, all the files that are to be shifted to the node incoming directory 
+    reside in the &#8220;sync&#8221; subfolder of the station distribution. As 
+    soon as the synchronization process is complete, the files have to be deleted 
+    by rsync, such that they are marked as published in the local database. <br>
+  </p>
+</blockquote>
+</body>
+</html>
