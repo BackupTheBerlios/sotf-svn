@@ -169,5 +169,6 @@ DROP TABLE "sotf_programmes_1063641060";
 -- mapping between ids at stations and nodes was not perfect
 DROP INDEX "sotf_station__id_at_station_key";
 ALTER TABLE sotf_station_mappings ADD COLUMN "type" varchar(30);
-CREATE UNIQUE INDEX sotf_station_mappings_uniq ON sotf_station_mappings ("id_at_station", "type");
+ALTER TABLE sotf_station_mappings ADD COLUMN "station" varchar(12);
+CREATE UNIQUE INDEX sotf_station_mappings_uniq ON sotf_station_mappings ("id_at_station", "station", "type");
 

@@ -591,8 +591,9 @@ CREATE TABLE "sotf_station_mappings" (
 "id" serial PRIMARY KEY,		-- just an id
 "type" varchar(30), -- type of thing
 "id_at_node" varchar(12) UNIQUE REFERENCES sotf_node_objects(id) ON DELETE CASCADE,		-- id of thing at node
+"station" varchar(12) UNIQUE REFERENCES sotf_stations(id) ON DELETE CASCADE,		-- id of station at node for which this mapping applies
 "id_at_station" varchar(20),	-- id of thing on station server
-CONSTRAINT "sotf_station_mappings_uniq" UNIQUE ("id_at_station", "type")
+CONSTRAINT "sotf_station_mappings_uniq" UNIQUE ("id_at_station", "station", "type")
 );
 
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'admin');

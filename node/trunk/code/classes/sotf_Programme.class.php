@@ -639,41 +639,44 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
 	 $db->begin();
 
-	 if($metadata['identifier']) {
-		$prgId = sotf_Programme::getMapping($metadata['identifier'], 'prg');
+	 // Select station
+	 $stId = trim($metadata['stationid']);
+	 if(is_numeric($stId)) {
+		$stId = $newPrg->makeId($config['nodeId'],  'sotf_stations', (int)$stId);
+	 }
+	 $station = &$repository->getObject($stId);
+	 if(!$station) {
+		raiseError("invalid stationid: ". $metadata['stationid']);
+		// by default I put the programme into the first station
+		//$stId = $db->getOne("SELECT id FROM sotf_stations ORDER BY id");
+		//$station = &$repository->getObject($stId);
 	 }
 
+	 // select/create programme entry
+	 if($metadata['identifier']) {
+		$prgId = sotf_Programme::getMapping($station->id, $metadata['identifier'], 'prg');
+	 }
 	 if($prgId) {
 		// updating an exisiting programme
-		$newPrg =  new sotf_Programme($prgId);
-		$station = &$repository->getObject($newPrg->get('station_id'));
-		$updatingPrg = 1;
 		debug("updating existing programme", $prgId);
+		$newPrg =  new sotf_Programme($prgId);
+		if($station->id != $newPrg->get('station_id'))
+		  raiseError("station provided in metadata is different from the station saved previously!");
+		//$station = &$repository->getObject($newPrg->get('station_id'));
+		$updatingPrg = 1;
 	 } else {
 		// a new programme
 		$newPrg = new sotf_Programme();
-		$stId = trim($metadata['stationid']);
-		if(is_numeric($stId)) {
-		  $stId = $newPrg->makeId($config['nodeId'],  'sotf_stations', (int)$stId);
-		}
-		$station = &$repository->getObject($stId);
-		if(!$station) {
-		  raiseError("invalid stationid: ". $metadata['stationid']);
-		  // by default I put the programme into the first station
-		  //$stId = $db->getOne("SELECT id FROM sotf_stations ORDER BY id");
-		  //$station = &$repository->getObject($stId);
-		}
 		$track = $metadata['title'];
-		debug("create with track", $track);
+		debug("create new programme with track", $track);
 		$newPrg->create($station->id, $track);
-		sotf_Programme::addMapping($metadata['identifier'], 'prg', $newPrg->id);
+		sotf_Programme::addMapping($station->id, $metadata['identifier'], 'prg', $newPrg->id);
 	 }
-
 	 $newPrg->set('foreign_id', $metadata['identifier']);
 
-	 // series
+	 // select/create series
 	 if($metadata['series'] && $metadata['series']['id']) {
-		$seriesId = sotf_Programme::getMapping($metadata['series']['id'], 'series');
+		$seriesId = sotf_Programme::getMapping($station->id, $metadata['series']['id'], 'series');
 		if(!$seriesId) {
 		  $series1 = new sotf_Series();
 		  $series1->set('name', $metadata['series']['title']);
@@ -696,7 +699,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		  $series->update();
 		} else {
 		  $series->create();
-		  sotf_Programme::addMapping($metadata['series']['id'], 'series', $series->id);
+		  sotf_Programme::addMapping($station->id, $metadata['series']['id'], 'series', $series->id);
 		}
 	 }
 
@@ -960,15 +963,15 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   /** private */
-  function getMapping($foreignId, $type) {
+  function getMapping($station, $foreignId, $type) {
 	 global $db;
-	 return $db->getOne("SELECT id_at_node FROM sotf_station_mappings WHERE id_at_station='$foreignId' AND type='$type'");
+	 return $db->getOne("SELECT id_at_node FROM sotf_station_mappings WHERE id_at_station='$foreignId' AND station='$station' AND type='$type'");
   }
 
   /** private */
-  function addMapping($foreignId, $type, $localId) {
+  function addMapping($station, $foreignId, $type, $localId) {
 	 global $db;
-	 return $db->query("INSERT INTO sotf_station_mappings (id_at_station,type,id_at_node) VALUES('$foreignId', '$type', '$localId')");
+	 return $db->query("INSERT INTO sotf_station_mappings (station,id_at_station,type,id_at_node) VALUES('$station', '$foreignId', '$type', '$localId')");
   }
 
 
