@@ -85,8 +85,9 @@ if($id) {
   $smarty->assign('RATING', $rating->getInstantRating($id));
 
   // my rating?
-  debug("r", $rating->getMyRating($id));
-  $smarty->assign('MY_RATING', $rating->getMyRating($id));
+  $myRating = $rating->getMyRating($id);
+  debug("r", $myRating);
+  $smarty->assign('MY_RATING', $myRating);
 
   if ($page->loggedIn()) {
     // is in my playlist?

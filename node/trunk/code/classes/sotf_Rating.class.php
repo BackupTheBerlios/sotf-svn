@@ -167,7 +167,7 @@ class sotf_Rating	 extends sotf_Object {
 	}
 
 	function getMyRating($objId) {
-		global $page, $user;
+	  global $page, $user, $config;
 		if(!$page->loggedIn()) {
 			$key = $page->getAuthKey();
 			if($key) {
@@ -176,7 +176,7 @@ class sotf_Rating	 extends sotf_Object {
 					return $this->get('rate');
 			}
 		} else {
-			$this->find($objId, $user->id);
+		  $this->find($objId, $user->id, $config['nodeId']);
 			if($this->exists())
 				return $this->get('rate');
 			
