@@ -47,6 +47,7 @@ if($id) {
   $audioFiles = $prg->getAssociatedObjects('sotf_media_files', 'main_content DESC, filename');
   for($i=0; $i<count($audioFiles); $i++) {
     $audioFiles[$i] =  array_merge($audioFiles[$i], sotf_AudioFile::decodeFormatFilename($audioFiles[$i]['format']));
+	 $audioFiles[$i]['playtime_string'] = strftime('%M:%S', $audioFiles[$i]['play_length']);
   }
   $smarty->assign('AUDIO_FILES', $audioFiles);
 

@@ -1,10 +1,10 @@
 
 .status {
-	background-color: #FFAAAA; FONT-WEIGHT: bold; FONT-SIZE: xx-small; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
+	background-color: #FFAAAA; FONT-WEIGHT: bold; FONT-SIZE: small; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
 }
 
 .menu {
-	FONT-WEIGHT: bold; FONT-SIZE: xx-small; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
+	FONT-WEIGHT: bold; FONT-SIZE: small; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
 }
 A.menu:link {
 	COLOR: #000000; TEXT-DECORATION: none
@@ -25,10 +25,10 @@ A.menu:hover {
 	FONT-WEIGHT: bold; FONT-SIZE: small; COLOR: #666666; FONT-FAMILY: Arial, Helvetica, sans-serif
 }
 TD {
-	FONT-SIZE: x-small; FONT-FAMILY: Tahoma, Verdana, Arial
+	FONT-SIZE: small; FONT-FAMILY: Tahoma, Verdana, Arial
 }
 TH {
-	FONT-SIZE: x-small; FONT-FAMILY: Tahoma, Verdana, Arial
+	FONT-SIZE: small; FONT-FAMILY: Tahoma, Verdana, Arial
 }
 .tablebg {
 	background-image: url(top_r2_c1.gif);
@@ -104,7 +104,7 @@ INPUT.action {
 }
 
 INPUT {
-  FONT-SIZE: x-small; FONT-FAMILY: Tahoma, Verdana, Arial;
+  FONT-SIZE: small; FONT-FAMILY: Tahoma, Verdana, Arial;
 }
 
 A {

@@ -68,7 +68,7 @@ class sotf_AudioFile extends sotf_File
 		parent::$parent($path);		// Call the constructor of the parent class. lk. super()
 		$fileinfo = GetAllFileInfo($this->path);
 		//if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg') {
-    //debug("finfo", $fileinfo);
+    debug("finfo", $fileinfo);
     if (isset($fileinfo['audio'])) {
       $audioinfo = $fileinfo['audio'];
 			$this->type = "audio";
@@ -79,7 +79,7 @@ class sotf_AudioFile extends sotf_File
 			$this->average_bitrate = round($audioinfo["bitrate"]/1000);
 			$this->samplerate = $audioinfo["sample_rate"];
 			$this->channels = $audioinfo["channels"];
-			$this->duration = round($audioinfo["playtime_seconds"]);
+			$this->duration = round($fileinfo["playtime_seconds"]);
 			$this->mimetype = $this->determineMimeType($this->format);
 		}
 	} // end func sotf_AudioFile
