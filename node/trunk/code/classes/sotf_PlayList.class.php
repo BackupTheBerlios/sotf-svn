@@ -288,7 +288,9 @@ class sotf_Playlist {
 
 	 debug("stop stream", $streamData);
 
-	 if($config['tamburineURL']) {
+	 if($config['httpStreaming']) {	 
+		// nothing to be done
+	 } elseif($config['tamburineURL']) {
 		$rpc = new rpc_Utils;
 		//$rpc->debug = true;
       $response = $rpc->callTamburine('quit', $streamData['pid']);
@@ -311,7 +313,10 @@ class sotf_Playlist {
   function getStreamInfo($streamData) {
 	 global $config, $db;
 
-	 if($config['tamburineURL']) {
+	 if($config['httpStreaming']) {	 
+		// no stream info...
+		return;
+	 } elseif($config['tamburineURL']) {
 		$rpc = new rpc_Utils;
 		//$rpc->debug = true;
       $response = $rpc->callTamburine('getpls', $streamData['pid']);

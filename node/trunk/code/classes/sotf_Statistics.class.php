@@ -135,7 +135,11 @@ class sotf_Statistics extends sotf_Object {
     global $db;
     $convert = array('visits'=>'100',
                      'listens'=>'010',
-                     'listens'=>'001');
+                     'downloads'=>'001');
+	 if(empty($type)) {
+		logError("addUniqueAccess: no type defined!!");
+		return;
+	 }
     $subIdValue = empty($fileId) ? 'IS NULL' : "='$fileId'" ;
     $db->query("UPDATE sotf_unique_access SET action = action | B'" . $convert[$type] . "' WHERE prog_id='$prgId' AND sub_id $subIdValue AND ip='$ip'");
     if($db->affectedRows()==0) {
