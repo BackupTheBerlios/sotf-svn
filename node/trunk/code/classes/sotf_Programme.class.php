@@ -576,7 +576,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		print_r($metadata);
 		echo "</pre>";
 		*/
-		//dump($metadata, "METADATA");
+		dump($metadata, "METADATA");
+		debug("METADATA", $metadata);
 	 }
 
 	 if($metadata['identifier']) {
@@ -616,7 +617,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		  $series->set('station_id', $station->id);
 		}
 		$series->set('name', $metadata['series']['title']);
-		$series->set('description', $metadata['series']['title']);
+		$series->set('description', $metadata['series']['description']);
 		if($series->exists()) {
 		  $series->update();
 		} else {
@@ -736,13 +737,16 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $newPrg->update();
 		
 	 // topic
-	 if($metadata['topic'])
+	 if($metadata['topic']) {
 		$repository->addToTopic($newPrg->id, $metadata['topic']);
+	 }
 	 // genre
-	 if(is_numeric($metadata['genre']))
-		$newPrg->set('genre_id', $metadata['genre']);
-	 else
-		logError("invalid genre id: " . $metadata['genre']);
+	 $genre = trim($metadata['genre']);
+	 if(is_numeric($genre)) {
+		$newPrg->set('genre_id', $genre);
+	 } else {
+		logError("invalid genre id: " . $genre);
+	 }
 
 	 // rights
 	 $rights = new sotf_NodeObject("sotf_rights");
@@ -756,17 +760,17 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		
 	 foreach($metadata['publisher'] as $contact) {
 		$role = 23; // Publisher
-		$id = sotf_Programme::importContact($contact, $role, $newPrg->id, $admins);
+		$id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station->id, $admins);
 	 }
 	 foreach($metadata['creator'] as $contact) {
 		$role = 22; // Creator
-		$id = sotf_Programme::importContact($contact, $role, $newPrg->id, $admins);
+		$id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station->id, $admins);
 	 }
 		
 	 if(is_array($metadata['contributor'])){
 		foreach($metadata['contributor'] as $contact) {
 		  $role = 24; // Contributor
-		  $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $admins);
+		  $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station->id, $admins);
 		}
 	 }
 	 
@@ -786,7 +790,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }//end func
 
   /** static: create contact record from metadata */
-  function importContact($contactData, $contactRole, $prgId, $admins) {
+  function importContact($contactData, $contactRole, $prgId, $stationId, $admins) {
 	 global $permissions, $repository, $config;
 
 	 // find out what should go into the 'name' field
@@ -803,7 +807,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $id = sotf_Contact::findByNameLocal($name);
 	 if(!$id) {
 		$contact = new sotf_Contact();
-		$status = $contact->create($name);
+		$status = $contact->create($name, $stationId);
 		if(!$status) {
 		  //$page->addStatusMsg('contact_create_failed');
 		  return null;
@@ -827,7 +831,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 // fetch logo from url and store
 	 if(!empty($contactData['logo'])) {
 		$url = $contactData['logo'];
-		if ($handle = fopen($url,'rb')) {
+		if ($handle = @fopen($url,'rb')) {
 		  $contents = "";
 		  do {
 			 $data = fread ($handle, 100000);
