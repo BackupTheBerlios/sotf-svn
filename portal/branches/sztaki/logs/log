@@ -1,0 +1,738 @@
+
+---------------------------------------------------------------------------------
+/portal/www/portal.php
+[26-Feb-2003 17:36:47] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:36:47] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:36:47] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://:@:/
+[26-Feb-2003 17:36:47] PHP Warning:  pg_connect() unable to connect to PostgreSQL server: FATAL 1:  Database "apache" does not exist in the system catalog.
+ in /usr/share/pear/DB/pgsql.php on line 118
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:37:17] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:37:17] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:37:17] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://:@:/
+[26-Feb-2003 17:37:17] PHP Warning:  pg_connect() unable to connect to PostgreSQL server: FATAL 1:  Database "apache" does not exist in the system catalog.
+ in /usr/share/pear/DB/pgsql.php on line 118
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:02] ------------------------------------------
+[26-Feb-2003 17:45:02] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:02] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:02] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:02] REFERER: 
+[26-Feb-2003 17:45:02] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:02] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: 0.0945 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:02] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:02] ------------------------------------------
+[26-Feb-2003 17:45:02] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:02] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:02] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:02] REFERER: 
+[26-Feb-2003 17:45:02] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:02] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: 0.0945 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:02] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:02] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:03] ------------------------------------------
+[26-Feb-2003 17:45:03] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:03] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:03] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:03] REFERER: 
+[26-Feb-2003 17:45:03] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:03] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: 0.1136 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:03] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:03] ------------------------------------------
+[26-Feb-2003 17:45:03] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:03] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:03] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:03] REFERER: 
+[26-Feb-2003 17:45:03] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:03] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: 0.0956 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:03] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:03] ------------------------------------------
+[26-Feb-2003 17:45:03] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:03] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:03] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:03] REFERER: 
+[26-Feb-2003 17:45:03] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:03] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: 0.0956 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:03] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:03] ------------------------------------------
+[26-Feb-2003 17:45:03] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:03] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:03] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:03] REFERER: 
+[26-Feb-2003 17:45:03] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:03] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: 0.0962 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:03] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:03] ------------------------------------------
+[26-Feb-2003 17:45:03] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:03] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:03] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:03] REFERER: 
+[26-Feb-2003 17:45:03] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:03] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: 0.0948 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:03] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:03] ------------------------------------------
+[26-Feb-2003 17:45:03] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:03] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:03] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:03] REFERER: 
+[26-Feb-2003 17:45:03] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:03] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: 0.0936 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:03] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:03] ------------------------------------------
+[26-Feb-2003 17:45:03] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:03] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:03] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:03] REFERER: 
+[26-Feb-2003 17:45:03] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:03] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: 0.0967 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:03] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:03] ------------------------------------------
+[26-Feb-2003 17:45:03] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:03] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:03] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:03] REFERER: 
+[26-Feb-2003 17:45:03] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:03] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: 0.0952 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:03] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:03] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:04] ------------------------------------------
+[26-Feb-2003 17:45:04] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:45:04] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:04] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:04] REFERER: 
+[26-Feb-2003 17:45:04] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:04] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:04] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:45:04] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:04] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:45:04] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:45:04] mukk.dsd.sztaki.hu: 0.1114 ms, /portal/www/portals.php
+[26-Feb-2003 17:45:04] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal.php/kanga
+[26-Feb-2003 17:45:10] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:45:10] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:45:10] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:45:10] ------------------------------------------
+[26-Feb-2003 17:45:10] REQUEST_URI: /portal/www/portal.php/kanga
+[26-Feb-2003 17:45:10] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:45:10] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:45:10] REFERER: 
+[26-Feb-2003 17:45:10] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:45:10] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:45:10] mukk.dsd.sztaki.hu: action:: portal
+[26-Feb-2003 17:45:10] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:45:10] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:45:10] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = '' AND password = '' AND portal_id = 1
+[26-Feb-2003 17:45:10] mukk.dsd.sztaki.hu: DB: Query: SELECT settings FROM portal_settings WHERE id = 1
+[26-Feb-2003 17:45:10] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:45:11] mukk.dsd.sztaki.hu: 0.4488 ms, /portal/www/portal.php/kanga
+[26-Feb-2003 17:45:11] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal.php/kanga
+[26-Feb-2003 17:46:00] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:00] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:00] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:00] ------------------------------------------
+[26-Feb-2003 17:46:00] REQUEST_URI: /portal/www/portal.php/kanga
+[26-Feb-2003 17:46:00] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:00] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:00] REFERER: 
+[26-Feb-2003 17:46:00] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:00] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:00] mukk.dsd.sztaki.hu: action:: portal
+[26-Feb-2003 17:46:00] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:00] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:00] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = '' AND password = '' AND portal_id = 1
+[26-Feb-2003 17:46:00] mukk.dsd.sztaki.hu: DB: Query: SELECT settings FROM portal_settings WHERE id = 1
+[26-Feb-2003 17:46:00] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:46:01] mukk.dsd.sztaki.hu: 1.038 ms, /portal/www/portal.php/kanga
+[26-Feb-2003 17:46:01] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal.php/kanga?login=1
+[26-Feb-2003 17:46:02] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:02] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:02] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:02] ------------------------------------------
+[26-Feb-2003 17:46:02] REQUEST_URI: /portal/www/portal.php/kanga?login=1
+[26-Feb-2003 17:46:02] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:02] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:02] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga
+[26-Feb-2003 17:46:02] GET: login = 1
+[26-Feb-2003 17:46:02] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:02] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:02] mukk.dsd.sztaki.hu: action:: portal
+[26-Feb-2003 17:46:02] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:02] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:02] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = '' AND password = '' AND portal_id = 1
+[26-Feb-2003 17:46:02] mukk.dsd.sztaki.hu: DB: Query: SELECT settings FROM portal_settings WHERE id = 1
+[26-Feb-2003 17:46:02] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:46:03] mukk.dsd.sztaki.hu: 0.4569 ms, /portal/www/portal.php/kanga?login=1
+[26-Feb-2003 17:46:03] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal.php/kanga
+[26-Feb-2003 17:46:07] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:07] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:07] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:07] ------------------------------------------
+[26-Feb-2003 17:46:07] REQUEST_URI: /portal/www/portal.php/kanga
+[26-Feb-2003 17:46:07] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:07] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:07] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?login=1
+[26-Feb-2003 17:46:07] POST: username = a
+[26-Feb-2003 17:46:07] POST: password = a
+[26-Feb-2003 17:46:07] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:07] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:07] mukk.dsd.sztaki.hu: action:: portal
+[26-Feb-2003 17:46:07] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = 'a' AND password = 'a' AND portal_id = 1
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: REDIRECT: /portal/www/portal.php/kanga
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: 0.0983 ms, /portal/www/portal.php/kanga
+[26-Feb-2003 17:46:08] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal.php/kanga
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:08] ------------------------------------------
+[26-Feb-2003 17:46:08] REQUEST_URI: /portal/www/portal.php/kanga
+[26-Feb-2003 17:46:08] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:08] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:08] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?login=1
+[26-Feb-2003 17:46:08] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:08] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: action:: portal
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = 'a' AND password = 'a' AND portal_id = 1
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: DB: Query: SELECT settings FROM portal_settings WHERE id = 1
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:46:08] mukk.dsd.sztaki.hu: 0.4472 ms, /portal/www/portal.php/kanga
+[26-Feb-2003 17:46:08] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:10] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:10] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:10] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:10] ------------------------------------------
+[26-Feb-2003 17:46:10] REQUEST_URI: /portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:10] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:10] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:10] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga
+[26-Feb-2003 17:46:10] GET: style = 1
+[26-Feb-2003 17:46:10] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:10] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:10] mukk.dsd.sztaki.hu: action:: portal
+[26-Feb-2003 17:46:10] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:10] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:10] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = 'a' AND password = 'a' AND portal_id = 1
+[26-Feb-2003 17:46:10] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:46:10] mukk.dsd.sztaki.hu: 0.4479 ms, /portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:10] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal.php/%7B$IMAGEDIR%7D/transp.gif
+[26-Feb-2003 17:46:11] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:11] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:11] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:11] ------------------------------------------
+[26-Feb-2003 17:46:11] REQUEST_URI: /portal/www/portal.php/%7B$IMAGEDIR%7D/transp.gif
+[26-Feb-2003 17:46:11] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:11] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:11] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:11] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:11] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:11] mukk.dsd.sztaki.hu: action:: portal
+[26-Feb-2003 17:46:11] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:11] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = '{$IMAGEDIR}/transp.gif'
+[26-Feb-2003 17:46:11] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:11] mukk.dsd.sztaki.hu: 0.2674 ms, /portal/www/portal.php/%7B$IMAGEDIR%7D/transp.gif
+[26-Feb-2003 17:46:11] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:46:11] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:11] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:12] ------------------------------------------
+[26-Feb-2003 17:46:12] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:46:12] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:12] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:12] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:12] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:12] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: 0.0962 ms, /portal/www/portals.php
+[26-Feb-2003 17:46:12] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:12] ------------------------------------------
+[26-Feb-2003 17:46:12] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:46:12] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:12] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:12] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:12] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:12] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: 0.1112 ms, /portal/www/portals.php
+[26-Feb-2003 17:46:12] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:12] ------------------------------------------
+[26-Feb-2003 17:46:12] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:46:12] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:12] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:12] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:12] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:12] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: 0.0954 ms, /portal/www/portals.php
+[26-Feb-2003 17:46:12] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:12] ------------------------------------------
+[26-Feb-2003 17:46:12] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:46:12] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:12] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:12] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:12] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:12] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: 0.0945 ms, /portal/www/portals.php
+[26-Feb-2003 17:46:12] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:12] ------------------------------------------
+[26-Feb-2003 17:46:12] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:46:12] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:12] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:12] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:12] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:12] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: 0.0966 ms, /portal/www/portals.php
+[26-Feb-2003 17:46:12] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:12] ------------------------------------------
+[26-Feb-2003 17:46:12] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:46:12] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:12] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:12] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:12] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:12] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:12] mukk.dsd.sztaki.hu: 0.0953 ms, /portal/www/portals.php
+[26-Feb-2003 17:46:12] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:46:17] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:18] ------------------------------------------
+[26-Feb-2003 17:46:18] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:46:18] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:18] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:18] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:18] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:18] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: 0.0963 ms, /portal/www/portals.php
+[26-Feb-2003 17:46:18] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:18] ------------------------------------------
+[26-Feb-2003 17:46:18] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:46:18] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:18] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:18] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:18] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:18] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: 0.0962 ms, /portal/www/portals.php
+[26-Feb-2003 17:46:18] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:18] ------------------------------------------
+[26-Feb-2003 17:46:18] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:46:18] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:18] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:18] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:18] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:18] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: 0.097 ms, /portal/www/portals.php
+[26-Feb-2003 17:46:18] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal.php/kanga?edit=1
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:18] ------------------------------------------
+[26-Feb-2003 17:46:18] REQUEST_URI: /portal/www/portal.php/kanga?edit=1
+[26-Feb-2003 17:46:18] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:18] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:18] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:18] GET: edit = 1
+[26-Feb-2003 17:46:18] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:18] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: action:: portal
+[26-Feb-2003 17:46:18] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:19] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:19] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = 'a' AND password = 'a' AND portal_id = 1
+[26-Feb-2003 17:46:19] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:46:19] mukk.dsd.sztaki.hu: 0.4552 ms, /portal/www/portal.php/kanga?edit=1
+[26-Feb-2003 17:46:19] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portals.php
+[26-Feb-2003 17:46:23] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:23] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:23] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:23] ------------------------------------------
+[26-Feb-2003 17:46:23] REQUEST_URI: /portal/www/portals.php
+[26-Feb-2003 17:46:23] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:23] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:23] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?style=1
+[26-Feb-2003 17:46:23] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:23] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:23] mukk.dsd.sztaki.hu: action:: portals
+[26-Feb-2003 17:46:23] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:23] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = ''
+[26-Feb-2003 17:46:23] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/portals.php
+[26-Feb-2003 17:46:23] mukk.dsd.sztaki.hu: 0.1196 ms, /portal/www/portals.php
+[26-Feb-2003 17:46:23] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal_popup.php/kanga?row=1&col=2
+[26-Feb-2003 17:46:28] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:29] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:29] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:29] ------------------------------------------
+[26-Feb-2003 17:46:29] REQUEST_URI: /portal/www/portal_popup.php/kanga?row=1&col=2
+[26-Feb-2003 17:46:29] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:29] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:29] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?edit=1
+[26-Feb-2003 17:46:29] GET: row = 1
+[26-Feb-2003 17:46:29] GET: col = 2
+[26-Feb-2003 17:46:29] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:29] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:29] mukk.dsd.sztaki.hu: action:: portal_popup
+[26-Feb-2003 17:46:29] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:29] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:29] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = 'a' AND password = 'a' AND portal_id = 1
+[26-Feb-2003 17:46:29] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:46:29] mukk.dsd.sztaki.hu: 0.5815 ms, /portal/www/portal_popup.php/kanga?row=1&col=2
+[26-Feb-2003 17:46:29] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal_popup.php/kanga?row=3&col=1
+[26-Feb-2003 17:46:34] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:35] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:35] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:35] ------------------------------------------
+[26-Feb-2003 17:46:35] REQUEST_URI: /portal/www/portal_popup.php/kanga?row=3&col=1
+[26-Feb-2003 17:46:35] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:35] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:35] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?edit=1
+[26-Feb-2003 17:46:35] GET: row = 3
+[26-Feb-2003 17:46:35] GET: col = 1
+[26-Feb-2003 17:46:35] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:35] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:35] mukk.dsd.sztaki.hu: action:: portal_popup
+[26-Feb-2003 17:46:35] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:35] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:35] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = 'a' AND password = 'a' AND portal_id = 1
+[26-Feb-2003 17:46:35] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:46:35] mukk.dsd.sztaki.hu: 0.5083 ms, /portal/www/portal_popup.php/kanga?row=3&col=1
+[26-Feb-2003 17:46:35] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal_popup.php/kanga?row=3&col=1
+[26-Feb-2003 17:46:44] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:44] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:44] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:44] ------------------------------------------
+[26-Feb-2003 17:46:44] REQUEST_URI: /portal/www/portal_popup.php/kanga?row=3&col=1
+[26-Feb-2003 17:46:44] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:44] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:44] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal_popup.php/kanga?row=3&col=1
+[26-Feb-2003 17:46:44] GET: row = 3
+[26-Feb-2003 17:46:44] GET: col = 1
+[26-Feb-2003 17:46:44] POST: resource = text
+[26-Feb-2003 17:46:44] POST: oldresource = text
+[26-Feb-2003 17:46:44] POST: value = <br>All programmes about kangaroos::<br><br>
+[26-Feb-2003 17:46:44] POST: link = none
+[26-Feb-2003 17:46:44] POST: style = size:+1
+[26-Feb-2003 17:46:44] POST: align = left
+[26-Feb-2003 17:46:44] POST: valign = bottom
+[26-Feb-2003 17:46:44] POST: width = 
+[26-Feb-2003 17:46:44] POST: color = 
+[26-Feb-2003 17:46:44] POST: cell_color = none
+[26-Feb-2003 17:46:44] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:44] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:44] mukk.dsd.sztaki.hu: action:: portal_popup
+[26-Feb-2003 17:46:44] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = 'a' AND password = 'a' AND portal_id = 1
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: REDIRECT: http://sotf2.dsd.sztaki.hu/portal/www/closeAndRefresh.php
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: 0.445 ms, /portal/www/portal_popup.php/kanga?row=3&col=1
+[26-Feb-2003 17:46:45] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal.php/kanga?edit=1&t=1046278005456
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:45] ------------------------------------------
+[26-Feb-2003 17:46:45] REQUEST_URI: /portal/www/portal.php/kanga?edit=1&t=1046278005456
+[26-Feb-2003 17:46:45] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:45] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:45] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/closeAndRefresh.php
+[26-Feb-2003 17:46:45] GET: edit = 1
+[26-Feb-2003 17:46:45] GET: t = 1046278005456
+[26-Feb-2003 17:46:45] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:45] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: action:: portal
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = 'a' AND password = 'a' AND portal_id = 1
+[26-Feb-2003 17:46:45] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:46:51] mukk.dsd.sztaki.hu: 5.4481 ms, /portal/www/portal.php/kanga?edit=1&t=1046278005456
+[26-Feb-2003 17:46:51] --------------------------------------------------------------------
+
+
+---------------------------------------------------------------------------------
+/portal/www/portal_popup.php/kanga?row=3&col=1
+[26-Feb-2003 17:46:57] mukk.dsd.sztaki.hu: debug: 1
+[26-Feb-2003 17:46:57] mukk.dsd.sztaki.hu: DB: connecting to: pgsql://micsik:@localhost:5432/portal
+[26-Feb-2003 17:46:57] mukk.dsd.sztaki.hu: DB: Query: SELECT name, value FROM portal_vars
+[26-Feb-2003 17:46:57] ------------------------------------------
+[26-Feb-2003 17:46:57] REQUEST_URI: /portal/www/portal_popup.php/kanga?row=3&col=1
+[26-Feb-2003 17:46:57] REMOTE_HOST: mukk.dsd.sztaki.hu
+[26-Feb-2003 17:46:57] USER_AGENT: Mozilla/5.0 Galeon/1.2.5 (X11; Linux i686; U;) Gecko/20020809
+[26-Feb-2003 17:46:57] REFERER: http://sotf2.dsd.sztaki.hu/portal/www/portal.php/kanga?edit=1&t=1046278005456#
+[26-Feb-2003 17:46:57] GET: row = 3
+[26-Feb-2003 17:46:57] GET: col = 1
+[26-Feb-2003 17:46:57] COOKIE: PHPSESSID = 5401c59a40166f3985b494251cf14298
+[26-Feb-2003 17:46:57] COOKIE: sessKey = MTkzLjIyNS44Ny4zOmtWTVo2VTh5QVR6UlZnc3pHa3RQQURjd1RzTm5l
+[26-Feb-2003 17:46:57] mukk.dsd.sztaki.hu: action:: portal_popup
+[26-Feb-2003 17:46:57] mukk.dsd.sztaki.hu: lang: en
+[26-Feb-2003 17:46:57] mukk.dsd.sztaki.hu: DB: Query: SELECT portal_settings.id, admin_id, portal_settings.password FROM portal_settings WHERE portal_settings.name = 'kanga'
+[26-Feb-2003 17:46:57] mukk.dsd.sztaki.hu: DB: Query: SELECT id, email, name FROM portal_users WHERE name = 'a' AND password = 'a' AND portal_id = 1
+[26-Feb-2003 17:46:57] mukk.dsd.sztaki.hu: XML-RPC: call to http://sotf2.dsd.sztaki.hu/node/www/xmlrpcServer.php
+[26-Feb-2003 17:46:57] mukk.dsd.sztaki.hu: 0.5752 ms, /portal/www/portal_popup.php/kanga?row=3&col=1
+[26-Feb-2003 17:46:57] --------------------------------------------------------------------
+

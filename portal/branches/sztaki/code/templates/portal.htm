@@ -1,0 +1,284 @@
+{config_load file="$LANG.conf" section="$ACTION"}
+<html>
+<head>
+<title>{#portal_editor#}</title>
+</head>
+<body {if $view OR $edit}bgcolor="#{$home.bg}" background="{$home.wall}" text="#{$home.font}" link="#{$home.link}" alink="#{$home.alink}" vlink="#{$home.vlink}"{elseif $id}bgcolor="#{$programmes.bg}" background="{$programmes.wall}" text="#{$programmes.font}" link="#{$programmes.link}" alink="#{$programmes.alink}" vlink="#{$programmes.vlink}"{else}bgcolor="#{$portal.bg2}"{/if} topmargin="0" leftmargin="0" marginwidth="0" marginheight="0">
+<form action="{$php_self}{if $edit}?edit=1{/if}" method="post" name="myform">
+<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
+	<tr align="center">
+		<td>
+		<table border="0" cellpadding="0" cellspacing="0" width="100%" bgcolor="#{$portal.bg1}" align="center">
+		<tr align="center">
+		{if $is_admin}
+			<td width="20%"{if $playlist} bgcolor="#{$portal.bg2}"{/if}>{if !$playlist}<a href="{$php_self}?playlist=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#programmes_editor#}{if $css}</span>{else}</font>{/if}</b>{if !$playlist}</a>{/if}</td>
+			<td width="20%"{if $style} bgcolor="#{$portal.bg2}"{/if}>{if !$style}<a href="{$php_self}?style=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#style_editor#}{if $css}</span>{else}</font>{/if}</b>{if !$style}</a>{/if}</td>
+			<td width="20%"{if $edit} bgcolor="#{$portal.bg2}"{/if}>{if !$edit}<a href="{$php_self}?edit=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#edit_homepage#}{if $css}</span>{else}</font>{/if}</b>{if !$edit}</a>{/if}</td>
+			<td width="20%"{if $view} bgcolor="#{$portal.bg2}"{/if}>{if !$view}<a href="{$php_self}">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#view_result#}{if $css}</span>{else}</font>{/if}</b>{if !$view}</a>{/if}</td>
+			<td width="20%"{if $admin} bgcolor="#{$portal.bg2}"{/if}>{if !$admin}<a href="{$php_self}?admin=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#admin_page#}{if $css}</span>{else}</font>{/if}</b>{if !$admin}</a>{/if}</td>
+		{else}
+			<td width="33%"{if $view} bgcolor="#{$portal.bg2}"{/if}>{if !$view}<a href="{$php_self}">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#home#}{if $css}</span>{else}</font>{/if}</b>{if !$view}</a>{/if}</td>
+			{if $is_logged_in}<td width="33%"><a href="{$php_self}?logout=1"><b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#Logout#} {$username}{if $css}</span>{else}</font>{/if}</b></a></td>
+			{else}<td width="33%"{if $login} bgcolor="#{$portal.bg2}"{/if}>{if !$login}<a href="{$php_self}?login=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#Login#}{if $css}</span>{else}</font>{/if}</b>{if !$login}</a>{/if}</td>{/if}
+			<td width="33%"><a href="{$sotfSite}index.php"><b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#sotf_portal#}{if $css}</span>{else}</font>{/if}</b></a></td>
+		{/if}
+		</tr>
+		</table>
+		</td>
+	</tr>
+	{if !$view}<tr bgcolor="#{$portal.bg2}"><td>&nbsp;</td></tr>{/if}
+	<tr align="center">
+		{if $login}
+		<td bgcolor="#{$portal.bg2}">
+			{#Username#}: <input type="text" name="username">
+			{#Password#}: <input type="password" name="password">
+			<input type="submit" value="{#Login#}">
+			t:t OR a:a
+		</td>
+		{elseif $playlist}
+		<td bgcolor="#{$portal.bg2}">
+			<table width="100%" border="0">
+			<tr align=center>
+				<td align="right">{#display#}:&nbsp;<select name="filter" onchange="javascript:this.form.submit()">{html_options options=$filters selected=$filter}</select></td>
+				<td align="left">&nbsp;{#from#}&nbsp;<select name="prglist" onchange="javascript:this.form.submit()">
+						{html_options options=$prglists selected=$prglist}
+						</select></td>
+			</tr>
+
+<!--			<tr align=center>
+				<td>{#queries#}:&nbsp;<select name="query" onchange="javascript:this.form.submit()">{html_options options=$queries}</select></td>
+				<td><input type="button" value="{#show#}"> {#prg_on_portal#}<br></td>
+				<td>{#static_lists#}:&nbsp;<select name="programmes" onchange="javascript:this.form.submit()">{html_options options=$playlists}</select></td>
+			</tr>
+-->
+			</table>
+			<br><br>
+			<input type="hidden" name="playlist" value="1">
+			<!--{include file="splitList.htm"}-->
+			<table width="100%" border="0">
+			{foreach name=outer item=item from=$result}
+				<tr>
+					<td align="center"><img src="{$item.icon}"></td>
+					<td><b><a href="{$php_self}?id={$item.id}">{$item.title}</a></b><BR>
+					{foreach key=key item=cell from=$item.values}
+						{if $cell != ""}
+						<b>{$key}:</b>{$cell}<br>
+						{/if}
+					{/foreach}
+					</td>
+					<td align="center">
+					{#upload_file#}:<input type="file"><input type="button" value="{#upload#}"><br><br>
+					<input type="button" value="{#edit_teaser#}"><br><br>
+					<input type="button" value="{#edit_text#}"><br>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" align="center"><hr width="70%" noshade></td>
+				</tr>
+			{/foreach}
+			</table>
+		</td>
+		{elseif $style}
+		<td bgcolor="#{$portal.bg2}">
+			<table border="0" cellpadding="20" cellspacing="0" width="100%">
+			<tr align="center">
+			<td width="50%">
+				<table border="0" cellpadding="0" cellspacing="0">
+				<tr>
+				<td align="right" valign="middle" width="50%"><input type="submit" value="{#save#}" name="save_style"> {#and_go_to#}</td>
+				<td align="left" valign="middle" width="50%"><input type="radio" name="goto" value="programmes"> {#programmes_editor#}<br><input type="radio" name="goto" value="edit" checked> {#edit_homepage#}<br><input type="radio" name="goto" value="view"> {#view_result#}<br><input type="radio" name="goto" value="admin"> {#admin_page#}<br></td>
+				</tr>
+				</table>
+			</td>
+			<td width="50%">
+				<div align="center"><b>{#color_codes#}</b></div><br>
+				{literal}
+				<SCRIPT language="javascript">
+				//<!--
+				function toHex(i)
+				{
+					if (i == 0) return "00";
+					if (i == 1) return "33";
+					if (i == 2) return "66";
+					if (i == 3) return "99";
+					if (i == 4) return "CC";
+					if (i == 5) return "FF";
+				}
+
+ 				document.write('<input type="hidden" name="colorcode">');
+ 				document.write('<table cellspacing="1" cellpadding="0" border="0" bgcolor="#000000">');
+				var i=0, j=0, k=0, color="";
+				for (var i=0; i<6; i++)
+				{
+					document.write('<tr>');
+					for (j=0; j<6; j++)
+					{
+						for (k=0; k<6; k++)
+						{
+							color=toHex(i)+toHex(j)+toHex(k);
+							document.write('<td bgcolor="#'+color+'"><a href="#'+color+'" onclick="javascript:document.myform.colorcode.value=\''+color+'\';return false;"><img src="{$IMAGEDIR}/transp.gif" border="0" width="10" height="10" alt="#'+color+'"></a></td>');
+						}
+					}
+				document.write('</tr>');
+				}
+				document.write('</table>');
+
+				function setValue(name)
+				{
+					document.myform.elements[name].value=document.myform.colorcode.value;
+					document.getElementById(name+"_sam").style.background="#"+document.myform.colorcode.value;
+				}
+
+				//-->
+				</script>
+				{/literal}
+				{#color_use#}
+			</td>
+			</tr>
+			<tr>
+			<td align="center" valign="middle">
+				<div align="center"><b>{#portal_menu#}</b></div><br>
+				<table border="0" cellpadding="0" cellspacing="0" align="center">
+				<tr>
+					<td align="right">{#BGColor#}: </td>
+					<td>#<input type="text" name="portal_bg1" value="{$portal.bg1}" size="6" ondblclick="javascript:setValue('portal_bg1')" onchange="javascript:document.getElementById('portal_bg1_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.portal_bg1.value=this.value; document.getElementById('portal_bg1_sam').style.background='#'+this.value;">{html_options options=$colors}</select></td>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td name="portal_bg1_s" ID="portal_bg1_sam" bgcolor="#{$portal.bg1}" width="30" border="1" onclick="javascript:setValue('portal_bg1')">&nbsp;</td></tr></table></td>
+
+				</tr>
+				<tr>
+					<td align="right">{#BGColor_active#}: </td>
+					<td>#<input type="text" name="portal_bg2" value="{$portal.bg2}" size="6" ondblclick="javascript:setValue('portal_bg2')" onchange="javascript:document.getElementById('portal_bg2_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.portal_bg2.value = this.value; document.getElementById('portal_bg2_sam').style.background='#'+this.value;">{html_options options=$colors}</select></td>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="portal_bg2_sam" bgcolor="#{$portal.bg2}" width="30" border="1" onclick="javascript:setValue('portal_bg2')">&nbsp;</td></tr></table></td>
+				</tr>
+				<tr>
+					<td align="right">{#font_color#}: </td>
+					<td>#<input type="text" name="portal_font" value="{$portal.font}" size="6" ondblclick="javascript:setValue('portal_font')" onchange="javascript:document.getElementById('portal_font_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.portal_font.value = this.value; document.getElementById('portal_font_sam').style.background='#'+this.value;">{html_options options=$colors}</select></td>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="portal_font_sam" bgcolor="#{$portal.font}" width="30" border="1" onclick="javascript:setValue('portal_font')">&nbsp;</td></tr></table></td>
+				</tr>
+				</table>
+				{if $css}{#CSS_file#}: <input type="text" name="portal_css" value="{$portal.css}" size="25" /><select name="file" onchange="javascript:this.form.portal_css.value = this.value">{html_options options=$files}</select>{/if}
+			</td>
+			<td align="center" valign="middle">
+				<div align="center"><b>{#upload_file_box#}</b></div><br>
+				{#custom_name#}: <input type="text" name="file_name" value="{#custom_name_example#}" size="40" /><br>
+				{#file#}: <input type="file" name="file_file" size="40" /><br>
+				<input type="button" value="{#upload#}" name="file_upload"><br>
+			</td>
+			</tr>
+			<tr>
+			<td align="center" valign="middle">
+				<div align="center"><b>{#portal_home#}</b></div><br>
+				<table border="0" cellpadding="0" cellspacing="0" align="center">
+				<tr>
+					<td align="right">{#BGColor#}: </td>
+					<td>#<input type="text" name="home_bg" value="{$home.bg}" size="6" ondblclick="javascript:setValue('home_bg')" onchange="javascript:document.getElementById('home_bg_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.home_bg.value=this.value; document.getElementById('home_bg_sam').style.background='#'+this.value;">{html_options options=$colors}</select><br>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="home_bg_sam" bgcolor="#{$home.bg}" width="30" border="1" onclick="javascript:setValue('home_bg')">&nbsp;</td></tr></table></td>
+				<tr>
+				</tr>
+					<td align="right">{#font_color#}: </td>
+					<td>#<input type="text" name="home_font" value="{$home.font}" size="6" ondblclick="javascript:setValue('home_font')" onchange="javascript:document.getElementById('home_font_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.home_font.value=this.value; document.getElementById('home_font_sam').style.background='#'+this.value;">{html_options options=$colors}</select><br>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="home_font_sam" bgcolor="#{$home.font}" width="30" border="1" onclick="javascript:setValue('home_font')">&nbsp;</td></tr></table></td>
+				<tr>
+				</tr>
+					<td align="right">{#link_color#}: </td>
+					<td>#<input type="text" name="home_link" value="{$home.link}" size="6" ondblclick="javascript:setValue('home_link')" onchange="javascript:document.getElementById('home_link_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.home_link.value=this.value; document.getElementById('home_link_sam').style.background='#'+this.value;">{html_options options=$colors}</select><br>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="home_link_sam" bgcolor="#{$home.link}" width="30" border="1" onclick="javascript:setValue('home_link')">&nbsp;</td></tr></table></td>
+				<tr>
+				</tr>
+					<td align="right">{#active_link_color#}: </td>
+					<td>#<input type="text" name="home_alink" value="{$home.alink}" size="6" ondblclick="javascript:setValue('home_alink')" onchange="javascript:document.getElementById('home_alink_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.home_alink.value=this.value; document.getElementById('home_alink_sam').style.background='#'+this.value;">{html_options options=$colors}</select><br>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="home_alink_sam" bgcolor="#{$home.alink}" width="30" border="1" onclick="javascript:setValue('home_alink')">&nbsp;</td></tr></table></td>
+				<tr>
+				</tr>
+					<td align="right">{#visited_link_color#}: </td>
+					<td>#<input type="text" name="home_vlink" value="{$home.vlink}" size="6" ondblclick="javascript:setValue('home_vlink')" onchange="javascript:document.getElementById('home_vlink_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.home_vlink.value=this.value; document.getElementById('home_vlink_sam').style.background='#'+this.value;">{html_options options=$colors}</select><br>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="home_vlink_sam" bgcolor="#{$home.vlink}" width="30" border="1" onclick="javascript:setValue('home_vlink')">&nbsp;</td></tr></table></td>
+				</tr>
+				</table>
+				{#wallpaper#}: <input type="text" name="home_wall" value="{$home.wall}" size="25" /><select name="file" onchange="javascript:this.form.home_wall.value = this.value">{html_options options=$files}</select><br>
+				{if $css}{#CSS_file#}: <input type="text" name="home_css" value="{$home.css}" size="25" /><select name="file" onchange="javascript:this.form.home_css.value = this.value">{html_options options=$files}</select>{/if}
+			</td>
+			<td align="center">
+				<div align="center"><b>{#change_portal_template#}</b></div><br>
+				<a href="#" onclick="javascript:window.open('portal_template.php','','width=640,height=480,left=0,top=0')"><img src="../static/portals/1.gif"></a>
+			</td>
+			</tr>
+			<tr>
+			<td align="center" valign="middle">
+				<div align="center"><b>{#programmes_page#}</b></div><br>
+				<table border="0" cellpadding="0" cellspacing="0" align="center">
+				<tr>
+					<td align="right">{#BGColor#}: </td>
+					<td>#<input type="text" name="programmes_bg" value="{$programmes.bg}" size="6" ondblclick="javascript:setValue('programmes_bg')" onchange="javascript:document.getElementById('programmes_bg_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.programmes_bg.value=this.value; document.getElementById('programmes_bg_sam').style.background='#'+this.value;">{html_options options=$colors}</select><br>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="programmes_bg_sam" bgcolor="#{$programmes.bg}" width="30" border="1" onclick="javascript:setValue('programmes_bg')">&nbsp;</td></tr></table></td>
+				<tr>
+				</tr>
+					<td align="right">{#font_color#}: </td>
+					<td>#<input type="text" name="programmes_font" value="{$programmes.font}" size="6" ondblclick="javascript:setValue('programmes_font')" onchange="javascript:document.getElementById('programmes_font_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.programmes_font.value=this.value; document.getElementById('programmes_font_sam').style.background='#'+this.value;">{html_options options=$colors}</select><br>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="programmes_font_sam" bgcolor="#{$programmes.font}" width="30" border="1" onclick="javascript:setValue('programmes_font')">&nbsp;</td></tr></table></td>
+				<tr>
+				</tr>
+					<td align="right">{#link_color#}: </td>
+					<td>#<input type="text" name="programmes_link" value="{$programmes.link}" size="6" ondblclick="javascript:setValue('programmes_link')" onchange="javascript:document.getElementById('programmes_link_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.programmes_link.value=this.value; document.getElementById('programmes_link_sam').style.background='#'+this.value;">{html_options options=$colors}</select><br>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="programmes_link_sam" bgcolor="#{$programmes.link}" width="30" border="1" onclick="javascript:setValue('programmes_link')">&nbsp;</td></tr></table></td>
+				<tr>
+				</tr>
+					<td align="right">{#active_link_color#}: </td>
+					<td>#<input type="text" name="programmes_alink" value="{$programmes.alink}" size="6" ondblclick="javascript:setValue('programmes_alink')" onchange="javascript:document.getElementById('programmes_alink_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.programmes_alink.value=this.value; document.getElementById('programmes_alink_sam').style.background='#'+this.value;">{html_options options=$colors}</select><br>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="programmes_alink_sam" bgcolor="#{$programmes.alink}" width="30" border="1" onclick="javascript:setValue('programmes_alink')">&nbsp;</td></tr></table></td>
+				<tr>
+				</tr>
+					<td align="right">{#visited_link_color#}: </td>
+					<td>#<input type="text" name="programmes_vlink" value="{$programmes.vlink}" size="6" ondblclick="javascript:setValue('programmes_vlink')" onchange="javascript:document.getElementById('programmes_vlink_sam').style.background='#'+this.value;" /><select name="color" onchange="javascript:this.form.programmes_vlink.value=this.value; document.getElementById('programmes_vlink_sam').style.background='#'+this.value;">{html_options options=$colors}</select><br>
+					<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="programmes_vlink_sam" bgcolor="#{$programmes.vlink}" width="30" border="1" onclick="javascript:setValue('programmes_vlink')">&nbsp;</td></tr></table></td>
+				</tr>
+				</table>
+				{#wallpaper#}: <input type="text" name="programmes_wall" value="{$programmes.wall}" size="25" /><select name="file" onchange="javascript:this.form.programmes_wall.value = this.value">{html_options options=$files}</select><br>
+				{if $css}{#CSS_file#}: <input type="text" name="programmes_css" value="{$programmes.css}" size="25" /><select name="file" onchange="javascript:this.form.programmes_css.value = this.value">{html_options options=$files}</select>{/if}
+			</td>
+			<td align="center">
+				<div align="center"><b>{#change_programmes_template#}</b></div><br>
+				<a href="#"><img src="../static/portals/2.gif"></a>
+			</td>
+			</tr>
+			</table>
+		</td>
+		{elseif $admin}
+		<td align="center">
+		<input type="submit" name="save_changes" value="{#save#}"> {#changes_made#}<br><br>
+		<input type="submit" name="logout" value="{#logout#}"><br><br>
+		<input type="hidden" name="admin" value="1">
+			<table border="0" cellpadding="10" cellspacing="0" align="center">
+			<tr>
+				<td align="center"><b>{#change_password#}</b></td>
+				<td align="center">&nbsp;</td>
+				<td align="center"><b>{#global_settings#}</b></td>
+			</tr>
+			<tr>
+			<td align="right">
+				{#old_password#}: <input type="password" name="password_old"><br>
+				{#new_password#}: <input type="password" name="password_new1"><br>
+				{#new_password_again#}: <input type="password" name="password_new2"><br>
+			</td>
+			<td align="center">&nbsp;</td>
+			<td align="left">
+				<input type="checkbox" name="stylesheet" {if $css}checked{/if}> {#use_stylesheets#}<br>
+				<input type="checkbox" name="rating" {if $rating}checked{/if}> {#use_rating#}<br>
+				<input type="checkbox" name="chat" {if $chat}checked{/if}> {#use_chat#}<br>
+			</td>
+			</tr>
+			</table>
+
+		</td>
+		{elseif $id}
+		<td align="center">{include file="portal_progpage.htm"}</td>
+		{else}
+		<td align="center">{include file="portal_htm.htm"}</td>
+		{/if}
+	</tr>
+	{if !$view}<tr bgcolor="#{$portal.bg2}"><td>&nbsp;</td></tr>{/if}
+</table>
+</form>
+
+</body>
+</html>
