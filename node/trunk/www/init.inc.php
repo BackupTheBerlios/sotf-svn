@@ -158,17 +158,18 @@ if($config['debug'])
   error_log("SERVER_NAME: " . myGetenv('SERVER_NAME'),0);
   error_log("HTTP_ACCEPT_LANGUAGE: " . myGetenv('HTTP_ACCEPT_LANGUAGE'),0);
   foreach($_GET as $key => $value) {
-    error_log("GET: $key = $value",0);
+    debug("GET: $key", $value);
   }
   foreach($_POST as $key => $value) {
-    error_log("POST: $key = $value",0);
+    debug("POST: $key", $value);
   }
   foreach($_COOKIE as $key => $value) {
-    error_log("COOKIE: $key = $value",0);
+    debug("COOKIE: $key", $value);
   }
   if(count($_SESSION) > 0) {
     foreach($_SESSION as $key => $value) {
-      error_log("SESSION: $key = $value",0);
+      //debug("SESSION: $key",$value);
+			error_log("SESSION: $key = $value",0);
     }
   }
   //  foreach($_ENV as $key => $value) {

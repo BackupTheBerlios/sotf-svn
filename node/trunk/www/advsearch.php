@@ -79,7 +79,7 @@ for ($i=0; $i < $max; $i++)			//go through all the values on the form
 	$SQLquery[$i][2] = $SQLeq[$i];
 	if ($SQLquery[$i][4] == "date")
 	{
-		$SQLquery[$i][3] = mktime(0,0,0,$SQLstring[$k],$SQLstring[$k+1],$SQLstring[$k+2]);	//	mktime(0,0,0,$month,$day,$year);
+		$SQLquery[$i][3] = mktime(0,0,0,$SQLstring[$k+1],$SQLstring[$k+2],$SQLstring[$k]);	//	mktime(0,0,0,$month,$day,$year);
 		$k += 2;
 	}
 	elseif ($SQLquery[$i][4] == "length")
