@@ -184,4 +184,9 @@ function moveUploadedFile($fieldName, $file) {
 	}
 }
 
+function excludeRobots() {
+	global $smarty;
+	$smarty->append('META_TAGS', '<META NAME="ROBOTS" CONTENT="NOINDEX,NOFOLLOW">');
+}
+
 ?>

@@ -85,8 +85,10 @@ class sotf_Statistics extends sotf_Object {
 	 } else {
 		$obj = new sotf_Statistics();
       $prg = $repository->getObject($prgId);
-      if(!$prg)
-        raiseError("addStat: no such programme: $prgId");
+      if(!$prg) {
+        // don't raiseError("addStat: no such programme: $prgId");
+		  return null;
+		}
 		$obj->setAll(array('prog_id' => $prgId,
                          'station_id' => $data['station_id'],
                          'year' => $year,

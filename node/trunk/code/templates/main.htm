@@ -4,6 +4,9 @@
 <html>
 <head>
 <title>{$PAGETITLE} (SOTF:{$NODE_NAME})</title>
+{foreach from=$META_TAGS item=META_TAG}
+  {$META_TAG}
+{/foreach}
 <link href="{$IMAGE_URL}/main.css" rel="stylesheet" type="text/css">
 <link rel="shortcut icon" href="{$ROOT_URL}/favicon.ico" />
 {literal}

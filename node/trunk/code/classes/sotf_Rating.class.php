@@ -119,9 +119,15 @@ class sotf_Rating	 extends sotf_Object {
 	}
 
 	function setRemoteRating($data) {
-		$this->recordRating($data);
-		sotf_Object::addToUpdate('ratingUpdate', $data['prog_id']);
-		//$this->updateInstant($data['prog_id']);
+	  global $repository;
+	  $obj = $repository->getObject($data['prog_id']);
+	  if($obj) {
+		 $this->recordRating($data);
+		 sotf_Object::addToUpdate('ratingUpdate', $data['prog_id']);
+		 //$this->updateInstant($data['prog_id']);
+	  } else {
+		 debug("Rating for non-existent prog",  $data['prog_id']);
+	  }
 	}
 
 	/** calculate overall rating value for object */

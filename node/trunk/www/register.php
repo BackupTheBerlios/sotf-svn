@@ -112,6 +112,8 @@ else
 	$smarty->assign("SUBMIT_TEXT", $page->getlocalized("Register"));
 }
 
+excludeRobots();
+
 $page->send();
 
 ?>

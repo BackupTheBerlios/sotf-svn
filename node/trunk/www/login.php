@@ -47,6 +47,8 @@ $smarty->assign(
                       'REGISTER_URL' => "register.php?okURL=" . urlencode($okURL)
                       )
                 );
+
+excludeRobots();
                       
 $page->send();
 
