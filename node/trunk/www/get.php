@@ -1,35 +1,59 @@
 <?php
 require("init.inc.php");
 
-// todo id must be  sql safe
-sotf_Utils::registerGlobalParameters('id', 'popup');
-
-$smarty->assign("PAGETITLE", $page->getlocalized("get"));
-$smarty->assign("OKURL", $_SERVER['PHP_SELF'] . "?id=" . rawurlencode($id));
+//$smarty->assign("OKURL", $_SERVER['PHP_SELF'] . "?id=" . rawurlencode($id));
+$id = sotf_Utils::getParameter('id');
 if($id) {
+
   $smarty->assign('ID', $id);
 
   $prg = & new sotf_Programme($id);
-  $smarty->assign_by_ref('PRG', $prg);
-  
-  if($prg->isEditable()) {
-    $smarty->assign('EDIT_PERMISSION', true);
+
+  $page->setTitle($prg->get('title'));
+
+  // general data
+  $smarty->assign('PRG_DATA', $prg->getAll());
+  // station data
+  $station = $prg->getStation();
+  $smarty->assign('STATION_DATA', $station->getAll());
+  // series data
+  $series = $prg->getSeries();
+  if($series)
+    $smarty->assign('SERIES_DATA', $series->getAll());
+
+  // roles and contacts
+  $smarty->assign('ROLES', $prg->getRoles());
+  // genre
+
+  // topics
+  $topics = $prg->getAssociatedObjects('sotf_prog_topics', 'id');
+  for($i=0; $i<count($topics); $i++) {
+    $topics[$i]['name'] = $repository->getTopicName($topics[$i]['topic_id']);
   }
+  $smarty->assign('TOPICS', $topics);
 
-  /* rights have to be get from sotf_files table
-  $smarty->assign('RIGHT_DOWNLOAD',$right_download);
-  $smarty->assign('RIGHT_DOWNLOAD24',$right_download24);
-  $smarty->assign('RIGHT_LISTEN',$right_listen);
-  $smarty->assign('RIGHT_LISTEN24',$right_listen24);
-  */
-  // ??? $smarty->assign('UPLOAD_PERMISSION',$page->getPermission('upload',$idObj->stationId));
+  $smarty->assign('GENRE', $repository->getGenreName($prg->get('genre_id')));
+  // language
+  $smarty->assign('LANGUAGE', $page->getlocalized($prg->get('language')));
+  // rights sections
+  $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
 
-  $smarty->assign('OTHERFILES', $prg->listOtherFiles());
-  $smarty->assign('AUDIOFILES', $prg->listAudioFiles());
+  // audio files 
+  $audioFiles = $prg->getAssociatedObjects('sotf_media_files', 'main_content DESC, filename');
+  for($i=0; $i<count($audioFiles); $i++) {
+    $audioFiles[$i] =  array_merge($audioFiles[$i], sotf_AudioFile::decodeFormatFilename($audioFiles[$i]['format']));
+  }
+  $smarty->assign('AUDIO_FILES', $audioFiles);
 
-  $smarty->assign('PAGETITLE', htmlspecialchars($prg->get('title')));
+  // other files
+  $otherFiles = $prg->getAssociatedObjects('sotf_other_files', 'filename');
+  $smarty->assign('OTHER_FILES', $otherFiles);
+  
+  // links
+  $smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));
 
-  $smarty->assign('REFERENCES', $prg->getRefs());
+
+  //$smarty->assign('REFERENCES', $prg->getRefs());
   /* stats and refs are collected via xml-rpc ??
   if($localItem) {
     $smarty->assign($repo->getStats($idObj));

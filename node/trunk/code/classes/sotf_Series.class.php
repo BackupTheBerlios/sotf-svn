@@ -9,10 +9,6 @@
 */
 class sotf_Series extends sotf_ComplexNodeObject {		
 
-  var $roles;
-
-  var $access;
-
    /**
      * Constructor: loads the object from database if ids are given
      *
@@ -28,12 +24,13 @@ class sotf_Series extends sotf_ComplexNodeObject {
     }
   }
 
+  function getStation() {
+    return new sotf_Station($this->get('station_id'));
+  }
+
   /** get number of published programmes */
   function numProgrammes($onlyPublished = true) {
-    $node = $this->node;
-    $id = $this->id;
-    $station = $this->data['station'];
-    $sql = "SELECT COUNT(*) FROM sotf_programmes WHERE node_id = '$node' AND series_id='$id'";
+    $sql = "SELECT COUNT(*) FROM sotf_programmes WHERE series_id='$this->id'";
     if($onlyPublished)
       $sql .= " AND published='t'";
     $count = $this->db->getOne($sql);
@@ -43,27 +40,22 @@ class sotf_Series extends sotf_ComplexNodeObject {
       return $count;
   }
 
-  function listProgrammes($start, $num, $onlyPublished = true) {
-    $node = $this->node;
-    $id = $this->id;
-    $sql = "SELECT node_id, id FROM sotf_programmes WHERE node_id = '$node' AND series_id='$id'";
-    if($onlyPublished)
-      $sql .= " AND published='t' ";
-    $sql .= " ORDER BY entry_date DESC,track ASC";
-    if ($num) {
-      if ($num < 0)
-        $num = 0;
-      $sql .= " LIMIT $num OFFSET $start";
-    }
-    $res = $this->db->getAll($sql);
-    if(DB::isError($res))
-      raiseError($res->getMessage());
-    foreach($res as $item) {
-      $list[] = new sotf_Programme($item['node_id'], $item['id']);
-    }
-    return $list;
-  }
-
+	/** list programmes */
+	function listProgrammes($start, $hitsPerPage, $onlyPublished = true) {
+		$id = $this->id;
+		$sql = "SELECT * FROM sotf_programmes WHERE series_id = '$id' ";
+		if($onlyPublished)
+			$sql .= " AND published='t' ";
+		$sql .= " ORDER BY entry_date DESC,track ASC";
+    if(!$start) $start = 0;
+		$res = $this->db->limitQuery($sql, $start, $hitsPerPage);
+		if(DB::isError($res))
+			raiseError($res);
+    while (DB_OK === $res->fetchInto($item)) {
+			$list[] = new sotf_Programme($item['id'], $item);
+		}
+		return $list;
+	}
 
 }	
 

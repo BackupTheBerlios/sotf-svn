@@ -5,6 +5,10 @@
     <p>{$MSG}</p>
   {/foreach}
 
-<FORM ACTION="index.php">
-<INPUT type="submit" name="ok" value="OK">
+    {if $POPUP}
+  <FORM ACTION="closeAndRefresh.php">
+    {else}
+    <FORM ACTION="index.php">
+    {/if}
+      <INPUT type="submit" name="ok" value="OK">
 </FORM>

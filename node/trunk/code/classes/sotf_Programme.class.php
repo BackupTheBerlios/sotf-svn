@@ -96,6 +96,19 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $this->saveMetadataFile();
   }
 
+  function getStation() {
+    return new sotf_Station($this->get('station_id'));
+  }
+
+  function getSeries() {
+    $sid = $this->get('series_id');
+    debug('soid',$sid);
+    if(!empty($sid))
+      return new sotf_Series($sid);
+    else 
+      return NULL;
+  }
+
 	function isLocal() {
 		return is_dir($this->getDir()); 
 	}
@@ -140,14 +153,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   /** returns directory where other files are stored for the programme */
   function getOtherFilesDir() {
     return $this->getDir() . '/files';
-  }
-
-  function getStation() {
-    return new sotf_Station($this->data['station_id']);
-  }
-
-  function getSeries() {
-    return $this->data['series'];
   }
 
   function isLocal() {
@@ -442,7 +447,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       $fileInfo->set('main_content', 'false');
     } else {
       $fileInfo = new sotf_NodeObject('sotf_other_files');
-
     }
     $fileInfo->set('prog_id', $this->id);
     $fileInfo->set('filename', $file->name);

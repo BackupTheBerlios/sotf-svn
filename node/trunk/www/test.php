@@ -6,7 +6,8 @@ require("init.inc.php");
 
 #$page->send();
 
-$x = array_merge($x, array(1,2));
+
+echo mime_content_type("test.php");
 
 ?>
 

@@ -58,6 +58,9 @@ if($delLink) {
   exit;
 }
 
+// generate output
+$smarty->assign('PRG_DATA', $prg->getAll());
+
 $smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));
 
 // TODO: compare directory and SQL data for correctness
@@ -85,8 +88,11 @@ $prgAudiolist->getAudioFromDir($prg->getAudioDir());
 if($prgAudiolist->count() != count($mainAudio)) {
   $page->addStatusMsg("main_audio_count_mismatch");
 }
- 
+
+
 $files = $prgAudiolist->getFiles();
+//debug('mainAUdio', $mainAudio);
+//debug('prgaudiolist', $files);
 for ($i=0;$i<count($files);$i++) {
   if(!$mainAudio[$files[$i]->name]) {
     // missing from SQL!

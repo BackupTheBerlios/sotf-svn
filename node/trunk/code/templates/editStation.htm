@@ -32,6 +32,7 @@
 
 <p></p>
 
+<form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#Roles#}</td>
@@ -53,9 +54,9 @@
               {$item.contact_data.name}
             </td>
             <td nowrap>
-              <a class="action" href="javascript:popup('editRole.php?roleid={$item.id}&objectid={$STATION_ID}','{#edit_role#}',350,400,false)">{#change#}</a>
-              <a class="action" href="javascript:popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)">{#edit_contact#}</a>
-              <a class="action" href="editStation.php?delrole=1&roleid={$item.id}&stationid={$STATION_ID}">{#delete#}</a>
+              <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$STATION_ID}','{#edit_role#}',350,400,false)" />
+              <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)" />
+              <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?delrole=1&roleid={$item.id}&stationid={$STATION_ID}')" />
             </td>
           </tr>
           {/foreach}
@@ -64,14 +65,16 @@
         <p>{#no_roles#}</p>
         {/if}
         <p>
-          <a class="action" href="javascript:popup('editRole.php?new=1&objectid={$STATION_ID}','{#edit_role#}',400,400,false)">{#add_new_role#}</a>
+            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$STATION_ID}','{#edit_role#}',400,400,false)" />
         </p>
       </td>
     </tr>
 </table>
+</form>
 
 <p></p>
 
+<form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#access_permissions#}</td>
@@ -94,8 +97,8 @@
               {/section}
             </td>
             <td nowrap>
-              <a class="action" href="javascript:popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)">{#change#}</a>
-              <a class="action" href="editStation.php?delperm=1&username={$username|escape}&stationid={$STATION_ID}">{#delete#}</a>
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?delperm=1&username={$username|escape}&stationid={$STATION_ID}')" />              
             </td>
           </tr>
           {/foreach}
@@ -112,6 +115,44 @@
       </td>
     </tr>
 </table>
+</form>
+
+<p></p>
+
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#series#}</td>
+  </tr>
+</table>
+<a name="series"></a>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $SERIES}
+        <table>
+          <tr class="listhead"><th>{#series_title#}</th><th>{#actions#}</th></tr>
+          {cycle name="perms" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$SERIES}
+          <tr class="{cycle name=perms}">
+            <td><a href="showSeries.php?seriesid={$item.id}">{$item.title}</a></td>
+            <td nowrap>
+              <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
+              <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?delseries=1&seriesid={$item.id}&stationid={$STATION_ID}')" />
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_series#}</p>
+        {/if}
+          <input class="action" type="button" name="b1" value="{#add_series#}" onClick="popup('createSeries.php?stationid={$STATION_ID}','{#series#}',550,550,true)" />
+
+
+      </td>
+    </tr>
+</table>
+</form>
 
 <p></p>
 

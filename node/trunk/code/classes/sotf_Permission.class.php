@@ -170,7 +170,7 @@ class sotf_Permission
     return $retval;
   }
 
-  //
+  /** returns programmes owned/edited by current user */
   function myProgrammes() {
 		if(!isset($this->currentPermissions))
       return NULL;  // not logged in yet
@@ -182,6 +182,19 @@ class sotf_Permission
     }
     return $retval;
   }
+
+  /** returns series (id,title) within given station owned/edited by current user */
+  function mySeriesData($stationId) {
+		if(!isset($this->currentPermissions))
+      return NULL;  // not logged in yet
+    global $db, $user;
+    $stationId = sotf_Utils::magicQuotes($stationId);
+    $sql = "SELECT s.id AS id, s.title AS title FROM sotf_series s, sotf_user_permissions u WHERE u.user_id = '$user->id' AND u.object_id=s.id AND s.station_id='$stationId' ORDER BY s.title";
+    $sdata = $db->getAll($sql);
+    return $sdata;
+  }
+
+
 
 
 } // end class sotf_Permission

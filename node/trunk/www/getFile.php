@@ -2,17 +2,21 @@
 
 require("init.inc.php");
 
-$filename = sotf_Utils::getParameter('filename');
+$filenameOrig = sotf_Utils::getParameter('filename');
 $id = sotf_Utils::getParameter('id');
 $mainAudio = sotf_Utils::getParameter('audio');
 $prg = & new sotf_Programme($id);
 
-$filename = sotf_Utils::getFileFromPath($filename);
+$filename = sotf_Utils::getFileFromPath($filenameOrig);
 if($mainAudio)
      $filename = $prg->getAudioDir() . '/' . $filename;
 else
      $filename = $prg->getOtherFilesDir() . '/' . $filename;
 
+if(!is_readable($filename))
+     raiseError("File not readable: $filenameOrig");
+
+debug('filename', $filename);
 
 $file = & new sotf_File($filename);
 if ($file->type != "none")
@@ -25,6 +29,6 @@ if ($file->type != "none")
 	readfile($filename);
 }
 else
-	exit($page->getlocalized("dowload_problem"));
+	raiseError("download_problem");
 
 ?>

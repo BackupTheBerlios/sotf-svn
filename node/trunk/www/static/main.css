@@ -35,12 +35,6 @@ TH {
 	background-position: right;
 }
 
-TD.tab {
-  FONT-WEIGHT: bold; background-color: #A8C3F7;
-}
-TD.tabarea {
-  background-color: #EFF4FE;
-}
 TR.listhead {
   background-color: #D3ECF5;
 }
@@ -55,13 +49,31 @@ TR.list1 {
 TABLE.tabarea {
   background: #D3ECF5; width: 100%;
 }
+TD.tabarea {
+  background-color: #EFF4FE;
+}
 
 TABLE.tab {
   background: #A8C3F7; width: 20%;
 }
+TD.tab {
+  FONT-WEIGHT: bold; background-color: #A8C3F7;
+}
+
+.prevnext {
+  background: #A8C3F7; text-align: center; width: 20%;
+}
 
 A.action {
- COLOR: #000000; border: outset; border-width: thin; background-color: #DDDDDD; TEXT-DECORATION: none; padding: 2pt; margin: 3pt;
+ COLOR: #000000; border: outset; border-width: thin; background-color: #DDDDDD; TEXT-DECORATION: none; padding: 2px; margin: 3px;
+}
+
+INPUT.action {
+  
+}
+
+INPUT {
+  FONT-SIZE: x-small; FONT-FAMILY: Tahoma, Verdana, Arial;
 }
 
 A {

@@ -7,6 +7,8 @@ $smarty->assign('PAGETITLE',$page->getlocalized('edit_station'));
 $page->forceLogin();
 
 $stationid = sotf_Utils::getParameter('stationid');
+$page->errorURL = "editStation.php?stationid=$stationid";
+
 $save = sotf_Utils::getParameter('save');
 $delperm = sotf_Utils::getParameter('delperm');
 $delrole = sotf_Utils::getParameter('delrole');
@@ -52,14 +54,15 @@ if($delrole) {
   $role = new sotf_NodeObject('sotf_object_roles', $roleid);
   $c = new sotf_Contact($role->get('contact_id'));
   $role->delete();
-  $msg = $page->getlocalizedWithParams("deleted_contact", $c->get('name'));
-  $page->addStatusMsg($msg, false);
+  //$msg = $page->getlocalizedWithParams("deleted_contact", $c->get('name'));
+  //$page->addStatusMsg($msg, false);
   $page->redirect("editStation.php?stationid=$stationid");
   exit;
 }
 
 // manage permissions
 if($delperm) {
+  $username = sotf_Utils::getParameter('username');
   $userid = $user->getUserid($username);
   if(empty($userid) || !is_numeric($userid)) {
     raiseError("Invalid username: $username");
@@ -84,10 +87,11 @@ if($setjingle)
 elseif($seticon)
 {
   $file = $user->getUserDir().'/'.$filename;
-  if ($st->setIcon($file))
-    $page->addStatusMsg("ok_icon");
-  else
-    $page->addStatusMsg("error_icon");
+  if ($st->setIcon($file)) {
+    //$page->addStatusMsg("ok_icon");
+  } else {
+    //$page->addStatusMsg("error_icon");
+  }
   $page->redirect("editStation.php?stationid=$stationid#icon");
 }
 
@@ -97,6 +101,7 @@ elseif($seticon)
 $smarty->assign('STATION_DATA',$st->data);
 $smarty->assign('STATION_MANAGER',true);
 $smarty->assign('ROLES', $st->getRoles());
+$smarty->assign('SERIES', $st->listSeriesData());
 
 // user permissions: editors and managers
 $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($st->id));

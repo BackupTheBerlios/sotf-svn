@@ -13,6 +13,10 @@ class sotf_Page
 	var $langConf;
 	/** an array containing error messages */
 	var $errors;
+	/** the URL to redirect to in case of errors */
+	var $errorURL;
+	/** if this page appears in a popup */
+	var $popup = false;
 
 	function sotf_Page()
 	{
@@ -108,6 +112,11 @@ class sotf_Page
 	  $_SESSION['statusMsgs'][] = $msg; 
 	}
 	
+	function setTitle($title) {
+	  global $smarty;
+	  $smarty->assign('PAGETITLE',$this->getlocalized($title));
+	}
+
 	function getUser()
 	{
 		if(!isset($this->user))
@@ -159,6 +168,11 @@ class sotf_Page
 	function send($template = 'main.htm'){
 		global $smarty, $totalTime;
 
+		if($this->popup) {
+		  $template = 'main_popup.htm';
+		  $smarty->assign('POPUP', 1);
+		}
+
 		unset($_SESSION['halted']);
 		// handle status messages
 		$smarty->assign('STATUS_MESSAGES', $_SESSION['statusMsgs']);
@@ -179,12 +193,18 @@ class sotf_Page
 
 	function halt($msg='') {
 	  global $smarty, $localPrefix;
+	  if($this->popup) {
+		 $smarty->assign('POPUP', 1);
+	  }
 	  if($this->errors) {
 		 $_SESSION['errorMsgs'] = $this->errors;
 	  }
 	  $url = getenv('HTTP_REFERER');
 	  debug("referer", $url);
-	  if($_SESSION['halted'] || !$url || !strstr($url, $localPrefix)) {
+	  if(!$url || !strstr($url, $localPrefix))
+		 $url = $this->errorURL;
+	  if($_SESSION['halted'] || !$url ) {
+		 debug("sending error page");
 		 $smarty->assign("ERRORS", $this->errors);
 		 $this->send('error.htm');
 	  } else {

@@ -102,4 +102,15 @@ class sotf_AudioFile extends sotf_File
 	{
 		return $this->bitrate . 'kbps_' . $this->channels . 'chn_' . $this->samplerate . 'Hz.' . $this->format;
 	} // end func getFormatFilename
+
+  /** static method converts format encoded into filename back to array of format characteristics. */
+  function decodeFormatFilename($filename) {
+    preg_match('/(\d+)kbps_(\d)chn_(\d+)Hz.(.*)/', $filename, $matches);
+    return array('bitrate' => $matches[1],
+                 'channels' => $matches[2],
+                 'samplerate' => $matches[3],
+                 'format' => $matches[4]);
+  }
+
+
 } // end class sotf_AudioFile

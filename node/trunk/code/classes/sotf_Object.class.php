@@ -180,6 +180,20 @@ class sotf_Object {
 			$this->id = $prop_value;
 		}
 	}
+
+	/**
+	 * sotf :: set()
+	 * 
+	 * purpose: to set a property. If you want this property to
+	 *					be the object ID, pass TRUE as a third parameter
+	 * 
+	 * @return (void)
+	 */
+	function setWithParam($prop_name, $param_name='', $id=false) {
+    if(!$param_name)
+      $param_name = $prop_name;
+    $this->set($prop_name, sotf_Utils::getParameter($param_name), $id);
+	}
 	
 	/**
 	 * sotf :: setBlob()

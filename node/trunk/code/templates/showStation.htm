@@ -1,82 +1,130 @@
 
-<h3 align="left">{#station#}: {$STATION}</h3>
+<h3>{$STATION}</h3>
 
-<table width="100%" bgcolor="{#editorBgColor1#}">
-<tr><td width="5">
-	{if $LOGO}
-		<img src="getIcon.php/icon.png?id={$STATION_ID}">
-	{/if}
-</td><td>
-          {if $STATION_DATA.description }
-          <p>{$STATION_DATA.description}</p>
-          {/if}
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        <table width="100%">
+          <tr><td width="5">
+            {if $STATION_DATA.icon}
+              <img src="getIcon.php/icon.png?id={$STATION_ID}">
+            {/if}
+          </td><td>
+              {if $STATION_DATA.description }
+              <p>{$STATION_DATA.description}</p>
+              {/if}
 
-          {if $ROLES}
-          <table cellspacing="0" cellpadding="2">
-            {foreach item=item from=$ROLES}
-            <tr>
-              <td>
-                {$item.role_name}: {$item.contact_data.name}
-                {if $item.contact_data.url}<a href="{$item.contact_data.url}">{$item.contact_data.url}</a>
-                {elseif $item.contact_data.email}<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email}</a>
-                {/if}
-                <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">{#More#}</a>
-              </td>
-            </tr>
-            {/foreach}
-          </table>
-          {/if}
+              {if $ROLES}
+              <table>
+                {foreach item=item from=$ROLES}
+                <tr>
+                  <td>
+                    {$item.role_name}: {$item.contact_data.name}
+                    {if $item.contact_data.url}<a href="{$item.contact_data.url}">{$item.contact_data.url}</a>
+                    {elseif $item.contact_data.email}<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email}</a>
+                    {/if}
+                    <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">{#More#}</a>
+                  </td>
+                </tr>
+                {/foreach}
+              </table>
+              {/if}
 
-          {if hasPerm($STATION_ID,'change') }
-          <p><a href="editStation.php?stationid={$STATION_ID}">{#edit_station#}</a></p>
-          {/if}
-
-</td></tr>
+              {if hasPerm($STATION_ID,'change') }
+              <p>
+                <form>
+                  <input class="action" type="button" name="b1" value="{#edit_station#}" onClick="redir(this.form, 'editStation.php?stationid={$STATION_ID}')">
+                </form>
+              </p>
+              {/if}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
 </table>
 
+{if $SERIES}
 
-<!--
-	<h4><a name="series">{#series#}</a></h4>
+  <p></p>
 
-	{if $EDIT_PERMISSION}
-	<p><a href="editSeries.php?station={$STATION|escape}">{#new_series#}</a></p>
-	{/if}
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#series#}</td>
+    </tr>
+  </table>
+  <table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
 
-	{if $SERIES_LIST}
-		<table border="1" cellspacing="0">
-		<tr><th>{#series_title#}</th><th>{#actions#}</th></tr>
-		{section name=i loop=$SERIES_LIST}
-			<tr>
-				<td><b><a href="listProgrammes.php?station={$STATION|escape}&series={$SERIES_LIST[i].series_id|escape}">{$SERIES_LIST[i].title}</a></b></td>
-				{if $EDIT_PERMISSION}
-					<td><a href="editSeries.php?station={$STATION|escape}&id={$SERIES_LIST[i].id|escape}">{#edit#}</a>
-					<a href="editSeries.php?station={$STATION|escape}&id={$SERIES_LIST[i].id|escape}&delete=1">{#delete#}</a></td>
-				{/if}
-			</tr>
-		{/section}
-		</table>
-	{else}
-		<p>{#no_series#}</p>
-	{/if}
--->
+        <a name="series"></a>
 
-{if $ITEM_LIST}
-	{section name=i loop=$ITEM_LIST}
-		{if not $smarty.section.i.first}<br>{/if}
-		<!--a href="javascript:popup('get.php?popup=1&id={$ITEM_LIST[i].id|escape}','{$ITEM_LIST[i].track|escape|replace:".":"_"|replace:":":"_"}',{#popupH#},{#popupW#},1)"-->
-		<a href="get.php?id={$ITEM_LIST[i].id|escape}">
+        <table>
+          {foreach item=item from=$SERIES}
+          <tr>
+            <td>{if $item.icon }<img src="getIcon.php/icon.png?id={$item.id}">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
+            <td><a href="showSeries.php?seriesid={$item.id}">{$item.title}</a> ({$item.count})</td>
+          </tr>
+          {/foreach}
+        </table>
+      </td>
+    </tr>
+  </table>
+{/if}
 
-			<b>{$ITEM_LIST[i].title}</b></a>
-				{if $lang == "de"} von/bis/auf/zu
-				{else} by
-				{/if}
-			<i>{$ITEM_LIST[i].author}</i>
-				{if $lang == "de"} von/bis/auf/zu
-				{else} on
-				{/if}
-			{$ITEM_LIST[i].production_date}
-	{/section}
-	<p>{if $START}<a href="listStation.php?station={$STATION|escape}&start={$PREV}">&lt;&lt;&lt;</a>{/if} {if $NEXT}<a href="listStation.php?station={$STATION|escape}&start={$NEXT}">&gt;&gt;&gt;</a>{/if}</p>
-{else}
-	<p>{#no_programme#}</p>
+
+{if $PROGS}
+  <p></p>
+
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#programmes#}</td>
+    </tr>
+  </table>
+  <table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
+
+        <a name="progs"></a>
+
+        
+        <table width="100%">
+          <tr>
+            <td colspan="2" align="center">
+              <div align="center" class="prevnext">
+                {if $PROG_SPLIT.prev ge 0}
+                <a href="showStation.php?stationid={$STATION_ID}&start={$PROG_SPLIT.prev}#progs">
+                  <img border="0" src="{$IMAGEDIR}/previous.png">
+                </a>
+                {/if}
+                {$PROG_SPLIT.start} - {$PROG_SPLIT.max} {#of#} {$PROG_SPLIT.count}
+                {if $PROG_SPLIT.next}
+                <a href="showStation.php?stationid={$STATION_ID}&start={$PROG_SPLIT.next}#progs">
+                  <img border="0" src="{$IMAGEDIR}/next.png">
+                </a>
+                {/if}
+              </div>
+            </td>
+          </tr>
+          {foreach item=item from=$PROGS}
+          <tr>
+            <td>
+              {if $item.icon }
+                 <img src="getIcon.php/icon.png?id={$item.id}">
+              {else}
+                 <img src="{$IMAGEDIR}/noicon.png">
+              {/if}
+            </td>
+            <td>
+              <a href="get.php?id={$item.id}">{$item.title}</a>
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+
 {/if}

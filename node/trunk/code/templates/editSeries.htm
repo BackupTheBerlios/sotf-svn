@@ -1,48 +1,170 @@
-{if $SERIES_ITEM.series_id}
-	{if $lang == "de"}
-	<h3>Edit '{$SERIES_ITEM.series_id}'</h3>
-	{else}
-	<h3>Edit '{$SERIES_ITEM.series_id}'</h3>
-	{/if}
-{else}
-	<h3>{#new_series#}</h3>
-{/if}
 
-{if $EDIT_PERMISSION}
-	<form method="post">
-	<input type="hidden" name="station" value="{$STATION}">
-	{if $OKURL}<inpup type="hidden" name="okURL" value="{$OKURL|escape}">{/if}
-	<table>
-		<tr>
-			<td valign="top">{#series_name#}:</td>
-			{if $SERIES_ITEM.series_id}
-				<td><input type="hidden" name="series_id" value="{$SERIES_ITEM.series_id}">{$SERIES_ITEM.series_id}</td>
-			{else}
-				<td><input size="32" name="series_id"{if $SERIES_ITEM.series_id} value="{$SERIES_ITEM.series_id}"{/if}>
-				{if $ERRORSERIESID}<font color="red"><b>{#missing#}</b></font>{/if}</td>
-			{/if}
-		</tr>
-		<tr>
-			<td valign="top">{#series_title#}:</td>
-			<td><input size="60" name="title"{if $SERIES_ITEM.title} value="{$SERIES_ITEM.title}"{/if}>
-			{if $ERRORTITLE}<font color="red"><b>{#missing#}</b></font>{/if}</td>
-		</tr>
-		<tr>
-			<td valign="top">{#description#}:</td>
-			<td><textarea name="description" rows="8" cols="60">{$SERIES_ITEM.description}</textarea>
-			{if $ERRORDESCRIPTION}<font color="red"><b>{#missing#}</b></font>{/if}</td>
-		</tr>
-		<tr>
-			<td valign="top">{#series_editor#}:</td>
-			<td><input size="60" name="editor"{if $SERIES_ITEM.editor} value="{$SERIES_ITEM.editor}"{/if}>
-			{if $ERROREDITOR}<font color="red"><b>{#missing#}</b></font>{/if}</td>
-		</tr>
-		<tr>
-			<td valign="top">{#contact_email#}:</td>
-			<td><input size="60" name="contact_email"{if $SERIES_ITEM.contact_email} value="{$SERIES_ITEM.contact_email}"{/if}>
-			{if $ERRORCONTACTEMAIL}<font color="red"><b>{#missing#}</b></font>{/if}</td>
-		</tr>
-	</table>
-	<input type="submit" name="save" value="{#save#}">
-	</form>
-{/if}
+<h3>{#edit_series#}</h3>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#general_data#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        <table width="100%">
+          <tr><td>
+              <form method="post">
+                <table>
+                  <tr>
+                    <td>{#title#}:</td>
+                    <td><input name="title" value="{$SERIES_DATA.title}" size="60" maxlength="255"/></td>
+                  </tr>
+                  <tr>
+                    <td>{#description#}:</td>
+                    <td><textarea cols="50" rows="10" name="description">{$SERIES_DATA.description}</textarea></td>
+                  </tr>
+                </table>
+                <input type="submit" name="save" value="{#save#}"> <input type="submit" name="finish" value="{#finish#}">
+              </form>
+            </td></tr>
+        </table>
+  </td>
+</tr>
+</table>
+
+<p></p>
+
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Roles#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $ROLES}
+        <table>
+          <tr class="listhead"><th>{#Role#}</th><th>{#Contact#}</th><th>{#actions#}</th></tr>
+          {cycle name="roles" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$ROLES}
+          <tr class="{cycle name=roles}">
+            <td>
+              {$item.role_name}
+            </td>
+            <td>
+              {$item.contact_data.name}
+            </td>
+            <td nowrap>
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$SERIES_ID}','{#edit_role#}',400,400,false)" />
+                  <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)" />
+                    <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editSeries.php?delrole=1&roleid={$item.id}&seriesid={$SERIES_ID}')" />
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_roles#}</p>
+        {/if}
+        <p>
+            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$SERIES_ID}','{#edit_role#}',400,400,false)" />
+        </p>
+      </td>
+    </tr>
+</table>
+</form>
+
+<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#access_permissions#}</td>
+  </tr>
+</table>
+<a name="permissions"></a>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $PERMISSIONS}
+        <form>
+        <table>
+          <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
+          {cycle name="perms" values="list1,list2" print=false advance=false}
+          {foreach item=user key=username from=$PERMISSIONS}
+          <tr class="{cycle name=perms}">
+            <td>{$username}</td>
+            <td>
+              {section name=i loop=$user}
+              {$user[i]}{if ! $smarty.section.i.last}, {/if}
+              {/section}
+            </td>
+            <td nowrap>
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES}&username={$username|escape}','Permissions',350,400,false)" />
+                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editSeries.php?delperm=1&username={$username|escape}&seriesid={$SERIES_ID}')" />
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        </form>
+        {else}
+        <p>{#no_users#}</p>
+        {/if}
+        <form method="post" name="form1">
+          <input type="hidden" name="seriesid" value="{$SERIES_ID}">
+            {#username#}: <input name="username"> 
+              <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
+                <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
+        </form>
+      </td>
+    </tr>
+</table>
+
+<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#icons_and_jingles#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+   <td class="tabarea"> 
+
+        {if $ICON}
+        <img align="left" src="getIcon.php/icon.png?id={$SERIES_ID}" border="1">
+          {else}
+          <p>{#no_icon#}</p>
+        {/if}
+        <a name="icon"></a>
+
+        {if $USERFILES}
+{literal}
+<script language="javascript">
+function getSelected() {
+     return document.userfiles['filename'].options[document.userfiles['filename'].selectedIndex].value;
+}
+</script>
+{/literal}
+
+        <form method="post" name="userfiles">
+          <input type="hidden" name="okURL" value="{$OKURL}">
+          <input type="hidden" name="seriesid" value="{$SERIES_ID}">
+          <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
+          <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
+          <input type="submit" name="seticon" value="{#set_icon#}">
+          <br \><small>{#userfiles_expl#}</small>
+        </form>
+        {else}
+        <p>{#no_files#}</p>
+        {/if}
+        <small>
+          <form enctype="multipart/form-data" method="post">
+            <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+            <input type="hidden" name="seriesid" value="{$SERIES_ID}" />
+            <input name="userfile" type="file" />
+            <input type="submit" name="uploadicon" value="{#set_icon#}">
+            <br />{#upload_expl#}
+          </form>
+        </small>
+        
+      </td>
+    </tr>
+  </table>

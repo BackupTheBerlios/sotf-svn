@@ -1,130 +1,110 @@
 <?php
-define("DELIMITER", ':'); 
 
 require("init.inc.php");
 
+$seriesid = sotf_Utils::getParameter('seriesid');
+$page->errorURL = "editSeries.php?seriesid=$seriesid";
+$page->setTitle('edit_series');
+$page->popup = true;
 $page->forceLogin();
 
-$station = sotf_Utils::getParameter('station');
-$id = sotf_Utils::getParameter('id');
-$okURL = sotf_Utils::getParameter('okURL');
+if (!hasPerm($seriesid, "change")) {
+  raiseError("You have no permission to change series settings!");
+}
+
+$series = & new sotf_Series($seriesid);
+
+// save general data
 $save = sotf_Utils::getParameter('save');
-$delete = sotf_Utils::getParameter('delete');
-$series_id = sotf_Utils::getParameter('series_id');
-$title = sotf_Utils::getParameter('title');
-$description = sotf_Utils::getParameter('description');
-$editor = sotf_Utils::getParameter('editor');
-$contact_email = sotf_Utils::getParameter('contact_email');
-
-$errorstation = sotf_Utils::getParameter('errorstation');
-$errorseriesid = sotf_Utils::getParameter('errorseriesid');
-$errortitle = sotf_Utils::getParameter('errortitle');
-$errordescription = sotf_Utils::getParameter('errordescription');
-$erroreditor = sotf_Utils::getParameter('erroreditor');
-$errorcontactemail = sotf_Utils::getParameter('errorcontactemail');
-
-if ($station)
-{
-	$smarty->assign('STATION',$station);
+$finish = sotf_Utils::getParameter('finish');
+if($save || $finish) {
+  $series->setWithParam('title');
+  $series->setWithParam('description');
+  $series->update();
+  if($finish)
+    $page->redirect("closeAndRefresh.php?part=series");
+  else
+    $page->redirect("editSeries.php?seriesid=$seriesid");
+  exit;
 }
 
-if ($okURL)
-{
-	$smarty->assign('OKURL',$okURL);
+// manage roles
+$delrole = sotf_Utils::getParameter('delrole');
+if($delrole) {
+  $roleid = sotf_Utils::getParameter('roleid');
+  $role = new sotf_NodeObject('sotf_object_roles', $roleid);
+  $c = new sotf_Contact($role->get('contact_id'));
+  $role->delete();
+  //$msg = $page->getlocalizedWithParams("deleted_contact", $c->get('name'));
+  //$page->addStatusMsg($msg, false);
+  $page->redirect("editSeries.php?seriesid=$seriesid");
+  exit;
 }
 
-if ($errorstation)
-	$smarty->assign('ERRORSTATION',$errorstation);
-if ($errorseriesid)
-	$smarty->assign('ERRORSERIESID',$errorseriesid);
-if ($errortitle)
-	$smarty->assign('ERRORTITLE',$errortitle);
-if ($errordescription)
-	$smarty->assign('ERRORDESCRIPTION',$errordescription);
-if ($erroreditor)
-	$smarty->assign('ERROREDITOR',$erroreditor);
-if ($errorcontactemail)
-	$smarty->assign('ERRORCONTACTEMAIL',$errorcontactemail);
-
-if ($id)
-	$ser = & new sotf_Series($id);
-else
-	$ser = & new sotf_Series($station . DELIMITER . $series_id);
-	
-if ($station)
-	$ser->set('station',$station);
-if ($series_id)
-	$ser->set('series_id',$series_id);
-if ($title)
-	$ser->set('title',$title);
-if ($description)
-	$ser->set('description',$description);
-if ($editor)
-	$ser->set('editor',$editor);
-if ($contact_email)
-	$ser->set('contact_email',$contact_email);
-
-if (sotf_Permission::get("write",$station))
-{
-	$smarty->assign('EDIT_PERMISSION',true); 
-	if ($save)
-	{
-		$error = "";
-		if (!$station)
-			$error .= "&errorstation=1";
-		if (!$series_id)
-			$error .= "&errorseriesid=1";
-		if (!$title)
-			$error .= "&errortitle=1";
-		if (!$description)
-			$error .= "&errordescription=1";
-		if (!$editor)
-			$error .= "&erroreditor=1";
-		if (!$contact_email)
-			$error .= "&errorcontactemail=1";
-		if ($error)
-			$page->redirect("editSeries.php?station=".rawurlencode($station).
-							"&series_id=".rawurlencode($series_id).
-							"&title=".rawurlencode($title).
-							"&description=".rawurlencode($description).
-							"&editor=".rawurlencode($editor).
-							"&contact_email=".rawurlencode($contact_email).
-							$error);
-		$ser->save();
-		if ($okURL)
-		{
-			$page->redirect($okURL);
-		}
-		else
-		{
-			$page->redirect("listProgrammes.php?station=".rawurlencode($station));
-		}
-	}
-	elseif ($delete)
-	{
-		$ser->delete();
-		$page->redirect("listProgrammes.php?station=".rawurlencode($station));
-	}
-
-	$editor = $ser->get('editor');
-	if (!$editor)
-		$editor = $user->name;
-	$contact_email = $ser->get('contact_email');
-	if (!$contact_email)
-		$contact_email = $user->email;
-	$series_item = array(
-							series_id		=>	$ser->get('series_id'),
-							title			=>	$ser->get('title'),
-							description		=>	$ser->get('description'),
-							editor			=>	$editor,
-							contact_email	=>	$contact_email,
-						);
-	
-	$smarty->assign('SERIES_ITEM',$series_item);
-	$page->send();
+// manage permissions
+$delperm = sotf_Utils::getParameter('delperm');
+if($delperm) {
+  $username = sotf_Utils::getParameter('username');
+  $userid = $user->getUserid($username);
+  if(empty($userid) || !is_numeric($userid)) {
+    raiseError("Invalid username: $username");
+  }
+  $permissions->delPermission($series->id, $userid);
+  $msg = $page->getlocalizedWithParams("deleted_permissions_for", $username);
+  $page->addStatusMsg($msg, false);
+  $page->redirect("editSeries.php?seriesid=$seriesid");
+  exit;
 }
-else
-{
-	$page->halt(getlocalized('permission_error'));
+
+// icon and jingle
+
+// upload icon
+$uploadIcon = sotf_Utils::getParameter('uploadicon');
+if($uploadIcon) {
+  $file = $user->getUserDir() . '/' . $_FILES['userfile']['name'];$upload = sotf_Utils::getParameter('upload');
+  move_uploaded_file($_FILES['userfile']['tmp_name'], $file);
+  if ($series->setIcon($file)) {
+    //$page->addStatusMsg("ok_icon");
+  } else {
+    $page->addStatusMsg("error_icon");
+  }
+  $page->redirect("editSeries.php?seriesid=$seriesid#icon");
+  exit;
 }
+
+// icon from my files
+$seticon = sotf_Utils::getParameter('seticon');
+if($seticon) {
+  $filename = sotf_Utils::getParameter('filename');
+  $path_parts = pathinfo(realpath($filename));
+  $filename = $path_parts['basename'];
+  $file = $user->getUserDir().'/'.$filename;
+  if ($series->setIcon($file)) {
+    //$page->addStatusMsg("ok_icon");
+  } else {
+    $page->addStatusMsg("error_icon");
+  }
+  $page->redirect("editSeries.php?seriesid=$seriesid#icon");
+}
+
+// generate output
+
+// general data
+$smarty->assign('SERIES_ID',$seriesid);
+$smarty->assign('SERIES_DATA',$series->data);
+$smarty->assign('SERIES_MANAGER',true);
+$smarty->assign('ROLES', $series->getRoles());
+
+// user permissions: editors and managers
+$smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($series->id));
+
+// icon and jingle
+$smarty->assign('USERFILES',$user->getUserFiles());
+
+if ($series->getIcon()) {
+  $smarty->assign('ICON','1');
+}
+
+$page->sendPopup();
+
 ?>

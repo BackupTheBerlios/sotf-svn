@@ -86,6 +86,7 @@ if($debug)
 {
 	error_log("\n---------------------------------------------------------------------------------\n" .  getenv("REQUEST_URI") . "\n",3, $logFile);
 	error_log(getenv('REMOTE_HOST') . ": " . getenv('HTTP_USER_AGENT') ,0);
+  error_log("REFERER: " . getenv('HTTP_REFERER'),0);
   foreach($_GET as $key => $value) {
     error_log("GET: $key = $value",0);
   }

@@ -17,8 +17,11 @@ else  window.location.href = this.location.href
 </SCRIPT>
 {/literal}
 
-<H3>{#Edit_files#}</H3>
+<H3>{#Edit_files#}: <a href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
 
+<div align="right"><a class="action" href="editMeta.php?id={$PRG_ID}">{#edit_meta#}</a></div>
+
+<form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#Prg_files#}</td>
@@ -70,24 +73,25 @@ else  window.location.href = this.location.href
             </td>
             <td nowrap>
               {if empty($item.filename) }
-              <a class="action" href="">{#convert#}</a>
+              <input class="action" type="button" name="b1" value="{#convert#}" onClick="" />
               {else}
-              <a class="action" href="editFiles.php?delmfile=1&objectid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delmfile=1&objectid={$item.id}&id={$PRG_ID}')" />
               {/if}
             </td>
           </tr>
           {/foreach}    
     </table>
-
-
-   <a class="action" href="javascript:popup('addFiles.php?new=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)">{#add_files#}</a>
+          <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?new=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)" />
  
  </td>
 </tr>
 </table>
+</form>
+
 
 <p></p>
 
+<form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#Files#}</td>
@@ -138,8 +142,8 @@ else  window.location.href = this.location.href
               <input type="checkbox" onclick="javascript:setvalue('audiofilesd', '{$item.id}', this.checked);return true;"{ if $item.download_access eq 't' } CHECKED="1" {/if} />
             </td>
             <td nowrap>
-              <a  class="action" href="javascript:setcaption('mfiles', '{$item.id}', '{$item.caption}');">{#change_caption#}</a>
-              <a class="action" href="editFiles.php?delofile=1&objectid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+              <input class="action" type="button" name="b1" value="{#change_caption#}" onClick="setcaption('mfiles', '{$item.id}', '{$item.caption}')" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delofile=1&objectid={$item.id}&id={$PRG_ID}')" />
             </td>
           </tr>
           {/foreach}    
@@ -176,11 +180,11 @@ else  window.location.href = this.location.href
               {$item.mime_type}
             </td>
             <td>
-              <input type="checkbox" onclick="javascript:setvalue('otherfiles', '{$item.id}', this.checked);return true;"{ if $item.public_access eq 't' } CHECKED="1" {/if} />
+              <input type="checkbox" onclick="javascript:setvalue('otherfiles', '{$item.id}', this.checked);return true;" { if $item.public_access eq 't' } CHECKED="1" {/if} />
             </td>
             <td nowrap>
-              <a  class="action" href="javascript:setcaption('ofiles', '{$item.id}', '{$item.caption}');">{#change_caption#}</a>
-              <a  class="action" href="editFiles.php?delofile=1&objectid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+                <input class="action" type="button" name="b1" value="{#change_caption#}" onClick="setcaption('ofiles', '{$item.id}', '{$item.caption}')" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delofile=1&objectid={$item.id}&id={$PRG_ID}')" />
             </td>
           </tr>
           {/foreach}    
@@ -189,11 +193,12 @@ else  window.location.href = this.location.href
    {if !$AUDIO_FILES and !$OTHER_FILES }
         <p>{#no_files#}</p>
    {/if}
-   <a class="action"  href="javascript:popup('addFiles.php?new=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)">{#add_files#}</a>
+          <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?new=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)" />
  
   </td>
 </tr>
 </table>
+</form>
 
 <p></p>
 
@@ -227,18 +232,17 @@ else  window.location.href = this.location.href
               <input type="checkbox" onclick="javascript:setvalue('links', '{$item.id}', this.checked);return true;"{ if $item.public_access eq 't' } CHECKED="1"{/if} />
             </td>
             <td nowrap>
-<!--                    <input type="button" name="i1" value="{#change#}">
-                      <input type="button" name="i2" value="{#delete#}">-->
-              <a class="action" href="javascript:popup('editLink.php?linkid={$item.id}&prgid={$PRG_ID}','{#edit_link#}',350,400,false)">{#change#}</a>
-              <a class="action" href="editFiles.php?dellink=1&linkid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+                <input class="action" type="button" name="i1" value="{#change#}" onClick="popup('editLink.php?linkid={$item.id}&prgid={$PRG_ID}','{#edit_link#}',350,400,false)" />
+                  <input class="action" type="button" name="i2" value="{#delete#}" onClick="redir(this.form,'editFiles.php?dellink=1&linkid={$item.id}&id={$PRG_ID}')" />
+
             </td>
           </tr>
           {/foreach}    
      </table>
     {else}
-                {#no_links#}
+                <p>{#no_links#}</p>
     {/if}
-              <a class="action" href="javascript:popup('editLink.php?new=1&prgid={$PRG_ID}','{#edit_link#}',400,400,false)">{#add_link#}</a>
+          <input class="action" type="button" name="i3" value="{#add_link#}" onClick="popup('editLink.php?new=1&prgid={$PRG_ID}','{#edit_link#}',400,400,false)" />
   </td>
 </tr>
 </table>

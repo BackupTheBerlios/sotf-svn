@@ -289,62 +289,6 @@ class sotf_Utils
 	    error_log("could not send mail to $to with subject $subject", 0);
 	}
 
-	function resizeImage($imgfile, $newfile, $iconWidth = 100, $iconHeight = 100)
-	{
-		global $magickDir;
-		if ($imgfile == "") { 
-      addError("No image file specified");
-      return false;
-    }
-		if (!file_exists($imgfile)) {
-      addError("File does not exist: $imgfile");
-      return false;
-    }
-		if (!copy($imgfile, $newfile)) {
-      addError("Could not copy image to $newfile");
-      return false;
-    }
-	
-		//$info = GetAllMP3info($file->getPath());
-		//if (($info['png']['width'] == $iconWidth) && ($info['png']['height'] == $iconHeight))
-
-		$currentimagesize = getimagesize($newfile);
-    if(!$currentimagesize || ($currentimagesize[0]==0 && $currentimagesize[1]==0)) {
-      addError("not_an_image");
-      return false;
-    }
-		$image_width = $currentimagesize[0];
-		$image_height= $currentimagesize[1];
-		$sizefactor = 1;
-
-		if(($image_height == $iconHeight) && ($image_width == $iconWidth))
-      return true;
-
-		if (($image_height > $iconHeight) || ($image_width > $iconWidth)) 
-		{   
-			$sizefactor = min((double)($iconHeight / $image_height), (double)($iconWidth / $image_width));
-		}    
-		$newwidth = (int) ($image_width * $sizefactor);
-		$newheight = (int) ($image_height * $sizefactor); 
-
-		$newsize = $newwidth . "x" . $newheight;
-
-    debug("resizing image", $newsize);
-
-		$cmd = "\"$magickDir/mogrify\" -resize $newsize ".
-		 "$newfile 2>&1";     
-
-		exec($cmd, $exec_output, $exec_retval);
-		/* 
- 		print($cmd);
-		if($exec_retval > 0)
-			print "ERROR: exec() error: $exec_output[0]";
-		else
-			print "Image was resized from ".$image_width."x".$image_height." to $newsize :)";
-		*/
-
-	return true;
-	}
 
 
 }

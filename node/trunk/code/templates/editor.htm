@@ -69,6 +69,7 @@
 
 <p></p>
 
+<form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#my_progs#}</td>
@@ -116,23 +117,27 @@
     {section name=i loop=$MYPROGS}
     <tr class="{cycle}">
       <td>&nbsp;</td>
-      <td><a href="get.php?id={$MYPROGS[i]->id|escape}"><b>{$MYPROGS[i]->data.title}</b></a>
-        <br><font size="-1">{$MYPROGS[i]->data.abstract|truncate:200}</font>
+      <td>
+                <a href="get.php?id={$MYPROGS[i]->id|escape}"><b>{$MYPROGS[i]->data.title}</b></a>
+                <br><font size="-1">{$MYPROGS[i]->data.abstract|truncate:200}</font>
       </td>
-      <td><a href="listStation.php?station={$MYPROGS[i]->data.station}">{$MYPROGS[i]->data.station}</a></td>
+      <td>
+                <a href="listStation.php?station={$MYPROGS[i]->data.station}">{$MYPROGS[i]->data.station}</a>
+      </td>
       <td>
         {if $MYPROGS[i]->data.series}
-        <a href="listSeries.php?series={$MYPROGS[i]->data.series}">{$MYPROGS[i]->data.series}</a></td>
+        <a href="listSeries.php?series={$MYPROGS[i]->data.series}">{$MYPROGS[i]->data.series}</a>
         {else}
         &nbsp;
         {/if}
+      </td>
       <td>{$MYPROGS[i]->data.production_date|default:"&nbsp;"}</td>
       <td>{$MYPROGS[i]->data.expiry_date|default:"&nbsp;"}</td>
       <td>&nbsp;</td>
       <td>&nbsp;</td>
       <td>
-        <a href="editFiles.php?id={$MYPROGS[i]->id|escape}&okURL={$OKURL|escape}">{#Edit_files#}</a>
-        <br><a href="editMeta.php?id={$MYPROGS[i]->id}">{#Edit#}</a>
+              <input class="action" type="button" name="b1" value="{#Edit_files#}" onClick="redir(this.form, 'editFiles.php?id={$MYPROGS[i]->id|escape}&okURL={$OKURL|escape}')" />
+              <input class="action" type="button" name="b1" value="{#Edit_meta#}" onClick="redir(this.form, 'editMeta.php?id={$MYPROGS[i]->id}')" />
       </td>
     </tr>
 		{/section}
@@ -141,3 +146,4 @@
 
 </td></tr>
 </table>
+</form>
