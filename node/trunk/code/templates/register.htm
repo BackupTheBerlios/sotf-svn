@@ -44,9 +44,14 @@
                 
                 <TR>
                   <TD>{#Language#}:</TD>
-                  <TD><select name="language">
-                      {html_options values=$LANGUAGES output=$LANGUAGES selected=$LANGUAGE}
-                    </select></TD>
+                  <TD>
+                                   <select name="language">
+                                     {foreach item=item from=$LANGUAGES}                 
+                                       <option value="{$item[0]}" {if $LANGUAGE eq $item[0]}SELECTED="1"{/if} >{$item[1]}</option>
+                                     {/foreach}
+                                   </select>
+
+                  </TD>
                 </TR>
                 
                 <TR>

@@ -145,7 +145,11 @@ $config['debug'] = true;
 //////////////////////////////////////////////////////////////////////////
 
 // selectable languages for user interface
-$config['outputLanguages'] = array("eng", "ger", "hun");
+$config['outputLanguages'] = array(
+																	 array("eng","in English"),
+																	 array("ger","Deutsch"),
+																	 array("hun", "magyarul")
+																	 );
 
 // default language if user's language cannot be determined
 $config['defaultLanguage'] = "eng";
