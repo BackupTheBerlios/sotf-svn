@@ -12,7 +12,20 @@ require("init.inc.php");
 
 $contactId = sotf_Utils::getParameter('id');
 
-$contact = & $repository->getObject($contactId);
+if(strpos($contactId, '@') !== FALSE) {
+  // someone tries with e-mail address
+  $contact = new sotf_Contact;
+  $contact->set('email', $contactId);
+  $contact->find();
+  if($contact->exists()) {
+	 $foundByEmail = 1;
+	 $contactId = $contact->id;
+  }
+}
+
+if(!$foundByEmail)
+  $contact = & $repository->getObject($contactId);
+
 if(!$contact)
   raiseError("no_such_object", $contactId);
 
