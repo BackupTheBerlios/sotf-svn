@@ -513,6 +513,8 @@ class sotf_AdvSearch
 	{
 		global $page;
 		$EQlang[is] = $page->getlocalized("is");
+		$EQlang[contains] = $page->getlocalized("contains");
+		$EQlang[does_not_contain] = $page->getlocalized("does_not_contain");
 		$EQlang[is_not] = $page->getlocalized("is_not");
 		return $EQlang;
 	}

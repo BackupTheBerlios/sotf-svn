@@ -66,7 +66,10 @@ class sotf_Neighbour extends sotf_Object {
   /** static */
   function listIds() {
 	 global $db;
-	 return $db->getCol("SELECT node_id FROM sotf_neighbours ORDER BY node_id");
+	 static $list;
+	 if(!$list)
+		$list = $db->getCol("SELECT node_id FROM sotf_neighbours ORDER BY node_id");
+	 return $list;
   }
 
   function getNode() {
@@ -163,7 +166,7 @@ class sotf_Neighbour extends sotf_Object {
 	 // take out from pending nodes
 	 if($this->get('pending_url')) {
 		$this->set('pending_url','');
-		$neis = $db->getCol("SELECT node_id FROM sotf_neighbours");
+		$neis = sotf_Neighbour::listIds();
 		$node->set('neighbours', join(',', $neis));
 	 }
 	 $this->update();
@@ -190,7 +193,7 @@ class sotf_Neighbour extends sotf_Object {
 		// take out from pending nodes, update neighbour list
 		if($this->get('pending_url')) {
 		  $this->set('pending_url','');
-		  $neis = $db->getCol("SELECT node_id FROM sotf_neighbours");
+		  $neis = sotf_Neighbour::listIds();
 		  $node->set('neighbours', join(',', $neis));
 		}
 		$this->update();

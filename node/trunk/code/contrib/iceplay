@@ -151,6 +151,14 @@ icy-br: $bitrate\r
 \r
 EEE
 
+#SOURCE radyo /ices
+#x-audiocast-name: boo
+#x-audiocast-url: http://www.icec
+#x-audiocast-genre: Default genre...
+#x-audiocast-bitrate: 128000
+#x-audiocast-public: 1
+#x-audiocast-description: Default
+
 #print "headers: $headers";
 $sock->print($headers);
 

@@ -40,7 +40,7 @@ CREATE TABLE "sotf_node_objects" (
 -- basis of replication + generic node object properties
 	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
-   "change_stamp" int2 DEFAULT 0,
+   "change_stamp" int DEFAULT 0,
 	"arrived" timestamptz DEFAULT CURRENT_TIMESTAMP,
 	"node_id" int2 --- REFERENCES sotf_nodes(node_id)
 ---	"st_id" varchar(40), -- id used at the station management side

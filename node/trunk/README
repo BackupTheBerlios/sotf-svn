@@ -28,6 +28,10 @@ PREREQUISITES:
 - ProFTPd (optional): http://www.proftpd.org
    (if users want to upload audio files via FTP)
 
+Included with source code:
+- XML-RPC for PHP: http://phpxmlrpc.sourceforge.net/
+- XML and RSS writer by Manuel Lemos: http://www.phpclasses.org/xmlwriter, http://www.phpclasses.org/rsswriter
+
 INSTALLATION
 
 - Check that the PHP scripts in node/www directory can be run by your

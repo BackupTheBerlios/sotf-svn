@@ -2,8 +2,37 @@
 
 require("init.inc.php");
 
-#require_once($config['classdir'] . "/rpc_Utils.class.php");
+require_once($config['classdir'] . "/rpc_Utils.class.php");
 
+
+$rpc = new rpc_Utils;
+$rpc->debug = true;
+
+$localNode = sotf_Node::getLocalNode();
+$localNodeData = $localNode->getAll();
+$localNodeData['url'] = $config['rootUrl'];
+
+$chunkInfo = array('this_chunk' => 1,
+                   'node' => $localNodeData,
+                   'objects_remaining' => 0,
+                   );
+
+$blid = '005bl15';
+
+$bl = $repository->getObject($blid);
+$bl->update();
+
+$obj = $bl->internalData;
+$obj['data'] = $bl->data;
+$obj['data']['data'] = 'A%0a';
+$objects = array($obj);
+
+//$data = $db->getRow("SELECT * FROM $tablename WHERE id = '$blid'");
+
+$objs = array($chunkInfo, $objects);
+$response = $rpc->call('http://sotf2.dsd.sztaki.hu/node2/www/xmlrpcServer.php', 'sotf.sync', $objs);
+
+/*
 print "<pre>";
 $a = NULL;
 if(is_null($a)) print "\nNULL IS_NULL";
@@ -16,6 +45,7 @@ if($a === NULL) print "\n0 === NULL";
 if($a == NULL) print "\n0 == NULL";
 
 print "</pre>";
+*/
 
 /*
 $ConnId = pg_connect ("host=localhost port=5432 dbname=node user=micsik password=");

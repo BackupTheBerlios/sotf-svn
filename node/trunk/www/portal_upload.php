@@ -11,7 +11,6 @@ $portal_http = sotf_Utils::getParameter('portal_http');
 //$portal_password = sotf_Utils::getParameter('portal_password');
 $submit = sotf_Utils::getParameter('submit');
 
-
 if ($portal_http == "") $portal_http = NULL;
 if (isset($portal_http))
 {
@@ -27,19 +26,23 @@ if (isset($portal_http))
 		$smarty->assign("upload_query", $portal_http_new);
 
 		$_SESSION['portal_http'] = $portal_http;		//TODO save to user properties
-		$prefs = $user->getPreferences();
-		$prefs->portalSettings = array("URL" => $portal_http);
-		$prefs->save();
+		if ($user)	//if logged in
+		{
+			$prefs = $user->getPreferences();
+			$prefs->portalSettings = array("URL" => $portal_http);
+			$prefs->save();
+		}
 
 		$page->redirect($portal_http_new."?type=".$type."&data=".$data);
 
 	}
 }
-else
+elseif ($user)			//only if logged in
 {
 	$prefs = $user->getPreferences();
 	$smarty->assign("old_upload", $prefs->portalSettings["URL"]);		//TODO load from user properties
 }
+else $smarty->assign("old_upload", $_SESSION['portal_http']);		//TODO load from session
 
 
 
