@@ -3,104 +3,106 @@ ini_set("max_execution_time", "90");
 header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 //TODO:debug infok kikapcsolasa!!!
 
-function PrintTitle($number)
+function PrintTitle($number)		//'header' af all tests
 {
+	set_time_limit(30);		//extends the time limit for the next 30 seconds (every test has so max. 30 seconds to run)
 	global $install_test_name, $install_color;
-	print('<TR><TD BGCOLOR="'.$install_color[$number].'">');
-	print('<DIV ALIGN="center"><B>'.$install_test_name[$number].'<BR /><BR /></B></DIV>');
+	print('<TR><TD BGCOLOR="'.$install_color[$number].'">');		//begin new table row, color is set here
+	print('<DIV ALIGN="center"><B>'.$install_test_name[$number].'<BR /><BR /></B></DIV>');		//prints the name of the test
 }
 
-function PrintButton($number)
+function PrintButton($number)		//'footer' of all tests
 {
 	global $install_test_result, $install_color;
-	print('<BR /><DIV ALIGN="center">'.$install_test_result[$number].'</DIV>');
-	print('<INPUT type="hidden" name="test_result[]" value="'.$install_test_result[$number].'">');
-	print('<INPUT type="hidden" name="color[]" value="'.$install_color[$number].'">');
-	print('<BR /><DIV ALIGN="center"><INPUT type="submit" name="run_test" value="Run test '.$number.'"></DIV>');
-	print('</TD></TR>');
-	flush();
+	print('<BR /><DIV ALIGN="center">'.$install_test_result[$number].'</DIV>');		//prints the result string of the tests
+	print('<INPUT type="hidden" name="test_result[]" value="'.htmlentities($install_test_result[$number]).'">');	//stores the result string in a hidden field (no need to rerun the test)
+	print('<INPUT type="hidden" name="color[]" value="'.$install_color[$number].'">');		//stores the color value	-||-
+	print('<BR /><DIV ALIGN="center"><INPUT type="submit" name="run_test" value="Run test '.$number.'"></DIV>');	//prints a run test button user can run this test again
+	print('</TD></TR>');		//end new table row
+	flush();			//writes out the row (if no buffer the user can see it)
 }
 
-function RunTest($number, $testname, $required = -1)
+function RunTest($number, $testname, $required = -1)		//returns if or not to run the test again
 {
 	global $install_run_test, $install_test_result, $install_test_name, $install_green, $install_color;
 	$install_test_name[$number] = $testname;
-	if ($required == -1)
-		return (($install_run_test == "Run test ".$number) OR ($install_test_result[$number] == NULL));
-	else
-		return ( ($install_run_test == "Run test ".$number) OR (($install_test_result[$number] == NULL) AND ($install_color[$required] == $install_green)) );
+	if ($required == -1)		//if no test is required for this one
+		return (($install_run_test == "Run test ".$number) OR ($install_test_result[$number] == NULL));		//if button pressed or no results (not run yet)
+	else				//if a pervious test needs to be OK
+		return ( ($install_run_test == "Run test ".$number) OR (($install_test_result[$number] == NULL) AND ($install_color[$required] == $install_green)) );	//same but the other test must be OK
 
 }
 
-function GetPerm($filename, $option)
+function GetPerm($filename, $option)		//tries to write or read files and directories
 {
-	if ($option == "read")
+	if ($option == "read")			////read a file
 	{
 		if (file_exists($filename))
 		{
 			if (!$fp = fopen($filename, 'r'))
 			{
-				return("read ERROR");
+				return("read ERROR");		//file exists but can not be read
 			}
 			fclose($fp);
-			return("OK readable");
+			return("OK readable");			//file is readable
 		}
-		else					//if not try to create it
+		else		//file does not exists
 		{
 		return("ERROR file does not exists");
 		}
 	}
-	elseif ($option == "write")
+	elseif ($option == "write")		////write a non existing file (directory write test)
 	{
-		if (file_exists($filename)) return("ERROR file in use");
-		if (!$fp = fopen($filename, 'a'))
+		if (file_exists($filename)) return("ERROR file in use");	//file exists ERROR
+		if (!$fp = fopen($filename, 'a'))			//create file
 		{
-			return("creating ERROR");
+			return("creating ERROR");			//file can not be created
 		}
 		if (!fwrite($fp, "alma"))
 		{
-			return("write ERROR");
+			return("write ERROR");				//file can not be written
 		}
 		fclose($fp);
-		unlink($filename);
-		return("OK writeable");
+		unlink($filename);					//delete file
+		return("OK writeable");					//file is writeable
 	}
-	elseif ($option == "dir")
+	elseif ($option == "dir")			////directory read test
 	{
 		if (file_exists($filename))
 		{
-			if (!$dir = @opendir($filename))
+			if (!$dir = @opendir($filename))	//read files in dir
 			{
 				return("read ERROR");
 			}
-			closedir($dir);
+			closedir($dir);				//close dir handler
 			return("OK readable");
 		}
-		else					//if not try to create it
+		else
 		{
 		return("ERROR directory does not exists");
 		}
 	}
-	elseif ($option == "append")
+	elseif ($option == "append")			////write to an existing or not existing file
 	{
-		if (!$fp = fopen($filename, 'a'))
+		if (!$fp = fopen($filename, 'a'))	//open file
 		{
-			return("creating ERROR");
+			return("creating ERROR");	//could not be opened
 		}
-		if (!fwrite($fp, "\ninstall scipt try\n"))
+		if (!fwrite($fp, "\ninstall scipt try\n"))	//write string
 		{
-			return("write ERROR");
+			return("write ERROR");			//write error
 		}
-		fclose($fp);
+		fclose($fp);					//clode file
 		return("OK writeable");
 	}
-	else return "ERROR ".$option." unknown in GetPerm";
+	else return "ERROR ".$option." unknown in GetPerm";	////bad option parameter
 }
 
 
 /*
 Initial parameters
 */
+$install_maxtests = 6;					//number of tests
 $install_red  =  "FF5555";				//red for ERROR
 $install_green = "00FF00";				//green for OK
 $install_blue =  "0000FF";				//blue for not tested
@@ -127,7 +129,10 @@ $install_node_db_name = $HTTP_POST_VARS["node_db_name"];	//DB name
 $install_run_test = $HTTP_POST_VARS["run_test"];	//Run test X buttons
 $install_run_all = $HTTP_POST_VARS["RUN_ALL"];		//Run all button
 $install_reload = $HTTP_POST_VARS["reload"];		//Reload config.inc.php button
-$install_createdb = $HTTP_POST_VARS["createdb"];		//Create sadm db button
+$install_createdb = $HTTP_POST_VARS["createdb"];	//Create sadm db button
+$install_writeback_sadm = $HTTP_POST_VARS["writeback_sadm"];	//write sadm connection params to config.inc.php
+$install_writeback_node = $HTTP_POST_VARS["writeback_node"];	//write node connection params to config.inc.php
+
 
 $install_color = $HTTP_POST_VARS["color"];		//color values for the cells
 $install_test_result = $HTTP_POST_VARS["test_result"];	//result strings of the tests
@@ -135,25 +140,24 @@ $install_test_result = $HTTP_POST_VARS["test_result"];	//result strings of the t
 
 if ($install_user === NULL)		//set default parameter if first time here
 {
-	$install_user = 'micsik';
-	$install_pass = 'aafa';
-	$install_host = 'samsonnn';
+	$install_user = 'username';
+	$install_pass = 'password';
+	$install_host = 'host';
 	$install_port = '5432';
-	$install_db_name = 'node';
 
-	for ($i=0; $i <= 9; $i++)
+	for ($i=0; $i <= $install_maxtests; $i++)
 	{
-		$install_color[$i]=$install_blue;
-		$install_test_result[$i] = NULL;
+		$install_color[$i]=$install_blue;	//set blue color as default
+		$install_test_result[$i] = NULL;	//no test results (forces tests to run)
 	}
 }
 
 if ($install_run_all != NULL)		//if run_all button pressed
 {
-	for ($i=0; $i <= 9; $i++)
+	for ($i=0; $i <= $install_maxtests; $i++)
 	{
-		$install_color[$i]=$install_blue;
-		$install_test_result[$i] = NULL;
+		$install_color[$i]=$install_blue;	//set blue color as default
+		$install_test_result[$i] = NULL;	//no test results (forces tests to run)
 	}
 }
 
@@ -180,7 +184,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 <?php
 	$id = 1;	//////////////////////////Test 1
-	if (RunTest($id, "PHP global variables"))
+	if (RunTest($id, "Server configuration"))
 	{
 		if ($_SERVER["PHP_SELF"] == NULL)
 		{
@@ -191,6 +195,16 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		{
 			$install_test_result[$id] = "Current location: ".$_SERVER["PHP_SELF"];
 			$install_test_result[$id] .= "<BR />Server software: ".$_SERVER["SERVER_SOFTWARE"];
+			$install_test_result[$id] .= "<BR />Server protocol: ".$_SERVER["SERVER_PROTOCOL"];
+			$install_test_result[$id] .= "<BR />Remote address: ".$_SERVER["REMOTE_ADDR"];
+			$install_test_result[$id] .= "<BR />Extensions loaded: ".implode(", ", array_values(get_loaded_extensions()));
+
+			$install_test_result[$id] .= "<BR />Web server - PHP interface: ".php_sapi_name();
+			$install_test_result[$id] .= "<BR />PHP version: ".phpversion();
+
+//			print_r();
+//			print(php_sapi_name());
+
 			$install_color[$id] = $install_green;
 		}
 	}
@@ -198,6 +212,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 	PrintTitle($id);
 	PrintButton($id);
+
 
 	$id = 2;	//////////////////////////Test 2
 	if (RunTest($id, "'config.inc.php' file include test") or ($install_reload != NULL))
@@ -261,6 +276,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="reload" value="Reload config.inc.php"></DIV>');
 	PrintButton($id);
 
+
 	$id = 3;	//////////////////////////Test 3
 	if (RunTest($id, "Directory and file permissions", 2))
 	{
@@ -318,6 +334,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	PrintTitle($id);
 	PrintButton($id);
 
+
 	$id = 4;	//////////////////////////Test 4
 	if (RunTest($id, "PostGresql connection"))
 	{
@@ -343,19 +360,29 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	</DIV>');
 	PrintButton($id);
 
+
 	$id = 5;	//////////////////////////Test 5
 	if (RunTest($id, "DB connection to 'sadm'", 4))		//////////////////////////Test 4 should be OK to run this test
 	{
 		$conn = @pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
 		if (!$conn)
 		{
-			$install_test_result[$id] = "Database 'sadm' not found, please install SADM";
-			$install_color[$id] = $install_red;
+			$conn = @pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=template1 user=$install_sadm_user password=$install_sadm_pass");
+			if (!$conn)
+			{
+				$install_test_result[$id] = "Could not connect.";
+				$install_color[$id] = $install_red;
+			}
+			else
+			{
+				$install_test_result[$id] = "Database 'sadm' not found, please install SADM.";
+				$install_color[$id] = $install_red;
+			}
 		}
 		else
 		{
 			$sql = "select count(*) from authenticate where username = 'admin'";
-			$result = @pg_exec($conn, $sql);
+			$result = @pg_query($conn, $sql);
 			$a = @pg_fetch_row($result, 0);
 			if ( $a[0] != 1)
 			{
@@ -370,29 +397,20 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		}
 		@pg_close($conn);
 	}
+//$install_writeback_sadm
 	PrintTitle($id);
 	print('
 	Username: <INPUT type="text" name="sadm_user" value="'.$install_sadm_user.'"><BR />
 	Password: <INPUT type="password" name="sadm_pass" value="'.$install_sadm_pass.'"><BR />
 	Hostname: <INPUT type="text" name="sadm_host" value="'.$install_sadm_host.'"> Port: <INPUT type="text" name="sadm_port" value="'.$install_sadm_port.'" SIZE=5><BR />
 	Database name: <INPUT type="text" name="sadm_db_name" value="'.$install_sadm_db_name.'"><BR />');
-	if ( ($install_sadm_user != $userDbUser) OR ($install_sadm_pass != $userDbPasswd) OR ($install_sadm_host != $userDbHost)
-		OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) );;
-	
-					
+	if ( ($install_color[$id] == $install_green) AND ( ($install_sadm_user != $userDbUser) OR ($install_sadm_pass != $userDbPasswd)
+		OR ($install_sadm_host != $userDbHost) OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) )
+			print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="writeback_sadm" value="Write new values to config.inc.php" disabled=true></DIV>');
 	PrintButton($id);
-
-
-					$install_node_user = $nodeDbUser;		//username for DB
-					$install_node_pass = $nodeDbPasswd;		//password for DB
-					$install_node_host = $nodeDbHost;		//host for DB
-					$install_node_port = $nodeDbPort;		//port for DB
-					$install_node_db_name = $nodeDbName;		//DB name
-
-
 	
 	$id = 6;	//////////////////////////Test 6
-	if (RunTest($id, "DB connection to 'node'", 5))		//////////////////////////Test 4 should be OK to run this test
+	if (RunTest($id, "DB connection to 'node'", 5))		//////////////////////////Test 5 should be OK to run this test
 	{
 		$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
 		if (!$conn)
@@ -418,7 +436,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		else
 		{
 			$sql = "CREATE DATABASE ".$install_node_db_name;		//create new db
-			$result = @pg_exec($conn, $sql);
+			$result = @pg_query($conn, $sql);
 			if (!$result)
 			{
 				$install_test_result[$id] = "Could not create db.";
@@ -447,9 +465,10 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 						$buffer = "";
 						while (!feof ($fd))			//read the whole file
 						{
-							$line = fgets($fd, 1024);
-							if (substr($line, 0, 2) != "--")
-								$buffer .= $line;	//if not comment
+							$line = fgets($fd, 1024);	//read a line with max lengts 1024 byte
+							$pos = strpos($line, "--");	//find comment position
+							if ($pos === false) $buffer .= $line;	//if no in line add it to the buffer
+							else $buffer .= substr($line, 0, $pos); 	//if any comment remove it first
 						}
 						fclose ($fd);
 
@@ -457,30 +476,34 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 						$sql = explode(";", $buffer);				//divide into single commands
 
 						$max = count($sql);					//count commands
-						$install_test_result[$id] = "OK";
+						$install_color[$id] = $install_green;
+						$install_test_result[$id] = "";				//delete pervious results
 						for($i=0; $i<$max; $i++) if ($sql[$i] != '')		//execute all commands if not empty
 						{
-							$result = @pg_exec($conn, $sql[$i]);
+							$result = @pg_query($conn, $sql[$i]);
 							//$result = $db->query();
 							if (!$result)
 								{
-								$install_test_result[$id] = "Error in db.sql.";
+								$install_test_result[$id] .= "<BR><DIV ALIGN='center'>-------".pg_last_error($conn)."-------<BR>".$sql[$i]."<BR></DIV>";
 								$install_color[$id] = $install_red;
-								print("<BR><BR>----------------------------------<BR>".$sql[$i]);
 								}
 						}
-						if ($install_test_result[$id] == "OK") $install_color[$id] = $install_green;
+						if ($install_color[$id] == $install_green) $install_test_result[$id] = "OK";
 					}
 				}
 			}
 		}
 	}
+//$install_writeback_node
 	PrintTitle($id);
 	print('
 	Username: <INPUT type="text" name="node_user" value="'.$install_node_user.'"><BR />
 	Password: <INPUT type="password" name="node_pass" value="'.$install_node_pass.'"><BR />
 	Hostname: <INPUT type="text" name="node_host" value="'.$install_node_host.'"> Port: <INPUT type="text" name="node_port" value="'.$install_node_port.'" SIZE=5><BR />
 	Database name: <INPUT type="text" name="node_db_name" value="'.$install_node_db_name.'"><BR />');
+	if ( ($install_color[$id] == $install_green) AND ( ($install_node_user != $nodeDbUser) OR ($install_node_pass != $nodeDbPasswd)
+		OR ($install_node_host != $nodeDbHost) OR ($install_node_port != $nodeDbPort) OR ($install_node_db_name != $nodeDbName) ) )
+				print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="writeback_node" value="Write new values to config.inc.php" disabled=true></DIV>');
 	if ($install_color[$id] == $install_red) print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="createdb" value="Create NODE db"></DIV>');
 	PrintButton($id);
 
@@ -506,11 +529,26 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 */
 
 
-
 ?>
 
 </TABLE>
 </DIV>
+<?php
+	$install_erroronpage = false;			//test if any errors on page
+	for ($i=1; $i <= $install_maxtests; $i++)	//run through all tests (nr.0 is no test)
+	{
+		if ($install_color[$i] != $install_green) $install_erroronpage = true;	//if not green set error true
+	}
+	if ($install_erroronpage) print('<DIV ALIGN="center"><BR /><BIG>Please run again the \'red marked\' tests!</BIG><BR /></DIV>');	//if no error write 'ALL OK'
+	elseif ( ($install_node_user != $nodeDbUser) OR ($install_node_pass != $nodeDbPasswd)
+		OR ($install_node_host != $nodeDbHost) OR ($install_node_port != $nodeDbPort)
+		OR ($install_node_db_name != $nodeDbName) OR ($install_sadm_user != $userDbUser)
+		OR ($install_sadm_pass != $userDbPasswd) OR ($install_sadm_host != $userDbHost)
+		OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) )
+		print('<DIV ALIGN="center"><BR /><BIG>The database settings here do not match with the setting in config.inc.php, please update it.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
+	else print('<DIV ALIGN="center"><BR /><BIG>ALL OK, you are now ready to use the <A HREF="index.php">system</A>. Log in using the admin login.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
+
+?>
 <DIV ALIGN="center">
 <BR /><INPUT type="submit" name="RUN_ALL" value="RUN ALL">
 </DIV>

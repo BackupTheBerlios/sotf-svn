@@ -3,12 +3,14 @@
 
 CREATE TABLE "sotf_vars" (
 -- global persistent server variables
-	"name" varchar(32) PRIMARY KEY,
+	"id" serial PRIMARY KEY, -- just an id
+	"name" varchar(32) UNIQUE,
 	"value" varchar(255) NOT NULL
 );
 
 CREATE TABLE "sotf_group_permission" (
 -- a group can have a set of permissions
+	"id" serial UNIQUE NOT NULL, -- just an id
 	"group_id" varchar(50) DEFAULT '' NOT NULL,
 	"permission" varchar(20) DEFAULT '' NOT NULL,
 	CONSTRAINT "sotf_group_permission_pkey" PRIMARY KEY ("group_id", "permission")
@@ -27,6 +29,7 @@ INSERT INTO "sotf_group_permission" ("group_id", "permission") VALUES('admin', '
 CREATE TABLE "sotf_user_group" (
 -- a user may belong to global or station-local groups thus defining permissions 
 -- for him as in table sotf_group_permission
+	"id" serial PRIMARY KEY, -- just an id
 	"username" varchar(50) DEFAULT 'nobody' NOT NULL,
 	"station" varchar(50),
 	"group_id" varchar(50) DEFAULT '' NOT NULL,
@@ -37,12 +40,14 @@ INSERT INTO "sotf_user_group" ("username", "station", "group_id") VALUES('admin'
 
 CREATE TABLE "sotf_user_prefs" (
 -- user preferences stored as serialized objects
+	"id" serial UNIQUE NOT NULL, -- just an id
 	"username" varchar(50) PRIMARY KEY,
 	"prefs" text
 );
 
 CREATE TABLE "sotf_playlists" (
 -- registered users may bookmark things
+	"id" serial UNIQUE NOT NULL, -- just an id
 	"prog_id" varchar(76) NOT NULL,
 	"username" varchar(50) NOT NULL,
 	"type" VARCHAR(10), -- use unclear yet
@@ -51,6 +56,7 @@ CREATE TABLE "sotf_playlists" (
 
 CREATE TABLE "sotf_user_history" (
 -- past actions of the user, may be used for collaborative filtering
+	"id" serial UNIQUE NOT NULL, -- just an id
 	"username" varchar(50) NOT NULL,
 	"action" VARCHAR(30), -- type of action the user did with 'id'
 	"prog_id" varchar(200),
@@ -60,7 +66,8 @@ CREATE TABLE "sotf_user_history" (
 
 CREATE TABLE "sotf_ratings" (
 -- individual ratings made by registered persons or anonym users
-	"prog_id" varchar(76) NOT NULL,										-- sotf id
+	"id" serial PRIMARY KEY, 										-- just an id
+	"prog_id" varchar(76) NOT NULL,								-- sotf programme id
 	"username" varchar(50) default NULL,						-- user who rated or NULL if anonymous
 	"rate" SMALLINT NOT NULL default '0',
 	"host" varchar(100) NOT NULL default '',					-- host from where the rating arrived
@@ -72,17 +79,19 @@ CREATE TABLE "sotf_ratings" (
 
 CREATE TABLE "sotf_neighbours" (
 -- the neighbours of this node
+	"id" serial PRIMARY KEY, 	-- just an id
 	"node_id" varchar(40) NOT NULL,
 	"accept_incoming" bool DEFAULT 't'::bool,
 	"use_for_outgoing" bool DEFAULT 't'::bool,
 	"last_incoming" timestamptz,
 	"last_outgoing" timestamptz,
-	CONSTRAINT "sotf_neighbours_pkey" PRIMARY KEY ("id")
+	CONSTRAINT "sotf_neighbours_uniq" UNIQUE ("node_id")
 );
 
 CREATE TABLE "sotf_nodes" (
 -- data about nodes in the network
-	"id" varchar(40) PRIMARY KEY,
+	"id" serial PRIMARY KEY, 										-- just an id
+	"name" varchar(40) UNIQUE NOT NULL,
 	"url" varchar(255) NOT NULL,
 	"authorizer" varchar(40) NOT NULL,
 	"ip" inet,
@@ -120,17 +129,17 @@ CREATE TABLE "sotf_programmes" (
 	"spatial_coverage" text,										-- dc.coverage.spatial
 	"temporal_coverage" date,										-- dc.coverage.temporal
 	"icon" bytea,														-- small image associated with prog
-	"rating_value" float,											-- value of rating
-	"rating_count_reg" int,											-- number of registered raters	
-	"rating_count_anon" int,										-- number of anonymous raters
 	"published" bool DEFAULT 'f'::bool,							-- unpublished items are not searchable nor browsable
 	"last_change" timestamptz DEFAULT ('now'::text)::timestamp(6) with time zone		-- needed for synchronization of nodes
 );
 
+------- IDAIG VAN ID_SITVE
+
 CREATE TABLE "sotf_rights" (
 -- used to store the rights for a programme
+	"id" serial PRIMARY KEY, 										-- just an id
 	"prog_id" varchar(76) FOREIGN KEY REFERENCES sotf_programmes.id ON delete CASCADE,
-	"start_time" int4 NOT NULL,   --startting second of the rightcpntrolled part
+	"start_time" int4 NOT NULL,   --starting second of the rightcontrolled part
 	"stop_time"  int4 NOT NULL,  -- ending second. Both may be empty. If so, the rights text is valid for the complete programme
 	"rights_text" text
 );
@@ -155,18 +164,31 @@ CREATE TABLE "sotf_extradata" (
 	CONSTRAINT "sotf_extradata_uniq" UNIQUE ("id", "element", "qualifier", "scheme", "value")
 );
 
-CREATE TABLE "sotf_files" (
+CREATE TABLE "sotf_other_files" (
 -- permissions on associated audio and other files for a radio programme
-	"prog_id" varchar(76) NOT NULL,
+	"prog_id" varchar(76) NOT NULL,	-- reference to programme
 	"filename" varchar(32) NOT NULL,
 	"caption" varchar(255),
 	"filesize" int,
-	"audio_length" int,
-	"audio" bool DEFAULT 'f'::bool,
-	"listen" bool DEFAULT 'f'::bool,
-	"download" bool DEFAULT 'f'::bool,
-	"last_change" timestamptz,
-	CONSTRAINT "sotf_files_pkey" PRIMARY KEY ("id", "filename")
+	"last_modified" datetime,
+	"public_access" bool DEFAULT 'f'::bool,
+	CONSTRAINT "sotf_other_files_pkey" PRIMARY KEY ("prog_id", "filename")
+);
+
+CREATE TABLE "sotf_media_files" (
+-- permissions on associated audio and other files for a radio programme
+	"prog_id" varchar(76) NOT NULL,	-- reference to programme
+	"filename" varchar(32) NOT NULL,
+	"caption" varchar(255),
+	"filesize" int,
+	"last_modified" datetime,
+	"play_length" int,
+	"type" varchar(10),		-- e.g. audio, video
+	"format" varchar(70),	-- e.g. mp3,24kbps,44100hz,stereo
+	"stream_access" bool DEFAULT 't'::bool,	-- if users may view it as a stream
+	"download_access" bool DEFAULT 'f'::bool,	-- if users may download it
+	"main_content" bool DEFAULT 'f'::bool,		-- if this file is a variation of the main programme audio/video or sg. else
+	CONSTRAINT "sotf_media_files_pkey" PRIMARY KEY ("prog_id", "filename")
 );
 
 CREATE TABLE "sotf_links" (
@@ -179,10 +201,30 @@ CREATE TABLE "sotf_links" (
 
 CREATE TABLE "sotf_prog_topics" (
 -- defines the topics associated with a radio programme
+	"id" to_be_defined,
 	"prog_id" varchar(76) NOT NULL,
-	"tree_id" int NOT NULL,
+	"tree_id" int2 NOT NULL,
 	"topic_id" int NOT NULL,
-	CONSTRAINT "sotf_prog_topics_pkey" PRIMARY KEY ("topic_id", "tree_id", "id")
+	CONSTRAINT "sotf_prog_topics_pkey" UNIQUE ("topic_id", "tree_id", "prog_id")
+);
+
+CREATE TABLE "sotf_topic_trees" (
+-- defines the topic trees used for classifying programmes
+	"id" serial,
+	"tree_id" int2 NOT NULL,
+	"topic_id" int NOT NULL,
+	"supertopic" int DEFAULT '0',
+	CONSTRAINT "sotf_topic_trees_u" UNIQUE ("topic_id", "tree_id")
+);
+
+CREATE TABLE "sotf_topics" (
+-- defines the topic translations used for classifying programmes
+	"id" serial,
+	"tree_id" int2 NOT NULL,
+	"topic_id" int NOT NULL,
+	"language" varchar(10) NOT NULL,
+	"topic_name" varchar(255),
+	CONSTRAINT "sotf_topics_u" UNIQUE ("topic_id", "tree_id", "language")
 );
 
 CREATE TABLE "sotf_stations" (
@@ -210,7 +252,6 @@ CREATE TABLE "sotf_series" (
 	"title" varchar(255) DEFAULT 'untitled' NOT NULL,
 	"description" text,
 	"owner" varchar(255) DEFAULT 'nobody' NOT NULL,			-- who has rights to modify these metadata
-	"editor" varchar(255),  -- use not clear yet
 	"icon" bytea,
 	"jingle" bytea,
 	"last_change" timestamptz
@@ -227,10 +268,10 @@ CREATE TABLE "sotf_series_roles" (
 CREATE TABLE "sotf_contacts" (
 -- this is a person or organization record
 	"id" varchar(100) PRIMARY KEY,
-	"owner" varchar(255),					-- who has rights to modify these metadata
+	"owner" varchar(255),					-- who has rights to modify these metadata, if empty anyone can change
 	"name" varchar(100) NOT NULL,
 	"alias" varchar(100),
-	"acronym" varchar(20),
+	"acronym" varchar(30),
 	"intro" text,
 	"email" varchar(100),
 	"address" varchar(255),
@@ -253,6 +294,13 @@ CREATE TABLE "sotf_deletions" (
 	CONSTRAINT "sotf_del_pkey" PRIMARY KEY ("table_name","del_id")
 );
 
+CREATE TABLE "sotf_prog_rating" (
+	"prog_id" varchar(76) PRIMARY KEY,							-- id of programme rated
+	"rating_value" float,											-- value of rating
+	"rating_count_reg" int,											-- number of registered raters	
+	"rating_count_anon" int,										-- number of anonymous raters
+);
+
 CREATE TABLE "sotf_refs" (
 -- referencing portal URLs for a radio programme
 	"prog_id" varchar(76) NOT NULL,
@@ -270,8 +318,9 @@ CREATE TABLE "sotf_stats" (
 	"month" int2 NOT NULL,
 	"week" int2 NOT NULL,
 	"day" int2 NOT NULL,
-	"listens" int2,
-	"downloads" int2,
+	"listens" int DEFAULT '0',
+	"downloads" int DEFAULT '0',
+	"visits" int DEFAULT '0',
 	CONSTRAINT "sotf_stats_pkey" PRIMARY KEY ("id", "month", "year", "day")
 );
 
