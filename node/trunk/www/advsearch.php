@@ -72,9 +72,7 @@ elseif (($run or ($run_image=="0")) and $SQLquery!=NULL)			////run query button 
 	$_SESSION["SQLquery"] = $SQLquery;
 	$_SESSION["SQLquerySerial"] = $advsearch->Serialize();
 
-//	$page->redirect("");
-//	if (DB::isError($result)) die($result->getMessage());
-//	print("<BR />".count($result));
+	$page->redirect("advsearchresults.php");
 }
 elseif ($new)									///new query button pressed
 {
@@ -113,8 +111,8 @@ $_SESSION["SQLquery"] = $SQLquery;				//save the new quey to the session
 ////SMARTY
 //terms
 $smarty->assign("SQLquery", $SQLquery);					//the query
-$smarty->assign("SQLquerySerial", $advsearch->Serialize());			//the serialized query
-$smarty->assign("SQLqueryfields", $advsearch->GetSQLqueryfields($SQLquery));	//translated name for all rows of the query
+$smarty->assign("SQLquerySerial", $advsearch->Serialize());		//the serialized query
+$smarty->assign("SQLqueryfields", $advsearch->GetSQLqueryfields());	//translated name for all rows of the query
 
 $smarty->assign("EQdate", $advsearch->GetEQdate());			//EQ dropdown for date
 $smarty->assign("EQstring", $advsearch->GetEQstring());			//EQ dropdown for string
@@ -127,7 +125,7 @@ $smarty->assign("SQLstring", $SQLstring);				//selected values
 
 //box 1
 $smarty->assign("SQLfields", $advsearch->GetSQLfields());		//name of all possibble columns
-$smarty->assign("SQLfieldDefault", key($advsearch->GetSQLfields($SQLquery)));	//set default selected to the first element
+$smarty->assign("SQLfieldDefault", key($advsearch->GetSQLfields()));	//set default selected to the first element
 
 //box 2
 $smarty->assign("sort1", $advsearch->GetSort1());			//current sort1

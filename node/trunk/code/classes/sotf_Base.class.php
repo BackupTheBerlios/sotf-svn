@@ -24,7 +24,7 @@ class sotf_Base {
    * 
    * purpose: constructor
    * 
-   * @param $id (int)
+   * @param	integer	$id	Undocumented by Alex
    * @return (void)
    */
   function sotf_Base($id='', $data=''){
@@ -333,7 +333,7 @@ function setDataIfNewer($table, $data, $primaryKey, $dateField) {
    * purpose: to get a property, will return FALSE
    * 					in case the property has not been set
    * 
-   * @param $prop_name
+   * @param	string	$prop_name	Undocumented by Alex
    * @return 
    */
   function get($prop_name){
@@ -348,7 +348,7 @@ function setDataIfNewer($table, $data, $primaryKey, $dateField) {
    * 
    * purpose: to get a binary property
    * 
-   * @param $prop_name
+   * @param	string	$prop_name	Undocumented by Alex
    * @return 
    */
   function getBlob($prop_name){

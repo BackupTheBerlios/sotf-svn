@@ -30,7 +30,7 @@ if($id) {
   $smarty->assign('PAGETITLE', htmlspecialchars($prg->get('title')));
 
   $smarty->assign('REFERENCES', $prg->getRefs());
-  /** stats and refs are collected via xml-rpc ??
+  /* stats and refs are collected via xml-rpc ??
   if($localItem) {
     $smarty->assign($repo->getStats($idObj));
     $smarty->assign('REFS', $repo->getRefs($idObj));

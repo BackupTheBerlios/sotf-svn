@@ -13,7 +13,8 @@ startTiming();
 /**
  * stopTiming() - to stop the timer for script execution
  * 
- * @return end time - float
+ * @package	StreamOnTheFly
+ * @return	float	end time - float
  * 
  * Version: 1.0  Date: 13.01.2002  Author: Koulikov Alexey
  */

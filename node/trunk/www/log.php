@@ -8,7 +8,7 @@ require($classdir . '/sotf_Utils.class.php');
 <body onChange="window.focus()">
 
 <?php
-/*** This is for remote view of log file */
+/* This is for remote view of log file */
 
 $full = sotf_Utils::getParameter("full");
 $lines = sotf_Utils::getFileSafeParameter("lines");

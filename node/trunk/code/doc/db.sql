@@ -150,8 +150,25 @@ CREATE TABLE "sotf_series" (
 	"contact_email" varchar(60),
 	"contact_phone" varchar(20),
 	"icon" bytea,
+	"jingle" bytea,
 	"last_change" timestamptz
 );
+
+CREATE TABLE "sotf_contact" (
+-- this is a person or organization record
+	"id" varchar(100) PRIMARY KEY,
+	"name" varchar(100) NOT NULL,
+	"alias" varchar(100),
+	"acronym" varchar(20),
+	"intro" text,
+	"email" varchar(100),
+	"address" varchar(255),
+	"phone" varchar(20),
+	"cellphone" varchar(20),
+	"fax" varchar(20),
+	"url" varchar(255),
+	"logo" bytea
+)
 
 CREATE TABLE "sotf_deletions" (
 -- remember and propagate deletions to other nodes

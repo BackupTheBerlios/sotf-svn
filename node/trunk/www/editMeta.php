@@ -99,7 +99,7 @@ if($id) {
   $smarty->assign('EXPIRY_START',date('Y'));
   $smarty->assign('EXPIRY_END',date('Y')+10);
 
-  /** stats and refs are collected via xml-rpc ??
+  /* stats and refs are collected via xml-rpc ??
   if($localItem) {
     $smarty->assign($repo->getStats($idObj));
     $smarty->assign('REFS', $repo->getRefs($idObj));

@@ -22,7 +22,7 @@
 		/**
 		 * error::addError() - add an error to the end of the list
 		 * 
-		 * @param $e_message
+		 * @param	string	$e_message	Undocumented by Alex
 		 * @return void
 		 * 
 		 * Koulikov Alexey 31.01.2002
@@ -43,7 +43,7 @@
 		/**
 		 * error::getError() - returns a given error
 		 * 
-		 * @param $n
+		 * @param	string	$n	Undocumented by Alex
 		 * @return string
 		 * 
 		 * Koulikov Alexey 31.01.2002
@@ -65,8 +65,8 @@
 		/**
 		 * error::checkLength() - will check whether a string is of minimal length
 		 * 
-		 * @param $some_string
-		 * @param $sentinel
+		 * @param	string	$some_string	Undocumented by Alex
+		 * @param	integer	$sentinel	Undocumented by Alex
 		 * @return bool
 		 * 
 		 * Koulikov Alexey 31.01.2002
@@ -82,7 +82,7 @@
 		/**
 		 * error::checkMail() - will check whether the string is a valid e-mail address
 		 * 
-		 * @param $some_string
+		 * @param	string	$some_string	Undocumented by Alex
 		 * @return bool
 		 * 
 		 * Koulikov Alexey 31.01.2002
@@ -97,7 +97,7 @@
 		/**
 		 * error::checkUser() - to check whether a valid user name has been choosen
 		 * 
-		 * @param $some_string
+		 * @param	string	$some_string	Undocumented by Alex
 		 * @return bool
 		 * 
 		 * Koulikov Alexey 31.01.2002
@@ -113,8 +113,8 @@
 		/**
 		 * error::checkDIP()
 		 * 
-		 * @param $some_string
-		 * @param $sentinel
+		 * @param	string	$some_string	Undocumented by Alex
+		 * @param	integer	$sentinel	Undocumented by Alex
 		 * @return 
 		 */
 		function checkDIP($some_string,$sentinel=2){
@@ -132,7 +132,7 @@
 		/**
 		 * error::checkInt() - will check wether the passed parameter is an integer
 		 * 
-		 * @param $some_int
+		 * @param	string	$some_int	Undocumented by Alex
 		 * @return bool
 		 * 
 		 * Koulikov Alexey 07.02.2002
@@ -149,7 +149,7 @@
 		/**
 		 * error::checkInt() - will check wether the passed parameter is a float
 		 * 
-		 * @param $some_int
+		 * @param	integer	$some_int	Undocumented by Alex
 		 * @return bool
 		 * 
 		 * Koulikov Alexey 07.02.2002
@@ -188,7 +188,7 @@
 		/**
 		 * cleanInput() - get rid of any unwanted spaces ;)
 		 * 
-		 * @param $some_input
+		 * @param	array	$some_input	Undocumented by Alex
 		 * @return $some_input - array
 		 * 
 		 * Koulikov Alexey :: 31.01.2002	

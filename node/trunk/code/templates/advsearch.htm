@@ -69,13 +69,4 @@
 	</TD>
 </TR>
 </TABLE>
-<BR />
-
-{foreach name=outer item=row from=$result}
-	{foreach key=key item=cell from=$row}
-		{if $cell != ""}{$key}: {$cell}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/if}
-	{/foreach}
-	<BR />___________________________________________________________<BR />
-{/foreach}
-
 </FORM>

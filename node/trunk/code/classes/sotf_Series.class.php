@@ -13,7 +13,8 @@ class sotf_Series extends sotf_Base {
    * 
    * el constructor
    * 
-   * @param $id, $db_handle
+   * @param	string	$id
+   * @param	object	$db_handle
    * @return (void)
    */
   function sotf_Series($id='', $data='') {

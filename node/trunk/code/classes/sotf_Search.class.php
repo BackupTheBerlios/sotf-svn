@@ -90,7 +90,7 @@
 		 * 
 		 * purpose: el constructor
 		 * 
-		 * @param $db_handle (object)
+		 * @param	object	$db_handle	Undocumented by Alex
 		 * @return (void)
 		 */
 		function sotf_Search($db_handle){
@@ -103,7 +103,7 @@
 		 * 
 		 * purpose: to set a search string
 		 * 
-		 * @param $search_string (string)
+		 * @param	string	$search_string Undocumented by Alex
 		 * @return (void)
 		 */
 		function searchString($search_string){
@@ -116,7 +116,7 @@
 		 * 
 		 * purpose: set the table name(s) to look in
 		 * 
-		 * @param $table (string)
+		 * @param	string	$table	Undocumented by Alex
 		 * @return (void)
 		 */
 		function table($table){
@@ -129,7 +129,7 @@
 		 * 
 		 * purpose: set the fields array
 		 * 
-		 * @param $fields (string)
+		 * @param	string	$fields	Undocumented by Alex
 		 * @return (void)
 		 */
 		function fields($fields){
@@ -144,11 +144,11 @@
 		 * 
 		 * purpose: set all parameters at once
 		 * 
-		 * @param $search_string (string)
-		 * @param $table_name (string)
-		 * @param $field_names (string)
-		 * @param $limit_start (int)
-		 * @param $limit_end (int)
+		 * @param	string	$search_string	Undocumented by Alex
+		 * @param	string	$table_name	Undocumented by Alex
+		 * @param	string	$field_names	Undocumented by Alex
+		 * @param	integer	$limit_start	Undocumented by Alex
+		 * @param	integer	$limit_end	Undocumented by Alex
 		 * @return (void)
 		 */
 		function search($search_string,$table_name,$field_names,$limit_start="",$limit_end=""){
@@ -165,7 +165,7 @@
 		 * 
 		 * purpose: set the start limit pointer
 		 * 
-		 * @param $limit_start (int)
+		 * @param	integer	$limit_start	Undocumented by Alex
 		 * @return (void)
 		 */
 		function limitStart($limit_start){
@@ -180,7 +180,7 @@
 		 * 
 		 * purpose: set the end limit pointer
 		 * 
-		 * @param $limit_end (int)
+		 * @param	integer	$limit_end	Undocumented by Alex
 		 * @return (void)
 		 */
 		function limitEnd($limit_end){
@@ -195,7 +195,7 @@
 		 * 
 		 * purpose: set constraints
 		 * 
-		 * @param $constraint (string)
+		 * @param	string	$constraint	Undocumented by Alex
 		 * @return (void)
 		 */
 		function constraint($constraint){
@@ -208,7 +208,7 @@
 		 * 
 		 * purpose: set an order by parameter
 		 * 
-		 * @param $order (string)
+		 * @param	string	$order	Undocumented by Alex
 		 * @return (void)
 		 */
 		function order($order){
@@ -223,7 +223,7 @@
 		 * 
 		 * purpose: to set a group by parameter
 		 * 
-		 * @param $group (string)
+		 * @param	string	$group	Undocumented by Alex
 		 * @return (void)
 		 */
 		function group($group){
@@ -236,7 +236,7 @@
 		 * 
 		 * purpose: what do we want to select?
 		 * 
-		 * @param $select (string)
+		 * @param	string	$select	Undocumented by Alex
 		 * @return 
 		 */
 		function select($select){
@@ -442,7 +442,7 @@
 		 * 					type 1 will return a string
 		 * 					all other types will return false
 		 * 
-		 * @param $type
+		 * @param	integer	$type	Undocumented by Alex
 		 * @return (array)(string)
 		 */
 		function getFields($type=0){
@@ -490,7 +490,7 @@
 		 * 					type 1 will return a string
 		 * 					all other types will return false
 		 * 
-		 * @param $type
+		 * @param	integer	$type	Undocumented by Alex
 		 * @return (array)(string)
 		 */
 		function getConstraints($type=0){
@@ -524,7 +524,7 @@
 		 * 					type 0 will return an array
 		 * 					type 1 will return a string
 		 * 
-		 * @param $type
+		 * @param	integer	$type	Undocumented by Alex
 		 * @return (array)(string)
 		 */
 		function getOrder($type=0){
@@ -543,10 +543,8 @@
 		 * 
 		 * purpose: to return the select by parameter list, either
 		 * 					as an array or as a string
-		 * 					type 0 will return an array
-		 * 					type 1 will return a string
 		 * 
-		 * @param $type
+		 * @param	integer	$type	type 0 will return an array, type 1 will return a string
 		 * @return (array)(string)
 		 */
 		function getSelect($type=0){

@@ -59,6 +59,7 @@ class sotf_User
 	/**
 	* Constructor
 	*
+	* @constructor	sotf_User
 	* @param	string	$name	name of user account
 	* @access	public
 	*/

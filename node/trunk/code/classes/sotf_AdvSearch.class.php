@@ -63,6 +63,65 @@ class sotf_AdvSearch
 		return $this->SQLquery;
 	}
 
+	function GetSQLCommand()			//gives back the SQL command for the search
+	{
+		$query="SELECT * FROM sotf_programmes WHERE";			//begining of the SQL command
+		$max = count($this->SQLquery);
+		for($i = 0; $i < $max ;$i++)		//go through all terms
+		{
+			if ($i != 0) $query = $query." ".$this->SQLquery[$i][0];
+			if ( (($this->SQLquery[$i][0] == "AND") || ($i == 0)) && ($this->SQLquery[$i+1][0] == "OR") ) $query = $query." (";	//set begining of round bracket
+			if ($this->SQLquery[$i][4] == "date") $query = $query." ".$this->SQLquery[$i][1];		//field name
+			else $query = $query." coalesce(".$this->SQLquery[$i][1].",'')";		//field name
+			$set = false;
+			switch ($this->SQLquery[$i][2]) {			//= < > != ...
+			    case "bigger":
+				$query = $query." >";
+			        break;
+			    case "smaller":
+				$query = $query." <";
+			        break;
+			    case "is":
+				$query = $query." =";
+			        break;
+			    case "contains":
+				$query = $query." LIKE '%".$this->SQLquery[$i][3]."%'";
+				$set = true;
+			        break;
+			    case "begins_with":
+				$query = $query." LIKE '".$this->SQLquery[$i][3]."%'";
+				$set = true;
+			        break;
+			    case "does_not_contain":
+				$query = $query." NOT LIKE '%".$this->SQLquery[$i][3]."%'";
+				$set = true;
+			        break;
+			    case "is_not_equal":
+				$query = $query." !=";
+			        break;
+			    case "is_not":
+				$query = $query." !=";
+			        break;
+			}
+			
+			if (!$set)
+			{
+				if ($this->SQLquery[$i][4] == "number") $query = $query." ".$this->SQLquery[$i][3];	//value
+				elseif ($this->SQLquery[$i][4] == "date")
+					{
+						$date = getdate($this->SQLquery[$i][3]);
+						$query = $query." '".$date["year"]."-".$date["mon"]."-".$date["mday"]."'";	//value
+					}
+				else $query = $query." '".$this->SQLquery[$i][3]."'";	//value
+			}
+			
+			if (($this->SQLquery[$i][0] == "OR") && ($this->SQLquery[$i+1][0] != "OR")) $query = $query." )";		//set end of round bracket
+		}
+		$query = $query." ORDER BY ".$this->sort1.", ".$this->sort2;			//ISBN DESC, BOOK_TITLE 
+		return $query;
+	}
+
+
 	function AddRow($SQLlink, $SQLfield, $where = -1)			//add a row to the query
 	{
 		if ($SQLlink == "AND") $new[0] = "AND";
@@ -152,14 +211,44 @@ class sotf_AdvSearch
 		else $this->sort2 = $sort2;
 	}
 	
-	function GetSQLqueryfields($SQLquery)		//translates fieldnames for all rows of the query
+	function GetHumanReadable()			//translates fieldnames for all rows of the query
 	{
 		global $page;
-		$max = count($SQLquery);
+		$SQLfields = "";
+		$max = count($this->SQLquery);
 		for($i=0; $i < $max; $i++)
-			$SQLfiels[] = $page->getlocalized($SQLquery[$i][1]);
-		return $SQLfiels;
+			{
+			$SQLfield[0] = $page->getlocalized($this->SQLquery[$i][0]);
+			$SQLfield[1] = $page->getlocalized($this->SQLquery[$i][1]);
+			$SQLfield[2] = $page->getlocalized($this->SQLquery[$i][2]);
+			if ($this->SQLquery[$i][4] == "date") $SQLfield[3] = date("Y-m-d", $this->SQLquery[$i][3]);
+				elseif ($this->SQLquery[$i][4] == "lang") $SQLfield[3] = $page->getlocalized($this->SQLquery[$i][3]);
+				else $SQLfield[3] = $this->SQLquery[$i][3];
+			$SQLfield[4] = $this->SQLquery[$i][4];
+			$SQLfields[] = $SQLfield;
+			}
+		return $SQLfields;
 	}
+
+	function GetSQLqueryfields()			//translates fieldnames for all rows of the query
+	{
+		global $page;
+		$max = count($this->SQLquery);
+		for($i=0; $i < $max; $i++)
+			$SQLfield[] = $page->getlocalized($this->SQLquery[$i][1]);
+		return $SQLfield;
+	}
+
+/*
+	function GetSQLqueryEQs()			//translates EQs (=, <, >...) for all rows of the query
+	{
+		global $page;
+		$max = count($this->SQLquery);
+		for($i=0; $i < $max; $i++)
+			$SQLEQfiels[] = $page->getlocalized($this->SQLquery[$i][2]);
+		return $SQLEQfiels;
+	}
+*/
 
 	function GetSQLfields()		//translates fieldnames for dropdown box
 	{

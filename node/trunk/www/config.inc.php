@@ -57,6 +57,12 @@ $smartydir = 'C:/sotf/helpers/smarty2.3';
 // where getid3 files are located
 $getid3dir = 'C:/sotf/helpers/getid3';
 
+// where phpdocgen files are located
+$phpdocgendir = 'C:/sotf/helpers/phpdocgen';
+
+// where perl is located
+$perl = 'C:/perl/bin/perl.exe';
+
 // where eZ xml files are located
 //$ezxmldir = '/ezxml';
 

@@ -1,6 +1,39 @@
 <h3>Advanced search results</h3>
-<FORM method="post" action="advsearch.php">
+<FORM method="post" action="advsearchresults.php">
 <INPUT type="hidden" name="SQLquerySerial" value="{$SQLquerySerial}">
+
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="80%" BGCOLOR="{#searchBgColor1#}">
+	<TR BGCOLOR="{#searchBgColor1#}">
+		<TD COLSPAN=4>{#your_query_is#}:</TD>
+	</TR>
+	<TR>
+		<TD">&nbsp;&nbsp;</TD>
+		<TD BGCOLOR="#FFFFFF" align=center COLSPAN=2>
+		{section name=i loop=$SQLquery}
+		{if $smarty.section.i.index != 0}{$HumanReadable[i][0]}{/if}
+		{if $SQLquery[i.index_next][0] == "OR"}{if $SQLquery[i][0] == "AND"}({elseif $smarty.section.i.index == 0}({/if}{/if}
+
+		<B>{$HumanReadable[i][1]} {$HumanReadable[i][2]} {$HumanReadable[i][3]}</B>
+		{if $SQLquery[i][0] == "OR"}{if $SQLquery[i.index_next][0] != "OR"}){/if}{/if}
+
+		{/section}
+		</TD>
+		<TD>&nbsp;&nbsp;</TD>
+	<TR>
+		<TD>&nbsp;</TD>
+		<TD ALIGN="left"><INPUT type="submit" name="refresh" value="{#refresh#}"></TD>
+		<TD ALIGN="right"><INPUT type="submit" name="back" value="{#back#}"></TD>
+		<TD>&nbsp;</TD>
+		</TR>
+</TABLE>
+
+<BR />
+{foreach name=outer item=row from=$result}
+	{foreach key=key item=cell from=$row}
+		{if $cell != ""}{$key}: {$cell}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/if}
+	{/foreach}
+	<BR />___________________________________________________________<BR />
+{/foreach}
 
 
 </FORM>
