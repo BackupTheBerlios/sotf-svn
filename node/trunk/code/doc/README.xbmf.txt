@@ -31,9 +31,9 @@ IST_MAX_MULLER <dir>
                 max_muller.com.lnk
                 important.doc
         audio <dir>
-                IST_MAX_MULLER_128_2_44100.mp3
-                IST_MAX_MULLER_64_2_44100.ogg
-                IST_MAX_MULLER_24_1_44100.mp3
+                IST_MAX_MULLER_128kbps_2chn_44100Hz.mp3
+                IST_MAX_MULLER_64kbps_2chn_44100Hz.ogg
+                IST_MAX_MULLER_24kbps_1chn_44100Hz.mp3
 
 
 Is this enough to be really general?
