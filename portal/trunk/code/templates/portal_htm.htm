@@ -13,7 +13,7 @@
 			<td width="100%">
 				<table border="{if $edit}1{else}0{/if}" cellpadding="0" cellspacing="0" width="100%" height="100%"{if $bgcolor} bgcolor="#{$bgcolor}"{/if}>
 					<tr>{foreach key=col_number item=cell from=$row}
-					<td align="{$cell.align != ""}" valign="{$cell.valign != ""}"{if $cell.width != ""} width="{$cell.width}"{/if}{if $cell.color != ""} bgcolor="{$cell.color}"{/if}{if $edit} onClick="javascript:window.open('{$rootdir}/portal_popup.php/{$portal_name}?row={$row_number}&col={$col_number}','','scrollbars=yes,width=640,height=400,left=320,top=200'); return false"{/if}>
+					<td align="{$cell.align != ''}" valign="{$cell.valign != ''}"{if $cell.width != ''} width="{$cell.width}"{/if}{if $cell.color != ''} bgcolor="{$cell.color}"{/if}{if $edit} onClick="javascript:window.open('{$rootdir}/portal_popup.php/{$portal_name}?row={$row_number}&col={$col_number}','','scrollbars=yes,width=640,height=400,left=320,top=200'); return false"{/if}>
 					{if $cell.resource == "picture"}
 						{if $cell.link != "none"}<a href='{$cell.link}'>{/if}
 						<img src="{$cell.value}" border="0"
@@ -21,9 +21,9 @@
 						{if $cell.link != "none"}</a>{/if}
 					{elseif $cell.resource == "text"}
 						{if $cell.class != "none"}<span class="{$cell.class}">{/if}
-						{if $cell.style != "none"}<font{if $cell.cur_style.color != ""} color="{$cell.cur_style.color}"{/if}{if $cell.cur_style.face != ""} face="{$cell.cur_style.face}"{/if}{if $cell.cur_style.size != ""} size="{$cell.cur_style.size}"{/if}>{/if}
+						{if $cell.style != "none"}<font{if $cell.cur_style.color != ''} color="{$cell.cur_style.color}"{/if}{if $cell.cur_style.face != ''} face="{$cell.cur_style.face}"{/if}{if $cell.cur_style.size != ''} size="{$cell.cur_style.size}"{/if}>{/if}
 						{if $cell.link != "none"}<a href='{$cell.link}'>{/if}
-						{if $cell.html == ""}&nbsp;{else}{$cell.html}{/if}
+						{if $cell.html == ''}&nbsp;{else}{$cell.html}{/if}
 						{if $cell.link != "none"}</a>{/if}
 						{if $cell.style != "none"}</font>{/if}
 						{if $cell.class != "none"}</span>{/if}
@@ -43,7 +43,7 @@
 							{$item.title}
 							{if $cell.class != "none"}</span>{/if}
 							</a></b><br />
-							{foreach key=name item=value from=$item.values}{if $value != ""}
+							{foreach key=name item=value from=$item.values}{if $value != ''}
 								{if $cell.class != "none"}<span class="{$cell.class}.name">{/if}
 								{$name}: 
 								{if $cell.class != "none"}</span><span class="{$cell.class}.value">{/if}
@@ -83,7 +83,7 @@
 							</td></tr>
 						{/foreach}
 						</table>
-					{elseif $cell.html != ""}
+					{elseif $cell.html != ''}
 						{$cell.html}
 					{else}
 						&nbsp;
