@@ -1031,6 +1031,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$url = $contactData['logo'];
 		if ($handle = @fopen($url,'rb')) {
 		  $contents = "";
+		  while (!feof($handle)) {
+			 $contents .= fread($handle, 8192);
+		  }
+		  /*
 		  do {
 			 $data = fread ($handle, 100000);
 			 if (strlen($data) == 0) {
@@ -1038,11 +1042,12 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 			 }
 			 //debug("received", strlen($data));
 			 $contents .= $data;
-		  } while(0);
+			 } while(0); */
 		  fclose($handle);
 		  $tmpFile = tempnam($config['tmpDir'], 'logo_u');
 		  debug("received logo from", $url);
 		  sotf_Utils::save($tmpFile, $contents);
+		  chmod($tmpFile, 0660);
 		  $contact->setIcon($tmpFile);
 		  unlink($tmpFile);
 		} else {

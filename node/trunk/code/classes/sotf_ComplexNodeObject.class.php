@@ -361,15 +361,12 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
 		exec($cmd, $exec_output, $exec_retval);
 
-		/* 
-		print($cmd);
-		if($exec_retval > 0)
-			print "ERROR: exec() error: $exec_output[0]";
-		else
-			print "Image was resized from ".$image_width."x".$image_height." to $newsize :)";
-		*/
-
-	return true;
+		if($exec_retval > 0) {
+		  logError("img resize error", join("\n",$exec_output));
+		  return false;
+		}
+		debug("Image was resized from ".$image_width."x".$image_height." to", $newsize);
+		return true;
 	}
 
 	//********************** JINGLE management ***********************************

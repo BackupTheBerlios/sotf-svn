@@ -8,6 +8,25 @@
 
 require("init.inc.php");
 
+$url = "http://www.resonancefm.com/images/banner.gif";
+if ($handle = fopen($url,'rb')) {
+  $contents = "";
+  while (!feof($handle)) {
+    $contents .= fread($handle, 8192);
+    //debug("received", strlen($data));
+  }
+  fclose($handle);
+  $tmpFile = tempnam($config['tmpDir'], 'logo_u');
+  debug("received logo from", $url);
+  debug("tmpfile", $tmpFile);
+  sotf_Utils::save($tmpFile, $contents);
+  chmod($tmpFile, 0660);
+  exec("/usr/bin/convert $tmpFile -resize 100x36 " . $config['tmpDir'] . "/test.png 2>&1", $output, $retval);
+  debug("retval", $retval);
+  debug("output", $output);
+}
+
+exit;
 
 require_once($config['classdir'] . "/rpc_Utils.class.php");
 
