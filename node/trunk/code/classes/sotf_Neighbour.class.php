@@ -127,8 +127,11 @@ class sotf_Neighbour extends sotf_Object {
 	 while($more) {
 		$db->begin(true);
 		$modifiedObjects = sotf_NodeObject::getModifiedObjects($remoteId, 0, $this->objectsPerRPCRequest);
+		$more = sotf_NodeObject::countModifiedObjects($remoteId);
 		$chunkInfo = array('this_chunk' => $thisChunk,
-								 'node' => $localNodeData);
+								 'node' => $localNodeData,
+								 'objects_remaining' => $more
+								 );
 		debug("chunk info", $chunkInfo);
 		//debug("number of sent objects", count($modifiedObjects));
 		//$objectsSent = $objectsSent + count($modifiedObjects);
@@ -146,25 +149,25 @@ class sotf_Neighbour extends sotf_Object {
 		$replyInfo = $response[0];
 		debug("replyInfo", $replyInfo);
 		$thisChunk++;
-		$more = sotf_NodeObject::countModifiedObjects($remoteId);
 	 }
 
 	 debug("total number of objects sent",$objectsSent );
 	 debug("total number of objects received",$objectsReceived );
 	 //$this->log($console, "number of updated objects: " .count($updatedObjects));
 	 
-	 // save last_sync
+	 // save node and neighbour stats
+	 $node = sotf_Node::getLocalNode();
 	 $this->set('success', $this->get('success')+1);
 	 $this->set('last_sync_out', $timestamp);
-	 /*
+	 $node->set('last_sync_out', $timestamp);
 	 // take out from pending nodes
 	 if($this->get('pending_url')) {
 		$this->set('pending_url','');
+		$neis = $db->getCol("SELECT node_id FROM sotf_neighbours");
+		$node->set('neighbours', join(',', $neis));
 	 }
-	 */
 	 $this->update();
-	 $this->saveNodeStatus($timestamp);
-	 // send receipt of successful sync??
+	 $node->update();
   }
 
   function syncResponse($chunkInfo, $objects) {
@@ -178,27 +181,25 @@ class sotf_Neighbour extends sotf_Object {
 	 // if db error: don't commit!
 	 $db->commit();
 	 debug("number of updated objects", $updatedObjects);
-	 // save time of this sync
-	 $this->set('last_sync_in', $timestamp);
-	 // take out from pending nodes
-	 if($this->get('pending_url')) {
-		$this->set('pending_url','');
+
+	 if($chunkInfo['objects_remaining'] == 0) {
+		// last chunk,  save node and neighbour stats
+		$node = sotf_Node::getLocalNode();
+		$this->set('last_sync_in', $timestamp);
+		$node->set('last_sync_in', $timestamp);
+		// take out from pending nodes, update neighbour list
+		if($this->get('pending_url')) {
+		  $this->set('pending_url','');
+		  $neis = $db->getCol("SELECT node_id FROM sotf_neighbours");
+		  $node->set('neighbours', join(',', $neis));
+		}
+		$this->update();
+		$node->update();
 	 }
-	 $this->update();
-	 $this->saveNodeStatus($timestamp, $currentStamp);
+
 	 $replyInfo = array('received' => count($objects),
 							  'updated' => $updatedObjects);
 	 return array($replyInfo);
-  }
-
-  function saveNodeStatus($lastSync) {
-	 global $config;
-	 $node = $this->getNode();
-	 if($node) {
-		$node->set('last_sync', $lastSync); //TODO: get receipt from recieving sync response??
-		$node->set('authorizer', $config['nodeId']);
-		$node->update();
-	 }
   }
 
 }

@@ -68,27 +68,28 @@ CREATE TABLE "sotf_blobs" (
 CREATE SEQUENCE "sotf_nodes_seq";
 
 CREATE TABLE "sotf_nodes" (
--- data about nodes in the network 
+-- data about nodes in the network XXX
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"node_id" int2 UNIQUE NOT NULL, 				-- this id and name
 	"name" varchar(40) UNIQUE NOT NULL,			-- will be negotiated via e-mail within a node network
 	"description" text,
 	"url" varchar(255) NOT NULL,
-	"authorizer" int2,
-	"last_sync" timestamptz							-- time of last sync XXX
+	"neighbours" varchar(255), -- XXX
+	"last_sync_in" timestamptz,							-- time of last sync XXX
+	"last_sync_out" timestamptz							-- time of last sync XXX
 );
 
 CREATE TABLE "sotf_neighbours" (
--- the neighbours of this node
+-- the neighbours of this node XXX
 	"id" serial PRIMARY KEY, 	-- just an id
 	"node_id" int2, -- same as in sotf_nodes, except for pending nodes
 	"accept_incoming" bool DEFAULT 't'::bool,
 	"use_for_outgoing" bool DEFAULT 't'::bool,
 	"last_sync_in" timestamptz,
 	"last_sync_out" timestamptz,  -- XXX
-	"errors" int,
-	"success" int,
+	"errors" int DEFAULT 0,
+	"success" int DEFAULT 0,
 	"pending_url" varchar(200),
 	CONSTRAINT "sotf_neighbours_uniq" UNIQUE ("node_id")
 );

@@ -74,7 +74,7 @@ class sotf_Object {
 	 reset($this->data);
 	 while(list($key,$val)=each($this->data)){
 		if($key != $this->idKey) {
-		  if($val === NULL || $val == '') {
+		  if($val === NULL) {
 			 $my_sql[] = $key . " = NULL";
 		  } else {
 			 //dump($val, 'val');
@@ -106,7 +106,7 @@ class sotf_Object {
 	 reset($this->data);
 	 while(list($key,$val)=each($this->data)){
 		$keys[] = $key;
-		if($val === NULL || $val == '') {
+		if($val === NULL) {
 		  $values[] = "NULL";
 		} else {
 		  if(in_array($key, $this->binaryFields)) {

@@ -38,9 +38,11 @@ if($createNew) {
 		}
 		$neighbor = new sotf_Neighbour();
 		$neighbor->set('node_id', $nid);
-		$neighbor->set('use_for_outgoing', 'f');
+		$neighbor->set('use_for_outgoing', 't');
 		$neighbor->set('accept_incoming', 't');
 		$neighbor->set('pending_url', $url);
+		$neighbor->set('errors', '0');
+		$neighbor->set('success', '0');
 		$neighbor->create();
 		$page->redirect("closeAndRefresh.php?anchor=network");
 		exit;

@@ -150,7 +150,10 @@ function getProgrammes($params)
 		$audioFiles = $prg->listAudioFiles('true');
 		$results[$key]['audioFiles'] = array();
 		foreach($audioFiles as $fileList)
+		{
 			if ($fileList['stream_access'] == "t") $results[$key]['audioFiles'][] = $fileList;
+			if ($fileList['download_access'] == "t") $results[$key]['downloadFiles'][] = $fileList;
+		}
 
 
 //		$audioFiles = $prg->listAudioFiles('true');

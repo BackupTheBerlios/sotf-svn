@@ -34,7 +34,7 @@
             <th>{#node#}</th>
             <th>{#accept_incoming#}</th>
             <th>{#use_for_outgoing#}</th>
-            <th>{#last_sync#}</th>
+            <th>{#last_sync_in#}</th>
             <th>{#last_sync_out#}</th>
             <th>{#err_succ#}</th>
           </tr>
@@ -49,13 +49,13 @@
               {/if}
             </td>
             <td>
-              {if $item.accept_incoming}{#Yes#}{else}{#No#}{/if}
+              {if $item.accept_incoming eq 't'}{#Yes#}{else}{#No#}{/if}
             </td>
             <td>
-              {if $item.use_for_outgoing}{#Yes#}{else}{#No#}{/if}
+              {if $item.use_for_outgoing eq 't'}{#Yes#}{else}{#No#}{/if}
             </td>
             <td>
-              {$item.last_sync}
+              {$item.last_sync_in}
             </td>
             <td>
               {$item.last_sync_out}
