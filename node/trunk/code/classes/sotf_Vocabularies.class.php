@@ -249,7 +249,7 @@ class sotf_Vocabularies {
 				$more = false;
 			} else {
 				if(preg_match('/^\s*([\w_]+)\s*=\s*(.*)/', $line, $items)) {
-					$treedata[$items[1]] = utf8_encode(trim($items[2]));
+					$treedata[$items[1]] = trim($items[2]);
 				} else {
 					logError("Bad line: $line");
 				}
@@ -318,7 +318,7 @@ class sotf_Vocabularies {
 			debug("tree items", $items);
 			$id = $items[1];
 			$l = $items[2];
-			$name = utf8_encode(trim($items[3]));
+			$name = trim($items[3]);
 			if($level < $l) {
 				$roots[] = $parentId;
 				$parentId = $prevId;
@@ -372,7 +372,7 @@ class sotf_Vocabularies {
 			}
 			debug("role item", $items);
 			$id = $items[1];
-			$name = utf8_encode(trim($items[2]));
+			$name = trim($items[2]);
 
 			$oid = sotf_NodeObject::makeId(0, "sotf_roles", $id);
 			$o1 = new sotf_NodeObject("sotf_roles", $oid);
@@ -465,7 +465,7 @@ class sotf_Vocabularies {
 			}
 			debug("genre item", $items);
 			$id = $items[1];
-			$name = utf8_encode(trim($items[2]));
+			$name = trim($items[2]);
 
 			$o1 = new sotf_NodeObject("sotf_genres");
 			$o1->setID($o1->makeId(0, $o1->tablename, $id . $language));

@@ -1,177 +1,177 @@
 tree_id=1
-name=SOTF témafa
-shortname=SOTF témák
-description=Kísérlet egy rádióknak szóló általános téma klasszifikáció megalkotására.
+name=SOTF tÃ©mafa
+shortname=SOTF tÃ©mÃ¡k
+description=KÃ­sÃ©rlet egy rÃ¡diÃ³knak szÃ³lÃ³ Ã¡ltalÃ¡nos tÃ©ma klasszifikÃ¡ciÃ³ megalkotÃ¡sÃ¡ra.
 url=
 
 # End of tree definition
       
-  1 1 Múvészet, média, szórakozás 
+  1 1 MÅ±vÃ©szet, mÃ©dia, szÃ³rakozÃ¡s 
    
-  2 2 Hírek
-  3 2 Új média (Internet, CD, DVD, Mini Disk, stb.) 
-  4 2 Sajtó 
-  5 2 Rádió 
-  6 2 Televízió 
-  7 2 Hirdetés és PR
-  8 2 Külföldi hírek
-  9 2 Filmek (Dokumentumfilmek és irodalom) 
- 10 2 Elõadómûvészet (színház, tánc, cirkusz, stb.)
- 11 2 Zene (mindenfajta: klasszikus és populáris is)
- 12 2 Képzõmûvészet (festés, szobrászat, fotó, stb.)
- 13 2 Építészet és urbanizáció
+  2 2 HÃ­rek
+  3 2 Ãšj mÃ©dia (Internet, CD, DVD, Mini Disk, stb.) 
+  4 2 SajtÃ³ 
+  5 2 RÃ¡diÃ³ 
+  6 2 TelevÃ­ziÃ³ 
+  7 2 HirdetÃ©s Ã©s PR
+  8 2 KÃ¼lfÃ¶ldi hÃ­rek
+  9 2 Filmek (Dokumentumfilmek Ã©s irodalom) 
+ 10 2 ElÅ‘adÃ³mÅ±vÃ©szet (szÃ­nhÃ¡z, tÃ¡nc, cirkusz, stb.)
+ 11 2 Zene (mindenfajta: klasszikus Ã©s populÃ¡ris is)
+ 12 2 KÃ©pzÅ‘mÅ±vÃ©szet (festÃ©s, szobrÃ¡szat, fotÃ³, stb.)
+ 13 2 Ã‰pÃ­tÃ©szet Ã©s urbanizÃ¡ciÃ³
  14 2 Irodalom 
  15 2 Krimi 
  16 2 Fantasztikus irodalom
- 17 2 Képregény, karikatûra
- 18 2 Kikapcsolódás, aktív pihenés
- 19 2 Utazás és turizmus
- 20 2 Játékok
+ 17 2 KÃ©pregÃ©ny, karikatÅ±ra
+ 18 2 KikapcsolÃ³dÃ¡s, aktÃ­v pihenÃ©s
+ 19 2 UtazÃ¡s Ã©s turizmus
+ 20 2 JÃ¡tÃ©kok
    
- 21 1 Emberi tényezõk, szociális ügyek
+ 21 1 Emberi tÃ©nyezÅ‘k, szociÃ¡lis Ã¼gyek
    
- 22 2 Nõk
- 23 2 Férfiak 
+ 22 2 NÅ‘k
+ 23 2 FÃ©rfiak 
  24 2 Fiatalok 
- 25 2 Idõsek
- 26 2 Család
- 27 2 Hátrányos helyzetûek
+ 25 2 IdÅ‘sek
+ 26 2 CsalÃ¡d
+ 27 2 HÃ¡trÃ¡nyos helyzetÅ±ek
    
  28 2 Body practices (?) 
- 29 2 Szexualitás
- 30 2 Kábítószer 
- 31 2 Szegénység 
- 32 2 Kivándorlás
+ 29 2 SzexualitÃ¡s
+ 30 2 KÃ¡bÃ­tÃ³szer 
+ 31 2 SzegÃ©nysÃ©g 
+ 32 2 KivÃ¡ndorlÃ¡s
    
  33 2 Multiculturalism (?) 
- 34 2 Feministák
+ 34 2 FeministÃ¡k
  35 2 Queer (?)
    
- 36 2 Közösségek (lakás, közlekedés, településtervezés, stb.)
- 37 2 Folklór
- 38 2 Vallás, metafizika
- 39 2 Rasszizmus, fajgyûlölet 
+ 36 2 KÃ¶zÃ¶ssÃ©gek (lakÃ¡s, kÃ¶zlekedÃ©s, telepÃ¼lÃ©stervezÃ©s, stb.)
+ 37 2 FolklÃ³r
+ 38 2 VallÃ¡s, metafizika
+ 39 2 Rasszizmus, fajgyÅ±lÃ¶let 
  40 2 Szexizmus
    
    
- 41 1 Egészség, gyógyítás
+ 41 1 EgÃ©szsÃ©g, gyÃ³gyÃ­tÃ¡s
    
- 42 2 Fizikai betegségek
- 43 2 Mentális egészség, mentális betegségek
+ 42 2 Fizikai betegsÃ©gek
+ 43 2 MentÃ¡lis egÃ©szsÃ©g, mentÃ¡lis betegsÃ©gek
  44 2 Healing Substance (?) 
  45 2 AIDS
- 46 2 Higiénia 
- 47 2 Közegészségügy
- 48 2 Legális gyógyszerek
- 49 2 Illegális gyógyszerek
- 50 2 Hagyományos gyógymódok
+ 46 2 HigiÃ©nia 
+ 47 2 KÃ¶zegÃ©szsÃ©gÃ¼gy
+ 48 2 LegÃ¡lis gyÃ³gyszerek
+ 49 2 IllegÃ¡lis gyÃ³gyszerek
+ 50 2 HagyomÃ¡nyos gyÃ³gymÃ³dok
  51 2 Clinical Test (?)
- 52 2 Alternatív gyógymódok 
- 53 2 Elsõsegély
- 54 2 Járványok
- 55 2 Orvosi kutatás 
- 56 2 Bio technológia (pl. génsebészet) 
+ 52 2 AlternatÃ­v gyÃ³gymÃ³dok 
+ 53 2 ElsÅ‘segÃ©ly
+ 54 2 JÃ¡rvÃ¡nyok
+ 55 2 Orvosi kutatÃ¡s 
+ 56 2 Bio technolÃ³gia (pl. gÃ©nsebÃ©szet) 
    
    
- 57 1 Oktatás, tanítás, tanulás
+ 57 1 OktatÃ¡s, tanÃ­tÃ¡s, tanulÃ¡s
    
  58 2 Egyetemek
- 59 2 Iskolák
- 60 2 Élethosszig tartó tanulás
- 61 2 Tanfolyamok, tréningek
- 62 2 Távoktatás
- 63 2 Oktatók, nevelõk
- 64 2 Oktatási módszerek 
- 65 2 Különleges oktatás
+ 59 2 IskolÃ¡k
+ 60 2 Ã‰lethosszig tartÃ³ tanulÃ¡s
+ 61 2 Tanfolyamok, trÃ©ningek
+ 62 2 TÃ¡voktatÃ¡s
+ 63 2 OktatÃ³k, nevelÅ‘k
+ 64 2 OktatÃ¡si mÃ³dszerek 
+ 65 2 KÃ¼lÃ¶nleges oktatÃ¡s
  66 2 e-learning 
    
- 67 2 Oktatás
- 68 2 Pedagógia 
- 69 2 Mûveltség
- 70 2 Életrajzok 
+ 67 2 OktatÃ¡s
+ 68 2 PedagÃ³gia 
+ 69 2 MÅ±veltsÃ©g
+ 70 2 Ã‰letrajzok 
  71 2 Tananyagok, tantervek
- 72 2 Elõadások
+ 72 2 ElÅ‘adÃ¡sok
    
    
- 73 1 Tudomány és technológia
+ 73 1 TudomÃ¡ny Ã©s technolÃ³gia
    
- 74 2 Természettudományok (etológia, ökológia, botanika, stb.)
- 75 2 Földtudományok (csillagászat, földrajz, geológia, stb.)
- 76 2 Anyagtudományok (fizika, kémia, stb.)
- 77 2 Élettudományok (biológia, genetika, anatómia, stb.)
- 78 2 Társadalomtudományok (szociológia, antropológia, stb.)
- 79 2 Pszichológia és pszichiátria
- 80 2 Régészet, õslénytan
- 81 2 Történelem
- 82 2 Kommunikáció, telekommunikáció és Internet
- 83 2 Energetika, atomenergia, fenntartható energiatermelés
- 84 2 Számítógéptudomány
+ 74 2 TermÃ©szettudomÃ¡nyok (etolÃ³gia, Ã¶kolÃ³gia, botanika, stb.)
+ 75 2 FÃ¶ldtudomÃ¡nyok (csillagÃ¡szat, fÃ¶ldrajz, geolÃ³gia, stb.)
+ 76 2 AnyagtudomÃ¡nyok (fizika, kÃ©mia, stb.)
+ 77 2 Ã‰lettudomÃ¡nyok (biolÃ³gia, genetika, anatÃ³mia, stb.)
+ 78 2 TÃ¡rsadalomtudomÃ¡nyok (szociolÃ³gia, antropolÃ³gia, stb.)
+ 79 2 PszicholÃ³gia Ã©s pszichiÃ¡tria
+ 80 2 RÃ©gÃ©szet, Å‘slÃ©nytan
+ 81 2 TÃ¶rtÃ©nelem
+ 82 2 KommunikÃ¡ciÃ³, telekommunikÃ¡ciÃ³ Ã©s Internet
+ 83 2 Energetika, atomenergia, fenntarthatÃ³ energiatermelÃ©s
+ 84 2 SzÃ¡mÃ­tÃ³gÃ©ptudomÃ¡ny
    
    
- 85 1 Környezet, környezetvédelem, mezõgazdaság
+ 85 1 KÃ¶rnyezet, kÃ¶rnyezetvÃ©delem, mezÅ‘gazdasÃ¡g
    
- 86 2 Mezõgazdaság, mezõgazdasági technológiák
+ 86 2 MezÅ‘gazdasÃ¡g, mezÅ‘gazdasÃ¡gi technolÃ³giÃ¡k
  87 2 Organic farming (?)
- 88 2 Élelmiszergyártási technológiák
- 89 2 Biológiai erõforrások
- 90 2 Vadászat és halászat
- 91 2 Veszélyeztetett fajták
- 92 2 Klíma
- 93 2 Népesség 
- 94 2 Vízgazdálkodás
- 95 2 Ökológiai rendszerek 
- 96 2 Állattenyésztés
- 97 2 Környezeti problémák
- 98 2 Éhínség
- 99 2 Biodiverzitás 
-100 2 Genetikailag módosított organizmusok, táplálék
-101 2 Szennyezés
+ 88 2 Ã‰lelmiszergyÃ¡rtÃ¡si technolÃ³giÃ¡k
+ 89 2 BiolÃ³giai erÅ‘forrÃ¡sok
+ 90 2 VadÃ¡szat Ã©s halÃ¡szat
+ 91 2 VeszÃ©lyeztetett fajtÃ¡k
+ 92 2 KlÃ­ma
+ 93 2 NÃ©pessÃ©g 
+ 94 2 VÃ­zgazdÃ¡lkodÃ¡s
+ 95 2 Ã–kolÃ³giai rendszerek 
+ 96 2 ÃllattenyÃ©sztÃ©s
+ 97 2 KÃ¶rnyezeti problÃ©mÃ¡k
+ 98 2 Ã‰hÃ­nsÃ©g
+ 99 2 BiodiverzitÃ¡s 
+100 2 Genetikailag mÃ³dosÃ­tott organizmusok, tÃ¡plÃ¡lÃ©k
+101 2 SzennyezÃ©s
    
    
-102 1 Állam és igazságügy
+102 1 Ãllam Ã©s igazsÃ¡gÃ¼gy
    
-103 2 Nemzetközi együttmûködés
+103 2 NemzetkÃ¶zi egyÃ¼ttmÅ±kÃ¶dÃ©s
 104 2 Geopolitika
 105 2 Belpolitika
-106 2 Fejlesztési irányelvek
-107 2 Szociális politika (munkavállalás, jólét)
+106 2 FejlesztÃ©si irÃ¡nyelvek
+107 2 SzociÃ¡lis politika (munkavÃ¡llalÃ¡s, jÃ³lÃ©t)
 108 2 Civil szervezetek
 109 2 Szakszervezetek
-110 2 Államszervezetek, kormányzat
-111 2 Humanitárius segély
+110 2 Ãllamszervezetek, kormÃ¡nyzat
+111 2 HumanitÃ¡rius segÃ©ly
 112 2 Munka
-113 2 Védelem
+113 2 VÃ©delem
    
-114 2 Politika üldözés (rabok, menekültek)
-115 2 Emberi jogok (menedékjog, szólásszabadság)
-116 2 Rendõrség
-117 2 Börtönök
-118 2 Bûnözés
+114 2 Politika Ã¼ldÃ¶zÃ©s (rabok, menekÃ¼ltek)
+115 2 Emberi jogok (menedÃ©kjog, szÃ³lÃ¡sszabadsÃ¡g)
+116 2 RendÅ‘rsÃ©g
+117 2 BÃ¶rtÃ¶nÃ¶k
+118 2 BÅ±nÃ¶zÃ©s
 119 2 Terrorizmus 
-120 2 Liszenszek és szerzõi jogok
+120 2 Liszenszek Ã©s szerzÅ‘i jogok
    
    
-121 1 Politika, politikai rendszerek, háborúk
+121 1 Politika, politikai rendszerek, hÃ¡borÃºk
    
 122 2 Anarchizmus
 123 2 Kapitalizmus
 124 2 Kommunizmus
-125 2 Zöld pártok 
-126 2 Választások 
-127 2 Fasizmus, nácizmus
+125 2 ZÃ¶ld pÃ¡rtok 
+126 2 VÃ¡lasztÃ¡sok 
+127 2 Fasizmus, nÃ¡cizmus
 128 2 Liberalizmus
-129 2 Politikai pártok
+129 2 Politikai pÃ¡rtok
 130 2 Pacifizmus
 131 2 Szocializmus
 132 2 Nacionalizmus
 133 2 Demokratikus rendszerek
-134 2 Tekintélyuralmi rendszerek
-135 2 Forradalmi és felforgató csoportok (aktivizmus)
-136 2 Globalizáció
+134 2 TekintÃ©lyuralmi rendszerek
+135 2 Forradalmi Ã©s felforgatÃ³ csoportok (aktivizmus)
+136 2 GlobalizÃ¡ciÃ³
    
-137 2 Felkelés
-138 2 Háború
-139 2 Polgárháború és forradalom
+137 2 FelkelÃ©s
+138 2 HÃ¡borÃº
+139 2 PolgÃ¡rhÃ¡borÃº Ã©s forradalom
 140 2 Fegyverek
    
    
@@ -180,7 +180,7 @@ url=
 142 2 Adventure Racing 
 143 2 Airsoft 
 144 2 Animal Fighting 
-145 2 Íjászat
+145 2 ÃjÃ¡szat
 146 2 Badminton 
 147 2 Baseball 
 148 2 Basketball 
@@ -247,9 +247,9 @@ url=
 209 2 Wrestling
    
    
-210 1 Üzlet
+210 1 Ãœzlet
    
-211 2 Könyvelés 
+211 2 KÃ¶nyvelÃ©s 
 212 2 Cooperatives 
 213 2 Customer Service 
 214 2 E-Commerce 
@@ -267,39 +267,39 @@ url=
 226 2 Wholesale Trade 
    
    
-227 1 Vásárlás és termékek
+227 1 VÃ¡sÃ¡rlÃ¡s Ã©s termÃ©kek
    
-228 2 Antik tárgyak, gyûjtemények (bélyeg, kupak, stb.) 
-229 2 Szépségipari termékek
-230 2 Könyvek
+228 2 Antik tÃ¡rgyak, gyÅ±jtemÃ©nyek (bÃ©lyeg, kupak, stb.) 
+229 2 SzÃ©psÃ©gipari termÃ©kek
+230 2 KÃ¶nyvek
 231 2 Gyermekeknek
-232 2 Ruházat
-233 2 Számítógép  
-234 2 Szórakoztató elektronika
-235 2 Iparmûvészet, kézmûipar
+232 2 RuhÃ¡zat
+233 2 SzÃ¡mÃ­tÃ³gÃ©p  
+234 2 SzÃ³rakoztatÃ³ elektronika
+235 2 IparmÅ±vÃ©szet, kÃ©zmÅ±ipar
 236 2 Death Care (?)  
-237 2 Szórakoztatás
-238 2 Etnikai és vallási cikkek
-239 2 Virágok
-240 2 Élelmiszer
-241 2 Bútor 
+237 2 SzÃ³rakoztatÃ¡s
+238 2 Etnikai Ã©s vallÃ¡si cikkek
+239 2 VirÃ¡gok
+240 2 Ã‰lelmiszer
+241 2 BÃºtor 
 242 2 General Merchandise (?)  
-243 2 Ajándékok  
-244 2 Egészség
-245 2 Nyaralás
-246 2 Otthon és kert
-247 2 Ékszerek  
+243 2 AjÃ¡ndÃ©kok  
+244 2 EgÃ©szsÃ©g
+245 2 NyaralÃ¡s
+246 2 Otthon Ã©s kert
+247 2 Ã‰kszerek  
 248 2 Zene 
-249 2 Irodai termékek
-250 2 Állatok
-251 2 Fotózás  
-252 2 Kiadványok
-253 2 Szabadidõ
-254 2 Dohányáru  
-255 2 Szerszámok 
-256 2 Játékok
-257 2 Utazás
-258 2 Jármûvek  
-259 2 Esküvõ  
-260 2 Nagybani kereskedés
+249 2 Irodai termÃ©kek
+250 2 Ãllatok
+251 2 FotÃ³zÃ¡s  
+252 2 KiadvÃ¡nyok
+253 2 SzabadidÅ‘
+254 2 DohÃ¡nyÃ¡ru  
+255 2 SzerszÃ¡mok 
+256 2 JÃ¡tÃ©kok
+257 2 UtazÃ¡s
+258 2 JÃ¡rmÅ±vek  
+259 2 EskÃ¼vÅ‘  
+260 2 Nagybani kereskedÃ©s
 

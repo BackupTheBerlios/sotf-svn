@@ -2,24 +2,24 @@
 2 auteur
 3 commentateur
 4 compositeur
-5 Détenteur de droit d'auteur
+5 DÃ©tenteur de droit d'auteur
 6 correspondant
 7 concepteur (designer)
-8 directeur ( od. réalisateur)
-9 rédacteur
+8 directeur ( od. rÃ©alisateur)
+9 rÃ©dacteur
 10 commanditaire / bailleur de fonds
-11 interviewé
+11 interviewÃ©
 12 interviewe(u)r
 13 narrateur
 14 participant
-15 interprète
+15 interprÃ¨te
 16 producteur
 17 personnel de production
 18 orateur (speaker)
 19 transcripteur
 20 traducteur
 21 autre
-22 créateur
-23 éditeur
+22 crÃ©ateur
+23 Ã©diteur
 24 contribuant
 

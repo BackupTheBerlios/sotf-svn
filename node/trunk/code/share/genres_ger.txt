@@ -1,12 +1,12 @@
 1 Aktuell
 2 Werbung / Sendekennung
-3 Ankündigung
+3 AnkÃ¼ndigung
 4 Call-in show
 5 Kinder- oder Jugendprogramm / youth
 6 Comedy
 7 Tanz
 8 Dokumentation
-9 Schauspiel / Hörspiel
+9 Schauspiel / HÃ¶rspiel
 10 Bildungsprogramm
 11 Feature
 12 Spielshow

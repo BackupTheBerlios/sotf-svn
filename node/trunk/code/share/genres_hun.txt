@@ -1,21 +1,21 @@
-1 Aktualitás
-2 Reklám
-3 Közlemény
-4 Betelefonálós mûsor
-5 Gyermek, ifjúsági
-6 Vígjáték
-7 Tánc
+1 AktualitÃ¡s
+2 ReklÃ¡m
+3 KÃ¶zlemÃ©ny
+4 BetelefonÃ¡lÃ³s mÅ±sor
+5 Gyermek, ifjÃºsÃ¡gi
+6 VÃ­gjÃ¡tÃ©k
+7 TÃ¡nc
 8 Dokumentarista
-9 Dráma
-10 Oktató, nevelõ
+9 DrÃ¡ma
+10 OktatÃ³, nevelÅ‘
 11 Feature
-12 Játék
+12 JÃ¡tÃ©k
 13 Riport
 15 Magazin
 17 Zene
-18 Hírek
-19 Visszaemlékezés, elbeszélés
-20 Talk show / beszélgetés
-21 Oktatóanyag
-22 Közösségi média
+18 HÃ­rek
+19 VisszaemlÃ©kezÃ©s, elbeszÃ©lÃ©s
+20 Talk show / beszÃ©lgetÃ©s
+21 OktatÃ³anyag
+22 KÃ¶zÃ¶ssÃ©gi mÃ©dia
 

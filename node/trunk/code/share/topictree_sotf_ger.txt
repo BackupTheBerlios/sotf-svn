@@ -1,7 +1,7 @@
 tree_id=1
 name=SOTF topic tree
 shortname=SOTF
-description=Ein versuch der allgemeinen Verzeichnis f¸r Radios
+description=Ein versuch der allgemeinen Verzeichnis f√ºr Radios
 url=
 
 # End of tree definition
@@ -13,7 +13,7 @@ url=
   4 2  Zeitungen, Zeitschriften 
   5 2  Radio 
   6 2  Fernsehen
-  7 2  Werbung und ÷ffentlichkeitsarbeit 
+  7 2  Werbung und √ñffentlichkeitsarbeit 
   8 2  Nachrichten Ausland (should remain) 
   9 2  Kino (Dokumentation, Spielfilm) 
  10 2  Darstellende Kunst (Theater, Tanz, Zirkus, etc.) 
@@ -31,19 +31,19 @@ url=
  21 1 Gesellschaft
       
  22 2  Frauen
- 23 2  M‰nner
+ 23 2  M√§nner
  24 2  Jugendliche 
- 25 2  ƒltere / Senioren 
+ 25 2  √Ñltere / Senioren 
  26 2  Familie
  27 2  Menschen mit Behinderung 
       
  28 2  Body practices (?)
- 29 2  Sexualit‰t
+ 29 2  Sexualit√§t
  30 2  Drogen
  31 2  Armut
  32 2  Migration 
       
- 33 2  Multikulturalit‰t 
+ 33 2  Multikulturalit√§t 
  34 2  Feminismus 
  35 2  Queer 
       
@@ -56,7 +56,7 @@ url=
       
  41 1 Medizin
       
- 42 2  kˆrperliche Gebrechen 
+ 42 2  k√∂rperliche Gebrechen 
  43 2  Geisteskrankheiten 
  44 2  Pharamazie 
  45 2  AIDS 
@@ -75,7 +75,7 @@ url=
       
  57 1 Lernen, Lehre und Studium
       
- 58 2  Universit‰t
+ 58 2  Universit√§t
  59 2  Schule
  60 2  Lebenslanges Lernen 
  61 2  Kurse 
@@ -117,7 +117,7 @@ url=
  90 2  Jagd und Fischerei 
  91 2  Bedrohte Arten 
  92 2  Klima
- 93 2  Bevˆlkerung
+ 93 2  Bev√∂lkerung
  94 2  Wasserversorgung 
  95 2  biologischer Kreislauf
  96 2  Viehzucht
@@ -138,7 +138,7 @@ url=
 108 2  NRO
 109 2  Gewerkschaften
 110 2  Staats- und Regierungsysteme 
-111 2  Humanit‰re Hilfe 
+111 2  Humanit√§re Hilfe 
 112 2  Arbeit
 113 2  Verteidigung
       
@@ -146,7 +146,7 @@ url=
 115 2  Menschenrechte 
 116 2  Polizei 
 117 2  Strafvollzug
-118 2  Kriminalit‰t  
+118 2  Kriminalit√§t  
 119 2  Terrorismus 
 120 2  Lizensen und Rechte 
       
@@ -156,7 +156,7 @@ url=
 122 2  Anarchismus 
 123 2  Kapitalismus 
 124 2  Kommunismus 
-125 2  Gr¸ne  
+125 2  Gr√ºne  
 126 2  Wahlen 
 127 2  Faschismus and Nazionalsozialismus 
 128 2  Liberale
@@ -165,13 +165,13 @@ url=
 131 2  Sozialismus / Sozialdemokraten
 132 2  Nationalismus 
 133 2  democratische Systeme 
-134 2  authorit‰re Systeme 
-135 2  revolution‰re Gruppen (activism) 
+134 2  authorit√§re Systeme 
+135 2  revolution√§re Gruppen (activism) 
 136 2  Globalisierung 
       
-137 2  Aufst‰nde
+137 2  Aufst√§nde
 138 2  Krieg
-139 2  B¸rgerkrieg und Revolution 
+139 2  B√ºrgerkrieg und Revolution 
 140 2  Waffen
       
       
@@ -179,8 +179,8 @@ url=
       
 142 2  Hindernislauf
 143 2  Airsoft (?)
-144 2  Tierwettk‰mpfe 
-145 2  Bogenschieﬂen
+144 2  Tierwettk√§mpfe 
+145 2  Bogenschie√üen
 146 2  Badminton 
 147 2  Baseball 
 148 2  Basketball 
@@ -199,7 +199,7 @@ url=
 161 2  Fechten 
 162 2  Fischen
 163 2  Dikuswurf 
-164 2  Fuﬂball 
+164 2  Fu√üball 
 165 2  Gaelic (?)
 166 2  Goalball (?)
 167 2  Golf 
@@ -224,14 +224,14 @@ url=
 186 2  Petanque (?)
 187 2  Racquetball 
 188 2  Rodeo 
-189 2  H¸pfseilspringen
+189 2  H√ºpfseilspringen
 190 2  Rounders (?)
 191 2  Laufen 
 192 2  Sepak Takraw (?)
-193 2  Schieﬂen 
+193 2  Schie√üen 
 194 2  Skateboard 
 195 2  Eislauf
-196 2  Fuﬂball
+196 2  Fu√üball
 197 2  Softball 
 198 2  Squash 
 199 2  Kraftsport 
@@ -254,24 +254,24 @@ url=
 213 2  Kundendienst 
 214 2  E-Commerce 
 215 2  Aus- und Weiterbildung 
-216 2  Besch‰ftigung
+216 2  Besch√§ftigung
 217 2  Arbeiter und Angestellte 
 218 2  internationaler Handel 
 219 2  Investionen
-220 2  Groﬂfirmen 
+220 2  Gro√üfirmen 
 221 2  Management 
 222 2  Verkauf und Werbung 
 223 2  Kleinfirmen 
 224 2  Firmendienstleistungen
 225 2  Finanzdienstleistungen 
-226 2  Groﬂhandel 
+226 2  Gro√ühandel 
       
       
-227 1 Verkauf und Verbrauchsg¸ter
+227 1 Verkauf und Verbrauchsg√ºter
       
-228 2  Antiquit‰ten  
-229 2  Schˆnheitsprodukte
-230 2  B¸cher
+228 2  Antiquit√§ten  
+229 2  Sch√∂nheitsprodukte
+230 2  B√ºcher
 231 2  Spielsachen
 232 2  Kleidung
 233 2  Computer  
@@ -282,7 +282,7 @@ url=
 238 2  traditionelle und regionale Produkte 
 239 2  Blumen
 240 2  Nahrungsmittel
-241 2  Mˆbel
+241 2  M√∂bel
 242 2  allgemeine Handelsware  
 243 2  Geschenkartikel
 244 2  Gesundheitsartikel
@@ -290,7 +290,7 @@ url=
 246 2  Heim und Garten  
 247 2  Schmuck
 248 2  Musik
-249 2  B¸roartikel  
+249 2  B√ºroartikel  
 250 2  Haustiere
 251 2  Photographie
 252 2  Magazine
@@ -301,5 +301,5 @@ url=
 257 2  Reisen
 258 2  Fahrzeuge
 259 2  Heiratsanzeigen
-260 2  Groﬂhandel
+260 2  Gro√ühandel
 

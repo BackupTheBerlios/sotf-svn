@@ -1,24 +1,24 @@
-1 Mûvész
-2 Szerzõ
-3 Kommentátor
-4 Zeneszerzõ
-5 Szerzõi jog birtokosa
-6 Tudósító
-7 Arculattervezõ
-8 Igazgató
-9 Szerkesztõ
+1 MÅ±vÃ©sz
+2 SzerzÅ‘
+3 KommentÃ¡tor
+4 ZeneszerzÅ‘
+5 SzerzÅ‘i jog birtokosa
+6 TudÃ³sÃ­tÃ³
+7 ArculattervezÅ‘
+8 IgazgatÃ³
+9 SzerkesztÅ‘
 10 Szponzor
 11 Riportalany
 12 Riporter
-13 Narrátor
-14 Résztvevõ
-15 Elõadó
-16 Gyártásvezetõ
-17 Gyártásban közremûködõ
-18 Bemondó
+13 NarrÃ¡tor
+14 RÃ©sztvevÅ‘
+15 ElÅ‘adÃ³
+16 GyÃ¡rtÃ¡svezetÅ‘
+17 GyÃ¡rtÃ¡sban kÃ¶zremÅ±kÃ¶dÅ‘
+18 BemondÃ³
 19 Transcriber
-20 Fordító
-21 Egyéb
-22 Alkotó
-23 Kiadó
-24 Közremûködõ
+20 FordÃ­tÃ³
+21 EgyÃ©b
+22 AlkotÃ³
+23 KiadÃ³
+24 KÃ¶zremÅ±kÃ¶dÅ‘
