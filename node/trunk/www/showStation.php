@@ -14,6 +14,28 @@ $st = & new sotf_Station($stationid);
 $page->errorURL = "showStation.php?stationid=$stationid";
 $page->setTitle($st->get('name'));
 
+// delete series
+$delseries = sotf_Utils::getParameter('delseries');
+if($delseries) {
+  $seriesid = sotf_Utils::getParameter('seriesid');
+  $series = new sotf_Series($seriesid);
+  $series->delete();
+  $page->redirect("showStation.php?stationid=$stationid#series");
+  exit;
+}
+
+// delete prog
+$delprog = sotf_Utils::getParameter('delprog');
+$prgid = sotf_Utils::getParameter('prgid');
+if($delprog) {
+  $prg = new sotf_Programme($prgid);
+  $prg->delete();
+  $page->redirect("showStation.php?stationid=$stationid#progs");
+  exit;
+}
+
+// generate output
+
 $smarty->assign('STATION_ID',$stationid);
 $smarty->assign('STATION',$st->get('name'));
 $smarty->assign('STATION_DATA',$st->getAll());
@@ -24,6 +46,7 @@ $smarty->assign('ROLES', $st->getRoles());
 
 if ($st->getIcon()) {
   $smarty->assign('ICON','1');
+  $st->cacheIcon();
 }
 
 if ($entered)
@@ -36,6 +59,7 @@ if(!empty($seriesList)) {
   while(list(,$series) = each($seriesList)) {
     $sd = $series->getAll();
     $sd['count'] = $series->numProgrammes();
+    $series->cacheIcon();
     $seriesData[] = $sd;
   }
 
@@ -49,28 +73,11 @@ $progs = $st->listProgrammes($limit["from"] , $limit["maxresults"]);
 if($progs) {
 
   while(list(,$prog) = each($progs)) {
+    $prog->cacheIcon();
     $pd = $prog->getAll();
     $progList[] = $pd;
   }
   $smarty->assign('PROGS',$progList);
-
-/*
-  $prev = $start - $hitsPerPage;
-  if ($prev < 0) {
-    $prev = false;
-  }
-  $next = $start + $hitsPerPage;
-  if ($next >= $numProgs) {
-    $next = false;
-  }
-  $smarty->assign('PROG_SPLIT', array('count' => $numProgs,
-                                      'start' => $start + 1,
-                                      'max'   => $start + count($progs),
-                                      'displayed' => count($progs),
-                                      'next' => $next,
-                                      'prev' => $prev)
-                  );
-*/
 }
 
 $page->send();

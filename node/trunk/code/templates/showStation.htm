@@ -1,42 +1,81 @@
+{literal}
+<script>
 
-<h3>{$STATION}</h3>
+function deleteConfirm(msg) {
+    return confirm(msg);
+}
+
+</script>
+{/literal}
+
+  <form>
+    <table class="title">
+      <tr>
+        <td>
+          <h3>{$STATION}</h3>
+        </td>
+        <td align="right">
+          {if hasPerm($STATION_ID,'change') }
+          <input class="action" type="button" name="b1" value="{#edit_station#}" onClick="redir(this.form, 'editStation.php?stationid={$STATION_ID}')">
+            {/if}
+          {if hasPerm($STATION_ID, 'add_prog')}
+            <br/><input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, 'editor.php?&stationid={$STATION_ID}')" />
+          {/if}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <a href="#general">{#general#}</a>, <a href="#series">{#series#}</a>, <a href="#progs">{#programmes#}</a>
+        </td>
+      </tr>
+    </table>
+  </form>
+
+<p></p>
 
 <table class="tabarea">
 <tr> 
   <td class="tabarea"> 
         <table width="100%">
-          <tr><td width="5">
+          <tr valign="top"><td width="5">
             {if $STATION_DATA.icon}
-              <img src="getIcon.php/icon.png?id={$STATION_ID}">
+              <img src="{$CACHEDIR}/{$STATION_ID}.png">
             {/if}
           </td><td>
+
+              <a name="general"></a>
+
               {if $STATION_DATA.description }
               <p>{$STATION_DATA.description}</p>
               {/if}
 
               {if $ROLES}
+              <h4>{#persons_involved#}</h4>
               <table>
                 {foreach item=item from=$ROLES}
-                <tr>
+                <tr valign="top">
                   <td>
-                    {$item.role_name}: {$item.contact_data.name}
-                    {if $item.contact_data.url}<a href="{$item.contact_data.url}">{$item.contact_data.url}</a>
-                    {elseif $item.contact_data.email}<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email}</a>
+                    {$item.role_name}
+                  </td>
+                  <td>
+                    <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">{$item.contact_data.name}</a>
+                    {if $item.contact_data.url}<br>(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
+                    {elseif $item.contact_data.email}<br>(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
                     {/if}
-                    <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">{#More#}</a>
+                  </td>
+                  <td>
+                    {if $item.contact_data.icon }{strip}
+                    <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">
+                      <img height="50" border="0" src="{$CACHEDIR}/{$item.contact_data.id}.png">
+                    </a>{/strip}
+                    {/if}
                   </td>
                 </tr>
                 {/foreach}
               </table>
               {/if}
 
-              {if hasPerm($STATION_ID,'change') }
-              <p>
-                <form>
-                  <input class="action" type="button" name="b1" value="{#edit_station#}" onClick="redir(this.form, 'editStation.php?stationid={$STATION_ID}')">
-                </form>
-              </p>
-              {/if}
+
             </td>
           </tr>
         </table>
@@ -59,11 +98,19 @@
 
         <a name="series"></a>
 
-        <table>
+        <table width="100%">
           {foreach item=item from=$SERIES}
-          <tr>
-            <td>{if $item.icon }<img src="getIcon.php/icon.png?id={$item.id}">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
-            <td><a href="showSeries.php?seriesid={$item.id}">{$item.title}</a> ({$item.count})</td>
+          <tr valign="top">
+            <td width="1%">{if $item.icon }<img src="{$CACHEDIR}/{$item.id}.png">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
+            <td width="98%"><a href="showSeries.php?seriesid={$item.id}">{$item.title}</a> ({$item.count})</td>
+            <td width="1%" valign="bottom">
+              {if hasPerm($item.id,'delete')}
+              <input class="action" type="button" name="b1" value="{#delete_series#}" onClick="if(deleteConfirm('{#delete_series_confirm#}'))redir(this.form, 'showStation.php?stationid={$STATION_ID}&delseries=1&seriesid={$item.id}')" />
+                {/if}
+              {if hasPerm($item.id, 'change')}
+              <br/><input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
+                  {/if}
+            </td>
           </tr>
           {/foreach}
         </table>
@@ -89,23 +136,33 @@
 
         
         <table width="100%">
-          <tr>
-            <td colspan="2" align="center">
+          <tr class="listhead">
+            <td colspan="3" align="center">
 		{include file="splitList.htm"}
             </td>
           </tr>
+          {cycle name="progs" values="list1,list2" print=false advance=false}
           {foreach item=item from=$PROGS}
-          <tr>
-            <td>
+          <tr valign="top" class="{cycle name="progs"}">
+            <td width="1%">
               {if $item.icon }
-                 <img src="getIcon.php/icon.png?id={$item.id}">
+                 <img src="{$CACHEDIR}/{$item.id}.png">
               {else}
                  <img src="{$IMAGEDIR}/noicon.png">
               {/if}
             </td>
-            <td>
+            <td width="98%">
               <a href="get.php?id={$item.id}">{$item.title}</a>
             </td>
+            <td width="1%" valign="bottom">
+              {if hasPerm($item.id,'delete')}
+              <input class="action" type="button" name="b1" value="{#delete_prog#}" onClick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, 'showStation.php?stationid={$STATION_ID}&delprog=1&prgid={$item.id}')" />
+                {/if}
+              {if hasPerm($item.id, 'change')}
+              <br/><input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, 'editMeta.php?id={$item.id}')" />
+                  {/if}
+            </td>
+
           </tr>
           {/foreach}
         </table>

@@ -19,6 +19,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
     for($i=0; $i<count($roles); $i++) {
       $roles[$i]['role_name'] = $this->repository->getRoleName($roles[$i]['role_id']);
       $cobj = new sotf_Contact($roles[$i]['contact_id']);
+      $cobj->cacheIcon();
       $roles[$i]['contact_data'] = $cobj->getAll();
     }
     return $roles;
@@ -70,6 +71,8 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
       $id = $this->id;
       $icon = $this->getBlob('icon');
     }
+    if(empty($icon))
+      return;
     $fname = "$cachedir/" . $id . '.png';
     // TODO: cache cleanup!
     ////debug("cache: ". filesize($fname) ."==" . strlen($icon));

@@ -30,6 +30,11 @@ if ($new) {
 			$page->addStatusMsg('illegal_name');
       $problem = 1;
   }
+
+  if(sotf_Station::isNameInUse($station)) {
+    $page->addStatusMsg('name_in_use');
+    $problem = 1;
+  }
   
 	if(!$problem)	{
     $st = & new sotf_Station();

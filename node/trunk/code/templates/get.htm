@@ -1,3 +1,13 @@
+{literal}
+<SCRIPT language="javascript">
+<!--
+function setvalue(name, id, value){
+var popurl="updatedb.php?name="+name+"&id="+id+"&value="+value
+winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
+} 
+-->
+</SCRIPT>
+{/literal}
 {if not $ID}
   <form action="get.php">
     {if $POPUP}
@@ -351,7 +361,7 @@
             <td>
               <p>
                 <form method="post" action="get.php?id={$ID}">
-                <input type="submit" name="put_into_playlist" value="{#put_into_playlist#}" />
+                <input type="button" name="put_into_playlist" value="{#put_into_playlist#}" onclick="javascript:setvalue('addplaylist', '{$ID}', 'add');return true;"/>
                 </form>
               </p>
               <p>

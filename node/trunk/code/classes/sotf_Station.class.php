@@ -20,6 +20,7 @@ class sotf_Station extends sotf_ComplexNodeObject {
 		$this->sotf_ComplexNodeObject('sotf_stations', $id, $data);
 	}
 
+  /** static */
   function isNameInUse($stationName) {
     global $db;
     $res = $db->getOne("SELECT count(*) FROM sotf_stations WHERE name='". sotf_Utils::clean($stationName) . "'");
@@ -197,7 +198,7 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	*/
 	function listSeriesData() {
 		$id = $this->id;
-		$slist = $this->db->getAll("SELECT * FROM sotf_series WHERE station_id='$id' ");
+		$slist = $this->db->getAll("SELECT * FROM sotf_series WHERE station_id='$id' ORDER BY title");
 		if(DB::isError($slist))
 			raiseError($slist);
     return $slist;
@@ -215,7 +216,7 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	*/
 	function listSeries() {
 		$id = $this->id;
-		$slist = $this->db->getAll("SELECT * FROM sotf_series WHERE station_id='$id' ");
+		$slist = $this->db->getAll("SELECT * FROM sotf_series WHERE station_id='$id' ORDER BY title ");
 		if(DB::isError($slist))
 			raiseError($slist);
 		while (list (, $val) = each ($slist)) {

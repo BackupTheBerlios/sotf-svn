@@ -97,5 +97,6 @@ if ($find != "")
 }
 
 $smarty->assign("result", $result);
-$page->send("main_frame_right.htm");
+//$page->send("main_frame_right.htm");
+$page->send("topicTreeFrame.htm");
 ?>

@@ -230,6 +230,8 @@ $smarty->assign("NODEID", $nodeId);
 $smarty->assign("ROOTDIR", $rootdir);
 $smarty->assign("IMAGEDIR", $imagedir);
 $smarty->assign("CACHEDIR", $cacheprefix);
+$smarty->assign("ICON_HEIGHT", $iconHeight);
+$smarty->assign("ICON_WIDTH", $iconWidth);
 $smarty->assign("DEBUG", $debug);
 $smarty->assign("ACTION", $page->action);
 $smarty->assign("LANG", $lang);

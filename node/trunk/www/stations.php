@@ -28,9 +28,12 @@ $stations = sotf_Station::listStations($limit["from"] , $limit["maxresults"]);
 for($i=0; $i<count($stations); $i++)
 {
 	
-	if ($stations[$i]->getIcon())
+	if ($stations[$i]->getIcon()) {
     $hasIcon = true;
-  
+    $stations[$i]->cacheIcon();
+  } else
+    $hasIcon = false;
+
 	 $sprops = array('id'		=> $stations[$i]->id,
                    'name'	=> $stations[$i]->get('name'),
                    'description'	=> $stations[$i]->get('description'),

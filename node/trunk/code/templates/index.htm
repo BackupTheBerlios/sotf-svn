@@ -1,11 +1,10 @@
 
-<script language="Javascript" src="{$IMAGEDIR}/popup.js"></script>
 <table width="100%" border="0" cellspacing="2" cellpadding="5">
   <tr> 
     <td width="20%" valign="top"> <br>
       <table width="40" border="0" cellspacing="0" cellpadding="2">
         <tr> 
-          <td nowrap bgcolor="{#tabBgColor#}"><strong>Login</strong></td>
+          <td nowrap bgcolor="{#tabBgColor#}"><strong>{#Login_tab#}</strong></td>
         </tr>
       </table>
       <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
@@ -13,11 +12,7 @@
           <td bgcolor="#FFFFFF">
 			{if $loggedIn}
         <p>
-			  {if $LANG == "de"}
-                Haben loggen inaus {$loggedIn}.
-			  {else}
-                Logged in as {$USERNAME}.
-        {/if}
+                  {#logged_in_as#} {$USERNAME}
         <br><a href="register.php">{#Preferences#} 
         <br><a href="logout.php">{#Logout#}</a></p>
 			 
