@@ -4,7 +4,7 @@
 	 * 
 	 * @return (echo)
 	 */
-	function pageFinish($action,$errorReporting=TRUE){
+	function pageFinish($action,$errorReporting=TRUE,$popup=FALSE){
 		global $smarty,$myNav,$myError,$_SESSION;
 		$smarty->assign("tot_time",stopTiming());
 		$smarty->assign("nav_bar",$myNav->out());
@@ -25,7 +25,11 @@
 		}
 		
 		//output!
-		$smarty->display('index.htm');
+		if(!$popup){
+			$smarty->display('index.htm');
+		}else{
+			$smarty->display('indexpopup.htm');
+		}
 	}
 	
 	/**
@@ -33,9 +37,8 @@
 	 * 
 	 * @return (echo)
 	 */
-	function pageFinishPopup(){
+	function pageFinishPopup($action,$errorReporting=TRUE){
 		global $smarty, $myError;
-		$smarty->assign("tot_time",stopTiming());
-		$smarty->display('index_popup.htm');
+		pageFinish($action,$errorReporting,true);
 	}
 ?>

@@ -8,41 +8,40 @@
                   <td colspan="2" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr> 
                         <td width="20" nowrap><strong><img src="{$root}img/i-users.gif" width="27" height="21"></strong></td>
-                        <td class=title><strong>Create New User</strong></td>
+                        <td class=title><strong>{#create_new_user#}</strong></td>
                       </tr>
                     </table></td>
                 </tr>
                 <tr bgcolor="#dddddd"> 
-                  <td colspan="2" nowrap class=whitesmall> <strong>Access Details</strong></td>
+                  <td colspan="2" nowrap class=whitesmall>{#access_det#}</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td width="10%" nowrap> <div align="right">Login Name:</div></td>
+                  <td width="10%" nowrap> <div align="right">{#login_name#}:</div></td>
                   <td nowrap><input name="login" type="text" class="myinput" id="login" value="{$submit_login}" maxlength="32"></td>
                 </tr>
                 <tr bgcolor="#F4F4F4"> 
-                  <td nowrap> <div align="right">User's E-Mail:</div></td>
+                  <td nowrap> <div align="right">{#user_mail#}:</div></td>
                   <td nowrap><input name="mail" type="text" class="myinput" id="mail" maxlength="100" value="{$submit_mail}"></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">Access Level:</div></td>
+                  <td nowrap><div align="right">{#access_level#}:</div></td>
                   <td nowrap><select name="access_level" id="access_level">
 				  {html_options options=$access_levels selected=$submit_access_level}
                     </select></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td colspan="2" nowrap bgcolor="#dddddd" class=whitesmall><strong>Access Password </strong>
-                    (if left empty, a password will be generated and e-mailed 
-                    to the above e-mail)</td>
+                  <td colspan="2" nowrap bgcolor="#dddddd" class=whitesmall><strong>{#access_password#}</strong> 
+                    ({#access_password_comm#})</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">Password:</div></td>
+                  <td nowrap><div align="right">{#password#}:</div></td>
                   <td nowrap><input name="pass" type="text" class="myinput" id="pass" maxlength="32" value="{$submit_pass}"></td>
                 </tr>
                 <tr bgcolor="#dddddd"> 
-                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>Formal Data</strong></div></td>
+                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#formal_data#}</strong></div></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">Real Name:</div></td>
+                  <td nowrap><div align="right">{#real_name#}:</div></td>
                   <td nowrap><input name="name" type="text" class="myinput" id="name" maxlength="64" value="{$submit_name}"></td>
                 </tr>
                 {section name=error_cell show=$error_out} 

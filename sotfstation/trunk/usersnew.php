@@ -136,7 +136,7 @@
 				$sdb->query("INSERT INTO user_preferences(auth_id) values('$my_new_id')");
 			
 				//create STATION USER
-				$db->query("INSERT INTO user_map(auth_id,access_id,name) VALUES('$my_new_id','$_POST[access_level]','$_POST[name]')");
+				$db->query("INSERT INTO user_map(auth_id,access_id,name,mail) VALUES('$my_new_id','$_POST[access_level]','$_POST[name]','$_POST[mail]')");
 				
 				//create maildirs
 				$fp = @fopen("/var/squirrel/maildir-creation/new-maildirs","a+");
@@ -156,7 +156,7 @@
 	}
 	
 	//output possible access levels
-	$smarty->assign("access_levels",$db->getCol("SELECT name FROM user_access ORDER BY id"));
+	$smarty->assign("access_levels",$db->getAssoc("SELECT id, name FROM user_access ORDER BY id"));
 																	
 	//page output :)	
 	pageFinish('usersnew.htm');											# enter the desired template name as a parameter

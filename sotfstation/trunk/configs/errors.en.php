@@ -27,7 +27,8 @@
 		'10'	=> 'Please specify a valid password that is made of alphanumeric charachters only!',
 		'11'	=> 'Please enter some user name for identification purposes!',
 		'12'	=> 'This login is already taken, please choose another login name',
-		'13'	=> 'The specified group does not exist, please change the Station Management configuration settings!'
+		'13'	=> 'The specified group does not exist, please change the Station Management configuration settings!',
+		'14'	=> 'Cannot edit user access status, The specified user is the last admin of the station, and hence cannot be edited!'
 	);
 	
 	//section names, used for building the navigation bar

@@ -1,0 +1,45 @@
+{config_load file="$lang.conf"}<html>
+<head>
+<title>:: SOTF :: Station Management</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="{$root}main.css" rel="stylesheet" type="text/css">
+<script language="JavaScript" src="{$root}scripts.js"></script>
+</head>
+
+<body bgcolor="#E7EBF7" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onLoad="{if $window_destroy}window.close(); opener.location='{$destination}?{$get_data}'; {/if} window.focus(); return false;">
+<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#FFFFFF">
+  <tr> 
+    <td width="150" bgcolor="#660000">&nbsp;</td>
+    <td bgcolor="#660000">&nbsp;<span class="whitesmall">SOTF Station Management 
+      :: build {$build_id}</span></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td background="{$root}img/bgtoppix.gif"><img src="{$root}img/bgtopleft.gif" width="153" height="4"></td>
+  </tr>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0"><tr>
+  
+  <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="5">
+      <tr> 
+        <td valign="top"> <table width="100%" border="0" cellspacing="1" cellpadding="3">
+            <tr> 
+              <td valign="top"> <div align="center">{include file=$action} {if 
+                  $show_help} <br>
+                  {include file=helpbox.htm} {/if} </div></td>
+            </tr>
+          </table></td>
+      </tr>
+    </table>
+    <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#FFFFFF">
+      <tr> 
+        <td bgcolor="#eeeeee"> <div align="center"><font color="#999999" size="-2" face="Tahoma, Verdana, Arial">&nbsp;copyright 
+            Public Voice Lab 2002<br>
+            page generated in {$tot_time} seconds</font></div></td>
+      </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

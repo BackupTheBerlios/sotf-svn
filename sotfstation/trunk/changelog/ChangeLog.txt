@@ -1,5 +1,24 @@
 Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
 
+
+************************************************************************************************
+ 19.11.2002
+************************************************************************************************
+
+User management has been finalized. The overall framework has been extended to support popups
+and a special set of popup templates has been developed to support this framework. Herewith
+the overall coding framework is finished. Now user data can be edited by the administrator.
+As with the addition of new users, some logical restrictions apply.
+
+************************************************************************************************
+ 18.11.2002
+************************************************************************************************
+
+The user management console has been extended to support the addition of new users to the
+station management interface. Various control checks have been integrated. An action
+confirmation screen has been introduced, will be used for all possible actions in the future.
+
+
 ************************************************************************************************
  15.11.2002
 ************************************************************************************************

@@ -1,0 +1,63 @@
+ <form name="form1" method="post" action="usersedit.php?{$get_data}">
+  <table width="100%" border="0" cellspacing="0" cellpadding="2">
+    <tr> 
+      <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr> 
+            <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+                <tr bgcolor="#ddddff"> 
+                  <td width="100%" colspan="2" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr> 
+                        <td width="20" nowrap><strong><img src="{$root}img/i-users.gif" width="27" height="21"></strong></td>
+                        <td class=title><strong>{#edit_user_data#}</strong></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td width="10%" nowrap>
+<div align="right">{#user_id#}:</div></td>
+                  <td width="90%" nowrap>{$user_id}</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td width="10%" nowrap>
+<div align="right">{#user_mail#}:</div></td>
+                  <td nowrap>{$user_mail}</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td width="10%"> 
+                    <div align="right">{#access_level#}:</div></td>
+                  <td nowrap><select name="access_level" id="access_level">
+				  {html_options options=$access_levels selected=$submit_access_level}
+                    </select></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td width="10%" nowrap>
+<div align="right">{#real_name#}:</div></td>
+                  <td nowrap>{$user_fname}</td>
+                </tr>
+				
+				{section name=error_cell show=$error_out}
+							<tr bgcolor="#FFCCCC"> 
+                              <td colspan="3">{section name=errors loop=$error_list show=$error_out}
+<div align=center>
+        <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
+{/section}</td>
+                            </tr>
+							{/section}
+							
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="2" nowrap><div align="center">
+                      <input name="Submit" type="hidden" id="Submit" value="da">
+                      <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
+                      &nbsp; 
+                      <input name="imageField2" type="image" src="{$root}img/b_back.gif" width="90" height="16" border="0" onClick="window.close();">
+                    </div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr> 
+            <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+</form>
