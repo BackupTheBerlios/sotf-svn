@@ -99,7 +99,7 @@ class sotf_Object {
 			if(in_array($key, $this->binaryFields))
 				continue;
 			$keys[] = $key;
-			if($val === NULL){
+			if($val === NULL || $val == '') {
 				$values[] = "NULL";
 			}else{
 				$values[] = "'" . sotf_Utils::magicQuotes($val) . "'";
