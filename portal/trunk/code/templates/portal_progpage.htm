@@ -1,7 +1,13 @@
 {config_load file="$LANG.conf"}
 <table border="0" cellspacing="20" cellpadding="0" width="100%">
 	<tr> 
-		<td width="100" align="left" valign="top"><img src="{$programme.icon}" width="100" height="100"></td>
+		<td width="100" align="left" valign="top">
+		{if $programme.icon}
+			<a href="{$php_self}?id={$programme.id}"><img src="{$programme.icon}"{if $cell.class != "none"} class="{$cell.class}.icon"{/if}></a>
+		{else}
+			<a href="{$php_self}?id={$programme.id}"><img src="{$IMAGEDIR}/noicon.png"{if $cell.class != "none"} class="{$cell.class}.icon"{/if}></a>
+		{/if}
+		</td>
 		<td width="15">&nbsp;</td>
 		<td align="left" valign="top">
 			<strong><font color="#FFCC33">&deg;&deg;&deg;&nbsp;{$programme.title}</font></strong>
@@ -25,14 +31,14 @@
 				<b>{#listen_to_this#}:</b><br />
 				{foreach item=file from=$programme.listen}
 				{if $file.mime_type == "audio/mp3"}
-					{if !$MP3}MP3: {else}, {/if}<a href="{$sotfSite}{$file.link}" alt="{#file_MP3#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
+					{if !$MP3}MP3: {else}, {/if}<a href="{$sotfSite}{$file.link}&portal=1" alt="{#file_MP3#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
 					{assign var="MP3" value="true"}
 				{/if}
 				{/foreach}
 				<br />
 				{foreach item=file from=$programme.listen}
 				{if $file.mime_type == "application/x-ogg"}
-					{if !$OGG}<span onclick="javascript:window.open('http://www.vorbis.com','','resizable=yes,scrollbars=yes,width=800,height=600,left=0,top=0');return false;">OGG Vorbis</span>: {else}, {/if}<a href="{$sotfSite}{$file.link}" alt="{#file_OGG#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
+					{if !$OGG}<span onclick="javascript:window.open('http://www.vorbis.com','','resizable=yes,scrollbars=yes,width=800,height=600,left=0,top=0');return false;">OGG Vorbis</span>: {else}, {/if}<a href="{$sotfSite}{$file.link}&portal=1" alt="{#file_OGG#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
 					{assign var="OGG" value="true"}
 				{/if}
 				{/foreach}
@@ -45,14 +51,14 @@
 				<b>{#download_this#}:</b><br />
 				{foreach item=file from=$programme.download}
 				{if $file.mime_type == "audio/mp3"}
-					{if !$DMP3}MP3: {else}, {/if}<a href="{$sotfSite}{$file.link}" alt="{#file_MP3#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
+					{if !$DMP3}MP3: {else}, {/if}<a href="{$sotfSite}{$file.link}&portal=1" alt="{#file_MP3#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
 					{assign var="DMP3" value="true"}
 				{/if}
 				{/foreach}
 				<br />
 				{foreach item=file from=$programme.listen}
 				{if $file.mime_type == "application/x-ogg"}
-					{if !$DOGG}<span onclick="javascript:window.open('http://www.vorbis.com','','resizable=yes,scrollbars=yes,width=800,height=600,left=0,top=0');return false;">OGG Vorbis</span>: {else}, {/if}<a href="{$sotfSite}{$file.link}" alt="{#file_OGG#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
+					{if !$DOGG}<span onclick="javascript:window.open('http://www.vorbis.com','','resizable=yes,scrollbars=yes,width=800,height=600,left=0,top=0');return false;">OGG Vorbis</span>: {else}, {/if}<a href="{$sotfSite}{$file.link}&portal=1" alt="{#file_OGG#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
 					{assign var="DOGG" value="true"}
 				{/if}
 				{/foreach}

@@ -1,5 +1,13 @@
 <?php
 
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: Máté Pataki, András Micsik
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ * 
+ */
+
 //$anhour = gmdate('D, d M Y H:i:s T', gmmktime(gmdate("H"),gmdate("i")+60,0,gmdate("m"),(gmdate("d")),gmdate("Y")));
 //header("Expires: $anhour");
 

@@ -1,4 +1,13 @@
 <?php
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: Máté Pataki, András Micsik
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ * 
+ */
+
 /*
 includes all neccesary classes
 checks login and portal name

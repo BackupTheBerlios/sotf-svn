@@ -1,9 +1,11 @@
 <?php
-/*
- * This class represents a portal outlook
- *
- * @author Mate Pataki MTA SZTAKI DSD
- *
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: Máté Pataki, András Micsik
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ * 
  */
 
 require_once("$classdir/rpc_Utils.class.php");
@@ -1069,14 +1071,15 @@ class sotf_Portal
 			$db->lockTable("portal_statistics");
 	
 			$sql = "SELECT timestamp FROM portal_statistics WHERE name='events_sent'";
-			$last_refresh = $db->diffTimestamp($db->getTimestamp(), $db->getOne($sql));
+			$last_sent = $db->getOne($sql);
+			$last_refresh = $db->diffTimestamp($db->getTimestamp(), $last_sent);
 			if ($last_refresh > $MIN_EVENT_SENDING)
 			{
 				debug("Sending events...");
 				$rpc = new rpc_Utils;
 				$url = $sotfSite."xmlrpcServer.php";
 	
-				$sql="SELECT portal_statistics.id, portal_statistics.name, portal_settings.name as portal_name, timestamp, number as value FROM portal_statistics WHERE name='page_impression' AND portal_id = portal_settings.id";
+				$sql="SELECT portal_statistics.id, portal_statistics.name, portal_settings.name as portal_name, timestamp, number as value FROM portal_statistics WHERE name='page_impression' AND portal_id = portal_settings.id AND timestamp > '$last_sent'";
 				$page_impression = $db->getAll($sql);
 	
 				$sql="SELECT * FROM portal_events WHERE true";
@@ -1093,24 +1096,34 @@ class sotf_Portal
 						$events[$key]['value'] = unserialize(base64_decode(($event['value'])));
 					}
 
-          // put prog_id in root array if exists
+					// put prog_id in root array if exists
 					if (($event['name'] == 'comment') OR($event['name'] == 'file_uploaded') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit'))
 					{
 						$events[$key]['prog_id'] = $events[$key]['value']['prog_id'];
 					}
+
+					//put 'prog_id' to the outer array
 					if (($event['name'] == 'programme_added') OR ($event['name'] == 'programme_deleted'))
 					{
 						$events[$key]['prog_id'] = $events[$key]['value'];
 					}
 
 					//make an URL which leads directly to the portal/programme on the portal
-					if ($event['name'] == 'file_uploaded') {
-            $events[$key]['url'] = "http://".$_SERVER['HTTP_HOST'].$events[$key]['value']['location'];
-					} elseif (($event['name'] == 'programme_added') OR ($event['name'] == 'programme_deleted') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit')) {
-            $events[$key]['url'] = $rootdir."/portal.php/".$events[$key]['portal_name']."?id=".$events[$key]['value']['prog_id'];
-					} else {
-            $events[$key]['url'] = $rootdir."/portal.php/".$events[$key]['portal_name'];
-          }
+					if ($event['name'] == 'file_uploaded')
+					{
+						$events[$key]['url'] = "http://".$_SERVER['HTTP_HOST'].$events[$key]['value']['location'];
+					}
+					elseif (($event['name'] == 'programme_added') OR ($event['name'] == 'programme_deleted') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit'))
+					{
+						$events[$key]['url'] = $rootdir."/portal.php/".$events[$key]['portal_name']."?id=".$events[$key]['prog_id'];
+					}
+					else
+					{
+						$events[$key]['url'] = $rootdir."/portal.php/".$events[$key]['portal_name'];
+					}
+
+					//make an URL which leads directly to the portal
+					$events[$key]['portal_url'] = $rootdir."/portal.php/".$events[$key]['portal_name'];
 				}
 				
 				$objs = array($events);
