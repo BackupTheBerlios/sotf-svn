@@ -654,7 +654,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$newPrg = new sotf_Programme();
 		$stId = trim($metadata['stationid']);
 		if(is_numeric($stId)) {
-		  $stId = $this->makeId($config['nodeId'],  'sotf_stations', (int)$stId);
+		  $stId = $newPrg->makeId($config['nodeId'],  'sotf_stations', (int)$stId);
 		}
 		$station = &$repository->getObject($stId);
 		if(!$station) {
