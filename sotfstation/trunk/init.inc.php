@@ -87,12 +87,12 @@
 		}else if($_SESSION['USER']->get($section)==1){		# user has read only access to this section
 			if((count($_POST) > 0) or (isset($_GET['action']))){		# there has been a POST call or an action
 				//unset the action calls
-				unset($_POST);
+				$_POST = array();
 				unset($_GET['action']);
+				
+				//add error to 'error bin'
+				$myError->add($ERR['ACC']);
 			}
-			
-			//add error to 'error bin'
-			$myError->add($ERR['403']);
 			
 			//notify client of problem ;)
 			return false;
