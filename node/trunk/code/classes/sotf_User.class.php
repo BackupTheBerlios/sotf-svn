@@ -77,6 +77,7 @@ class sotf_User
       
       // get some more data from sadm
 			$data = $userdb->getRow("SELECT * FROM user_preferences WHERE auth_id = '$id'");
+      debug("user_preferences", $data);
 			$this->realname = $data['RealName'];
 			$this->language = $data['language'];
 			$this->email = $data['email'];
@@ -142,7 +143,9 @@ class sotf_User
 			$query = "UPDATE authenticate SET passwd='". sotf_Utils::magicQuotes($password) . "' WHERE auth_id='" . sotf_Utils::magicQuotes($this->id) . "'";
 			$userdb->query($query);
 		}
-		$query = "UPDATE user_preferences SET RealName='". sotf_Utils::magicQuotes($this->realname) ."', language='". sotf_Utils::magicQuotes($this->language) . "' WHERE auth_id='" . sotf_Utils::magicQuotes($this->id) . "'";
+    // RealName taken out
+		//$query = "UPDATE user_preferences SET RealName='". sotf_Utils::magicQuotes($this->realname) ."', language='". sotf_Utils::magicQuotes($this->language) . "' WHERE auth_id='" . sotf_Utils::magicQuotes($this->id) . "'";
+    $query = "UPDATE user_preferences SET language='". sotf_Utils::magicQuotes($this->language) . "' WHERE auth_id='" . sotf_Utils::magicQuotes($this->id) . "'";
 		$userdb->query($query);
     $this->saveEmail();
 	}
@@ -173,10 +176,9 @@ class sotf_User
 		$userdb->query($query);
 		$id = $userdb->getOne("SELECT auth_id FROM authenticate WHERE username='$name'");
 		//		$query = "INSERT INTO user_preferences (RealName,language,last_visit,num_logins) ";
-		$query = "INSERT INTO user_preferences (auth_id, RealName, language,last_visit,num_logins) ";
-		$query .= "VALUES('$id','"
-						. sotf_Utils::magicQuotes($realname) . "','" 
-			. sotf_Utils::magicQuotes($language) 
+    // RealName taken out 						. sotf_Utils::magicQuotes($realname) . "','" 
+		$query = "INSERT INTO user_preferences (auth_id, language,last_visit,num_logins) ";
+		$query .= "VALUES('$id','" . sotf_Utils::magicQuotes($language) 
 			. "','". db_Wrap::getSQLDate() . "',1)";
 		$userdb->query($query);
     // TODO: check email??

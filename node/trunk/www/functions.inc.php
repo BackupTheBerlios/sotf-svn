@@ -105,12 +105,12 @@ function noErrors() {
 /** shortcut for permission check: hasPerm(<objectId>, <permName1>, <permName2>, ...)
 will return true if the current user has at least one of the listed permissions for the object.
 Also used in smarty templates to check permissions. */
-function hasPerm($object) {
+function hasPerm($objectId) {
   global $permissions;
 	$perm_list = func_get_args();
 	for ($i = 1; $i <count($perm_list); $i++) {
-		$perm = $permissions->hasPermission($object, $perm_list[$i]);
-		debug("checking for permission " . $perm_list[$i], $perm);
+		$perm = $permissions->hasPermission($objectId, $perm_list[$i]);
+		debug("checking for permission " . $perm_list[$i] . " on " . $objectId, $perm);
 		if($perm)
 			return true;
 	}
