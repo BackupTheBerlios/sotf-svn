@@ -245,10 +245,12 @@ class sotf_Page
 		 debug("alertWithErrors()");
 		 print("\n<script type=\"text/javascript\" language=\"javascript1.1\">");
 		 foreach($this->errors as $err) {
-			print "\nalert('" . addslashes(strtr($err, "\n\r\t\0",'  ')) . "');";
+			print "\n alert('" . addslashes(strtr($err, "\n\r\t\0",'  ')) . "');";
 		 }
-		 print("\nhistory.back();");
+		 print("\n if(history.length > 0) history.back();");
 		 print("\n</script>");
+		 $closeMsg = $this->getlocalized('error_close');
+		 print("<a href=\"closeAndRefresh.php\">$closeMsg</a>");
 	  } else {
 		 debug("no errors");
 	  }

@@ -47,6 +47,7 @@ window.onload=myonload;
     </div>
 {/if}
 
+{if hasPerm($PRG_ID, 'change') }
   <table class="tab">
     <tr> 
       <td nowrap class="tab">{#general_data#}</td>
@@ -64,7 +65,10 @@ window.onload=myonload;
               <td class="meta">{#series#}:</td>
               <td>{if $SERIES_DATA}<a class="goto_object" href="showSeries.php?seriesid={$SERIES_DATA.id}">{$SERIES_DATA.title}</a>{else}{#not_in_series#}{/if}
                 {if !empty($MY_SERIES)}
-                   <input class="action" type="button" name="b1" value="{#change_series#}" onClick="popup('addToSeries.php?prgid={$PRG_ID}','{#changeseries#}',350,400,false); return false;" />
+                   <input class="action" type="button" name="b1" value="{#change_series#}" onClick="popup('addToSeries.php?prgid={$PRG_ID}','{#changeseries#}',120,400,false); return false;" />
+                {/if}
+                {if $SERIES_DATA}
+                   <input class="action" type="button" name="b1" value="{#remove_from_series#}" onClick="redir(this.form, 'editMeta.php?delfromseries=1&id={$PRG_ID}')" />
                 {/if}
               </td>
             </tr>
@@ -277,8 +281,10 @@ window.onload=myonload;
     </tr>
 </table>
 </form>
-
+{/if}
 <p></p>
+
+{if hasPerm($PRG_ID, 'authorize') }
 
   <a name="perms"></a>
 <table class="tab">
@@ -322,8 +328,11 @@ window.onload=myonload;
       </td>
     </tr>
 </table>
+{/if}
 
 <p></p>
+
+{if hasPerm($PRG_ID, 'change') }
 
         <a name="icon"></a>
 <table class="tab">
@@ -373,6 +382,7 @@ function getSelected() {
       </td>
     </tr>
   </table>
+{/if}
 
 {if $NEW}
     <table width="100%">

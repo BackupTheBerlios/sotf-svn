@@ -1,6 +1,11 @@
-<?php
-// -*- tab-width: 3; indent-tabs-mode: 1; -*-
-// $Id$
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
 
 require("init.inc.php");
 
@@ -11,10 +16,7 @@ $manager = sotf_Utils::getParameter('username');
 
 $page->forceLogin();
 
-if (!hasPerm('node','create')) {
-  raiseError($page->getlocalized('no_permission'));
-  exit;
-}
+checkPerm('node','create');
 
 if ($new) {
 

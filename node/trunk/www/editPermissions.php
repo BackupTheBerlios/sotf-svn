@@ -1,4 +1,11 @@
-<?php
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
 
 require("init.inc.php");
 
@@ -11,6 +18,12 @@ $objectid = sotf_Utils::getParameter('objectid');
 $username = sotf_Utils::getParameter('username');
 $save = sotf_Utils::getParameter('save');
 $userid = $user->getUserid($username);
+
+if($userid == $user->id) {
+  // trying to change permissions for self
+  if(!hasPerm($objectid, 'admin'))
+    raiseError("self_perm_change_not_allowed");
+}
 
 checkPerm($objectid, "authorize");
 

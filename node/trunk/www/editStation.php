@@ -37,6 +37,16 @@ if($save) {
   exit;
 }
 
+// delete series
+$delseries = sotf_Utils::getParameter('delseries');
+if($delseries) {
+  $seriesid = sotf_Utils::getParameter('seriesid');
+  $series = new sotf_Series($seriesid);
+  $series->delete();
+  $page->redirect("editStation.php?stationid=$stationid#series");
+  exit;
+}
+
 // manage roles
 $delrole = sotf_Utils::getParameter('delrole');
 if($delrole) {

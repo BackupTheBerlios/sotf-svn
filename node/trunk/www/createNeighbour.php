@@ -1,4 +1,11 @@
-<?php
+<?php  // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
 
 require("init.inc.php");
 
@@ -7,9 +14,8 @@ $smarty->assign('PAGETITLE',$page->getlocalized('AdminPage'));
 $page->forceLogin();
 $page->popup = true;
 $page->errorURL = "createNeighbour.php";
-if (!hasPerm('node', "change")) {
-  raiseError("You have no permission to change node settings!");
-}
+
+checkPerm('node', "change");
 
 $url = sotf_Utils::getParameter('url');
 $nid = sotf_Utils::getParameter('node_id');

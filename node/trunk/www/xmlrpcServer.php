@@ -71,6 +71,7 @@ function getQueryResults($params)
 {
 	global $classdir, $db, $rootdir, $cacheprefix;
 	$query = xmlrpc_decode($params->getParam(0));
+
 	$advsearch = new sotf_AdvSearch();	//create new search object object with this array
 	$SQLquery = $advsearch->Deserialize($query);		//deserialize the content of the hidden field
 	$query = $advsearch->GetSQLCommand();
@@ -83,6 +84,12 @@ function getQueryResults($params)
 	}
 	$retval = xmlrpc_encode($results);
 	return new xmlrpcresp($retval);
+}
+
+function getProgrammes($params)
+{
+	global $classdir, $db, $rootdir, $cacheprefix;
+	$prglist = xmlrpc_decode($params->getParam(0));
 }
 
 stopTiming();

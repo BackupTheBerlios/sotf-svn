@@ -57,6 +57,9 @@
 	</table>
 	<input type="submit" name="save" value="{#save#}">
 	<input type="submit" name="finish1" value="{#finish#}">
+  {if hasPerm($CONTACT_ID,'delete')}
+              &nbsp;&nbsp;&nbsp;&nbsp;<input class="action" type="button" name="b1" value="{#delete_contact#}" onClick="if(deleteConfirm('{#delete_contact_confirm#}'))redir(this.form, 'editContact.php?id={$CONTACT_ID}&delete=1')" />
+  {/if}
 	</form>
 </td></tr>
 </table>

@@ -1,6 +1,13 @@
-<?php
-require("init.inc.php");
+<?php  // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
 
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
+
+require("init.inc.php");
 
 $prgId = sotf_Utils::getParameter('id');
 $new = sotf_Utils::getParameter('new');
@@ -27,15 +34,21 @@ $prg = & new sotf_Programme($prgId);
 if(!$prg->isLocal()) {
   raiseError("You can only edit programmes locally!");
 }
-if(!hasPerm($prgId, 'change')) {
-  raiseError("no permission to change files in this programme");
-  exit;
+
+checkPerm($prg->id, 'change', 'authorize');
+
+if(sotf_Utils::getParameter('delfromseries')) {
+  checkPerm($prg->id, 'change');
+  $prg->set("series_id", null);
+  $prg->update();
+  $page->redirect("editMeta.php?id=$prgId");
 }
 
 $finishpublish = sotf_Utils::getParameter('finishpublish');
 $finish = sotf_Utils::getParameter('finish');
 $save = sotf_Utils::getParameter('save');
 if($save || $finish || $finishpublish) {
+  checkPerm($prg->id, 'change');
   $params = array('title'=>'text',
                   'alternative_title'=>'text',
                   'episode_title'=>'text',
@@ -88,6 +101,7 @@ $smarty->assign('PRG_TITLE', $prg->get('title'));
 $delrole = sotf_Utils::getParameter('delrole');
 $roleid = sotf_Utils::getParameter('roleid');
 if($delrole) {
+  checkPerm($prg->id, 'change');
   $role = new sotf_NodeObject('sotf_object_roles', $roleid);
   $c = new sotf_Contact($role->get('contact_id'));
   $role->delete();
@@ -101,6 +115,7 @@ if($delrole) {
 $delright = sotf_Utils::getParameter('delright');
 $rid = sotf_Utils::getParameter('rid');
 if($delright) {
+  checkPerm($prg->id, 'change');
   $right = new sotf_NodeObject('sotf_rights', $rid);
   $right->delete();
   //$msg = $page->getlocalizedWithParams("deleted_", $c->get('name'));
@@ -113,6 +128,7 @@ if($delright) {
 $delperm = sotf_Utils::getParameter('delperm');
 $username = sotf_Utils::getParameter('username');
 if($delperm) {
+  checkPerm($prg->id, 'authorize');
   $userid = $user->getUserid($username);
   if(empty($userid) || !is_numeric($userid)) {
     raiseError("Invalid username: $username");
@@ -129,6 +145,7 @@ if($delperm) {
 // upload icon
 $uploadIcon = sotf_Utils::getParameter('uploadicon');
 if($uploadIcon) {
+  checkPerm($prg->id, 'change');
   $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
   if ($prg->setIcon($file)) {
@@ -144,6 +161,7 @@ if($uploadIcon) {
 $seticon = sotf_Utils::getParameter('seticon');
 $filename = sotf_Utils::getParameter('filename');
 if($seticon) {
+  checkPerm($prg->id, 'change');
   $file = $user->getUserDir() . '/' . $filename;
   if ($prg->setIcon($file)) {
     //$page->addStatusMsg("ok_icon");

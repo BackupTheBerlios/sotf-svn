@@ -1,4 +1,12 @@
-<?php
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
+
 require("init.inc.php");
 
 $id = sotf_Utils::getParameter('id');
@@ -38,10 +46,7 @@ elseif ($capname == "mfiles")
 $prg = & new sotf_Programme($id);
 
 // admins or owners can change files
-if(!hasPerm($id, 'change')) {
-  raiseError("no permission to change files in this programme");
-  exit;
-}
+checkPerm($id, 'change');
 
 // delete link
 $delLink = sotf_Utils::getParameter('dellink');

@@ -31,8 +31,8 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
           <br>{$PRG_DATA.title}
         </td>
         <td class="title2">
-          <a href="#general">{#Metadata#}</a>, <a href="#roles">{#Roles#}</a>, <a href="#rights">{#Rights#}</a>,
-          <a href="#mfiles">{#Content#}</a>, <a href="#links">{#Links#}</a>, <a href="#stats">{#Statistics#}</a>
+          <a href="#general">{#Metadata#}</a>{if $ROLES}, <a href="#roles">{#Roles#}</a>{/if}{if $RIGHTS}, <a href="#rights">{#Rights#}</a>{/if},
+          <a href="#mfiles">{#Content#}</a>{if $LINKS }, <a href="#links">{#Links#}</a>{/if}, <a href="#stats">{#Statistics#}</a>
         </td>
         <td class="title2" width="15%">
         {if $SERIES_DATA and $SERIES_DATA.icon}

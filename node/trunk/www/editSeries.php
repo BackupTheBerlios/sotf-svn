@@ -1,4 +1,12 @@
-<?php
+<?php  // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
+
 
 require("init.inc.php");
 
@@ -12,29 +20,31 @@ if(!$seriesid) {
   raiseError("Id is missing");
 }
 
-if (!hasPerm($seriesid, "change")) {
-  raiseError("You have no permission to change series settings!");
-}
-
 $series = & new sotf_Series($seriesid);
+
+checkPerm($series->id, "change", 'authorize');
 
 // save general data
 $save = sotf_Utils::getParameter('save');
 $finish = sotf_Utils::getParameter('finish');
+$finish2 = sotf_Utils::getParameter('finish2');
 if($save || $finish) {
+  checkPerm($series->id, "change");
   $series->setWithParam('title');
   $series->setWithParam('description');
   $series->update();
-  if($finish)
-    $page->redirect("closeAndRefresh.php?anchor=series");
-  else
-    $page->redirect("editSeries.php?seriesid=$seriesid");
-  exit;
+}
+if($finish || $finish2) {
+  $page->redirect("closeAndRefresh.php?anchor=series");
+}
+if($save) {
+  $page->redirect("editSeries.php?seriesid=$seriesid");
 }
 
 // manage roles
 $delrole = sotf_Utils::getParameter('delrole');
 if($delrole) {
+  checkPerm($series->id, "change");
   $roleid = sotf_Utils::getParameter('roleid');
   $role = new sotf_NodeObject('sotf_object_roles', $roleid);
   $c = new sotf_Contact($role->get('contact_id'));
@@ -48,6 +58,7 @@ if($delrole) {
 // manage permissions
 $delperm = sotf_Utils::getParameter('delperm');
 if($delperm) {
+  checkPerm($series->id, "authorize");
   $username = sotf_Utils::getParameter('username');
   $userid = $user->getUserid($username);
   if(empty($userid) || !is_numeric($userid)) {
@@ -65,6 +76,7 @@ if($delperm) {
 // upload icon
 $uploadIcon = sotf_Utils::getParameter('uploadicon');
 if($uploadIcon) {
+  checkPerm($series->id, "change");
   $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
   if ($series->setIcon($file)) {
@@ -79,6 +91,7 @@ if($uploadIcon) {
 // icon from my files
 $seticon = sotf_Utils::getParameter('seticon');
 if($seticon) {
+  checkPerm($series->id, "change");
   $filename = sotf_Utils::getParameter('filename');
   $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
   if ($series->setIcon($file)) {
@@ -93,6 +106,8 @@ if($seticon) {
 
 // general data
 $smarty->assign('SERIES_ID',$seriesid);
+$smarty->assign('SERIES',$series->get('title'));
+
 $smarty->assign('SERIES_DATA',$series->getAll());
 $smarty->assign('SERIES_MANAGER',true);
 $smarty->assign('ROLES', $series->getRoles());

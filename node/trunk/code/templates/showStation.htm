@@ -7,7 +7,7 @@
           <br>{$STATION}
         </td>
         <td class="title2">
-          <a href="#general">{#general#}</a>, <a href="#series">{#series#}</a>, <a href="#progs">{#programmes#}</a>
+          <a href="#general">{#general#}</a>{if $SERIES}, <a href="#series">{#series#}</a>{/if}{if $PROGS}, <a href="#progs">{#programmes#}</a>{/if}
         </td>
         <td class="title2" width="10%" align="right" valign="bottom">
           {if hasPerm($STATION_ID,'change','authorize') }
@@ -23,7 +23,6 @@
         </td>
       </tr>
     </table>
-  </form>
 
 <p></p>
 
@@ -69,13 +68,18 @@
               </table>
               {/if}
 
-
+              {if hasPerm($STATION_ID,'create') }
+              <p align="right">
+              <input class="action" type="button" name="b1" value="{#add_series#}" onClick="popup('createSeries.php?stationid={$STATION_ID}','{#series#}',550,550,true)" />
+              </p>
+              {/if}
             </td>
           </tr>
         </table>
       </td>
     </tr>
 </table>
+</form>
 
 {if $SERIES}
 
@@ -103,7 +107,7 @@
               {/if}
             </td>
             <td width="1%" valign="bottom">
-              {if hasPerm($item.id, 'change')}
+              {if hasPerm($item.id, 'change', 'authorize')}
               <br/><input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
                   {/if}
               {if hasPerm($item.id,'delete')}
@@ -159,7 +163,7 @@
               {/if}
             </td>
             <td width="1%" valign="bottom">
-              {if hasPerm($item.id, 'change')}
+              {if hasPerm($item.id, 'change', 'authorize')}
               <input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, 'editMeta.php?id={$item.id}')" />
                   {/if}
               {if hasPerm($item.id,'delete')}

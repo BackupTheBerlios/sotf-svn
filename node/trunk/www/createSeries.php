@@ -1,6 +1,11 @@
-<?php
-// -*- tab-width: 3; indent-tabs-mode: 1; -*-
-// $Id$
+<?php  // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
 
 require("init.inc.php");
 
@@ -10,9 +15,7 @@ $page->forceLogin();
 $stationId = sotf_Utils::getParameter('stationid');
 $seriesTitle = sotf_Utils::getParameter('title');
 
-if(!hasPerm($stationId, "create")) {
-  raiseError("You have no permission to create new series!");
-}
+checkPerm($stationId, "create");
 
 if($seriesTitle) {
   // create a new series

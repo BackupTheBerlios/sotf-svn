@@ -1,6 +1,7 @@
 
 <h3>{#edit_series#}</h3>
 
+{if hasPerm($SERIES_ID, 'change') }
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#general_data#}</td>
@@ -56,7 +57,9 @@
             </td>
             <td nowrap>
                 <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$SERIES_ID}','{#edit_role#}',400,400,false)" />
+             {if $item.change_contact }
                   <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)" />
+             {/if}
                     <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editSeries.php?delrole=1&roleid={$item.id}&seriesid={$SERIES_ID}')" />
             </td>
           </tr>
@@ -72,9 +75,10 @@
     </tr>
 </table>
 </form>
-
+{/if}
 <p></p>
 
+{if hasPerm($SERIES_ID, 'authorize') }
 <a name="perms"></a>
 <table class="tab">
   <tr> 
@@ -117,9 +121,10 @@
       </td>
     </tr>
 </table>
-
+{/if}
 <p></p>
 
+{if hasPerm($SERIES_ID, 'change') }
         <a name="icon"></a>
 <table class="tab">
   <tr> 
@@ -169,3 +174,9 @@ function getSelected() {
       </td>
     </tr>
   </table>
+
+{/if}
+
+<p></p>
+<form method="post"><input type="submit" name="finish2" value="{#finish#}"></form>
+

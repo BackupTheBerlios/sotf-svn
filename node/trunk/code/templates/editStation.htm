@@ -154,8 +154,12 @@
           <tr class="{cycle name=perms}">
             <td><a href="showSeries.php?seriesid={$item.id}">{$item.title}</a></td>
             <td nowrap>
+                {if hasPerm($item.id, 'change') }
               <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
+                {/if}
+                {if hasPerm($STATION_ID, 'delete') or hasPerm($item.id, 'admin') }
               <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?delseries=1&seriesid={$item.id}&stationid={$STATION_ID}')" />
+                {/if}
             </td>
           </tr>
           {/foreach}

@@ -1,5 +1,6 @@
 	<html>
 	  <head>
+       <!-- $Id$ -->
 		<title>
 		  Close this window automatically
 		</title>

@@ -7,7 +7,7 @@
           <br>{$SERIES_DATA.title}
         </td>
         <td class="title2">
-          <a href="#general">{#general#}</a>, <a href="#progs">{#programmes#}</a>
+          <a href="#general">{#general#}</a>{if $PROGS}, <a href="#progs">{#programmes#}</a>{/if}
         </td>
         <td class="title2" width="10%" align="right" valign="bottom">
           {if hasPerm($SERIES_DATA.id,'change') }
@@ -123,7 +123,7 @@
               {/if}
             </td>
             <td width="1%" valign="bottom">
-              {if hasPerm($item.id, 'change')}
+              {if hasPerm($item.id, 'change', 'authorize')}
               <input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, 'editMeta.php?id={$item.id}')" />
                   {/if}
               {if hasPerm($item.id,'delete')}

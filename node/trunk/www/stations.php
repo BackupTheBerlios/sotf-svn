@@ -1,6 +1,12 @@
-<?php
-// -*- tab-width: 3; indent-tabs-mode: 1; -*-
-// $Id$
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
+
 
 require("init.inc.php");
 $hitsPerPage = $sotfVars->get("hitsPerPage", 15);
@@ -11,8 +17,8 @@ $start = sotf_Utils::getParameter('start');
 $station = sotf_Utils::getParameter('station');
 $delete = sotf_Utils::getParameter('delete');
 
-if ($delete and hasPerm('node','delete'))
-{
+if ($delete) {
+  checkPerm('node','delete');
   $st = & new sotf_Station($station);
   $st->delete();
   $page->addStatusMsg('delete_ok');
@@ -31,7 +37,7 @@ for($i=0; $i<count($stations); $i++) {
   
   $sprops['numProgs'] = $stations[$i]->numProgrammes();
   $sprops['isLocal'] = $stations[$i]->isLocal();
-  if(hasPerm('node','delete')) {
+  if(hasPerm('node','delete', 'change')) {
     $sprops['managers'] = $permissions->listUsersWithPermission($stations[$i]->id, 'admin');
   }
 

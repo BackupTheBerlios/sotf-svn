@@ -1,4 +1,12 @@
-<?php //-*- tab-width: 3; indent-tabs-mode: 1; -*-
+<?php  // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
+
 require("init.inc.php");
 
 $smarty->assign("PAGETITLE", $page->getlocalized("EditorPage"));
@@ -23,10 +31,7 @@ if(sotf_Utils::getParameter('delprog')) {
 if(sotf_Utils::getParameter('addprog')) {
   $fname = sotf_Utils::getParameter('fname');
   $station = sotf_Utils::getParameter('station');
-  if(!$permissions->hasPermission($station, 'add_prog')) {
-    raiseError("no permission to upload to $station");
-    exit;
-  }
+  checkPerm($station, 'add_prog');
   $newPrg = new sotf_Programme();
   $track = preg_replace('/\.[^.]*$/','', $fname);
   debug("create with track", $track);
