@@ -44,8 +44,8 @@ class sotf_Repository {
 									"sotf_role_names" => "rn",
 									"sotf_deletions" => "de",
 									"sotf_prog_rating" => "ra",
-									"sotf_refs" => "re",
-									"sotf_stats" => "sx",
+									"sotf_prog_refs" => "re",
+									"sotf_prog_stats" => "sx",
 									"sotf_blobs" => "bl"
 									);
 

@@ -86,7 +86,9 @@ function addError($msg) {
   if(DB::isError($msg)) 
     $msg = "SQL error: " . $msg->getMessage();
   logError($msg);
-  $page->errors[] = $page->getlocalized($msg);
+	if(!strstr($msg, ' '))
+		 $msg = $page->getlocalized($msg);
+  $page->errors[] = $msg;
 }
 
 function raiseError($msg) {
@@ -94,7 +96,9 @@ function raiseError($msg) {
   if(DB::isError($msg)) 
     $msg = "SQL error: " . $msg->getMessage();
   logError($msg);
-  $page->errors[] = $page->getlocalized($msg);
+	if(!strstr($msg, ' '))
+		 $msg = $page->getlocalized($msg);
+  $page->errors[] = $msg;
   $page->halt();
   exit;
 }

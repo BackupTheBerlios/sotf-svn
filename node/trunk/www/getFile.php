@@ -14,6 +14,12 @@ $id = sotf_Utils::getParameter('id');
 $mainAudio = sotf_Utils::getParameter('audio');
 $prg = & new sotf_Programme($id);
 
+if(!$prg->isLocal()) {
+  // have to send user to home node of this programme
+  sotf_Node::redirectToHomeNode($prg);
+  exit;
+}
+
 // TODO check if user have rights to access: 1. prg is published, 2. file has public_access or donwload_access
 
 if($mainAudio)

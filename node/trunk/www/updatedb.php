@@ -44,6 +44,12 @@ $id = $_GET["id"];
 $value = $_GET["value"];
 
 if ($name == 'rating') {
+  $obj = $repository->getObject($id);
+  if(!$obj->isLocal()) {
+	 sotf_Node::redirectToHomeNode($obj);
+	 exit;
+  }
+
   $rating = new sotf_Rating();
   $rating->setRating($id, $value);
   $page->alertWithErrors();

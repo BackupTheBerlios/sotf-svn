@@ -139,23 +139,25 @@ CREATE TABLE "sotf_object_roles" (
 CREATE SEQUENCE "sotf_stations_seq";
 
 CREATE TABLE "sotf_stations" (
--- REPLICATED
+-- REPLICATED XXX
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"name" varchar(32) UNIQUE NOT NULL,
 	"description" text,
-	"language" varchar(20),											-- 2-letter codes separeted by comma
+	"url" varchar(100), 						-- URL for radio station website, if any
+	"language" varchar(40),											-- 2-letter codes separeted by comma
 	"entry_date" date DEFAULT CURRENT_DATE
 );
 
 CREATE SEQUENCE "sotf_series_seq";
 
 CREATE TABLE "sotf_series" (
--- REPLICATED
+-- REPLICATED XXX
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"station_id" varchar(12) NOT NULL,
 	"title" varchar(255) DEFAULT 'untitled' NOT NULL,
 	"description" text,
-	"language" varchar(20),											-- 2-letter codes separeted by comma
+	"url" varchar(100), 						-- URL for radio series website, if any
+	"language" varchar(40),											-- 2-letter codes separeted by comma
 	"entry_date" date DEFAULT CURRENT_DATE,
 	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE
 );
@@ -193,6 +195,9 @@ CREATE TABLE "sotf_programmes" (
 	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE,
 	FOREIGN KEY("series_id") REFERENCES sotf_series("id") ON DELETE CASCADE --??
 );
+
+CREATE INDEX prg_lang_idx ON sotf_programmes (language);  -- XXX
+-- TODO more indexes
 
 CREATE SEQUENCE "sotf_rights_seq";
 
@@ -413,23 +418,25 @@ CREATE TABLE "sotf_ratings" (
 CREATE SEQUENCE "sotf_prog_rating_seq";
 
 CREATE TABLE "sotf_prog_rating" (
--- calculated overall rating for a programme is stored here
+-- calculated overall rating for a programme is stored here XXX
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"prog_id" varchar(12) NOT NULL,						-- id of programme rated
 	"rating_value" float,									-- value of rating
+	"alt_value" float,										-- rating calculated in an alternative way XXX
 	"rating_count" int DEFAULT 0,							-- total number of raters	
 	"rating_count_reg" int DEFAULT 0,					-- number of registered raters	
 	"rating_count_anon" int DEFAULT 0,					-- number of anonymous raters
 	"rating_sum_reg" int DEFAULT 0,						-- sum of ratings by registered raters	
 	"rating_sum_anon" int DEFAULT 0,						-- sum of ratings by anonymous raters
+	"detail" text,												-- may contain more detailed structured data on rating XXX
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
-CREATE SEQUENCE "sotf_refs_seq";
+CREATE SEQUENCE "sotf_prog_refs_seq";
 
-CREATE TABLE "sotf_refs" (
--- referencing portal URLs for a radio programme
+CREATE TABLE "sotf_prog_refs" (
+-- referencing portal URLs for a radio programme XXX
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"prog_id" varchar(12) NOT NULL,							-- programme being referenced
@@ -442,16 +449,33 @@ CREATE TABLE "sotf_refs" (
 	"rating" float,									-- rating on the portal
 	"raters" int,										-- number of raters on the portal
 	"comments" int2 DEFAULT '0',					-- number of comments
+	"detail" text,										-- may contain more detailed structured data on rating
 	CONSTRAINT "sotf_refs_u" UNIQUE ("prog_id", "url"),
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
-CREATE SEQUENCE "sotf_stats_seq";
+CREATE SEQUENCE "sotf_prog_stats_seq";
 
-CREATE TABLE "sotf_stats" (
--- download and listen statistics for a radio programme
+CREATE TABLE "sotf_prog_stats" (
+-- download and listen statistics for a radio programme XXX
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
+	"prog_id" varchar(12) NOT NULL,			-- programme being referenced
+	"station_id" varchar(12) NOT NULL,		-- station of programme
+	"listens" int DEFAULT '0',					-- number of listens
+	"downloads" int DEFAULT '0',				-- number of downloads
+	"visits" int DEFAULT '0',					-- number of times page has been visited
+	"unique_listens" int DEFAULT '0',					-- number of users who listened
+	"unique_downloads" int DEFAULT '0',				-- number of users who downloaded
+	"unique_visits" int DEFAULT '0',					-- number of users the page has been visited
+	"detail" text,									-- may contain more detailed structured data on rating
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE,
+	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE
+);
+
+CREATE TABLE "sotf_stats" (
+-- detailed download and listen statistics for a radio programme XXX
+	"id" serial PRIMARY KEY,
 	"prog_id" varchar(12) NOT NULL,
 	"station_id" varchar(12) NOT NULL,
 	"year" int2 NOT NULL,
@@ -461,8 +485,12 @@ CREATE TABLE "sotf_stats" (
 	"listens" int DEFAULT '0',					-- number of listens
 	"downloads" int DEFAULT '0',				-- number of downloads
 	"visits" int DEFAULT '0',					-- number of times page has been visited
+	"unique_listens" int DEFAULT '0',					-- number of users who listened until that time
+	"unique_downloads" int DEFAULT '0',				-- number of users who downloaded until that time
+	"unique_visits" int DEFAULT '0',					-- number of users the page has been visited until that time
 	CONSTRAINT "sotf_stats_u" UNIQUE ("prog_id", "month", "year", "day"),
-	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE,
+	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "sotf_comments" (
@@ -480,19 +508,20 @@ CREATE TABLE "sotf_to_forward" (
 -- data to forward to another node XXX
 -- host??
 	"id" serial PRIMARY KEY,
+	"node_id" int2,	-- id of node to forward to
 	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
 	"type" varchar(10),  -- type of data
 	"data" text			-- data to be sent
 );
 
-CREATE TABLE "sotf_access" (
--- memory to calculate unique access to prg
+CREATE TABLE "sotf_unique_access" (
+-- memory to calculate unique access to prg XXX
 	"id" serial PRIMARY KEY,
 	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
+	"sub_id" varchar(12),		-- id of file within programme
 	"ip" varchar(100),			-- host or IP
 	"auth_key" varchar(50),		-- anti-abuse thingie
-	"action" char(1),				-- type of access
-	"when" timestamptz			-- time of access
+	"action" bit varying(6)				-- type of access
 );
 
 CREATE TABLE "sotf_user_progs" (
@@ -504,8 +533,6 @@ CREATE TABLE "sotf_user_progs" (
 	"comments" text,					-- editor's private comments
 	"flags" varchar(20)				-- various flags (e.g. important, to-do)
 );
-
-CREATE SEQUENCE "sotf_user_progs_seq";
 
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'admin');
 SELECT nextval('sotf_permissions_id_seq');
@@ -520,3 +547,8 @@ SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('6', 'authorize');
 SELECT nextval('sotf_permissions_id_seq');
 
+-- alter table sotf_stats rename to sotf_stats_old
+-- insert into sotf_stats (prog_id, station_id, year, week, month, day, listens, downloads, visits) select prog_id, station_id, year, week, month, day, listens, downloads, visits from sotf_stats_old
+
+-- select count(*) FROM (select distinct on (language, published) language, published from sotf_programmes) AS foo;
+-- SELECT a FROM test WHERE SUBSTRING(a FROM 1 FOR 1)=B'1';

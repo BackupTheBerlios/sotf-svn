@@ -56,16 +56,15 @@ class sotf_Object {
   }
 
   function save() {
-	 global $db;
-	 if($this->id) {
-		$exists = $db->getOne("SELECT count(*) FROM " . $this->tablename . " WHERE " . $this->idKey . "='" . $this->id . "' ");
-		if($exists) {
+		//global $db;
+		//if($this->id) {
+		//$exists = $db->getOne("SELECT count(*) FROM " . $this->tablename . " WHERE " . $this->idKey . "='" . $this->id . "' ");
+		if($this->exists()) {
 		  $this->update();
-		  return;
+		} else {
+			$this->create();
 		}
-	 }
-	 $this->create();
-  }
+	}
 
   /** updates fields in 'data' except binary fields */
   function update() {

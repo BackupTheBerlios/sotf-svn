@@ -13,6 +13,7 @@ define("TRACKNAME_LENGTH", 32);
 
 require_once($config['classdir'] . '/Tar.php');
 require_once($config['classdir'] . '/unpackXML.class.php');
+require_once($config['classdir'] . '/sotf_Statistics.class.php');
 
 class sotf_Programme extends sotf_ComplexNodeObject {
   
@@ -213,62 +214,41 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		return false;
 	} // end func setIcon
 
+	/************************************************
+	 *      STATISTICS AND FEEDBACK
+	 ************************************************/
 
-  function deleteStats() {
-	 global $db;
-
-	 $id = $this->id;
-	 $db->query("DELETE FROM sotf_stats WHERE id='$id'");
+	/** When you have to send forward stats data to the home node */
+  function createForwardObject($type, $data) {
+	 $obj = new sotf_Object("sotf_to_forward");
+	 $obj->setAll(array('prog_id' => $this->id,
+							  'node_id' => $this->getNodeId(),
+							  'type' => $type,
+							  'date' => serialize($data)));
+	 $obj->create();
   }
 
-  function addStat($filename, $type) {
-	global $db;
+  function addStat($fileId, $type) {
+	 global $db;
 
-	 // TODO: if remote program, send this by XML-RPC!!
 	 if($type != 'listens' && $type != 'downloads' && $type != 'visits')
 		raiseError("addStat: type should be 'listens' or 'downloads' or 'visits'");
-	 $now = getdate();
-	 $year = $now['year'];
-	 $month = $now['mon'];
-	 $day = $now['mday'];
-	 $week = date('W');
-	 $track = $id->trackId;
-	 $where = " WHERE prog_id='$this->id' AND year='$year' AND month='$month' AND day='$day' AND week='$week'";
-	 $id = $db->getOne("SELECT id FROM sotf_stats $where");
-	 if($id) {
-		$obj = new sotf_NodeObject("sotf_stats", $id);
-		$obj->set($type, $obj->get($type)+1);
-		$obj->update();
+
+	 if($this->isLocal()) {
+		sotf_Statistics::addStat($this->id, $fileId, $type);
 	 } else {
-		$obj = new sotf_NodeObject("sotf_stats");
-		$obj->setAll(array('prog_id' => $this->id,
-								 'station_id' => $this->get('station_id'),
-								 'year' => $year,
-								 'month' => $month,
-								 'week' => $week,
-								 'day' => $day,
-								 $type => 1));
-		$obj->create();
+		// if remote program, send this by XML-RPC!!
+		$data = array('prog_id' => $this->id,
+						  'date' => getdate(),
+						  'ip' => getHostName(),
+						  'type' => $type,
+						  'file' => $filename);
+		$this->createForwardObject('stat', $data);
 	 }
   }
 
   function getStats() {
-	global $db;
-
-	 $idStr = $this->id;
-	 $result = $db->getRow("SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads FROM sotf_stats WHERE prog_id='$idStr'");
-	 if(DB::isError($result))
-		return array('visits'=>0, 'listens'=> 0, 'downloads' => 0);
-	 else {
-		debug("STATS", $result);
-		return $result;
-	 }
-  }
-
-  /** static */
-  function getAllStats() {
-	 global $db;
-	 return $db->getRow("SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads FROM sotf_stats");
+	 return sotf_Statistics::getGlobalStats($this->id);
   }
 
   /** static */
@@ -281,19 +261,16 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	global $db;
 
 	 $id = $this->id;
-	 $result = $db->getAll("SELECT * FROM sotf_refs WHERE id='$id'" );
+	 $result = $db->getAll("SELECT * FROM sotf_prog_refs WHERE id='$id'" );
 	 if(DB::isError($result))
 		return array();
 	 else
 		return $result;
   }
 
-  function deleteRefs() {
-	global $db;
-
-	 $id = $this->id;
-	 $db->query("DELETE FROM sotf_refs WHERE id='$id'");
-  }
+  /************************************************
+   *      
+   ************************************************/
 
   /** get news for index page */
   function getNewProgrammes($fromDay, $maxItems) {
@@ -496,21 +473,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 return true;
   }
 
-  function sortTopicsByName($a, $b) {
-	 return strcmp($a['name'], $b['name']);
-  }
-
-  function getTopics() {
-	global $repository;
- 
-	 $topics = $this->getAssociatedObjects('sotf_prog_topics', 'id');
-	 for($i=0; $i<count($topics); $i++) {
-		$topics[$i]['name'] = $repository->getTopicName($topics[$i]['topic_id']);
-	 }
-	 usort($topics, array('sotf_Programme', 'sortTopicsByName'));
-	 return $topics;
-  }
-
   /**
 	* @method static countAll
 	* @return count of available objects
@@ -532,8 +494,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		" LEFT JOIN sotf_series se ON p.series_id=se.id".
 		" LEFT JOIN sotf_prog_rating rating ON p.id=rating.prog_id".
 		" LEFT JOIN sotf_user_progs flags ON p.id=flags.prog_id AND flags.user_id='$user->id'".
-		" LEFT JOIN (SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads, prog_id".
-		" FROM sotf_stats GROUP BY prog_id) AS stats ON stats.prog_id=p.id, sotf_user_permissions u".
+		//" LEFT JOIN (SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads, prog_id".
+		//" FROM sotf_prog_stats GROUP BY prog_id) AS stats ON stats.prog_id=p.id " .
+      ", sotf_user_permissions u".
 		" WHERE u.user_id = '$user->id' AND u.object_id=p.id";
 	 if ($series != "allseries") $sql .= " AND p.series_id='$series'";
 	 if ($filter == "all") ;
@@ -550,6 +513,30 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 }*/
 	 return $plist;
   }
+
+  /************************************************
+   *      TOPICS
+   ************************************************/
+
+  function sortTopicsByName($a, $b) {
+	 return strcmp($a['name'], $b['name']);
+  }
+
+  function getTopics() {
+	global $repository;
+ 
+	 $topics = $this->getAssociatedObjects('sotf_prog_topics', 'id');
+	 for($i=0; $i<count($topics); $i++) {
+		$topics[$i]['name'] = $repository->getTopicName($topics[$i]['topic_id']);
+	 }
+	 usort($topics, array('sotf_Programme', 'sortTopicsByName'));
+	 return $topics;
+  }
+
+
+  /************************************************
+   *      XBMF import/export
+   ************************************************/
 
   /** private: strips newlines, truncates, etc. metadata fields in XBMF */
   function normalizeText($text, $length=0) {

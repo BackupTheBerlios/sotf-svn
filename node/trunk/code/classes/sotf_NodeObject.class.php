@@ -102,6 +102,17 @@ class sotf_NodeObject extends sotf_Object {
 	 return $db->getOne("SELECT count(*) FROM sotf_node_objects WHERE node_id = '$nodeId'");
   }
 
+  function loadInternalData() {
+	 global $db;
+	 $this->internalData = $db->getRow("SELECT * FROM sotf_node_objects WHERE id='$this->id' ");
+  }
+
+  function getNodeId() {
+	 if(count($this->internalData)==0)
+		$this->loadInternalData();
+	 return  $this->internalData['node_id'];
+  }
+
   /************************************************
 	*		 REPLICATION STATUS MANAGEMENT
 	************************************************/

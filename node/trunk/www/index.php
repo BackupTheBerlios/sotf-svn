@@ -23,7 +23,7 @@ $data['numStations'] = sotf_Station::countAll();
 $data['numProgs'] = sotf_Programme::countAll();
 $data['numProgs'] = sotf_Programme::countAll();
 
-$allStats = sotf_Programme::getAllStats();
+$allStats = sotf_Statistics::networkStats();
 $allStats['l_and_d'] = $allStats['listens'] + $allStats['downloads'];
 $data['access'] = $allStats;
 

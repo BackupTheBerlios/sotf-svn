@@ -38,6 +38,18 @@ class sotf_Node extends sotf_NodeObject {
 		return sotf_Node::getNodeById($config['nodeId']);
 	}
 
+	/** static */
+	function redirectToHomeNode($obj) {
+	  // have to send user to home node of this programme
+	  $node = sotf_Node::getNodeById($obj->getNodeId());
+	  if(!$node) {
+		 raiseError("Could not find home node for programme: " . $prg->id);
+	  }
+	  $url = $node->get('url') . getenv('QUERY_STRING');
+	  $page->redirect($url);
+	  exit;
+	}
+
 	/** returns a list of all such objects: can be slow!!
 	 * @method static listAll
 	 */
