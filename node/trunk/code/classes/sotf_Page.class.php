@@ -83,10 +83,10 @@ class sotf_Page
 	* @return	string	The authorization key
 	*/
 	function getAuthKey() {
-	  if($this->loggedIn()) {
-		 $this->errors[] = "logged in user needs no authKey";
-		 return false;
-	  }
+	  //if($this->loggedIn()) {
+		// $this->errors[] = "logged in user needs no authKey";
+		// return false;
+	  //}
 	  if($this->authKey)
 		 return $this->authKey;
 	  $c = base64_decode($_COOKIE[$this->authKeyName]);

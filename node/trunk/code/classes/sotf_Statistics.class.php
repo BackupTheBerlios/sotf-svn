@@ -102,7 +102,14 @@ class sotf_Statistics extends sotf_Object {
     // would be too often: 
 	 if($update)
 		$obj->updateStats(false);
-    $obj->save();
+	 if($obj->exists()) {
+		$obj->update();
+	 } else {
+		$obj->create();
+		debug("obj1", $obj);
+		$obj->find(); // to get the id
+		debug("obj2", $obj);
+	 }
 	 if(!$update)
 		sotf_Object::addToUpdate('sotf_stats', $obj->id);
 	 return $obj;
