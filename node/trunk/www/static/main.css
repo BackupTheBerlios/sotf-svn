@@ -1,3 +1,6 @@
+BODY { 
+  FONT-SIZE: 13px;
+}
 
 .status {
 	background-color: #FFAAAA; FONT-WEIGHT: bold; FONT-SIZE: 13px; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
@@ -75,8 +78,6 @@ TD.topic_titlehead {
   FONT-WEIGHT: bold; background: #F0B989;
 }
 
-
-
 TABLE.login {
   background: #EFF4FE;
 }
@@ -95,6 +96,11 @@ A.goto_object {
 
 A.playlist {
   FONT-SIZE: 12px;
+}
+
+A.topicitem {
+  FONT-SIZE: 12px;
+  TEXT-DECORATION: none;
 }
 
 INPUT.action {

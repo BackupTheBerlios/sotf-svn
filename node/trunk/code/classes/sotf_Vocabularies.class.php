@@ -107,6 +107,10 @@ class sotf_Vocabularies {
   function updateTopicCounts() {
     // calculate counts by topic
 		$this->db->begin(true);
+		$disappeared = $this->db->getCol("SELECT t.id FROM sotf_prog_topics t LEFT JOIN sotf_programmes p ON t.prog_id=p.id WHERE p.id IS NULL");
+		foreach($disappeared as $did) {
+			$this->db->query("DELETE FROM sotf_prog_topics WHERE id='$did'");
+		}
     $this->db->query("DROP TABLE sotf_topics_counter");
     $this->db->query("SELECT setval('sotf_topics_counter_id_seq', 1, false)");
     $this->db->query("SELECT nextval('sotf_topics_counter_id_seq') AS id, t.id AS topic_id, count(p.id) AS number, NULL::int AS total INTO sotf_topics_counter FROM sotf_topic_tree_defs t LEFT JOIN sotf_prog_topics p ON t.id = p.topic_id GROUP BY t.id");

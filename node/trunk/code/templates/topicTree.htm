@@ -1,17 +1,7 @@
 {config_load file="$LANG.conf" section="$ACTION"}
   <HTML> 
     <HEAD> 
-<link href="{$IMAGE_URL}/main.css" rel="stylesheet" type="text/css">
-{literal}
-<style type="text/css">
-<!--
-        .child {font-family: verdana, helvetica, arial, geneva, sans-serif; font-size: 8pt; color: #333399; text-decoration: none}
-        .item, .item:active, .item:hover { color: #000000; text-decoration: none}
-        .topic {font-size:small;}
-        .tblItem:hover {color: #FF0000; text-decoration: underline}
-        //-->
-</style>
-{/literal}
+    <link href="{$IMAGE_URL}/main.css" rel="stylesheet" type="text/css">
     </HEAD> 
     <BODY bgcolor="#CEDEFF" >
 
@@ -48,13 +38,13 @@
 
               {if $TREE[i].level gt $TREE[i.index_prev].level}<ul compact>{/if}
               {if $TREE[i].level lt $TREE[i.index_prev].level}</ul>{/if}
-              <li class="topic">
+              <li>
                 <nobr><a name="{$TREE[i].id}"></a>
                   {if $ADD_MODE}
                     {if $TREE[i].topic_name != ""}{$TREE[i].topic_name}{else}{$TREE[i].name}{/if}
                     <a href="#" onclick="javascript:setvalue('addtree','{$prgid}','{$TREE[i].id}');window.opener.location.href='{$OPENER_URL}&t='+new Date().getTime()+'#topics';return false;">{#add#}</a>
                   {else}
-                    <a class="item" target="search" href="topicSearch.php?ID={$TREE[i].id}">
+                    <a class="topicitem" target="search" href="topicSearch.php?ID={$TREE[i].id}">
                     {if $TREE[i].topic_name != ""}{$TREE[i].topic_name}{else}{$TREE[i].name}{/if}
                     ({if $TREE[i].total}{$TREE[i].total}{else}{$TREE[i].number}{/if})
                     </a>
