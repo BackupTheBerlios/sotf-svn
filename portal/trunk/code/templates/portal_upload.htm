@@ -4,15 +4,20 @@
 <title>Upload page</title>
 </head>
 <body bgcolor="#{$portal.bg2}">
-
 <form action="{$rootdir}/portal_upload.php/{$portal_name}" method="post">
-{#upload_password#}<input type="password" name="portal_password"><br>
-name<input type="text" name="name" value="{$name}"><br>
-type<input type="text" name="type" value="{$type}"><br>
-data<input type="text" name="data" value="{$data}"><br>
-<input type="submit" name="ok" value="{#ok#}">
+
+{if $error == "OK"}
+	{if $type == "query"}{#query_uploaded#}{/if}
+	<br><br><input type="button" value="{#close_window#}" onclick="javascript:window.close();">
+{else}
+	{if $error}<b>{$error}</b><br>{/if}
+	{#upload_password#}<input type="password" name="portal_password"><br>
+	{#name#}<input type="text" name="name" value="{$name}"><br>
+	<input type="hidden" name="type" value="{$type}"><br>
+	<input type="hidden" name="data" value="{$data}"><br>
+	<input type="submit" name="submit" value="{#ok#}">
+{/if}
 
 </form>
-
 </body>
 </html>

@@ -8,12 +8,16 @@ $type = sotf_Utils::getParameter('type');
 $data = sotf_Utils::getParameter('data');
 $name = sotf_Utils::getParameter('name');
 $portal_password = sotf_Utils::getParameter('portal_password');
+$submit = sotf_Utils::getParameter('submit');
 
 $d = array();
 if ($type == "query") {$d['query'] = $data; $d['name'] = $name;}
 	else $d = $data;
-$ok = $portal->uploadData($type, $d, $portal_password);
-//if ($ok) $page->redirect($rootdir."/closeAndRefresh.php");		//close window
+$result = $portal->uploadData($type, $d, $portal_password);
+//if ($result == "OK") $page->redirect($rootdir."/closeAndRefresh.php");		//close window
+//else
+
+if (isset($submit)) $smarty->assign("error", $result);						//error message in $result
 
 
 ////SMARTY

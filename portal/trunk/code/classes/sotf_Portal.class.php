@@ -641,19 +641,26 @@ class sotf_Portal
 
 	function uploadData($type, $data, $portal_password)		//for upload programmes and queries from the node
 	{
-		global $db;
-		if ($this->portal_password != $portal_password) return false;	//if password not right
+		global $db, $page;
+		if ($this->portal_password != $portal_password) return $page->getlocalized("wrong_password");	//if password not right
+		if (($data['name'] == "") OR ($data['query'] == "")) return $page->getlocalized("data_missing");	//if something is missing
+
 		if ($type == "query")
 		{
-			$sql="SELECT name FROM portal_queries WHERE portal_id = '$this->portal_id' AND name='".$data['name']."'";
+			$sql="SELECT query FROM portal_queries WHERE portal_id = '$this->portal_id' AND query='".$data['query']."'";
 			$result = $db->getOne($sql);
 			if ($result == NULL)		//if not exists
 			{
-				if (($data['name'] == "") OR ($data['query'] == "")) return false;	//if something is missing
-				$sql="INSERT INTO portal_queries(portal_id, query, name) values('$this->portal_id', '".$data['query']."', '".$data['name']."')";
-				$db->query($sql);
+				$sql="SELECT name FROM portal_queries WHERE portal_id = '$this->portal_id' AND name='".$data['name']."'";
+				$result = $db->getOne($sql);
+				if ($result == NULL)		//if not exists
+				{
+					$sql="INSERT INTO portal_queries(portal_id, query, name) values('$this->portal_id', '".$data['query']."', '".$data['name']."')";
+					$db->query($sql);
+				}
+				else return $page->getlocalized("name_exists");
 			}
-			else return false;
+			else return $page->getlocalized("query_exists");
 		}
 		elseif ($type == "prg")
 		{
@@ -670,9 +677,9 @@ class sotf_Portal
 		elseif ($type == "prglist")
 		{
 		}
-		else return false;		//if bad type given
+		else return $page->getlocalized("bad_type");		//if bad type given
 
-		return true;
+		return "OK";
 	}
 
 	function getPortals()
