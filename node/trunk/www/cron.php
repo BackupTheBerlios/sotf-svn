@@ -119,7 +119,7 @@ while($entry = $dir->read()) {
   if(is_dir($file))
     continue;
   //if (preg_match('/\.png$/', $entry) || preg_match('/\.m3u$/', $entry)) {
-  if(filemtime($file) < $clearTime) {
+  if(is_file($file) && filemtime($file) < $clearTime) {
     if(!unlink($file))
       logError("could not delete: $file");
   }

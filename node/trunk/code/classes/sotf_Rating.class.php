@@ -73,6 +73,7 @@ class sotf_Rating	 extends sotf_Object {
 		 $key = $data['auth_key'];
 		 if($key) {
 			$this->findAnon($data['prog_id'], $key);
+			$data['user_id'] = NULL;
 			if($this->exists()) {
 			  // change existing rating
 			  $id = $this->id;
@@ -120,7 +121,7 @@ class sotf_Rating	 extends sotf_Object {
 
 	function setRemoteRating($data) {
 	  global $repository;
-	  $obj = $repository->getObject($data['prog_id']);
+	  $obj = & $repository->getObject($data['prog_id']);
 	  if($obj) {
 		 $this->recordRating($data);
 		 sotf_Object::addToUpdate('ratingUpdate', $data['prog_id']);
