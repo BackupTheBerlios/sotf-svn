@@ -7,6 +7,9 @@ Change Log was started from build 12, which has taken place at 1700 on the 7th o
 Autologin cross-domain cookie bug fixed. New series and new programme time rounding 
 algorythm introduced.
 
+Series owner can now edit his programmes - series data from the calendar page. This privilige
+has been available fro station managers only. Usabilty rules! :)
+
 
 ************************************************************************************************
  05.12.2002
