@@ -135,10 +135,11 @@ CREATE SEQUENCE "sotf_stations_seq";
 CREATE TABLE "sotf_stations" (
 -- REPLICATED 
 "id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-"name" varchar(32) NOT NULL,
+"id2" varchar(50),                    -- currently not used
+"name" varchar(60) NOT NULL,
 "description" text,
 "url" varchar(100),										-- URL for radio station website, if any
-"language" varchar(40),									-- 3-letter codes separeted by comma
+"language" varchar(40),               -- 3-letter codes separeted by comma
 "entry_date" date DEFAULT CURRENT_DATE
 );
 
@@ -198,7 +199,7 @@ CREATE TABLE "sotf_programmes" (
 -- used to store generic and searchable metadata about radio programmes 
 -- REPLICATED
 "id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-"guid" varchar(76) UNIQUE NOT NULL,							-- globally unique id
+"guid" varchar(76) UNIQUE NOT NULL,							-- not used, obsolete!
 "station_id" varchar(12) NOT NULL,										-- dc.publisher ??
 "series_id" varchar(12),													-- this prog is part of series
 "track" varchar(32) NOT NULL,									-- part of id: unique within station and entry_date

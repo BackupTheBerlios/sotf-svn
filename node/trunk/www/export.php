@@ -25,7 +25,10 @@ checkPerm($prg, 'change');
 
 if ($type == 1) {
   // send XBMF metadata
-  $md = $prg->getXBMFMetadata();
+
+  //$md = $prg->getXBMFMetadata();
+  $meta = new sotf_Metadata($prg);
+  $md = $meta->getMetadataForXBMF();
 
   header("Content-type: application/xml\n");
   //header("Content-type: text/plain\n");

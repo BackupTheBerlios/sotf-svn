@@ -29,13 +29,9 @@
     </tr>
   </FORM>
   <tr align="center" bgcolor="#FFFFFF"> 
-    <td colspan="2">{if $LANG == "de"} 
-        <p>Wenn Sie noch keinen Benutzernamen haben, k&ouml;nnen 
-        Sie hier einen <a href="{$REGISTER_URL}">Neuen Benutzer anlegen</a>.</p>
-    {else}
-      <p>If you don't have a username, you can <a href="{$REGISTER_URL}">Register</a> 
-        here.</p> 
-    {/if}</td>
+    <td colspan="2">
+      <p>{#register_here#}</p> 
+    </td>
   </tr>
 </table>
 </div>

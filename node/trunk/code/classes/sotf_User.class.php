@@ -131,6 +131,11 @@ class sotf_User {
 		 return $page->getlocalized("invalid_username");
 	  }
 	  debug("USERDB", "registering user: ". $name);
+	  $name1 = sotf_Utils::makeValidName($name, 32);
+	  if ($name1 != $name) {
+		 //$page->addStatusMsg('illegal_name');
+		 return $page->getlocalized("illegal_name");
+	  }
 	  $fields['password'] = sotf_Utils::magicQuotes($password);
 	  $fields['username'] = sotf_Utils::magicQuotes($name);
 	  $fields['language'] = sotf_Utils::magicQuotes($language);

@@ -80,10 +80,9 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	/** the directory where contents are stored. */
 	function getDir() {
 	  global $repository;
-	  $name = $this->get("name");
-	  if(empty($name))
-		 raiseError("this station has no name!");
-	  return $repository->rootdir . '/' . $name;
+	  if(empty($this->id))
+		 raiseError("this station has no id!");
+	  return $repository->rootdir . '/' . $this->id;
 	}
 
 	/** returns the directory where metadata/jingles/icons are stored */

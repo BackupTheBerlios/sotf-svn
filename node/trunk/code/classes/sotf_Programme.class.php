@@ -16,6 +16,7 @@ require_once($config['classdir'] . '/unpackXML.class.php');
 //require_once($config['classdir'] . '/packXML.class.php');
 require_once($config['classdir'] . '/sotf_Statistics.class.php');
 require_once($config['getid3dir'] . "/getid3.putid3.php");
+require_once($config['classdir'] . '/sotf_Metadata.class.php');
 
 class sotf_Programme extends sotf_ComplexNodeObject {
   
@@ -52,35 +53,28 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 }
   }
   
-  function generateGUID() {
-	 $this->set('guid', $this->stationName . GUID_DELIMITER . $this->get('entry_date') . GUID_DELIMITER . $this->get('track'));
-  }
-
-  /** finds the next available track id within the station ($track may be empty) */
+  /** finds the next available track id within that date ($track may be empty) */
   function getNextAvailableTrackId() {
 	global $db;
-
 		$track = $this->get('track'); 
 		if(!$track)
 		  $track = '1';
 		else
 		  $track = substr($track, 0, TRACKNAME_LENGTH);
 		$this->set('track', $track);
-		$this->generateGUID();
 		$count = 0;
 		while($count < 50) {
-		  $guid = $this->get('guid');
-		  $res = $db->getOne("SELECT count(*) FROM sotf_programmes WHERE guid='$guid'");
-		  if(DB::isError($res))
-			 raiseError($res);
-		  if($res==0)
+		  $dir = $this->getDir();
+		  if(!is_dir($dir)) {
+			 $this->checkDirs();
 			 return;
+		  }
 		  $track = $this->get('track'); 
 		  $track++;
 		  $this->set('track', $track);
-		  $this->generateGUID();
 		  $count++;
 		}
+		raiseError("Could not create unique dir for prog!");
   }
 
   function create($stationOrSeriesId, $track='') {
@@ -107,13 +101,15 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		raiseError("station does not exist");
 	 if(empty($track))
 		$track = 'prg';
-	 $this->stationName = $stationName;
+	 $this->getStation();
 	 $this->set('entry_date', date('Y-m-d'));
 	 $this->set('modify_date', date('Y-m-d'));
 	 $this->set('track', sotf_Utils::makeValidName($track, 32));
 	 $this->getNextAvailableTrackId();
-	 if(parent::create()) { // this will also create the required directories via setMetadataFile !!
-		debug("created new programme", $this->get['guid']);
+	 // guid is obsolete, but anyway:
+	 $this->set('guid', $this->station->id . GUID_DELIMITER . $this->get('entry_date') . GUID_DELIMITER . $this->get('track'));
+	 if(parent::create()) {
+		debug("created new programme", $this->id);
 		$db->commit();
 		return true;
 	 }
@@ -300,7 +296,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 
 	 // save XBMF
 	 if(is_writable($this->getMetaDir())) {
-		$xbmf = $this->getXBMFMetadata();
+		$meta = new sotf_Metadata($this);
+		$xbmf = $meta->getMetadataForXBMF();
+		//$xbmf = $this->getXBMFMetadata();
 		$file = $this->getMetaDir() . '/metadata.xml';
 		sotf_Utils::save($file, $xbmf);
 	 }

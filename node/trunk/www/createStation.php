@@ -31,11 +31,13 @@ if ($new) {
   }
 
   $station_old = $station;
+  /*
   $station = sotf_Utils::makeValidName($station, 32);
   if ($station != $station_old) {
 			$page->addStatusMsg('illegal_name');
       $problem = 1;
   }
+  */
 
   if(sotf_Station::isNameInUse($station)) {
     $page->addStatusMsg('name_in_use');

@@ -35,47 +35,55 @@ function exportPrg(obj, prg) {
 </table>
 <table class="tabarea">
 <tr> 
-  <td class="tabarea">
-        <form>
-        <table width="100%">
-          <tr valign="top">
-            <td align="center">
-              <a target="ftp" href="{$USERFTPURL}">{#user_ftp_access#}</a>
-            </td>
-            <td align="center">
-              <input class="action" type="button" name="b1" value="{#manage_files#}" onClick="popup('manageFiles.php','{#managefiles#}',500,500,true)" />
-             </td>
-             <td align="center">
-                <input type="submit" name="refresh" value="{#refresh#}"></input>
-             </td>
+	<td class="tabarea">
+	  <table width="100%">
+	    <tr valign="top" class="list1">
+	      <td>
+		{#create_new_expl1#}
+	      </td>
+	    </tr>
+	    <tr class="list2">
+	      <td>
+		<a target="ftp" href="{$USERFTPURL}">{#user_ftp_access#}</a>, &nbsp;&nbsp;&nbsp;
+		<a href="javascript:popup('manageFiles.php','{#managefiles#}',500,500,true)">{#manage_files#}</a>
+	      </td>
+	    </tr>
+	    <tr class="list1">
+	      <td>
+		{#create_new_expl2#}
+	      </td>
+	    </tr>
+	    <tr class="list2">
+	      <td>
+		{if $USER_AUDIO_FILES}
+
+		<form method="post">
+
+		  <!-- {#pending_audio#}: -->
+
+		  <select name="fname">
+		    {html_options values=$USER_AUDIO_FILES|escape output=$USER_AUDIO_FILES selected=$FNAME}
+		  </select>
+
+		  { if count($STATIONS)==1 }
+		  
+		  <input type="hidden" name="station" value="{$STATIONS[0].id}"></input>
+		  
+		  { else }
+		  <select name="station">
+		    {foreach from=$STATIONS item=station}
+		    <option value="{$station.id}" {if $station.id == $SELECTED_STATION}SELECTED=1{/if} >{$station.name}</option>
+		  {/foreach}
+		</select>
+		  {/if}
+		  <input type="submit" name="addprog" value="{#add_programme#}"></input>
+		  <input type="submit" name="refresh" value="{#refresh#}"></input>
+		</form>
+		{/if}
+
+	      </td>
           </tr>
         </table>
-        </form>
-
-        {if $USER_AUDIO_FILES}
-
-        <form method="post">
-
-          {#pending_audio#}: 
-
-          <select name="fname">
-            {html_options values=$USER_AUDIO_FILES|escape output=$USER_AUDIO_FILES selected=$FNAME}
-          </select>
-
-          { if count($STATIONS)==1 }
-          
-          <input type="hidden" name="station" value="{$STATIONS[0].id}"></input>
-          
-          { else }
-          <select name="station">
-            {foreach from=$STATIONS item=station}
-            <option value="{$station.id}" {if $station.id == $SELECTED_STATION}SELECTED=1{/if} >{$station.name}</option>
-            {/foreach}
-          </select>
-          {/if}
-          <input type="submit" name="addprog" value="{#add_programme#}"></input>
-        </form>
-        {/if}
 
 </td></tr>
 </table>

@@ -100,6 +100,7 @@ no_permission = Sie würden Zugriffsrecht %1 brauchen, umd das zu tun!
 conversion_failed = Audio-Konvertierung fehlgeschlagen!
 operation_for_local_objects_only = Diese Operation ist nur fŸr lokale Objekte erlaubt!
 no_such_object = Objekt mit dieser ID kann nich aufgefunden werden
+illegal_name = Der Sendername enthält nicht erlaubte Zeichen.
 
 confirm_unsaved = Bitte sichern Sie zuerst. Wollen Sie die Änderungen verwerfen?
 
@@ -240,7 +241,6 @@ no_permission = Keine Berechtigung, um einen Sender zu erzeugen.
 userlist = Benutzerliste
 select_manager = Bitte wählen sie einen Benutzer als Sender-Manager.
 name_in_use = Bereits ein Sender mit dem selben Namen vorhanden.
-illegal_name = Der Sendername enthält nicht erlaubte Zeichen.
 station_created = Neuer Sender erfolgreich erzeugt
 
 [editStation]
@@ -540,7 +540,9 @@ add_prg = Programm hinzufügen
 
 [editor]
 will_expire = Sie haben %1 Programm(e), die in %2 Tagen ablaufen!
-manage_files = Eigene Dateien verwalten
+create_new_expl1 = 1. Um eine neue Radiosendung zu erstellen, laden Sie die Audiodaten mit FTP oder HTTP in Ihren Arbeitsbereich.
+create_new_expl2 = 2. Wenn Sie bereits Audiodaten in Ihrem Arbeitsbereich haben, wählen Sie heir die Datei um daraus eine Sendung zu erzeugen
+manage_files = Dateiverwaltung
 managefiles = Dateiverwaltung
 add_programme = Als neues Programm hinzufügen
 user_ftp_access = FTP-Zugriff auf die eigenen Dateien
@@ -675,6 +677,7 @@ please_wait = Bitte Warten...
 [login]
 missing_parameters = Bitte Benutzername und Passwort eingeben
 invalid_login = Ungültiger Benutzername / Passwort!
+register_here = Wenn Sie noch keinen Benutzernamen haben, können Sie hier einen <a href="register.php">Neuen Benutzer anlegen</a>.
 
 [register]
 username_in_use = Benutzername bereits vorhanden

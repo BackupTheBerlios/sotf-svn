@@ -95,8 +95,9 @@ class sotf_Repository {
       $table = array_search($tc, $this->tableCodes);
 			if($table)
 				$obj = new sotf_NodeObject($table, $objectId, $data);
-			else
+			else {
 				raiseError('Invalid id, stop this', $objectId);
+			}
     }
     if(!$obj->exists()) {
 		debug("Object does not exist",$objectId);
@@ -116,6 +117,10 @@ class sotf_Repository {
 		$this->putInCache($obj);
 	 return $obj;
   }
+
+	function looksLikeId($id) {
+		return preg_match('/^[0-9]{3}[a-z]{2}[0-9]+$/', $id);
+	}
 
   function getNodeId($objectId) {
 	 if(!preg_match('/\d{3}[a-z]{2}\d+/', $objectId))
@@ -173,7 +178,7 @@ class sotf_Repository {
       $obj->set('url', $event['url']);
       $obj->find();
       if(!$obj->exists()) {
-        logError("unknown prog ref arrives: " . $event['url']);
+        debug("unknown prog ref arrives: "  . $event['value'] . ' - ' . $event['url']);
         $prg = &$this->getObject($obj->get('prog_id'));
 		  if(!$prg)
 			 break;
@@ -190,7 +195,8 @@ class sotf_Repository {
       $obj->set('url', $event['url']);
       $obj->find();
       if(!$obj->exists()) {
-        logError("unknown prog ref arrives: " . $event['url']);
+				// TODO: how can this happen? It happens too many times!
+        debug("unknown prog ref arrives: " . $event['value']['prog_id'] . ' - ' . $event['url']);
         $prg = &$this->getObject($obj->get('prog_id'));
  		  if(!$prg)
 			 break;
@@ -235,7 +241,7 @@ class sotf_Repository {
       $obj->set('url', $event['url']);
       $obj->find();
       if(!$obj->exists()) {
-        logError("unknown prog ref arrives: " . $event['url']);
+        debug("unknown prog ref arrives: " . $event['url']);
         $prg = &$this->getObject($obj->get('prog_id'));
 		  if(!$prg)
 			 break;
@@ -266,7 +272,7 @@ class sotf_Repository {
       $obj->set('url', $event['url']);
       $obj->find();
       if(!$obj->exists()) {
-        logError("unknown prog ref arrives: " . $event['url']);
+        logError("unknown prog ref arrives: " . $event['value']['prog_id'] . ' - ' . $event['url']);
         $prg = &$this->getObject($obj->get('prog_id'));
         $obj->set('station_id', $prg->get('station_id'));
         $obj->set('start_date', $event['timestamp']);

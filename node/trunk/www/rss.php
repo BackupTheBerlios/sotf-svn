@@ -1,11 +1,11 @@
 <?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
 
-/*  
- * $Id$
- * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Kézdi 
- *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
- */
+  /*  
+	* $Id$
+	* Created for the StreamOnTheFly project (IST-2001-32226)
+	* Authors: András Micsik, Máté Pataki, Tamás Kézdi 
+	*          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+	*/
 
 define('ITEMS_IN_RSS', 10);
 
@@ -15,7 +15,7 @@ require_once($config['classdir'] . "/rss_writer_class.php");
 require_once($config['classdir'] . "/sotf_AdvSearch.class.php");
 
 $prgId = sotf_Utils::getParameter('id');
-$stationName = sotf_Utils::getParameter('station');
+$stationId = sotf_Utils::getParameter('station');
 $seriesId = sotf_Utils::getParameter('series');
 $userName = sotf_Utils::getParameter('user');
 $queryName = sotf_Utils::getParameter('qname');
@@ -128,9 +128,9 @@ if($prgId) {
   // add contributors as item
   $properties=array();
   /*
-  $smarty->assign('ROLES', $prg->getRoles());
-  $text = $smarty->fetch('rssContributors.htm');
-  $properties["description"] = $text;
+	$smarty->assign('ROLES', $prg->getRoles());
+	$text = $smarty->fetch('rssContributors.htm');
+	$properties["description"] = $text;
   */
   $text = '<br clear="all" />';
   foreach($prg->getRoles() as $role) {
@@ -190,270 +190,276 @@ if($prgId) {
 
   $db->commit();
 } elseif($seriesId) {
+  
   //******************************************************
-  //
-  //   SERIES
-  //
-  //******************************************************
-
-  // send list of new progs in series
-  $series = $repository->getObject($seriesId);
-  if(!$series)
-	 raiseError("no such series: $seriesId");
-
-  // define channel
-  $properties=array();
-  $properties["description"] = $page->getlocalized('new_programmes'); //"New programmes at " . $series->get('title');
-  $properties["link"]=$config['rootUrl'] . "/showSeries.php/" . $series->id;
-  $properties["title"]= $series->get('title');
-  $properties["dc:language"]= $series->get2LetterLanguageCode();
-  $properties["dc:date"]= getW3CDate();
-  $rss_writer_object->addchannel($properties);
-
-  // get and cache series icon
-  $seriesData = $series->getAllWithIcon();
-  if($seriesData['icon']) {
-	 // define icon for series
+		//
+		//   SERIES
+		//
+		//******************************************************
+		
+		// send list of new progs in series
+		$series = $repository->getObject($seriesId);
+	 if(!$series)
+		raiseError("no such series: $seriesId");
+	 
+	 // define channel
 	 $properties=array();
-	 $properties["url"]=$config['cacheUrl'] . "/$series->id.png";
+	 $properties["description"] = $page->getlocalized('new_programmes'); //"New programmes at " . $series->get('title');
 	 $properties["link"]=$config['rootUrl'] . "/showSeries.php/" . $series->id;
-	 $properties["title"]= $series->get('title') . " logo";
-	 //$properties["description"]="";
-	 $rss_writer_object->addimage($properties);
-  }
+	 $properties["title"]= $series->get('title');
+	 $properties["dc:language"]= $series->get2LetterLanguageCode();
+	 $properties["dc:date"]= getW3CDate();
+	 $rss_writer_object->addchannel($properties);
 
-  // add items
-  $newProgs = $series->listProgrammes(0, ITEMS_IN_RSS);
-  //debug("progs", $newProgs);
-  foreach($newProgs as $prog) {
-	 $properties=array();
-	 $properties["description"]= $prog->get('abstract');
-	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
-	 $properties["title"]= $prog->get('title');
-	 if($prog->get('production_date')) {
-		$properties["dc:date"]= toW3CDate($prog->get('production_date'));
+	 // get and cache series icon
+	 $seriesData = $series->getAllWithIcon();
+	 if($seriesData['icon']) {
+		// define icon for series
+		$properties=array();
+		$properties["url"]=$config['cacheUrl'] . "/$series->id.png";
+		$properties["link"]=$config['rootUrl'] . "/showSeries.php/" . $series->id;
+		$properties["title"]= $series->get('title') . " logo";
+		//$properties["description"]="";
+		$rss_writer_object->addimage($properties);
 	 }
-	 $rss_writer_object->additem($properties);
-  }
 
-  /*
-  // define search box
-  $properties=array();
-  // The name of the text input form field
-  $properties["name"]="pattern";
-  $properties["link"]=$config['rootUrl'] . "/search.php?language=any_language&station=$stationName";
-  $properties["title"]="Search for:";
-  $properties["description"]="Search in $stationName";
-  $rss_writer_object->addtextinput($properties);
-  */
-
-} elseif($stationName) {
-  //******************************************************
-  //
-  //   STATION
-  //
-  //******************************************************
-
-  // send list of new progs in station
-  $station = sotf_Station::getByName($stationName);
-  if(!$station)
-	 raiseError("no such station: $stationName");
-
-  // define channel
-  $properties=array();
-  $properties["description"] = $page->getlocalized('new_programmes'); //"New programmes at $stationName";
-  $properties["link"]=$config['rootUrl'] . "/showStation.php/" . $station->id;
-  $properties["title"] = "$stationName";
-  $properties["dc:language"]= $station->get2LetterLanguageCode();
-  $properties["dc:date"]= getW3CDate();
-  $rss_writer_object->addchannel($properties);
-
-  // get and cache station icon
-  $stationData = $station->getAllWithIcon();
-  if($stationData['icon']) {
-	 // define icon for station
-	 $properties=array();
-	 $properties["url"]=$config['cacheUrl'] . "/$station->id.png";
-	 $properties["link"]=$config['rootUrl'] . "/showStation.php/" . $station->id;
-	 $properties["title"]="$stationName logo";
-	 //$properties["description"]="";
-	 $rss_writer_object->addimage($properties);
-  }
-
-  // add items
-  $newProgs = $station->listProgrammes(0, ITEMS_IN_RSS);
-  //debug("progs", $newProgs);
-  foreach($newProgs as $prog) {
-	 $properties=array();
-	 $properties["description"]= $prog->get('abstract');
-	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
-	 $properties["title"]= $prog->get('title');
-	 if($prog->get('production_date')) {
-		$properties["dc:date"]= toW3CDate($prog->get('production_date'));
-	 }
-	 $rss_writer_object->additem($properties);
-  }
-
-  // define search box
-  $properties=array();
-  // The name of the text input form field
-  $properties["name"]="pattern";
-  $properties["link"]=$config['rootUrl'] . "/search.php?language=any_language&station=$stationName";
-  $properties["title"]="Search for:";
-  $properties["description"]= $page->getlocalizedWithParams('search_in_station', $stationName);
-  $rss_writer_object->addtextinput($properties);
-
-} elseif($userName) {
-  // user's saved query
-
-  $userid = sotf_User::getUserid($userName);
-  if(!$userid)
-	 raiseError("no such user: $userName");
-  $user2 = new sotf_User($userid);
-  $prefs2 = $user2->getPreferences();
-  debug('saved queries', $prefs2->savedQueries);
-  $query = $prefs2->getQuery($queryName);
-  if(!$query)
-	 raiseError("no such user query: $userName/$queryName");
-
-  // Define the properties of the channel.
-  $properties=array();
-  $properties["description"]="Results of the StreamOnTheFly query $userName/$queryName";
-  $properties["link"]=$config['rootUrl'] . "";
-  $properties["title"]="StreamOnTheFly query results";
-  //$properties["language"]="en";
-  $properties["dc:date"]= getW3CDate();
-  $rss_writer_object->addchannel($properties);
-	
-  //  If your channel has a logo, before adding any channel items, specify the logo details this way.
-  $properties=array();
-  $properties["url"]=$config['rootUrl'] . "/static/sotflogosmall.gif";
-  $properties["link"]=$config['rootUrl'] . "";
-  $properties["title"]="StreamOnTheFly logo";
-  $properties["description"]="World wide network of radio archives";
-  $rss_writer_object->addimage($properties);
-	
-  //  Then add your channel items one by one.
-  $advsearch = new sotf_AdvSearch();
-  $advsearch->Deserialize($query);
-  $query = $advsearch->GetSQLCommand();
-  $res = $db->limitQuery($query, 0, ITEMS_IN_RSS);
-  $hits = array();
-  while (DB_OK === $res->fetchInto($row)) {
-	 //$row['icon'] = sotf_Blob::cacheIcon($row['id']);
-	 $hits[] = $row;
-  }
-  foreach($hits as $prog) {
-	 $properties=array();
-	 $properties["description"]= $prog['abstract'];
-	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
-	 $properties["title"]= $prog['title'];
-	 $properties["dc:date"]= $prog['production_date'];
-	 $rss_writer_object->additem($properties);
-  }
-
-} elseif($query) {
-  // send results of advanced query given as string
-
-  // Define the properties of the channel.
-  $properties=array();
-  $properties["description"]="Results of StreamOnTheFly query";
-  $properties["link"]=$config['rootUrl'] . "";
-  $properties["title"]="StreamOnTheFly query results";
-  //$properties["language"]="en";
-  $properties["dc:date"]= getW3CDate();
-  $rss_writer_object->addchannel($properties);
-	
-  //  If your channel has a logo, before adding any channel items, specify the logo details this way.
-  $properties=array();
-  $properties["url"]=$config['rootUrl'] . "/static/sotflogosmall.gif";
-  $properties["link"]=$config['rootUrl'] . "";
-  $properties["title"]="StreamOnTheFly logo";
-  $properties["description"]="World wide network of radio archives";
-  $rss_writer_object->addimage($properties);
-	
-  //  Then add your channel items one by one.
-  $advsearch = new sotf_AdvSearch();
-  $advsearch->Deserialize($query);
-  $query = $advsearch->GetSQLCommand();
-  $res = $db->limitQuery($query, 0, ITEMS_IN_RSS);
-  $hits = array();
-  while (DB_OK === $res->fetchInto($row)) {
-	 //$row['icon'] = sotf_Blob::cacheIcon($row['id']);
-	 $hits[] = $row;
-  }
-  foreach($hits as $prog) {
-	 $properties=array();
-	 $properties["description"]= $prog['abstract'];
-	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
-	 $properties["title"]= $prog['title'];
-	 $properties["dc:date"]= $prog['production_date'];
-	 $rss_writer_object->additem($properties);
-  }
-
-} else {
-
-  // Define the properties of the channel.
-  $properties=array();
-  $properties["description"]="New programmes at StreamOnTheFly";
-  $properties["link"]=$config['rootUrl'] . "";
-  $properties["title"]="StreamOnTheFly";
-  //$properties["language"]="en";
-  $properties["dc:date"]= getW3CDate();
-  $rss_writer_object->addchannel($properties);
-	
-  //  If your channel has a logo, before adding any channel items, specify the logo details this way.
-  $properties=array();
-  $properties["url"]=$config['rootUrl'] . "/static/sotflogosmall.gif";
-  $properties["link"]=$config['rootUrl'] . "";
-  $properties["title"]="StreamOnTheFly logo";
-  $properties["description"]="World wide network of radio archives";
-  $rss_writer_object->addimage($properties);
-	
-  //  Then add your channel items one by one.
-  $newProgs = sotf_Programme::getNewProgrammes($fromDay, ITEMS_IN_RSS);
-  if(!empty($newProgs)) {
+	 // add items
+	 $newProgs = $series->listProgrammes(0, ITEMS_IN_RSS);
+	 //debug("progs", $newProgs);
 	 foreach($newProgs as $prog) {
 		$properties=array();
-		$properties["description"]= $prog['abstract'];
-		$properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
-		$properties["title"]= $prog['title'];
-		$properties["dc:date"]= $prog['production_date'];
+		$properties["description"]= $prog->get('abstract');
+		$properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
+		$properties["title"]= $prog->get('title');
+		if($prog->get('production_date')) {
+		  $properties["dc:date"]= toW3CDate($prog->get('production_date'));
+		}
 		$rss_writer_object->additem($properties);
 	 }
-  } else {
+
+	 /*
+	  // define search box
+	  $properties=array();
+	  // The name of the text input form field
+	  $properties["name"]="pattern";
+	  $properties["link"]=$config['rootUrl'] . "/search.php?language=any_language&station=$stationName";
+	  $properties["title"]="Search for:";
+	  $properties["description"]="Search in $stationName";
+	  $rss_writer_object->addtextinput($properties);
+	 */
+
+} elseif($stationId) {
+  //******************************************************
+		//
+		//   STATION
+		//
+		//******************************************************
+
+		// send list of new progs in station
+  
+		if($repository->looksLikeId($stationId)) {
+		  $station = $repository->getObject($stationId);
+		}
+	 if(!$station)
+		$station = sotf_Station::getByName($stationId);
+	 if(!$station)
+		raiseError("no such station: $stationName");
+
+	 // define channel
 	 $properties=array();
-	 $properties["description"]= '';
-	 $properties["link"]= $config['rootUrl'];
-	 $properties["title"]= "no new items";
-	 //$properties["dc:date"]= ;
-	 $rss_writer_object->additem($properties);
-  }
+		  $properties["description"] = $page->getlocalized('new_programmes'); //"New programmes at $stationName";
+		  $properties["link"]=$config['rootUrl'] . "/showStation.php/" . $station->id;
+		  $properties["title"] = "$stationName";
+		  $properties["dc:language"]= $station->get2LetterLanguageCode();
+		  $properties["dc:date"]= getW3CDate();
+		  $rss_writer_object->addchannel($properties);
 
-	//  If your channel has a search page, after adding the channel items, specify a search form details this way.
-	$properties=array();
-	// The name property if the name of the text input form field
-	$properties["name"]="pattern";
-	$properties["link"]=$config['rootUrl'] . "/search.php?language=any_language";
-	$properties["title"]="Search for:";
-	$properties["description"]="Search in StreamOnTheFly";
-	$rss_writer_object->addtextinput($properties);
+		  // get and cache station icon
+		  $stationData = $station->getAllWithIcon();
+		  if($stationData['icon']) {
+			 // define icon for station
+			 $properties=array();
+			 $properties["url"]=$config['cacheUrl'] . "/$station->id.png";
+			 $properties["link"]=$config['rootUrl'] . "/showStation.php/" . $station->id;
+			 $properties["title"]="$stationName logo";
+			 //$properties["description"]="";
+			 $rss_writer_object->addimage($properties);
+		  }
+
+		  // add items
+		  $newProgs = $station->listProgrammes(0, ITEMS_IN_RSS);
+		  //debug("progs", $newProgs);
+		  foreach($newProgs as $prog) {
+			 $properties=array();
+			 $properties["description"]= $prog->get('abstract');
+			 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
+			 $properties["title"]= $prog->get('title');
+			 if($prog->get('production_date')) {
+				$properties["dc:date"]= toW3CDate($prog->get('production_date'));
+			 }
+			 $rss_writer_object->additem($properties);
+		  }
+
+		  // define search box
+		  $properties=array();
+		  // The name of the text input form field
+		  $properties["name"]="pattern";
+		  $properties["link"]=$config['rootUrl'] . "/search.php?language=any_language&station=$stationName";
+		  $properties["title"]="Search for:";
+		  $properties["description"]= $page->getlocalizedWithParams('search_in_station', $stationName);
+		  $rss_writer_object->addtextinput($properties);
+
+		} elseif($userName) {
+		// user's saved query
+
+		$userid = sotf_User::getUserid($userName);
+		if(!$userid)
+		  raiseError("no such user: $userName");
+		$user2 = new sotf_User($userid);
+		$prefs2 = $user2->getPreferences();
+		debug('saved queries', $prefs2->savedQueries);
+		$query = $prefs2->getQuery($queryName);
+		if(!$query)
+		  raiseError("no such user query: $userName/$queryName");
+
+		// Define the properties of the channel.
+		$properties=array();
+		$properties["description"]="Results of the StreamOnTheFly query $userName/$queryName";
+		$properties["link"]=$config['rootUrl'] . "";
+		$properties["title"]="StreamOnTheFly query results";
+		//$properties["language"]="en";
+		$properties["dc:date"]= getW3CDate();
+		$rss_writer_object->addchannel($properties);
 	
-}
+		//  If your channel has a logo, before adding any channel items, specify the logo details this way.
+		$properties=array();
+		$properties["url"]=$config['rootUrl'] . "/static/sotflogosmall.gif";
+		$properties["link"]=$config['rootUrl'] . "";
+		$properties["title"]="StreamOnTheFly logo";
+		$properties["description"]="World wide network of radio archives";
+		$rss_writer_object->addimage($properties);
+	
+		//  Then add your channel items one by one.
+		$advsearch = new sotf_AdvSearch();
+		$advsearch->Deserialize($query);
+		$query = $advsearch->GetSQLCommand();
+		$res = $db->limitQuery($query, 0, ITEMS_IN_RSS);
+		$hits = array();
+		while (DB_OK === $res->fetchInto($row)) {
+		  //$row['icon'] = sotf_Blob::cacheIcon($row['id']);
+		  $hits[] = $row;
+		}
+		foreach($hits as $prog) {
+		  $properties=array();
+		  $properties["description"]= $prog['abstract'];
+		  $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
+		  $properties["title"]= $prog['title'];
+		  $properties["dc:date"]= $prog['production_date'];
+		  $rss_writer_object->additem($properties);
+		}
 
-if($rss_writer_object->writerss($output)) {
+	 } elseif($query) {
+		// send results of advanced query given as string
+
+		// Define the properties of the channel.
+		$properties=array();
+		$properties["description"]="Results of StreamOnTheFly query";
+		$properties["link"]=$config['rootUrl'] . "";
+		$properties["title"]="StreamOnTheFly query results";
+		//$properties["language"]="en";
+		$properties["dc:date"]= getW3CDate();
+		$rss_writer_object->addchannel($properties);
+	
+		//  If your channel has a logo, before adding any channel items, specify the logo details this way.
+		$properties=array();
+		$properties["url"]=$config['rootUrl'] . "/static/sotflogosmall.gif";
+		$properties["link"]=$config['rootUrl'] . "";
+		$properties["title"]="StreamOnTheFly logo";
+		$properties["description"]="World wide network of radio archives";
+		$rss_writer_object->addimage($properties);
+	
+		//  Then add your channel items one by one.
+		$advsearch = new sotf_AdvSearch();
+		$advsearch->Deserialize($query);
+		$query = $advsearch->GetSQLCommand();
+		$res = $db->limitQuery($query, 0, ITEMS_IN_RSS);
+		$hits = array();
+		while (DB_OK === $res->fetchInto($row)) {
+		  //$row['icon'] = sotf_Blob::cacheIcon($row['id']);
+		  $hits[] = $row;
+		}
+		foreach($hits as $prog) {
+		  $properties=array();
+		  $properties["description"]= $prog['abstract'];
+		  $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
+		  $properties["title"]= $prog['title'];
+		  $properties["dc:date"]= $prog['production_date'];
+		  $rss_writer_object->additem($properties);
+		}
+
+	 } else {
+
+		// Define the properties of the channel.
+		$properties=array();
+		$properties["description"]="New programmes at StreamOnTheFly";
+		$properties["link"]=$config['rootUrl'] . "";
+		$properties["title"]="StreamOnTheFly";
+		//$properties["language"]="en";
+		$properties["dc:date"]= getW3CDate();
+		$rss_writer_object->addchannel($properties);
+	
+		//  If your channel has a logo, before adding any channel items, specify the logo details this way.
+		$properties=array();
+		$properties["url"]=$config['rootUrl'] . "/static/sotflogosmall.gif";
+		$properties["link"]=$config['rootUrl'] . "";
+		$properties["title"]="StreamOnTheFly logo";
+		$properties["description"]="World wide network of radio archives";
+		$rss_writer_object->addimage($properties);
+	
+		//  Then add your channel items one by one.
+		$newProgs = sotf_Programme::getNewProgrammes($fromDay, ITEMS_IN_RSS);
+		if(!empty($newProgs)) {
+		  foreach($newProgs as $prog) {
+			 $properties=array();
+			 $properties["description"]= $prog['abstract'];
+			 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
+			 $properties["title"]= $prog['title'];
+			 $properties["dc:date"]= $prog['production_date'];
+			 $rss_writer_object->additem($properties);
+		  }
+		} else {
+		  $properties=array();
+		  $properties["description"]= '';
+		  $properties["link"]= $config['rootUrl'];
+		  $properties["title"]= "no new items";
+		  //$properties["dc:date"]= ;
+		  $rss_writer_object->additem($properties);
+		}
+
+		//  If your channel has a search page, after adding the channel items, specify a search form details this way.
+		$properties=array();
+		// The name property if the name of the text input form field
+		$properties["name"]="pattern";
+		$properties["link"]=$config['rootUrl'] . "/search.php?language=any_language";
+		$properties["title"]="Search for:";
+		$properties["description"]="Search in StreamOnTheFly";
+		$rss_writer_object->addtextinput($properties);
+	
+	 }
+
+	 if($rss_writer_object->writerss($output)) {
 		
-  // If the document was generated successfully, you may now output it.
-  Header("Content-Type: text/xml; charset=\"".$rss_writer_object->outputencoding."\"");
-  Header("Content-Length: ".strval(strlen($output)));
-  echo $output;
-} else {
+		// If the document was generated successfully, you may now output it.
+		Header("Content-Type: text/xml; charset=\"".$rss_writer_object->outputencoding."\"");
+		Header("Content-Length: ".strval(strlen($output)));
+		echo $output;
+	 } else {
 
-  //  If there was an error, output it as well.
-  Header("Content-Type: text/plain");
-  echo ("Error: ".$rss_writer_object->error);
-}
+		//  If there was an error, output it as well.
+		Header("Content-Type: text/plain");
+		echo ("Error: ".$rss_writer_object->error);
+	 }
 
-$page->logRequest();
+	 $page->logRequest();
 
-?>
+	 ?>

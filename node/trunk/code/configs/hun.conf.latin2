@@ -100,6 +100,7 @@ no_permission = Ehhez '%1' jogosultságra lenne szükséged!
 conversion_failed = Az auidó konverzió nem sikerült.
 operation_for_local_objects_only = Ez a mûvelet csak lokális objektumokon engedélyezett.
 no_such_object = Nincsen ilyen azonosítójú objektum az adatbázisban
+illegal_name = A név nem megengedett karaktereket tartalmazott. Ezeket kijavítottuk, kérjük ellenõrizze!
 
 confirm_unsaved = Ezen az oldalon elmentetlen információk vannak. Ha igent válaszol, ezek elvesznek. Nyomja meg a nem és mentés gombokat mielõtt továbblépne.
 
@@ -234,7 +235,6 @@ no_permission = Nincs joga új rádiót létrehozni
 userlist = Felhasználók listája
 select_manager = Kérjük írjon be egy létezõ felhasználó nevet fõszerkesztõnek.
 name_in_use = Már van ilyen nevû rádió.
-illegal_name = A rádió neve nem megengedett karaktereket tartalmazott. Ezeket kijavítottuk, kérjök ellenõrizze!
 station_created = Új rádió létrehozva.
 
 [editStation]
@@ -532,16 +532,17 @@ add_prg = Mûsorok hozzáadása
 
 [editor]
 will_expire = %1 mûsor lejár (és törlésre kerül) %2 napon belül!
-manage_files = Fájlok kezelése
+create_new_expl1 = 1. Új mûsor hozzáadásához elõször a hanganyagot fel kell töltenie a személyes tárhelyére. Ez történhet HTTP feltöltéssel vagy FTP-n keresztül:
+create_new_expl2 = 2. Ha már feltöltötte a hanganyagot, akkor a lenti listából válassza ki, melyiket kívánja új mûsorként elhelyezni az archívumban:	
+manage_files = Webes fájlkezelõ
 managefiles = FajlKezelo
 add_programme = Új mûsorként hozzáad
 user_ftp_access = FTP hozzáférés fájljaimhoz
 upload_file = Feltöltés fájljaimhoz
 select_file = Kérjük válasszon fájlt!
-refresh = Fájllista frissítés
+refresh = (Fájllista frissítés)
 pending_audio = Hangfájlok, melyekbõl még mûsor lehet
 create_new_prg = Új mûsor létrehozása
-manage_files = Fájlok kezelése
 my_progs = Mûsoraim
 Filter = Szûrés
 sortby = Rendezés
@@ -667,6 +668,7 @@ please_wait = Kérem várjon...
 [login]
 missing_parameters = Hiányzó paraméterek
 invalid_login = Érvénytelen bejelentkezés
+register_here = Ha még nem regisztrált felhasználónk, <a href="register.php">itt regisztrálhat</a>.
 
 [register]
 username_in_use = Ezt a nevet már más használja!
@@ -912,7 +914,7 @@ user_dir_ftp_access = Ftp hozzáférés a fájljaimhoz
 
 [manageFiles]
 manage_files = Fájljaim kezelése
-add_files = Fájlok hozzáadása ??
+add_files = Fájlok hozzáadása
 userfiles = Fájljaim kezelése
 userfiles_expl = 
 upload_file = Fájl feltöltése

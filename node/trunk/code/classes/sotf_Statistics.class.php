@@ -90,7 +90,7 @@ class sotf_Statistics extends sotf_Object {
 		  return null;
 		}
 		$obj->setAll(array('prog_id' => $prgId,
-                         'station_id' => $data['station_id'],
+                         'station_id' => $prg->get('station_id'),
                          'year' => $year,
                          'month' => $month,
                          'week' => $week,

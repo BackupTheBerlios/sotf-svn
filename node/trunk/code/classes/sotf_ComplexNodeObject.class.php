@@ -110,6 +110,17 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	 ************************************************/
 
 	/** can be static */
+	function getLanguagesArray($languages = '') {
+	  if(!$languages)
+		 $languages = $this->get('language');
+	  if(!empty($languages)) {
+		 $langs = explode(',',$languages);
+		 return $langs;
+	  }
+	  return array();
+	}
+
+	/** can be static */
 	function getLanguagesLocalized($languages = '') {
 	  global $page;
 	  if(!$languages)

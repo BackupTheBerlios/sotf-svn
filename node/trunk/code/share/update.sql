@@ -172,6 +172,10 @@ ALTER TABLE sotf_station_mappings ADD COLUMN "type" varchar(30);
 ALTER TABLE sotf_station_mappings ADD COLUMN "station" varchar(12);
 CREATE UNIQUE INDEX sotf_station_mappings_uniq ON sotf_station_mappings ("id_at_station", "station", "type");
 
+-- ???? somewhere around Xmas
+
+-- added sotf_users table and ftp_auth view, so sotf can work now without SADM
+
 -- 2004-02-23
 
 -- Some acceleration for topic browsing
@@ -180,3 +184,14 @@ CREATE INDEX "topic_id_sotf_topics_key" ON "sotf_topics"("topic_id");
 CREATE UNIQUE INDEX "topic_id_sotf_topics_counter_ukey" ON "sotf_topics_counter"("topic_id");
 CREATE INDEX "topic_id_sotf_prog_topics_key" ON "sotf_prog_topics"("topic_id");
 CREATE INDEX "prog_id_sotf_prog_topics_key" ON "sotf_prog_topics"("prog_id");
+
+-- 2004-03-02
+
+-- VERY IMPORTANT!
+-- you have to rename all station dirs under node/repository!
+-- do commands like: mv Test_Radio 011st2
+
+-- some placeholder
+ALTER TABLE "sotf_stations" ADD "id2" varchar (50);
+-- also sotf_stations.name field became longer, but not a big problem
+
