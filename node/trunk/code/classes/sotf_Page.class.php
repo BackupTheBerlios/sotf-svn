@@ -40,6 +40,7 @@ class sotf_Page
 		// load user data
 		if($_SESSION['userid'])
 		{
+      debug("userid", $_SESSION['userid']);
 			$this->user = new sotf_User($_SESSION['userid']);
 		}
 		// Currently it is not needed

@@ -201,10 +201,10 @@ $userdb->setFetchmode(DB_FETCHMODE_ASSOC);
 // persistent server variables
 $sotfVars = new sotf_Vars($db, 'sotf_vars');
 
-$debug = $sotfVars->get('debug', 0);
+$debug = $sotfVars->get('debug', 1);
 
-$userdb->debug = $sotfVars->get('debug_sql', 0);
-$db->debug = $sotfVars->get('debug_sql', 0);
+$userdb->debug = $sotfVars->get('debug_sql', 1);
+$db->debug = $sotfVars->get('debug_sql', 1);
 
 if($debug)
 {
