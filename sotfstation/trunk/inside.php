@@ -25,12 +25,13 @@
 	
 	$myDay = new dayView();
 	$myDay->addBlock(1,'11:00','13:30','Da Bomb of da bombing clan');
-	$myDay->addBlock(2,'12:40','14:30','Asda',2,'Alex');
+	$myDay->addBlock(2,'12:40','14:30','Asda',2,'Alex','pp');
 	$myDay->addBlock(3,'9:40','10:30','Great Opening',3,'Da DeeJey');
+	$myDay->addBlock('aa','05:00','08:00','Boot The Booth',1,'Alex','na');
 	$smarty->assign('day',$myDay->show());
 	
 	//create help message
-	//$myHelp = new helpBox(1);										# this will fetch a help message from the database and output it
+	//$myHelp = new helpBox(1,'98%');							# this will fetch a help message from the database and output it
 																								# in the template (if allowed to do so)
 																							
 	//page output :)	

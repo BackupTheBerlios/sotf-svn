@@ -11,6 +11,7 @@
 		var $description;
 		var $owner;
 		var $owner_name;
+		var $special;
 		
 		/**
 		 * dayBlock::dayBlock()
@@ -83,6 +84,14 @@
 		function getOwnerName(){
 			return $this->owner_name;
 		}
+		
+		function setSpecial($special){
+			$this->special = $special;
+		}
+		
+		function getSpecial(){
+			return $this->special;
+		}
 	}
 	
 	/***
@@ -114,7 +123,7 @@
 		var $no_content = "<img height=16 src=\"{class_root}templates/img/i-remindergray.gif\" width=24 border=0>";
 		var $content = "<table cellspacing=0 cellpadding=0 border=0>
                 <tbody><tr><td width=24>{bell}</td>
-                <td bgcolor={color_on}>{content_owner}<font size=-1><a href=\"appointment.php?id={content_id}\" onclick=\"NewWindow(this.href,'14','620','400','yes');return false\">{content_name}</a></font>&nbsp;&nbsp;<font size=-1 color={color_text}>({content_start_time}-{content_end_time})</font></td></tr></tbody></table>";
+                <td bgcolor={color_on}>{content_owner}<font size=-1><a href=\"appointment.php?id={content_id}\" onclick=\"NewWindow(this.href,'14','620','400','yes');return false\">{content_name}</a></font>&nbsp;{special}&nbsp;<font size=-1 color={color_text}>({content_start_time}-{content_end_time})</font></td></tr></tbody></table>";
 		
 		var $content_owner = "<font color={color_text}>(<a href=\"overview.php?user={owner_id}\" class=date2 onclick=\"NewWindow(this.href,'14','620','400','yes');return false\">{owner_name}</a>)</font> ";
 		
@@ -171,7 +180,7 @@
 		 * @param $desc
 		 * @return (void)
 		 */
-		function addBlock($id,$start_time,$end_time,$desc,$owner=0,$owner_name="nobody"){
+		function addBlock($id,$start_time,$end_time,$desc,$owner=0,$owner_name="nobody",$special=false){
 			if(strpos($start_time,":")>0){
 				$myTimes = explode(":",$start_time);
 				$start_time = mktime($myTimes[0],$myTimes[1],0,date("m",$this->timestamp),date("d",$this->timestamp),date("Y",$this->timestamp));
@@ -183,6 +192,11 @@
 			}
 			
 			$new_block = new dayBlock($id,$start_time,$end_time,$desc,$owner,$owner_name);
+			
+			if($special){
+				$new_block->setSpecial($special);
+			}
+			
 			$this->blocks[$id] = $new_block;
 		}
 		
@@ -228,7 +242,7 @@
 								$myout = date("H:i",$val->getEnd());
 							}
 							
-							$this_row_content= str_replace("{content_name}",$val->getText(),$this_row_content);
+							$this_row_content = str_replace("{content_name}",$val->getText(),$this_row_content);
 							$this_row_content = str_replace("{content_start_time}",date("H:i",$val->getStart()),$this_row_content);
 							$this_row_content = str_replace("{content_end_time}",$myout,$this_row_content);
 							$this_row_content = str_replace("{content_id}",$val->getID(),$this_row_content);
@@ -241,6 +255,20 @@
 								$this_row_content= str_replace("{content_owner}",$myOwner,$this_row_content);
 							}else{
 								$this_row_content = str_replace("{content_owner}","",$this_row_content);
+							}
+							
+							//process special data
+							if(!$val->getSpecial()){
+								$this_row_content = str_replace("{special}",'',$this_row_content);
+							}else{
+								if($val->getSpecial()=='pp'){
+									$spec = "<b>p.p.</b>";
+								}else if($val->getSpecial()=='na'){
+									$spec = "<b><font color=#ff0000>n.a.</font></b>";
+								}else{
+									$spec = "";
+								}
+								$this_row_content = str_replace("{special}",$spec,$this_row_content);
 							}
 							
 							//show only one bell per hour

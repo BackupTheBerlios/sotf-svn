@@ -17,4 +17,8 @@
 	session_destroy();															# destroy all session related data
 	header("Location: " . SRC_ROOT . "index.php");	# redirect to root page
 	exit;																						# exit
+	
+	/*
+	* I'll be honest, I hate PHP...
+	**/
 ?>
