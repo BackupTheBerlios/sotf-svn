@@ -62,16 +62,16 @@
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
 		 <tr>
-          <td class="menu1" {if $action == 'series.htm'}bgcolor=#E7EBF7{/if}>&nbsp;&nbsp;&raquo; <a href="{$server_root}series.php" class=menu1>{#series#}</a></td>
+          <td class="menu1" {if $action == 'series.htm' or $action == 'seriesnew.htm'}bgcolor=#E7EBF7{/if}>&nbsp;&nbsp;&raquo; <a href="{$server_root}seriesnew.php" class=menu1>{#series#}</a></td>
         </tr>
-		{if $action == 'series.htm'}
+		{if $action == 'series.htm' or $action == 'seriesnew.htm'}
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
         <tr>
-          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}series.php" class="menu2l">{#overview#}</a><br>
-            &nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">{#new_ser#}</a><br>
-			&nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">{#print_ver#}</a></td>
+          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}seriesnew.php" class="menu2l">{#overview#}</a><br>
+            &nbsp;&nbsp;&nbsp; <a href="{$server_root}seriesnew.php" class="menu2l">{#new_ser#}</a><br>
+			&nbsp;&nbsp;&nbsp; <a href="{$server_root}seriesnew.php" class="menu2l">{#print_ver#}</a></td>
         </tr>
 		{/if}
         <tr>

@@ -84,7 +84,7 @@
 	
 	//assign default data to drop down boxes
 	$smarty->assign(array(
-													"special_needs" => array(""=>$STING['NONE'],"na"=>$STING['NA'],"pp"=>$STING['PP']),
+													"special_needs" => array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
 													"series_owner" => $db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name")
 												));
 												

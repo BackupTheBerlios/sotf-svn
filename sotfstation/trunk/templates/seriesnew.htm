@@ -1,0 +1,112 @@
+<form name="form1" method="post" action="seriesnew.php">
+  <table width="100%" border="0" cellspacing="0" cellpadding="2">
+    <tr> 
+      <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr> 
+            <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+                <tr bgcolor="#ddddff"> 
+                  <td colspan="2" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr> 
+                        <td width="20" nowrap><strong><img src="{$root}img/i16-newprogramme.gif" width="27" height="21"></strong></td>
+                        <td class=title><strong>Create New Series</strong></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr bgcolor="#dddddd"> 
+                  <td colspan="2" nowrap class=whitesmall><strong>{#series_data#}</strong></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td width="10%" nowrap> <div align="right">*{#series_title#}:</div></td>
+                  <td nowrap><input name="series_title" type="text" class="myinput" id="series_title" value="{$submit_series_title}" maxlength="255"></td>
+                </tr>
+                <tr bgcolor="#F4F4F4"> 
+                  <td nowrap> <div align="right">*{#series_desc#}:</div></td>
+                  <td nowrap><textarea name="series_description" rows="5" wrap="VIRTUAL" class="myinput" id="series_description">{$submit_series_description}</textarea></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap> <div align="right">*Start Date:</div></td>
+                  <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=sd 
+                    time=$stime}</td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap> <div align="right">*{#start_time#}:</div></td>
+                  <td nowrap>{html_select_time time=$stime display_seconds=false 
+                    prefix=sd}</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap> <div align="right">*{#end_time#}:</div></td>
+                  <td nowrap>{html_select_time display_seconds=false time=$time 
+                    prefix=ed} ({#end_time_comm#})</td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap> <div align="right">*End Date:</div></td>
+                  <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=ed 
+                    time=$time}</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*Weekday(s):</div></td>
+                  <td nowrap><table width="100" border="0" cellpadding="2" cellspacing="1" bgcolor="#CCCCCC">
+                      <tr bgcolor="#eeeeee"> 
+                        <td align=center>Mo</td>
+                        <td align=center>Tu</td>
+                        <td align=center>We</td>
+                        <td align=center>Th</td>
+                        <td align=center>Fr</td>
+                        <td align=center>Sa</td>
+                        <td align=center>Su</td>
+                      </tr>
+                      <tr bgcolor="#eeeeee"> 
+                        <td> <input name="mon" type="checkbox" value="1" {if $mon==1}checked{/if}></td>
+                        <td> <input name="tue" type="checkbox" value="1" {if $tue==1}checked{/if}></td>
+                        <td> <input name="wed" type="checkbox" value="1" {if $wed==1}checked{/if}></td>
+                        <td> <input name="thu" type="checkbox" value="1" {if $thu==1}checked{/if}></td>
+                        <td> <input name="fri" type="checkbox" value="1" {if $fri==1}checked{/if}></td>
+                        <td> <input name="sat" type="checkbox" value="1" {if $sat==1}checked{/if}></td>
+                        <td> <input name="sun" type="checkbox" value="1" {if $sun==1}checked{/if}></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">*Period:</div></td>
+                  <td nowrap><select name="series_period" class="myselect">
+				  		{html_options options=$series_period selected=$submit_series_period}
+                    </select></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*Active?:</div></td>
+                  <td nowrap><select name="series_active" class="myselect">
+				  		{html_options options=$series_active selected=$submit_series_active}
+                    </select></td>
+                </tr>
+                <tr bgcolor="#dddddd"> 
+                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#owner_data#}</strong></div></td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">*{#series_owner#}:</div></td>
+                  <td nowrap><select name="series_owner" class="myselect" id="series_owner">
+				  		{html_options options=$series_owner selected=$submit_series_owner}
+                    </select></td>
+                </tr>
+                {section name=error_cell show=$error_out} 
+                <tr bgcolor="#FFCCCC"> 
+                  <td colspan="2">{section name=errors loop=$error_list show=$error_out} 
+                    <div align=center> 
+                      <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
+                    {/section}</td>
+                </tr>
+                {/section} 
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="2" nowrap><div align="center"> 
+                      <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
+                      <input name="Submit" type="hidden" id="Submit" value="do">
+                    </div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr> 
+            <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+</form>
