@@ -669,6 +669,9 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 			// delete topics 
 
+			$result = $db->query("DELETE FROM sotf_topic_trees");
+			$result = $db->query("DELETE FROM sotf_topic_tree_defs");
+			$result = $db->query("DELETE FROM sotf_topics");
 			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
 			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
 			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
@@ -687,144 +690,24 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 			// create default topic trees
 
-			$o1 = & new sotf_NodeObject("sotf_topic_trees");
-			$o1->set('tree_id', 1);
-			$o1->set('name', 'SOTF general');
-			$o1->set('languages', 'en');
-			$o1->create();
-			$oid = $o1->getID();
+			$treedata= array('tree_id' => 1,
+								  'name' => 'SOTF general topic tree',
+								  'shortname' => 'SOTF general',
+								  'description' => "An attempt to create a general subject tree for radios."
+								  );
+			$repository->importTopicTree($treedata, files($config['baseDir']."/code/doc/topictree_sotf.txt");
 
-			$rootId = addParent("SOTF", "StreamOnTheFly general", 'en', 1, "A temporary attempt to create a general subject tree based on Dewey.");
-			$oid = addChild($rootId, "generalities", "Generalities", "en", 1);
-			$oid = addChild($rootId, "philosophy and psychology", "Philosophy and psychology", "en", 1);
-			$oid = addChild($rootId, "religion", "Religion", "en", 1);
-			$oid = addChild($rootId, "Social sciences", "Social sciences", "en", 1);
-			$oid = addChild($rootId, "Language", "Language", "en", 1);
-			$oid = addChild($rootId, "Natural sciences and mathematics", "Natural sciences and mathematics", "en", 1);
-			$oid = addChild($rootId, "Technology", "Technology", "en", 1);
-			$oid = addChild($rootId, "Arts", "Arts", "en", 1);
-			$oid = addChild($rootId, "Literature and rhetoric", "Literature and rhetoric", "en", 1);
-			$oid = addChild($rootId, "Geography and history", "Geography and history", "en", 1);
+			$treedata= array('tree_id' => 2,
+								  'name' => 'SOMA Metadata version 1',
+								  'shortname' => 'SOMA',
+								  'url', 'http://soma-dev.sourceforge.net/',
+								  'description' => "The Shared Online Media Archive initiative gave a topic tree for its metadata definition. It is provided as an alternative topic tree here."
+								  );
+			$repository->importTopicTree($treedata, files($config['baseDir']."/code/doc/topictree_soma.txt");
 
-
-			$o1 = & new sotf_NodeObject("sotf_topic_trees");
-			$o1->set('tree_id', 2);
-			$o1->set('name', 'SOMA Metadata version 1');
-			$o1->set('url', 'http://soma-dev.sourceforge.net/');
-			$o1->set('languages', 'en');
-			$o1->create();
-			$oid = $o1->getID();
-
-			$rootId = addParent("SOMA", "SOMA topics", 'en', 2, "StreamOnTheFly project worked with SOMA in the preparation of their metadata set, but this topic tree is too specific for our use, and will be offered as an alternative for a more general one.");
-			$oid = addChild($rootId, "development", "Development");
-			addChild($oid, "agriculture", "Agriculture");
-			addChild($oid, "aid", "Aid");
-			addChild($oid, "capacity building", "Capacity Building");
-			addChild($oid, "children", "Children");
-			addChild($oid, "cities", "Cities");
-			addChild($oid, "education", "Education");
-			addChild($oid, "emergency relief", "Emergency Relief");
-			addChild($oid, "energy", "Energy");
-			addChild($oid, "fisheries", "Fisheries");
-			addChild($oid, "food", "Food");
-			addChild($oid, "gender", "Gender");
-			addChild($oid, "intermediate technology", "Intermediate Technology");
-			addChild($oid, "international cooperation", "International Cooperation");
-			addChild($oid, "labour/work", "Labour/Work");
-			addChild($oid, "land", "Land");
-			addChild($oid, "migration", "Migration");
-			addChild($oid, "population", "Population");
-			addChild($oid, "poverty", "Poverty");
-			addChild($oid, "refugees", "Refugees");
-			addChild($oid, "shelter/housing", "Shelter/Housing");
-			addChild($oid, "social exclusion", "Social Exclusion");
-			addChild($oid, "tourism", "Tourism");
-			addChild($oid, "transport", "Transport");
-			addChild($oid, "volunteering", "Volunteering");
-			addChild($oid, "water/sanitation", "Water/Sanitation");
-			addChild($oid, "youth", "Youth");
-			addChild($oid, "old age / retirement", "Old Age / Retirement");
-
-			$oid = addChild($rootId, "economy", "Economy");
-			addChild($oid, "business", "Business");
-			addChild($oid, "consumption/consumerism", "Consumption/Consumerism");
-			addChild($oid, "corporations", "Corporations");
-			addChild($oid, "credit/investment", "Credit/Investment");
-			addChild($oid, "debt", "Debt");
-			addChild($oid, "finance", "Finance");
-			addChild($oid, "microcredit", "Microcredit");
-			addChild($oid, "social enterprise", "Social Enterprise");
-			addChild($oid, "trade", "Trade");
-
-			$oid = addChild($rootId, "environment", "Environment");
-			addChild($oid, "animals", "Animals");
-			addChild($oid, "atmosphere", "Atmosphere");
-			addChild($oid, "biodiversity", "Biodiversity");
-			addChild($oid, "climate change", "Climate Change");
-			addChild($oid, "conservation", "Conservation");
-			addChild($oid, "environmental activism", "Environmental Activism");
-			addChild($oid, "forests", "Forests");
-			addChild($oid, "genetics", "Genetics");
-			addChild($oid, "nuclear issues", "Nuclear Issues");
-			addChild($oid, "oceans", "Oceans");
-			addChild($oid, "pollution", "Pollution");
-			addChild($oid, "renewable energy", "Renewable Energy");
-			addChild($oid, "rivers", "Rivers");
-			addChild($oid, "soils", "Soils");
-			addChild($oid, "rural life", "Rural Life");
-
-			$oid = addChild($rootId, "health", "Health");
-			addChild($oid, "aids", "Aids");
-			addChild($oid, "disease/treatment", "Disease/Treatment");
-			addChild($oid, "infant mortality", "Infant Mortality");
-			addChild($oid, "malaria", "Malaria");
-			addChild($oid, "narcotics", "Narcotics");
-			addChild($oid, "nutrition/malnutrition", "Nutrition/Malnutrition");
-
-			$oid = addChild($rootId, "human rights", "Human Rights");
-			addChild($oid, "civil rights/civil liberties", "Civil Rights/Civil Liberties");
-			addChild($oid, "disability", "Disability");
-			addChild($oid, "indigenous rights", "Indigenous Rights");
-			addChild($oid, "race politics", "Race Politics");
-			addChild($oid, "religion", "Religion");
-			addChild($oid, "sexuality", "Sexuality");
-			addChild($oid, "social exclusion", "Social Exclusion");
-
-			$oid = addChild($rootId, "information & media", "Information & Media");
-			addChild($oid, "communications", "Communications");
-			addChild($oid, "culture", "Culture");
-			addChild($oid, "freedom of expression", "Freedom Of Expression");
-			addChild($oid, "internet", "Internet");
-			addChild($oid, "knowledge", "Knowledge");
-			addChild($oid, "media", "Media");
-			addChild($oid, "science", "Science");
-			addChild($oid, "art", "Art");
-			addChild($oid, "sport", "Sport");
-
-			$oid = addChild($rootId, "politics", "Politics");
-			addChild($oid, "activism", "Activism");
-			addChild($oid, "civil society", "Civil Society");
-			addChild($oid, "codes of conduct", "Codes Of Conduct");
-			addChild($oid, "democracy", "Democracy");
-			addChild($oid, "ethics/value systems", "Ethics/Value Systems");
-			addChild($oid, "geopolitics", "Geopolitics");
-			addChild($oid, "globalisation", "Globalisation");
-			addChild($oid, "governance", "Governance");
-			addChild($oid, "justice/crime", "Justice/Crime");
-			addChild($oid, "law", "Law");
-			addChild($oid, "transparency/corruption", "Transparency/Corruption");
-			addChild($oid, "United Nations", "United Nations");
-			addChild($oid, "class issues", "Class Issues");
-
-			$oid = addChild($rootId, "war & peace", "War & Peace");
-			addChild($oid, "arms/military", "Arms/Military");
-			addChild($oid, "conflict", "Conflict");
-			addChild($oid, "conflict resolution", "Conflict Resolution");
-			addChild($oid, "landmines", "Landmines");
-			addChild($oid, "nuclear issues", "Nuclear Issues");
-			addChild($oid, "peace", "Peace");
-			addChild($oid, "security", "Security");
-			addChild($oid, "terrorism", "Terrorism");
+			$result = $db->query("SELECT setval('sotf_topics_seq', ". $config['nodeId'] . "000, false)");
+			$result = $db->query("SELECT setval('sotf_topic_trees_seq', ". $config['nodeId'] . "000, false)");
+			$result = $db->query("SELECT setval('sotf_topic_tree_defs_seq', ". $config['nodeId'] . "000, false)");
 
 		}
 		if (isset($install_delete_topic))
