@@ -13,13 +13,17 @@ $addstationmanager = sotf_Utils::getParameter('addstationmanager');
 $delstationmanager = sotf_Utils::getParameter('delstationmanager');
 $username = sotf_Utils::getParameter('username');
 
+if ($station)
+	$st = & new sotf_Station($station);
+
 if (sotf_Node::hasPermission('create'))
 {
+	$smarty->assign('NODE_ADMIN',$station);
 	if ($new)
 	{
 		$station_old = $station;
 		$station = preg_replace("/[^a-zA-Z0-9_-]/","_",$station);
-		
+
 		$smarty->assign('STATION',$station);
 		$smarty->assign('DESC',$desc);
 		
@@ -51,6 +55,8 @@ if (sotf_Node::hasPermission('create'))
 	}
 	elseif ($addstationmanager)
 	{
+		//$st = & new sotf_Station($station);
+		//$st->addPermission(, $userid)
 		if (sotf_Permission::addStationManager($username))
 			$smarty->assign('STATUS',$page->getlocalized('addstationmanager_ok'));
 		else

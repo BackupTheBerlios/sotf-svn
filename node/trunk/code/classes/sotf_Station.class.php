@@ -15,8 +15,8 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 		 * @param string node node id
 		 * @param string id id within node
 	 */
-	function sotf_Station($nodeId='', $id=''){
-		$this->sotf_NodeObjectWithPerm('sotf_stations', $nodeId, $id);
+	function sotf_Station($id='', $data=''){
+		$this->sotf_NodeObjectWithPerm('sotf_stations', $id, $data);
 		if($id) {
 			$roles = $this->loadRoles();
 		}
@@ -32,37 +32,40 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
     */
 	}
 
-	function create($station, $desc) {
+  function isNameInUse($stationName) {
+    global $db;
+    $res = $db->getOne("SELECT count(*) FROM sotf_stations WHERE name='". sotf_Utils::clean($stationName) . "'");
+    if(DB::isError($res))
+      raiseError($res);
+    return $res;
+  }
+
+	function create($stationName, $desc) {
 		global $nodeId;
-	$st = & new sotf_Station();
-	$st->id = $station;
-	$st->set('id', $station);
-	$st->set('description', $desc);
-	$st->set('node_id', $nodeId);
-	$dir = $st->getDir();
-	if(!is_dir($dir)) {
-		mkdir($dir, 0775);
-		mkdir("$dir/station", 0775);
-	}
-	$st->save();
-	return $st;
+		$st = & new sotf_Station();
+		$st->set('name', $stationName);
+		$st->set('description', $desc);
+		$dir = $st->getDir();
+		if(!is_dir($dir)) {
+			mkdir($dir, 0775);
+			mkdir("$dir/station", 0775);
+		}
+    parent::create();
 	}
 	
 	function delete(){
-		if(! $this->isLocal()) {
-			error("Can delete only local stations");
-			return false;
-		}
+		if(!$this->isLocal())
+			raiseError("Can delete only local stations");
 		// delete files from the repository
 		sotf_Utils::erase($this->getDir());
 		// propagate deletion to other nodes
-	 $this->createDeletionRecord();
+    $this->createDeletionRecord();
 		// delete from sql db
 		return parent::delete();
 	}
 
 	function getDir() {
-		return $this->repository->rootdir . '/' . $this->id;
+		return $this->repository->rootdir . '/' . $this->name;
 	}
 
 	function getStationDir() {
@@ -189,21 +192,20 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 	function numProgrammes($onlyPublished = true) {
 		if(isset($this->numProgrammes))
 			return $this->numProgrammes;
-	$sql = "SELECT COUNT(*) FROM sotf_programmes WHERE station_id = '" . $this->id . "' AND node_id='" . $this->node . "' ";
-	if($onlyPublished)
-		$sql .= " AND published='t'";
-	$count = $this->db->getOne($sql);
-	if (DB::isError($count))
-		return 0;
-	else
-		return $count;
+    $sql = "SELECT COUNT(*) FROM sotf_programmes WHERE station_id = '" . $this->id . "' ";
+    if($onlyPublished)
+      $sql .= " AND published='t'";
+    $count = $this->db->getOne($sql);
+    if (DB::isError($count))
+      return 0;
+    else
+      return $count;
 	}
 
 	/** list programmes */
 	function listProgrammes($start, $num, $onlyPublished = true) {
 		$id = $this->id;
-	 $node = $this->node;
-		$sql = "SELECT id, node_id FROM sotf_programmes WHERE station_id = '$id' AND node_id='$node'";
+		$sql = "SELECT * FROM sotf_programmes WHERE station_id = '$id' ";
 		if($onlyPublished)
 			$sql .= " AND published='t' ";
 		$sql .= " ORDER BY entry_date DESC,track ASC";
@@ -214,10 +216,9 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 		}
 		$res = $this->db->getAll($sql);
 		if(DB::isError($res))
-			raiseError($res->getMessage());
-
+			raiseError($res);
 		foreach($res as $item) {
-			$list[] = new sotf_Programme($item['node_id'], $item['id']);
+			$list[] = new sotf_Programme($item['id'], $item);
 		}
 		return $list;
 	}
@@ -228,10 +229,11 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 	*/
 	function listSeries() {
 		$id = $this->id;
-	 $node = $this->node;
-		$slist = $this->db->getAll("SELECT node_id, id FROM sotf_series WHERE station_id='$id' AND node_id='$node'");
+		$slist = $this->db->getAll("SELECT * FROM sotf_series WHERE station_id='$id' ");
+		if(DB::isError($slist))
+			raiseError($slist);
 		while (list (, $val) = each ($slist)) {
-			$retval[] = new sotf_Series($val['node_id'], $val['id']);
+			$retval[] = new sotf_Series($val['id'], $val);
 		}
 		return $retval;
 	}

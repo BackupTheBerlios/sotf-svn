@@ -1,12 +1,15 @@
 <?php //-*- tab-width: 3; indent-tabs-mode: 1; -*-
 
+define("GUID_DELIMITER", ':');
+define("TRACKNAME_LENGTH", 32);
+
 /***
  * Show Class
  * purpose: to represent a SOTF SHOW :)
  * Author: Alexey Koulikov - alex@pvl.at, alex@koulikov.cc
  ************/
 
-class sotf_Programme extends sotf_NodeObject {
+class sotf_Programme extends sotf_NodeObjectWithPerm {
   
   var $topics;
   var $listenTotal;
@@ -16,6 +19,7 @@ class sotf_Programme extends sotf_NodeObject {
   var $ratingTotal;
   var $genre;
   var $station;
+  var $stationName;
   var $series;
 
   var $roles;
@@ -30,42 +34,57 @@ class sotf_Programme extends sotf_NodeObject {
    * constructor
    */
   function sotf_Programme($id='', $data='') {
-	 parent::constructor('sotf_programmes', $id, $data);
+	 $this->sotf_NodeObjectWithPerm('sotf_programmes', $id, $data);
+	 if($id) {
+		//$roles = $this->loadRoles();
+	 }
   }
   
-  /** finds the next available track id within the station ($track may be empty) */
-  function createTrackId($station, $date, $track) {
-    global $db;
-    if(!$track)
-      $track = '1';
-    $res = $db->getOne("SELECT max(track) FROM sotf_programmes WHERE station='$station' AND entry_date='$date'");
-    if(DB::isError($res)) {
-      raiseError($res);
-    }
-    if(empty($res))
-      return $track;
-    else
-      return $res+1;
+  function generateGUID() {
+	 $this->set('guid', $this->stationName . GUID_DELIMITER . $this->get('entry_date') . GUID_DELIMITER . $this->get('track');
   }
-		
-  /** static method to create a new programme */
-  // todo: this is not good enough
-  function create($station, $track='') {
-    global $user;
+
+  /** finds the next available track id within the station ($track may be empty) */
+  function getNextAvailableTrackId() {
+		$track = $this->get('track'); 
+		if(!$track)
+		  $track = '1';
+		else
+		  $track = substr($track, 0, TRACKNAME_LENGTH);
+		$this->set('track', $track);
+		$this->generateGUID();
+		while(1) {
+		  $guid = $this->get('guid');
+		  $res = $db->getOne("SELECT count(*) FROM sotf_programmes WHERE guid='$guid'");
+		  if(DB::isError($res))
+			 raiseError($res);
+		  if($res==0)
+			 return;
+		  $track = $this->get('track'); 
+		  $track++;
+		  $this->set('track', $track);
+		  $this->generateGUID();
+		}
+  }
+
+  function create($stationId, $track='') {
+	 $stationName = $this->db->getOne("SELECT name FROM sotf_stations WHERE id='" . $this->get('station_id') . "'");
+	 if(DB::isError($stationName))
+		raiseError($stationName);
+	 if(empty($stationName))
+		raiseError("station with id '$stationId' does not exist");
     $prg = new sotf_Programme();
-    $prg->set('station', $station);
-    $id = new sotf_Id($station, NULL, $track);
-    $id->track = sotf_Programme::getNextTrackId($station, $id->date, $track);
-    $prg->set('entry_date', $id->date);
-    $prg->set('owner', $user->name);
+	 $prg->stationName = $stationName;
+    $prg->set('station_id', $stationId);
+    $prg->set('entry_date', $date);
+    $prg->set('track', $track);
+	 $prg->getNextAvailableTrackId();
     while(1) {
-      $prg->set('track', $id->track);
-      $prg->id = $id->toString();
-      if($prg->save()) { // this will also create the required directories via setMetadataFile !!
-        debug("created new programme", $prg->id);
+      if(parent::create()) { // this will also create the required directories via setMetadataFile !!
+        debug("created new programme", $prg->get['guid']);
         return $prg;
       }
-      $id->track = sotf_Programme::getNextTrackId($station, $id->date, $id->track);
+		$prg->getNextAvailableTrackId();
     }
   }
 

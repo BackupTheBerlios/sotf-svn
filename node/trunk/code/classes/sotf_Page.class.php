@@ -26,10 +26,11 @@ class sotf_Page
 		{
 			$this->user = new sotf_User($_SESSION['userid']);
 		}
-		else
+		// Currently it is not needed
+		/*else
 		{
 			$this->user = new sotf_User();
-		}
+		}*/
 		$user = $this->user;
 
 		// determine language
@@ -52,10 +53,13 @@ class sotf_Page
 
 		$smarty->assign("ACTION", $this->action);
 		$smarty->assign("LANG", $lang);
-		$smarty->assign("loggedIn", $this->loggedIn());
-		if($user->isEditor())
-		  $smarty->assign("IS_EDITOR", '1');
-		////$smarty->assign("STATION_MANAGER", sotf_Permission::get("station_manager"));
+		if ($this->loggedIn()) {
+		  $smarty->assign("loggedIn", '1');
+		  $smarty->assign("USERNAME", $user->name);
+		  if($user->isEditor())
+			 $smarty->assign("IS_EDITOR", '1');
+		  //$smarty->assign("STATION_MANAGER", sotf_Permission::get("station_manager"));
+		}
 		if($debug) {
 		  $smarty->assign("VIEWLOG", $this->logURL());
 		}
@@ -118,7 +122,8 @@ class sotf_Page
 
 	function loggedIn()
 	{
-		return $_SESSION['username'];
+	  //return $_SESSION['username'];
+	  return is_object($this->user) && !empty($this->user->id);
 	}
 
 	function logURL($urlprefix='', $txt='') {
@@ -133,8 +138,8 @@ class sotf_Page
 	{
 		header ("Location: $url");
 		debug("REDIRECT", $url);
-    stopTiming();
-    $this->logRequest();
+		stopTiming();
+		$this->logRequest();
 		exit;
 	}
 

@@ -37,8 +37,9 @@ $smarty->assign(
                       'USERID'     => $username,
                       'OK_URL' => htmlspecialchars($okURL),
                       'REGISTER_URL' => "register.php?okURL=" . urlencode($okURL)
-                      ));
-
+                      )
+                );
+                      
 $page->send();
 
 ?>

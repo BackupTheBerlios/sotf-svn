@@ -159,6 +159,9 @@ $errorControl = new error_Control;
 
 function addError($msg) {
   global $errorControl;
+  if(DB::isError($msg)) 
+    $msg = "SQL error: " . $msg->getMessage();
+  debug("added error", $msg);
   $errorControl->add($msg);
 }
 

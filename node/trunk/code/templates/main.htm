@@ -65,7 +65,7 @@
                       | <a class="menu" href="{$ROOTDIR}/stations.php">{#Stations#}</a> 
                       {if $IS_EDITOR} | <a class="menu" href="{$ROOTDIR}/editor.php">{#EditorPage#}</a> {/if} 
                       {if $loggedIn}
-                      | <a class="menu" href="{$ROOTDIR}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$loggedIn})</a>
+                      | <a class="menu" href="{$ROOTDIR}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$USERNAME})</a>
                       {else}
                       | <a class="menu" href="{$ROOTDIR}/login.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Login#}</a>
                       {/if}
