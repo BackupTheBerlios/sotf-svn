@@ -527,10 +527,15 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       $metadata = $myPack->process();
     }
 		
+		
 		if(!$metadata or $myPack->error){ //errors during import - stop execution
 			sotf_Utils::delete($pathToFile . $folderName);
-			trigger_error("The import did not succeed!",2);
+			trigger_error("The import did not succeed!");
 			return false;	//did not succeed
+		}else{
+			echo "<pre>";
+			print_r($metadata);
+			echo "</pre>";
 		}
 	
     //dump($metadata, "METADATA");
@@ -641,17 +646,17 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     /*
      * PART 2.3 - Remove (unlink) the xbmf file and the temp dir
      */
-    
-    sotf_Utils::delete($pathToFile . $folderName);
-		unlink($fileName);
 		
 		//publish if needed
 		if($publish){
 			$newPrg->publish();
 		}
     
+		sotf_Utils::delete($pathToFile . $folderName);
+		//unlink($fileName);
+		
     return $newPrg->id;
-  }
+  }//end func
 
   /** static: create contact record from metadata */
   function importContact($cdata, $roleSel, $prgId, $station) {
