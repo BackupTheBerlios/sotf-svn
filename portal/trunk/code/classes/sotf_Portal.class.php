@@ -86,6 +86,7 @@ class sotf_Portal
 			foreach ($row as $col_number => $cell)
 				$this->setCell($row_number, $col_number, $cell);
 		}
+		$this->searchOldEvents();		//search for programmes and queries that are removed, and remove them from the statistics
 	}
 
 	function isAdmin($id)
@@ -166,8 +167,14 @@ class sotf_Portal
 		{
 			global $IMAGEDIR, $db, $page;
 
-			if ($cell["resource"] == "query") $results = $this->runQuery($cell["value"]);
-			else  $results = $this->runPlaylist($cell["value"]);
+
+			if ($cell["resource"] == "query")
+			{
+				$this->addEvent("query", $cell["value"]);
+				$results = $this->runQuery($cell["value"]);
+			}
+			else $results = $this->runPlaylist($cell["value"]);
+
 			if (!(count($results) > 0)) $results = array();		//if no results create empty array();
 
 			$selected_result = array();
@@ -177,6 +184,7 @@ class sotf_Portal
 
 			foreach($results as $result)
 			{
+				$this->addEvent("programme", $result['id']);
 				$this->programmes_on_portal[$result['id']] = $result;		//collecting for programmes editor page
 				$prgprop = $this->getPrgProperties($result['id']);
 				$item['teaser'] = $prgprop['teaser'];
@@ -216,58 +224,9 @@ class sotf_Portal
 				$item = "";
 				$values = "";
 
-//	print("<pre>");
-//	var_dump($result['audioFiles']);
-//	print("</pre>");
-//	print("<br />");
 			}
 
 			$this->settings['table'][$row][$col]['items'] = $selected_result;
-
-			/*
-			$html .= "<table>";
-			foreach($selected_result as $item)
-			{
-				$html .= "<tr><td>";
-				if ($item[icon])
-				{
-					$html .= "<img src=\"".$item['icon']."\"";
-					if ($cell["class"] != "none") $html .= " class=\"".$cell["class"]."icon\"";
-					$html .= ">";
-				}
-				else
-				{
-					$html .= "<img src=\"$IMAGEDIR/noicon.png\"";
-					if ($cell["class"] != "none") $html .= " class=\"".$cell["class"]."icon\"";
-					$html .= ">";
-				}
-				$html .= "</td><td><b><a href=\"$php_self?id=$item[id]\">";
-				if ($cell["class"] != "none") $html .= "<span class=\"".$cell["class"]."title\">";
-				$html .= $item["title"];
-				if ($cell["class"] != "none") $html .= "</span>";
-				$html .= "</a></b><BR>";
-				foreach($item["values"] as $name => $value)
-					if ($value != "")
-					{
-						if ($cell["class"] != "none") $html .= "<span class=\"".$cell["class"]."name\">";
-						$html .= "$name: ";
-						if ($cell["class"] != "none") $html .= "</span><span class=\"".$cell["class"]."value\">";
-						$html .= "$value<br>";
-						if ($cell["class"] != "none") $html .= "</span>";
-					}
-				if (count($item['files']) > 0)
-				{
-					$html .= "<b>".$page->getlocalized("uploaded_files")."</b>:";
-					foreach ($item['files'] as $filename => $file_location)
-						$html .= "&nbsp;&nbsp;<a href=\"$file_location\">$filename</a>,";
-					$html = substr($html, 0, -1);		//delete last ,
-				}
-				if ($item['teaser']) $html .= "<br>".$item['teaser']."<br>";
-				$html .= "<small>&nbsp;<br></small><b>LISTEN</b> 24MP3 | 64OGG | 0 COMMENTS | RATING<br><br>";
-				$html .= "</td></tr>";
-			}
-			$html .= "</table>";
-			*/
 		}
 	}
 
@@ -504,11 +463,70 @@ class sotf_Portal
 
 	function runQuery($query)
 	{
-		global $sotfSite;
-		$rpc = new rpc_Utils;
-		$url = $sotfSite."xmlrpcServer.php";
-		$objs = array($query);
-		return $rpc->call($url, 'portal.query', $objs);
+		return $this->getCached($query, 1);	//1 means query
+	}
+
+	function getCached($query, $type)	//$type 1 is query 2 is programme
+	{
+		global $sotfSite, $db, $REFRESH_TIME, $ERROR_REFRESH_TIME;
+
+		$sql = "SELECT timestamp, value FROM portal_cache WHERE type=$type AND name='$query'";
+		$cached = $db->getRow($sql);
+		//if refresh needed
+		if (($cached === NULL) OR ($db->diffTimestamp($db->getTimestamp(), $cached['timestamp']) > $REFRESH_TIME))
+		{
+			$result = NULL;
+			//if failed to connect in the last $ERROR_REFRESH_TIME seconds don't try again
+			$sql = "SELECT timestamp FROM portal_statistics WHERE name='last_connection_try'";
+			$last_error = $db->diffTimestamp($db->getTimestamp(), $db->getOne($sql));
+			if ($last_error > $ERROR_REFRESH_TIME)
+			{
+				//echo("connect...");
+				$rpc = new rpc_Utils;
+				$url = $sotfSite."xmlrpcServer.php";
+				$objs = array($query);
+
+				if ($type == 1) $result = $rpc->call($url, 'portal.query', $objs);
+				else $result = $rpc->call($url, 'portal.playlist', array($objs));	//if($type == 2)
+				if ($result === NULL)		//if some error occured
+				{
+					debug("Connection error!!!");
+					//set the last try to the current time
+					$sql = "UPDATE portal_statistics SET timestamp='".$db->getTimestampTz()."' WHERE name='last_connection_try'";
+					$db->query($sql);
+				}
+			}
+
+			if ($result === NULL)	//if some error occured
+			{
+				if ($cached === NULL) return array();	//if not in cache and not available
+
+				return unserialize(base64_decode($cached['value']));
+			}
+			else		//if got result, set last successful connection to current time
+			{
+				$sql = "UPDATE portal_statistics SET timestamp='".$db->getTimestampTz()."' WHERE name='last_connection'";
+				$db->query($sql);
+
+				if ($type == 1) foreach($result as $programme)		//if query, use this results to update the programmes table
+				{
+					$serial = base64_encode(serialize($programme));
+					$sql = "UPDATE portal_cache SET value='$serial', timestamp='".$db->getTimestampTz()."' WHERE type=2 AND name='".$programme['id']."'";
+					$db->query($sql);
+				}
+				else $result = $result[0];
+
+				//save result in cache
+				$serial = base64_encode(serialize($result));
+				if ($cached === NULL) $sql = "INSERT INTO portal_cache(type, name, value, timestamp) VALUES($type, '$query', '$serial', '".$db->getTimestampTz()."')";
+				else $sql = "UPDATE portal_cache SET value='$serial', timestamp='".$db->getTimestampTz()."' WHERE type=$type AND name='$query'";
+				$db->query($sql);
+
+				return $result;
+			}
+		}
+		return unserialize(base64_decode($cached['value']));
+
 	}
 
 	function getPlaylists()
@@ -544,22 +562,17 @@ class sotf_Portal
 		if ($list == NULL) return array();	//if no result
 
 		return $this->getProgrammes($list);
-//		$rpc = new rpc_Utils;			//load xmlrpc
-//		$url = $sotfSite."xmlrpcServer.php";
-//		$objs = array($list);
-//
-//		return $rpc->call($url, 'portal.playlist', $objs);	//return the result
 	}
 
 	function getProgrammes($ids)
 	{
-		global $sotfSite;
-
-		$rpc = new rpc_Utils;			//load xmlrpc
-		$url = $sotfSite."xmlrpcServer.php";
-		$objs = array($ids);
-
-		return $rpc->call($url, 'portal.playlist', $objs);	//return the result
+		$result = array();
+		foreach($ids as $id)
+		{
+			$programme = $this->getCached($id, 2);
+			if (count($programme) > 0) $result[] = $programme;
+		}
+		return $result;
 	}
 
 	function createNewPlaylist($name)
@@ -775,7 +788,8 @@ class sotf_Portal
 
 	function addComment($progid, $user_id, $reply_to, $title, $comment, $email)
 	{
-		global $db;
+		global $db, $user, $page;
+
 		$IPaddr = $_SERVER['REMOTE_ADDR'];
 		$comment = nl2br(htmlentities($comment));
 		$title = htmlentities(substr($title, 0, 30));
@@ -802,6 +816,8 @@ class sotf_Portal
 
 		if ($email == NULL) $sql="INSERT INTO programmes_comments(portal_id, progid, user_id, reply_to, title, comment, level, path, IPaddr) values($this->portal_id, '$progid', $user_id, $reply_to, '$title', '$comment', $level, '$path.$counter', '$IPaddr')";
 		else  $sql="INSERT INTO programmes_comments(portal_id, progid, user_id, reply_to, title, comment, level, path, IPaddr, email) values($this->portal_id, '$progid', NULL, $reply_to, '$title', '$comment', $level, '$path.$counter', '$IPaddr', '$email')";
+
+		$this->addEvent("comment", array("prog_id" => $progid,"title" => $title, "comment" => $comment, "user_name" => $user->getName(), "email" => $email, "path" => $path.$counter, "host" => getHostName(), "authkey" => $page->getAuthKey()));
 
 		return $db->query($sql);
 	}
@@ -868,6 +884,128 @@ class sotf_Portal
 		$result = $db->getOne($sql);
 		if ($result == NULL) return 0;
 		return $result;
+	}
+
+	function addEvent($name, $value, $timestamp = NULL)
+	{
+		global $db;
+
+		if (($name == 'query') OR ($name == 'programme'))
+		{
+			$sql="UPDATE portal_statistics SET timestamp2='".$db->getTimestampTz()."' WHERE name='$name' AND portal_id='$this->portal_id' AND value='$value'";
+			$db->query($sql);
+			if ($db->affectedRows() == 0)	//if it wasn't on the portal yet
+			{
+				$timestamp = $db->getTimestampTz();		//current timestamp
+				$sql="INSERT INTO portal_statistics(name, timestamp, timestamp2, portal_id, value) VALUES('$name', '$timestamp', '$timestamp', '$this->portal_id', '$value')";
+				$db->query($sql);
+				$this->addEvent($name."_added", $value, $timestamp);
+			}
+		}
+		elseif (($name == 'query_deleted') OR ($name == 'programme_deleted') OR ($name == 'query_added') OR ($name == 'programme_added'))
+		{
+			$sql="INSERT INTO portal_events(name, timestamp, portal_name, value) VALUES('$name', '$timestamp', '$this->portal_name', '$value')";
+			$db->query($sql);
+		}
+		elseif (($name == 'comment') OR ($name == 'rating'))
+		{
+			$timestamp = $db->getTimestampTz();		//current timestamp
+			$serial = base64_encode(serialize($value));
+			$sql="INSERT INTO portal_events(name, timestamp, portal_name, value) VALUES('$name', '$timestamp', '$this->portal_name', '$serial')";
+			$db->query($sql);
+		}
+		elseif ($name == 'visit')
+		{
+			$timestamp = $db->getTimestampTz();		//current timestamp
+			$serial = base64_encode(serialize($value));
+			$sql="UPDATE portal_events SET timestamp='$timestamp' WHERE name='$name' AND portal_name = '$this->portal_name' AND value = '$serial'";
+			$db->query($sql);
+			if ($db->affectedRows() == 0)
+			{
+				$sql="INSERT INTO portal_events(name, timestamp, portal_name, value) VALUES('$name', '$timestamp', '$this->portal_name', '$serial')";
+				$db->query($sql);
+			}
+		}
+		elseif ($name == 'users')
+		{
+			$timestamp = $db->getTimestampTz();		//current timestamp
+			$sql="INSERT INTO portal_events(name, timestamp, portal_name, value) VALUES('$name', '$timestamp', '$this->portal_name', '$value')";
+			$db->query($sql);
+		}
+		elseif ($name == 'portal_updated')
+		{
+			$timestamp = $db->getTimestampTz();		//current timestamp
+			$sql="UPDATE portal_events SET timestamp='$timestamp' WHERE name='$name' AND portal_name = '$this->portal_name' AND value = '$value'";
+			$db->query($sql);
+			if ($db->affectedRows() == 0)
+			{
+				$sql="INSERT INTO portal_events(name, timestamp, portal_name, value) VALUES('$name', '$timestamp', '$this->portal_name', '$value')";
+				$db->query($sql);
+			}
+		}
+	}
+
+	function searchOldEvents()
+	{
+		global $db, $MIN_REMOVAL_TIME, $MIN_EVENT_SENDING, $sotfSite;
+
+		$sql="SELECT * FROM portal_statistics WHERE (name='query' OR name='programme') AND portal_id='$this->portal_id'";
+		$result = $db->getAll($sql);
+		foreach ($result as $event)
+		{
+			if ($db->diffTimestamp($db->getTimestamp(), $event['timestamp2']) > $MIN_REMOVAL_TIME)
+			{
+				$sql="DELETE FROM portal_statistics WHERE id=".$event['id'];
+				$db->query($sql);
+				$this->addEvent($event['name']."_deleted", $event['value'], $event['timestamp2']);
+			}
+		}
+
+		$sql = "SELECT timestamp FROM portal_statistics WHERE name='events_sent'";
+		$last_refresh = $db->diffTimestamp($db->getTimestamp(), $db->getOne($sql));
+
+		if ($last_refresh < $MIN_EVENT_SENDING)
+		{
+			debug("Sending events...");
+			$rpc = new rpc_Utils;
+			$url = $sotfSite."xmlrpcServer.php";
+
+			$sql="SELECT id, name, portal_id as portal_name, timestamp, number as value FROM portal_statistics WHERE name='page_impression'";
+			$page_impression = $db->getAll($sql);
+
+			$sql="SELECT * FROM portal_events WHERE true";
+			$events = $db->getAll($sql);
+
+			$sql="DELETE FROM portal_events WHERE WHERE true";
+			//$db->query($sql);
+
+			$events = array_merge($events, $page_impression);
+			foreach($events as $key => $event)
+			{
+				if ($event['name'] == 'page_impression') $events[$key]['portal_name'] = $this->portal_name;
+				elseif (($event['name'] == 'comment') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit'))
+					$events[$key]['value'] = unserialize(base64_decode(($event['value'])));
+			}
+			
+			$objs = array($events);
+
+			$result = $rpc->call($url, 'portal.events', $objs);
+			if ($result === NULL)		//if some error occured
+			{
+				debug("Connection error!!!");
+				//set the last try to the current time
+				$sql = "UPDATE portal_statistics SET timestamp='".$db->getTimestampTz()."' WHERE name='last_connection_try'";
+				$db->query($sql);
+			}
+			else
+			{
+				$sql = "UPDATE portal_statistics SET timestamp='".$db->getTimestampTz()."' WHERE name='events_sent'";
+				$db->query($sql);
+			}
+
+		}
+
+
 	}
 
 }
@@ -984,11 +1122,24 @@ class portal_user
 		return $this->name;	//return username
 	}
 
+	function getEmail()
+	{
+		return $this->email;	//return email address
+	}
+
 	function loggedIn()
 	{
 		if ($this->id == -1) return false;	//if not logged in return false
 		return true;				//else return true
 	}
+
+	function countUsers($portal_id)
+	{
+		global $db;
+		$sql="SELECT count(*) FROM portal_users WHERE portal_id=$portal_id";
+		return $db->getOne($sql);
+	}
+
 
 //	function getPrefs($portal_admin)
 //	{

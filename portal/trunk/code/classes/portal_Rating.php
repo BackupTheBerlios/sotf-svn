@@ -2,20 +2,20 @@
 
 class Rating {
 
-  function setRating($comment_id, $rating) {
-	global $page;
+  function setRating($prog_id, $rating) {
+	global $page, $user, $db;
 
-	$db = &$page->db;;
-	if($page->loggedInNotAnonym()) {
-	  $userid = clean($page->getUserId());
-	  $db->query("SELECT * FROM rating_atomic WHERE comment_id='$comment_id' AND userid='$userid'");
-	  if($db->next_record()) {
-		$query = "UPDATE rating_atomic SET rate='$rating', host='" . getHostName() . "', ";
-		$query .= "entered='" . getSQLDate() . "' ";
-		$query .= "WHERE comment_id='$comment_id' AND userid='$userid'";
+	if($user->loggedIn()) {
+	  $userid = $user->getId();
+	  $query = "SELECT * FROM portal_ratings WHERE prog_id='$prog_id' AND user_id='$userid'";
+	  $result = $db->getRow($query);
+	  if($result != NULL) {
+		$query = "UPDATE portal_ratings SET rate='$rating', host='" . getHostName() . "', ";
+		$query .= "entered='" . $db->getTimestampTz() . "' ";
+		$query .= "WHERE prog_id='$prog_id' AND user_id='$userid'";
 	  } else {
-		$query = "INSERT INTO rating_atomic (comment_id, userid, rate, host, entered) 
-                  VALUES('$comment_id', '$userid','$rating','" . getHostName() . "','" . getSQLDate() . "')";
+		$query = "INSERT INTO portal_ratings (prog_id, user_id, rate, host, entered) 
+                  VALUES('$prog_id', '$userid','$rating','" . getHostName() . "','" . $db->getTimestampTz() . "')";
 	  }
 	  $db->query($query);
 	} else {
@@ -23,15 +23,16 @@ class Rating {
 	  $key = $page->getAuthKey();
 	  //debug("new rating", $key);
 	  if($key) {
-		$db->query("SELECT rate FROM rating_atomic WHERE comment_id='$comment_id' AND auth_key='$key'");
-		if($db->next_record()) {
+		$query = "SELECT rate FROM portal_ratings WHERE prog_id='$prog_id' AND auth_key='$key'";
+		$result = $db->getOne($query);
+		if($result != NULL) {
 		  // update
-		  if($db->Record['rate'] == $rating) {
+		  if($result == $rating) {
 			// we can spare an SQL query
 		  } else {
-			$query = "UPDATE rating_atomic SET rate='$rating', host='" . getHostName() . "', ";
-			$query .= "entered='" . getSQLDate() . "' ";
-			$query .= " WHERE comment_id='$comment_id' AND auth_key='$key'";
+			$query = "UPDATE portal_ratings SET rate='$rating', host='" . getHostName() . "', ";
+			$query .= "entered='" . $db->getTimestampTz() . "' ";
+			$query .= " WHERE prog_id='$prog_id' AND auth_key='$key'";
 			$db->query($query);
 		  }
 		  $updateDone = true;
@@ -46,39 +47,46 @@ class Rating {
 		  $keySafe = "NULL";
 		} else {
 		  $problem = "NULL";
-		  $keySafe = "'".clean($key)."'";
+		  $keySafe = "'".$key."'";
 		}
-		$query = "INSERT INTO rating_atomic (comment_id, rate, host, entered, auth_key, problem) 
-          VALUES('$comment_id','$rating','" . getHostName() . "','" . getSQLDate() . "', $keySafe, $problem)";
+		$query = "INSERT INTO portal_ratings (prog_id, rate, host, entered, auth_key, problem) 
+          VALUES('$prog_id','$rating','" . getHostName() . "','" . $db->getTimestampTz() . "', $keySafe, $problem)";
 		$db->query($query);
 	  }
 	}
 	// update instant rating
-	$db->query("select SUM(rate) as sum, count(rate) as count FROM rating_atomic " .
-			   "WHERE comment_id='$comment_id' AND userid IS NULL");
-	$db->next_record();
-	$count_anon = $db->Record['count'];
-	$sum_anon = $db->Record['sum'];
-	$db->query("select SUM(rate) as sum, count(rate) as count FROM rating_atomic " .
-			   "WHERE comment_id='$comment_id' AND userid IS NOT NULL");
-	$db->next_record();
-	$count_reg = $db->Record['count'];
-	$sum_reg = $db->Record['sum'];
+	$query = "select SUM(rate) as sum, count(rate) as count FROM portal_ratings WHERE prog_id='$prog_id' AND user_id IS NULL";
+	$result = $db->getRow($query);
+	$count_anon = $result['count'];
+	$sum_anon = $result['sum'];
+
+	$query = "select SUM(rate) as sum, count(rate) as count FROM portal_ratings WHERE prog_id='$prog_id' AND user_id IS NOT NULL";
+	$result = $db->getRow($query);
+
+	$count_reg = $result['count'];
+	$sum_reg = $result['sum'];
 	$ratingValue = ($sum_reg + $sum_anon) / ($count_reg + $count_anon);
-	$query = "UPDATE psl_comment SET rating_value=$ratingValue, " .
-	   "rating_count_anon=$count_anon, rating_count_reg=$count_reg WHERE comment_id='$comment_id'";
-	$db->query($query);
+	$query = "UPDATE portal_prog_rating SET rating_value=$ratingValue, " .
+	   "rating_count_anon=$count_anon, rating_count_reg=$count_reg WHERE prog_id='$prog_id'";
+	$result = $db->query($query);
+	if ($db->affectedRows() == 0)
+	{
+		$query = "INSERT INTO portal_prog_rating(rating_value, rating_count_anon, rating_count_reg, prog_id) ".
+			" VALUES($ratingValue, $count_anon, $count_reg, '$prog_id')";
+		$result = $db->query($query);
+	}
+	
   }
 
-  function getRating($comment_id) {
-	global $page;
+  function getRating($prog_id) {
+	global $page, $db;
 
-	$comment_id = clean($comment_id);
-	$db = &$page->db;;
-	$db->query("SELECT rating_value, rating_count_anon, rating_count_reg FROM psl_comment ".
-			   " WHERE comment_id='$comment_id'");
-	$db->next_record();
-	return getRatingFromCommentRecord($db->Record);
+	$prog_id = $prog_id;
+	$query = "SELECT rating_value, rating_count_anon, rating_count_reg FROM portal_prog_rating ".
+			   " WHERE prog_id='$prog_id'";
+	$result = $db->getRow($query);
+
+	return $this->getRatingFromCommentRecord($result);
   }
 
   function getRatingFromCommentRecord($array) {
@@ -99,6 +107,17 @@ class Rating {
 				 );
   }
   
+  function getRatings() {
+  global $page;
+  return array(
+  	0 => $page->getlocalized("rating_0"),
+  	1 => $page->getlocalized("rating_1"),
+  	2 => $page->getlocalized("rating_2"),
+  	3 => $page->getlocalized("rating_3"),
+  	4 => $page->getlocalized("rating_4"),
+  	5 => $page->getlocalized("rating_5")
+  );
+  }
 
 }
 

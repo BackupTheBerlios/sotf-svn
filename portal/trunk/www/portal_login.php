@@ -22,6 +22,18 @@ $portal_name = substr($_SERVER["PATH_INFO"], 1);
 
 $portal = new sotf_Portal($portal_name);
 $portal_id = $portal->getId();
+
+//count page_impression
+		$query = "UPDATE portal_ratings SET rate='$rating', host='" . getHostName() . "', ";
+		$query .= "entered='" . $db->getTimestampTz() . "' ";
+		$query .= "WHERE prog_id='$prog_id' AND user_id='$userid'";
+
+
+if ($portal_id == NULL) $query = "UPDATE portal_statistics SET number=number+1, timestamp='".$db->getTimestampTz()."' WHERE name='page_impression' AND portal_id IS NULL";
+else $query = "UPDATE portal_statistics SET number=number+1, timestamp='".$db->getTimestampTz()."' WHERE name='page_impression' AND portal_id = $portal_id";
+$db->query($query);
+
+
 if ( $portal_id == NULL AND !(strpos($_SERVER['PHP_SELF'], "index.php")) ) $page->redirect($rootdir."/index.php");	//redirect if no such portal AND not called from there
 
 ////user login and logout////

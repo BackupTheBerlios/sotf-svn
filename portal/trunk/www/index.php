@@ -37,8 +37,11 @@ if (sotf_Utils::getParameter('create_new_portal'))
 			$user_id = $user->addNewUser($portal_id, $username, $user_password, $email);
 	
 			$sql = "UPDATE portal_settings SET admin_id = $user_id WHERE id = $portal_id";
-			$result = $db->query($sql);
-	
+			$db->query($sql);
+
+			$sql = "INSERT INTO portal_statistics(name, number, portal_id) VALUES('page_impression', 0, $portal_id);";
+			$db->query($sql);
+
 			//$smarty->assign("error", "Portal created!");
 			$page->redirect($rootdir."/portal.php/$name");
 		}

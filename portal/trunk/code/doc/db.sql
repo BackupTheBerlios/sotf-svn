@@ -84,6 +84,62 @@ CREATE TABLE "portal_vars" (
 );
 CREATE  UNIQUE INDEX "portal_vars_name_key" ON "portal_vars" ("name");
 
+CREATE TABLE "portal_ratings" (						-- individual ratings made by registered persons or anonym users
+	"id" serial PRIMARY KEY, 					-- just an id
+	"prog_id" varchar(12) NOT NULL,					-- sotf programme id
+	"user_id" int,							-- user who rated or NULL if anonymous
+	"rate" SMALLINT NOT NULL DEFAULT '0',
+	"host" varchar(100) NOT NULL,					-- host from where the rating arrived
+	"entered" timestamptz NOT NULL DEFAULT '-infinity',		-- date when rating arrived
+	"auth_key" varchar(50),						-- anti-abuse thingie
+	"problem" varchar(50) default NULL				-- if any suspicious thing occurred during rating
+);
+
+CREATE TABLE "portal_prog_rating" (					-- calculated overall rating for a programme is stored here XXX
+	"id" SERIAL PRIMARY KEY,
+	"prog_id" varchar(12) NOT NULL,						-- id of programme rated
+	"rating_value" float,							-- value of rating
+	"alt_value" float,							-- rating calculated in an alternative way XXX
+	"rating_count" int DEFAULT 0,						-- total number of raters	
+	"rating_count_reg" int DEFAULT 0,					-- number of registered raters	
+	"rating_count_anon" int DEFAULT 0,					-- number of anonymous raters
+	"rating_sum_reg" int DEFAULT 0,						-- sum of ratings by registered raters	
+	"rating_sum_anon" int DEFAULT 0,					-- sum of ratings by anonymous raters
+	"detail" text								-- may contain more detailed structured data on rating XXX
+);
+
+CREATE TABLE "portal_statistics" (					--statistics on portals, programmes
+	"id" SERIAL PRIMARY KEY,
+	"name" varchar NOT NULL,					--name of the data (page_impression, events_sent, last_connection, last_connection_try, query, programme)
+	"value" varchar,						--value if needed (by query the query string and by programme tge ID)
+	"timestamp" datetime DEFAULT date('now'::datetime) NOT NULL,	--timestamp
+	"timestamp2" datetime,						--timestamp2 (stop time (last used) for query and programme)
+	"portal_id" int4 REFERENCES portal_settings(id),		--portal_id for page_impression, query and programme
+	"number" int4							--counter for page_impression
+);
+INSERT INTO portal_statistics(name, number) VALUES('page_impression', 0);		--page impression for unknow portals and main page
+
+INSERT INTO portal_statistics(name) VALUES('events_sent');			--last time events table has been sent to the node
+INSERT INTO portal_statistics(name) VALUES('last_connection');			--last time connected to node
+INSERT INTO portal_statistics(name) VALUES('last_connection_try');		--last time tried to connect to the node
+
+
+CREATE TABLE "portal_events" (						--events that must be sent to the node
+	"id" SERIAL PRIMARY KEY,
+	"name" varchar NOT NULL,					--name of the event (portal_created, portal_updated, portal_deleted, users, rating, comment, visit)
+	"portal_name" varchar,						--portal_name
+	"timestamp" datetime DEFAULT date('now'::datetime) NOT NULL,	--timestamp
+	"value" varchar							--value of the event
+);
+
+CREATE TABLE "portal_cache" (						--cache for queries and programmes (reduces XMLRPC calls)
+	"id" SERIAL PRIMARY KEY,
+	"type" int4 NOT NULL,						--type of the cache element (1=query, 2=programme)
+	"name" varchar NOT NULL,					--the query or the id of the programme
+	"value" varchar NOT NULL,					--value of the cached element
+	"timestamp" datetime DEFAULT date('now'::datetime) NOT NULL	--timestamp last updated
+);
+
 INSERT INTO "portal_vars" ("id", "name", "value") VALUES(1, 'smarty_compile_check', '1');
 
 INSERT INTO "portal_templates" ("id", "name", "settings", "published") VALUES(1, 'Under construction', 'YTo3OntzOjU6InRhYmxlIjthOjQ6e2k6MDthOjM6e2k6MDthOjEwOntzOjg6InJlc291cmNlIjtzOjQ6InRleHQiO3M6NToidmFsdWUiO3M6MDoiIjtzOjQ6ImxpbmsiO3M6NDoibm9uZSI7czo1OiJzdHlsZSI7czo0OiJub25lIjtzOjU6ImNsYXNzIjtzOjQ6Im5vbmUiO3M6NToiYWxpZ24iO3M6NjoiY2VudGVyIjtzOjY6InZhbGlnbiI7czo2OiJtaWRkbGUiO3M6NToid2lkdGgiO3M6MDoiIjtzOjU6ImNvbG9yIjtzOjY6ImZmMDAwMCI7czo0OiJodG1sIjtzOjA6IiI7fWk6MTthOjEwOntzOjg6InJlc291cmNlIjtzOjQ6InRleHQiO3M6NToidmFsdWUiO3M6MDoiIjtzOjQ6ImxpbmsiO3M6NDoibm9uZSI7czo1OiJzdHlsZSI7czo0OiJub25lIjtzOjU6ImNsYXNzIjtzOjQ6Im5vbmUiO3M6NToiYWxpZ24iO3M6NjoiY2VudGVyIjtzOjY6InZhbGlnbiI7czo2OiJtaWRkbGUiO3M6NToid2lkdGgiO3M6MDoiIjtzOjU6ImNvbG9yIjtzOjY6ImZmZmZmZiI7czo0OiJodG1sIjtzOjA6IiI7fWk6MjthOjEwOntzOjg6InJlc291cmNlIjtzOjQ6InRleHQiO3M6NToidmFsdWUiO3M6MDoiIjtzOjQ6ImxpbmsiO3M6NDoibm9uZSI7czo1OiJzdHlsZSI7czo0OiJub25lIjtzOjU6ImNsYXNzIjtzOjQ6Im5vbmUiO3M6NToiYWxpZ24iO3M6NjoiY2VudGVyIjtzOjY6InZhbGlnbiI7czo2OiJtaWRkbGUiO3M6NToid2lkdGgiO3M6MDoiIjtzOjU6ImNvbG9yIjtzOjY6IjAwODAwMCI7czo0OiJodG1sIjtzOjA6IiI7fX1pOjE7YToxOntpOjA7YToxMDp7czo4OiJyZXNvdXJjZSI7czo0OiJ0ZXh0IjtzOjU6InZhbHVlIjtzOjA6IiI7czo0OiJsaW5rIjtzOjQ6Im5vbmUiO3M6NToic3R5bGUiO3M6NDoibm9uZSI7czo1OiJjbGFzcyI7czo0OiJub25lIjtzOjU6ImFsaWduIjtzOjY6ImNlbnRlciI7czo2OiJ2YWxpZ24iO3M6NjoibWlkZGxlIjtzOjU6IndpZHRoIjtzOjA6IiI7czo1OiJjb2xvciI7czowOiIiO3M6NDoiaHRtbCI7czowOiIiO319aToyO2E6MTp7aTowO2E6MTA6e3M6ODoicmVzb3VyY2UiO3M6NDoidGV4dCI7czo1OiJ2YWx1ZSI7czozNToiVW5kZXIgY29uc3RydWN0aW9uITxicj48aHIgbm9zaGFkZT4iO3M6NDoibGluayI7czo0OiJub25lIjtzOjU6InN0eWxlIjtzOjQwOiJzaXplOjV8ZmFjZTpBcmlhbCwgSGVsdmV0aWNhLCBzYW5zLXNlcmlmIjtzOjU6ImNsYXNzIjtzOjQ6Im5vbmUiO3M6NToiYWxpZ24iO3M6NjoiY2VudGVyIjtzOjY6InZhbGlnbiI7czo2OiJtaWRkbGUiO3M6NToid2lkdGgiO3M6NDoiMTAwJSI7czo1OiJjb2xvciI7czowOiIiO3M6NDoiaHRtbCI7czo5MzoiPGZvbnQgZmFjZT0iQXJpYWwsIEhlbHZldGljYSwgc2Fucy1zZXJpZiIgc2l6ZT0iNSI+VW5kZXIgY29uc3RydWN0aW9uITxicj48aHIgbm9zaGFkZT48L2ZvbnQ+Ijt9fWk6MzthOjE6e2k6MDthOjEwOntzOjg6InJlc291cmNlIjtzOjU6InNwYWNlIjtzOjU6InZhbHVlIjtzOjA6IiI7czo0OiJsaW5rIjtzOjQ6Im5vbmUiO3M6NToic3R5bGUiO3M6NDoibm9uZSI7czo1OiJjbGFzcyI7czo0OiJub25lIjtzOjU6ImFsaWduIjtzOjY6ImNlbnRlciI7czo2OiJ2YWxpZ24iO3M6NjoibWlkZGxlIjtzOjU6IndpZHRoIjtzOjA6IiI7czo1OiJjb2xvciI7czowOiIiO3M6NDoiaHRtbCI7czowOiIiO319fXM6NjoicG9ydGFsIjthOjQ6e3M6MzoiYmcxIjtzOjY6Ijk5ZmY5OSI7czozOiJiZzIiO3M6NjoiNjZjYzAwIjtzOjQ6ImZvbnQiO3M6NjoiMDAwMDAwIjtzOjM6ImNzcyI7Tjt9czo0OiJob21lIjthOjc6e3M6MjoiYmciO3M6NjoiOTlmZjk5IjtzOjQ6IndhbGwiO3M6NDM6Imh0dHA6Ly93d3cuZHNkLnN6dGFraS5odS9+bWF0ZS9wbTIwNS9iZy5qcGciO3M6NDoiZm9udCI7czo2OiIwMDAwMDAiO3M6NDoibGluayI7czo2OiIwMDMzMDAiO3M6NToiYWxpbmsiO3M6NjoiMDA2NjAwIjtzOjU6InZsaW5rIjtzOjY6IjAwNjYwMCI7czozOiJjc3MiO047fXM6MTA6InByb2dyYW1tZXMiO2E6Nzp7czoyOiJiZyI7czo2OiI5OWZmOTkiO3M6NDoid2FsbCI7czo0MzoiaHR0cDovL3d3dy5kc2Quc3p0YWtpLmh1L35tYXRlL3BtMjA1L2JnLmpwZyI7czo0OiJmb250IjtzOjY6IjAwMDAwMCI7czo0OiJsaW5rIjtzOjY6IjAwMzMwMCI7czo1OiJhbGluayI7czo2OiIwMDY2MDAiO3M6NToidmxpbmsiO3M6NjoiMDA2NjAwIjtzOjM6ImNzcyI7Tjt9czozOiJjc3MiO2I6MDtzOjY6InJhdGluZyI7YjowO3M6NDoiY2hhdCI7YjowO30=', 'f');

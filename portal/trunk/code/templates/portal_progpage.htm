@@ -61,8 +61,10 @@
 			</p>
 			<br />
 			<p>
-			Rating: *** (average)<br>
-			<select name="rating" size="1"><option>Rate this programme</option><option>***** excellent</option><option>**** good</option><option>*** average</option><option>** mediocre</option><option>* poor</option></select>
+			<b>{#rating#}:</b>
+			{#average#}:{$rating_average}<br>
+			{#users_rated1#} {$users_rated} {#users_rated2#}<br>
+			<select name="rating" size="1">{html_options options=$ratings selected=$rating.RATING_OUTPUT}</select>
 			<input type="submit" name="rate_it" value="Submit">
 			</p>
 			</font>

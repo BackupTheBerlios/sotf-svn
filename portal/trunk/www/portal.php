@@ -4,6 +4,8 @@
 //header("Expires: $anhour");
 
 require("portal_login.php");
+if (sotf_Utils::getParameter('id')) require("$classdir/portal_Rating.php");
+
 $error = "";			//to collect the (error) messages for the user
 
 if (sotf_Utils::getParameter('logout'))			//if logout link pressed
@@ -92,6 +94,7 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 	}
 	elseif (sotf_Utils::getParameter('save_changes'))		//admin page save button pressed
 	{
+		$portal->addEvent("portal_updated", "$portal_name");
 		if ($admin)			//if on admin page
 		{
 			if ($settings["rating"])	//if rating enabled check it (else it is disabled)
@@ -286,6 +289,9 @@ $activate = sotf_Utils::getParameter('activate');
 if ($id)	//if programmes view
 {
 	$comments = $portal->getComments($id);
+	$rating = new Rating();
+
+	$portal->addEvent("visit", array("user_name" => $user->getName(),"user_email" => $user->getEmail(), "host" => getHostName(), "authkey" => $page->getAuthKey()));
 
 	if ($portal->isAdmin($user->getId()))	//if admin user
 	{
@@ -307,12 +313,13 @@ if ($id)	//if programmes view
 		{
 			$reply_to = sotf_Utils::getParameter('reply_to');
 			$value = sotf_Utils::getParameter('value');
+			$title = sotf_Utils::getParameter('title');
 
 			//if (strpos($email, "@") == false)		//if email not valid
 			//	$page->redirect($_SERVER["PHP_SELF"]."?id=".$id."&reply_to=".$reply_to."&value=".urlencode($value)."#edit");		//redirect page, prevent resend of data
 			if ($user->loggedIn())
 			{
-				$email = NULL;
+				$email = $user->getEmail();
 				$user_id = $user->getId();
 			}
 			else
@@ -323,7 +330,8 @@ if ($id)	//if programmes view
 			}
 
 			if ($reply_to == "root") $reply_to = NULL;
-			$portal->addComment($id, $user_id, $reply_to, sotf_Utils::getParameter('title'), $value, $email);
+			$portal->addComment($id, $user_id, $reply_to, $title, $value, $email);
+
 			$page->redirect($_SERVER["PHP_SELF"]."?id=".$id);		//redirect page, prevent resend of data
 		}
 		elseif (sotf_Utils::getParameter('comment'))		//add comment or reply button (link) pressed
@@ -339,14 +347,23 @@ if ($id)	//if programmes view
 
 	if ( ($user->loggedIn()) OR ($settings["a_rating"]) )	//if logged in or anonym rating enabled
 	{
-		if (sotf_Utils::getParameter('rate_it'))	//programme rating
+		$value = (integer)sotf_Utils::getParameter('rating');
+		if (sotf_Utils::getParameter('rate_it') AND ($value != 0))	//programme rating
 		{
+			$rating->setRating($id, $value);
+			$r = $rating->getRating($id);
+			$r['user_name'] = $user->getName();
+			$r['user_email'] = $user->getEmail();
+			$r['host'] = getHostName();
+			$r['authkey'] = $page->getAuthKey();
+			$portal->addEvent("rating", $r);
 			$page->redirect($_SERVER["PHP_SELF"]."?id=".$id);		//redirect page, prevent resend of data
 		}
 	}
 
 	$smarty->assign('comments', $comments);
 	$result = $portal->getProgrammes(array($id));
+
 	$result = $result[0];
 
 	$fields = $portal->getAllFieldnames();
@@ -415,7 +432,18 @@ if ($id)	//if programmes view
 	$programme['values'] = $values;
 
 	$smarty->assign('programme', $programme);
-
+/*
+				 RATING_OUTPUT => $rtext,
+a				 RATING_VALUE => $array['rating_value'],
+a				 RATING_COUNT => $array['rating_count_reg'] + $array['rating_count_anon'],
+				 RATING_COUNT_REG => $array['rating_count_reg'],
+				 RATING_COUNT_ANON => $array['rating_count_anon']
+*/
+	$r = $rating->getRating($id);
+	$average = round((float)$r['RATING_VALUE']);
+	$smarty->assign('rating_average', $page->getlocalized("rating_".$average));
+	$smarty->assign('users_rated', $r['RATING_COUNT']);
+	$smarty->assign('ratings', $rating->getRatings());
 }
 elseif (sotf_Utils::getParameter('register_new_user'))
 {
@@ -434,6 +462,7 @@ elseif (sotf_Utils::getParameter('register_new_user'))
 	elseif ($user->addNewUser($portal->getId(), $desired_username, $desired_password, $email_address))
 	{
 		$smarty->assign('reply', $page->getlocalized("user_added"));
+		$portal->addEvent("users", $user->countUsers($portal_id));
 		$desired_username = "";
 		$email_address = "";
 	}
