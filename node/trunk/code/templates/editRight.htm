@@ -15,7 +15,7 @@
               <tr>
                 <td>{#start_time#}</td>
                 <td>
-                  <input size="6" name="start_time" value="{$START_TIME}" />
+                  <input size="6" name="start_time" value="{$START_TIME}" /> {#time_format#}
                 </td>
                 <td rowspan="2">
                   <input type="checkbox" name="fullprog" {if !$NEW and !$START_TIME and !$STOP_TIME} CHECKED="1" {/if} /> {#for_whole_prg#}
@@ -24,7 +24,7 @@
               <tr>
                 <td>{#stop_time#}</td>
                 <td>
-                  <input size="6" name="stop_time" value="{$STOP_TIME}" />
+                  <input size="6" name="stop_time" value="{$STOP_TIME}" />  {#time_format#}
                 </td>
               </tr>
               <tr valign="top">

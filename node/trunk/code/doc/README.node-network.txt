@@ -1,6 +1,6 @@
 
 
-How to start a node network?
+How to join a node network?
 ---------------------------
 
 1. log in as admin

@@ -53,6 +53,8 @@ INSTALLATION
 - Go to 'Admin' menu to join the node network
 
 - Run node/www/cron.php periodically for housekeeping
+  You can do this for example with a cron job similar to this:
+  0      *       *       *       *       /usr/bin/wget -q -t 1 -O /dev/null http://<YOUR_NODE_URL>/cron.php
 
 NOTES
 

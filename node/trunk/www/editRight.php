@@ -9,6 +9,17 @@
 
 require("init.inc.php");
 
+// get number of seconds from time in seconds or in min:seconds format
+function getTime($text) {
+  if(is_numeric($text))
+	 return $text;
+  if(preg_match("/(\d+):(\d+)/", trim($text), $mm)) {
+	 $time = $mm[1]*60+$mm[2];
+	 return $time;
+  }
+  return NULL;
+}
+
 $smarty->assign('PAGETITLE',$page->getlocalized('edit_right'));
 
 $page->popup = true;
@@ -35,8 +46,8 @@ if($rightId) {
 }
 
 if($save) {
-  $startTime = sotf_Utils::getParameter('start_time');
-  $stopTime = sotf_Utils::getParameter('stop_time');
+  $startTime = getTime(sotf_Utils::getParameter('start_time'));
+  $stopTime = getTime(sotf_Utils::getParameter('stop_time'));
   $rightsText = sotf_Utils::getParameter('rights_text');
   $fullProg = sotf_Utils::getParameter('fullprog');
   // save
