@@ -19,7 +19,7 @@ class sotf_Neighbour extends sotf_Object {
 			//logError('no such neighbour: $nodeId');
       return null;
     }
-		return new sotf_Node($data['id'], $data);
+		return new sotf_Neighbour($data['id'], $data);
 	}
 
 	/** 
@@ -57,8 +57,17 @@ class sotf_Neighbour extends sotf_Object {
     return $this->get('pending_url');
   }
 
-  function sync() {
-    if($this->get('use_for_outgoing')=='f') {
+  /** private */
+  function log($console, $msg) {
+    global $page;
+    logError($msg);
+    if($console)
+      $page->addStatusMsg($msg);
+  }
+
+  function sync($console = false) {
+    global $page;
+    if(!$console && $this->get('use_for_outgoing')=='f') {
       debug("node $this->id is not used for outgoing sync");
       return;
     }
@@ -70,6 +79,7 @@ class sotf_Neighbour extends sotf_Object {
       $url = substr($url, 0, -1);
     // collect local data to send
     $localNode = sotf_Node::getLocalNode();
+    debug("localNode", $localNode);
     $localNodeData = $localNode->getAll();
     // check if url is correct...
     $localNodeData['url'] = $rootdir;
@@ -80,14 +90,6 @@ class sotf_Neighbour extends sotf_Object {
     $response = $rpc->call($url . '/xmlrpcServer.php', 'sync', $objs);
     // error handling
     if(!$response) {
-      logError("SYNC failed with node $remoteId");
-      $err = true;
-    }
-    if ($response->faultCode() != 0) {
-      logError("SYNC error with node $remoteId: " . $response->faultCode() . ": " . $response->faultString());
-      $err = true;
-    }
-    if($err) {
       $this->set('errors', $this->get('errors')+1);
       $this->update();
       return;
@@ -95,7 +97,7 @@ class sotf_Neighbour extends sotf_Object {
     // save received data
     if(count($response) > 0) {
       $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects);
-      debug("number of updatd objects", count($updatedObjects));
+      $this->log($console, "number of updatd objects", count($updatedObjects));
     }
     
     // save last_sync

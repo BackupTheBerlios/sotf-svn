@@ -24,10 +24,10 @@ function call($url, $method, $params) {
   // process response
   debug("XML-RPC Response", $response->serialize());
   if (!$response) {
-    logError("No response","probably host is unreachable");
+    addError("No response","probably host is unreachable");
   } elseif ($response->faultCode() != 0) {
     // there was an error
-    logError("Error response: ", $response->faultCode() . "  " . $response->faultString());
+    addError("Error response: ", $response->faultCode() . "  " . $response->faultString());
   } else {
     $retval = $response->value();
     if($retval)

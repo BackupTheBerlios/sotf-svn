@@ -27,9 +27,9 @@ if($save) {
 // sync
 $sync = sotf_Utils::getParameter('sync');
 if($sync) {
-  $nodeId = sotf_Utils::getParameter('nodeid');
-  $neighbour = sotf_Neighbour::getById($nodeId);
-  $neighbour->sync();
+  $nid = sotf_Utils::getParameter('nodeid');
+  $neighbour = sotf_Neighbour::getById($nid);
+  $neighbour->sync(true);
   $page->redirect("admin.php#network");
   exit;
 }
