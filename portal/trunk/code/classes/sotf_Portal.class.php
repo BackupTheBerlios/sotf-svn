@@ -541,6 +541,7 @@ class sotf_Portal
 			//if failed to connect in the last $ERROR_REFRESH_TIME seconds don't try again
 			$sql = "SELECT timestamp FROM portal_statistics WHERE name='last_connection_try'";
 			$last_error = $db->diffTimestamp($db->getTimestamp(), $db->getOne($sql));
+
 			if ($last_error > $ERROR_REFRESH_TIME)
 			{
 				//echo("connect...");
@@ -1062,7 +1063,7 @@ class sotf_Portal
 		$last_error = $db->diffTimestamp($db->getTimestamp(), $db->getOne($sql));
 
 		//$MIN_EVENT_SENDING=10;$ERROR_REFRESH_TIME =10;	//to test it
-		if ($last_error > $ERROR_REFRESH_TIME)
+		if ($last_error >= $ERROR_REFRESH_TIME)
 		{
 			$db->begin();	//begin transaction
 			$db->lockTable("portal_statistics");
@@ -1096,7 +1097,7 @@ class sotf_Portal
 				}
 				
 				$objs = array($events);
-	
+
 				$result = $rpc->call($url, 'portal.events', $objs);
 				if ($result != count($events))		//if some error occured (return value must be the number of events sent)
 				{

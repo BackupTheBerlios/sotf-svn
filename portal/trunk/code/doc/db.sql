@@ -69,7 +69,7 @@ CREATE TABLE programmes_comments (
 "id" SERIAL PRIMARY KEY,
 "portal_id" int4 REFERENCES portal_settings(id) NOT NULL,
 "progid" varchar (20),
-"user_id" int4 REFERENCES portal_users(id) NOT NULL,
+"user_id" int4 REFERENCES portal_users(id),
 "reply_to" int4 REFERENCES programmes_comments(id),
 "path" varchar,
 "timestamp" timestamp DEFAULT date('now'::timestamp) NOT NULL,
