@@ -140,6 +140,8 @@ if($config['debug'])
 	error_log("REMOTE_HOST: " . getHostName() ,0);
   error_log("USER_AGENT: " . myGetenv('HTTP_USER_AGENT') ,0);
   error_log("REFERER: " . myGetenv('HTTP_REFERER'),0);
+  error_log("HTTP_HOST: " . myGetenv('HTTP_HOST'),0);
+  error_log("SERVER_NAME: " . myGetenv('SERVER_NAME'),0);
   foreach($_GET as $key => $value) {
     error_log("GET: $key = $value",0);
   }
