@@ -69,6 +69,8 @@
 		if(empty($val['prog_title'])){									# if no programme title has been specifid, take the series title
 			$val['prog_title'] = $val['series_title'];
 		}
+		
+		//add calendar blocks
 		$myDay->addBlock($val['prog_id'],date("H:i",$val['intime']),date("H:i",$val['outtime']),$val['prog_title'],$val['series_owner'],$val['owner_name'],$val['special']);
 	}
 	
