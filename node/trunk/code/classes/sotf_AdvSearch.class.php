@@ -522,7 +522,7 @@ class sotf_AdvSearch
 		return $EQnumber;
 	}
 
-	function simpleSearch($words, $language = false)		//searches the words in the most popular fields
+	function simpleSearch($words, $language = false, $stationId = '')		//searches the words in the most popular fields
 	{
 		global $db;
 		$this->allid = array();
@@ -537,6 +537,7 @@ class sotf_AdvSearch
 			//find word at the most common places
 			$serial = str_replace("XXX", $word[$i], "production_date|Bstation|AAND|Bperson|Bcontains|BXXX|Bstring|AOR|Btitle|Bcontains|BXXX|Bstring|AOR|Bkeywords|Bcontains|BXXX|Bstring|AOR|Babstract|Bcontains|BXXX|Bstring|AOR|Bspatial_coverage|Bcontains|BXXX|Bstring");
 			if ($language) $serial .= "|AAND|Blanguage|Bis|B".$language."|Blang";		//if language given add to search options
+      if ($stationId) $serial .= "|AAND|Bstation|Bis|B".$stationId."|Bstation";
 			$this->Deserialize($serial);		//deserialize query
 			$query = $this->GetSQLCommand();	//get desrialized query
 			$query = "SELECT id FROM (".$query.") as a";

@@ -42,6 +42,16 @@ class sotf_UserPrefs
     return '';
   }
 
+  function getQuery($name) {
+    reset($this->savedQueries);
+    while(list(,$query)=each($this->savedQueries)) {
+      if($query['name']==$name)
+        return $query['query'];
+    }
+    return '';
+  }
+  
+
   function save() {
     global $db, $user;
     $data = serialize($this);

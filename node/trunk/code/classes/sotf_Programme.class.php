@@ -1,5 +1,4 @@
-<?php 
-// -*- tab-width: 3; indent-tabs-mode: 1; -*-
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 // $Id$
 
 define("GUID_DELIMITER", ':');

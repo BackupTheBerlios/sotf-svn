@@ -13,14 +13,16 @@ require("$classdir/sotf_AdvSearch.class.php");
 
 $pattern = sotf_Utils::getSQLSafeParameter('pattern');
 $language = sotf_Utils::getSQLSafeParameter('language');
+$station = sotf_Utils::getSQLSafeParameter('station');
+
 if($pattern) {
-//  debug("language", $language);
+  //  debug("language", $language);
 
-if ($language == "any_language") $language = false;
+  if ($language == "any_language") $language = false;
 
-$advsearch = new sotf_AdvSearch();						//create new search object object with this array
+  $advsearch = new sotf_AdvSearch();						//create new search object object with this array
 
-  $total = $advsearch->simpleSearch($pattern, $language);
+  $total = $advsearch->simpleSearch($pattern, $language, $station);
   $limit = $page->splitList($total, $_SERVER["REQUEST_URI"]);
   $result = $advsearch->getSimpleSearchResults($limit["from"] , $limit["to"]);
 
