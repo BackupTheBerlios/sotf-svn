@@ -54,7 +54,7 @@
             </tr>
             <tr valign="top">
               <td class="meta">{#episode_sequence#}:</td>
-              <td><input name="episode_sequence" value="{$PRG_DATA.episode_sequence}" size="5" maxlength="5"></td>
+              <td><input name="episode_sequence" value="{if $PRG_DATA.episode_sequence}{$PRG_DATA.episode_sequence}{/if}" size="5" maxlength="5"></td>
             </tr>
             <tr valign="top">
               <td class="meta">{#language#}:</td>

@@ -56,7 +56,9 @@ if($save || $finish || $finishpublish) {
     if($type=='text') {
       $value = strip_tags($value);
     } elseif($type=='number') {
-      if(!is_numeric($value)) {
+      if(empty($value))
+        $value = '';
+      elseif(!is_numeric($value)) {
         addError($page->getlocalized('not_a_number') . ": $value");
         continue;
       }
