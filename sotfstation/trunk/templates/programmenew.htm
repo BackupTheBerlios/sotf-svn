@@ -1,0 +1,84 @@
+<form name="form1" method="post" action="programmenew.php">
+  <table width="100%" border="0" cellspacing="0" cellpadding="2">
+    <tr> 
+      <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr> 
+            <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+                <tr bgcolor="#ddddff"> 
+                  <td colspan="2" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr> 
+                        <td width="20" nowrap><strong><img src="{$root}img/i16-newprogramme.gif" width="27" height="21"></strong></td>
+                        <td class=title><strong>{#create_new_prog#}</strong></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr bgcolor="#dddddd"> 
+                  <td colspan="2" nowrap class=whitesmall><strong>{#series_data#}</strong> 
+                    ({#series_data_comm#})</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td width="10%" nowrap> <div align="right">*{#series_title#}:</div></td>
+                  <td nowrap><input name="series_title" type="text" class="myinput" id="series_title" value="{$submit_series_title}" maxlength="255"></td>
+                </tr>
+                <tr bgcolor="#F4F4F4"> 
+                  <td nowrap> <div align="right">*{#series_desc#}:</div></td>
+                  <td nowrap><textarea name="series_description" rows="5" wrap="VIRTUAL" class="myinput" id="series_description">{$submit_series_description}</textarea></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="2" nowrap bgcolor="#dddddd" class=whitesmall><strong>{#prog_data#}</strong></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">{#prog_title#}:</div></td>
+                  <td nowrap><input name="programme_title" type="text" class="myinput" id="programme_title" maxlength="255" value="{$submit_programme_title}"></td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap> 
+                    <div align="right">*{#start_time#}:</div></td>
+                  <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=sd 
+                    time=$stime} {html_select_time time=$stime display_seconds=false prefix=sd} </td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*{#end_time#}:</div></td>
+                  <td nowrap>{html_select_date end_year=2010 field_order=DMY time=$time 
+                    prefix=ed} {html_select_time display_seconds=false time=$time 
+                    prefix=ed} </td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap> 
+                    <div align="right">*{#spec_needs#}:</div></td>
+                  <td nowrap><select name="special_needs" id="special_needs">
+                     {html_options options=$special_needs selected=$submit_special_needs}
+                    </select></td>
+                </tr>
+                <tr bgcolor="#dddddd"> 
+                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#owner_data#}</strong></div></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*{#series_owner#}:</div></td>
+                  <td nowrap><select name="series_owner" class="myselect" id="series_owner">
+				  		{html_options options=$series_owner selected=$submit_series_owner}
+                    </select></td>
+                </tr>
+                {section name=error_cell show=$error_out} 
+                <tr bgcolor="#FFCCCC"> 
+                  <td colspan="2">{section name=errors loop=$error_list show=$error_out} 
+                    <div align=center> 
+                      <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
+                    {/section}</td>
+                </tr>
+                {/section} 
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="2" nowrap><div align="center"> 
+                      <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
+                      <input name="Submit" type="hidden" id="Submit" value="do">
+                    </div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr> 
+            <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+</form>

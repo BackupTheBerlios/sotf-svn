@@ -28,7 +28,10 @@
 		'11'	=> 'Please enter some user name for identification purposes!',
 		'12'	=> 'This login is already taken, please choose another login name',
 		'13'	=> 'The specified group does not exist, please change the Station Management configuration settings!',
-		'14'	=> 'Cannot edit user access status, The specified user is the last admin of the station, and hence cannot be edited!'
+		'14'	=> 'Cannot edit user access status, The specified user is the last admin of the station, and hence cannot be edited!',
+		'15'	=> 'Please enter a title for the series!',
+		'16'	=> 'Please enter a description for the series!',
+		'17'	=> 'Programme end time must be greater than programme start time!'
 	);
 	
 	//section names, used for building the navigation bar
@@ -36,7 +39,8 @@
 		'LOGIN'		=> 'Login',
 		'HOME'		=> 'Home',
 		'403'			=> 'No Access',
-		'INSIDE'	=> 'Day Overview',
+		'INSIDE'	=> 'Programme',
+		'ADDPROG' => 'New Programme',
 		'USERS'		=> 'Users',
 		'USERSNEW'=> 'Add New User',
 		'SETTINGS'=> 'Settings',
@@ -53,6 +57,7 @@
 	);
 	
 	$CONFIRM = array(
-		'1'				=> 'A new user has been created, you will be shortly redirected to the user management page!'
+		1			=> 'A new user has been created, you will be shortly redirected to the user management page!',
+		2			=> 'A new programme has been added to the station management console, you will be shortly redirected to the programme overview page!'
 	);
 ?>

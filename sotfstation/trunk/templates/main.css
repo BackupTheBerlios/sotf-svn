@@ -89,7 +89,7 @@ A.date:hover { color:#FF0000;}
 
 .myform, form {  font-family: Tahoma; font-size: 9px; clear: none; float: none; border-style: none; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px}
 
-select,.myinput{
+.myselect,.myinput{
 	font-size: 9px
 	background : #EEEEEE;
 	border : 1px solid #999999;

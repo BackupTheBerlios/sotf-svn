@@ -1,5 +1,14 @@
 Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
 
+************************************************************************************************
+ 20.11.2002
+************************************************************************************************
+
+From now on new programmes can be added to the station management console. A single programme
+is no more than a one show series. The addition is fully error controlled. The station 
+manager can easily assign as programme owner any other user of the station management console.
+Date overlaps are controlled. Confirmation Message Frameworks are used massively.
+
 
 ************************************************************************************************
  19.11.2002
