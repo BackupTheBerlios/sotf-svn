@@ -1,0 +1,61 @@
+<h3>{#add_files#}</h3>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#userfiles#}</td>
+  </tr>
+</table>
+<table width="100%" class="tabarea">
+<tr><td class="tabarea">
+	<form method="post">
+    <input type="hidden" name="prgid" value="{$PRG_ID}">
+    <input type="hidden" name="main" value="{$MAIN}">
+    {if $USERFILES}
+    <table width="100%"><tr><td width="50%">
+        <table>
+       {foreach key=key item=fname from=$USERFILES}
+          <tr>
+            <td>
+              <input value="{$fname|escape}" name="sel_{$key}" type="checkbox"  />
+            </td>
+            <td>
+              <a target="link" href="getUserFile.php/{$fname|escape}?filename={$fname|escape}">{$fname}</a>
+            </td>
+          </tr>
+        {/foreach}    
+        </table>
+      </td><td width="50%">
+                  <input type="radio" name="copy" value="1">{#copy_files#}
+                  <br /><input type="radio" name="copy" value="0" CHECKED>{#move_files#}
+      </td></tr></table>
+                <input type="submit" name="add" value="{#add_selected#}">
+                <!-- <input type="submit" name="del" value="{#del_selected#}"> -->
+                <br \><small>{#userfiles_expl#}</small>
+        </form>
+    {else}
+                    {#no_files#}    
+    {/if}
+</td></tr>
+</table>
+
+<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#direct_upload#}</td>
+  </tr>
+</table>
+<table width="100%" class="tabarea">
+<tr><td class="tabarea">
+          <form enctype="multipart/form-data" method="post">
+            <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+            <input type="hidden" name="stationid" value="{$STATION_ID}" />
+            <input name="userfile" type="file" />
+            <input type="submit" name="upload" value="{#upload_file#}" onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}')" />
+            <br /><small>{#upload_expl#}</small>
+          </form>
+
+<p>{#user_dir_ftp_access#}: <a target="ftp" href="{$USERFTPURL}">{$USERFTPURL}</a></p>
+
+</td></tr>
+</table>

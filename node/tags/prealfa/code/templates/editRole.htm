@@ -1,0 +1,34 @@
+
+{if $NEW}
+<h3>{#new_role#}</h3>
+{else}
+<h3>{#change_role#}</h3>
+{/if}
+
+<form name="form1" method="POST">
+
+<!--<input name="contactname" value="{$CONTACT_NAME}">-->
+<input type="hidden" name="objectid" value="{$OBJECT_ID}">
+      <select name="contact">
+        {foreach from=$CONTACTS item=contact}
+        <option value="{$contact.id}"  {if $contact.id eq $CONTACT_SELECTED} SELECTED {/if} >{$contact.name}</option>
+        {/foreach}
+      </select>
+      <select name="role">
+        {foreach from=$ROLE_LIST item=role}
+        <option value="{$role.id}"  {if $role.id eq $ROLE_SELECTED} SELECTED {/if} >{$role.name}</option>
+        {/foreach}
+      </select>
+{if $NEW}
+  <input type="submit" name="save" value="{#Add#}">
+{else}
+  <input type="submit" name="save" value="{#Change#}">
+{/if}
+
+<p>
+<span bgcolor="{#grayBgColor#}">
+<input type="button" onClick="javascript:popup('createContact.php','createContact',500,500,true)" value="{#Create_new#}" >
+</span>
+</p>
+
+</form>

@@ -1,0 +1,8 @@
+
+StreamOnTheFly node software
+
+INSTALLATION
+
+Check that the PHP scripts in node/www directory can be run by your
+web server.  Edit node/www/config.inc.php, then run
+node/www/install.php from your browser.

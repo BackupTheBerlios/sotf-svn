@@ -1,0 +1,57 @@
+<h3>Advanced search results</h3>
+<FORM method="post" action="advsearchresults.php">
+
+<div align="center">
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="80%" BGCOLOR="{#searchBgColor1#}">
+	<TR>
+		<TD COLSPAN=4>{#your_query_is#}:</TD>
+	</TR>
+	<TR>
+		<TD>&nbsp;&nbsp;</TD>
+		<TD BGCOLOR="#FFFFFF" align=center COLSPAN=2>
+		{section name=i loop=$SQLquery}
+		{if $smarty.section.i.index != 0}{$HumanReadable[i][0]}{/if}
+		{if $SQLquery[i.index_next][0] == "OR"}{if $SQLquery[i][0] == "AND"}({elseif $smarty.section.i.index == 0}({/if}{/if}
+
+		<b>{$HumanReadable[i][1]} {$HumanReadable[i][2]} <i>{$HumanReadable[i][3]}</i></b>
+		{if $SQLquery[i][0] == "OR"}{if $SQLquery[i.index_next][0] != "OR"}){/if}{/if}
+
+		{/section}
+		</TD>
+		<TD>&nbsp;&nbsp;</TD>
+	<TR>
+		<TD COLSPAN=3>&nbsp;</TD>
+	</TR>
+	<TR>
+		<TD>&nbsp;</TD>
+		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="33%">
+		<a href="advsearchresults.php?back=true{$SQLquerySerial}" class="menu"><big>[ {#back#} ]</big></a>
+<!--		<INPUT type="submit" name="back" value="{#back#}"> -->
+		</TD>
+		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="66%">
+		{include file="splitList.htm"}
+		</TD>
+		<TD>&nbsp;</TD>
+	</TR>
+	<TR>
+		<TD COLSPAN=4>&nbsp;</TD>
+	</TR>
+</TABLE>
+</div>
+
+<BR />
+<table>
+{foreach name=outer item=item from=$result}
+	<tr>
+		<td>{if $item.icon}<img src="{$CACHEDIR}/{$item.id}.png">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
+		<td><b><a href="get.php?id={$item.id}">{$item.title}</a></b><BR>
+		{foreach key=key item=cell from=$item.values}
+			{if $cell != ""}
+			<b>{$key}:</b>{$cell}<br>
+			{/if}
+		{/foreach}
+		</td>
+	</tr>
+{/foreach}
+</table>
+</FORM>

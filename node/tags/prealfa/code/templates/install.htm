@@ -1,0 +1,16 @@
+<h3>Install</h3>
+<FORM method="post" action="install.php">
+
+{#username#}: <INPUT type="text" name="user" value="$user"><BR />
+{#password#}: <INPUT type="password" name="pass" value="$pass"><BR />
+{#hostname#}: <INPUT type="text" name="host" value="$host"><BR />
+{#dbname#}: <INPUT type="text" name="db_name" value="$db_name"><BR />
+
+{section name=i loop=$output}
+{$output[i]}<BR />
+{/section}
+
+
+<INPUT type="submit" name="send" value="{#send#}">
+
+</FORM>

@@ -1,0 +1,41 @@
+
+<h3 align="center">{#Login#}</h3>
+<div align="center">{#please_login#} <br>
+
+<TABLE cellspacing="1" cellpadding="3" width="40%" class="login">
+
+  <FORM method="post" action="{$ROOTDIR}/login.php">
+    <INPUT type="hidden" name="filled" value="1">
+    <INPUT type="hidden" name="okURL" value="{$OK_URL}">
+    <TR> 
+      <TD COLSPAN="2"> <font color="red">{$ERRORMSG}</font> </TD>
+    </TR>
+    <TR> 
+      <TD width="30%" align="right" nowrap> <div class="logintext"> 
+          <div align="right"><strong>{#Username#}</strong></div>
+        </div></TD>
+      <TD> <INPUT type="text" name="userid" value="{$USERID}" style="width: 100%;"></TD>
+    </TR>
+    <TR> 
+      <TD align="right" nowrap> <div class="logintext"> 
+          <div align="right"><strong>{#Password#}</strong></div>
+        </div></TD>
+      <TD> <INPUT type="password" name="password" style="width: 100%;"></TD>
+    </TR>
+    <tr> 
+      <td colspan="2"> <div align="center"> 
+          <INPUT type="submit" value="{#Login#}">
+        </div></td>
+    </tr>
+  </FORM>
+  <tr align="center" bgcolor="#FFFFFF"> 
+    <td colspan="2">{if $LANG == "de"} 
+        <p>Wenn Sie noch keinen Benutzernamen haben, k&ouml;nnen 
+        Sie hier einen <a href="{$REGISTER_URL}">Neuen Benutzer anlegen</a>.</p>
+    {else}
+      <p>If you don't have a username, you can <a href="{$REGISTER_URL}">Register</a> 
+        here.</p> 
+    {/if}</td>
+  </tr>
+</table>
+</div>

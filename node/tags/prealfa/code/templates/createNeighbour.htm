@@ -1,0 +1,61 @@
+
+  <h3>{#create_neighbour#}</h3>
+  
+{if count($NODES) gt 0}
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#create_from_nodes#}</td>
+    </tr>
+  </table>
+  <table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
+        <table width="100%">
+          <tr>
+            <td>
+              <form method="post">
+                <select name="node_id">
+                  {foreach item=item from=$NODES}
+                  <option value="{$item.node_id}">{$item.name}</option>
+                  {/foreach}
+                </select>
+                <input type="submit" name="create_from_node" value="{#create#}">
+              </form>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+<p></p>
+{/if}
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#create_new_node#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        <table width="100%">
+          <tr><td>
+              <form method="post">
+                <table>
+                  <tr>
+                    <td nowrap>{#id#}:</td>
+                    <td><input name="node_id" value="{$NID}" size="3" maxlength="3"  /></td>
+                  </tr>
+                  <tr>
+                    <td>{#url#}:</td>
+                    <td><input name="url" value="{$URL}" size="50" maxlength="200"  />
+                 </tr>
+                </table>
+                <input type="submit" name="create_new_node" value="{#create#}">
+              </form>
+            </td></tr>
+        </table>
+  </td>
+</tr>
+</table>

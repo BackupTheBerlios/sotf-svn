@@ -1,0 +1,77 @@
+{config_load file="layout.conf"}
+{config_load file="$LANG.conf" section="$ACTION"}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+<title>{$PAGETITLE} (StreamOnTheFly:{$NODEID})</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="{$IMAGEDIR}/main.css" rel="stylesheet" type="text/css">
+{literal}
+<script>
+      var data_changed=0;
+      function confirmUnsaved() {
+        if(data_changed) {
+          return confirm('{/literal}{#confirm_unsaved#}{literal}');
+      }else
+        return true;
+      }
+</script>
+{/literal}
+<script src="{$IMAGEDIR}/base.js"></script>
+</head>
+<body background="{$IMAGEDIR}/bg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<div align="center"> 
+  <table width="{#pageW#}" height="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td background="{$IMAGEDIR}/bg_main_LEFT.gif"> 
+        <div align="center"><img src="{$IMAGEDIR}/bg_main_LEFT.gif" width="7" height="6"></div>
+      </td>
+      <td width="{#pageW#}" valign="top" bgcolor="#FFFFFF"> 
+        <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
+          <tr> 
+            <td bgcolor="#000000">
+               <font color="#FFFFFF"><strong>STREAM ON THE FLY</strong></font>
+            </td>
+          </tr>
+          <tr> 
+            <td background="{$IMAGEDIR}/top_r4_c2.gif">
+              <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
+                <tr> 
+                  <td><img name="top_r4_c1" src="{$IMAGEDIR}/top_r4_c1.gif" width="2" height="6" border="0" alt=""></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="5">
+          <!-- {if $STATUS_MESSAGES}
+            {foreach from=$STATUS_MESSAGES item=MSG}
+                <tr> 
+                  <td class="status">
+                      {$MSG}
+                  </td>
+                </tr>
+            {/foreach}
+          {/if} -->
+          <tr> 
+            <td>
+              <div align="left"> {include file="$ACTION.htm"} 
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td width="7" background="{$IMAGEDIR}/bg_main.gif"><img src="{$IMAGEDIR}/bg_main.gif" width="7" height="6"></td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>
+
+<script language="Javascript">
+  {if $STATUS_MESSAGES or $ERROR_MESSAGES }
+       alert("{foreach from=$ERROR_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}{foreach from=$STATUS_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}");
+  {/if}
+</script>

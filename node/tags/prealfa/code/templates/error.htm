@@ -1,0 +1,32 @@
+{config_load file="layout.conf"}
+{config_load file="$LANG.conf" section="$ACTION"}
+
+<h3>{#errors_occured#}:</h3>
+
+  {foreach from=$ERRORS item=MSG}
+    <p>{$MSG}</p>
+  {/foreach}
+
+<!--
+    {if $POPUP}
+       <FORM ACTION="closeAndRefresh.php">
+    {else}
+       <FORM ACTION="index.php">
+    {/if}
+      <INPUT type="submit" name="ok" value="OK">
+</FORM>
+-->
+
+{if $REFERER}
+  <p><a href="{$REFERER}">Go back to referring page</a></p>
+{/if}
+
+{if $ERROR_URL}
+  <p><a href="{$ERROR_URL}">Go back to a safe page</a></p>
+{/if}
+
+  <p><a href="index.php">Go back to home page</a></p>
+
+  <p><a href="closeAndRefresh.php">Close window</a></p>
+
+

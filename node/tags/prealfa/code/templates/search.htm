@@ -1,0 +1,61 @@
+
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+            <form name="searchform" method="get" action="search.php">
+              <table width="100%" border="0" cellspacing="0" cellpadding="2">
+                <tr> 
+                  <td width="60%"> 
+                    <input type="text" name="pattern" value="{$PATTERN}" style="width: 100%">
+                  </td>
+                  <td width="20%"> 
+                    <select name="language" style="width: 100%">
+                        {html_options values=$searchLangs selected=$LANGUAGE output=$langNames}
+                    </select>
+                  </td>
+                  <td width="1"> 
+                    <input type="submit" name="search" value="{#Search#}">
+                  </td>
+                </tr>
+                <tr>
+                    <td><font size=2><A href="advsearch.php">{#advSearch#}</a></font>
+                    </tr>
+              </table>
+            </form>
+      </td>
+    </tr>
+  </table>
+
+  <p></p>
+
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#Results#}</td>
+    </tr>
+  </table><table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
+        {if count($RESULTS) gt 0 }
+        {include file="splitList.htm"}
+        <table width="100%">
+          {foreach item=item from=$RESULTS}
+          <tr bgcolor="#FFFFFF" height="1"><td colspan="2"></td></tr>
+          <tr valign="top">
+            <td width="5%">
+              {if $item.icon}<img src="{$CACHEDIR}/{$item.id}.png">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}
+            </td>
+            <td>
+              <a href="get.php?id={$item.id}"><b>{$item.title}</b></a>
+              {if $item.abstract}
+              <br />{$item.abstract|truncate:300}
+                {/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        {#No_results#}
+        {/if}
+      </td>
+    </tr>
+  </table>
