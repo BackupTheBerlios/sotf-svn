@@ -43,11 +43,14 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	}
 	
 	function delete() {
+	  global $db;
 	  if($this->isLocal()) {
 		 // delete files from the repository
 		 debug("deleting: ", $this->getDir());
 		 sotf_Utils::erase($this->getDir());
 		 // delete from sql db
+		 // somehow foreign keys do not work in this case, so let's do it by hand:
+		 $db->query("DELETE FROM sotf_object_roles WHERE object_id='" . $this->id . "'");
 	  }
 	  return parent::delete();
 	}

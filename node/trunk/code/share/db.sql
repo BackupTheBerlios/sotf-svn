@@ -425,7 +425,8 @@ CREATE TABLE "sotf_deletions" (
 -- remember and propagate deletions to other nodes
 -- REPLICATED
 "id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-"del_id" varchar(12) UNIQUE NOT NULL -- REFERENCES sotf_node_objects(id)
+"del_id" varchar(12) UNIQUE NOT NULL, -- REFERENCES sotf_node_objects(id)
+"del_time" timestamptz
 );
 
 CREATE TABLE "sotf_playlists" (

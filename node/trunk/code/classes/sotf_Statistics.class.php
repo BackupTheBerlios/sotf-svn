@@ -79,6 +79,8 @@ class sotf_Statistics extends sotf_Object {
 	 $fileId = $data['file'];
     $where = " WHERE prog_id='$prgId' AND year='$year' AND month='$month' AND day='$day' AND week='$week'";
 	 $db->begin();
+	 // to avoid deadlocks I try this:
+	 $db->query("LOCK TABLE sotf_stats, sotf_unique_access, sotf_to_update IN ROW EXCLUSIVE MODE");
 	 $id = $db->getOne("SELECT id FROM sotf_stats $where");
 	 if($id) {
 		$obj = new sotf_Statistics($id);

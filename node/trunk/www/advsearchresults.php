@@ -39,8 +39,12 @@ $max = count($SQLquery);				//$fields will contain all the USED field names
 for($i =0; $i<$max; $i++)
 	$fields[$SQLquery[$i][1]] = $allfields[$SQLquery[$i][1]];
 
-$fields[$advsearch->GetSort1()] = $allfields[$advsearch->GetSort1()];
-$fields[$advsearch->GetSort2()] = $allfields[$advsearch->GetSort2()];
+//$fields[$advsearch->GetSort1()] = $allfields[$advsearch->GetSort1()];
+//$fields[$advsearch->GetSort2()] = $allfields[$advsearch->GetSort2()];
+
+$fields[$advsearch->GetSort1()] = $page->getlocalized($advsearch->GetSort1());
+$fields[$advsearch->GetSort2()] = $page->getlocalized($advsearch->GetSort2());
+
 
 if (array_key_exists("title", $fields))
 {

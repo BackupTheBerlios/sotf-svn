@@ -129,8 +129,10 @@ class sotf_NodeObject extends sotf_Object {
 
   /** Creates a deletion record: used when a replicated object is deleted. */
   function createDeletionRecord() {
+	 global $db;
 	 $dr = new sotf_NodeObject('sotf_deletions');
 	 $dr->set('del_id', $this->id);
+	 $dr->set('del_time', $db->getTimestampTz());
 	 $dr->create();
   }
 

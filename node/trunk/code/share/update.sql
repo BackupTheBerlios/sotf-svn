@@ -195,3 +195,7 @@ CREATE INDEX "prog_id_sotf_prog_topics_key" ON "sotf_prog_topics"("prog_id");
 ALTER TABLE "sotf_stations" ADD "id2" varchar (50);
 -- also sotf_stations.name field became longer, but not a big problem
 
+-- 2004-10-19
+
+ALTER TABLE "sotf_deletions" ADD "del_time" timestamptz;
+

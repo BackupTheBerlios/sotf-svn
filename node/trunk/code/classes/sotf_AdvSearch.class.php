@@ -433,14 +433,18 @@ class sotf_AdvSearch
 		$SQLfiels[broadcast_date] = $page->getlocalized("broadcast_date");
 		$SQLfiels[spatial_coverage] = $page->getlocalized("spatial_coverage");
 		$SQLfiels[temporal_coverage] = $page->getlocalized("temporal_coverage");
+		
 		asort($SQLfiels);
 		return $SQLfiels;
 	}
 
 	function getOrderFields()		//translates fieldnames for dropdown box
 	{
+	  global $page;
 		$SQLfiels = $this->GetSQLfields();
 		foreach($SQLfiels as $key => $value) if ($key != "person" AND $key != "topic") $OrderFields[$key] = $value;
+		$OrderFields['episode_sequence'] = $page->getlocalized("episode_sequence");
+		asort($OrderFields);
 		return $OrderFields;
 	}
 

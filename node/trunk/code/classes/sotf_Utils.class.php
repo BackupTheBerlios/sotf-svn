@@ -71,13 +71,15 @@ class sotf_Utils
       debug("no such file", $dir . '/' . $filename);
       raiseError("no_such_file");
     }
-    /* TODO: this does not work under WIndows, because of / and \ differences
-    if(!strstr($path, $dir)) {
+    /* TODO: this does not work under WIndows, because of / and \ differences */
+		$dirP = str_replace('\\', '/', $dir);
+    $pathP = str_replace('\\', '/', $pathP);
+		debug("DIRP", $dirP);
+    if(!preg_match("|^$dirP|", $path)) {
       debug("path", $path);
       debug("dir", $dir);
-      raiseError("Attempt to break out directory");
+      raiseError("Attempt to break out directory", $path);
     }
-    */
     return $path;
   }
 
