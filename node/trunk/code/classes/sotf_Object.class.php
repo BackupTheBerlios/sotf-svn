@@ -356,7 +356,7 @@ class sotf_Object {
 				$rating->updateInstant($item['row_id']);
 				break;
 			case 'sotf_stats':
-				$obj = new sotf_Object('sotf_stats', $item['row_id']);
+				$obj = new sotf_Statistics($item['row_id']);
 				$obj->updateStats();
 				break;
 			default:

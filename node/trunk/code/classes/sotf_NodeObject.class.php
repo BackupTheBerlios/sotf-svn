@@ -340,7 +340,7 @@ class sotf_NodeObject extends sotf_Object {
 	 global $db, $config, $repository;
 
 	 // select objects to send to neighbour
-	 $result = $db->limitQuery("SELECT * FROM sotf_to_forward WHERE node_id = '$remoteNode' ORDER BY when", 0, $objectsPerPage);
+	 $result = $db->limitQuery("SELECT * FROM sotf_to_forward WHERE node_id = '$remoteNode' ORDER BY entered", 0, $objectsPerPage);
 	 while (DB_OK === $result->fetchInto($row)) {
 		$objects[] = $row;
 	 }

@@ -181,7 +181,7 @@ class sotf_User
 		$_SESSION['currentUserId'] = '';
 	}
 
-  /** Returns the name of the user given with ID. */
+  /** static: Returns the name of the user given with ID. */
 	function getUsername($user_id) {
 		global $userdb;
 		if (is_numeric($user_id))
@@ -189,7 +189,7 @@ class sotf_User
 		return false;
 	}
 
-  /** Retrieves userid for a username. */
+  /** static: Retrieves userid for a username. */
 	function getUserid($username) {
 		global $userdb;
 		return $userdb->getOne("SELECT auth_id FROM authenticate WHERE username = '$username'");

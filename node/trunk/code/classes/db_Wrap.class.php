@@ -125,9 +125,10 @@ class db_Wrap extends DB_pgsql {
 	}
 
   function begin($serializable = false) {
+    $succ = $this->query("BEGIN TRANSACTION");
     if($serializable)
-      $this->query("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE");
-    return $this->query("BEGIN TRANSACTION");
+      $succ = $this->query("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+    return $succ;
   }
 
   function commit() {

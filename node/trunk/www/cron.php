@@ -52,8 +52,9 @@ if(count($neighbours) > 0) {
 $nodes = sotf_Node::listAll();
 if(count($nodes) > 0) {
   while(list(,$node) = each($nodes)) {
-    if($node->getID() != $config['nodeId'])
+    if($node->get('node_id') != $config['nodeId']) {
       $node->forwardObjects();
+    }
   }
 }
 

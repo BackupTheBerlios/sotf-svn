@@ -96,7 +96,7 @@ function forwardResp($params) {
   $chunkInfo = xmlrpc_decode($params->getParam(0));
   $fromNode = $chunkInfo['from_node'];
   $objects = xmlrpc_decode($params->getParam(1));
-  $node = sotf_Node::getByNodeId($fromNode);
+  $node = sotf_Node::getNodeById($fromNode);
   if(!$node) {
     logError("No access: you are not in my node list!");
     return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: you are not in my node list!");

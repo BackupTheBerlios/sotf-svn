@@ -99,7 +99,7 @@ class sotf_Node extends sotf_NodeObject {
 		 $rpc->debug = true;
 	  $timestamp = $db->getTimestampTz();
 	  $remoteId = $this->get('node_id');
-	  $url = $this->getUrl();
+	  $url = $this->get('url');
 	  // remove trailing '/'
 	  while(substr($url, -1) == '/')
 		 $url = substr($url, 0, -1);
