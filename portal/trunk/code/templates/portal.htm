@@ -69,12 +69,12 @@
 		</td>
 		{elseif $playlist}
 		<td bgcolor="#{$portal.bg2}">
-			<table width="100%" border="0">
+			<table border="0">
 			<tr align=center>
-				<td align="center">
-				{#display#}:&nbsp;<select name="filter" onchange="javascript:this.form.submit()">{html_options options=$filters selected=$filter}</select>
-				&nbsp;{#from#}&nbsp;<select name="prglist" onchange="javascript:this.form.submit()">{html_options options=$prglists selected=$prglist}</select>
-				<input type="hidden" name="playlist" value="1">
+				<td align="right" valign="middle">{#display#}&nbsp;</td>
+				<td align="center" valign="middle"><select name="filter" size="4" onchange="javascript:this.form.submit()">{html_options options=$filters selected=$filter}</select></td>
+				<td align="center" valign="middle">&nbsp;{#from#}&nbsp;<input type="hidden" name="playlist" value="1"></td>
+				<td align="left" valign="middle"><select name="prglist" onchange="javascript:if (this.value != 'queries') if (this.value != 'playlists') this.form.submit()">{html_options options=$prglists selected=$prglist}</select></td>
 				</td>
 			</tr>
 			</table>
@@ -84,10 +84,10 @@
 			<tr>
 				<td align="left" valign="bottom"><img src="{$IMAGEDIR}/leftdown.gif"></td>
 				<td align="right"><input type="submit" value="{#copy#}" name="copy_selected">{if $prglist.0 != "q"}<br><input type="submit" name="move_selected" value="{#move#}">{/if}</td>
-				<td align="left" valign="middle">&nbsp;{#selected_to#}&nbsp;<select name="destination">{html_options options=$static_lists}</select></td>
-				{if $prglist.0 != "q"}<td align="center" valign="middle"><input type="submit" value="{#delete_selected#}" name="delete_selected"></td>{/if}
+				<td align="left" valign="middle">&nbsp;{#selected_to#}&nbsp;<select name="destination">{html_options options=$static_lists}</select>
+				{if $prglist.0 != "q"}&nbsp;&nbsp;{#selected_or#}&nbsp;&nbsp;<input type="submit" value="{#delete_selected#}" name="delete_selected" onclick="javascript:return confirm('{#delete_programmes#}');">{/if}</td>
 
-				<td align="center" valign="middle"><input type="text" name="new_list_name"><input type="submit" name="create_new_list" value="{#create_new_list#}"></td>
+				<td align="center" valign="middle"><input type="submit" name="create_new_list" value="{#create_new_list#}">&nbsp;{#list_name#}&nbsp;<input type="text" name="new_list_name"></td>
 			</tr>
 			</table>
 
@@ -95,12 +95,12 @@
 			<input type="hidden" name="playlist" value="1">
 			<table width="100%" border="0">
 			{foreach name=outer item=item from=$result}
-				<tr>
+				<tr id="{$item.id}">
 					<td align="center"><input type="checkbox" name="selected[]" value="{$item.id}"></td>
 
 					<td align="center"><img src="{$item.icon}"></td>
 
-					<td><b><a href="{$php_self}?id={$item.id}">{$item.title}</a></b><BR>
+					<td><b><a href="{$php_self}?id={$item.id}&back=true">{$item.title}</a></b><BR>
 					{foreach key=key item=cell from=$item.values}
 						{if $cell != ""}
 						<b>{$key}:</b>&nbsp;&nbsp;{$cell}<br>
@@ -128,7 +128,7 @@
 					<td colspan="2">
 					<b>{#uploaded_files#}</b>:&nbsp;&nbsp;
 						{foreach key=filename item=file_location from=$item.files}
-							<a href="{$file_location}">{$filename}</a>&nbsp;&nbsp;
+							<a href="{$file_location}" onclick="javascript:window.open('{$file_location}','','scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{$filename}</a>&nbsp;{if $is_admin}<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$php_self}?playlist=1&prgid={$item.id}&delete_file={$file_location}#{$item.id}" onclick="javascript:return confirm('{#delete_the_file#}');">{#delete_file#}</a>]</font>{/if}&nbsp;&nbsp;
 						{/foreach}
 					</td>
 				</tr>
@@ -144,12 +144,7 @@
 			<table border="0" cellpadding="20" cellspacing="0" width="100%">
 			<tr align="center">
 			<td width="50%">
-				<table border="0" cellpadding="0" cellspacing="0">
-				<tr>
-				<td align="right" valign="middle" width="50%"><input type="submit" value="{#save#}" name="save_style"> {#and_go_to#}</td>
-				<td align="left" valign="middle" width="50%"><input type="radio" name="goto" value="programmes"> {#programmes_editor#}<br><input type="radio" name="goto" value="edit" checked> {#edit_homepage#}<br><input type="radio" name="goto" value="view"> {#view_result#}<br><input type="radio" name="goto" value="admin"> {#admin_page#}<br></td>
-				</tr>
-				</table>
+				<input type="submit" value="{#save_style#}" name="save_style">
 			</td>
 			<td width="50%">
 				<div align="center"><b>{#color_codes#}</b></div><br>

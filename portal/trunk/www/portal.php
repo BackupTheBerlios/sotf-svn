@@ -15,11 +15,12 @@ if (sotf_Utils::getParameter('logout'))			//if logout link pressed
 
 
 
+$prglist = sotf_Utils::getParameter('prglist');
+$filter = sotf_Utils::getParameter('filter');
+
 //prevent browsers from reload/reprocess the page, save the variables to the session that are needed after reload
-if (count($_POST) > 0)
+if ( (count($_POST) > 0) OR (isset($prglist) AND isset($filter)) )
 {
-	$filter = sotf_Utils::getParameter('filter');
-	$prglist = sotf_Utils::getParameter('prglist');
 	if (isset($filter)) $_SESSION['filter'] = $filter;		//filter dropdown box on programmes editor page
 	if (isset($prglist)) $_SESSION['prglist'] = $prglist;		//pgogrammes list dropdown box on programmes editor page
 }
@@ -75,15 +76,16 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		$settings["programmes"]["wall"] = sotf_Utils::getParameter('programmes_wall');
 		$settings["programmes"]["css"] = sotf_Utils::getParameter('programmes_css');
 	
+		$style = "1";		//do not go from the style page
+
 		//goto after save
-		if (sotf_Utils::getParameter('goto') == "programmes") $playlist = true;
-		elseif (sotf_Utils::getParameter('goto') == "edit") $edit = true;
-		elseif (sotf_Utils::getParameter('goto') == "view") $view = true;
-		elseif (sotf_Utils::getParameter('goto') == "admin") $admin = true;
+		//if (sotf_Utils::getParameter('goto') == "programmes") $playlist = true;
+		//elseif (sotf_Utils::getParameter('goto') == "edit") $edit = true;
+		//elseif (sotf_Utils::getParameter('goto') == "view") $view = true;
+		//elseif (sotf_Utils::getParameter('goto') == "admin") $admin = true;
 	}
-	elseif (sotf_Utils::getParameter('file_upload'))
+	elseif (sotf_Utils::getParameter('file_upload'))	//Upload file (picture or CSS) on edit style page
 	{
-		//Upload file (picture or CSS)
 		//sotf_Utils::getParameter('file_name')
 		$portal->uploadFile($_FILES['file_file']['tmp_name'], $_FILES['file_file']['name'], NULL, sotf_Utils::getParameter('file_name'));
 		$style = "1";
@@ -154,6 +156,11 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 	{
 		$prg_id = sotf_Utils::getParameter('upload_file');		//id of the program to which the file belongs
 		$portal->uploadFile($_FILES['uploaded_file_'.$prg_id]['tmp_name'], $_FILES['uploaded_file_'.$prg_id]['name'], $prg_id);
+		$page->redirect($_SERVER["PHP_SELF"]."?playlist=1&anchor=".$prg_id);		//redirect page, prevent resend of data
+	}
+	elseif (sotf_Utils::getParameter('delete_file'))		//delete button pressed on programmes editor page
+	{
+		$portal->deleteFile(sotf_Utils::getParameter('delete_file'), sotf_Utils::getParameter('prgid'));
 	}
 
 	if ($playlist)						//on programmes editor page
@@ -198,8 +205,8 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 			foreach($result as $key => $value)
 				if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
 					if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
-					else $values[$fields[$key]] = $value;
-			$item['title'] = $result['title'];
+					else $values[$fields[$key]] = htmlspecialchars($value);
+			$item['title'] = htmlspecialchars($result['title']);
 			$item['id'] = $result['id'];
 			$item['icon'] = $result['icon'];
 			$item['files'] = $prgprop['files'];
@@ -250,36 +257,41 @@ $activate = sotf_Utils::getParameter('activate');
 
 if ($id)	//if programmes view
 {
+	$comments = $portal->getComments($id);
+
 	if ($user->loggedIn())		//only for logged in users
 	{
-		if (sotf_Utils::getParameter('add_comment'))
+		if (sotf_Utils::getParameter('add_comment'))	//Send button pressed
 		{
 			$reply_to = sotf_Utils::getParameter('reply_to');
 			if ($reply_to == "root") $reply_to = NULL;
 			$portal->addComment($id, $user->getId(), $reply_to, sotf_Utils::getParameter('title'), sotf_Utils::getParameter('value'));
 			$page->redirect($_SERVER["PHP_SELF"]."?id=".$id);		//redirect page, prevent resend of data
 		}
-		elseif (sotf_Utils::getParameter('comment'))
+		elseif (sotf_Utils::getParameter('comment'))		//add comment or reply button (link) pressed
 		{
 			$reply_to = sotf_Utils::getParameter('comment');
 			$page->redirect($_SERVER["PHP_SELF"]."?id=".$id."&reply_to=".$reply_to."#edit");		//redirect page, prevent resend of data
 		}
-		elseif (sotf_Utils::getParameter('delete_comment'))
+		elseif (sotf_Utils::getParameter('delete_comment'))	//delete a comment (admin only)
 		{
 			if ($portal->isAdmin($user->getId())) $portal->deleteComment($id, $user->getId(), sotf_Utils::getParameter('delete_comment'));
+			$comments = $portal->getComments($id);		//reread comments
 		}
-		elseif (sotf_Utils::getParameter('rate_it'))	//programme rated
+		elseif (sotf_Utils::getParameter('rate_it'))	//programme rating
 		{
 			$page->redirect($_SERVER["PHP_SELF"]."?id=".$id);		//redirect page, prevent resend of data
+		}
+		elseif (sotf_Utils::getParameter('delete_file'))	//delete a file that is associated to the programme
+		{
+			if ($portal->isAdmin($user->getId())) $portal->deleteFile(sotf_Utils::getParameter('delete_file'), $id);
 		}
 		$reply_to = sotf_Utils::getParameter('reply_to');
 		$smarty->assign('reply_to', $reply_to);
 		$smarty->assign('reply_title', $comments[$reply_to]['title']);
 	}
 
-	$comments = $portal->getComments($id);
 	$smarty->assign('comments', $comments);
-
 	$result = $portal->getProgrammes(array($id));
 	$result = $result[0];
 
@@ -370,10 +382,14 @@ $smarty->assign("admin", $admin);	//admin page
 
 //prevent browsers from reload/reprocess the page
 
+//it seems an IE bug, but in IE6 the anchor disappears when redirecting after file upload...
+$anchor = sotf_Utils::getParameter('anchor');
+if (isset($anchor)) $page->redirect($_SERVER["PHP_SELF"]."?".$subpage."=3#".$anchor);		//redirect page
+
 if ((count($_POST) > 0) AND !$login)
 {
 	$_SESSION['error'] = $error;			//needed after reload
-	$page->redirect($_SERVER["PHP_SELF"]."?".$subpage."=1");		//redirect page
+	$page->redirect($_SERVER["PHP_SELF"]."?".$subpage."=2");		//redirect page
 }
 
 
@@ -385,6 +401,8 @@ $smarty->assign("table", $portal->getTable());		//current layout table
 $smarty->assign("is_admin", $portal->isAdmin($user->getId()));		//true if admin
 $smarty->assign("is_logged_in", $user->loggedIn());			//true if logged in
 $smarty->assign("username", $user->getName());				//username (if logged in)
+$smarty->assign("back", sotf_Utils::getParameter('back'));		//true if came from programmes editor page to the view programme page
+
 
 //directories and names
 $smarty->assign("rootdir", $rootdir);				//root directory (portal/www)

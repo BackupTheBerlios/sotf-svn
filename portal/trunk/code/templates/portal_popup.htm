@@ -1,14 +1,14 @@
 {config_load file="$LANG.conf"}
 <html>
 <head>
-<title>Cell proprties</title>
+<title>{#cell_properties#}</title>
 </head>
 <body bgcolor="#{$portal.bg2}">
 
 <form action="{$rootdir}/portal_popup.php/{$portal_name}?row={$row}&col={$col}" method="post">
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
-		<td align="right">Resource type:&nbsp;</td>
+		<td align="right">{#resource_type#}:&nbsp;</td>
 		<td align="left">
 			<select name="resource" onchange="javascript:this.form.submit()">{html_options options=$resources selected=$resource}</select>
 			<input type="hidden" name="oldresource" value="{$resource}">
@@ -24,16 +24,16 @@
 		<td align="right"></td>
 		<td align="left"><input type="hidden" name="value" va;ue="{$value}"></td>
 		{else}
-		<td align="right">Value:&nbsp;</td>
+		<td align="right">{#value#}:&nbsp;</td>
 		<td align="left"><textarea name="value" rows=4 cols=40>{$value}</textarea></td>
 		{/if}
 	</tr>
 	<tr>
 		<td align="right">{if $resource == "query"}Queries:{elseif $resource == "playlist"}Programme lists:{/if}&nbsp;</td>
 		<td align="left">
-			{if $resource == "picture"}Uploaded files:&nbsp;<select name="file" onchange="javascript:this.form.value.value = this.value">{html_options options=$files selected=$file}</select>{/if}
-			{if $resource == "query"}<select name="file" onchange="javascript:this.form.value.value = this.value"><option value="none">Choose...</option>{html_options options=$queries}</select>{/if}
-			{if $resource == "playlist"}<select name="file" onchange="javascript:this.form.value.value = this.value">{html_options options=$playlists}</select>{/if}
+			{if $resource == "picture"}{#uploaded_files#}:&nbsp;<select name="file" onchange="javascript:this.form.value.value = this.value">{html_options options=$files selected=$file}</select>{/if}
+			{if $resource == "query"}<select name="file" onchange="javascript:this.form.value.value = this.value">{html_options options=$queries selected=$value}</select>{/if}
+			{if $resource == "playlist"}<select name="file" onchange="javascript:this.form.value.value = this.value">{html_options options=$playlists selected=$value}</select>{/if}
 		</td>
 	</tr>
 	<tr>
@@ -42,21 +42,21 @@
 	</tr>
 	{if $resource == "picture" OR $resource == "text"}
 	<tr>
-		<td align="right">Link:&nbsp;</td>
+		<td align="right">{#link#}:&nbsp;</td>
 		<td align="left"><input type="text" name="link" value="{$link}" size="40"/></td>
 	</tr>
 	{/if}
 	{if $css}
 	<tr>
-		<td align="right">Class:&nbsp;</td>
+		<td align="right">{#class#}:&nbsp;</td>
 		<td align="left">
 			<input type="text" name="class" value="{$class}" size="10"/>
-			{if $resource == "picture" OR $resource == "text"}&nbsp;&nbsp;&nbsp;Style:&nbsp;<select name="style">{html_options options=$styles selected=$style}</select>{/if}
+			{if $resource == "picture" OR $resource == "text"}&nbsp;&nbsp;&nbsp;{#style#}:&nbsp;<select name="style">{html_options options=$styles selected=$style}</select>{/if}
 		</td>
 	</tr>
 	{elseif $resource == "picture" OR $resource == "text"}
 	<tr>
-		<td align="right">Style:&nbsp;</td>
+		<td align="right">{#style#}:&nbsp;</td>
 		<td align="left">
 			<select name="style">{html_options options=$styles selected=$style}</select>
 		</td>
@@ -67,13 +67,13 @@
 		<td align="right">&nbsp;</td>
 	</tr>
 	<tr>
-		<td align="right">Box:&nbsp;</td>
+		<td align="right">{#box#}:&nbsp;</td>
 		<td align="left">
-			Align:&nbsp;<select name="align">{html_options options=$aligns selected=$align}</select>
-			&nbsp;&nbsp;&nbsp;Valign:&nbsp;<select name="valign">{html_options options=$valigns selected=$valign}</select>
-			&nbsp;&nbsp;&nbsp;Width:&nbsp;<input type="text" name="width" value="{$width}" size="2"/><br>
+			{#align#}:&nbsp;<select name="align">{html_options options=$aligns selected=$align}</select>
+			&nbsp;&nbsp;&nbsp;{#valign#}:&nbsp;<select name="valign">{html_options options=$valigns selected=$valign}</select>
+			&nbsp;&nbsp;&nbsp;{#width#}:&nbsp;<input type="text" name="width" value="{$width}" size="2"/><br>
 			<table border="0" cellpadding="0" cellspacing="0"><tr>
-				<td>BGColor:&nbsp;<input type="text" name="color" value="{$color}" size="6" onchange="javascript:document.getElementById('color_sam').style.background=this.value" /><select name="cell_color" onchange="javascript:this.form.color.value=this.value; document.getElementById('color_sam').style.background=this.value">{html_options options=$colors}</select>&nbsp;</td>
+				<td>{#BGColor#}:&nbsp;<input type="text" name="color" value="{$color}" size="6" onchange="javascript:document.getElementById('color_sam').style.background=this.value" /><select name="cell_color" onchange="javascript:this.form.color.value=this.value; document.getElementById('color_sam').style.background=this.value">{html_options options=$colors}</select>&nbsp;</td>
 				<td><table border="1" cellpadding="0" cellspacing="0"><tr><td ID="color_sam" bgcolor="#{$color}" width="30" border="1">&nbsp;</td></tr></table></td></tr>
 			</table>
 		</td>
@@ -83,16 +83,16 @@
 <br>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
-		<td align="center"><input type="submit" name="insert_before" value="Create cell before this"></td>
-		<td align="center"><input type="submit" name="delete" value="Delete this"></td>
-		<td align="center"><input type="submit" name="insert_after" value="Create cell after this"></td>
+		<td align="center"><input type="submit" name="insert_before" value="{#create_cell_before#}"></td>
+		<td align="center"><input type="submit" name="delete" value="{#delete_cell#}" onclick="javascript:return confirm('{#delete_the_cell#}');"></td>
+		<td align="center"><input type="submit" name="insert_after" value="{#create_cell_after#}"></td>
 	</tr>
 </table>
 <br>
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
-		<td align="center"><input type="submit" value="Submit"></td>
-		<td align="center"><input type="reset" value="Reset"></select></td>
+		<td align="center"><input type="submit" value="{#submit_cell#}"></td>
+		<td align="center"><input type="reset" value="{#reset_cell#}"></select></td>
 	</tr>
 </table>
 </form>

@@ -8,16 +8,61 @@
 		{/if}
 		{foreach key=row_number name=outer item=row from=$table}
 		<tr>
-			{if $edit}<td align="center" valign="middle" bgcolor="#{$portal.bg2}"><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><input type="image" alt="{#delete_row#}" src="{$IMAGEDIR}/minusz2.gif" name="delete_row" value="-{$row_number}" onclick="javascript:this.form.edit.value = this.value"><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /></td>
+			{if $edit}<td align="center" valign="middle" bgcolor="#{$portal.bg2}"><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><input type="image" alt="{#delete_row#}" src="{$IMAGEDIR}/minusz2.gif" name="delete_row" value="-{$row_number}" onclick="javascript:this.form.edit.value = this.value;return confirm('{#delete_the_row#}');"><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /></td>
 			{else}<td>&nbsp;&nbsp;&nbsp;</td>{/if}
 			<td width="100%">
 				<table border="{if $edit}1{else}0{/if}" cellpadding="0" cellspacing="0" width="100%" height="100%"{if $bgcolor} bgcolor="#{$bgcolor}"{/if}>
 					<tr>{foreach key=col_number item=cell from=$row}
 					<td align="{$cell.align != ""}" valign="{$cell.valign != ""}"{if $cell.width != ""} width="{$cell.width}"{/if}{if $cell.color != ""} bgcolor="{$cell.color}"{/if}{if $edit} onClick="javascript:window.open('{$rootdir}/portal_popup.php/{$portal_name}?row={$row_number}&col={$col_number}','','scrollbars=yes,width=640,height=400,left=320,top=200'); return false"{/if}>
-					{if $cell.resource == "qqqquery"}
-
+					{if $cell.resource == "picture"}
+						{if $cell.link != "none"}<a href='{$cell.link}'>{/if}
+						<img src="{$cell.value}" border="0"
+						{if $cell.class != "none"} class="{$cell.class}"{/if}>
+						{if $cell.link != "none"}</a>{/if}
+					{elseif $cell.resource == "text"}
+						{if $cell.class != "none"}<span class="{$cell.class}">{/if}
+						{if $cell.style != "none"}<font{if $cell.cur_style.color != ""} color="{$cell.cur_style.color}"{/if}{if $cell.cur_style.face != ""} face="{$cell.cur_style.face}"{/if}{if $cell.cur_style.size != ""} size="{$cell.cur_style.size}"{/if}>{/if}
+						{if $cell.link != "none"}<a href='{$cell.link}'>{/if}
+						{if $cell.html == ""}&nbsp;{else}{$cell.html}{/if}
+						{if $cell.link != "none"}</a>{/if}
+						{if $cell.style != "none"}</font>{/if}
+						{if $cell.class != "none"}</span>{/if}
+					{elseif $cell.resource == "query" OR $cell.resource == "playlist"}
+						<table>
+						{foreach item=item from=$cell.items}
+							<tr id="{$item.id}"><td>
+							{if $item.icon}
+								<img src="{$item.icon}"{if $cell.class != "none"} class="{$cell.class}.icon"{/if}>
+							{else}
+								<img src="{$IMAGEDIR}/noicon.png"{if $cell.class != "none"} class="{$cell.class}.icon"{/if}>
+							{/if}
+							</td><td><b><a href="{$php_self}?id={$item.id}">
+							{if $cell.class != "none"}<span class="{$cell.class}.title">{/if}
+							{$item.title}
+							{if $cell.class != "none"}</span>{/if}
+							</a></b><br />
+							{foreach key=name item=value from=$item.values}{if $value != ""}
+								{if $cell.class != "none"}<span class="{$cell.class}.name">{/if}
+								{$name}
+								{if $cell.class != "none"}</span><span class="{$cell.class}.value">{/if}
+								{$value}<br />
+								{if $cell.class != "none"}</span>{/if}
+							{/if}{/foreach}
+							{if count($item.files) > 0}
+								<b>{#uploaded_files#}</b>:
+								{foreach key=filename item=file_location from=$item.files}
+								<a href="{$file_location}" onclick="javascript:window.open('{$file_location}','','scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{$filename}</a>&nbsp;{if $is_admin}<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$php_self}?view=1&prgid={$item.id}&delete_file={$file_location}&anchor={$item.id}" onclick="javascript:return confirm('{#delete_the_file#}');">{#delete_file#}</a>]</font>{/if}&nbsp;&nbsp;
+								{/foreach}
+							{/if}
+							{if $item.teaser} <br />{$item.teaser}<br />{/if}
+							<small>&nbsp;<br /></small><b>LISTEN</b> 24MP3 | 64OGG | 0 COMMENTS | RATING<br /><br />
+							</td></tr>
+						{/foreach}
+						</table>
+					{elseif $cell.html != ""}
+						{$cell.html}
 					{else}
-					{if $cell.html != ""}{$cell.html}{else}&nbsp;{/if}
+						&nbsp;
 					{/if}
 					</td>
 					{/foreach}

@@ -116,6 +116,7 @@ class sotf_Portal
 				$s3 = split(":", $s2);
 				$cur_style[$s3[0]] = $s3[1];
 			}
+			$cell['curr_style'] = $cur_style;
 		}
 
 		$this->settings['table'][$row][$col]["resource"] = $cell["resource"];
@@ -132,14 +133,19 @@ class sotf_Portal
 
 		if ($cell["resource"] == "picture")
 		{
+			/*
 			if ($cell["link"] != "none") $html .= "<a href='".$cell["link"]."'>";
 			$html .= "<img src=\"".$cell["value"]."\" border=\"0\"";
 			if ($cell["class"] != "none") $html .= " class=\"".$cell["class"]."\"";
 			$html .= ">";
 			if ($cell["link"] != "none") $html .= "</a>";
+			*/
 		}
 		elseif ($cell["resource"] == "text")
 		{
+			$html = nl2br($cell["value"]);			//convert \n to <br />
+			$this->settings['table'][$row][$col]['html'] = $html;
+			/*
 			if ($cell["class"] != "none") $html .= "<span class=\"".$cell["class"]."\">";
 			if ($cell["style"] != "none")
 			{
@@ -154,6 +160,7 @@ class sotf_Portal
 			if ($cell["link"] != "none") $html .= "</a>";
 			if ($cell["style"] != "none") $html .= "</font>";
 			if ($cell["class"] != "none") $html .= "</span>";
+			*/
 		}
 		elseif (($cell["resource"] == "query") OR ($cell["resource"] == "playlist"))
 		{
@@ -179,8 +186,8 @@ class sotf_Portal
 				foreach($result as $key => $value)
 					if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
 						if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
-						else $values[$fields[$key]] = $value;
-				$item['title'] = $result['title'];
+						else $values[$fields[$key]] = htmlspecialchars($value);
+				$item['title'] = htmlspecialchars($result['title']);
 				$item['id'] = $result['id'];
 				$item['icon'] = $result['icon'];
 				$item['values'] = $values;
@@ -188,6 +195,10 @@ class sotf_Portal
 				$item = "";
 				$values = "";
 			}
+
+			$this->settings['table'][$row][$col]['items'] = $selected_result;
+
+			/*
 			$html .= "<table>";
 			foreach($selected_result as $item)
 			{
@@ -230,9 +241,8 @@ class sotf_Portal
 				$html .= "</td></tr>";
 			}
 			$html .= "</table>";
+			*/
 		}
-		
-		$this->settings['table'][$row][$col][html] = $html;
 	}
 
 	function insertCell($row, $col, $flag)
@@ -365,6 +375,23 @@ class sotf_Portal
 			$db->query($sql);
 		}
 
+	}
+
+	function deleteFile($filename, $prg_id = NULL)
+	{
+		global $db;
+		if ($prg_id == NULL)
+		{
+		}
+		else
+		{
+			if (@unlink($_SERVER["DOCUMENT_ROOT"].$filename))
+			{
+				$sql="DELETE FROM portal_files WHERE portal_id = $this->portal_id AND file_location = '$filename' AND progid = '$prg_id'";
+				return $db->query($sql);
+			}
+			else return false;
+		}
 	}
 
 	function getUploadedFiles()
