@@ -77,6 +77,8 @@ ALTER TABLE "sotf_prog_refs" ADD COLUMN "portal_home" varchar(200);
 
 ALTER TABLE "sotf_comments" ADD COLUMN "comment_title" text;
 
+CREATE SEQUENCE "sotf_portals_seq";
+
 CREATE TABLE "sotf_portals" (
 -- list of portals connected to this node 
 -- REPLICATED

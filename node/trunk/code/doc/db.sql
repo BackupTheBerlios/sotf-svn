@@ -565,6 +565,8 @@ CREATE TABLE "sotf_streams" (
 	"flags" varchar(20)				-- various flags
 );
 
+CREATE SEQUENCE "sotf_portals_seq";
+
 CREATE TABLE "sotf_portals" (
 -- list of portals connected to this node 
 -- REPLICATED
