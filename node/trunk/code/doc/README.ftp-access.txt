@@ -28,7 +28,8 @@ setup:
 2. Self-admin tool (SADM) will provide sql-based authentication for
 proftpd. By default, the view ftp_auth does this. However, if you find
 the this view is empty, or its contents are improper, you can tweak
-ftp_auth like this:
+ftp_auth like this (remember to change <path-to-user-dirs> to the real
+path!):
 
 CREATE VIEW "ftp_auth" AS SELECT authenticate.username, 
 'www-data' AS groupname, 33000 AS uid, 33 AS gid, authenticate.passwd, 
