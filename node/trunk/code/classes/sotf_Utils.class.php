@@ -62,6 +62,17 @@ class sotf_Utils
 		return $path_parts["basename"];
 	}
 
+  function getFileInDir($dir, $filename) {
+    if(empty($filename))
+      raiseError("Filename is empty");
+    $path = realpath($dir . '/' . $filename);
+    if(!strstr($path, $dir)) {
+      debug("path", $path);
+      raiseError("Attempt to break out directory");
+    }
+    return $path;
+  }
+
 	/** Same as unix tail */
 	function tail($file, $chars) {
 	  $fd = fopen ("$file", "r");

@@ -40,12 +40,14 @@ class sotf_Permission
     global $repository;
 		if(!isset($this->currentPermissions))
       return false;
+    reset($this->currentPermissions);
     while(list($key,$value) = each($this->currentPermissions)) {
       $table = $repository->getTable($key);
       if( $table == 'sotf_stations' ) { 
         if( in_array('admin', $value) || in_array('add_prog', $value) ) {
           return true;
-        } else debug("nem jo: $key == $table,  $value");
+        } else 
+          debug("nem jo: $key == $table,  $value");
       }
     }
     return false;

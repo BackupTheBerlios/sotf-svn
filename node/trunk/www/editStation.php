@@ -15,12 +15,9 @@ $delrole = sotf_Utils::getParameter('delrole');
 $view = sotf_Utils::getParameter('view');
 $setjingle = sotf_Utils::getParameter('setjingle');
 $seticon = sotf_Utils::getParameter('seticon');
-$filename = sotf_Utils::getParameter('filename');
+
 $roleid = sotf_Utils::getParameter('roleid');
 $desc = sotf_Utils::getParameter('desc');
-
-$path_parts = pathinfo(realpath($filename));
-$filename = $path_parts['basename'];
 
 $st = & new sotf_Station($stationid);
 $smarty->assign('STATION_ID',$stationid);
@@ -75,9 +72,11 @@ if($delperm) {
 }
 
 // icon and jingle
+$filename = sotf_Utils::getParameter('filename');
 if($setjingle)
 {
-  $audiofile = & new sotf_AudioFile($user->getUserDir() . '/' . $filename);
+  $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
+  $audiofile = & new sotf_AudioFile($file);
   if ($st->setJingle($audiofile))
     $page->addStatusMsg("ok_jingle");
   else
@@ -86,7 +85,8 @@ if($setjingle)
 }
 elseif($seticon)
 {
-  $file = $user->getUserDir().'/'.$filename;
+  $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
+  debug("FILE", $file);
   if ($st->setIcon($file)) {
     //$page->addStatusMsg("ok_icon");
   } else {

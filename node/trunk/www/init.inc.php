@@ -96,9 +96,9 @@ if($debug)
   foreach($_COOKIE as $key => $value) {
     error_log("COOKIE: $key = $value",0);
   }
-  foreach($_ENV as $key => $value) {
-    error_log("ENV: $key = $value",0);
-  }
+  //  foreach($_ENV as $key => $value) {
+  //  error_log("ENV: $key = $value",0);
+  //}
 
 }
 

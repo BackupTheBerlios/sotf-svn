@@ -107,12 +107,11 @@ class sotf_User
 
 	function deleteFile($filename)
 	{
-		$filename = sotf_Utils::getFileFromPath($filename);
-			$targetFile = $this->getUserDir() . '/'. $filename;
-			if (unlink($targetFile))
-				return 0;
-			else
-				raiseError("Could not remove file $targetFile");
+    $targetFile =  sotf_Utils::getFileInDir($this->getUserDir(), $filename);
+    if (unlink($targetFile))
+      return 0;
+    else
+      raiseError("Could not remove file $targetFile");
 	}
 
 	function userNameCheck($username) {

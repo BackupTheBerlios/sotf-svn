@@ -37,7 +37,7 @@ if(sotf_Utils::getParameter('addprog')) {
 }
 
 
-$userFtpUrl = str_replace('ftp://', "ftp://$userid@", "$userFTP$userid");
+$userFtpUrl = str_replace('ftp://', "ftp://$user->name@", $userFTP . $user->name);
 	$smarty->assign("USERFTPURL", $userFtpUrl); 
 
 $stations = $permissions->listStationsForEditor();

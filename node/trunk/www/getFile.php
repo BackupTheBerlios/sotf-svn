@@ -9,11 +9,10 @@ $prg = & new sotf_Programme($id);
 
 // TODO check if user have rights to access: 1. prg is published, 2. file has public_access or donwload_access
 
-$filename = sotf_Utils::getFileFromPath($filenameOrig);
 if($mainAudio)
-     $filename = $prg->getAudioDir() . '/' . $filename;
+     $filename =  sotf_Utils::getFileInDir($prg->getAudioDir(), $filename);
 else
-     $filename = $prg->getOtherFilesDir() . '/' . $filename;
+     $filename =  sotf_Utils::getFileInDir($prg->getOtherFilesDir(), $filename);
 
 if(!is_readable($filename))
      raiseError("File not readable: $filenameOrig");

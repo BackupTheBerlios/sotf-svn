@@ -4,8 +4,7 @@ require("init.inc.php");
 
 $filename = sotf_Utils::getParameter('filename');
 
-$filename = sotf_Utils::getFileFromPath($filename);
-$filename = $user->getUserDir() . '/' . $filename;
+$filename = sotf_Utils::getFileInDir($user->getUserDir(), $filename);
 
 $file = & new sotf_File($filename);
 if ($file->type != "none")
@@ -18,6 +17,6 @@ if ($file->type != "none")
 	readfile($filename);
 }
 else
-	exit($page->getlocalized("dowload_problem"));
+	raiseError("download_problem");
 
 ?>
