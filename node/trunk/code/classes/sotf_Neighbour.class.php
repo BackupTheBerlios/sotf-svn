@@ -87,7 +87,7 @@ class sotf_Neighbour extends sotf_Object {
                   $localNodeData,
                   sotf_NodeObject::getModifiedObjects($remoteId, $this->get('last_sync')));
     $rpc = new rpc_Utils;
-    $response = $rpc->call($url . '/xmlrpcServer.php', 'sync', $objs);
+    $response = $rpc->call($url . '/xmlrpcServer.php', 'sotf.sync', $objs);
     // error handling
     if(!$response) {
       $this->set('errors', $this->get('errors')+1);

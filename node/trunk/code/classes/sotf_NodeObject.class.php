@@ -103,6 +103,7 @@ class sotf_NodeObject extends sotf_Object {
         if(count($data) > 1) {         // don't send occasional empty records
           $obj['data'] = $data;
           $objects[] = $obj;
+          debug("sending modified object", $obj['id']);
         }
       }
     }

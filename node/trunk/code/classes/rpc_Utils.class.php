@@ -16,18 +16,18 @@ function call($url, $method, $params) {
   debug("XML-RPC message", $message->serialize());
   $addr = parse_url($url);
   $client = new xmlrpc_client($url, $addr['host'], $addr['port']);
-  //if($debug)
-  //  $client->setDebug(1);
+  if($debug)
+    $client->setDebug(1);
   debug("XML-RPC", "call to " . $url);
   $response = $client->send($message);
   
   // process response
-  debug("XML-RPC Response", $response->serialize());
+  //debug("XML-RPC Response", $response->serialize());
   if (!$response) {
-    addError("No response","probably host is unreachable");
+    addError("No response: probably host is unreachable");
   } elseif ($response->faultCode() != 0) {
     // there was an error
-    addError("Error response: ", $response->faultCode() . "  " . $response->faultString());
+    addError("Error response: " . $response->faultCode() . "  " . $response->faultString());
   } else {
     $retval = $response->value();
     if($retval)

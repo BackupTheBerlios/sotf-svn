@@ -31,12 +31,15 @@ function checkAccess($neighbour) {
 }
 
 function syncResp($params) {
+  debug("incoming SYNC request");
   $lastSync = xmlrpc_decode($params->getParam(0));
   $nodeData = xmlrpc_decode($params->getParam(1));
   $objects = xmlrpc_decode($params->getParam(2));
   $neighbour = sotf_Neighbour::getById($nodeData['node_id']);
-  if(!$neighbour)
+  if(!$neighbour) {
+    logError("No access: you are not an allowed neighbour node!");
     return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: you are not an allowed neighbour node!");
+  }
   $msg = checkAccess($enighbour);
   if($msg) {
     logError($msg);

@@ -31,7 +31,7 @@ function dump($what, $name='')
 
 /** this creates a log entry */
 function logError($msg) {
-  error_log(getHostName() . "ERROR: $msg", 0);
+  error_log(getHostName() . ": ERROR: $msg", 0);
 }
 
 /** this creates a log entry if $debug is true*/
