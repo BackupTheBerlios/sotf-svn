@@ -43,7 +43,7 @@ class sotf_NodeObject extends sotf_Object {
 		$this->internalData['node_id'] = $config['nodeId'];
 	 $this->internalData['arrived'] = $db->getTimestampTz();
 	 $this->internalData['last_change'] = $db->getTimestampTz();
-	 $this->internalData['change_stamp'] = 0;
+	 $this->internalData['change_stamp'] = '0';
 	 $internalObj = new sotf_Object('sotf_node_objects', $this->id, $this->internalData);
 	 $internalObj->create();
 	 $success = parent::create();
