@@ -626,7 +626,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		foreach($topicz as $topic){
 			$topic_id = $db->getOne("SELECT topic_id FROM sotf_topics WHERE topic_name = '" . trim($topic) . "'");
 			if(!empty($topic_id)){
-				$db->query("INSERT INTO sotf_prog_topics(id, prog_id, topic_id) VALUES('" . $this->getID() . "','" . $newPrg->id . "','$topic_id')");
+				$db->query("INSERT INTO sotf_prog_topics(id, prog_id, topic_id) VALUES('" . $newPrg->getID() . "','" . $newPrg->id . "','$topic_id')");
 			}
 		}
 
