@@ -195,6 +195,13 @@ $smarty->assign('BROADCAST_TIME', strtotime($prg->get('broadcast_date')));
 $station = $prg->getStation();
 $smarty->assign('STATION_DATA', $station->getAllForHTML());
 
+// other stations
+$stations = $permissions->listStationsForEditor(false);
+//debug("stations", $stations);
+if(count($stations) > 1) {
+  $smarty->assign("CHANGE_STATION", 1);
+}
+
 // series data
 $series = $prg->getSeries();
 if($series)

@@ -8,6 +8,8 @@
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
+  //die("By default the install script is disabled. This is for your security. Please comment out this statement at the beginning of the file");
+
 ini_set("max_execution_time", "90");
 header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 //header ("Expires: Mon, 26 Jul 2010 05:00:00 GMT");
@@ -605,8 +607,8 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 			// create roles
 			
-			$db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
-			$db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
+			$db->query("DELETE FROM sotf_node_objects WHERE id LIKE '___rn%'");
+			$db->query("DELETE FROM sotf_node_objects WHERE id LIKE '___ro%'");
 			$db->query("DELETE FROM sotf_roles");
 			$db->query("DELETE FROM sotf_role_names");
 			$db->query("SELECT setval('sotf_roles_seq', 1, false)");
@@ -623,7 +625,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			
 			// create genres
 			
-			$db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
+			$db->query("DELETE FROM sotf_node_objects WHERE id LIKE '___ge%'");
 			$db->query("DELETE FROM sotf_genres");
 			$db->query("SELECT setval('sotf_genres_seq', 1, false)");
 			
@@ -639,9 +641,9 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$result = $db->query("DELETE FROM sotf_topic_trees");
 			$result = $db->query("DELETE FROM sotf_topic_tree_defs");
 			$result = $db->query("DELETE FROM sotf_topics");
-			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
-			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
-			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
+			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '___tt%'");
+			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '___td%'");
+			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '___to%'");
 			$result = $db->query("SELECT setval('sotf_topics_seq', 1, false)");
 			$result = $db->query("SELECT setval('sotf_topic_trees_seq', 1, false)");
 			$result = $db->query("SELECT setval('sotf_topic_tree_defs_seq', 1, false)");
@@ -677,9 +679,9 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			 // delete topics 
 
 			 $conn = pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
-			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
-			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
-			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '___tt%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '___td%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '___to%'");
 			 $result = pg_exec($conn, "SELECT setval('sotf_topics_seq', 1, false)");
 			 $result = pg_exec($conn, "SELECT setval('sotf_topic_trees_seq', 1, false)");
 			 $result = pg_exec($conn, "SELECT setval('sotf_topic_tree_defs_seq', 1, false)");
@@ -694,8 +696,8 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 			 // delete roles
 
-			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
-			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '___rn%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '___ro%'");
 			 $result = pg_exec($conn, "DELETE FROM sotf_roles");
 			 $result = pg_exec($conn, "DELETE FROM sotf_role_names");
 			 $result = pg_exec($conn, "SELECT setval('sotf_roles_seq', 1, false)");
@@ -703,7 +705,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 			 // delete genres
       
-			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
+			 $result = pg_exec($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '___ge%'");
 			 $result = pg_exec($conn, "DELETE FROM sotf_genres");
 			 $result = pg_exec($conn, "SELECT setval('sotf_genres_seq', 1, false)");
 

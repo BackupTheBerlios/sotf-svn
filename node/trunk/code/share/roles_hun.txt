@@ -1,6 +1,6 @@
 1 Mûvész
 2 Szerzõ
-3 Commentator
+3 Kommentátor
 4 Zeneszerzõ
 5 Szerzõi jog birtokosa
 6 Tudósító

@@ -64,7 +64,11 @@ window.onload=myonload;
           <table width="100%">
             <tr valign="top" class="list1">
               <td class="meta" width="20%">{#station#}:</td>
-              <td><a class="goto_object" href="showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a></td>
+              <td><a class="goto_object" href="showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a>
+                {if $CHANGE_STATION}
+                   <input class="action" type="button" name="b1" value="{#change_station#}" onClick="popup('changeStation.php?prgid={$PRG_ID}','{#changestation#}',120,400,false); return false;" />
+                {/if}
+		</td>
             </tr>
             <tr valign="top" class="list2">
               <td class="meta">{#series#}:</td>
