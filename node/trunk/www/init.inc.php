@@ -124,6 +124,8 @@ if(!ini_set("include_path", $newPath))
 */
 
 require($peardir . '/DB.php');
+// change this if you want to use other DBMS not Postgres
+require_once($peardir . '/DB/pgsql.php');
 require($smartydir . '/Smarty.class.php');
 require($smartydir . '/Config_File.class.php');
 require($classdir . '/db_Wrap.class.php');
