@@ -482,8 +482,9 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	Hostname: <INPUT type="text" name="sadm_host" value="'.$install_sadm_host.'"> Port: <INPUT type="text" name="sadm_port" value="'.$install_sadm_port.'" SIZE=5><BR />
 	Database name: <INPUT type="text" name="sadm_db_name" value="'.$install_sadm_db_name.'"><BR />');
 	if ( ($install_color[$id] == $install_green) AND ( ($install_sadm_user != $userDbUser) OR ($install_sadm_pass != $userDbPasswd)
-		OR ($install_sadm_host != $userDbHost) OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) )
-			print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="writeback_sadm" value="Write new values to config.inc.php" disabled=true></DIV>');
+		   OR ($install_sadm_host != $userDbHost) OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) ) {
+	  print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="writeback_sadm" value="Write new values to config.inc.php" disabled=true></DIV>');
+	}
 	PrintButton($id);
 
 
@@ -583,9 +584,10 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	Password: <INPUT type="password" name="node_pass" value="'.$install_node_pass.'"><BR />
 	Hostname: <INPUT type="text" name="node_host" value="'.$install_node_host.'"> Port: <INPUT type="text" name="node_port" value="'.$install_node_port.'" SIZE=5><BR />
 	Database name: <INPUT type="text" name="node_db_name" value="'.$install_node_db_name.'"><BR />');
-	if ( ($install_color[$id] == $install_green) AND ( ($install_node_user != $nodeDbUser) OR ($install_node_pass != $nodeDbPasswd)
-		OR ($install_node_host != $nodeDbHost) OR ($install_node_port != $nodeDbPort) OR ($install_node_db_name != $nodeDbName) ) )
-				print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="writeback_node" value="Write new values to config.inc.php" disabled=true></DIV>');
+   if ( ($install_color[$id] == $install_green) AND ( ($install_node_user != $nodeDbUser) OR ($install_node_pass != $nodeDbPasswd)
+			OR ($install_node_host != $nodeDbHost) OR ($install_node_port != $nodeDbPort) OR ($install_node_db_name != $nodeDbName) ) ) {
+	  //print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="writeback_node" value="Write new values to config.inc.php" disabled=true></DIV>');
+	}
 	if ($install_color[$id] == $install_red) print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="createdb" value="Create NODE db"></DIV>');
 	PrintButton($id);
 
