@@ -204,7 +204,7 @@ class sotf_Neighbour extends sotf_Object {
 	 return array($replyInfo);
   }
 
-  function getNeighbours() {
+  function getNeighbourString() {
 	 $neis = sotf_Neighbour::listAll();
 	 $first = 1;
 	 while(list(,$nei) = each($neis)) {
