@@ -105,20 +105,6 @@ CREATE TABLE "sotf_user_permissions" (
 CONSTRAINT "sotf_user_permissions_uniq" UNIQUE ("user_id", "object_id", "permission_id")
 );
 
-CREATE SEQUENCE "sotf_object_roles_seq";
-
-CREATE TABLE "sotf_object_roles" (
--- points from stations/series/etc. to contact records for editors/artists/etc.
--- REPLICATED
-"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-"object_id" varchar(12) NOT NULL,
-"contact_id" varchar(12) NOT NULL,
-"role_id" int2,	-- SOMA role (ref. to sotf_role_names)
-CONSTRAINT "sotf_roles_uniq" UNIQUE ("object_id", "contact_id", "role_id"),
-FOREIGN KEY("contact_id") REFERENCES sotf_contacts("id") ON DELETE CASCADE,
-FOREIGN KEY("object_id") REFERENCES sotf_node_objects("id") ON DELETE CASCADE
-);
-
 CREATE SEQUENCE "sotf_stations_seq";
 
 CREATE TABLE "sotf_stations" (
@@ -129,20 +115,6 @@ CREATE TABLE "sotf_stations" (
 "url" varchar(100),										-- URL for radio station website, if any
 "language" varchar(40),									-- 3-letter codes separeted by comma
 "entry_date" date DEFAULT CURRENT_DATE
-);
-
-CREATE SEQUENCE "sotf_series_seq";
-
-CREATE TABLE "sotf_series" (
--- REPLICATED 
-"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-"station_id" varchar(12) NOT NULL,
-"name" varchar(255) DEFAULT 'untitled series' NOT NULL,	-- 
-"description" text,
-"url" varchar(100),											-- URL for radio series website, if any
-"language" varchar(40),										-- 3-letter codes separeted by comma
-"entry_date" date DEFAULT CURRENT_DATE,
-FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_contacts_seq";
@@ -163,6 +135,34 @@ CREATE TABLE "sotf_contacts" (
 "fax" varchar(50),
 "url" varchar(255),
 "feedback" bool DEFAULT 'f'::bool  -- if he wants comments forwarded to him
+);
+
+CREATE SEQUENCE "sotf_series_seq";
+
+CREATE TABLE "sotf_series" (
+-- REPLICATED 
+"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
+"station_id" varchar(12) NOT NULL,
+"name" varchar(255) DEFAULT 'untitled series' NOT NULL,	-- 
+"description" text,
+"url" varchar(100),											-- URL for radio series website, if any
+"language" varchar(40),										-- 3-letter codes separeted by comma
+"entry_date" date DEFAULT CURRENT_DATE,
+FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE
+);
+
+CREATE SEQUENCE "sotf_object_roles_seq";
+
+CREATE TABLE "sotf_object_roles" (
+-- points from stations/series/etc. to contact records for editors/artists/etc.
+-- REPLICATED
+"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
+"object_id" varchar(12) NOT NULL,
+"contact_id" varchar(12) NOT NULL,
+"role_id" int2,	-- SOMA role (ref. to sotf_role_names)
+CONSTRAINT "sotf_roles_uniq" UNIQUE ("object_id", "contact_id", "role_id"),
+FOREIGN KEY("contact_id") REFERENCES sotf_contacts("id") ON DELETE CASCADE,
+FOREIGN KEY("object_id") REFERENCES sotf_node_objects("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_programmes_seq";
