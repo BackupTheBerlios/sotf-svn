@@ -1,3 +1,16 @@
+{literal}
+<script language="JavaScript">
+ function nn(){
+ 	if(document.form1.series.value == '0'){
+		document.form1.series_title.disabled = false;
+		document.form1.series_description.disabled = false;
+	}else{
+		document.form1.series_title.disabled = true;
+		document.form1.series_description.disabled = true;
+	}
+ }
+</script>
+{/literal}
 <form name="form1" method="post" action="programmenew.php">
   <table width="100%" border="0" cellspacing="0" cellpadding="2">
     <tr> 
@@ -15,6 +28,12 @@
                 <tr bgcolor="#dddddd"> 
                   <td colspan="2" nowrap class=whitesmall><strong>{#series_data#}</strong> 
                     ({#series_data_comm#})</td>
+                </tr>
+                <tr bgcolor="#f4f4f4">
+                  <td nowrap><div align="right">Part of a Series:</div></td>
+                  <td nowrap><select name="series" onChange="nn();">
+				  		{html_options options=$myseries selected=$smarty.post.series}
+                    </select></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
                   <td width="10%" nowrap> <div align="right">*{#series_title#}:</div></td>
@@ -37,72 +56,60 @@
                     time=$stime}</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap> 
-                    <div align="right">*{#start_time#}:</div></td>
+                  <td nowrap> <div align="right">*{#start_time#}:</div></td>
                   <td nowrap>{html_select_time time=$stime display_seconds=false 
                     prefix=sd}</td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap> 
-                    <div align="right">*{#end_time#}:</div></td>
+                  <td nowrap> <div align="right">*{#end_time#}:</div></td>
                   <td nowrap>{html_select_time display_seconds=false time=$time 
                     prefix=ed} ({#end_time_comm#})</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap> 
-                    <div align="right">*{#spec_needs#}:</div></td>
-                  <td nowrap> 
-                    <select name="special_needs" id="special_needs">
+                  <td nowrap> <div align="right">*{#spec_needs#}:</div></td>
+                  <td nowrap> <select name="special_needs" id="special_needs">
                      {html_options options=$special_needs selected=$submit_special_needs}
                     </select></td>
                 </tr>
-                
-				<tr bgcolor="#dddddd"> 
+                <tr bgcolor="#dddddd"> 
                   <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#sotf1#}</strong></div></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
                   <td nowrap><div align="right">{#sotf2#}:</div></td>
                   <td nowrap><input name="alt_title" type="text" class="myinput" id="alt_title" maxlength="255" value="{$submit_alt_title}"></td>
                 </tr>
-				
-				<tr bgcolor="#f4f4f4"> 
+                <tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right">*{#sotf3#} ({#sotf4#}):</div></td>
                   <td nowrap><input name="keywords" type="text" class="myinput" id="keywords" maxlength="255" value="{$submit_keywords}"></td>
                 </tr>
-				
-				<tr bgcolor="#eeeeee"> 
+                <tr bgcolor="#eeeeee"> 
                   <td nowrap><div align="right">*{#sotf5#}:</div></td>
                   <td nowrap><textarea name="programme_desc" rows="4" class="myinput" id="programme_desc">{$submit_programme_desc}</textarea></td>
                 </tr>
-				
-				<tr bgcolor="#f4f4f4"> 
+                <tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right">{#sotf6#} ({#sotf4#}):</div></td>
                   <td nowrap><input name="contrib" type="text" class="myinput" id="contrib" maxlength="255" value="{$submit_contrib}"></td>
                 </tr>
-				
-				<tr bgcolor="#eeeeee"> 
+                <tr bgcolor="#eeeeee"> 
                   <td nowrap><div align="right">*{#sotf7#}:</div></td>
                   <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=dcr 
                     time=$dcrtime}</td>
                 </tr>
-				
-				<tr bgcolor="#f4f4f4"> 
+                <tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right">*{#sotf8#}:</div></td>
                   <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=dis 
                     time=$distime}</td>
                 </tr>
-				
-				<tr bgcolor="#eeeeee"> 
+                <tr bgcolor="#eeeeee"> 
                   <td nowrap><div align="right">*{#sotf9#}:</div></td>
                   <td nowrap><table width="100%" border="0" cellspacing="0" cellpadding="0">
-                      <tr>
+                      <tr> 
                         <td width="1" align=right>{#sotf10#}:</td>
-                        <td width="100%"> 
-                          <select name="sotf_topic" id="sotf_topic">
+                        <td width="100%"> <select name="sotf_topic" id="sotf_topic">
 {html_options options=$sotf_topics selected=$submit_sotf_topic}
-                          </select>
-                        </td>
-                      </tr><tr>
+                          </select> </td>
+                      </tr>
+                      <tr> 
                         <td width="1">{#sotf11#}:</td>
                         <td><select name="sotf_genre" id="sotf_genre">
 								{html_options options=$sotf_genres selected=$submit_sotf_genre}
@@ -110,22 +117,17 @@
                       </tr>
                     </table></td>
                 </tr>
-				
-				<tr bgcolor="#f4f4f4"> 
+                <tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right">*{#sotf12#}:</div></td>
                   <td nowrap><select name="sotf_lang" id="sotf_lang">
 				  		{html_options options=$sotf_lang selected=$submit_sotf_lang_default}
                     </select></td>
                 </tr>
-				
-				<tr bgcolor="#eeeeee"> 
+                <tr bgcolor="#eeeeee"> 
                   <td nowrap><div align="right">*{#sotf13#}:</div></td>
                   <td nowrap><input name="rights" type="text" class="myinput" id="rights" maxlength="255" value="{$submit_rights}"></td>
                 </tr>
-				
-				
-				
-				<tr bgcolor="#dddddd"> 
+                <tr bgcolor="#dddddd"> 
                   <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#owner_data#}</strong></div></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
@@ -157,3 +159,6 @@
     </tr>
   </table>
 </form>
+<script language="JavaScript">
+ nn();
+</script>

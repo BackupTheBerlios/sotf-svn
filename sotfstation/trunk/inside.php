@@ -71,7 +71,7 @@
 		}
 		
 		//add calendar blocks
-		$myDay->addBlock($val['prog_id'],$val['intime'],$val['outtime'],$val['prog_title'],$val['series_owner'],$val['owner_name'],$val['special']);
+		$myDay->addBlock($val['prog_id'],$val['intime'],$val['outtime'],$val['prog_title'],$val['series_owner'],$val['owner_name'],$val['special'],$val['series_title']);
 	}
 	
 	//output to smarty

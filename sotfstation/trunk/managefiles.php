@@ -52,6 +52,7 @@
 	while (false !== ($entry = $d->read())) {
 		if($entry != '.' and $entry != '..'){
 			$file['name'] 	= $entry;
+			$file['url'] 	= urlencode($entry);
 			$mp3info = GetAllFileinfo(PROG_DIR . $_GET['id'] . "/XBMF/" . "audio/" . $entry);
 			$file['length'] = $mp3info['playtime_string'];
 			$file['channelmode'] = $mp3info['audio']['channelmode'];
@@ -61,7 +62,7 @@
 		}
 	}
 	$d->close();
-	$smarty->assign("path","progs/" . $_GET['id'] . "/XBMF/" . "audio/");
+	$smarty->assign("path",PROG_URL . $_GET['id'] . "/XBMF/" . "audio/");
 	$smarty->assign("audiofiles",$audiofiles);
 	
 	##### OTHER FILES

@@ -18,17 +18,19 @@
 		$smarty->assign("station_access",$mod_flag);
 		$smarty->assign("edit_station",$_SESSION['USER']->get("edit_station"));
 	}
-	$_GET['file'] = stripslashes($_GET['file']);
+	$_GET['file'] = stripslashes(urldecode($_GET['file']));
 	
 	
 	################## FETCH FILE INFO ###################################
 	//get info
+	$file = array();
 	$mp3info = GetAllFileinfo(PROG_DIR . $_GET['id'] . "/XBMF/" . "audio/" . $_GET['file']);
-	$file['name'] 	= $_GET['file'];
-	$file['length'] = $mp3info['playtime_string'];
-	$file['channelmode'] = $mp3info['audio']['channelmode'];
-	$file['bitrate'] = $mp3info['bitrate'] / 1000;
-	$file['samplerate'] = $mp3info['audio']['sample_rate'] / 1000;
+	$file['name'] 			= $_GET['file'];
+	$file['url'] 			= urlencode($_GET['file']);
+	$file['length'] 		= $mp3info['playtime_string'];
+	$file['channelmode'] 	= $mp3info['audio']['channelmode'];
+	$file['bitrate'] 		= $mp3info['bitrate'] / 1000;
+	$file['samplerate'] 	= $mp3info['audio']['sample_rate'] / 1000;
 	
 	
 	################## PROCESS CUT ########################################
@@ -39,8 +41,9 @@
 		if($start > $end or $start > $mp3info['playtime_seconds']){
 			$smarty->assign("error",true);
 		}else{
-			//echo "mp3splt " . PROG_DIR . $_GET['id'] . "/audio/" . $_GET['file'] . " " . $_POST['smin'] . "." . $_POST['ssec'] . " " . $_POST['emin'] . "." . $_POST['esec'] . " " . PROG_DIR . $_GET['id'] . "/audio/asda.mp3";
 			$newFile = uniqid("audio_") . ".mp3";
+			//echo "mp3splt " . PROG_DIR . $_GET['id'] . "/XBMF/audio/" . $_GET['file'] . " " . $_POST['smin'] . "." . $_POST['ssec'] . " " . $_POST['emin'] . "." . $_POST['esec'] . " " . PROG_DIR . $_GET['id'] . "/XBMF/audio/"  . $newFile;
+			
 			exec("mp3splt " . PROG_DIR . $_GET['id'] . "/XBMF/audio/" . $_GET['file'] . " " . $_POST['smin'] . "." . $_POST['ssec'] . " " . $_POST['emin'] . "." . $_POST['esec'] . " " . PROG_DIR . $_GET['id'] . "/XBMF/audio/" . $newFile);
 			$smarty->assign("confirm",true);
 			$smarty->assign("new_file",$newFile);
@@ -69,7 +72,7 @@
 	}
 	$smarty->assign("minutes",$minutes);
 	
-	$smarty->assign("path",PROG_DIR . $_GET['id'] . "/XBMF/" . "audio/");
+	$smarty->assign("path",PROG_URL . $_GET['id'] . "/XBMF/" . "audio/");
 	$smarty->assign("id",$_GET['id']);
 	
 	//page output :)	

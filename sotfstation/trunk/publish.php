@@ -146,9 +146,8 @@
 			$myPack->toFile(PROG_DIR . $_GET['pid'] . "/XBMF/Metadata.xml");
 			
 			//echo "tar.sh " . PROG_DIR . $_GET['pid'] . " ../" . $_GET['pid'] . ".tgz";
-			system("tar.sh " . PROG_DIR . $_GET['pid'] . " ../" . SOTF_STATION_ID . "_" . $_GET['pid'] . ".tgz");
-			chmod(PROG_DIR . SOTF_STATION_ID . "_" . $_GET['pid'] . ".tgz",0777);
-			system("mv " . PROG_DIR . SOTF_STATION_ID . "_" . $_GET['pid'] . ".tgz " . SYNC_DIR);
+			exec("tar -cvvf " . SYNC_DIR . SOTF_STATION_ID . "_" . $_GET['pid'] . ".tgz -C " . PROG_DIR . $_GET['pid'] . " ./"); 
+			chmod(SYNC_DIR . SOTF_STATION_ID . "_" . $_GET['pid'] . ".tgz",0777);
 			
 			//mark programme as published
 			$db->query("UPDATE programme SET published = '" . date("Y-m-d H:i:s") . "' WHERE id = '$_GET[pid]'");

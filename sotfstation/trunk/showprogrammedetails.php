@@ -9,11 +9,11 @@
 
 	/*************************
 	* Show Programme Details *
-	*------------------------**********************************************************
-	* This is a popup that will show all the details of the desired programme					*
-	* Programme owner or the station manager will be able to edit all the available		*
-	* information. Other users will only be able to view it.													*
-	**********************************************************************************/
+	*------------------------********************************************************
+	* This is a popup that will show all the details of the desired programme		*
+	* Programme owner or the station manager will be able to edit all the available	*
+	* information. Other users will only be able to view it.						*
+	*********************************************************************************/
 	include("init.inc.php");	# include the global framework
 	
 	//can I edit this? (this is my authorize!)
@@ -82,30 +82,30 @@
 		if($myError->getLength()==0){
 			//run update queries
 			$db->query("UPDATE series SET 
-																		owner = '$_POST[series_owner]', 
-																		title = '$_POST[series_title]', 
-																		description = '$_POST[series_description]', 
-																		active = '$_POST[series_active]' 
-																WHERE id = '$_POST[series_id]'");
+										owner = '$_POST[series_owner]', 
+										title = '$_POST[series_title]', 
+										description = '$_POST[series_description]', 
+										active = '$_POST[series_active]' 
+										WHERE id = '$_POST[series_id]'");
 			
 			//update programme data
 			$db->query("UPDATE programme SET 
-																			title 				= '$_POST[programme_title]', 
-																			intime 				= '$_POST[sdYear]-$_POST[sdMonth]-$_POST[sdDay] $_POST[sdHour]:$_POST[sdMinute]:00', 
-																			outtime 			= '$_POST[edYear]-$_POST[edMonth]-$_POST[edDay] $_POST[edHour]:$_POST[edMinute]:00', 
-																			special 			= '$_POST[special_needs]', 
-																			active 				= '$_POST[prog_active]',
-																			alt_title 		= '$_POST[alt_title]',
-																			keywords 			= '$_POST[keywords]',
-																			description 	= '$_POST[programme_desc]',
-																			contributors 	= '$_POST[contrib]',
-																			created 			=	'$_POST[dcrYear]-$_POST[dcrMonth]-$_POST[dcrDay]',
-																			issued				= '$_POST[disYear]-$_POST[disMonth]-$_POST[disDay]',
-																			topic					= '$_POST[sotf_topic]',
-																			genre					= '$_POST[sotf_genre]',
-																			lang					= '$_POST[sotf_lang]',
-																			rights				= '$_POST[rights]' 
-																	WHERE id = '$_GET[id]'");
+										title 				= '$_POST[programme_title]', 
+										intime 				= '$_POST[sdYear]-$_POST[sdMonth]-$_POST[sdDay] $_POST[sdHour]:$_POST[sdMinute]:00', 
+										outtime 			= '$_POST[edYear]-$_POST[edMonth]-$_POST[edDay] $_POST[edHour]:$_POST[edMinute]:00', 
+										special 			= '$_POST[special_needs]', 
+										active 				= '$_POST[prog_active]',
+										alt_title 			= '$_POST[alt_title]',
+										keywords 			= '$_POST[keywords]',
+										description 		= '$_POST[programme_desc]',
+										contributors 		= '$_POST[contrib]',
+										created 			= '$_POST[dcrYear]-$_POST[dcrMonth]-$_POST[dcrDay]',
+										issued				= '$_POST[disYear]-$_POST[disMonth]-$_POST[disDay]',
+										topic				= '$_POST[sotf_topic]',
+										genre				= '$_POST[sotf_genre]',
+										lang				= '$_POST[sotf_lang]',
+										rights				= '$_POST[rights]' 
+									WHERE id = '$_GET[id]'");
 			
 			//close window and redirect
 			//choose where to redirect
@@ -116,37 +116,37 @@
 			}
 		}else{	//there were errorz, reset data
 			$smarty->assign(array(
-															"prog_title"						=> 	$_POST['programme_title'],
-															"prog_intimets"					=> 	mktime($_POST['sdHour'],$_POST['sdMinute'],1,$_POST['sdMonth'],$_POST['sdDay'],$_POST['sdYear']),
-															"prog_outtimets"				=> 	mktime($_POST['edHour'],$_POST['edMinute'],1,$_POST['edMonth'],$_POST['edDay'],$_POST['edYear']),
-															"submit_special_needs"	=> 	$_POST['special_needs'],
-															"series_title"					=> 	$_POST['series_title'],
-															"series_desc"						=> 	$_POST['series_description'],
-															"submit_series_owner"		=> 	$_POST['series_owner'],
-															"tot_progs"							=> 	$db->getOne("SELECT count(*) FROM programme WHERE series_id = '$_POST[series_id]'"),
-															"progs_to_run"					=> 	$db->getOne("SELECT count(*) FROM programme WHERE series_id = '$_POST[series_id]' AND intime > '" . date("Y-m-d H:i:s") . "'"),
-															"series_id"							=> 	$_POST['series_id'],
-															"special_needs" 				=> 	array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
-															"series_owner" 					=> 	$db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name"),
-															"series_active" 				=> 	array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
-															"prog_active" 					=> 	array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
-															"submit_series_active"	=>	$_POST['series_active'],
-															"submit_prog_active"		=>	$_POST['prog_active'],
-															"get_stuff"							=>	$_POST['get_stuff'],
-															"programme_id" 					=>  $_GET['id'],
-															
-															"submit_alt_title"					=>$_POST['alt_title'],
-															"submit_keywords"						=>$_POST['keywords'],
-															"submit_programme_desc"			=>$_POST['programme_desc'],
-															"submit_contrib"						=>$_POST['contrib'],
-															"dcrtime"										=>mktime(0,0,1,$_POST['dcrMonth'],$_POST['dcrDay'],$_POST['dcrYear']),
-															"distime"										=>mktime(0,0,1,$_POST['disMonth'],$_POST['disDay'],$_POST['disYear']),
-															"submit_sotf_topic"					=>$_POST['sotf_topic'],
-															"submit_sotf_genre"					=>$_POST['sotf_genre'],
-															"submit_sotf_lang"					=>$_POST['sotf_lang'],
-															"submit_rights"							=>$_POST['rights']
-													 )
-											);
+								"prog_title"					=> 	$_POST['programme_title'],
+								"prog_intimets"					=> 	mktime($_POST['sdHour'],$_POST['sdMinute'],1,$_POST['sdMonth'],$_POST['sdDay'],$_POST['sdYear']),
+								"prog_outtimets"				=> 	mktime($_POST['edHour'],$_POST['edMinute'],1,$_POST['edMonth'],$_POST['edDay'],$_POST['edYear']),
+								"submit_special_needs"			=> 	$_POST['special_needs'],
+								"series_title"					=> 	$_POST['series_title'],
+								"series_desc"					=> 	$_POST['series_description'],
+								"submit_series_owner"			=> 	$_POST['series_owner'],
+								"tot_progs"						=> 	$db->getOne("SELECT count(*) FROM programme WHERE series_id = '$_POST[series_id]'"),
+								"progs_to_run"					=> 	$db->getOne("SELECT count(*) FROM programme WHERE series_id = '$_POST[series_id]' AND intime > '" . date("Y-m-d H:i:s") . "'"),
+								"series_id"						=> 	$_POST['series_id'],
+								"special_needs" 				=> 	array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
+								"series_owner" 					=> 	$db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name"),
+								"series_active" 				=> 	array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
+								"prog_active" 					=> 	array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
+								"submit_series_active"			=>	$_POST['series_active'],
+								"submit_prog_active"			=>	$_POST['prog_active'],
+								"get_stuff"						=>	$_POST['get_stuff'],
+								"programme_id" 					=>  $_GET['id'],
+														
+								"submit_alt_title"				=>$_POST['alt_title'],
+								"submit_keywords"				=>$_POST['keywords'],
+								"submit_programme_desc"			=>$_POST['programme_desc'],
+								"submit_contrib"				=>$_POST['contrib'],
+								"dcrtime"						=>mktime(0,0,1,$_POST['dcrMonth'],$_POST['dcrDay'],$_POST['dcrYear']),
+								"distime"						=>mktime(0,0,1,$_POST['disMonth'],$_POST['disDay'],$_POST['disYear']),
+								"submit_sotf_topic"				=>$_POST['sotf_topic'],
+								"submit_sotf_genre"				=>$_POST['sotf_genre'],
+								"submit_sotf_lang"				=>$_POST['sotf_lang'],
+								"submit_rights"					=>$_POST['rights']
+								 )
+								);
 		}//end if error
 		
 	}else{ // no submit action has been taken

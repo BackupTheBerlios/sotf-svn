@@ -12,6 +12,7 @@
 		var $owner;
 		var $owner_name;
 		var $special;
+		var $series_name;
 		
 		/**
 		 * dayBlock::dayBlock()
@@ -26,13 +27,14 @@
 		 * @param $owner_name (string)
 		 * @return (void)
 		 */
-		function dayBlock($id,$start_time,$end_time,$description,$owner,$owner_name){
+		function dayBlock($id,$start_time,$end_time,$description,$owner,$owner_name,$series_name){
 			$this->id = $id;
 			$this->start_time = $start_time;
 			$this->end_time = $end_time;
 			$this->description = $description;
 			$this->owner = $owner;
 			$this->owner_name = $owner_name;
+			$this->series_name = $series_name;
 		}
 		
 		/**
@@ -93,6 +95,10 @@
 		
 		function getSpecial(){
 			return $this->special;
+		}
+		
+		function getSeriesName(){
+			return $this->series_name;
 		}
 	}
 	
@@ -185,7 +191,7 @@
 		 * @param $special (string)
 		 * @return (void)
 		 */
-		function addBlock($id,$start_time,$end_time,$desc,$owner=0,$owner_name="nobody",$special=false){
+		function addBlock($id,$start_time,$end_time,$desc,$owner=0,$owner_name="nobody",$special=false,$series_name=null){
 			if(strpos($start_time,":")>0){
 				$myTimes = explode(":",$start_time);
 				$start_time = mktime($myTimes[0],$myTimes[1],0,date("m",$this->timestamp),date("d",$this->timestamp),date("Y",$this->timestamp));
@@ -198,7 +204,7 @@
 			
 			
 			
-			$new_block = new dayBlock($id,$start_time,$end_time,$desc,$owner,$owner_name);
+			$new_block = new dayBlock($id,$start_time,$end_time,$desc,$owner,$owner_name,$series_name);
 			
 			if($special){
 				$new_block->setSpecial($special);
@@ -256,10 +262,10 @@
 							$this_row_content = str_replace("{content_id}",$val->getID(),$this_row_content);
 							
 							//process owner data	(all that comes with $owner and $ownername)
-							$ownerName = $val->getOwnerName();
+							$ownerName = $val->getSeriesName();
 							if(!empty($ownerName)){
 								$myOwner = str_replace("{owner_id}",$val->getOwner(),$this->content_owner);
-								$myOwner = str_replace("{owner_name}",$val->getOwnerName(),$myOwner);
+								$myOwner = str_replace("{owner_name}",$val->getSeriesName(),$myOwner);
 								$this_row_content= str_replace("{content_owner}",$myOwner,$this_row_content);
 							}else{
 								$this_row_content = str_replace("{content_owner}","",$this_row_content);

@@ -13,48 +13,43 @@
                     </table></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td width="10%" nowrap>
-<div align="right">{#user_id#}:</div></td>
+                  <td width="10%" nowrap> <div align="right">{#user_id#}:</div></td>
                   <td width="90%" nowrap>{$user_id}</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td width="10%" nowrap>
-<div align="right">{#user_mail#}:</div></td>
+                  <td width="10%" nowrap> <div align="right">{#user_mail#}:</div></td>
                   <td nowrap>{$user_mail}</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td width="10%"> 
-                    <div align="right">{#access_level#}:</div></td>
+                  <td width="10%"> <div align="right">{#access_level#}:</div></td>
                   <td nowrap><select name="access_level" id="access_level" class="myselect">
 				  {html_options options=$access_levels selected=$submit_access_level}
                     </select></td>
                 </tr>
-				
-				 <tr bgcolor="#eeeeee"> 
-                  <td width="10%"> 
-                    <div align="right">{#role#}:</div></td>
+                <tr bgcolor="#eeeeee"> 
+                  <td width="10%"> <div align="right">{#role#}:</div></td>
                   <td nowrap><select name="role" id="role" class="myselect">
 				  {html_options options=$roles selected=$submit_role}
                     </select></td>
                 </tr>
-				
                 <tr bgcolor="#eeeeee"> 
-                  <td width="10%" nowrap>
-<div align="right">{#real_name#}:</div></td>
+                  <td width="10%" nowrap> <div align="right">{#real_name#}:</div></td>
                   <td nowrap>{$user_fname}</td>
                 </tr>
-				
-				{section name=error_cell show=$error_out}
-							<tr bgcolor="#FFCCCC"> 
-                              <td colspan="3">{section name=errors loop=$error_list show=$error_out}
-<div align=center>
-        <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
-{/section}</td>
-                            </tr>
-							{/section}
-							
+                <tr bgcolor="#eeeeee">
+                  <td nowrap><div align="right">Series:</div></td>
+                  <td nowrap>{if $myseries}{foreach from=$myseries item=series}<li>{$series}</li>{/foreach}{else}None{/if}</td>
+                </tr>
+                {section name=error_cell show=$error_out} 
+                <tr bgcolor="#FFCCCC"> 
+                  <td colspan="3">{section name=errors loop=$error_list show=$error_out} 
+                    <div align=center> 
+                      <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
+                    {/section}</td>
+                </tr>
+                {/section} 
                 <tr bgcolor="#eeeeee"> 
-                  <td colspan="2" nowrap><div align="center">
+                  <td colspan="2" nowrap><div align="center"> 
                       <input name="Submit" type="hidden" id="Submit" value="da">
                       <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
                       &nbsp; 

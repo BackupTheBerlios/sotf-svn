@@ -57,6 +57,9 @@
 	//get roles
 	include('common/getroles.inc.php');
 	$smarty->assign("roles",$myroles);
+	
+	//get user's series
+	$smarty->assign("myseries",$db->getAssoc("SELECT id, title FROM series WHERE owner = '$_GET[id]'"));
 											
 	//page output :)	
 	pageFinishPopup('usersedit.htm');							# enter the desired template name as a parameter

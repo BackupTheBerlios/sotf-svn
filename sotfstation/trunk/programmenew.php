@@ -35,12 +35,14 @@
 		
 		########## check for errors ##########
 		//check if fields filled in
-		if(!$myError->checkLength($_POST['series_title'],2)){
-			$myError->add($ERR[15]);
-		}
+		if($_POST['series'] == 0){
+			if(!$myError->checkLength($_POST['series_title'],2)){
+				$myError->add($ERR[15]);
+			}
 		
-		if(!$myError->checkLength($_POST['series_description'],2)){
-			$myError->add($ERR[16]);
+			if(!$myError->checkLength($_POST['series_description'],2)){
+				$myError->add($ERR[16]);
+			}
 		}
 		
 		//check if enddate is greater than start date
@@ -74,10 +76,15 @@
 		//no errorz?
 		if($myError->getLength()==0){
 			//add database entries
-			$db->query("INSERT INTO series(owner,title,description) VALUES('$_POST[series_owner]','$_POST[series_title]','$_POST[series_description]')");
+			if($_POST['series'] == 0){
+				$db->query("INSERT INTO series(owner,title,description) VALUES('$_POST[series_owner]','$_POST[series_title]','$_POST[series_description]')");
+				$newSeriesID = $db->getOne("SELECT max(id) FROM series");
+			}else{
+				$newSeriesID = $_POST['series'];
+			}
 			
 			$db->query("INSERT INTO programme(series_id,intime,outtime,title,special,alt_title,keywords,description,contributors,created,issued,topic,genre,lang,rights) VALUES(
-																				(SELECT max(id) FROM series),
+																				'$newSeriesID',
 																				'$_POST[sdYear]-$_POST[sdMonth]-$_POST[sdDay] $_POST[sdHour]:$_POST[sdMinute]:00',
 																				'$_POST[edYear]-$_POST[edMonth]-$_POST[edDay] $_POST[edHour]:$_POST[edMinute]:00',
 																				'$_POST[programme_title]',
@@ -92,6 +99,8 @@
 																				'$_POST[sotf_genre]',
 																				'$_POST[sotf_lang]',
 																				'$_POST[rights]')");
+			
+		
 			
 			//redirect to confirm page
 			header("Location: confirm.php?action=2&next=inside");
@@ -130,12 +139,16 @@
 	include('common/getdata.inc.php');
 	
 	//assign default data to drop down boxes
+	$mySeries = $db->getAssoc("SELECT id, title FROM series WHERE owner = '" . $_SESSION['USER']->get("auth_id") . "' ORDER BY title");
+	$mySeries[0] = 'New Series';
+	
 	$smarty->assign(array(
 													"special_needs" => array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
-													"series_owner" => $db->getAssoc("SELECT auth_id, name || ': '::\"varchar\" || role AS name FROM user_map WHERE access_id < 4 ORDER BY name"),
-													"sotf_lang"	=> $langs,
+													"series_owner" 	=> $db->getAssoc("SELECT auth_id, name || ': '::\"varchar\" || role AS name FROM user_map WHERE access_id < 4 ORDER BY name"),
+													"sotf_lang"		=> $langs,
 													"sotf_genres"	=> $mygenres,
-													"sotf_topics"	=> $mytopics
+													"sotf_topics"	=> $mytopics,
+													"myseries"		=> $mySeries
 												));
 												
 	//page output :)	
