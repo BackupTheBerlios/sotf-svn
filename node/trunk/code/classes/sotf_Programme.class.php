@@ -358,7 +358,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   /** static */
   function getFileStats() {
 	 global $db;
-	 return $db->getRow("SELECT sum(filesize) AS filesize, sum(play_length) AS play_length FROM sotf_media_files");
+	 return $db->getRow("SELECT sum(f.filesize) AS filesize, sum(f.play_length) AS play_length FROM sotf_media_files f LEFT JOIN sotf_programmes p ON f.prog_id=p.id WHERE p.id IS NOT NULL ");
   }
 
   function getRefs() {
