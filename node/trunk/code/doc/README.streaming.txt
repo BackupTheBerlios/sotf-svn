@@ -62,3 +62,5 @@ You can start it with a command like this:
 
 nohup /.../tamburine-0.3/tamburine >>/.../node/logs/play.log 2>&1 &
 
+For each stream the total length is calculated and stream data are stored
+in SQL. Using this database old streams are periodically cleared.
