@@ -5,6 +5,7 @@ require_once($config['classdir'] . "/rpc_Utils.class.php");
 class sotf_Playlist {
 
   var $audioFiles = array();
+  var $totalLength;
   var $localPlaylist;
   var $streamName;
   var $tmpId;
@@ -20,6 +21,7 @@ class sotf_Playlist {
 		raiseError("Could not determine bitrate, maybe this is not an audio file: " . $item['path']);
 	 $item['bitrate'] = $bitrate;
 	 $this->audioFiles[] = $item;
+	 $this->totalLength += $mp3info["playtime_seconds"];
   }
 
   function addProg($prg, $fileid='') {
@@ -142,10 +144,7 @@ class sotf_Playlist {
   }
 
   function startStreaming() {
-	 global $config, $tamburine;
-
-	 if(!$this->localPlaylist) 
-		$this->makeLocalPlaylist();
+	 global $config, $page;
 
 	 if($config['tamburineURL']) {
 		// tamburine-based streaming
@@ -153,10 +152,16 @@ class sotf_Playlist {
 		if($_SESSION['playlist_id']) {
 		  //TODO? kill old stream
 		}
-		
+
+		// playlist
+		reset($this->audioFiles);
+		while(list(,$audioFile) = each($this->audioFiles)) {
+		  $songs[] = $audioFile['path'];
+		}
+
 		$rpc = new rpc_Utils;
 		//$rpc->debug = true;
-      $response = $rpc->call($config['tamburineURL'], 'setpls', $this->localPlaylist);
+      $response = $rpc->callTamburine('setpls', $songs);
 		if(is_null($response)) {
 		  debug("no reply from tamburine server");
 		} else {
@@ -167,6 +172,9 @@ class sotf_Playlist {
 
 	 } else {
 		// command-line streaming
+
+		if(!$this->localPlaylist) 
+		  $this->makeLocalPlaylist();
 		
 		$this->url = 'http://' . $config['iceServer'] . ':' . $config['icePort'] . '/' . $this->getMountPoint() . "\n";
 		//$url = preg_replace('/^.*\/repository/', 'http://sotf2.dsd.sztaki.hu/node/repository', $filepath);

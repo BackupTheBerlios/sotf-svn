@@ -52,27 +52,45 @@ class rpc_Utils {
   function callTamburine($method, $params) {
     global $config;
 
+    if(!is_array($params)) {
+      $params = array($params);
+    }
+
     // fetch config
     $urlParts = parse_url($config['tamburineURL']);
     $port= $urlParts['port'];
     $host = $urlParts['host'];
     $path = $urlParts['path'];
-    debug("host", $host);
-    debug("port", $port);
-    debug("path", $path);
+    //debug("host", $host);
+    //debug("port", $port);
+    //debug("path", $path);
+
+    /*
+    // xmlrpc encode parameters
+    for($i=0;$i<count($params);$i++){
+      if(get_class($params[$i]) != 'xmlrpcval') {
+        $xmlparams[$i] = xmlrpc_encode($params[$i]);
+      }
+    }
+    $msg = new xmlrpcmsg($method, $xmlparams);
+    // this does not work because it rawurlencodes string values
+    // and Tamburine does not understand it
+    $rawMessage = $msg->serialize();
+    */
+
+    $rawMessage = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<methodCall>\n<methodName>$method</methodName>\n<params>";
+    for($i=0;$i<count($params);$i++){
+      $rawMessage .= "\n<param><value>";
+      $value = trim($params[$i]);
+      if(is_numeric($value)) {
+        $rawMessage .= "<i4>$value</i4>";
+      } else {
+        $rawMessage .= "<string>$value</string>";
+      }
+      $rawMessage .= "</value></param>";
+    }
+    $rawMessage .= "\n</params>\n</methodCall>";
     
-
-    $rawMessage = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<methodCall>
-<methodName>setpls</methodName>
-<params>
-<param><value><string>/home/micsik/ok.mp3
-</string></value></param>
-<param><value><string>/home/micsik/china.mp3
-</string></value></param>
-</params>
-</methodCall>";
-
     //prepare request header
     $rawRequest = "POST $path HTTP/1.1
 Accept: */*
@@ -87,16 +105,6 @@ Content-Type: text/xml
 
 $rawMessage";
 
-    //$rawRequest = str_replace("\n", "\r\n", $rawRequest);
-    /*
-    // prepare data to send
-    for($i=0;$i<count($params);$i++){
-      if(get_class($params[$i]) != 'xmlrpcval') {
-        $params[$i] = xmlrpc_encode($params[$i]);
-      }
-    }
-    */
-
 	 $fp=fsockopen($host, $port, $errno, $errstr, $this->timeout);
 	 if (!$fp) {
      raiseError("Streaming error: $errstr ($errno)");
@@ -107,13 +115,25 @@ $rawMessage";
 		  raiseError('Streaming error: Write error');
    }
    while (!feof($fp)) {
-     $rep = fgets ($fp,128);
-     if(!$rep)
+     $rep = fread ($fp, 1024);
+     if($rep === FALSE)
        raiseError('Streaming error: Read error');
      $rawReply .= $rep;
    }
    fclose ($fp);
-   return $rawReply;
+
+   $parts = explode("\n\n", $rawReply);
+   if(count($parts) > 2)
+     raiseError("could not parse response");
+   $header = $parts[0];
+   $content = $parts[1];
+   $content = preg_replace('/<\?.*\?>/','', $content);
+
+   $msg = new xmlrpcmsg('foo', '');
+   $resp = $msg->parseResponse($content);
+   //dump($resp->value(), "RETVAL1");
+   $retval = xmlrpc_decode($resp->value());
+   return $retval;
  }
 
 

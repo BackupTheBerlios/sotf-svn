@@ -10,14 +10,17 @@ require("init.inc.php");
 
 require_once($config['classdir'] . "/rpc_Utils.class.php");
 
+dump( (int)'0009');
+dump(sprintf('%03d', $config['nodeId']) . 'st');
+exit;
 
 $rpc = new rpc_Utils;
 $rpc->debug = true;
-$response = $rpc->callTamburine('version', '');
+//$response = $rpc->callTamburine('version', '');
+$response = $rpc->callTamburine('setpls', array('/home/micsik/ok.mp3', '/home/micsik/china.mp3'));
+//$response = $rpc->callTamburine('quit', 2);
 
-echo "<pre>";
-echo $response;
-echo "</pre>";
+dump($response, "RESPONSE");
 exit;
 
 /*

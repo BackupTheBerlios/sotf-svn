@@ -134,18 +134,21 @@ class sotf_Repository {
     }
   }
 
+  function makeId($nodeId, $tablename, $serial) {
+    $tableCode = $this->getTableCode($tablename);
+    if($this->isVocabularyTable($tablename)) 
+      $nodeId = 0;
+	 return sprintf("%03d%2s%d", $nodeId, $tableCode, $serial);
+  }
+
+
   /** Generates the ID for a new persistent object. */
   function generateID($object) {
     global $config;
     if($config['nodeId'] == 0)
       raiseError('Please set config[nodeId] to a positive integer in config.inc.php');
-    $tableCode = $this->getTableCode($object->tablename);
-    if($this->isVocabularyTable($object->tablename)) 
-      $nid = 0;
-    else
-      $nid = $config['nodeId'];
     $localId = $this->db->nextId($object->tablename);
-    $id = sprintf("%03d%2s%d", $nid, $tableCode, $localId);
+	 $id = $this->makeId($config['nodeId'], $object->tablename, $localId);
     debug("generated ID", $id);
     return $id;
   }

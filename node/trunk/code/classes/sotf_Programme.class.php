@@ -111,12 +111,21 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $this->getNextAvailableTrackId();
 	 if(parent::create()) { // this will also create the required directories via setMetadataFile !!
 		debug("created new programme", $this->get['guid']);
-		$this->saveMetadataFile();
 		$db->commit();
 		return true;
 	 }
 	 $db->rollback();
 	 raiseError("Could not create new programme");
+  }
+
+  function update() {
+	 sotf_NodeObject::update();
+	 if($this->isLocal()) {
+		$this->checkDirs();
+		$this->addToUpdate('updateMeta', $this->id);
+		// instead of immediate update:
+		// $this->saveMetadataFile();
+	 }
   }
 
   function getStation() {
@@ -580,6 +589,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		debug("METADATA", $metadata);
 	 }
 
+	 $db->begin();
+
 	 if($metadata['identifier']) {
 		$prgId = sotf_Programme::getMapping($metadata['identifier']);
 	 }
@@ -593,10 +604,17 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 } else {
 		// a new programme
 		$newPrg = new sotf_Programme();
-		// TODO: by default I put the programme into the first station
-		$stId = $db->getOne("SELECT id FROM sotf_stations ORDER BY id");
-		
+		$stId = trim($metadata['stationid']);
+		if(is_numeric($stId)) {
+		  $stId = $repository->makeId($config['nodeId'],  'sotf_stations', (int)$stId);
+		}
 		$station = &$repository->getObject($stId);
+		if(!$station) {
+		  raiseError("invalid stationid: ". $metadata['stationid']);
+		  // by default I put the programme into the first station
+		  //$stId = $db->getOne("SELECT id FROM sotf_stations ORDER BY id");
+		  //$station = &$repository->getObject($stId);
+		}
 		$track = $metadata['title'];
 		debug("create with track", $track);
 		$newPrg->create($station->id, $track);
@@ -630,6 +648,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 foreach(array($metadata['owner'], $metadata['publishedby']) as $foreignUser) {
 		if(is_array($foreignUser)) {
 		  $userId = sotf_User::getUserid($foreignUser['login']);
+		  debug("owner/publisher", $foreignUser);
 		  if($userId) {
 			 if($permissions->hasPermission($station->id, 'create', $userId) ||
 				 ($series && $permissions->hasPermission($series->id, 'create', $userId))) {
@@ -641,6 +660,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		}
 	 }
 	 // if we did not get permission info, add permissions for all station/series admins
+	 debug("admins2", $admins);
 	 if(empty($admins)) {
 		if($series)
 		  $admins1 = $permissions->listUsersWithPermission($series->id, 'admin');
@@ -651,67 +671,12 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		  $permissions->addPermission($newPrg->id, $admin['id'], 'admin');
 		}
 	 }
+	 debug("admins3", $admins);
 	 // now create permissions
 	 while(list(, $adminId) = each($admins)) {
 		$permissions->addPermission($newPrg->id, $adminId, 'admin');
 		if($newSeries)
 		  $permissions->addPermission($series->id, $adminId, 'admin');
-	 }
-
-	 /*
-	  * PART 2.1 - Move the audio data to the specified station folder
-	  */
-	 
-	 // insert audio
-	 $dirPath = $pathToFile . $folderName . "/XBMF/audio";
-	 $dir = dir($dirPath);
-	 while($entry = $dir->read()) {
-		if ($entry != "." && $entry != "..") {
-		  $currentFile = $dirPath . "/" . $entry;
-		  if (!is_dir($currentFile)) {
-			 if(is_file($currentFile))
-				 $newPrg->setAudio($currentFile, true);
-		  }
-		}
-	 }
-	 $dir->close();
-
-	 // insert other files
-	 $dirPath = $pathToFile . $folderName . "/XBMF/files";
-	 $dir = dir($dirPath);
-	 while($entry = $dir->read()) {
-		if ($entry != "." && $entry != "..") {
-		  $currentFile = $dirPath . "/" .$entry;
-		  if (!is_dir($currentFile)) {
-			 $id = $newPrg->setOtherFile($currentFile, true);
-			 /* by default, no need for this
-			 if($id) {
-				$fileInfo = &$repository->getObject($id);
-				$fileInfo->set('public_access', 't');
-				$fileInfo->update();
-			 }
-			 */
-		  }
-		}
-	 }
-	 $dir->close();
-
-	 // insert icon
-	 $logoFile = $pathToFile . $folderName . "/icon.png";
-	 if(is_readable($logoFile)) {
-		$newPrg->setIcon($logoFile);
-	 }
-
-	 // convert missing formats!
-	 $audioFiles = & new sotf_FileList();
-	 $audioFiles->getAudioFromDir($newPrg->getAudioDir());
-	 $checker = & new sotf_AudioCheck($audioFiles);
-	 $checker->console = $console; // if we don't want progress bars
-	 $targets = $checker->convertAll($newPrg->id);
-	 if(is_array($targets)) {
-		foreach($targets as $target) {
-		  $newPrg->setAudio($target);
-		}
 	 }
 
 	 /*
@@ -729,10 +694,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $newPrg->set("modify_date", date('Y-m-d', strtotime($metadata['modified'])));
 
 	 $newPrg->set('language', $metadata['language']);
-	 if($metadata['language']=='German')
-		$newPrg->set('language','de');
+	 if($metadata['language']=='ger')
+		$newPrg->set('language','deu');
 	 if($metadata['language']=='English')
-		$newPrg->set('language','en');
+		$newPrg->set('language','eng');
 
 	 $newPrg->update();
 		
@@ -755,6 +720,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $rights->find();
 	 $rights->save();
 
+	 $db->commit();
 	 // contacts
 	 //$role = 21; // Other
 		
@@ -773,7 +739,67 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		  $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station->id, $admins);
 		}
 	 }
+
+	 /*
+	  * PART 2.1 - Move the audio data to the specified station folder
+	  */
 	 
+	 // insert audio
+	 $dirPath = $pathToFile . $folderName . "/XBMF/audio";
+	 $dir = dir($dirPath);
+	 while($entry = $dir->read()) {
+		if ($entry != "." && $entry != "..") {
+		  $currentFile = $dirPath . "/" . $entry;
+		  if (!is_dir($currentFile)) {
+			 if(is_file($currentFile)) {
+				debug("insert audio", $currentFile);
+				$newPrg->setAudio($currentFile, true);
+			 }
+		  }
+		}
+	 }
+	 $dir->close();
+
+	 // insert other files
+	 $dirPath = $pathToFile . $folderName . "/XBMF/files";
+	 $dir = dir($dirPath);
+	 while($entry = $dir->read()) {
+		if ($entry != "." && $entry != "..") {
+		  $currentFile = $dirPath . "/" .$entry;
+		  if (!is_dir($currentFile)) {
+			 $id = $newPrg->setOtherFile($currentFile, true);
+			 debug("insert other", $currentFile);
+			 /* by default, no need for this
+			 if($id) {
+				$fileInfo = &$repository->getObject($id);
+				$fileInfo->set('public_access', 't');
+				$fileInfo->update();
+			 }
+			 */
+		  }
+		}
+	 }
+	 $dir->close();
+
+	 // insert icon
+	 $logoFile = $pathToFile . $folderName . "/icon.png";
+	 if(is_readable($logoFile)) {
+		debug("insert icon", $currentFile);
+		$newPrg->setIcon($logoFile);
+	 }
+
+	 // convert missing formats!
+	 $audioFiles = & new sotf_FileList();
+	 $audioFiles->getAudioFromDir($newPrg->getAudioDir());
+	 $checker = & new sotf_AudioCheck($audioFiles);
+	 $checker->console = $console; // if we don't want progress bars
+	 $targets = $checker->convertAll($newPrg->id);
+	 if(is_array($targets)) {
+		foreach($targets as $target) {
+		  $newPrg->setAudio($target);
+		}
+	 }
+
 	 /*
 	  * PART 2.3 - Remove (unlink) the xbmf file and the temp dir
 	  */
@@ -791,7 +817,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   /** static: create contact record from metadata */
   function importContact($contactData, $contactRole, $prgId, $stationId, $admins) {
-	 global $permissions, $repository, $config;
+	 global $db, $permissions, $repository, $config;
+
+	 $db->begin();
 
 	 // find out what should go into the 'name' field
 	 if($contactData['type']=='organisation') {
@@ -828,6 +856,25 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $contact->set('email', $contactData['email']);
 	 $contact->set('address', $contactData['address']);
 	 $contact->update();
+
+	 // determine role
+	 if($contactData['role']) {
+		$language = 'en'; // for now
+		$rid = $repository->getRoleId($contactData['role'], $language);
+		if($rid)
+		  $contactRole = $rid;
+	 }
+	 // create role
+	 if(!sotf_ComplexNodeObject::findRole($prgId, $contact->id, $contactRole)) {
+		$role = new sotf_NodeObject("sotf_object_roles");
+		$role->set('object_id', $prgId);
+		$role->set('contact_id', $contact->id);
+		$role->set('role_id', $contactRole);
+		$role->create();
+	 }
+
+	 $db->commit();
+
 	 // fetch logo from url and store
 	 if(!empty($contactData['logo'])) {
 		$url = $contactData['logo'];
@@ -850,22 +897,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		} else {
 		  logError("Could not fetch icon from $url");
 		}
-	 }
-
-	 // determine role
-	 if($contactData['role']) {
-		$language = 'en'; // for now
-		$rid = $repository->getRoleId($contactData['role'], $language);
-		if($rid)
-		  $contactRole = $rid;
-	 }
-	 // create role
-	 if(!sotf_ComplexNodeObject::findRole($prgId, $contact->id, $contactRole)) {
-		$role = new sotf_NodeObject("sotf_object_roles");
-		$role->set('object_id', $prgId);
-		$role->set('contact_id', $contact->id);
-		$role->set('role_id', $contactRole);
-		$role->create();
 	 }
 
 	 return $contact->id;
