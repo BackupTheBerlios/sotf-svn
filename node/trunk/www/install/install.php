@@ -207,7 +207,7 @@ if ($install_run_all != NULL)		//if run_all button pressed
 
 
 if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if test 2 passed and not already included
-	@include("config.inc.php");
+	@include("../config.inc.php");
 
 //@include "install_tests.php";
 
@@ -264,12 +264,12 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		$error = false;
 		$install_test_result[$id] = "config.inc.php: ";
 	
-		if (!file_exists("config.inc.php"))
+		if (!file_exists("../config.inc.php"))
 		{
 			$install_test_result[$id] .= "file not exists.";
 			$error = true;
 		}
-		elseif (GetPerm("config.inc.php", "read") != "OK readable")
+		elseif (GetPerm("../config.inc.php", "read") != "OK readable")
 		{
 			$install_test_result[$id] .= "reading error";
 			$error = true;
@@ -281,7 +281,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		}
 		else
 		{
-			@include("config.inc.php");
+			@include("../config.inc.php");
 			if ($nodeDbHost != NULL)		//in iclude successfull
 			{
 					//set default parameter if first time successfull or reload button pressed
@@ -335,7 +335,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 		$install_test_result[$id] .= "logs ($basedir/code/logs) ".@GetPerm($basedir."/code/logs/pmppmp.pmp", "write")."<BR />";
 		$install_test_result[$id] .= "templates_c ($basedir/code/templates_c) ".@GetPerm($basedir."/code/templates_c/pmppmp.pmp", "write")."<BR />";
-		$install_test_result[$id] .= "tmp (./tmp) ".@GetPerm("./tmp/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "tmp (../tmp) ".@GetPerm("../tmp/pmppmp.pmp", "write")."<BR />";
 //		$install_test_result[$id] .= " ($basedir) ".@GetPerm($basedir."/pmppmp.pmp", "write")."<BR />";
 
 		//other directories
@@ -739,7 +739,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		OR ($install_sadm_pass != $userDbPasswd) OR ($install_sadm_host != $userDbHost)
 		OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) )
 		print('<DIV ALIGN="center"><BR /><BIG>The database settings here do not match with the setting in config.inc.php, please update it.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
-	else print('<DIV ALIGN="center"><BR /><BIG>ALL OK, you are now ready to use the <A HREF="index.php">system</A>. Log in using the admin login.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
+	else print('<DIV ALIGN="center"><BR /><BIG>ALL OK, you are now ready to use the <A HREF="../index.php">system</A>. Log in using the admin login.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
 
 ?>
 <DIV ALIGN="center">

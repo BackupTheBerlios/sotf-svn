@@ -38,8 +38,10 @@ function syncResp($params) {
   if(!$neighbour)
     return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: you are not an allowed neighbour node!");
   $msg = checkAccess($enighbour);
-  if($msg)
+  if($msg) {
+    logError($msg);
     return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: $msg!");
+  }
   $retval = $neighbour->syncResponse($lastSync, $nodeData, $objects);
   // send response
   $retval = xmlrpc_encode($retval);
