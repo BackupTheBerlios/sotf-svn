@@ -21,9 +21,8 @@
 		 */
 		function add($owner,$action){
 			global $db;
-			if((ALLOW_LOGS) and (is_int($owner) and (is_int($action)))){
-				$time = date("Y-m-d H:i:s");
-				$db->query("INSERT INTO user_log(auth_id,action,intime) VALUES('$owner','$action','$time')");
+			if((ALLOW_LOGS) and is_int($action)){
+				$db->query("INSERT INTO user_log(auth_id,action) VALUES('$owner','$action')");
 				return true;
 			}
 			return false;
