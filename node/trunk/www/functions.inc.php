@@ -151,6 +151,8 @@ function hasPermPrivate($mixed, $permName) {
 		return $permissions->hasPermission('node', $permName);
 	} else {
 		$obj = & $repository->getObject($mixed);
+		if(!$obj)
+			raiseError("Database inconsistency: no such object: $mixed");
 		$fields = $obj->getAll();
 	}
 	// check perm on the object itself

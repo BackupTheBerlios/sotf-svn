@@ -41,7 +41,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         {if $SERIES_DATA and $SERIES_DATA.icon}
           {strip}
           <a href="{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}">
-            <img height="50%" border="0" src="{$CACHE_URL}/{$SERIES_DATA.id}.png"  alt="{#series#}: {$SERIES_DATA.name}">
+            <img hheight="50%" border="0" src="{$CACHE_URL}/{$SERIES_DATA.id}.png"  alt="{#series#}: {$SERIES_DATA.name}">
           </a>
           {/strip}
         {/if}
@@ -50,13 +50,13 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         {if $STATION_DATA.icon}
           {strip}
           <a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">
-            <img height="50%" border="0" src="{$CACHE_URL}/{$STATION_DATA.id}.png" alt="{#station#}: {$STATION_DATA.name}">
+            <img hheight="50%" border="0" src="{$CACHE_URL}/{$STATION_DATA.id}.png" alt="{#station#}: {$STATION_DATA.name}">
           </a>
           {/strip}
         {/if}
       </td>
         <td class="title2" width="10%" align="right" valign="bottom">
-          <a href="{$ROOT_URL}/rss.php?id={$ID}">RSS</a><br />
+          <a href="{$ROOT_URL}/rss.php?id={$ID}&uiLang={$LANG}">RSS</a><br />
           {if hasPerm($ID,'change') }
           <input class="action" type="button" name="b1" value="{#edit_meta#}" onClick="redir(this.form,'{$ROOT_URL}/editMeta.php?id={$ID}')" />
           <input class="action" type="button" name="b1" value="{#edit_files#}" onClick="redir(this.form,'{$ROOT_URL}/editFiles.php?id={$ID}')" />
@@ -177,7 +177,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
             <td>
               {if $item.contact_data.icon }{strip}
               <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">
-                <img height="50%" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
+                <img hheight="50%" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
               </a>{/strip}
               {/if}
             </td>
