@@ -30,7 +30,7 @@ if (!hasPerm($contact->id, "change")) {
 // upload icon
 $uploadicon = sotf_Utils::getParameter('uploadicon');
 if($uploadicon) {
-  $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name']);
+  $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
   $contact->setIcon($file);
   $page->redirect("editContact.php?id=$contactId#icon");

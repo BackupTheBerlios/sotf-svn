@@ -77,7 +77,7 @@ class sotf_User
       
       // get some more data from sadm
 			$data = $userdb->getRow("SELECT * FROM user_preferences WHERE auth_id = '$id'");
-			$this->realname = $data['realname'];
+			$this->realname = $data['RealName'];
 			$this->language = $data['language'];
 			$this->email = $data['email'];
 			$this->exist = true;
@@ -173,7 +173,7 @@ class sotf_User
 		$userdb->query($query);
 		$id = $userdb->getOne("SELECT auth_id FROM authenticate WHERE username='$name'");
 		//		$query = "INSERT INTO user_preferences (RealName,language,last_visit,num_logins) ";
-		$query = "INSERT INTO user_preferences (auth_id, realname, language,last_visit,num_logins) ";
+		$query = "INSERT INTO user_preferences (auth_id, RealName, language,last_visit,num_logins) ";
 		$query .= "VALUES('$id','"
 						. sotf_Utils::magicQuotes($realname) . "','" 
 			. sotf_Utils::magicQuotes($language) 

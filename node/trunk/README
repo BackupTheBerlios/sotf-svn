@@ -52,3 +52,5 @@ to streams, viewing images and donwloading files will not work!
 
 After the installation completed you may want to protect the
 node/www/install subdir from unauthorized access.
+
+We strongly suggest to set register_globals off in PHP.

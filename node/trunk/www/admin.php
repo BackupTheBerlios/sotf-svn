@@ -116,6 +116,13 @@ if($delperm) {
 
 $localNode = sotf_Node::getLocalNode();
 if(!$localNode) {
+	// clear old entry
+	$localNode = new sotf_Node();
+	$localNode->set('name', $nodeName);
+	$localNode->find();
+	if($localNode->exists())
+		$localNode->delete();
+	// create local node entry if does not exist
   $localNode = new sotf_Node();
   $localNode->set('node_id', $nodeId);
   $localNode->set('name', $nodeName);
