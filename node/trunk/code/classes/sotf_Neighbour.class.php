@@ -121,7 +121,9 @@ class sotf_Neighbour extends sotf_Object {
 	 // do XML-RPC conversation
 	 $objectsSent = 0;
 	 $objectsReceived = 0;
-	 $more = true;
+	 $more = sotf_NodeObject::countModifiedObjects($remoteId);
+	 if(!$more)
+		debug("No new objects to send");
 	 while($more) {
 		$db->begin(true);
 		$modifiedObjects = sotf_NodeObject::getModifiedObjects($remoteId, 0, $this->objectsPerRPCRequest);
@@ -144,7 +146,7 @@ class sotf_Neighbour extends sotf_Object {
 		$replyInfo = $response[0];
 		debug("replyInfo", $replyInfo);
 		$thisChunk++;
-		$more = (sotf_NodeObject::countModifiedObjects($remoteId) > 0);
+		$more = sotf_NodeObject::countModifiedObjects($remoteId);
 	 }
 
 	 debug("total number of objects sent",$objectsSent );
