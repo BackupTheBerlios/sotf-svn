@@ -54,7 +54,7 @@ function logger($name, $msg='', $type='default') {
   if ($type == 'default') {
     $type = $config['debug_type'];
   }
-  if(is_array($msg)) {
+  if(is_array($msg) || is_object($msg)) {
     ob_start();
     //var_dump($msg);
     print_r($msg);

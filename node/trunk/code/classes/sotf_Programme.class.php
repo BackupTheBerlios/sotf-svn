@@ -378,9 +378,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $target = $this->getAudioDir() .  '/' . $this->get('track') . '_' . $srcFile->getFormatFilename();
 	 if(!$srcFile->isAudio())
 		raiseError("this is not an audio file");
-	 if(is_file($target)) {
-		raiseError($page->getlocalized('format_already_present'));
-	 }
+	 //if(is_file($target)) {
+	 //	raiseError($page->getlocalized('format_already_present'));
+	 //}
 	 // check and save length
 	 $length = round($srcFile->duration);
 	 if(!$this->get('length')) {
@@ -432,10 +432,19 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$mainContent = 'true';
 	 else 
 		$mainContent = 'false';
-	 // save file info into database
+	 // get audio properties of file
 	 $file = new sotf_AudioFile($filepath);
+	 // find if this is an existing file
 	 if($file->isAudio()) {
 		$fileInfo = new sotf_NodeObject('sotf_media_files');
+	 } else {
+		$fileInfo = new sotf_NodeObject('sotf_other_files');
+	 }
+	 $fileInfo->set("prog_id", $this->id);
+	 $fileInfo->set("filename", $file->name);
+	 $fileInfo->find();
+	 // save file info into database
+	 if($file->isAudio()) {
 		$fileInfo->set('play_length', round($file->duration));
 		$fileInfo->set('type', $file->type);
 		if(is_numeric($file->bitrate)) {
@@ -449,18 +458,14 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		}
 		$fileInfo->set('format', $file->getFormatFilename());
 		$fileInfo->set('main_content', $mainContent);
-	 } else {
-		$fileInfo = new sotf_NodeObject('sotf_other_files');
 	 }
-	 $fileInfo->set('prog_id', $this->id);
-	 $fileInfo->set('filename', $file->name);
 	 $fstat = stat($filepath);
 	 $fileInfo->set('filesize', $fstat['size']);
 	 $fileInfo->set('last_modified', $db->getTimestampTz($fstat['mtime']));
 	 $fileInfo->set('mime_type', $file->mimetype);
-	 $success = $fileInfo->create();
-	 if(!$success)
-		raiseError("could not write into database");
+	 $success = $fileInfo->save();
+	 //if(!$success)
+	 //	raiseError("could not write into database");
 	 return $fileInfo->id;
   }
 
@@ -518,7 +523,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   /** static: import a programme from the given XBMF archive */
   function importXBMF($fileName, $publish=false) {
 	 global $db, $config, $permissions, $repository;
-	 
+
 	 $pathToFile = $config['xbmfInDir'] . '/';
 	 // create temp folder with unique name
 	 $folderName = uniqid("xbmf");
@@ -531,7 +536,14 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 debug("untar result", $result);
 	
 	 //parse the xml file
-	 $myPack = new unpackXML($pathToFile . $folderName . "/XBMF/Metadata.xml");	//note that the unpacker needs AN ABSOLUTE path to the file
+	 $metaFile = $pathToFile . $folderName . "/XBMF/Metadata.xml";
+	 if(!is_file($metaFile)) {
+		$metaFile = $pathToFile . $folderName . "/XBMF/metadata.xml";
+		if(!is_file($metaFile)) {
+		  raiseError("no metadata file found in XBMF!");
+		}
+	 }
+	 $myPack = new unpackXML($metaFile);
 	
 	 if(!$myPack->error){		//if the file has been found
 		$metadata = $myPack->process();
@@ -542,28 +554,92 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		echo "<font color=#FF0000><b>The import of $fileName did not succeed!</b></font>";
 		return false;	//did not succeed
 	 }else{
+		/*
 		echo "Came In: " . $myPack->encoding . "<br>";
 		echo "Went Out: " . $myPack->outencoding . "<br>";
 		echo "<pre>";
 		print_r($metadata);
 		echo "</pre>";
+		*/
+		//dump($metadata, "METADATA");
 	 }
-	
-	 //dump($metadata, "METADATA");
 
-	 // TODO: by default I put the programme into the first station
-	 $stId = $db->getOne("SELECT id FROM sotf_stations ORDER BY id");
+	 if($metadata['identifier']) {
+		$prgId = sotf_Programme::getMapping($metadata['identifier']);
+	 }
 
-	 $station = $repository->getObject($stId);
-	 $track = $metadata['title']['basetitle'];
-	 $newPrg = new sotf_Programme();
-	 debug("create with track", $track);
-	 $newPrg->create($station->id, $track);
+	 if($prgId) {
+		// updating an exisiting programme
+		$newPrg =  new sotf_Programme($prgId);
+		$station = &$repository->getObject($newPrg->get('station_id'));
+		$updatingPrg = 1;
+		debug("updating existing programme", $prgId);
+	 } else {
+		// a new programme
+		$newPrg = new sotf_Programme();
+		// TODO: by default I put the programme into the first station
+		$stId = $db->getOne("SELECT id FROM sotf_stations ORDER BY id");
+		
+		$station = &$repository->getObject($stId);
+		$track = $metadata['title'];
+		debug("create with track", $track);
+		$newPrg->create($station->id, $track);
+		sotf_Programme::addMapping($metadata['identifier'], $newPrg->id);
+	 }
 
-	 // add permissions for all station admins (??)
-	 $admins = $permissions->listUsersWithPermission($station->id, 'admin');
-	 while(list(, $admin) = each($admins)) {
-		$permissions->addPermission($newPrg->id, $admin['id'], 'admin');
+	 $newPrg->set('foreign_id', $metadata['identifier']);
+
+	 // series
+	 if($metadata['series'] && $metadata['series']['id']) {
+		$seriesId = sotf_Programme::getMapping($metadata['series']['id']);
+		if($seriesId) {
+		  $newPrg->set('series_id', $seriesId);
+		  $series = &$repository->getObject($seriesId);
+		} else {
+		  $newSeries = 1;
+		  $series = new sotf_Series();
+		  $series->set('station_id', $station->id);
+		}
+		$series->set('name', $metadata['series']['title']);
+		$series->set('description', $metadata['series']['title']);
+		if($series->exists()) {
+		  $series->update();
+		} else {
+		  $series->create();
+		  sotf_Programme::addMapping($metadata['series']['id'], $series->id);
+		}
+	 }
+
+	 // permissions
+	 foreach(array($metadata['owner'], $metadata['publishedby']) as $foreignUser) {
+		if(is_array($foreignUser)) {
+		  $userId = sotf_User::getUserid($foreignUser['login']);
+		  if($userId) {
+			 if($permissions->hasPermission($station->id, 'add_prog') ||
+				 ($series && $permissions->hasPermission($series->id, 'add_prog'))) {
+				// add permission for user
+				$permissions->addPermission($newPrg->id, $userId, 'admin');
+				$admins[] = $userId;
+			 }
+		  }
+		}
+	 }
+	 // if we did not get permission info, add permissions for all station/series admins
+	 if(empty($admins)) {
+		if($series)
+		  $admins1 = $permissions->listUsersWithPermission($series->id, 'admin');
+		if(!$admins1)
+		  $admins1 = $permissions->listUsersWithPermission($station->id, 'admin');
+		while(list(, $admin) = each($admins1)) {
+		  $admins[] = $admin['id'];
+		  $permissions->addPermission($newPrg->id, $admin['id'], 'admin');
+		}
+	 }
+	 // now create permissions
+	 while(list(, $adminId) = each($admins)) {
+		$permissions->addPermission($newPrg->id, $adminId, 'admin');
+		if($newSeries)
+		  $permissions->addPermission($series->id, $adminId, 'admin');
 	 }
 
 	 /*
@@ -575,9 +651,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $dir = dir($dirPath);
 	 while($entry = $dir->read()) {
 		if ($entry != "." && $entry != "..") {
-		  $currentFile = $dirPath . "/" .$entry;
+		  $currentFile = $dirPath . "/" . $entry;
 		  if (!is_dir($currentFile)) {
-			 $newPrg->setAudio($currentFile);
+			 if(is_file($targetFile))
+				 $newPrg->setAudio($currentFile, true);
 			 //break;
 		  }
 		}
@@ -594,7 +671,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		  if (!is_dir($currentFile)) {
 			 $id = $newPrg->setOtherFile($currentFile, true);
 			 if($id) {
-				$fileInfo = $repository->getObject($id);
+				$fileInfo = &$repository->getObject($id);
 				$fileInfo->set('public_access', 't');
 				$fileInfo->update();
 			 }
@@ -614,18 +691,14 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	  */
 
 	 // basic metadata
-	 $newPrg->set('title', sotf_Programme::normalizeText($metadata['title']['basetitle'],255));
-	 $newPrg->set('alternative_title', sotf_Programme::normalizeText($metadata['title']['alternative'],255));
-	 $newPrg->set('episode_title', sotf_Programme::normalizeText($metadata['title']['episodetitle'],255));
-	 $newPrg->set('episode_sequence', sotf_Programme::normalizeText($metadata['title']['episodesequence']));
+	 $newPrg->set('title', sotf_Programme::normalizeText($metadata['title'],255));
+	 $newPrg->set('alternative_title', sotf_Programme::normalizeText($metadata['alternative'],255));
+	 $newPrg->set('episode_sequence', sotf_Programme::normalizeText($metadata['episodesequence']));
 	 $newPrg->set('abstract', sotf_Programme::normalizeText($metadata['description']));
 	 
 	 $newPrg->set("production_date", date('Y-m-d', strtotime($metadata['created'])));
 	 $newPrg->set("broadcast_date", date('Y-m-d', strtotime($metadata['issued'])));
 	 $newPrg->set("modify_date", date('Y-m-d', strtotime($metadata['modified'])));
-
-	 // subject ???
-	 //$newPrg->set('???', $metadata['subject']);
 
 	 $newPrg->set('language', $metadata['language']);
 	 if($metadata['language']=='German')
@@ -636,41 +709,39 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $newPrg->update();
 		
 	 // topic
-	 $topicz = explode(",",$metadata['type']);
-	 foreach($topicz as $topic){
-		$topic_id = $db->getOne("SELECT topic_id FROM sotf_topics WHERE topic_name = '" . trim($topic) . "'");
-		if(!empty($topic_id)){
-		  $db->query("INSERT INTO sotf_prog_topics(id, prog_id, topic_id) VALUES('" . $newPrg->getID() . "','" . $newPrg->id . "','$topic_id')");
-		}
-	 }
+	 if($metadata['topic'])
+		$repository->addToTopic($newPrg->id, $metadata['topic']);
+	 // genre
+	 if(is_numeric($metadata['genre']))
+		$newPrg->set('genre_id', $metadata['genre']);
+	 else
+		logError("invalid genre id: " . $metadata['genre']);
 
 	 // rights
 	 $rights = new sotf_NodeObject("sotf_rights");
-	 $rights->set('rights_text', $metadata['rights']);
 	 $rights->set('prog_id', $newPrg->id);
-	 $rights->create();
+	 $rights->set('rights_text', $metadata['rights']);
+	 $rights->find();
+	 $rights->save();
 
 	 // contacts
 	 //$role = 21; // Other
 		
 	 foreach($metadata['publisher'] as $contact) {
 		$role = 23; // Publisher
-		$id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
+		$id = sotf_Programme::importContact($contact, $role, $newPrg->id, $admins);
 	 }
 	 foreach($metadata['creator'] as $contact) {
 		$role = 22; // Creator
-		$id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
+		$id = sotf_Programme::importContact($contact, $role, $newPrg->id, $admins);
 	 }
 		
 	 if(is_array($metadata['contributor'])){
 		foreach($metadata['contributor'] as $contact) {
 		  $role = 24; // Contributor
-		  $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
+		  $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $admins);
 		}
 	 }
-
-	 // permissions
-	 
 	 
 	 /*
 	  * PART 2.3 - Remove (unlink) the xbmf file and the temp dir
@@ -688,8 +759,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }//end func
 
   /** static: create contact record from metadata */
-  function importContact($contactData, $contactRole, $prgId, $station) {
-	 global $permissions, $repository;
+  function importContact($contactData, $contactRole, $prgId, $admins) {
+	 global $permissions, $repository, $config;
 
 	 // find out what should go into the 'name' field
 	 if($contactData['type']=='organisation') {
@@ -711,23 +782,44 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		  return null;
 		}
 		// add permissions for all station admins (??)
-		$admins = $permissions->listUsersWithPermission($station->id, 'admin');
-		while(list(, $admin) = each($admins)) {
-		  $permissions->addPermission($contact->id, $admin['id'], 'admin');
+		while(list(, $adminId) = each($admins)) {
+		  $permissions->addPermission($contact->id, $adminId, 'admin');
 		}
 	 } else {
 		$contact = $repository->getObject($id);
 	 }
 
+	 //debug("contactData", $contactData);
 	 // set/update contact data
 	 $contact->set('acronym', $contactData['organizationacronym']);
 	 $contact->set('alias', $contactData['alias']);
 	 $contact->set('url', $contactData['uri']);
 	 $contact->set('email', $contactData['email']);
 	 $contact->set('address', $contactData['address']);
-	 $contact->set('url', $contactData['uri']);
-	 // logo not handled yet as no need for TMW
 	 $contact->update();
+	 // fetch logo from url and store
+	 if(!empty($contactData['logo'])) {
+		$url = $contactData['logo'];
+		if ($handle = fopen($url,'rb')) {
+		  $contents = "";
+		  do {
+			 $data = fread ($handle, 100000);
+			 if (strlen($data) == 0) {
+				break;
+			 }
+			 //debug("received", strlen($data));
+			 $contents .= $data;
+		  } while(0);
+		  fclose($handle);
+		  $tmpFile = tempnam($config['xbmfInDir'], 'logo_u');
+		  debug("received logo from", $url);
+		  sotf_Utils::save($tmpFile, $contents);
+		  $contact->setIcon($tmpFile);
+		  unlink($tmpFile);
+		} else {
+		  logError("Could not fetch icon from $url");
+		}
+	 }
 
 	 // determine role
 	 if($contactData['role']) {
@@ -747,6 +839,20 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
 	 return $contact->id;
   }
+
+  /** private */
+  function getMapping($foreignId) {
+	 global $db;
+	 return $db->getOne("SELECT id_at_node FROM sotf_station_mappings WHERE id_at_station='$foreignId'");
+  }
+
+  /** private */
+  function addMapping($foreignId, $localId) {
+	 global $db;
+	 return $db->query("INSERT INTO sotf_station_mappings (id_at_station,id_at_node) VALUES('$foreignId', '$localId')");
+  }
+
+
 
 }
 

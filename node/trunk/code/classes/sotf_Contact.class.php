@@ -93,7 +93,64 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 	/** static */
 	function listLocalContactNames() {
 		global $db, $config;
-		$res = $db->getAll("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_node_objects n WHERE c.id = n.id AND n.node_id='" . $config['nodeId']."' ORDER BY name");
+		$res = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_node_objects n WHERE c.id = n.id AND n.node_id='" . $config['nodeId']."' ORDER BY name");
+		if(DB::isError($res))
+			raiseError($res);
+		return $res;
+	}
+
+	/** static */
+	function listMyContactNames() {
+		global $db, $config, $user;
+		$res = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_user_permissions p WHERE c.id = p.object_id AND p.user_id='" . $user->id . "' ORDER BY name");
+		if(DB::isError($res))
+			raiseError($res);
+		return $res;
+	}
+
+	/** static */
+	function listObjectContactNames($object) {
+		global $db, $config, $user;
+		$class = get_class($object);
+		if($class == 'sotf_programme') {
+		  $station = $object->getStation();
+		} elseif($class == 'sotf_series') {
+		  $station = $object->getStation();
+		} elseif($class == 'sotf_station') {
+		  $station = &$object;
+		} else {
+		  return $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_object_roles r WHERE c.id = r.contact_id AND r.object_id='" . $object->id . "' ORDER BY name");
+		}
+		
+		$res1 = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_object_roles r WHERE c.id = r.contact_id AND r.object_id='" . $station->id . "' ORDER BY name");
+		if(DB::isError($res1))
+			raiseError($res1);
+		$res2 = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_series s, sotf_object_roles r WHERE c.id = r.contact_id AND r.object_id=s.id AND s.station_id = '" . $station->id . "' ORDER BY name");
+		if(DB::isError($res2))
+			raiseError($res2);
+		$res3 = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_programmes s, sotf_object_roles r WHERE c.id = r.contact_id AND r.object_id=s.id AND s.station_id = '" . $station->id . "' ORDER BY name");
+		if(DB::isError($res3))
+			raiseError($res3);
+		$res = array_merge($res1, $res2, $res3);
+		asort($res);
+		return $res;
+	}
+
+	/** static */
+	function listAllContactNames() {
+		global $db, $config, $user;
+		// TODO: a-b-c split
+		$res = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c ORDER BY name");
+		if(DB::isError($res))
+			raiseError($res);
+		return $res;
+	}
+
+	/** static */
+	function searchContactNames($pattern) {
+		global $db, $config, $user;
+		$pattern = sotf_Utils::magicQuotes($pattern);
+		$res = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c WHERE name ~ '$pattern' ORDER BY name");
 		if(DB::isError($res))
 			raiseError($res);
 		return $res;

@@ -15,7 +15,7 @@ if ($portal_http == "") $portal_http = NULL;
 if (isset($portal_http))
 {
 	if (substr($portal_http, 0, 7) != "http://") $portal_http = "http://".$portal_http;
-	$pos = strstr($portal_http_new, "?");		//find post parameters
+	$pos = strpos($portal_http, "?");		//find post parameters
 	if ($pos) $portal_http = substr($portal_http, 0, $pos);		//eliminate post parameters
 	$smarty->assign("old_upload", $portal_http);	//save given URL (next time no nedd to write it again)
 	$portal_http_new = str_replace("/portal.php/", "/portal_upload.php/", $portal_http);		//replace portal.php name with the php file responsible for upload

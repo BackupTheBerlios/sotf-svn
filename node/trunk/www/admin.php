@@ -24,13 +24,17 @@ checkPerm('node', 'change', 'authorize');
 $xbmfFile = sotf_Utils::getParameter('import_xbmf');
 if($xbmfFile) {
   $file = $config['xbmfInDir'] . "/$xbmfFile";
+  $db->begin();
   $id = sotf_Programme::importXBMF($file, $config['publishXbmf']);
-	if($id) {
-		echo "Import succesful: <a target=\"_opener\" href=\"editMeta.php?id=$id\">click here</a>";
-		unlink($file);
-	} else {
-		echo "Import failed";
-	}
+  if($id) {
+	 $db->commit();
+	 echo "Import succesful: <a target=\"_opener\" href=\"editMeta.php?id=$id\">click here</a>";
+	 unlink($file);
+  } else {
+	 $db->rollback();
+	 echo "Import failed";
+  }
+  $page->logRequest();
   exit;
 }
 
@@ -42,6 +46,7 @@ if(sotf_Utils::getParameter('updatecvs')) {
   header("Content-type: text/plain\n");
   system('cvs update');
   //$page->redirect("admin.php");
+  $page->logRequest();
   exit;
 }
 
@@ -50,6 +55,7 @@ if(sotf_Utils::getParameter('retemplate')) {
 	checkPerm('node', 'change');
   $smarty->clear_compiled_tpl();
   $page->redirect("admin.php");
+  $page->logRequest();
   exit;  
 }
 
@@ -57,6 +63,7 @@ if(sotf_Utils::getParameter('retemplate')) {
 if(sotf_Utils::getParameter('updatetopics')) {
   $repository->updateTopicCounts();
   $page->redirect("admin.php");
+  $page->logRequest();
   exit;  
 }
 
@@ -68,6 +75,7 @@ if(sotf_Utils::getParameter('save_debug')) {
   $sotfVars->set('debug_smarty', sotf_Utils::getParameter('debug_smarty'));
   $sotfVars->set('smarty_compile_check', sotf_Utils::getParameter('smarty_compile_check'));
   $page->redirect("admin.php");
+  $page->logRequest();
   exit;
 }
 
@@ -79,6 +87,7 @@ if(sotf_Utils::getParameter('save')) {
   $localNode->set('description', $desc);
   $localNode->update();
   $page->redirect("admin.php#network");
+  $page->logRequest();
   exit;
 }
 
@@ -96,6 +105,7 @@ if(sotf_Utils::getParameter('sync')) {
   // sync
   $neighbour->sync(true);
   $page->redirect("admin.php#network");
+  $page->logRequest();
 }
 
 // delete neighbour
@@ -106,6 +116,7 @@ if(sotf_Utils::getParameter('delneighbour')) {
   $neighbour = sotf_Neighbour::getById($nid);
   $neighbour->delete();
   $page->redirect("admin.php#network");
+  $page->logRequest();
 }
 
 // manage permissions
@@ -121,6 +132,7 @@ if(sotf_Utils::getParameter('delperm')) {
   $msg = $page->getlocalizedWithParams("deleted_permissions_for", $username);
   $page->addStatusMsg($msg, false);
   $page->redirect("admin.php");
+  $page->logRequest();
   exit;
 }
 
@@ -168,6 +180,7 @@ $dir = dir($dirPath);
 while($entry = $dir->read()) {
 	if ($entry != "." && $entry != "..") {
 		$currentFile = $dirPath . "/" .$entry;
+		//debug("examining", $currentFile);
 		if (!is_dir($currentFile)) {
 			$XBMF[] = basename($currentFile);
 		}

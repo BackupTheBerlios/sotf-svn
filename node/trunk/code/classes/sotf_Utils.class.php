@@ -96,54 +96,6 @@ class sotf_Utils
 	  fclose ($fd);
 	}
 	
-	/*
-	 function tail($file,$num) {
-	
-	
-	
-	   global $tail_start_buf; // Global: max string length
-	   global $tail_record_lenght; // Global: approximate string length
-	   if ($tail_start_buf==0) $tail_start_buf=80;
-	   if ($tail_record_lenght==0) $tail_record_lenght=4096;
-	   $appxlen=$tail_start_buf;// approximate string length
-	   $flen=filesize($file);// file length
-	   $out=array();// $out is array to return
-	   $fp=@fopen($file,'r');
-	   if ($fp) {
-	     do {
-	       if ($num*$appxlen>$flen) $pos=0;
-	       else $pos=$flen-($num*$appxlen);
-	       $out= sotf_Utils::_readfile($fp,$pos,$num);
-	       $appxlen*=2;
-	     } while (count($out)!=$num && $pos!=0);
-	     fclose($fp);
-	   }
-	   return $out;
-	 }
-	
-	 function _readfile($fp,$pos,$num) {
-	   global $tail_record_lenght;
-	   fseek($fp,$pos);
-	   $tmp=array();
-	   for ($i=0; !feof($fp); $i++) {
-	     $line=chop(fgets($fp,$tail_record_lenght));
-	     if (!$line) break;
-	     $tmp[$i]=$line;
-	   }
-	   $j=count($tmp)-$num;
-	   if ($pos!=0 && $j==0) {
-	     $j++;
-	   }
-	   if ($j<0) {
-	     $j=0;
-	     $xnum=$num-1;
-	   } else $xnum=$num;
-	   for ($i=0; $i<$xnum && $j<count($tmp); $i++,$j++) $out[$i]=$tmp[$j];
-	   error_log(implode("\nS",$out), 0);
-	   return $out;
-	 }
-	*/
-	
 	/////////////////////////////// STRING UTILS ////////////////////////////////////////////////////
 	
 	function appendWith($list, $item, $delim=", ")

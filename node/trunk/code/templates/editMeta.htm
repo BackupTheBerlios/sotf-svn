@@ -228,7 +228,7 @@ window.onload=myonload;
               {$item.contact_data.name}
             </td>
             <td>
-                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$PRG_ID}','{#edit_role#}',350,400,false)" />
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$PRG_ID}','{#edit_role#}',280,550,false)" />
                 <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)" />
                 <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editMeta.php?delrole=1&roleid={$item.id}&id={$PRG_ID}')" />
             </td>
@@ -239,7 +239,7 @@ window.onload=myonload;
         <p>{#no_roles#}</p>
         {/if}
         <p>
-            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$PRG_ID}','{#edit_role#}',400,400,false)" />
+            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$PRG_ID}','{#edit_role#}',280,550,false)" />
         </p>
       </td>
     </tr>

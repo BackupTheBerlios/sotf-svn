@@ -74,11 +74,14 @@ while($entry = $dir->read()) {
 $dir->close();
 if(!empty($XBMF)) {
   foreach($XBMF as $xbmfFile) {
+    $db->begin();
     $id = sotf_Programme::importXBMF($config['xbmfInDir'] . "/$xbmfFile", $config['publishXbmf']);
     if($id) {
+      $db->commit();
       debug("CRON","Imported new XBMF: $xbmfFile");
       unlink($config['xbmfInDir'] . "/$xbmfFile");
     } else {
+      $db->rollback();
       logger("CRON","Import FAILED for XBMF: $xbmfFile");
     }
   }

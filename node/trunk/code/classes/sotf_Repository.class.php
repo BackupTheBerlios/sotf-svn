@@ -212,7 +212,10 @@ class sotf_Repository {
 
   function addToTopic($progId, $topicId) {
     global $db;
-    // TODO: ha mar van, akkor ne adja hozza
+	 if(!$topicId || $this->getTable($topicId) != 'sotf_topic_tree_defs') {
+		logError("invalid topic: $topicId");
+		return;
+	 }
     $query="SELECT id  FROM sotf_prog_topics WHERE  prog_id = '".$progId."' AND topic_id  = '".$topicId."'";
     $result = $db->getAll($query);
     if (count($result) == 0)		//if not already in the DB
