@@ -6,6 +6,7 @@ require("init.inc.php");
 
 $smarty->assign('PAGETITLE',$page->getlocalized('edit_role'));
 
+$page->popup = true;
 $page->forceLogin();
 
 $roleId = sotf_Utils::getParameter('roleid');
@@ -15,13 +16,11 @@ $objectId = sotf_Utils::getParameter('objectid');
 $save = sotf_Utils::getParameter('save');
 $roleSelected = sotf_Utils::getParameter('role');
 
-if (!hasPerm($objectId, "change")) {
-  raiseError("You have no permission to change these settings!");
-}
-
 if(empty($objectId)) {
      raiseError("Object id is missing!");
 }
+
+checkPerm($objectId, "change");
 
 if($roleId) {
   $role = & new sotf_NodeObject('sotf_object_roles', $roleId);

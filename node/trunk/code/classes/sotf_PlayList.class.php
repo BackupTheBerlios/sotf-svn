@@ -110,7 +110,9 @@ class sotf_Playlist {
 		if($_SESSION['playlist_id']) {
 		  //TODO? kill old stream
 		}
-
+		
+		$rpc = new rpc_Utils;
+		//$rpc->debug = true;
       $response = $rpc->call($tamburineURL, 'setpls', $this->localPlaylist);
 		if(is_null($response)) {
 		  debug("no reply from tamburine server");

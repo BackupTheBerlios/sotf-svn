@@ -235,7 +235,8 @@ class sotf_Page
     //exit; //??
 	}
 	
-	function sendPopup(){
+	function sendPopup() {
+		$this->popup = true; // should be done at startup because of errors!
 	  $this->send('main_popup.htm');
 	}
 

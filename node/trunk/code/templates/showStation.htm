@@ -10,7 +10,7 @@
           <a href="#general">{#general#}</a>, <a href="#series">{#series#}</a>, <a href="#progs">{#programmes#}</a>
         </td>
         <td class="title2" width="10%" align="right" valign="bottom">
-          {if hasPerm($STATION_ID,'change') }
+          {if hasPerm($STATION_ID,'change','authorize') }
           <input class="action" type="button" name="b1" value="{#edit_station#}" onClick="redir(this.form, 'editStation.php?stationid={$STATION_ID}')">
             {/if}
           {if hasPerm($STATION_ID, 'add_prog')}

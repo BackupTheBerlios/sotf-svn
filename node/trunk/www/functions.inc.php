@@ -117,6 +117,25 @@ function hasPerm($objectId) {
 	return false;
 }
 
+function checkPerm($objectId) {
+  global $page, $permissions;
+	$perm_list = func_get_args();
+	for ($i = 1; $i <count($perm_list); $i++) {
+		$permName = $perm_list[$i];
+		$perm = $permissions->hasPermission($objectId, $permName);
+		debug("checking for permission " . $permName . " on " . $objectId, $perm);
+		if($perm)
+			return;
+	}
+	for ($i = 1; $i <count($perm_list); $i++) {
+		if($i > 1)
+			$permTransl = $permTransl . ' ' . $page->getlocalized('or') . ' ';
+		$permTransl = $permTransl . $page->getlocalized('perm_' . $perm_list[$i]);
+	}
+	$msg = $page->getlocalizedWithParams('no_permission', $permTransl);
+	raiseError($msg);
+}
+
 /** shortcut for permission check: hasAnyPerm(<objectId>)
 will return true if the current user has some kind of permission for the object.
 Also used in smarty templates to check permissions. */

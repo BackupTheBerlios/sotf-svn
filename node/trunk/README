@@ -11,6 +11,7 @@ PREREQUISITES:
 
 - Apache version 1 or 2: http://www.apache.org
 - PHP version >= 4.2: http://www.php.net
+    with extension: pgsql, domxml
 - PEAR (bundled with PHP)
 - PostgreSQL DBMS version >= 7.2: http://www.postgresql.org/
 - SelfAdmin tool from PublicVoiceLab (for user authentication)

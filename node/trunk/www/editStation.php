@@ -1,4 +1,11 @@
-<?php
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
 
 require("init.inc.php");
 
@@ -16,13 +23,13 @@ $smarty->assign('STATION',$st->get('name'));
 if(!$st->isLocal()) {
   raiseError("You can only edit local stations!");
 }
-if (!hasPerm($st->id, "change")) {
-  raiseError("You have no permission to change station settings!");
-}
+
+checkPerm($st->id, "change", 'authorize');
 
 // save general data
 $save = sotf_Utils::getParameter('save');
 if($save) {
+  checkPerm($st->id, "change");
   $desc = sotf_Utils::getParameter('desc');
   $st->set('description', $desc);
   $st->update();
@@ -33,6 +40,7 @@ if($save) {
 // manage roles
 $delrole = sotf_Utils::getParameter('delrole');
 if($delrole) {
+  checkPerm($st->id, "change");
   $roleid = sotf_Utils::getParameter('roleid');
   $role = new sotf_NodeObject('sotf_object_roles', $roleid);
   $c = new sotf_Contact($role->get('contact_id'));
@@ -46,6 +54,7 @@ if($delrole) {
 // manage permissions
 $delperm = sotf_Utils::getParameter('delperm');
 if($delperm) {
+  checkPerm($st->id, "authorize");
   $username = sotf_Utils::getParameter('username');
   $userid = $user->getUserid($username);
   if(empty($userid) || !is_numeric($userid)) {
@@ -65,6 +74,7 @@ $deljingle = sotf_Utils::getParameter('deljingle');
 $jingleIndex = sotf_Utils::getParameter('index');
 $jingleFile = sotf_Utils::getParameter('filename');
 if($deljingle) {
+  checkPerm($st->id, "change");
   $st->deleteJingle($jingleFile, $jingleIndex);
   $page->redirect("editStation.php?stationid=$stationid#icon");
   exit;
@@ -73,6 +83,7 @@ if($deljingle) {
 // upload icon
 $uploadicon = sotf_Utils::getParameter('uploadicon');
 if($uploadicon) {
+  checkPerm($st->id, "change");
   $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
   $st->setIcon($file);
@@ -83,6 +94,7 @@ if($uploadicon) {
 // upload jingle
 $uploadjingle = sotf_Utils::getParameter('uploadjingle');
 if($uploadjingle) {
+  checkPerm($st->id, "change");
   $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
   $st->setJingle($file);
@@ -96,12 +108,14 @@ $setjingle = sotf_Utils::getParameter('setjingle');
 $seticon = sotf_Utils::getParameter('seticon');
 if($setjingle)
 {
+  checkPerm($st->id, "change");
   $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
   $st->setJingle($file);
   $page->redirect("editStation.php?stationid=$stationid#icon");
 }
 elseif($seticon)
 {
+  checkPerm($st->id, "change");
   $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
   //debug("FILE", $file);
   if ($st->setIcon($file)) {

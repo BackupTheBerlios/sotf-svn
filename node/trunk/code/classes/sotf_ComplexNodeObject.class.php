@@ -30,6 +30,9 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
       $roles[$i]['role_name'] = $this->repository->getRoleName($roles[$i]['role_id']);
       $cobj = new sotf_Contact($roles[$i]['contact_id']);
       $roles[$i]['contact_data'] = $cobj->getAllWithIcon();
+      if(hasPerm($roles[$i]['contact_id'], 'change')) {
+        $roles[$i]['change_contact'] = 1;
+      }
     }
     return $roles;
   }

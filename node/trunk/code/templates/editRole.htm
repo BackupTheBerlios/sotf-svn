@@ -9,26 +9,36 @@
 
 <!--<input name="contactname" value="{$CONTACT_NAME}">-->
 <input type="hidden" name="objectid" value="{$OBJECT_ID}">
-      <select name="contact">
-        {foreach from=$CONTACTS item=contact}
-        <option value="{$contact.id}"  {if $contact.id eq $CONTACT_SELECTED} SELECTED {/if} >{$contact.name}</option>
-        {/foreach}
-      </select>
-      <select name="role">
-        {foreach from=$ROLE_LIST item=role}
-        <option value="{$role.id}"  {if $role.id eq $ROLE_SELECTED} SELECTED {/if} >{$role.name}</option>
-        {/foreach}
-      </select>
-{if $NEW}
-  <input type="submit" name="save" value="{#Add#}">
-{else}
-  <input type="submit" name="save" value="{#Change#}">
+
+{if count($CONTACTS) gt 0 }
+
+  <select name="contact">
+   {foreach from=$CONTACTS item=contact}
+     <option value="{$contact.id}"  {if $contact.id eq $CONTACT_SELECTED} SELECTED {/if} >{$contact.name}</option>
+   {/foreach}
+  </select>
+  <select name="role">
+   {foreach from=$ROLE_LIST item=role}
+     <option value="{$role.id}"  {if $role.id eq $ROLE_SELECTED} SELECTED {/if} >{$role.name}</option>
+   {/foreach}
+  </select>
+
+  {if $NEW}
+    <input type="submit" name="save" value="{#Add#}">
+  {else}
+    <input type="submit" name="save" value="{#Change#}">
+  {/if}
+
 {/if}
 
 <p>
-<span bgcolor="{#grayBgColor#}">
-<input type="button" onClick="javascript:popup('createContact.php','createContact',500,500,true)" value="{#Create_new#}" >
-</span>
+{if count($CONTACTS) gt 0 }
+            {#create_new_if_needed#}
+{else}
+            {#no_contacts_yet#}
+{/if}
+<br /><input type="button" onClick="javascript:popup('createContact.php','createContact',500,500,true)" value="{#Create_new#}" >
+
 </p>
 
 </form>

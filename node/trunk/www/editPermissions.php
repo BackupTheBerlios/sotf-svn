@@ -2,7 +2,7 @@
 
 require("init.inc.php");
 
-//$page->popup = true;
+$page->popup = true;
 $page->forceLogin();
 
 $context = sotf_Utils::getParameter('context');
@@ -12,9 +12,8 @@ $username = sotf_Utils::getParameter('username');
 $save = sotf_Utils::getParameter('save');
 $userid = $user->getUserid($username);
 
-if (!hasPerm($objectid, "change")) {
-  raiseError("You have no permission to change user permissions!");
-}
+checkPerm($objectid, "authorize");
+
 if(empty($userid) || !is_numeric($userid)) {
   raiseError("Invalid username: $username");
 }

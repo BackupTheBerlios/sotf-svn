@@ -4,12 +4,21 @@
 
 require("init.inc.php");
 
+$page->popup = true;
 $page->forceLogin();
 
 //$contactId = sotf_Utils::getParameter('contactid');
 $contactName = sotf_Utils::getParameter('name');
 
 if($contactName) {
+
+  if(sotf_Contact::findByNameLocal($contactName)) {
+    //$page->addStatusMsg('contact_name_exists');
+    //$page->redirect("createCOntact.php);
+    raiseError("contact_name_exists");
+    exit;
+  }
+
   // create a new contact
   $contact = new sotf_Contact();
   $status = $contact->create($contactName);

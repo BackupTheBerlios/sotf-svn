@@ -1,6 +1,7 @@
 
   <h3>{#admin#}</h3>
 
+{if hasPerm('node', 'change') }
 <a name="network"></a>
   <table class="tab">
     <tr> 
@@ -80,9 +81,10 @@
       </td>
     </tr>
   </table>
-
+{/if}
 <p></p>
 
+{if hasPerm('node', 'authorize') }
 <a name="perms"></a>
 <table class="tab">
   <tr> 
@@ -125,9 +127,11 @@
       </td>
     </tr>
 </table>
+{/if}
 
 <p></p>
 
+{if hasPerm('node', 'change') }
 <a name="xbmf"></a>
 <table class="tab">
   <tr> 
@@ -215,4 +219,5 @@
 </table>
 
 <p></p>
+{/if}
 

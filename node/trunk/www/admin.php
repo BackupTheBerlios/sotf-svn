@@ -6,11 +6,9 @@ $smarty->assign('PAGETITLE',$page->getlocalized('AdminPage'));
 
 $page->forceLogin();
 
-$page->errorURL = "admin.php";
+//$page->errorURL = "admin.php";
 
-if (!hasPerm('node', "change")) {
-  raiseError("You have no permission to change node settings!");
-}
+checkPerm('node', 'change', 'authorize');
 
 // import XBMF
 $xbmfFile = sotf_Utils::getParameter('import_xbmf');
@@ -26,6 +24,8 @@ if($xbmfFile) {
 
 // update CVS
 if(sotf_Utils::getParameter('updatecvs')) {
+	checkPerm('node', 'change');
+
   chdir($basedir);
   header("Content-type: text/plain\n");
   system('cvs update');
@@ -35,6 +35,7 @@ if(sotf_Utils::getParameter('updatecvs')) {
 
 // recompile Smarty templates
 if(sotf_Utils::getParameter('retemplate')) {
+	checkPerm('node', 'change');
   $smarty->clear_compiled_tpl();
   $page->redirect("admin.php");
   exit;  
@@ -48,8 +49,8 @@ if(sotf_Utils::getParameter('updatetopics')) {
 }
 
 // save general data
-$save = sotf_Utils::getParameter('save_debug');
-if($save) {
+if(sotf_Utils::getParameter('save_debug')) {
+	checkPerm('node', 'change');
   $sotfVars->set('debug', sotf_Utils::getParameter('debug'));
   $sotfVars->set('debug_sql', sotf_Utils::getParameter('debug_sql'));
   $sotfVars->set('debug_smarty', sotf_Utils::getParameter('debug_smarty'));
@@ -59,8 +60,8 @@ if($save) {
 }
 
 // save network data
-$save = sotf_Utils::getParameter('save');
-if($save) {
+if(sotf_Utils::getParameter('save')) {
+	checkPerm('node', 'change');
   $desc = sotf_Utils::getParameter('desc');
   $localNode = sotf_Node::getLocalNode();
   $localNode->set('description', $desc);
@@ -70,8 +71,8 @@ if($save) {
 }
 
 // sync
-$sync = sotf_Utils::getParameter('sync');
-if($sync) {
+if(sotf_Utils::getParameter('sync')) {
+	checkPerm('node', 'change');
   // this can be long duty!
   set_time_limit(18000);
   // get sync stamp and increment it
@@ -87,10 +88,9 @@ if($sync) {
 }
 
 // delete neighbour
-$deln = sotf_Utils::getParameter('delneighbour');
-debug("deln", $deln);
-if($deln) {
-  debug("deln", "!!");
+if(sotf_Utils::getParameter('delneighbour')) {
+	checkPerm('node', 'change');
+  debug("delete neighbour", "!!");
   $nid = sotf_Utils::getParameter('nodeid');
   $neighbour = sotf_Neighbour::getById($nid);
   $neighbour->delete();
@@ -99,7 +99,8 @@ if($deln) {
 
 // manage permissions
 $delperm = sotf_Utils::getParameter('delperm');
-if($delperm) {
+if(sotf_Utils::getParameter('delperm')) {
+	checkPerm('node', 'authorize');
   $username = sotf_Utils::getParameter('username');
   $userid = $user->getUserid($username);
   if(empty($userid) || !is_numeric($userid)) {

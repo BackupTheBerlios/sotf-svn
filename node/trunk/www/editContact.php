@@ -23,9 +23,7 @@ $smarty->assign('CONTACT_NAME',$contact->get('name'));
 if(!$contact->isLocal()) {
   raiseError("You can only edit local contacts!");
 }
-if (!hasPerm($contact->id, "change")) {
-  raiseError("You have no permission to change contact settings!");
-}
+checkPerm($contact->id, "change");
 
 // upload icon
 $uploadicon = sotf_Utils::getParameter('uploadicon');

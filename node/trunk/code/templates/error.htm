@@ -6,13 +6,25 @@
 <title>{#ErrorTitle#}</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
-<body background="{$IMAGEDIR}/bg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body bgcolor="#D3ECF5" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
-<h3>{#errors_occured#}:</h3>
+<table align="center">
+  <tr>
+    <td>
+      <img align="left" src="{$IMAGEDIR}/stop.gif" height="100" width="100">
+    </td>
+    <td>
+ 
+<h3>{#errors_occured#}</h3>
 
   {foreach from=$ERRORS item=MSG}
     <p>{$MSG}</p>
   {/foreach}
+
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2">
 
 <!--
     {if $POPUP}
@@ -24,16 +36,24 @@
 </FORM>
 -->
 
-{if $REFERER}
-  <p><a href="{$REFERER}">Go back to referring page</a></p>
-{/if}
+<p>{#error_exclaim#}</p>
+
+<script>
+  if(history.length > 0)
+       document.writeln("<p><a href=\"javascript:history.back()\">{#error_go_back#}</a></p>");
+</script>
 
 {if $ERROR_URL}
-  <p><a href="{$ERROR_URL}">Go back to a safe page</a></p>
+  <p><a href="{$ERROR_URL}">{#error_go_safe_page#}</a></p>
 {/if}
 
-  <p><a href="index.php">Go back to home page</a></p>
 
-  <p><a href="closeAndRefresh.php">Close window</a></p>
+{if $POPUP}
+  <p><a href="closeAndRefresh.php">{#error_close#}</a></p>
+{else}
+  <p><a href="index.php">{#error_go_home#}</a></p>
+{/if}
 
-
+</td>
+</tr>
+</table>
