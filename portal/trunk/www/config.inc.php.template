@@ -1,0 +1,70 @@
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
+
+//////////////////////////////////////////////////////////////////////////
+// SQL SETUP --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// the sql connection URL
+$nodeDbUser = 'user';
+$nodeDbHost = 'localhost';
+$nodeDbPort = '5432';
+$nodeDbPasswd = '';
+$nodeDbName = 'portal';
+
+// SOTF site
+$sotfSite = 'http://sotf2.dsd.sztaki.hu/node/www/';
+
+//////////////////////////////////////////////////////////////////////////
+// MAIL --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// e-mails sent by the code will have this address as From:
+$mailFromAddress = "foo@your.host.com";
+
+//////////////////////////////////////////////////////////////////////////
+// FILE LOCATIONS  --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// $basedir -> Complete filesystem path
+$basedir = '/pub/sotf/portal';
+
+// where PEAR files are located
+$peardir = '/usr/share/pear';
+
+// where Smarty files are located
+$smartydir = '/pub/sotf/helpers/smarty2.3';
+
+// Path to the class files
+$classdir = $basedir . '/code/classes';
+
+// Path to XML-RPC libraries
+$xmlrpcdir = $basedir . '/code/xmlrpc';
+
+// path to PHP scripts and images
+$wwwdir = $basedir . '/www';
+
+// The URL prefix for code/www subdir
+$localPrefix = '/portal/www';
+
+//////////////////////////////////////////////////////////////////////////
+// DEBUGGING, LOGGING & ERROR HANDLING -----------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+$logFile = "$basedir/logs/log";
+
+// Temp. solution for debugging after install
+$debug = true;
+
+//////////////////////////////////////////////////////////////////////////
+// LANGUAGE SETUP  --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// selectable languages for user interface
+$outputLanguages = array("en");
+
+$defaultLanguage = "en";
+
+// languages appearing in language select boxes
+$languages = array("en", "de", "hu", "it", "es", "cz", "fr", "ro", "ru");
+
+?>
