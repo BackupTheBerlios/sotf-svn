@@ -39,7 +39,7 @@ CREATE VIEW "ftp_auth" AS SELECT
 	33000 AS uid, 
 	33 AS gid, 
 	sotf_users.password AS passwd, 
-	'__PATH_TO_USER_DIRS__' || sotf_users.username AS homedir, 
+	'__PATH_TO_USER_DIRS__' || '/' || sotf_users.username AS homedir, 
 	0 AS count, 
 	'/bin/sh' AS shell 
 	FROM sotf_users;
