@@ -189,19 +189,21 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	/************************* ROLE MANAGEMENT **************************************/
 	
 	/** Retrieves roles and contacts associated with this object */
-	function getRoles() {
-		global $db, $vocabularies;
-
-		$roles = $db->getAll("SELECT id, contact_id, role_id FROM sotf_object_roles WHERE object_id='$this->id' ORDER BY role_id, contact_id");
-		for($i=0; $i<count($roles); $i++) {
-			$roles[$i]['role_name'] = $vocabularies->getRoleName($roles[$i]['role_id']);
-			$cobj = new sotf_Contact($roles[$i]['contact_id']);
-			$roles[$i]['contact_data'] = $cobj->getAllWithIcon();
-			if(hasPerm($roles[$i]['contact_id'], 'change')) {
-				$roles[$i]['change_contact'] = 1;
-			}
-		}
-		return $roles;
+	function getRoles($language='') {
+	  global $db, $vocabularies, $lang;
+	  if(empty($language))
+		 $language = $lang;
+	  $roles = $db->getAll("SELECT id, contact_id, role_id FROM sotf_object_roles WHERE object_id='$this->id' ORDER BY role_id, contact_id");
+	  for($i=0; $i<count($roles); $i++) {
+		 $roles[$i]['role_name'] = $vocabularies->getRoleName($roles[$i]['role_id'], $language);
+		 $roles[$i]['creator'] = $vocabularies->isCreator($roles[$i]['role_id']);
+		 $cobj = new sotf_Contact($roles[$i]['contact_id']);
+		 $roles[$i]['contact_data'] = $cobj->getAllWithIcon();
+		 if(hasPerm($roles[$i]['contact_id'], 'change')) {
+			$roles[$i]['change_contact'] = 1;
+		 }
+	  }
+	  return $roles;
 	}
 
 	/** Retrieves roles and contacts associated with this object */

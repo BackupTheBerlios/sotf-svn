@@ -24,8 +24,9 @@ class sotf_Vocabularies {
     $this->db = &$db;
   }
 
-  function getTopicName($topicId) {
-    global $lang;
+  function getTopicName($topicId, $lang='') {
+		if(!$lang)
+			$lang = $GLOBALS['lang'];
     if(!empty($topicId)) {
       $db = $this->db;
       $name = $db->getOne("SELECT topic_name FROM sotf_topics WHERE topic_id='$topicId' AND language='$lang'");
@@ -390,23 +391,44 @@ class sotf_Vocabularies {
 	}
 
 	// load roles
-	function loadRoles() {
-		if(empty($this->roles)) {
-			global $lang, $db;
-			$this->roles = $db->getAll("SELECT role_id AS id, name FROM sotf_role_names WHERE language='$lang'");
+	function loadRoles($language='') {
+		global $lang, $db;
+		if(empty($language))
+			$language = $lang;
+		if(empty($this->roles[$language])) {
+			$this->roles[$language] = $db->getAll("SELECT rn.role_id AS id, rn.name, ro.creator FROM sotf_roles ro, sotf_role_names rn WHERE ro.role_id=rn.role_id AND rn.language='$language'");
 		}
+		//debug("ROLES", $this->roles);
 	}
 
-  function getRoleName($id) {
-		$this->loadRoles();
-    reset($this->roles);
-    while(list(,$r) = each($this->roles)) {
+  function getRoleName($id, $language='') {
+		if(empty($language))
+			$language = $GLOBALS['lang'];
+		$this->loadRoles($language);
+    reset($this->roles[$language]);
+    while(list(,$r) = each($this->roles[$language])) {
       if($r['id']==$id)
         return $r['name'];
     }
-    debug("unkwon role id", $id);
+    debug("unknown role id", $id);
     return "UNKNOWN_ROLE";
   }
+
+	function isCreator($id) {
+		global $lang;
+		$this->loadRoles();
+    reset($this->roles[$lang]);
+    while(list(,$r) = each($this->roles[$lang])) {
+      if($r['id']==$id) {
+				if($r['creator'] == 't')
+					return true;
+				else
+					return false;
+			}
+    }
+    debug("unknown role id 2", $id);
+    return false;
+	}
 
   function getRoleId($name, $language) {
 		$this->loadRoles();
@@ -452,10 +474,12 @@ class sotf_Vocabularies {
 	}
 
 	// load genres
-	function loadGenres() {
-		if(empty($this->genres)) {
-			global $lang, $db;
-			$this->genres = $db->getAll("SELECT genre_id AS id, name FROM sotf_genres WHERE language='$lang'");
+	function loadGenres($language='') {
+		global $lang, $db;
+		if(empty($language))
+			$language = $lang;
+		if(empty($this->genres[$language])) {
+			$this->genres[$language] = $db->getAll("SELECT genre_id AS id, name FROM sotf_genres WHERE language='$language'");
 			//debug("genres", $this->genres);
 		}
 	}
@@ -465,9 +489,11 @@ class sotf_Vocabularies {
 		return $this->genres;
   }
 	
-  function getGenreName($id) {
-		$this->loadGenres();
-    while(list(,$r) = each($this->genres)) {
+  function getGenreName($id, $language='') {
+		if(empty($language))
+			$language = $GLOBALS['lang'];
+		$this->loadGenres($language);
+    while(list(,$r) = each($this->genres[$language])) {
       if($r['id']==$id) {
 				//debug("genre", $r);
         return $r['name'];
