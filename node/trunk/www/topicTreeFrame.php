@@ -1,6 +1,8 @@
 <?php
 require("init.inc.php");
 
+$smarty->assign("openTree", sotf_Utils::getParameter("open"));
+
 function SORTIT($a, $b)
 {
 	if (($a["supertopic"] != 0) AND ($b["supertopic"] != 0))	//both are leafs

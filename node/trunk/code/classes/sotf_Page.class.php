@@ -204,7 +204,7 @@ class sotf_Page
 	{
 		global $debug, $startTime, $totalTime, $PHP_SELF;
 		$host = getHostName();
-		error_log("$host: FINISHED IN $totalTime ms WITH " . getenv("REQUEST_URI"),0);
+		error_log("$host: $totalTime ms, " . getenv("REQUEST_URI"),0);
 		if($debug)
 		  error_log("--------------------------------------------------------------------\n",0);
 	}

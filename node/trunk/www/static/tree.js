@@ -260,4 +260,3 @@ else {
 } // end of adding styles
 
 
-onload = initIt;

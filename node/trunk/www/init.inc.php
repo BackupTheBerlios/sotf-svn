@@ -9,7 +9,7 @@ function startTiming(){
 }
 
 startTiming();	
-	
+
 function stopTiming(){
   global $startTime, $totalTime;
   
@@ -76,6 +76,10 @@ require_once('config.inc.php');
 // this is valid only until we have an SQL connection to get persistent vars
 $debug = true;
 $debug_type = 'later';	// 'now' for output to browser
+
+if($debug) {
+     error_log("\n---------------------------------------------------------------------------------\n" .  getenv("REQUEST_URI") . "\n",3, $logFile);
+}
 
 /*
 if($_COOKIE['debug']) {
@@ -195,7 +199,6 @@ $db->debug = $sotfVars->get('debug_sql', 0);
 
 if($debug)
 {
-	//error_log("\n---------------------------------------------------------------------------------\n" .  getenv("REQUEST_URI") . "\n",3, $logFile);
   error_log("------------------------------------------", 0);
   error_log("REQUEST_URI: " . getenv("REQUEST_URI"), 0);
 	error_log("REMOTE_HOST: " . getenv('REMOTE_HOST') ,0);

@@ -78,7 +78,7 @@
                 <tr class="list2">
                   <td colspan="2">
                     {foreach item=item from=$REFS}
-                    {$item}<br />
+                    {$item.role} {$item.mid} <a target="_blank" href="{$item.url}">{$item.name}</a><br />
                     {/foreach}
                   </td>
                 </tr>

@@ -49,8 +49,12 @@ while (scalar(@ARGV) > 0) {
 					$password = shift @ARGV;
 					last SWITCH;
 				};
-		$1 =~ /l/	&& do {
+		$1 =~ /l$/	&& do {
 					$playlist = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /lf/	&& do {
+					$logfile = shift @ARGV;
 					last SWITCH;
 				};
 		$1 =~ /w/	&& do {
@@ -95,6 +99,8 @@ while (scalar(@ARGV) > 0) {
 
 #print "START: $0\n";
 
+$logfile='iceplay.log' if(!$logfile);
+
 unless ($server && $port && $password && $name && defined($public) && $bitrate) {
 	&usage;
 	exit(1);
@@ -106,6 +112,19 @@ sub formatDate {
   $mon++;
   return "$year/$mon/$mday $hour:$min:$sec";
 }
+
+
+#print "Forking.. \n" if $verbose;
+#defined(my $pid = fork) or die "Can't fork: $!";
+#if($pid) {
+#  print "parent exits now" if $verbose;
+#  exit;
+#}
+#setsid                  or die "Can't start a new session: $!";
+#open STDIN, '/dev/null' or die "Can't read /dev/null: $!";
+#open STDOUT, '/dev/null' or die "Can't write to /dev/null";
+#open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
+
 
 my $sock = IO::Socket::INET->new(Proto => "tcp",
 				 PeerAddr => $server,
@@ -204,6 +223,8 @@ iceplay -s <server> -p <password> -n <name> -g <genre> -u <url> [-P <port>] [-b 
 	-d: is the server public? (0)
 	-l: playlist file (playlist)
 	-w: web data file (webfile)
+  -v: verbose
+  -lf: logfile
 
 END
 }

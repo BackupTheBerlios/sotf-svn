@@ -22,18 +22,25 @@ while(list(,$row)=each($refs)) {
   if($repository->getTable($id) != 'sotf_programmes') {
     $obj = $repository->getObject($id);
     $class = get_class($obj);
+    $data = array();
+    $data['role'] = $repository->getRoleName($role);
     if($class == 'sotf_station') {
-      $locMsg = 'in_station';
-      $name = $obj->get('name');
+      $data['url'] = "showStation.php?stationid=$id";
+      $data['name'] = $obj->get('name');
+      $data['mid'] = $page->getlocalized('of_station');
+      //$locMsg = 'in_station';
     } elseif($class == 'sotf_series') {
-      $locMsg = 'in_series';
-      $name = $obj->get('title');
+      $data['url'] = "showSeries.php?seriesid=$id";
+      $data['name'] = $obj->get('title');
+      $data['mid'] = $page->getlocalized('of_series');
+      //$locMsg = 'in_series';
     }
     else {
       debug("unhandled class", $class);
       continue;
     }
-    $ins[] = $page->getlocalizedWithParams($locMsg, $repository->getRoleName($role), $name);
+    //$data['text'] = $page->getlocalizedWithParams($locMsg, $data['role'], $data['name']);
+    $ins[] = $data;
   }
 }
 $smarty->assign('REFS',$ins);

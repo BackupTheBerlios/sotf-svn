@@ -11,6 +11,7 @@ require("init.inc.php");
  *          Koulikov Alexey - alex@pvl.at
  */
 
+$smarty->assign("openTree", sotf_Utils::getParameter("open"));
 $smarty->display("topics.htm");
 
 ?>

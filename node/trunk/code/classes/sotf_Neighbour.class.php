@@ -115,6 +115,8 @@ class sotf_Neighbour extends sotf_Object {
     $lastSyncStamp = $this->lastSyncStamp();
     $count = sotf_NodeObject::countModifiedObjects($remoteId, $lastSyncStamp);
     $numChunks = ceil($count / $objectsPerRPCRequest);
+    if($numChunks == 0) 
+      $numChunks = 1;
     $thisChunk = 1;
     $chunkInfo = array("old_stamp" => $lastSyncStamp,
                        "current_stamp" => $currentStamp,
@@ -143,8 +145,8 @@ class sotf_Neighbour extends sotf_Object {
         return;
       }
       // save received data
-      $chunkInfo = $response[1];
-      $newObjects = $response[2];
+      $chunkInfo = $response[0];
+      $newObjects = $response[1];
       $objectsReceived = $objectsReceived + count($newObjects);
       debug("number of received objects", count($newObjects));
       if(count($newObjects) > 0) {

@@ -70,6 +70,15 @@ TD.titlehead {
   FONT-WEIGHT: bold; FONT-SIZE: larger; background: #F0B989;
 }
 
+TD.topic_title2 {
+  FONT-WEIGHT: bold; FONT-SIZE: larger; background-color: #F7DCC3;
+}
+TD.topic_titlehead {
+  FONT-WEIGHT: bold; background: #F0B989;
+}
+
+
+
 TABLE.login {
   background: #EFF4FE;
 }

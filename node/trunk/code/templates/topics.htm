@@ -5,8 +5,8 @@
 </HEAD> 
 
 <FRAMESET COLS="25%, *"> 
-    <FRAME SRC="topicTreeFrame.php" name="tree"> 
-    <FRAME SRC="topicSearch.php" name="search"> 
+    <FRAME SRC="topicTreeFrame.php{if $openTree}?open={$openTree}{/if}" name="tree"> 
+    <FRAME SRC="topicSearch.php{if $openTree}?ID={$openTree}{/if}" name="search"> 
 </FRAMESET> 
 
 </HTML>

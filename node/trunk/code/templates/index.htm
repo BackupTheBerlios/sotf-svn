@@ -219,7 +219,7 @@
                   <table>
                     {foreach item=item from=$TOPICS}
                     <tr>
-                      <td>{$item.name}</td>
+                      <td><a href="topics.php?open={$item.topic_id}">{$item.name}</a></td>
                       <td>({$item.total})</td>
                     </tr>
                     {/foreach}

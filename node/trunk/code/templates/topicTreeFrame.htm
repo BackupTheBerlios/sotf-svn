@@ -1,9 +1,8 @@
 <HTML> 
 <HEAD> 
 </HEAD> 
-<BODY bgcolor="#CEDEFF">
+<BODY bgcolor="#CEDEFF" onload="alert('ablak');">
 {literal}
-
 <!-- Collapsible tables list scripts <BODY bgcolor="#CEDEFF">-->
 <SCRIPT language=javascript1.2 type=text/javascript>
 <!--
@@ -46,13 +45,12 @@
 {php}$counter = 0;{/php}
 {foreach name=outer item=row from=$result}
 {if $row.supertopic eq '0'}
-{php}$counter++;{/php}
 		{if $row.id != $result.0.id}</div>{/if}
-		<div ID="el{php}print($counter);{/php}Parent" CLASS="parent">
-			<nobr><a class="item" onClick="expandBase('el{php}print($counter);{/php}',true); return false;" href="topicTreeFrame.php?a=b"><img NAME="imEx" SRC="{$IMAGEDIR}/plus.gif" BORDER="0" ALT="+" width="9" height="9" ID="el{php}print($counter);{/php}Img"></a>&nbsp;
+		<div ID="el{$row.id}Parent" CLASS="parent">
+			<nobr><a class="item" onClick="expandBase('el{$row.id}',true); return false;" href="topicTreeFrame.php?a=b"><img NAME="imEx" SRC="{$IMAGEDIR}/plus.gif" BORDER="0" ALT="+" width="9" height="9" ID="el{$row.id}Img"></a>&nbsp;
 			<font color="black" class="heada"><a class="item" target="search" href="topicSearch.php?ID={$row.id}&NAME={if $row.topic_name != ""}{$row.topic_name}{else}{$row.name}{/if}">{if $row.topic_name != ""}{$row.topic_name}{else}{$row.name}{/if}{if $row.numberall != ""} ({$row.numberall}){else} (0){/if}</a></font></nobr>
 		</div>
-		<div ID="el{php}print($counter);{/php}Child" CLASS="child">
+		<div ID="el{$row.id}Child" CLASS="child">
 {else}
 			<nobr>&nbsp;&nbsp;<a class="item" target="search" href="topicSearch.php?ID={$row.id}&NAME={if $row.topic_name != ""}{$row.topic_name}{else}{$row.name}{/if}">{if $row.topic_name != ""}{$row.topic_name}{else}{$row.name}{/if}{if $row.number != ""} ({$row.number}){else} (0){/if}</a></nobr><br>
 {/if}
@@ -63,16 +61,25 @@
 {literal}
 <SCRIPT language=javascript1.2 type=text/javascript>
 <!--
-    if (isNS4) {
-      firstEl  = 'el1Parent';
-      firstInd = nsGetIndex(firstEl);
-      nsShowAll();
-      nsArrangeList();
-    }
-    expandedDb = '';
+	if (isNS4)
+	{
+		firstEl  = 'el{/literal}{$result.0.id}{literal}Parent';
+		firstInd = nsGetIndex(firstEl);
+		nsShowAll();
+		nsArrangeList();
+	}
+	expandedDb = '';
+
+	function initIt2()
+	{
+		initIt();
+		{/literal}{if $openTree}
+		expandBase('el{$openTree}',true);
+		{/if}{literal}
+	}
+	onload = initIt2;
+{/literal}
     //-->
 </SCRIPT>
-{/literal}
-
 </BODY>
 </HTML> 

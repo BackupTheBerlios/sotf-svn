@@ -1,39 +1,64 @@
-<table BORDER=0 CELLPADDING=15 CELLSPACING=0 WIDTH="100%"><tr><td>
-<h3>Topic search</h3>
+
+  <form>
+    <table class="title" cellspacing="0" cellpadding="5" width="100%">
+      <tr valign="bottom">
+        <td class="topic_titlehead" width="20%">
+          {#topic_search#}
+        </td>
+        <td class="topic_title2">
+               {$NAME}
+        </td>
+        <td class="title2" width="10%" align="right" valign="bottom">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" class="titlehead" height="5">
+        </td>
+      </tr>
+    </table>
+  </form>
+
+<p></p>
+
 {if $NAME != ""}
-<BR />
-<h4>{$NAME}</h4>
-<BR />
-<BR />
-<table width="100%">
-	<tr class="listhead">
-		<td>{include file="splitList.htm"}</td>
-	</tr>
-</table>
-<table>
-{foreach item=item from=$result}
-	<tr>
-	<td>
-	{if $item.icon }
-	 <img src="{$CACHEDIR}/{$item.id}.png">
-	{else}
-	 <img src="{$IMAGEDIR}/noicon.png">
-	{/if}
-	</td>
-	<td>
-	<a href="get.php?id={$item.id}">{$item.title}</a>
-	</td>
-	</tr>
-{/foreach}
-</table>
-<br><br><br><br><br>
-<!--
-{foreach name=outer item=row from=$result}
-	{foreach key=key item=cell from=$row}
-		{if $cell != ""}{$key}: {$cell}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/if}
-	{/foreach}
-	<BR />___________________________________________________________<BR />
-{/foreach}
--->
+
+  <table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
+
+        <a name="progs"></a>
+
+        
+        <table width="100%">
+          <tr class="listhead">
+            <td colspan="3" align="center">
+		{include file="splitList.htm"}
+            </td>
+          </tr>
+          {cycle name="progs" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$result}
+          <tr valign="top" class="{cycle name="progs"}">
+            <td width="1%">
+              {if $item.icon }
+                 <img src="{$CACHEDIR}/{$item.id}.png">
+              {else}
+                 <img src="{$IMAGEDIR}/noicon.png">
+              {/if}
+            </td>
+            <td width="98%">
+              <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> ({$item.entry_date})
+              {if $item.alternative_title}<br>{$item.alternative_title}{/if}
+              {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
+              {if $item.abstract}
+                  <div class="abstract">{$item.abstract|truncate:300}</div>
+              {/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
 {/if}
-</td></tr></table>

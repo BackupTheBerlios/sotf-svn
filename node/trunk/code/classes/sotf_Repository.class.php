@@ -143,11 +143,14 @@ class sotf_Repository {
     $db = $this->db;
     $name = $db->getOne("SELECT topic_name FROM sotf_topics WHERE topic_id='$topicId' AND language='$lang'");
     $tid = $db->getOne("SELECT supertopic FROM sotf_topic_tree_defs WHERE id='$topicId'");
-    while($tid != 0) {
+    debug("tid", "X${tid}X");
+    while($tid != '0') {
       $n1 = $db->getOne("SELECT topic_name FROM sotf_topics WHERE topic_id='$tid' AND language='$lang'");
       $name = $n1 . ' / ' . $name;
       $tid = $db->getOne("SELECT supertopic FROM sotf_topic_tree_defs WHERE id='$tid'");
+      debug("tid", "X${tid}X");
     }
+    debug('name', $name);
     return $name;
   }
 

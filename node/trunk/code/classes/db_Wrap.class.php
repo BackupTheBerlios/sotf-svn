@@ -7,8 +7,6 @@
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
-include_once($peardir . '/DB/pgsql.php');
-
 class db_Wrap extends DB_pgsql {
 
   /** When true, all executed SQL statements are logged. */

@@ -3,6 +3,10 @@ require("init.inc.php");
 $ID = sotf_Utils::getParameter('ID');
 $NAME = sotf_Utils::getParameter('NAME');
 
+$NAME = $repository->getTopicName($ID);
+
+// TODO: garbage collect :-)
+
 $query="SELECT * FROM (".
 	" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as serietitle, sotf_series.description as seriedescription FROM sotf_programmes".
 	" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id".
@@ -14,7 +18,7 @@ $query="SELECT * FROM (".
 $max = $db->getAll("SELECT count(*) FROM (".$query.") as count");	//get the number of results
 $max = $max[0]["count"];
 
-$limit = $page->splitList($max, "$php_self?ID=$ID&NAME=$NAME");
+$limit = $page->splitList($max, "$php_self?ID=$ID");
 //$result = $db->limitQuery($query, $limit["from"], $limit["maxresults"]);				//get results with limit
 $result = $db->getAll($query.$limit["limit"]);
 

@@ -34,6 +34,10 @@ $name = "$id_" . time();
 $url = 'http://' . $iceServer . ':' . $icePort . '/' . $name . "\n";
 debug("file", $filepath);
 
+$url = preg_replace('/^.*\/repository/', 'http://sotf2.dsd.sztaki.hu/node/repository', $filepath);
+
+//$url = "http://sotf2.dsd.sztaki.hu/node/repository/ASD_Radio/2002-11-21/WLS24/files/enya24.mp3";
+
 if (!is_file($filepath)) {
      raiseError("no_such_file");
 }
@@ -57,10 +61,14 @@ $bitrate = (string) $mp3info['mpeg']['audio']['bitrate'];
 $mystreamCmd = str_replace('__PLAYLIST__', $tmpfile, $streamCmd);
 $mystreamCmd = str_replace('__NAME__', $name, $mystreamCmd);
 $mystreamCmd = str_replace('__BITRATE__', $bitrate, $mystreamCmd);
-debug("Cmd", $mystreamCmd);
-debug("Url", $url);
 
-exec($mystreamCmd);
+debug("starting stream with cmd", $mystreamCmd);
+
+//exec($mystreamCmd);
+//$h = popen($mystreamCmd, 'r');
+//pclose($h);
+
+debug("sending url", $url);
 
 //$res = exec($mystreamCmd);
 //debug("Cmd output", $res);
@@ -74,6 +82,8 @@ header("Content-length: " . strlen($url) . "\n");
 echo $url;
 
 // save stats
-$prg->addStat($file->get('filename'), 'listens');
+//$prg->addStat($file->get('filename'), 'listens');
+
+$page->logRequest();
 
 ?>
