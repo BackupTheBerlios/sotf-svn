@@ -1,7 +1,6 @@
-<?php 
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/*  -*- tab-width: 3; indent-tabs-mode: 1; -*-
- * $Id$
+/* $Id$
  *
  * Created for the StreamOnTheFly project (IST-2001-32226)
  * Authors: András Micsik, Máté Pataki, Tamás Déri 
@@ -134,10 +133,9 @@ class sotf_Repository {
     return $id;
   }
 
-  //TODO
-  function getTopicTree($language) {
-
-  }
+  /************************************************
+   *      TOPICS
+   ************************************************/
 
   function getTopicName($topicId) {
     global $lang;
@@ -250,6 +248,34 @@ class sotf_Repository {
     return $topics[$index]['total'];
   }
 
+  /** return a topic tree */
+  function getTree($treeId, $language, $withCounts = false) {
+    $supertopics = $this->db->getCol("SELECT DISTINCT supertopic FROM sotf_topic_tree_defs WHERE tree_id='$treeId'");
+    debug('supertopics', $supertopics);
+    return $this->dumpTree(0, 0, $treeId, $language, $supertopics, $withCounts);
+  }
+
+  /** private recursive function for dumping trees */
+  function dumpTree($root, $level, $treeId, $language, $supertopics, $withCounts = false) {
+    if($withCounts) {
+      $rawlist = $this->db->getAll("SELECT sotf_topics.topic_id AS id, sotf_topics.topic_name AS name, supertopic, number, total FROM sotf_topic_tree_defs LEFT JOIN sotf_topics ON sotf_topics.topic_id = sotf_topic_tree_defs.id LEFT JOIN sotf_topics_counter ON sotf_topics_counter.topic_id = sotf_topic_tree_defs.id WHERE sotf_topics.language='$language' AND sotf_topic_tree_defs.supertopic='$root' ORDER BY sotf_topics.topic_name");
+    } else {
+      $rawlist = $this->db->getAll("SELECT sotf_topics.topic_id AS id, sotf_topics.topic_name AS name, supertopic FROM sotf_topic_tree_defs LEFT JOIN sotf_topics ON sotf_topics.topic_id = sotf_topic_tree_defs.id WHERE sotf_topics.language='$language' AND sotf_topic_tree_defs.supertopic='$root' ORDER BY sotf_topics.topic_name");
+    }
+    while(list(,$a) = each($rawlist)) {
+      $a['level'] = $level;
+      $list[] = $a;
+      if(in_array($a['id'], $supertopics)) {
+        $list = array_merge($list, $this->dumpTree($a['id'], $level+1, $treeId, $language, $supertopics, $withCounts));
+      }
+    }
+    return $list;
+  }
+
+  /************************************************
+   *      ROLES
+   ************************************************/
+
   function getRoleName($id) {
     reset($this->roles);
     while(list(,$r) = each($this->roles)) {
@@ -270,12 +296,48 @@ class sotf_Repository {
 		return $this->roles;
   }
 
+  /************************************************
+   *      GENRES
+   ************************************************/
+
   function getGenres() {
 	 return $this->genres;
   }
 
   function getGenreName($id) {
 	 return $this->genres[$id];
+  }
+
+  /************************************************
+   *      XML-RPC ACCESS TO CONTROLLED VOCABULARIES
+   ************************************************/
+
+  function getCVocabularyNames() {
+    // TODO: make this properly: check which languages are available
+    return array(
+                 array("roles","","en"),
+                 array("genres","","en"),
+                 array("topics","1","en")
+                 );
+  }
+
+  /** type=(topics,roles,genres) */
+  function getCVocabulary($type, $name, $language) {
+    if($type=='topics') {
+      // TODO: select lang and topic tree!!
+      $retval = $this->getTree(1, 'en');
+    } elseif($type=='roles') {
+      $retval = $db->getAll("SELECT role_id AS id, name FROM sotf_role_names WHERE language='$language'");
+    } elseif($type=='genres') {
+      $retval = $db->getAll("SELECT genre_id AS id, name FROM sotf_genres WHERE language='$language'");
+    } else {
+      logError("Unknown getCVocabulary request type: $type");
+      return "Unknown getCVocabulary request type: $type";
+    }
+    if(DB::isError($retval)) {
+      return "DB error";
+    }
+    return $retval;
   }
 
 }

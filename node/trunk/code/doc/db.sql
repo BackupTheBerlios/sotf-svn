@@ -276,6 +276,7 @@ CREATE TABLE "sotf_topic_tree_defs" (
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"supertopic" varchar(12) DEFAULT '0',
+	"tree_id" int2,
 	"name" varchar(100)
 );
 

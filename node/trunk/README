@@ -58,3 +58,13 @@ We strongly suggest to set register_globals off in PHP.
 
 Uploading large audio files to the node via web will not work if you
 don't raise upload_max_filesize and post_max_size in PHP!
+
+You can set the session timeout for logged in users in php.ini.
+
+It is not recommended to put this directory structure under the root
+directory of the web server (e.g. htdocs), because then anyone might
+be able to download files which you don't want to be publicly
+accessible. Therefore you may create a symbolic link from htdocs for
+the www subdir, thus making accessible only a controlled part of the
+directory structure through the web.
+

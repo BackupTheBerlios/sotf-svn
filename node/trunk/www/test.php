@@ -1,32 +1,26 @@
 <?php
 
-$server='vas.dsd.sztaki.hu';
-$port='80';
+require("init.inc.php");
 
-$op= "GET /node/www/xx.php HTTP/1.1
-Accept: */*
-Host: sotf.dsd.sztaki.hu
-User-Agent: PHP
+require_once("$classdir/rpc_Utils.class.php");
+
+$rpc = new rpc_Utils;
+$rpc->debug = true;
+$response = $rpc->call("$rootdir/xmlrpcServer.php", 'sotf.cv.get', array('topics',1,1));
+print "<pre>";
+print_r($response);
+print "</pre>";
 
 
-";
+/*
+$tree = $repository->getTree(1, 'en');
 
-$fp=fsockopen($server, $port,$errno, $errstr);
-if (!$fp)
-{
-  die('Connect error');
-}
-
-if (!fputs($fp, $op, strlen($op)))
-{
-  die('Write error');
-}
+print "<pre>";
+print_r($tree);
+print "</pre>";
 
 exit;
-
-//require("init.inc.php");
-
-
+*/
 
 /*
 require_once("$classdir/rpc_Utils.class.php");
