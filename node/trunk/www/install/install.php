@@ -555,7 +555,89 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	{
 		if (isset($install_create_topic))
 		{
-			require("init.inc.php");
+			require_once("../init.inc.php");
+
+      // create roles
+
+      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
+      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
+      $db->query("DELETE FROM sotf_roles");
+      $db->query("DELETE FROM sotf_role_names");
+      $db->query("SELECT setval('sotf_roles_seq', 1, false)");
+      $db->query("SELECT setval('sotf_role_names_seq', 1, false)");
+      
+      function createRole($id, $english, $creator = 'f') {
+        $o1 = new sotf_NodeObject("sotf_roles");
+        $o1->set('role_id', $id);
+        $o1->set('creator', $creator);
+        $o1->create();
+        $o2 = new sotf_NodeObject("sotf_role_names");
+        $o2->set('role_id', $id);
+        $o2->set('language', 'en');
+        $o2->set('name', $english);
+        $o2->create();
+      }
+      
+      createRole( 1, 'Artist');
+      createRole( 2, 'Author');
+      createRole( 3, 'Commentator');
+      createRole( 4, 'Composer');
+      createRole( 5, 'Copyright holder');
+      createRole( 6, 'Correspondent');
+      createRole( 7, 'Designer');
+      createRole( 8, 'Director');
+      createRole( 9, 'Editor');
+      createRole( 10, 'Funder / Sponsor');
+      createRole( 11, 'Interviewee');
+      createRole( 12, 'Interviewer');
+      createRole( 13, 'Narrator');
+      createRole( 14, 'Participant');
+      createRole( 15, 'Performer');
+      createRole( 16, 'Producer');
+      createRole( 17, 'Production Personnel');
+      createRole( 18, 'Speaker');
+      createRole( 19, 'Transcriber');
+      createRole( 20, 'Translator');
+      createRole( 21, 'Other');
+
+      // create genres
+
+      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
+      $db->query("DELETE FROM sotf_genres");
+      $db->query("SELECT setval('sotf_genres_seq', 1, false)");
+      
+      function createGenre($id, $english) {
+        $o1 = new sotf_NodeObject("sotf_genres");
+        $o1->set('genre_id', $id);
+        $o1->set('language', 'en');
+        $o1->set('name', $english);
+        $o1->create();
+      }
+      
+      createGenre( 1, 'Actuality');
+      createGenre( 2, 'Advert / jingle / spot');
+      createGenre( 3, 'Announcement');
+      createGenre( 4, 'Call-in show');
+      createGenre( 5, 'Children / youth');
+      createGenre( 6, 'Comedy');
+      createGenre( 7, 'Dance');
+      createGenre( 8, 'Documentary');
+      createGenre( 9, 'Drama');
+      createGenre( 10, 'Education');
+      createGenre( 11, 'Feature');
+      createGenre( 12, 'Game show');
+      createGenre( 13, 'Interview');
+      //createGenre( 14, 'Jingle');
+      createGenre( 15, 'Magazine');
+      //createGenre( 16, 'Mocroprogramme');
+      createGenre( 17, 'Music');
+      createGenre( 18, 'News');
+      createGenre( 19, 'Oral history / storytelling');
+      createGenre( 20, 'Talk show / discussion');
+      createGenre( 21, 'Training');
+      createGenre( 22, 'Community media');
+
+      // create topic tree
 
 			$id = addParent("development", "Development");
 			addChild($id, "agriculture", "Agriculture");
@@ -666,6 +748,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			addChild($id, "peace", "Peace");
 			addChild($id, "security", "Security");
 			addChild($id, "terrorism", "Terrorism");
+
 		}
 		if (isset($install_delete_topic))
 		{
@@ -697,7 +780,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	PrintTitle($id);
 	print('<DIV ALIGN="center"><BR />
 	<INPUT type="submit" name="delete_topic" value="Delete topic tree">
-	<INPUT type="submit" name="create_topic" value="Create topic tree">
+	<INPUT type="submit" name="create_topic" value="Create vocabularies (topic tree, genres, roles)">
 	</DIV>');
 	PrintButton($id);
 
@@ -732,14 +815,17 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	{
 		if ($install_color[$i] != $install_green) $install_erroronpage = true;	//if not green set error true
 	}
-	if ($install_erroronpage) print('<DIV ALIGN="center"><BR /><BIG>Please run again the \'red marked\' tests!</BIG><BR /></DIV>');	//if no error write 'ALL OK'
-	elseif ( ($install_node_user != $nodeDbUser) OR ($install_node_pass != $nodeDbPasswd)
-		OR ($install_node_host != $nodeDbHost) OR ($install_node_port != $nodeDbPort)
-		OR ($install_node_db_name != $nodeDbName) OR ($install_sadm_user != $userDbUser)
-		OR ($install_sadm_pass != $userDbPasswd) OR ($install_sadm_host != $userDbHost)
-		OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) )
+	if ($install_erroronpage) {
+    print('<DIV ALIGN="center"><BR /><BIG>Please run again the \'red marked\' tests!</BIG><BR /></DIV>');	//if no error write 'ALL OK'
+	} elseif ( ($install_node_user != $nodeDbUser) OR ($install_node_pass != $nodeDbPasswd)
+             OR ($install_node_host != $nodeDbHost) OR ($install_node_port != $nodeDbPort)
+             OR ($install_node_db_name != $nodeDbName) OR ($install_sadm_user != $userDbUser)
+             OR ($install_sadm_pass != $userDbPasswd) OR ($install_sadm_host != $userDbHost)
+             OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) {
 		print('<DIV ALIGN="center"><BR /><BIG>The database settings here do not match with the setting in config.inc.php, please update it.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
-	else print('<DIV ALIGN="center"><BR /><BIG>ALL OK, you are now ready to use the <A HREF="../index.php">system</A>. Log in using the admin login.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
+	} else {
+    print('<DIV ALIGN="center"><BR /><BIG>ALL OK, you are now ready to use the <A HREF="../index.php">system</A>. Log in using the admin login.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
+  }
 
 ?>
 <DIV ALIGN="center">
