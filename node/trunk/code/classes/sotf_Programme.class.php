@@ -199,6 +199,38 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
 	/************************************************
+	 *      METADATA
+	 ************************************************/
+
+  function saveMetadataFile() {
+	 global $permissions;
+
+	 $name = get_class($this);
+	 $name = str_replace("sotf_", "", $name);
+	 $xml = "<$name>";
+	 $xml .= sotf_Utils::writeXML('data', $this->data, 1);
+	 $roles = $this->getRoles();
+	 $xml .= sotf_Utils::writeXML('role', $roles, 1);
+	 $perms = $permissions->listUsersAndPermissions($this->id);
+	 $xml .= sotf_Utils::writeXML('permission', $perms, 1);
+	 $links = $this->getAssociatedObjects('sotf_links', 'caption');
+	 $xml .= sotf_Utils::writeXML('link', $links, 1);
+	 $rights = $this->getAssociatedObjects('sotf_rights', 'start_time');
+	 $xml .= sotf_Utils::writeXML('right', $rights, 1);
+	 $topics = $this->getTopics();
+	 $xml .= sotf_Utils::writeXML('topic', $topics, 1);
+	 $xml = $xml . "\n</$name>\n";
+	 // TODO: save more data from other tables as well !!!!!
+
+	 $file = $this->getDir() . '/metadump.xml';
+	 debug("dumping metadata xml in", $file);
+	 $fp = fopen("$file", "w");
+	 fwrite($fp, $xml);
+	 fclose($fp);
+	 return true;
+  }
+
+	/************************************************
 	 *      STATISTICS AND FEEDBACK
 	 ************************************************/
 
@@ -228,7 +260,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   /************************************************
-   *      
+   *   QUERIES
    ************************************************/
 
   /** get news for index page */
@@ -247,27 +279,63 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 return $results;
   }
 
-  function deleteFile($fid) {
-	global $repository;
+  /**
+	* @method static countAll
+	* @return count of available objects
+  */
+  function countAll() {
+	 global $db;
 
-	 $table = $repository->getTable($fid);
-	 $file = new sotf_NodeObject($table, $fid);
-	 if($table == 'sotf_media_files' && $file->get('main_content') == 't')
-		$filepath = $this->getAudioDir() . '/' . $file->get('filename');
-	 else
-		$filepath = $this->getOtherFilesDir() . '/' . $file->get('filename');
-	 $file->delete();
-	 if (unlink($filepath))
-		return 0;
-	 else
-		raiseError("Could not remove file $filepath");
+	 return $db->getOne("SELECT count(*) FROM sotf_programmes WHERE published='t'");
   }
+
+  /** static returns programmes owned/edited by current user */
+  function myProgrammes($series, $filter, $sort, $count = false) {
+	 global $permissions, $db, $user;
+
+		if(!isset($permissions->currentPermissions))
+		return NULL;  // not logged in yet
+	 $sql = "SELECT  s.name AS station, se.name AS series, stats.visits, stats.listens, stats.downloads, flags.flags, rating.*, p.*".
+		" FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id".
+		" LEFT JOIN sotf_series se ON p.series_id=se.id".
+		" LEFT JOIN sotf_prog_rating rating ON p.id=rating.prog_id".
+		" LEFT JOIN sotf_user_progs flags ON p.id=flags.prog_id AND flags.user_id='$user->id'".
+		" LEFT JOIN sotf_prog_stats stats ON stats.prog_id=p.id " .
+      ", sotf_user_permissions u".
+		" WHERE u.user_id = '$user->id' AND u.object_id=p.id";
+	 if ($series != "allseries") $sql .= " AND p.series_id='$series'";
+	 if ($filter == "all") ;
+	 elseif ($filter == "published") $sql .= " AND p.published='t'";
+	 elseif ($filter == "unpublished") $sql .= " AND p.published='f'";
+	 else $sql .= " AND flags = '$filter'";
+	 if ($sort) $sql .= " ORDER BY $sort";
+	 
+	 if ($count) return $db->getOne("SELECT count(*) FROM ($sql) as a");
+	 $plist = $db->getAll($sql);
+	 /*
+	 foreach($plist as $item) {
+		$retval[] = new sotf_Programme($item['id'], $item);
+	 }*/
+	 return $plist;
+  }
+
+  /************************************************
+   *  FILE MANAGEMENT
+   ************************************************/
 
   /** Returns an array containing info about the available audio files. */
   function listAudioFiles($mainContent = 'true') {
 	 global $db;
 
 	 $objects = $db->getAll("SELECT * FROM sotf_media_files WHERE prog_id='$this->id' AND main_content='$mainContent' ORDER BY filename");
+	 return $objects;
+  }
+
+  /** Returns an array containing info about the available other files. */
+  function listOtherFiles() {
+	global $db;
+
+	 $objects = $db->getAll("SELECT * FROM sotf_other_files WHERE prog_id='$this->id' ORDER BY filename");
 	 return $objects;
   }
 
@@ -287,14 +355,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		  return $f['id'];
 	 }
 	 return '';
-  }
-
-  /** Returns an array containing info about the available other files. */
-  function listOtherFiles() {
-	global $db;
-
-	 $objects = $db->getAll("SELECT * FROM sotf_other_files WHERE prog_id='$this->id' ORDER BY filename");
-	 return $objects;
   }
 
   function setAudio($filename, $copy=false) {
@@ -393,72 +453,20 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 return $fileInfo->id;
   }
 
-  function saveMetadataFile() {
-	 global $permissions;
+  function deleteFile($fid) {
+	global $repository;
 
-	 $name = get_class($this);
-	 $name = str_replace("sotf_", "", $name);
-	 $xml = "<$name>";
-	 $xml .= sotf_Utils::writeXML('data', $this->data, 1);
-	 $roles = $this->getRoles();
-	 $xml .= sotf_Utils::writeXML('role', $roles, 1);
-	 $perms = $permissions->listUsersAndPermissions($this->id);
-	 $xml .= sotf_Utils::writeXML('permission', $perms, 1);
-	 $links = $this->getAssociatedObjects('sotf_links', 'caption');
-	 $xml .= sotf_Utils::writeXML('link', $links, 1);
-	 $rights = $this->getAssociatedObjects('sotf_rights', 'start_time');
-	 $xml .= sotf_Utils::writeXML('right', $rights, 1);
-	 $topics = $this->getTopics();
-	 $xml .= sotf_Utils::writeXML('topic', $topics, 1);
-	 $xml = $xml . "\n</$name>\n";
-	 // TODO: save more data from other tables as well !!!!!
-
-	 $file = $this->getDir() . '/metadump.xml';
-	 debug("dumping metadata xml in", $file);
-	 $fp = fopen("$file", "w");
-	 fwrite($fp, $xml);
-	 fclose($fp);
-	 return true;
-  }
-
-  /**
-	* @method static countAll
-	* @return count of available objects
-  */
-  function countAll() {
-	 global $db;
-
-	 return $db->getOne("SELECT count(*) FROM sotf_programmes WHERE published='t'");
-  }
-
-  /** static returns programmes owned/edited by current user */
-  function myProgrammes($series, $filter, $sort, $count = false) {
-	 global $permissions, $db, $user;
-
-		if(!isset($permissions->currentPermissions))
-		return NULL;  // not logged in yet
-	 $sql = "SELECT  s.name AS station, se.name AS series, stats.visits, stats.listens, stats.downloads, flags.flags, rating.*, p.*".
-		" FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id".
-		" LEFT JOIN sotf_series se ON p.series_id=se.id".
-		" LEFT JOIN sotf_prog_rating rating ON p.id=rating.prog_id".
-		" LEFT JOIN sotf_user_progs flags ON p.id=flags.prog_id AND flags.user_id='$user->id'".
-		" LEFT JOIN sotf_prog_stats stats ON stats.prog_id=p.id " .
-      ", sotf_user_permissions u".
-		" WHERE u.user_id = '$user->id' AND u.object_id=p.id";
-	 if ($series != "allseries") $sql .= " AND p.series_id='$series'";
-	 if ($filter == "all") ;
-	 elseif ($filter == "published") $sql .= " AND p.published='t'";
-	 elseif ($filter == "unpublished") $sql .= " AND p.published='f'";
-	 else $sql .= " AND flags = '$filter'";
-	 if ($sort) $sql .= " ORDER BY $sort";
-	 
-	 if ($count) return $db->getOne("SELECT count(*) FROM ($sql) as a");
-	 $plist = $db->getAll($sql);
-	 /*
-	 foreach($plist as $item) {
-		$retval[] = new sotf_Programme($item['id'], $item);
-	 }*/
-	 return $plist;
+	 $table = $repository->getTable($fid);
+	 $file = new sotf_NodeObject($table, $fid);
+	 if($table == 'sotf_media_files' && $file->get('main_content') == 't')
+		$filepath = $this->getAudioDir() . '/' . $file->get('filename');
+	 else
+		$filepath = $this->getOtherFilesDir() . '/' . $file->get('filename');
+	 $file->delete();
+	 if (unlink($filepath))
+		return 0;
+	 else
+		raiseError("Could not remove file $filepath");
   }
 
   /************************************************
@@ -514,21 +522,21 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 //parse the xml file
 	 $myPack = new unpackXML($pathToFile . $folderName . "/XBMF/Metadata.xml");	//note that the unpacker needs AN ABSOLUTE path to the file
 	
-	  if(!$myPack->error){		//if the file has been found
+	 if(!$myPack->error){		//if the file has been found
 		$metadata = $myPack->process();
 	 }
 		
-		if(!$metadata or $myPack->error){ //errors during import - stop execution
-			sotf_Utils::delete($pathToFile . $folderName);
-			echo "<font color=#FF0000><b>The import of $fileName did not succeed!</b></font>";
-			return false;	//did not succeed
-		}else{
-			echo "Came In: " . $myPack->encoding . "<br>";
-			echo "Went Out: " . $myPack->outencoding . "<br>";
-			echo "<pre>";
-			print_r($metadata);
-			echo "</pre>";
-		}
+	 if(!$metadata or $myPack->error){ //errors during import - stop execution
+		sotf_Utils::delete($pathToFile . $folderName);
+		echo "<font color=#FF0000><b>The import of $fileName did not succeed!</b></font>";
+		return false;	//did not succeed
+	 }else{
+		echo "Came In: " . $myPack->encoding . "<br>";
+		echo "Went Out: " . $myPack->outencoding . "<br>";
+		echo "<pre>";
+		print_r($metadata);
+		echo "</pre>";
+	 }
 	
 	 //dump($metadata, "METADATA");
 
@@ -559,11 +567,12 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		  $currentFile = $dirPath . "/" .$entry;
 		  if (!is_dir($currentFile)) {
 			 $newPrg->setAudio($currentFile);
-					//break;
+			 //break;
 		  }
 		}
 	 }
 	 $dir->close();
+	 // TODO: convert missing formats!
 
 	 // insert other files
 	 $dirPath = $pathToFile . $folderName . "/XBMF/files";
@@ -615,14 +624,14 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
 	 $newPrg->update();
 		
-		// topic
-		$topicz = explode(",",$metadata['type']);
-		foreach($topicz as $topic){
-			$topic_id = $db->getOne("SELECT topic_id FROM sotf_topics WHERE topic_name = '" . trim($topic) . "'");
-			if(!empty($topic_id)){
-				$db->query("INSERT INTO sotf_prog_topics(id, prog_id, topic_id) VALUES('" . $newPrg->getID() . "','" . $newPrg->id . "','$topic_id')");
-			}
+	 // topic
+	 $topicz = explode(",",$metadata['type']);
+	 foreach($topicz as $topic){
+		$topic_id = $db->getOne("SELECT topic_id FROM sotf_topics WHERE topic_name = '" . trim($topic) . "'");
+		if(!empty($topic_id)){
+		  $db->query("INSERT INTO sotf_prog_topics(id, prog_id, topic_id) VALUES('" . $newPrg->getID() . "','" . $newPrg->id . "','$topic_id')");
 		}
+	 }
 
 	 // rights
 	 $rights = new sotf_NodeObject("sotf_rights");
@@ -642,24 +651,27 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
 	 }
 		
-		if(is_array($metadata['contributor'])){
+	 if(is_array($metadata['contributor'])){
 		foreach($metadata['contributor'] as $contact) {
-			$role = 24; // Contributor
-			$id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
+		  $role = 24; // Contributor
+		  $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
 		}
-		}
+	 }
+
+	 // permissions
+	 
 	 
 	 /*
 	  * PART 2.3 - Remove (unlink) the xbmf file and the temp dir
 	  */
 		
-		//publish if needed
-		if($publish){
-			$newPrg->publish();
-		}
+	 //publish if needed
+	 if($publish){
+		$newPrg->publish();
+	 }
 	 
-		sotf_Utils::delete($pathToFile . $folderName);
-		//unlink($fileName);
+	 sotf_Utils::delete($pathToFile . $folderName);
+	 //unlink($fileName);
 		
 	 return $newPrg->id;
   }//end func

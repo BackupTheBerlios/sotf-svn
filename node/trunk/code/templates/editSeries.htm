@@ -136,12 +136,62 @@
 <table class="tabarea">
 <tr> 
    <td class="tabarea"> 
+          <form>
+            <table>
+              <tr>
+                <th>{#icon#}</th><th>{#jingle_list#}</th>
+              </tr>
+              <tr>
+                <td>
+                  {if $ICON}
+                  <img src="getIcon.php/icon.png?id={$SERIES_ID}" border="1">
+                  {else}
+                  <p>{#no_icon#}</p>
+                  {/if}
+                </td>
+                <td>   
+                  <table>
+                    <tr class="listhead"><th>&nbsp;</th><th>{#format#}</th><th>{#bitrate#}</th><th>{#channels#}</th><th>{#samplerate#}</th><th></th></tr>
+                    {cycle values="list1,list2" print=false advance=false}
+                    {foreach item=item from=$JINGLE}
+                    <tr class="{cycle}">
+                      <td>
+                        {if $item.filename}
+                        <a href="getJingle.php/{$SERIES_DATA.name}_jingle.mp3?id={$SERIES_ID}&file={$item.filename}">{#exists#}</a>
+                        {else}
+                        <font color="red">{#missing#}</font>
+                        {/if}
+                      </td>
+                      <td>
+                        {$item.format}
+                      </td>
+                      <td>
+                        {$item.bitrate}
+                      </td>
+                      <td>
+                        {$item.channels}
+                      </td>
+                      <td>
+                        {$item.samplerate}
+                      </td>
+                      <td>
+                        {if empty($item.filename) }
+                          {if $HAS_JINGLE}
+                            <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?jingle=1&id={$SERIES_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=80')" />
+                          {/if}
+                        {else}
+                          <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editSeries.php?deljingle=1&filename={$item.filename}&index={$item.index}&seriesid={$SERIES_ID}')" />
+                         {/if}
+                      </td>
+                    </tr>
+                    {/foreach}
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </form>
 
-        {if $ICON}
-        <img align="left" src="getIcon.php/icon.png?id={$SERIES_ID}" border="1">
-          {else}
-          <p>{#no_icon#}</p>
-        {/if}
+
 
         {if $USERFILES}
 {literal}
@@ -158,6 +208,7 @@ function getSelected() {
           <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
           <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
           <input type="submit" name="seticon" value="{#set_icon#}" onClick="return confirmUnsaved()"  onClick="return confirmUnsaved()" >
+          <input type="submit" name="setjingle" value="{#set_jingle#}" onClick="return confirmUnsaved()" >
           <br \><small>{#userfiles_expl#}</small>
         </form>
         {else}
@@ -169,6 +220,7 @@ function getSelected() {
             <input type="hidden" name="seriesid" value="{$SERIES_ID}" />
             <input name="userfile" type="file" />
             <input type="submit" name="uploadicon" value="{#set_icon#}" onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()">
+            <input type="submit" name="uploadjingle" value="{#set_jingle#}"  onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
             <br />{#upload_expl#}
           </form>
         </small>
