@@ -8,6 +8,9 @@
 class sotf_AdvSearch
 {
 	var $SQLquery, $sort1, $sort2, $allid;
+
+  /** Used by deserialize only */
+  var $SQLFields = array('station','production_date','language','person','title','seriestitle','topic','length','rating','genre_id','keywords','abstract','seriesdescription','entry_date','expiry_date','modify_date','broadcast_date','spatial_coverage','temporal_coverage');
 	
 	function sotf_AdvSearch($array = "")			//constuctor with a starting query
 	{
@@ -84,7 +87,7 @@ class sotf_AdvSearch
 		for($i=1; $i < $max; $i++)
 		{			//TODO: | char as a sepecial char so replace it
 			$term = explode("|B", $terms[$i]);
-			if (count($term == 5) AND array_key_exists($term[1], $this->GetSQLfields()))			//to be sure :-)
+			if (count($term == 5) AND in_array($term[1], $this->SQLfields))			//to be sure :-)
 				$this->SQLquery[]=$term;
 		}
 		return $this->SQLquery;
