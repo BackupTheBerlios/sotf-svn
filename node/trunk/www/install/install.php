@@ -694,16 +694,16 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$oid = $o1->getID();
 
 			$rootId = addParent("SOTF", "StreamOnTheFly general", 'en', 1, "A temporary attempt to create a general subject tree based on Dewey.");
-			$oid = addChild($rootId, "generalities", "Generalities");
-			$oid = addChild($rootId, "philosophy and psychology", "Philosophy and psychology");
-			$oid = addChild($rootId, "religion", "Religion");
-			$oid = addChild($rootId, "Social sciences", "Social sciences");
-			$oid = addChild($rootId, "Language", "Language");
-			$oid = addChild($rootId, "Natural sciences and mathematics", "Natural sciences and mathematics");
-			$oid = addChild($rootId, "Technology", "Technology");
-			$oid = addChild($rootId, "Arts", "Arts");
-			$oid = addChild($rootId, "Literature and rhetoric", "Literature and rhetoric");
-			$oid = addChild($rootId, "Geography and history", "Geography and history");
+			$oid = addChild($rootId, "generalities", "Generalities", "en", 1);
+			$oid = addChild($rootId, "philosophy and psychology", "Philosophy and psychology", "en", 1);
+			$oid = addChild($rootId, "religion", "Religion", "en", 1);
+			$oid = addChild($rootId, "Social sciences", "Social sciences", "en", 1);
+			$oid = addChild($rootId, "Language", "Language", "en", 1);
+			$oid = addChild($rootId, "Natural sciences and mathematics", "Natural sciences and mathematics", "en", 1);
+			$oid = addChild($rootId, "Technology", "Technology", "en", 1);
+			$oid = addChild($rootId, "Arts", "Arts", "en", 1);
+			$oid = addChild($rootId, "Literature and rhetoric", "Literature and rhetoric", "en", 1);
+			$oid = addChild($rootId, "Geography and history", "Geography and history", "en", 1);
 
 
 			$o1 = & new sotf_NodeObject("sotf_topic_trees");

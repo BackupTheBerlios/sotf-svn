@@ -23,6 +23,7 @@ if(!$treeId) {
 	 $treeId = $repository->getDefaultTreeId();
   }
 }
+debug("treeid", $treeId);
 $rootId = $repository->getTopicTreeRoot($treeId);
 
 if($prgid) { 

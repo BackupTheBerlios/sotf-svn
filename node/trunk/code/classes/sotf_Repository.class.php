@@ -176,8 +176,9 @@ class sotf_Repository {
       debug("tid", "X${tid}X");
       while($tid != '0') {
         $n1 = $db->getOne("SELECT topic_name FROM sotf_topics WHERE topic_id='$tid' AND language='$lang'");
-        $name = $n1 . ' / ' . $name;
         $tid = $db->getOne("SELECT supertopic FROM sotf_topic_tree_defs WHERE id='$tid'");
+		  if($tid)
+			 $name = $n1 . ' / ' . $name;
         debug("tid", "X${tid}X");
       }
     } else {
@@ -188,7 +189,7 @@ class sotf_Repository {
   }
 
   function getTopTopics($maxHits) {
-    $res = $this->db->limitQuery("SELECT * FROM sotf_topics_counter WHERE total > 0 ORDER BY total DESC", 0, $maxHits);
+    $res = $this->db->limitQuery("SELECT tc.* FROM sotf_topics_counter tc, sotf_topic_tree_defs td WHERE tc.topic_id=td.id AND td.supertopic != 0 AND total > 0 ORDER BY total DESC", 0, $maxHits);
     if(DB::isError($res)) {
       addError($res);
 			return array();
