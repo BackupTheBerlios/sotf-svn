@@ -22,6 +22,7 @@
 		
 		//authorative data
 		$smarty->assign("station_access",$mod_flag);
+		$smarty->assign("edit_station",$_SESSION['USER']->get("edit_station"));
 	}
 	
 	####################################################################
@@ -83,8 +84,13 @@
 			$db->query("UPDATE series SET owner = '$_POST[series_owner]', title = '$_POST[series_title]', description = '$_POST[series_description]', active = '$_POST[series_active]' WHERE id = '$_POST[series_id]'");
 			$db->query("UPDATE programme SET title = '$_POST[programme_title]', intime = '$_POST[sdYear]-$_POST[sdMonth]-$_POST[sdDay] $_POST[sdHour]:$_POST[sdMinute]:00', outtime = '$_POST[edYear]-$_POST[edMonth]-$_POST[edDay] $_POST[edHour]:$_POST[edMinute]:00', special = '$_POST[special_needs]', active = '$_POST[prog_active]' WHERE id = '$_GET[id]'");
 			
-			//close window
-			$smarty->assign(array("window_destroy"=>true,"destination"=>"inside.php","get_data"=>"date=$_POST[sdDay]-$_POST[sdMonth]-$_POST[sdYear]"));
+			//close window and redirect
+			//choose where to redirect
+			if(!empty($_POST['get_stuff'])){
+				$smarty->assign(array("window_destroy"=>true,"destination"=>"myseries.php","get_data"=>$_POST['get_stuff']));
+			}else{
+				$smarty->assign(array("window_destroy"=>true,"destination"=>"inside.php","get_data"=>"date=$_POST[sdDay]-$_POST[sdMonth]-$_POST[sdYear]"));
+			}
 		}else{	//there were errorz, reset data
 			$smarty->assign(array(
 															"prog_title"						=> 	$_POST['programme_title'],
@@ -102,7 +108,9 @@
 															"series_active" 				=> 	array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
 															"prog_active" 					=> 	array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
 															"submit_series_active"	=>	$_POST['series_active'],
-															"submit_prog_active"		=>	$_POST['prog_active']
+															"submit_prog_active"		=>	$_POST['prog_active'],
+															"get_stuff"							=>	$_POST['get_stuff'],
+															"programme_id" 					=>  $_GET['id']
 													 )
 											);
 		}//end if error
@@ -167,7 +175,20 @@
 		$programme_data['progs_to_run'] = $db->getOne("SELECT count(*) FROM programme WHERE series_id = '$programme_data[series_id]' AND intime > '" . date("Y-m-d H:i:s") . "'");
 	
 		$smarty->assign($programme_data); 
-	
+		
+		//prepare GET stuff (if called from series management interface)
+		if(isset($_GET['sid'])){
+			$my_id = $_GET['id'];						# need to preserve value for smarty's later use
+			$_GET['id'] = $_GET['sid'];
+			unset($_GET['sid']);
+			unset($_GET['action']);
+			reset($_GET);
+			while(list($key,$val) = each($_GET)){
+				$get_stuff[] = $key . "=" . $val;
+			}
+			$get_stuff = implode("&",$get_stuff);
+		}
+		
 		//assign default data to drop down boxes (if admin)
 		$smarty->assign(array(
 													"special_needs" 				=> array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
@@ -176,11 +197,14 @@
 													"prog_active" 					=> array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
 													"submit_special_needs" 	=> $prog_special,
 													"submit_series_owner"		=> $programme_data['series_owner_id'],
-													"series_id" 						=> $programme_data[series_id],
-													"programme_id" 					=> $_GET[id]
+													"series_id" 						=> $programme_data['series_id'],
+													"programme_id" 					=> $my_id,
+													"get_stuff"							=> $get_stuff
 												));
 	}//end IF NO Submit
 	
 	//page output :)	
 	pageFinishPopup('showprogrammedetails.htm');							# enter the desired template name as a parameter
+	
+	//shared ru_exit remove ryth
 ?>

@@ -58,6 +58,9 @@
 			//update database
 			$db->query("UPDATE user_map SET name = '$_POST[name]', mail = '$_POST[mail]', per_page = '$_POST[per_page]' WHERE auth_id = '" . $_SESSION['USER']->get("auth_id") . "'");
 			
+			//update session
+			$_SESSION['USER']->set("per_page",$_POST[per_page]);
+			
 			//redirect to confirm
 			header("Location: confirm.php?action=4&next=settings");
 		}else{ # errorz :(

@@ -171,12 +171,16 @@
                   <td nowrap><div align="right">{#progs_in_ser#}:</div></td>
                   <td nowrap>{$tot_progs} overall, {$progs_to_run} still to run</td>
                 </tr>
+{if $edit_station == 2}
                 <tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right">*{#series_owner#}:</div></td>
                   <td nowrap><select name="series_owner" class="myselect" id="series_owner">
 				  		{html_options options=$series_owner selected=$submit_series_owner}
                     </select></td>
                 </tr>
+{else}
+<input type="hidden" name="series_owner" value="{$submit_series_owner}">
+{/if}
                 <tr bgcolor="#eeeeee"> 
                   <td nowrap><div align="right">{#series_active#}:</div></td>
                   <td nowrap><select name="series_active" class="myselect">
@@ -209,6 +213,7 @@
                       <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
                       <input name="Submit" type="hidden" id="Submit" value="do">
                       <input type="hidden" name="series_id" value="{$series_id}">
+					  <input type="hidden" name="get_stuff" value="{$get_stuff}">
                     </div></td>
                 </tr>
               </table>
