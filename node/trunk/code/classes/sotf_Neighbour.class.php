@@ -21,7 +21,7 @@ class sotf_Neighbour extends sotf_Object {
   function delete() {
 	 global $db;
 	 $db->begin();
-	 sotf_NodeObject::removeFromRefreshTable($this->get('node_id'));
+	 sotf_NodeObject::nodeLeavingNetwork($this->get('node_id'));
 	 parent::delete();
 	 $db->commit();
   }
