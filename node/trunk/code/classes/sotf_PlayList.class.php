@@ -95,11 +95,12 @@ class sotf_Playlist {
 		//  $userid = 'guest';
 		if($this->name) {
 		  $this->mountPoint = substr($this->name, 0, 20);
-		  $this->mountPoint .= '_' . time();
+		  $this->mountPoint .= '_' . date('i-s');
 		} else {
 		  $this->mountPoint = $page->getlocalized('playlist_name');
-		  $this->mountPoint .= '_' . time();
+		  $this->mountPoint .= '_' . date('i-s');
 		}
+		$this->mountPoint = preg_replace('/\s+/', '_', $this->mountPoint);
 		$this->mountPoint = preg_replace('/_+/', '_', $this->mountPoint);
 	 }
 	 return $this->mountPoint;
