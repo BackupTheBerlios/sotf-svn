@@ -14,7 +14,7 @@ class rpc_Utils {
     // xmlrpc encode parameters
     for($i=0;$i<count($params);$i++){
       if(get_class($params[$i]) != 'xmlrpcval') {
-        $params[$i] = xmlrpc_encode($params[$i]);
+        $params[$i] = xmlrpc_encoder($params[$i]);
       }
     }
     // send request
@@ -42,7 +42,7 @@ class rpc_Utils {
     } else {
       $retval = $response->value();
       if($retval)
-        $retval = xmlrpc_decode($retval);
+        $retval = xmlrpc_decoder($retval);
       //debug("Response", $retval);
       return $retval;
     }
@@ -69,7 +69,7 @@ class rpc_Utils {
     // xmlrpc encode parameters
     for($i=0;$i<count($params);$i++){
       if(get_class($params[$i]) != 'xmlrpcval') {
-        $xmlparams[$i] = xmlrpc_encode($params[$i]);
+        $xmlparams[$i] = xmlrpc_encoder($params[$i]);
       }
     }
     $msg = new xmlrpcmsg($method, $xmlparams);
@@ -139,7 +139,7 @@ Content-Type: text/xml
    $msg = new xmlrpcmsg('foo', '');
    $resp = $msg->parseResponse($content);
    //dump($resp->value(), "RETVAL1");
-   $retval = xmlrpc_decode($resp->value());
+   $retval = xmlrpc_decoder($resp->value());
    return $retval;
  }
 

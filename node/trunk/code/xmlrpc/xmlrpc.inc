@@ -1394,7 +1394,7 @@
 	*                                                               *
 	* author: Dan Libby (dan@libby.com)                             *
 	****************************************************************/
-	function xmlrpc_decode($xmlrpc_val)
+	function xmlrpc_decoder($xmlrpc_val)
 	{
 		$kind = $xmlrpc_val->kindOf();
 
@@ -1409,7 +1409,7 @@
 
 			for($i = 0; $i < $size; $i++)
 			{
-				$arr[]=xmlrpc_decode($xmlrpc_val->arraymem($i));
+				$arr[]=xmlrpc_decoder($xmlrpc_val->arraymem($i));
 			}
 			return $arr; 
 		}
@@ -1420,7 +1420,7 @@
 
 			while(list($key,$value)=$xmlrpc_val->structeach())
 			{
-				$arr[$key] = xmlrpc_decode($value);
+				$arr[$key] = xmlrpc_decoder($value);
 			}
 			return $arr;
 		}
@@ -1438,7 +1438,7 @@
 	*                                                               *
 	* author: Dan Libby (dan@libby.com)                             *
 	****************************************************************/
-	function xmlrpc_encode($php_val)
+	function xmlrpc_encoder($php_val)
 	{
 		global $xmlrpcInt;
 		global $xmlrpcDouble;
@@ -1457,7 +1457,7 @@
 				$arr = array();
 				while (list($k,$v) = each($php_val))
 				{
-					$arr[$k] = xmlrpc_encode($v);
+					$arr[$k] = xmlrpc_encoder($v);
 				}
 				$xmlrpc_val->addStruct($arr);
 				break;
