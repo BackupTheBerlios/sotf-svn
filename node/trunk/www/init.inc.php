@@ -68,7 +68,8 @@ if(!strstr($oldPath, $config['peardir'])) {
 	if($oldPath) {
 		$newPath = $config['peardir'].$PATH_SEP.$oldPath;
 	} else {
-		$newPath = $config['peardir'].$PATH_SEP.".";
+		//$newPath = $config['peardir'].$PATH_SEP.".";
+		$newPath = $config['peardir'];
 	}
 	if(!ini_set("include_path", $newPath))
 		die("Failed to set include_path!!");
