@@ -90,14 +90,10 @@
       </table>
     </td>
     <td width="60%" valign="top">
-      <table width="100%" border="0" cellspacing="0" cellpadding="5">
+      <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="5">
         <tr> 
           <td>
-            <p>
-                {if $LANG=="de"}Wilkommen zu StreamOnTheFly! More translations coming soon!
-                {else}
-                Welcome to StreamOnTheFly! This is a network of audio archives containing radio programmes of community radios all over the World.
-                {/if}
+            <p>{#intro#}
             </p>
           </td>
         </tr>
@@ -105,16 +101,27 @@
           <td bgcolor="#eeeeee"><strong>{#New_shows#}:<br>
             </strong> 
               <table width="100%" border="0" cellspacing="0" cellpadding="2">
-                <tr> 
-                  {if count($NEWS) gt 0 }
-                  {section name=i loop=$LOCAL_NEWS}
-                  <td>
-                    <a href=""><b>{$NEWS[i]->data.title}</b></a>
+                {if count($NEWS) gt 0 }
+                {foreach item=item from=$NEWS}
+                <tr bgcolor="#FFFFFF" height="1"><td colspan="2"></td></tr>
+                <tr valign="top">
+                  <td width="5%">
+                    {if $item.icon }
+                    <img src="{$CACHEDIR}/{$item.id}.png">
+                    {else}
+                    {/if}
                   </td>
-                  {/section}
-                  {else}
-                  <td>{#No_news#}</td>
-                  {/if}
+                  <td>
+                    <a href="get.php?id={$item.id}"><b>{$item.title}</b></a>
+                    {if $item.abstract}
+                    <br />{$item.abstract|truncate:300}
+                    {/if}
+                  </td>
+                </tr>
+                {/foreach}
+                {else}
+                <tr><td>{#No_news#}</td></tr>
+                {/if}
                 </tr>
               </table>
            </td>
@@ -149,11 +156,11 @@
       </table>
       <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
         <tr> 
-            <form name="stationsform" method="get" action="stations.php">
+            <form name="stationsform" method="get" action="showStation.php">
                 <td width="100%" bgcolor="#FFFFFF"> 
                     <select name="stationid" style="width: 100%">
                        {foreach from=$STATIONS item=station}
-                          <option name="{$station.id}">{$station.name}</option>
+                          <option value="{$station.id}">{$station.name}</option>
                        {/foreach}
                     </select>
                     <input type="submit" name="select_station" value="{#Go#}">
@@ -170,16 +177,16 @@
       </table>
       <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
         <tr> 
-            <form name="topicsform" method="get" action="topics.php">
-                  <td width="100%" bgcolor="#FFFFFF"> 
-                    <select name="topic" style="width: 100%">
-                          <option name="1">Politics</option>
-                          <option name="2">Health</option>
-                          <option name="3">Leisure</option>
-                    </select>
-                    <input type="submit" name="select_topic" value="{#Go#}">
-                  </td>
-            </form>
+            <td width="100%" bgcolor="#FFFFFF"> 
+                  <table>
+                    {foreach item=item from=$TOPICS}
+                    <tr>
+                      <td>{$item.name}</td>
+                      <td>({$item.total})</td>
+                    </tr>
+                    {/foreach}
+                  </table>
+           </td>
         </tr>
       </table>
     </td>

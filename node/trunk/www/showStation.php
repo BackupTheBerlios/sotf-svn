@@ -32,16 +32,18 @@ if (!$start)
      $start = 0;
 
 $seriesList = $st->listSeries();
-while(list(,$series) = each($seriesList)) {
-  $sd = $series->getAll();
-  $sd['count'] = $series->numProgrammes();
-  $seriesData[] = $sd;
+if(!empty($seriesList)) {
+  while(list(,$series) = each($seriesList)) {
+    $sd = $series->getAll();
+    $sd['count'] = $series->numProgrammes();
+    $seriesData[] = $sd;
+  }
+
+  $smarty->assign('SERIES', $seriesData);
 }
 
-$smarty->assign('SERIES', $seriesData);
-
 $numProgs = $st->numProgrammes();
-$limit = $page->resultspage($numProgs, $_SERVER["REQUEST_URI"]);
+$limit = $page->splitList($numProgs, $_SERVER["REQUEST_URI"]);
 $progs = $st->listProgrammes($limit["from"] , $limit["maxresults"]);
 
 if($progs) {

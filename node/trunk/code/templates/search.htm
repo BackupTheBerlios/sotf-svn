@@ -1,4 +1,8 @@
-            <form name="searchform" method="post" action="search.php">
+
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+            <form name="searchform" method="get" action="search.php">
               <table width="100%" border="0" cellspacing="0" cellpadding="2">
                 <tr> 
                   <td width="60%"> 
@@ -18,21 +22,43 @@
                     </tr>
               </table>
             </form>
+      </td>
+    </tr>
+  </table>
 
-<hr>
+  <p></p>
 
-{if count($RESULTS) gt 0 }
-
-<h3>{#Results#}</h3>
-
-		{section name=i loop=$RESULTS}
-				<a href=""><b>{$RESULTS[i]->data.title}</b></a>
-    {#by#}
-				<i>{$RESULTS[i]->data.author}</i>
-    - 
-				{$RESULTS[i]->data.production_date}
-		{/section}
-
-{else}
-    {#No_results#}
-{/if}
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#Results#}</td>
+    </tr>
+  </table><table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
+        {if count($RESULTS) gt 0 }
+        {include file="splitList.htm"}
+        <table width="100%">
+          {foreach item=item from=$RESULTS}
+          <tr bgcolor="#FFFFFF" height="1"><td colspan="2"></td></tr>
+          <tr valign="top">
+            <td width="5%">
+              {if $item.icon }
+              <img src="{$CACHEDIR}/{$item.id}.png">
+                {else}
+                {/if}
+            </td>
+            <td>
+              <a href="get.php?id={$item.id}"><b>{$item.title}</b></a>
+              {if $item.abstract}
+              <br />{$item.abstract|truncate:300}
+                {/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        {#No_results#}
+        {/if}
+      </td>
+    </tr>
+  </table>

@@ -1,0 +1,39 @@
+<table BORDER=0 CELLPADDING=15 CELLSPACING=0 WIDTH="100%"><tr><td>
+<h3>Topic search</h3>
+{if $NAME != ""}
+<BR />
+<h4>{$NAME}</h4>
+<BR />
+<BR />
+<table width="100%">
+	<tr class="listhead">
+		<td>{include file="splitList.htm"}</td>
+	</tr>
+</table>
+<table>
+{foreach item=item from=$result}
+	<tr>
+	<td>
+	{if $item.icon }
+	 <img src="getIcon.php/icon.png?id={$item.id}">
+	{else}
+	 <img src="{$IMAGEDIR}/noicon.png">
+	{/if}
+	</td>
+	<td>
+	<a href="get.php?id={$item.id}">{$item.title}</a>
+	</td>
+	</tr>
+{/foreach}
+</table>
+<br><br><br><br><br>
+<!--
+{foreach name=outer item=row from=$result}
+	{foreach key=key item=cell from=$row}
+		{if $cell != ""}{$key}: {$cell}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/if}
+	{/foreach}
+	<BR />___________________________________________________________<BR />
+{/foreach}
+-->
+{/if}
+</td></tr></table>

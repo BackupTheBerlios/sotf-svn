@@ -71,16 +71,18 @@ class sotf_AdvSearch
 			return " < ".$value;
 		    case "is":
 			return " = ".$value;
+		    case "is_equal":
+			return " ~* '^".substr($value, 1, -1)."$'";
 		    case "is_not_equal":
 			return " != ".$value;
 		    case "is_not":
 			return " != ".$value;
 		    case "contains":
-			return " LIKE '%".substr($value, 1, -1)."%'";
+			return " ~* '.*".substr($value, 1, -1).".*'";
 		    case "begins_with":
-			return " LIKE '".substr($value, 1, -1)."%'";
+			return " ~* '^".substr($value, 1, -1)."'";
 		    case "does_not_contain":
-			return " NOT LIKE '%".substr($value, 1, -1)."%'";
+			return " !~* '.*".substr($value, 1, -1).".*'";
 		}
 		return false;
 	}
@@ -88,7 +90,7 @@ class sotf_AdvSearch
 	function GetSQLCommand()			//gives back the SQL command for the search
 	{
 		global $lang;
-		$query="SELECT programmes.* FROM (";
+		$query="SELECT distinct programmes.* FROM (";
 		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription FROM sotf_programmes";
 		$query.=" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id";
 		$query.=" LEFT JOIN sotf_series ON sotf_programmes.series_id = sotf_series.id";
@@ -97,7 +99,7 @@ class sotf_AdvSearch
 		for($i = 0; $i < $max ;$i++)		//go through all terms
 		{
 			//AND or OR words
-			if ($i != 0) $query = $query." ".$this->SQLquery[$i][0];
+			if ($i != 0) $query .= " ".$this->SQLquery[$i][0];
 
 			//set begining of round bracket
 			if ( (($this->SQLquery[$i][0] == "AND") || ($i == 0)) && ($this->SQLquery[$i+1][0] == "OR") ) $query = $query." (";
@@ -105,26 +107,54 @@ class sotf_AdvSearch
 			//field name eq sign and value
 			if ($this->SQLquery[$i][4] == "date")
 			{
-				$query = $query." ".$this->SQLquery[$i][1];
+				$query .= " ".$this->SQLquery[$i][1];
 				$date = getdate($this->SQLquery[$i][3]);
 				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$date["year"]."-".$date["mon"]."-".$date["mday"]."'");
 			}
 			elseif ($this->SQLquery[$i][1] == "topic")
 			{
 				$query .= " (sotf_programmes.id = sotf_prog_topics.prog_id".
-				" and sotf_prog_topics.topic_id = sotf_topics.topic_id".
-				" and sotf_topics.language = '$lang'".
-				" and sotf_topics.topic_name";
+					" and sotf_prog_topics.topic_id = sotf_topics.topic_id".
+					" and sotf_topics.language = '$lang'".
+					" and sotf_topics.topic_name";
 				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."')");
 			}
 			elseif ($this->SQLquery[$i][1] == "title")
 			{
+				if (strpos($this->SQLquery[$i][2], "not") == false) $andor = "OR";
+				else $andor = "AND";	//if does not contain or not equal then NONE should contain it
 				$query .= " (coalesce(title,'')";
 				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'");
-				$query .= " OR coalesce(alternative_title,'')";
+				$query .= " $andor coalesce(alternative_title,'')";
 				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'");
-				$query .= " OR coalesce(episode_title,'')";
+				$query .= " $andor coalesce(episode_title,'')";
 				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'").")";
+			}
+			elseif ($this->SQLquery[$i][1] == "person")
+			{
+				if ($this->SQLquery[$i][2] == "does_not_contain")
+				{
+					$qi2 = "contains";
+					$not = "not";
+				}
+				elseif  ($this->SQLquery[$i][2] == "is_not_equal")
+				{
+					$qi2 = "is_equal";
+					$not = "not";
+				}
+				else
+				{
+					$qi2 = $this->SQLquery[$i][2];
+					$not = "";
+				}
+
+				$query .= " id $not in (SELECT sotf_object_roles.object_id as id FROM sotf_object_roles WHERE sotf_object_roles.contact_id = sotf_contacts.id AND";
+				$query .= " ( coalesce(sotf_contacts.name,'')";
+				$query .= $this->getEQSign($qi2, "'".$this->SQLquery[$i][3]."'");
+				$query .= " OR coalesce(sotf_contacts.alias,'')";
+				$query .= $this->getEQSign($qi2, "'".$this->SQLquery[$i][3]."'");
+				$query .= " OR coalesce(sotf_contacts.acronym,'')";
+				$query .= $this->getEQSign($qi2, "'".$this->SQLquery[$i][3]."'")."))";
 			}
 			elseif (($this->SQLquery[$i][4] == "number") or ($this->SQLquery[$i][4] == "genre"))
 			{
@@ -140,11 +170,18 @@ class sotf_AdvSearch
 			//set end of round bracket
 			if (($this->SQLquery[$i][0] == "OR") && ($this->SQLquery[$i+1][0] != "OR")) $query = $query." )";
 		}
-//		$query = $query." LEFT JOIN sotf_topics ON sotf_topics.topic_id = sotf_programmes.??id";
 		$query = $query." ORDER BY ".$this->sort1.", ".$this->sort2;			//ISBN DESC, BOOK_TITLE 
-//print($query);
-//die();
+		//print($query);
+		//die();
 		return $query;
+	}
+
+
+	function getPersons($program_id)			//gives back the persons that have to do with the program
+	{
+		global $db, $lang;
+		$query="SELECT sotf_contacts.name, sotf_contacts.alias, sotf_contacts.acronym, sotf_role_names.name as role FROM sotf_contacts, sotf_role_names WHERE sotf_contacts.id = sotf_object_roles.contact_id AND sotf_object_roles.object_id = '$program_id' AND sotf_object_roles.role_id = sotf_role_names.role_id AND sotf_role_names.language='$lang'";
+		return $db->getAll($query);
 	}
 
 
@@ -190,7 +227,7 @@ class sotf_AdvSearch
 		    case "owner":
 			$new[4] = "string";
 		        break;
-		    case "author":
+		    case "person":
 			$new[4] = "string";
 		        break;
 		    case "title":
@@ -306,7 +343,7 @@ class sotf_AdvSearch
 		$SQLfiels[station] = $page->getlocalized("station");
 		$SQLfiels[production_date] = $page->getlocalized("production_date");
 		$SQLfiels[language] = $page->getlocalized("language");
-		$SQLfiels[author] = $page->getlocalized("author");
+		$SQLfiels[person] = $page->getlocalized("person");
 		$SQLfiels[title] = $page->getlocalized("title");
 		$SQLfiels[seriestitle] = $page->getlocalized("seriestitle");
 		$SQLfiels[topic] = $page->getlocalized("topic");
@@ -369,7 +406,7 @@ class sotf_AdvSearch
 		global $page;
 		$EQstring[contains] = $page->getlocalized("contains");
 		$EQstring[begins_with] = $page->getlocalized("begins_with");
-		$EQstring[is] = $page->getlocalized("is");
+		$EQstring[is_equal] = $page->getlocalized("is");
 		$EQstring[does_not_contain] = $page->getlocalized("does_not_contain");
 		$EQstring[is_not_equal] = $page->getlocalized("is_not_equal");
 		return $EQstring;
@@ -391,6 +428,20 @@ class sotf_AdvSearch
 		$EQlength[is] = $page->getlocalized("is");
 		$EQlength[is_not] = $page->getlocalized("is_not");
 		return $EQlength;
+	}
+
+	function simpleSearch($words, $language = false)		//searches the words in the most popular fields
+	{
+		$words = htmlspecialchars($words);
+		$word = split(" ", $words);
+		$max = count($word);
+		for ($i=0; $i<$max; $i++)
+		{
+			$word = trim($word);
+			if ($word == "") next;
+			$flat = "production_date|Bstation|AAND|Bperson|Bcontains|BXXX|Bstring|AOR|Btitle|Bcontains|BXXX|Bstring|AOR|Bkeywords|Bcontains|BXXX|Bstring|AOR|Babstract|Bcontains|BXXX|Bstring|AOR|Bspatial_coverage|Bcontains|BXXX|Bstring"
+			$flat .= "|AAND|Blanguage|Bis|BYYY|Blang"
+		}
 	}
 
 }

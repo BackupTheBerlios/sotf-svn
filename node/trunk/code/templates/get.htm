@@ -321,12 +321,16 @@
             <td>
               <table>
                 <tr>
+                  <td>{#Visits#}:</td>
+                  <td>{if $STATS.visits}{$STATS.visits}{else}0{/if}</td>
+                </tr>
+                <tr>
                   <td>{#Listens#}:</td>
-                  <td>{if $PRG_DATA.listens}{$PRG_DATA.listens}{else}0{/if}</td>
+                  <td>{if $STATS.listens}{$STATS.listens}{else}0{/if}</td>
                 </tr>
                 <tr>
                   <td>{#Downloads#}:</td> 
-                  <td>{if $PRG_DATA.downloads}{$PRG_DATA.downloads}{else}0{/if}</td>
+                  <td>{if $STATS.downloads}{$STATS.downloads}{else}0{/if}</td>
                 </tr>
                 <tr>
                   <td>{#Rating#}:</td> 

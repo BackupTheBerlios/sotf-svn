@@ -30,9 +30,11 @@ $smarty->assign('searchLangs', $searchLangs);
 $smarty->assign('langNames', $langNames);
 
 $now = getDate();
-$yesterday = mktime(0,0,0, $now['mon'], $now['mday']-2, $now['year']);
-$fromDay = date('Y-m-d', $yesterday);
+$dayInThePast = mktime(0,0,0, $now['mon'], $now['mday']-10, $now['year']);
+$fromDay = date('Y-m-d', $dayInThePast);
 $smarty->assign('NEWS', sotf_Programme::getNewProgrammes($fromDay, MAX_ITEMS_IN_INDEX));
+
+$smarty->assign('TOPICS', $repository->getTopTopics(5));
 
 $page->send();
 

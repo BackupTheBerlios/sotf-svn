@@ -1,12 +1,17 @@
 <?php
 require("init.inc.php");
 
+
+
 $pattern = sotf_Utils::getSQLSafeParameter('pattern');
 $language = sotf_Utils::getSQLSafeParameter('language');
 if($pattern) {
   debug("language", $language);
-  $result = $repository->simpleSearch($pattern, $language, 0, 20);
-  $smarty->assign_by_ref('RESULTS', $result);
+
+  $total = sotf_Programme::countSearch($pattern, $language);
+  $limit = $page->splitList($total, $_SERVER["REQUEST_URI"]);
+  $result = sotf_Programme::simpleSearch($pattern, $language, $limit["from"] , $limit["maxresults"]);
+  $smarty->assign('RESULTS', $result);
   $smarty->assign('PATTERN', $pattern);
   $smarty->assign('LANGUAGE', $language);
 }

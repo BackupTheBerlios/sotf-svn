@@ -30,7 +30,7 @@
 <!--		<INPUT type="submit" name="back" value="{#back#}"> -->
 		</TD>
 		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="66%">
-		{include file="resultspage.htm"}
+		{include file="splitList.htm"}
 		</TD>
 		<TD>&nbsp;</TD>
 	</TR>
@@ -47,10 +47,9 @@
 		<td>{if $item.icon}<img src="getIcon.php/icon.png?id={$item.id}">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
 		<td><b><a href="get.php?id={$item.id}">{$item.title}</a></b><BR>
 		{foreach key=key item=cell from=$item.values}
-			<b>{$key}:</b>
 			{if $cell != ""}
-				{$cell}
-			{else}-{/if}<br>
+			<b>{$key}:</b>{$cell}<br>
+			{/if}
 		{/foreach}
 		</td>
 	</tr>

@@ -105,6 +105,19 @@ class sotf_Repository {
     return $name;
   }
 
+  function getTopTopics($maxHits) {
+    $res = $this->db->limitQuery("SELECT * FROM sotf_topics_counter WHERE total > 0 ORDER BY total DESC", 0, $maxHits);
+    if(DB::isError($res)) {
+      addError($res);
+			return array();
+    }
+    while (DB_OK === $res->fetchInto($item)) {
+      $item['name'] = $this->getTopicName($item['topic_id']);
+			$list[] = $item;
+		}
+		return $list;
+  }
+
   function updateTopicCounts() {
     // calculate counts by topic
     $this->db->query("DROP TABLE sotf_topics_counter");
@@ -277,79 +290,6 @@ class sotf_Repository {
   }
 
   /////////// end SYNC support ////////////////////////////////////////////////
-
-
-    function simpleSearch($text, $language, $from, $count) {
-      $db = $this->db;
-      $sql = "SELECT * FROM sotf_programmes WHERE published='t' ";
-      $sql .= " AND (title ~* '$text' OR keywords ~* '$text' OR abstract ~* '$text' OR author ~* '$text' OR spatial_coverage ~* '$text') ";
-      if($language && $language != 'any_language') {
-        $language = sotf_Utils::clean($language);
-        $sql .= " AND language='$language' ";
-      }
-      $sql .= " ORDER BY production_date DESC ";
-      $res = $db->limitQuery($sql, $from, $count);
-      if(DB::isError($res))
-        raiseError($res->getMessage());
-      while (DB_OK === $res->fetchInto($row)) {
-        debug("row", $row['title']);
-        $list[] = new sotf_Programme($row['id'], $row);
-      }
-      return $list;
-    }
-
-  function search($station, $author, $word, $from, $until, $language) {
-	$sql = "SELECT * FROM sotf_programmes";
-	
-	if($station) {
-	  if(array_search(getlocalized("every_station"), $station)===NULL) {
-	    for($stationcount = 0; $stationcount < count($station); $stationcount++) {
-	      if($stationcount != 0)
-	        $sqlstation = $sqlstation." OR station='".clean($station[$stationcount])."'";
-          else
-            $sqlstation = " (station='".clean($station[0])."'";
-        }
-	    $sqlstation = $sqlstation.") ";
-	    $where[] = $sqlstation;
-	  }
-	  else {
-	    unset($station);
-	    unset($sqlstation);
-	  }
-	}
-
-	if($language) {
-	  if(array_search(getlocalized("any_language"), $language)===NULL) {
-		for($langcount = 0; $langcount < count($language); $langcount++) {
-		  if($langcount != 0)
-			$sqllang = $sqllang." OR language='".clean($language[$langcount])."'";
-		  else
-			$sqllang = " (language='".clean($language[0])."'";
-		}
-		$sqllang = $sqllang . ") ";
-		$where[] = $sqllang;
-	  }
-	}
-
-	if($author) {
-	  $where[] = " author ~* '.*" . clean($author) . ".*' ";
-	}
-	if($word) {
-	  $like = " '.*" . clean($word) . ".*' ";
-	  $where[] = " (area ~* $like OR title ~* $like OR keywords ~* $like OR abstract ~* $like) ";
-	}
-	if($from) {
-	  $where[] = " production_date >= '" . clean($from) . "' ";
-	}
-	if($until) {
-	  $where[] = " production_date <= '" . clean($until) . "' ";
-	}
-	$where[] = " published='t' ";
-//	var_dump($where);
-    if($where)
-	  $sql .= " WHERE ".join(" AND ", $where);
-	return $this->db->getAll($sql, DB_FETCHMODE_ASSOC );
-  }
 
 }
 

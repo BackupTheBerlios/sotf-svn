@@ -1,17 +1,19 @@
 
-<h3>{$STATION}</h3>
+<h3>{$SERIES_DATA.title}</h3>
 
 <table class="tabarea">
 <tr> 
   <td class="tabarea"> 
         <table width="100%">
-          <tr><td width="5">
-            {if $STATION_DATA.icon}
-              <img src="getIcon.php/icon.png?id={$STATION_ID}">
-            {/if}
-          </td><td>
-              {if $STATION_DATA.description }
-              <p>{$STATION_DATA.description}</p>
+          <tr>
+            <td width="5">
+              {if $SERIES_DATA.icon}
+              <img src="getIcon.php/icon.png?id={$SERIES_ID}">
+                {/if}
+            </td>
+            <td>
+              {if $SERIES_DATA.description }
+              <p>{$SERIES_DATA.description}</p>
               {/if}
 
               {if $ROLES}
@@ -30,48 +32,25 @@
               </table>
               {/if}
 
-              {if hasPerm($STATION_ID,'change') }
+              {if hasPerm($SERIES_ID,'change') }
               <p>
                 <form>
-                  <input class="action" type="button" name="b1" value="{#edit_station#}" onClick="redir(this.form, 'editStation.php?stationid={$STATION_ID}')">
+                  <input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('editSeries.php?seriesid={$SERIES_ID}','{#editSeries#}',550,450,true)" >
                 </form>
               </p>
               {/if}
+            </td>
+            <td width="5">
+              {if $STATION_DATA.icon}
+              <img src="getIcon.php/icon.png?id={$STATION_DATA.id}"><br />
+                {/if}
+              <a href="showStation.php?stationid={$STATION_DATA.id}">{$STATION_DATA.name}</a>
             </td>
           </tr>
         </table>
       </td>
     </tr>
 </table>
-
-{if $SERIES}
-
-  <p></p>
-
-  <table class="tab">
-    <tr> 
-      <td nowrap class="tab">{#series#}</td>
-    </tr>
-  </table>
-  <table class="tabarea">
-    <tr> 
-      <td class="tabarea"> 
-
-        <a name="series"></a>
-
-        <table>
-          {foreach item=item from=$SERIES}
-          <tr>
-            <td>{if $item.icon }<img src="getIcon.php/icon.png?id={$item.id}">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
-            <td><a href="showSeries.php?seriesid={$item.id}">{$item.title}</a> ({$item.count})</td>
-          </tr>
-          {/foreach}
-        </table>
-      </td>
-    </tr>
-  </table>
-{/if}
-
 
 {if $PROGS}
   <p></p>

@@ -227,7 +227,7 @@ class sotf_Page
 	 * 2. param is the url from the page
 	 * return value is an associative array with 4 fields: from, to, maxresults, limit (string to the end of a query to limit a pgsql query)
 	*/
-	function resultspage($rp_count, $rp_url)
+	function splitList($rp_count, $rp_url)
 	{
 		global $smarty, $sotfVars;
 		$rp_maxresults = $sotfVars->get("hitsPerPage", 30);		//display maximal so many results

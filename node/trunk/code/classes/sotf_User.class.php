@@ -200,5 +200,6 @@ class sotf_User
 		global $userdb;
 		return $userdb->getOne("SELECT auth_id FROM authenticate WHERE username = '$username'");
 	}
+
 }
 ?>

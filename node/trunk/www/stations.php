@@ -19,7 +19,7 @@ if ($delete and hasPerm('node','delete'))
   $page->redirect($_SERVER["PHP_SELF"]);
 }
 
-$limit = $page->resultspage(sotf_Station::countAll(), "$php_self");
+$limit = $page->splitList(sotf_Station::countAll(), "$php_self");
 
 //$result = $db->limitQuery($query, $limit["from"], $limit["maxresults"]);				//get results with limit
 

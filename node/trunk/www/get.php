@@ -48,14 +48,14 @@ if($id) {
   // links
   $smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));
 
+  // referencing portals
+  $smarty->assign('REFS', $prg->getRefs());
 
-  //$smarty->assign('REFERENCES', $prg->getRefs());
-  /* stats and refs are collected via xml-rpc ??
-  if($localItem) {
-    $smarty->assign($repo->getStats($idObj));
-    $smarty->assign('REFS', $repo->getRefs($idObj));
-  }
-  */
+  // statistics
+  $smarty->assign('STATS', $prg->getStats());
+
+  // add this visit to statistics
+  $prg->addStat('', "visits");
 
 }
 

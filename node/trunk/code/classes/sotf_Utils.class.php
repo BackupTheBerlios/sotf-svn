@@ -16,6 +16,8 @@ class sotf_Utils
     if (!$fp = fopen($filename, 'wb')) {
       raiseError("Cannot open file ($filename)");
     }
+    if(empty($contents))
+      raiseError("Nothing to write into file ($filename)");
     if (!fwrite($fp, $contents)) {
       raiseError("Cannot write to file ($filename)");
     }

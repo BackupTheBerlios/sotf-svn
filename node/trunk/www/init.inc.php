@@ -110,8 +110,8 @@ $rootdir = 'http://' . $_SERVER['HTTP_HOST'] . $localPrefix;
 $imagedir = $rootdir . '/static';
 
 $tmpdir = $wwwdir . '/tmp';
-$cachedir = $wwwdir . '/tmp';
-$cacheprefix =  $rootdir . '/tmp';
+$cachedir = $wwwdir . '/tmp/cache';
+$cacheprefix =  $rootdir . '/tmp/cache';
 
 umask(0002);
 
@@ -229,6 +229,7 @@ $repository = new sotf_Repository($repositoryDir, $db);
 $smarty->assign("NODEID", $nodeId);
 $smarty->assign("ROOTDIR", $rootdir);
 $smarty->assign("IMAGEDIR", $imagedir);
+$smarty->assign("CACHEDIR", $cacheprefix);
 $smarty->assign("DEBUG", $debug);
 $smarty->assign("ACTION", $page->action);
 $smarty->assign("LANG", $lang);

@@ -26,7 +26,7 @@ $query = $advsearch->GetSQLCommand();
 $max = $db->getAll("SELECT count(*) FROM (".$query.") as count");	//get the number of results
 $max = $max[0]["count"];
 
-$limit = $page->resultspage($max, "$php_self?ID=$ID&NAME=$NAME");
+$limit = $page->splitList($max, "$php_self?ID=$ID&NAME=$NAME");
 $result = $db->getAll($query.$limit["limit"]);
 
 $allfields = $advsearch->GetSQLfields();		//get all possible fileld names with translation
@@ -51,12 +51,33 @@ for($i =0; $i<$max; $i++)	//$selected will contain all the information about the
 		if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent lavel
 		if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
 		else $values[$fields[$key]] = $value;
+	if (array_key_exists("person", $fields))
+	{
+		//var_dump($result[$i]["id"]);
+		$persons = $advsearch->getPersons($result[$i]["id"]);
+		//print("<pre>");
+		//var_dump($persons);
+		//print("</pre>");
+		foreach($persons as $person)
+		if ($person["name"] != "")
+		{
+			$allnames = $person["name"]." (".$person["alias"].", ".$person["acronym"].")";
+			$allnames = str_replace(", )", ")", $allnames);
+			$allnames = str_replace("(,", "(", $allnames);
+			$allnames = str_replace("()", "", $allnames);
+			if ( $values[$person["role"]] != "") $values[$person["role"]] .= "; ".$allnames;
+			else $values[$person["role"]] = $allnames;
+			//print($allnames."aaaa");
+		}
+	}
+
 	$item[title] = $result[$i][title];
 	$item[id] = $result[$i][id];
 	$item[icon] = $result[$i][icon];
 	$item[values] = $values;
 	$selected[] = $item;
 	$item = "";
+	$values = "";
 }
 //var_dump($selected);
 

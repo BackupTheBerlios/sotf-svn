@@ -168,7 +168,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   /** marks as withdrawn, but not deletes it */
-  function withDraw() {
+  function withdraw() {
     $this->data['published'] = 'f';
     $this->update();
   }
@@ -191,8 +191,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   function addStat($filename, $type) {
-    if($type != 'listens' && $type != 'downloads')
-      die("addStat: type should be 'listens' or 'downloads'");
+    // TODO: if remote program, send this by XML-RPC!!
+    if($type != 'listens' && $type != 'downloads' && $type != 'visits')
+      raiseError("addStat: type should be 'listens' or 'downloads' or 'visits'");
     $db = $this->db;
     $now = getdate();
     $year = $now['year'];
@@ -222,15 +223,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function getStats() {
     $db = $this->db;
     $idStr = $this->id;
-    $result = $db->getRow("SELECT sum(listens) AS listentotal, sum(downloads) AS downloadtotal FROM sotf_stats WHERE id='$idStr'");
+    $result = $db->getRow("SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads FROM sotf_stats WHERE prog_id='$idStr'");
     if(DB::isError($result))
-      return array('listentotal'=> 0, 'downloadtotal' => 0);
+      return array('visits'=>0, 'listens'=> 0, 'downloads' => 0);
     else {
-      //debug("result", $result);
-      if($result['listentotal'] == NULL)
-        $result['listentotal'] = 0; // cosmetics
-      if($result['downloadtotal'] == NULL)
-        $result['downloadtotal'] = 0; // cosmetics
+      debug("STATS", $result);
       return $result;
     }
   }
@@ -259,7 +256,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       raiseError($res);
     $results = null;
     while (DB_OK === $res->fetchInto($row)) {
-      $results[] = new sotf_Programme($row['id'], $row);
+      $results[] = $row;
+      if(!empty($row['icon'])) {
+        sotf_Programme::cacheIcon($row['id'], $db->unescape_bytea($row['icon']));
+      }
     }
     return $results;
   }
@@ -426,7 +426,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     global $permissions, $db, $user;
 		if(!isset($permissions->currentPermissions))
       return NULL;  // not logged in yet
-    $sql = "SELECT  s.name AS station, se.title AS series, p.* FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id=se.id, sotf_user_permissions u WHERE u.user_id = '$user->id' AND u.object_id=p.id ORDER BY p.entry_date DESC";
+    $sql = "SELECT  s.name AS station, se.title AS series, stats.visits, stats.listens, stats.downloads, p.* FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id=se.id LEFT JOIN (SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads, prog_id FROM sotf_stats GROUP BY prog_id) AS stats ON stats.prog_id=p.id, sotf_user_permissions u WHERE u.user_id = '$user->id' AND u.object_id=p.id ORDER BY p.entry_date DESC";
     $plist = $db->getAll($sql);
     /*
     foreach($plist as $item) {
@@ -435,6 +435,44 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     return $plist;
   }
 
+  function internalSearch($text, $language) {
+    $langCond = '';
+    if($language && $language != 'any_language') {
+      $language = sotf_Utils::clean($language);
+      $sql .= " AND language='$language' ";
+    }
+    //    $sql = "FROM sotf_programmes p, sotf_object_roles o, sotf_contacts c WHERE p.id=o.object_id AND o.contact_id=c.id AND p.published='t' ";
+    //$sql .= " AND (p.title ~* '$text' OR p.keywords ~* '$text' OR p.abstract ~* '$text' OR c.name ~* '$text' OR p.spatial_coverage ~* '$text') ";
+    $query = "SELECT distinct programmes.* FROM ( SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription FROM sotf_programmes LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id LEFT JOIN sotf_series ON sotf_programmes.series_id = sotf_series.id) as programmes WHERE published = 't' $langCond AND ( (coalesce(title,'') ~* '.*$text.*' OR coalesce(alternative_title,'') ~* '.*$text.*' OR coalesce(episode_title,'') ~* '.*$text.*') OR coalesce(abstract,'') ~* '.*$text.*' OR coalesce(spatial_coverage,'') ~* '.*$text.*' OR coalesce(keywords,'') ~* '.*$text.*' OR id in (SELECT sotf_object_roles.object_id as id FROM sotf_object_roles WHERE sotf_object_roles.contact_id = sotf_contacts.id AND ( coalesce(sotf_contacts.name,'') ~* '.*$text.*' OR coalesce(sotf_contacts.alias,'') ~* '.*$text.*' OR coalesce(sotf_contacts.acronym,'') ~* '.*$text.*')) ) ORDER BY entry_date, title";
+    return $query;
+  }
+
+  function countSearch($text, $language) {
+    global $db;
+    $sql = "FROM sotf_programmes p, sotf_object_roles o, sotf_contacts c WHERE p.id=o.object_id AND o.contact_id=c.id AND p.published='t' ";
+    $sql .= " AND (p.title ~* '$text' OR p.keywords ~* '$text' OR p.abstract ~* '$text' OR c.name ~* '$text' OR p.spatial_coverage ~* '$text') ";
+    if($language && $language != 'any_language') {
+      $language = sotf_Utils::clean($language);
+      $sql .= " AND language='$language' ";
+    }
+    $sql .= " GROUP BY p.id ORDER BY p.entry_date DESC ";
+    return $db->getOne("SELECT count(*) FROM (" . sotf_Programme::internalSearch($text, $language) . ") AS foo"); 
+  }
+
+  function simpleSearch($text, $language, $from, $count) {
+    global $db;
+    $res = $db->limitQuery(sotf_Programme::internalSearch($text, $language), $from, $count);
+    if(DB::isError($res))
+      raiseError($res->getMessage());
+    while (DB_OK === $res->fetchInto($row)) {
+      //debug("row", $row['title']);
+      $list[] = $row;
+      if(!empty($row['icon'])) {
+        sotf_Programme::cacheIcon($row['id'], $db->unescape_bytea($row['icon']));
+      }
+    }
+    return $list;
+  }
 
 }
 
