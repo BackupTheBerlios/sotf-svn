@@ -94,7 +94,8 @@ $icePort = "8000";
 $encoderPassword = "radjo";
 
 // The command to start streaming __XX__ style tokens are replaced with the actual value
-$streamCmd = "contrib/iceplay -b __BITRATE__ -s $iceServer -P $icePort -p $encoderPassword -l __PLAYLIST__ -n __NAME__ >>logs/play.log 2>&1 &";  
+$streamCmd = "C:/Perl/bin/perl $basedir/code/contrib/iceplay -b __BITRATE__ -s $iceServer -P $icePort -p $encoderPassword -l __PLAYLIST__ -n __NAME__ ";
+##>>logs/play.log 2>&1 &";  
 
 // The server will not start more streams than this
 $maxNumberOfStreams = 30;
@@ -153,6 +154,8 @@ $audioFormats = array(
 
 $iconWidth = 100;
 $iconHeight = 100;
+
+$lame = 'C:/sotf/helpers/lame';
 
 //////////////////////////////////////////////////////////////////////////
 // MISC OPTIONS ------------------------------------------------------

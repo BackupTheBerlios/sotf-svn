@@ -6,26 +6,10 @@ require("init.inc.php");
 
 #$page->send();
 
+$repository->updateTopicCounts();
 
-echo mime_content_type("test.php");
-
+$mainContent = false;
+echo ($mainContent ? 't' : 'f');
 ?>
+<h2>updateTopicCounts() ready</h2>
 
-<SCRIPT language="javascript">
-<!--
-function setvalue(name, id, value){
-var popurl="updatedb.php?name="+name+"&id="+id+"&value="+value
-winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
-}
-
-function setcaption(id, value){
-  window.location.href = this.location.href+"?id="+id+"&value="+value;
-  //return false;
-  //var popurl="updatedb.php?name=caption&id="+id+"&value="+value
-  //winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
-  //setTimeout("window.location.replace(this.location)",3000)
-}
-// -->
-</SCRIPT>
-
-<a href="javascript:str = prompt('Caption: ', '{$item.caption}'); if(str) setcaption('asdfg', escape(str));">TEST</a>

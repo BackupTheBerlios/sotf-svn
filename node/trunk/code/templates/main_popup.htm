@@ -8,7 +8,7 @@
 <title>{$PAGETITLE} (StreamOnTheFly:{$NODEID})</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="{$IMAGEDIR}/main.css" rel="stylesheet" type="text/css">
-<script src="{$IMAGEDIR}/popup.js"></script>
+<script src="{$IMAGEDIR}/base.js"></script>
 </head>
 <body background="{$IMAGEDIR}/bg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <div align="center"> 
@@ -61,6 +61,6 @@
 
 <script language="Javascript">
   {if $STATUS_MESSAGES or $ERROR_MESSAGES }
-       alert("{foreach from=$ERROR_MESSAGES item=MSG}{$MSG}\n{/foreach}{foreach from=$STATUS_MESSAGES item=MSG}{$MSG}\n{/foreach}");
+       alert("{foreach from=$ERROR_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}{foreach from=$STATUS_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}");
   {/if}
 </script>

@@ -7,6 +7,7 @@ $smarty->assign('PAGETITLE',$page->getlocalized('add_files'));
 $page->forceLogin();
 
 $prgId = sotf_Utils::getParameter('prgid');
+$main = sotf_Utils::getParameter('main');
 $add = sotf_Utils::getParameter('add');
 
 if(empty($prgId))
@@ -16,14 +17,11 @@ if (!hasPerm($prgId, "change")) {
   raiseError("You have no permission to add files here!");
 }
 
-$smarty->assign('PRG_ID',$prgId);
-
-
 // upload to my files
 $upload = sotf_Utils::getParameter('upload');
 if($upload) {
   move_uploaded_file($_FILES['userfile']['tmp_name'], $user->getUserDir() . '/' . $_FILES['userfile']['name']);
-  $page->redirect("addFiles.php?prgid=$prgId");
+  $page->redirect("addFiles.php?prgid=$prgId&main=$main");
   exit;
 }
 
@@ -35,8 +33,13 @@ if($add) {
   while(list($k,$fname) = each($_POST)) {
     debug("P", $k);
     if(substr($k, 0, 4) == 'sel_') {
-      debug("adding", "'$fname', '$copy'");
-      $prg->setOtherFile($fname, $copy);
+      if($main) {
+        debug("setAudio", "'$fname', '$copy'");
+        $prg->setAudio($user->getUserDir() . '/' . $fname, $copy);
+      } else {
+        debug("setOtherFile", "'$fname', '$copy'");
+        $prg->setOtherFile($fname, $copy);
+      }
     }
   }
   $page->redirect("closeAndRefresh.php");
@@ -44,6 +47,10 @@ if($add) {
 }
 
 // generate output
+
+$smarty->assign('PRG_ID',$prgId);
+$smarty->assign('MAIN',$main);
+
 
 // general data
 $smarty->assign('USERFILES',$user->getUserFiles());

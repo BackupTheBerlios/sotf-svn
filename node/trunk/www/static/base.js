@@ -11,7 +11,7 @@ function popup(url, name, height, width, scroll) {
 }
 
 /*
-function call2(f, url) {
+function redir2(f, url) {
   f.action = url;
   f.submit();
 }
@@ -20,3 +20,12 @@ function call2(f, url) {
 function redir(f, url) {
   window.location.href = url;
 }
+
+function checkIfEmpty(input, message) {
+  if(!input.value) {
+    alert(message);
+    return false;
+  } else
+    return true;
+}
+

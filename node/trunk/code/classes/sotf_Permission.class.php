@@ -170,19 +170,6 @@ class sotf_Permission
     return $retval;
   }
 
-  /** returns programmes owned/edited by current user */
-  function myProgrammes() {
-		if(!isset($this->currentPermissions))
-      return NULL;  // not logged in yet
-    global $db, $user;
-    $sql = "SELECT p.* FROM sotf_programmes p, sotf_user_permissions u WHERE u.user_id = '$user->id' AND u.object_id=p.id ORDER BY p.entry_date DESC";
-    $plist = $db->getAll($sql);
-    foreach($plist as $item) {
-      $retval[] = new sotf_Programme($item['id'], $item);
-    }
-    return $retval;
-  }
-
   /** returns series (id,title) within given station owned/edited by current user */
   function mySeriesData($stationId) {
 		if(!isset($this->currentPermissions))

@@ -7,6 +7,8 @@ $id = sotf_Utils::getParameter('id');
 $mainAudio = sotf_Utils::getParameter('audio');
 $prg = & new sotf_Programme($id);
 
+// TODO check if user have rights to access: 1. prg is published, 2. file has public_access or donwload_access
+
 $filename = sotf_Utils::getFileFromPath($filenameOrig);
 if($mainAudio)
      $filename = $prg->getAudioDir() . '/' . $filename;

@@ -1,7 +1,23 @@
 
-<h3>{#editmeta#}: <a href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
-
-<div align="right"><a class="action" href="editFiles.php?id={$PRG_ID}">{#edit_files#}</a></div>
+<form name="metadata" method="post">
+{if $NEW}
+    <table width="100%">
+      <tr valign="top">
+        <td>
+          <h4>{#New_prog_step1#}</h4>
+          <h3>{#editmeta#}</h3>
+        </td>
+        <td align="right">
+            <input class="action" type="button" name="b1" value="{#goto_step1#}" onClick="redir(this.form, 'editFiles.php?new=1&id={$PRG_ID}')" />
+            <input class="action" type="button" name="finishpublish" value="{#finish_publish#}" onClick="this.form.action='editMeta.php?new=1&id={$PRG_ID}&finishpublish=1';this.form.submit();" />
+            <input class="action" type="button" name="finish" value="{#finish_not_publish#}" onClick="this.form.action='editMeta.php?new=1&id={$PRG_ID}&finish=1';this.form.submit()" />
+          </td>
+      </tr>
+    </table>
+{else}
+    <h3>{#editmeta#}: <a href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
+    <div align="right"><a class="action" href="editFiles.php?id={$PRG_ID}">{#edit_files#}</a></div>
+{/if}
 
   <table class="tab">
     <tr> 
@@ -11,8 +27,6 @@
   <table class="tabarea">
     <tr> 
       <td class="tabarea"> 
-        
-        <form method="post">
           <table width="100%">
             <tr valign="top">
               <td class="meta">{#station#}:</td>
@@ -113,11 +127,11 @@
             </tr>
           </table>
 	<input type="submit" name="save" value="{#save#}">
-</form>
 
 </td>
 </tr>
 </table>
+</form>
 
 <p></p>
 
@@ -243,7 +257,7 @@
         <form method="post" name="form1">
           <input type="hidden" name="id" value="{$PRG_ID}">
             {#username#}: <input name="username"> 
-              <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=programme&objectid={$PRG_ID}&objectname={$PRG_TITLE|escape}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
+              <input type="button" name="addperm" value="{#change_perm#}" onClick="if(checkIfEmpty(this.form.username,'{#select_user#}')) popup('editPermissions.php?context=programme&objectid={$PRG_ID}&objectname={$PRG_TITLE|escape}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
                 <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
         </form>
       </td>
@@ -302,3 +316,18 @@ function getSelected() {
     </tr>
   </table>
 
+{if $NEW}
+    <table width="100%">
+      <tr valign="top">
+        <td>
+        </td>
+        <td align="right">
+          <form>
+            <input class="action" type="button" name="b1" value="{#goto_step1#}" onClick="redir(this.form, 'editFiles.php?new=1&id={$PRG_ID}')" />
+            <input class="action" type="button" name="finishpublish" value="{#finish_publish#}" onClick="document.metadata.action='editMeta.php?new=1&id={$PRG_ID}&finishpublish=1';document.metadata.submit();" />
+            <input class="action" type="button" name="finish" value="{#finish_not_publish#}" onClick="document.metadata.action='editMeta.php?new=1&id={$PRG_ID}&finish=1';document.metadata.submit()" />
+          </form>
+          </td>
+      </tr>
+    </table>
+{/if}

@@ -1,5 +1,6 @@
 <h3>Advanced search</h3>
 <FORM method="post" action="advsearch.php">
+<div align="center">
 <TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="80%" BGCOLOR="{#searchBgColor2#}">
 	<TR BGCOLOR="{#searchBgColor1#}">
 		<TD COLSPAN=6>{#your_query_is#}{if $SQLquery != ""}:{else} {#empty#}{/if}
@@ -27,6 +28,9 @@
 		{elseif $SQLquery[i][4] == "station"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD><SELECT name="SQLstring[]">{html_options options=$Stations selected=$SQLquery[i][3]}</TD>
+		{elseif $SQLquery[i][4] == "genre"}
+			<TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
+			<TD><SELECT name="SQLstring[]">{html_options options=$Genres selected=$SQLquery[i][3]}</TD>
 		{elseif $SQLquery[i][4] == "length"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlength selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" MAXLENGTH=5> {#seconds#}</TD>
@@ -37,6 +41,7 @@
 	{/section}
 	<TR BGCOLOR="{#searchBgColor1#}"><TD COLSPAN=6>&nbsp;</TD></TR>
 </TABLE>
+</div>
 <BR />
 <TABLE BORDER=0 WIDTH="100%">
 <TR>

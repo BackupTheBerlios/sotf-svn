@@ -27,11 +27,12 @@ if(sotf_Utils::getParameter('addprog')) {
   }
   $newPrg = new sotf_Programme();
   $track = preg_replace('/\.[^.]*$/','', $fname);
+  debug("create with track", $track);
   $newPrg->create($station, $track);
-  $newPrg->setAudio($fname);
+  $newPrg->setAudio($user->getUserDir() . '/' . $fname);
   $permissions->addPermission($newPrg->id, $user->id, 'admin');
   //$page->redirect("editFiles.php");
-  $page->redirect($_SERVER['SCRIPT_NAME']);
+  $page->redirect("editFiles.php?new=1&id=" . $newPrg->getID());
   exit;
 }
 
@@ -51,7 +52,7 @@ if(!empty($list)) {
 		 $smarty->assign_by_ref("USER_AUDIO_FILES", $list);
 }
 
-$myProgs = $permissions->myProgrammes();
+$myProgs = sotf_Programme::myProgrammes();
 //$plist = new sotf_PrgList($myProgs);
 //// todo sort/filter using sotf_PrgList
 //$l = $plist->getList();

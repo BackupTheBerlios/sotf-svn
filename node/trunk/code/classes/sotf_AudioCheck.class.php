@@ -123,6 +123,45 @@ class sotf_AudioCheck
 	} // end func getRequestIndex
 
 	/**
+	* Gets best quality audio file
+	*
+	* @return	mixed	If found return the index of the file, else returns boolean false
+	*/
+	function getBest()
+	{
+		$bitrate = 0;								// set minimum bitrate
+		$index = false;								// initialize file index
+		for($i=0;$i<count($this->list->list);$i++)	// walk thru files
+			if ($this->list->list[$i]->type == 'audio')
+				if ($this->list->list[$i]->avarange_bitrate > $bitrate)
+				{
+					$bitrate = $this->list->list[$i]->avarange_bitrate;
+					$index = $i;
+				}
+		return $i;
+	}
+
+	/**
+	* Gets best quality MP3 file
+	*
+	* @return	mixed	If found return the index of the file, else returns boolean false
+	*/
+	function getBestMP3()
+	{
+		$bitrate = 0;								// set minimum bitrate
+		$index = false;								// initialize file index
+		for($i=0;$i<count($this->list->list);$i++)	// walk thru files
+			if ($this->list->list[$i]->type == 'audio')
+				if ($this->list->list[$i]->format == 'mp3')
+					if ($this->list->list[$i]->avarange_bitrate > $bitrate)
+					{
+						$bitrate = $this->list->list[$i]->avarange_bitrate;
+						$index = $i;
+					}
+		return $i;
+	}
+
+	/**
 	* Encode format to a filename.
 	*
 	* @param	integer	$index	Format index of the jingle in the $audioFormats global variable

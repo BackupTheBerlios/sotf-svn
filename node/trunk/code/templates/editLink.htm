@@ -16,7 +16,7 @@
 		</tr>
 		<tr>
 			<td>{#public_access#}:</td>
-			<td><input type="checkbox" name="public_access" {if $LINK_DATA.public_access=='t'} CHECKED="1" {/if} /></td>
+			<td><input type="checkbox" name="public_access" {if $LINK_DATA.public_access eq 't'} CHECKED="1" {/if} /></td>
 		</tr>
 	</table>
 	<input type="submit" name="save" value="{#save#}">

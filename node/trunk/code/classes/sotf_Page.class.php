@@ -193,6 +193,13 @@ class sotf_Page
 
 	function halt($msg='') {
 	  global $smarty, $localPrefix;
+	  debug("sending error page");
+	  $smarty->assign("ERRORS", $this->errors);
+	  $smarty->assign("ERROR_URL", $this->errorURL);
+	  $smarty->assign("REFERER", getenv('HTTP_REFERER'));
+	  $this->send('error.htm');
+	  exit;
+	  /*
 	  if($this->popup) {
 		 $smarty->assign('POPUP', 1);
 	  }
@@ -211,7 +218,54 @@ class sotf_Page
 		 $_SESSION['halted'] = 1;
 		 $this->redirect($url);
 	  }
+	  */
 	  exit;
+	}
+
+	/*
+	 * 1. param is the maximal number of results
+	 * 2. param is the url from the page
+	 * return value is an associative array with 4 fields: from, to, maxresults, limit (string to the end of a query to limit a pgsql query)
+	*/
+	function resultspage($rp_count, $rp_url)
+	{
+		global $smarty, $sotfVars;
+		$rp_maxresults = $sotfVars->get("hitsPerPage", 30);		//display maximal so many results
+		$rp_maxresults = 2;
+		$rp_from = sotf_Utils::getParameter('rp_from');
+		
+		$rp_button = sotf_Utils::getParameter('rp');
+	
+		if ($rp_button == "rp_first") $rp_from = 1;			//if first button pressed
+		if ($rp_button == "rp_prev") $rp_from -= $rp_maxresults;		//if prev button pressed
+		if ($rp_button == "rp_next") $rp_from += $rp_maxresults;		//if next button pressed
+		if ($rp_button == "rp_last") $rp_from = $rp_count - ($rp_count % $rp_maxresults) + 1;	//if last button pressed
+		
+		if (!isset($rp_from)) $rp_from = 1;			//if first time on page
+		if ($rp_from > $rp_count) $rp_from -= $rp_maxresults;	//if no more results
+		
+		if ($rp_from < 1) $rp_from = 1;		//$from must bee min. 1
+		
+		$rp_to = $rp_from + $rp_maxresults - 1;			//set 'to' field
+		if ($rp_to > $rp_count) $rp_to = $rp_count;			//if less then $maxresults
+		
+		if (strpos($rp_url, "?") === false) $rp_url .= "?rp_from=$rp_from";
+		else $rp_url .= "&rp_from=$rp_from";
+	
+		$smarty->assign("rp_count", $rp_count);
+		$smarty->assign("rp_to", $rp_to);
+		$smarty->assign("rp_from", $rp_from);
+		$smarty->assign("rp_url", $rp_url);
+	
+		if ($rp_to == $rp_count) $smarty->assign("rp_theend", true);
+		if ($rp_from == 1) $smarty->assign("rp_thebeginning", true);
+		
+		$limit["from"] = $rp_from-1;
+		$limit["to"] = $rp_to-1;
+		$limit["maxresults"] = $rp_maxresults;
+		$limit["limit"] = " LIMIT ".$rp_maxresults." OFFSET ".($rp_from - 1);
+		return $limit;
+		//print($query." LIMIT ".$maxresults." OFFSET ".($from - 1))
 	}
 
 }

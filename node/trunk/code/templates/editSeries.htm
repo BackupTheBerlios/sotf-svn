@@ -110,7 +110,7 @@
         <form method="post" name="form1">
           <input type="hidden" name="seriesid" value="{$SERIES_ID}">
             {#username#}: <input name="username"> 
-              <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
+              <input type="button" name="addperm" value="{#change_perm#}" onClick="if(checkIfEmpty(this.form.username,'{#select_user#}')) popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
                 <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
         </form>
       </td>

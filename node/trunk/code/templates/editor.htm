@@ -1,5 +1,13 @@
-
-{if $USER_AUDIO_FILES}
+{literal}
+<SCRIPT language="javascript">
+<!--
+function setvalue(name, id, value){
+var popurl="updatedb.php?name="+name+"&id="+id+"&value="+value
+winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
+}
+// -->
+</SCRIPT>
+{/literal}
 
 <table class="tab">
   <tr> 
@@ -9,63 +17,50 @@
 <table class="tabarea">
 <tr> 
   <td class="tabarea"> 
-<form method="post">
+        <table width="100%">
+          <tr valign="top">
+            <td>
+              <a target="ftp" href="{$USERFTPURL}">{#user_ftp_access#}</a>
+            </td>
+            <td>
+              <form enctype="multipart/form-data" method="post" onSubmit="return(checkIfEmpty(this.userfile,'{#select_file#}'))" >
+                <input type="hidden" name="MAX_FILE_SIZE" value="15000000">
+                  <input name="userfile" type="file">
+                    <input type="submit" name="upload" value="{#upload_file#}" >
+              </form>
+            </td>
+          </tr>
+        </table>
 
-{#pending_audio#}: 
+        {if $USER_AUDIO_FILES}
 
-<select name="fname">
-      {html_options values=$USER_AUDIO_FILES|escape output=$USER_AUDIO_FILES selected=$FNAME}
-</select>
+        <form method="post">
 
-{ if count($STATIONS)==1 }
+          {#pending_audio#}: 
 
-<input type="hidden" name="station" value="{$STATIONS[0].id}">
+          <select name="fname">
+            {html_options values=$USER_AUDIO_FILES|escape output=$USER_AUDIO_FILES selected=$FNAME}
+          </select>
 
-{ else }
-<select name="station">
-        {foreach from=$STATIONS item=station}
-        <option value="{$station.id}" >{$station.name}</option>
-        {/foreach}
-</select>
-{/if}
+          { if count($STATIONS)==1 }
+          
+          <input type="hidden" name="station" value="{$STATIONS[0].id}"></input>
+          
+          { else }
+          <select name="station">
+            {foreach from=$STATIONS item=station}
+            <option value="{$station.id}" >{$station.name}</option>
+            {/foreach}
+          </select>
+          {/if}
+          <input type="submit" name="addprog" value="{#add_programme#}"></input>
+          <input type="submit" name="refresh" value="{#refresh#}"></input>
 
-<input type="submit" name="addprog" value="{#add_programme#}">
+        </form>
+        {/if}
 
-</form>
 </td></tr>
 </table>
-
-{/if}
-
-<p></p>
-
-<table class="tab">
-  <tr> 
-    <td nowrap class="tab">{#manage_files#}</td>
-  </tr>
-</table>
-<table class="tabarea">
-<tr> 
-  <td class="tabarea"> 
-        <table><tr><td>
-<a target="ftp" href="{$USERFTPURL}">{#user_ftp_access#}</a>
-
-</td><td>
-
-<form method="get">
-<input type="submit" name="refresh" value="{#refresh#}">
-</form>
-
-</td><td>
-
-<form enctype="multipart/form-data" method="post">
-<input type="hidden" name="MAX_FILE_SIZE" value="15000000">
-<input name="userfile" type="file">
-<input type="submit" name="upload" value="{#upload_file#}">
-</form>
-</td></tr></table>
-
-</td></tr></table>
 
 <p></p>
 
@@ -79,6 +74,7 @@
 <tr> 
   <td class="tabarea"> 
 
+<!--
 <table width="100%" bgcolor="{#editorBgColor2#}">
 <tr>
       <td>
@@ -100,47 +96,46 @@
         </select>
       </td>
 </tr></table>
-<table border="1" width="100%" bgcolor="{#editorBgColor1#}">
+-->
+
+<table width="100%">
 <tr class="listhead">
-      <th>{#Flag#}</th>
+      <!--<th>{#Flag#}</th>-->
       <th>{#Title_abs#}</th>
-      <th>{#Station#}</th>
-      <th>{#Series#}</th>
-      <th>{#Prod_date#}</th>
+      <th>{#Station_series#}</th>
+      <th>{#Entry_date#}</th>
       <th>{#Exp_date#}</th>
       <th>{#Stats#}</th>
-      <th>{#Access#}</th>
+      <th>{#Published#}</th>
       <th>{#Actions#}</th>
 </tr>
 
     {cycle values="list1,list2" print=false advance=false}
-    {section name=i loop=$MYPROGS}
+    {foreach item=item from=$MYPROGS}
     <tr class="{cycle}">
-      <td>&nbsp;</td>
+      <!--<td>&nbsp;</td>-->
       <td>
-                <a href="get.php?id={$MYPROGS[i]->id|escape}"><b>{$MYPROGS[i]->data.title}</b></a>
-                <br><font size="-1">{$MYPROGS[i]->data.abstract|truncate:200}</font>
+                <a href="get.php?id={$item.id}"><b>{$item.title}</b></a>
+                <br><font size="-1">{$item.abstract|truncate:200}</font>
       </td>
       <td>
-                <a href="listStation.php?station={$MYPROGS[i]->data.station}">{$MYPROGS[i]->data.station}</a>
+                <a href="listStation.php?station={$item.station_id}">{$item.station}</a>
+                {if $item.series_id}
+                <br /><a href="listSeries.php?series={$item.series_id}">{$item.series}</a>
+                {/if}
       </td>
-      <td>
-        {if $MYPROGS[i]->data.series}
-        <a href="listSeries.php?series={$MYPROGS[i]->data.series}">{$MYPROGS[i]->data.series}</a>
-        {else}
-        &nbsp;
-        {/if}
-      </td>
-      <td>{$MYPROGS[i]->data.production_date|default:"&nbsp;"}</td>
-      <td>{$MYPROGS[i]->data.expiry_date|default:"&nbsp;"}</td>
-      <td>&nbsp;</td>
+      <td>{$item.production_date|default:"&nbsp;"}</td>
+      <td>{$item.expiry_date|default:"&nbsp;"}</td>
       <td>&nbsp;</td>
       <td>
-              <input class="action" type="button" name="b1" value="{#Edit_files#}" onClick="redir(this.form, 'editFiles.php?id={$MYPROGS[i]->id|escape}&okURL={$OKURL|escape}')" />
-              <input class="action" type="button" name="b1" value="{#Edit_meta#}" onClick="redir(this.form, 'editMeta.php?id={$MYPROGS[i]->id}')" />
+         <input type="checkbox" onclick="javascript:setvalue('{$item.id}', this.checked);return true;"{ if $item.published eq 't' } CHECKED="1"{/if} />
+      </td>
+      <td>
+              <input class="action" type="button" name="b1" value="{#Edit_files#}" onClick="redir(this.form, 'editFiles.php?id={$item.id|escape}&okURL={$OKURL|escape}')" />
+              <input class="action" type="button" name="b1" value="{#Edit_meta#}" onClick="redir(this.form, 'editMeta.php?id={$item.id}')" />
       </td>
     </tr>
-		{/section}
+		{/foreach}
 
 </table>
 

@@ -40,17 +40,19 @@ while(list(,$series) = each($seriesList)) {
 
 $smarty->assign('SERIES', $seriesData);
 
-$progs = $st->listProgrammes($start, $hitsPerPage);
+$numProgs = $st->numProgrammes();
+$limit = $page->resultspage($numProgs, $_SERVER["REQUEST_URI"]);
+$progs = $st->listProgrammes($limit["from"] , $limit["maxresults"]);
 
 if($progs) {
-  $numProgs = $st->numProgrammes();
+
   while(list(,$prog) = each($progs)) {
     $pd = $prog->getAll();
     $progList[] = $pd;
   }
   $smarty->assign('PROGS',$progList);
 
-
+/*
   $prev = $start - $hitsPerPage;
   if ($prev < 0) {
     $prev = false;
@@ -59,7 +61,6 @@ if($progs) {
   if ($next >= $numProgs) {
     $next = false;
   }
-
   $smarty->assign('PROG_SPLIT', array('count' => $numProgs,
                                       'start' => $start + 1,
                                       'max'   => $start + count($progs),
@@ -67,6 +68,7 @@ if($progs) {
                                       'next' => $next,
                                       'prev' => $prev)
                   );
+*/
 }
 
 $page->send();

@@ -1,15 +1,16 @@
 <?php
 require("init.inc.php");
 
-$smarty->assign("PAGETITLE", $page->getlocalized("editmeta"));
-//////$smarty->assign("OKURL", $_SERVER['PHP_SELF'] . "?id=" . rawurlencode($id));
-
-$page->forceLogin();
 
 $prgId = sotf_Utils::getParameter('id');
+$new = sotf_Utils::getParameter('new');
 
-$finishpublish = sotf_Utils::getParameter('finishpublish');
-$finishnotpublish = sotf_Utils::getParameter('finishnotpublish');
+if($new)
+     $smarty->assign("PAGETITLE", $page->getlocalized("New_prog_step1"));
+else
+     $smarty->assign("PAGETITLE", $page->getlocalized("editmeta"));
+
+$page->forceLogin();
 
 $okURL = sotf_Utils::getParameter('okURL');
 
@@ -17,6 +18,7 @@ $delTopic = sotf_Utils::getParameter('deltopic');
 if($delTopic) {
   $obj = new sotf_NodeObject('sotf_prog_topics', $delTopic);
   $obj->delete();
+  $repository->updateTopicCounts();
   $page->redirect("editMeta.php?id=$prgId#topics");
   exit;
 }
@@ -31,8 +33,10 @@ if(!hasPerm($prgId, 'change')) {
   exit;
 }
 
+$finishpublish = sotf_Utils::getParameter('finishpublish');
+$finish = sotf_Utils::getParameter('finish');
 $save = sotf_Utils::getParameter('save');
-if($save) {
+if($save || $finish || $finishpublish) {
   $params = array('title'=>'text',
                   'alternative_title'=>'text',
                   'episode_title'=>'text',
@@ -63,24 +67,16 @@ if($save) {
     }
     $prg->set($param, $value);
   }
-  $prg->update();
-  $page->redirect("editMeta.php?id=$prg->id");
-  /*
   if ($finishpublish) {
     $prg->publish();
-    if ($okURL)
-      $page->redirect($okURL);
-    else
-      $page->redirect("editor.php");
+    $page->redirect("editor.php");
+  } elseif ($finish) {
+    $prg->update();
+    $page->redirect("editor.php");
+  } else {
+    $prg->update();
+    $page->redirect("editMeta.php?id=$prg->id");
   }
-  if ($finishnotpublish) {
-    $prg->withDraw();
-    if ($okURL)
-      $page->redirect($okURL);
-    else
-      $page->redirect("editor.php");
-  }
-  */
 }
 
 $smarty->assign('PRG_ID', $prgId);
@@ -157,6 +153,8 @@ if($seticon) {
 // generate output
 
 // general data
+if($new)
+     $smarty->assign("NEW",1);
 $smarty->assign('PRG_DATA', $prg->getAll());
 
 // station data
@@ -176,11 +174,7 @@ $smarty->assign('ROLES', $prg->getRoles());
 $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($prg->id));
 
 // topics
-$topics = $prg->getAssociatedObjects('sotf_prog_topics', 'id');
-for($i=0; $i<count($topics); $i++) {
-  $topics[$i]['name'] = $repository->getTopicName($topics[$i]['topic_id']);
-}
-$smarty->assign('TOPICS', $topics);
+$smarty->assign('TOPICS', $prg->getTopics());
 
 // genres
 $genres = $repository->getGenres();

@@ -2,6 +2,7 @@
 <FORM method="post" action="advsearchresults.php">
 <INPUT type="hidden" name="SQLquerySerial" value="{$SQLquerySerial}">
 
+<div align="center">
 <TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="80%" BGCOLOR="{#searchBgColor1#}">
 	<TR>
 		<TD COLSPAN=4>{#your_query_is#}:</TD>
@@ -20,17 +21,16 @@
 		</TD>
 		<TD>&nbsp;&nbsp;</TD>
 	<TR>
-		<TD COLSPAN=4>&nbsp;</TD>
+		<TD COLSPAN=3>&nbsp;</TD>
 	</TR>
 	<TR>
 		<TD>&nbsp;</TD>
-		<TD ALIGN="center" BGCOLOR="#FFFFFF"><INPUT type="submit" name="back" value="{#back#}"></TD>
-		<TD ALIGN="center" BGCOLOR="#FFFFFF">
-			<INPUT type="submit" name="first" value="{#first#}">&nbsp;
-			<INPUT type="submit" name="prev" value="{#prev#}">&nbsp;
-			<INPUT type="submit" name="refresh" value="{#refresh#}">&nbsp;
-			<INPUT type="submit" name="next" value="{#next#}">
-			<INPUT type="submit" name="last" value="{#last#}">
+		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="33%">
+		<a href="advsearchresults.php?back=true" class="menu"><big>[ {#back#} ]</big></a>
+<!--		<INPUT type="submit" name="back" value="{#back#}"> -->
+		</TD>
+		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="66%">
+		{include file="resultspage.htm"}
 		</TD>
 		<TD>&nbsp;</TD>
 	</TR>
@@ -38,14 +38,32 @@
 		<TD COLSPAN=4>&nbsp;</TD>
 	</TR>
 </TABLE>
+</div>
 
 <BR />
+<table>
+{foreach name=outer item=item from=$result}
+	<tr>
+		<td>{if $item.icon}<img src="getIcon.php/icon.png?id={$item.id}">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
+		<td><b><a href="get.php?id={$item.id}">{$item.title}</a></b><BR>
+		{foreach key=key item=cell from=$item.values}
+			<b>{$key}:</b>
+			{if $cell != ""}
+				{$cell}
+			{else}-{/if}<br>
+		{/foreach}
+		</td>
+	</tr>
+{/foreach}
+</table>
+<br><br><br><br><br>
+<!--
 {foreach name=outer item=row from=$result}
 	{foreach key=key item=cell from=$row}
 		{if $cell != ""}{$key}: {$cell}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/if}
 	{/foreach}
 	<BR />___________________________________________________________<BR />
 {/foreach}
-
+-->
 
 </FORM>

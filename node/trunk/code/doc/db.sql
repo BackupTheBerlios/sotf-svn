@@ -290,7 +290,8 @@ CREATE TABLE "sotf_topics_counter" (
 -- defines the number of programmes in the topic
 	"id" serial PRIMARY KEY,
 	"topic_id" varchar(12) NOT NULL,
-	"number" int2
+	"number" int2,
+	"total" int2
 );
 
 CREATE SEQUENCE "sotf_prog_topics_seq";

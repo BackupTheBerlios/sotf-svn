@@ -46,7 +46,7 @@
     <tr> 
       <td class="tabarea"> 
         <table width="100%">
-            <tr valign="top"><td class="meta" nowrap>{#station#}:</td><td><a href="showStation.php?stationid={$STATION_DATA.id}">{$STATION_DATA.name}</a></td></tr>
+            <tr valign="top"><td class="meta" nowrap width="10%">{#station#}:</td><td><a href="showStation.php?stationid={$STATION_DATA.id}">{$STATION_DATA.name}</a></td></tr>
             {if $SERIES_DATA}
             <tr valign="top"><td class="meta" nowrap>{#series#}:</td><td><a href="showSeries.php?seriesid={$SERIES_DATA.id}">{$SERIES_DATA.title}</a></td></tr>
             {/if}
@@ -232,7 +232,7 @@
             </td>
             <td>
               { if $item.stream_access eq 't' }
-                 <input class="action" type="button" name="b1" value="{#Listen#}" />
+                 <input class="action" type="button" name="b1" value="{#Listen#}" onClick="redir(this.form, 'listen.php/audio.m3u?id={$ID}&fileid={$item.id}')" />
               {/if}
             </td>
           </tr>

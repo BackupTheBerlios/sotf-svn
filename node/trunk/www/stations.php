@@ -19,9 +19,11 @@ if ($delete and hasPerm('node','delete'))
   $page->redirect($_SERVER["PHP_SELF"]);
 }
 
-// TODO: page splitting in station list!
+$limit = $page->resultspage(sotf_Station::countAll(), "$php_self");
 
-$stations = sotf_Station::listStations($start, $hitsPerPage);
+//$result = $db->limitQuery($query, $limit["from"], $limit["maxresults"]);				//get results with limit
+
+$stations = sotf_Station::listStations($limit["from"] , $limit["maxresults"]);
 
 for($i=0; $i<count($stations); $i++)
 {

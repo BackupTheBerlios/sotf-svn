@@ -27,7 +27,11 @@ function deleteStationConfirm(url) {
 {/if}
 
 <h3>{#stations#}</h3>
-
+<table width="100%">
+	<tr class="listhead">
+		<td>{include file="resultspage.htm"}</td>
+	</tr>
+</table>
 {cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
 
 {if count($STATIONS) gt 0 }

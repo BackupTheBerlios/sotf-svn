@@ -17,9 +17,23 @@ else  window.location.href = this.location.href
 </SCRIPT>
 {/literal}
 
+{if $NEW}
+  <table width="100%">
+    <tr valign="top">
+      <td>
+        <h4>{#New_prog_step1#}</h4>
+        <h3>{#Edit_files#}</h3>
+      </td>
+      <td align="right">
+        <a class="action" href="editMeta.php?new=1&id={$PRG_ID}">{#goto_step2#}</a>
+      </td>
+    </tr>
+  </table>
+{else}
 <H3>{#Edit_files#}: <a href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
-
 <div align="right"><a class="action" href="editMeta.php?id={$PRG_ID}">{#edit_meta#}</a></div>
+{/if}
+
 
 <form>
 <table class="tab">
@@ -48,7 +62,7 @@ else  window.location.href = this.location.href
               {if !empty($item.filename) }
               <a target="link" href="getFile.php/{$item.filename}?audio=1&id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
               { else }
-              {#missing#}
+              <font color="red">{#missing#}</font>
               {/if}
             </td>
             <td>
@@ -66,22 +80,26 @@ else  window.location.href = this.location.href
               {/if}
             </td>
             <td>
-              <input type="checkbox" onclick="javascript:setvalue('audiofilesa', '{$item.id}', this.checked);return true;"{ if $item.stream_access eq 't' } CHECKED="1" {/if} />
+                {if !empty($item.filename) }
+                <input type="checkbox" onclick="javascript:setvalue('audiofilesa', '{$item.id}', this.checked);return true;"{ if $item.stream_access eq 't' } CHECKED="1" {/if} />
+                {/if}
             </td>
             <td>
+                {if !empty($item.filename) }
               <input type="checkbox" onclick="javascript:setvalue('audiofilesd', '{$item.id}', this.checked);return true;"{ if $item.download_access eq 't' } CHECKED="1" {/if} />
+                {/if}
             </td>
             <td nowrap>
               {if empty($item.filename) }
-              <input class="action" type="button" name="b1" value="{#convert#}" onClick="" />
+              <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=80')" />
               {else}
-                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delmfile=1&objectid={$item.id}&id={$PRG_ID}')" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
               {/if}
             </td>
           </tr>
           {/foreach}    
     </table>
-          <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?new=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)" />
+          <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?main=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)" />
  
  </td>
 </tr>
@@ -143,7 +161,7 @@ else  window.location.href = this.location.href
             </td>
             <td nowrap>
               <input class="action" type="button" name="b1" value="{#change_caption#}" onClick="setcaption('mfiles', '{$item.id}', '{$item.caption}')" />
-                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delofile=1&objectid={$item.id}&id={$PRG_ID}')" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
             </td>
           </tr>
           {/foreach}    
@@ -184,7 +202,7 @@ else  window.location.href = this.location.href
             </td>
             <td nowrap>
                 <input class="action" type="button" name="b1" value="{#change_caption#}" onClick="setcaption('ofiles', '{$item.id}', '{$item.caption}')" />
-                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delofile=1&objectid={$item.id}&id={$PRG_ID}')" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
             </td>
           </tr>
           {/foreach}    
@@ -193,7 +211,7 @@ else  window.location.href = this.location.href
    {if !$AUDIO_FILES and !$OTHER_FILES }
         <p>{#no_files#}</p>
    {/if}
-          <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?new=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)" />
+          <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?prgid={$PRG_ID}','{#addfiles#}',500,500,true)" />
  
   </td>
 </tr>
@@ -248,3 +266,7 @@ else  window.location.href = this.location.href
 </table>
 
 </form>
+
+{if $NEW}
+  <div align="right"><a class="action" href="editMeta.php?new=1&id={$PRG_ID}">{#goto_step2#}</a></div>
+{/if}

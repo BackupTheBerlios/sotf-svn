@@ -91,19 +91,7 @@
         <table width="100%">
           <tr>
             <td colspan="2" align="center">
-              <div align="center" class="prevnext">
-                {if $PROG_SPLIT.prev ge 0}
-                <a href="showStation.php?stationid={$STATION_ID}&start={$PROG_SPLIT.prev}#progs">
-                  <img border="0" src="{$IMAGEDIR}/previous.png">
-                </a>
-                {/if}
-                {$PROG_SPLIT.start} - {$PROG_SPLIT.max} {#of#} {$PROG_SPLIT.count}
-                {if $PROG_SPLIT.next}
-                <a href="showStation.php?stationid={$STATION_ID}&start={$PROG_SPLIT.next}#progs">
-                  <img border="0" src="{$IMAGEDIR}/next.png">
-                </a>
-                {/if}
-              </div>
+		{include file="resultspage.htm"}
             </td>
           </tr>
           {foreach item=item from=$PROGS}

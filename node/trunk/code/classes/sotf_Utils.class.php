@@ -213,7 +213,11 @@ class sotf_Utils
 
   /** this clears not allowed chars from a string (e.g. station name, series name) and truncates to allowed length */
   function makeValidName($str, $len) {
+    if(empty($str))
+      return '';
     $retval = preg_replace("/[^a-zA-Z0-9_-]/","_",$str);
+    $retval = preg_replace("/[_-]+/","_", $retval);
+    $retval = preg_replace('/_+$/','', $retval);
     return substr($retval, 0, $len);
   }
 

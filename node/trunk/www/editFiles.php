@@ -1,7 +1,11 @@
 <?php
 require("init.inc.php");
 
-if(sotf_Utils::getParameter('newProg')) {
+$id = sotf_Utils::getParameter('id');
+$new = sotf_Utils::getParameter('new');
+$okURL = sotf_Utils::getParameter('okURL');
+
+if($new) {
   $smarty->assign("PAGETITLE", $page->getlocalized("New_prog_step1"));
 } else {
   $smarty->assign("PAGETITLE", $page->getlocalized("Edit_files"));
@@ -9,23 +13,11 @@ if(sotf_Utils::getParameter('newProg')) {
     
 $page->forceLogin();
 
-sotf_Utils::registerGlobalParameters('id', 'okURL', 'copy');
-
-$ok = sotf_Utils::getParameter('ok');
-$okURL = sotf_Utils::getParameter('okURL');
-$send = sotf_Utils::getParameter('send');
-$selectedUserFiles = sotf_Utils::getParameter('userfiles');
-$selectedOtherFiles = sotf_Utils::getParameter('otherfiles');
-$delLink = sotf_Utils::getParameter('dellink');
-$addLink = sotf_Utils::getParameter('addlink');
-$delother = sotf_Utils::getParameter('delother');
+// set caption
 $capid =  sotf_Utils::getParameter('capid');
 $capvalue =  sotf_Utils::getParameter('capvalue');
 $capurl =  sotf_Utils::getParameter('capurl');
 $capname =  sotf_Utils::getParameter('capname');
-
-$smarty->assign("OKURL",$okURL);
-
 if ($capname == "ofiles")
 {
 	$x = new sotf_NodeObject("sotf_other_files", $capid);
@@ -51,14 +43,27 @@ if(!hasPerm($id, 'change')) {
   exit;
 }
 
+$delLink = sotf_Utils::getParameter('dellink');
+$linkid = sotf_Utils::getParameter('linkid');
 if($delLink) {
-  $link = new sotf_NodeObject("sotf_links", sotf_Utils::getParameter('linkid'));
+  $link = new sotf_NodeObject("sotf_links", $linkid);
   $link->delete();
   $page->redirect("editFiles.php?id=$id");
   exit;
 }
 
+$delFile = sotf_Utils::getParameter('delfile');
+if($delFile) {
+  $prg->deleteFile($delFile);
+  $page->redirect("editFiles.php?id=$id");
+  exit;
+}
+
 // generate output
+//$smarty->assign("OKURL",$okURL);
+if($new)
+     $smarty->assign("NEW",1);
+
 $smarty->assign('PRG_DATA', $prg->getAll());
 
 $smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));
@@ -66,21 +71,18 @@ $smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));
 // TODO: compare directory and SQL data for correctness
 
 // other files
-$otherFiles = $prg->getAssociatedObjects('sotf_other_files', 'filename');
+$otherFiles = $prg->listOtherFiles();
 $smarty->assign('OTHER_FILES', $otherFiles);
 
 // audio files which does not contain the main programme
-$mainAudio = array();
-$audioFiles = $prg->getAssociatedObjects('sotf_media_files', 'main_content, filename');
-for ($i=0;$i<count($audioFiles);$i++) {
-  if($audioFiles[$i]['main_content']=='t') {
-    $mainAudio[$audioFiles[$i]['filename']] = $audioFiles[$i];
-    unset($audioFiles[$i]);
-  }
-}
-$smarty->assign('AUDIO_FILES', $audioFiles);
+$smarty->assign('AUDIO_FILES', $prg->listAudioFiles('false'));
 
 // audio files for programme
+$audioFiles = $prg->listAudioFiles('true');
+for ($i=0;$i<count($audioFiles);$i++) {
+    $mainAudio[$audioFiles[$i]['filename']] = $audioFiles[$i];
+}
+
 $prgAudiolist = & new sotf_FileList();
 $prgAudiolist->getAudioFromDir($prg->getAudioDir());
 
@@ -89,10 +91,9 @@ if($prgAudiolist->count() != count($mainAudio)) {
   $page->addStatusMsg("main_audio_count_mismatch");
 }
 
-
 $files = $prgAudiolist->getFiles();
-//debug('mainAUdio', $mainAudio);
-//debug('prgaudiolist', $files);
+debug('mainAUdio', $mainAudio);
+debug('prgaudiolist', $files);
 for ($i=0;$i<count($files);$i++) {
   if(!$mainAudio[$files[$i]->name]) {
     // missing from SQL!
@@ -130,8 +131,7 @@ for ($i=0;$i<count($audioFormats);$i++)
 
 debug("mainAudio", $mainAudio);
 while(list($fn,$finfo) = each($mainAudio)) {
-  $PRG_AUDIO[] = array('name' => $fn,
-                       'format' => $finfo['format']);
+  $PRG_AUDIO[] = $finfo;
 }
 
 $smarty->assign('PRG_AUDIO',$PRG_AUDIO);

@@ -26,11 +26,7 @@ if($id) {
   // genre
 
   // topics
-  $topics = $prg->getAssociatedObjects('sotf_prog_topics', 'id');
-  for($i=0; $i<count($topics); $i++) {
-    $topics[$i]['name'] = $repository->getTopicName($topics[$i]['topic_id']);
-  }
-  $smarty->assign('TOPICS', $topics);
+  $smarty->assign('TOPICS', $prg->getTopics());
 
   $smarty->assign('GENRE', $repository->getGenreName($prg->get('genre_id')));
   // language

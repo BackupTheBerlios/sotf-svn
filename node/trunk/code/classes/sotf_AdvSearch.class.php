@@ -62,72 +62,88 @@ class sotf_AdvSearch
 		return $this->SQLquery;
 	}
 
+	function getEQSign($sign, $value)
+	{
+		switch ($sign) {			//= < > != ...
+		    case "bigger":
+			return " > ".$value;
+		    case "smaller":
+			return " < ".$value;
+		    case "is":
+			return " = ".$value;
+		    case "is_not_equal":
+			return " != ".$value;
+		    case "is_not":
+			return " != ".$value;
+		    case "contains":
+			return " LIKE '%".substr($value, 1, -1)."%'";
+		    case "begins_with":
+			return " LIKE '".substr($value, 1, -1)."%'";
+		    case "does_not_contain":
+			return " NOT LIKE '%".substr($value, 1, -1)."%'";
+		}
+		return false;
+	}
+
 	function GetSQLCommand()			//gives back the SQL command for the search
 	{
 		global $lang;
 		$query="SELECT programmes.* FROM (";
-		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station FROM sotf_programmes";
+		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription FROM sotf_programmes";
 		$query.=" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id";
-		$query.=") as programmes WHERE";
+		$query.=" LEFT JOIN sotf_series ON sotf_programmes.series_id = sotf_series.id";
+		$query.=") as programmes WHERE published = 't' AND";
 		$max = count($this->SQLquery);					//all rows of the advsearch
 		for($i = 0; $i < $max ;$i++)		//go through all terms
 		{
-			if ($i != 0) $query = $query." ".$this->SQLquery[$i][0];	//AND or OR words
-			if ( (($this->SQLquery[$i][0] == "AND") || ($i == 0)) && ($this->SQLquery[$i+1][0] == "OR") ) $query = $query." (";	//set begining of round bracket
-			if ($this->SQLquery[$i][4] == "date") $query = $query." ".$this->SQLquery[$i][1];		//field name
+			//AND or OR words
+			if ($i != 0) $query = $query." ".$this->SQLquery[$i][0];
+
+			//set begining of round bracket
+			if ( (($this->SQLquery[$i][0] == "AND") || ($i == 0)) && ($this->SQLquery[$i+1][0] == "OR") ) $query = $query." (";
+
+			//field name eq sign and value
+			if ($this->SQLquery[$i][4] == "date")
+			{
+				$query = $query." ".$this->SQLquery[$i][1];
+				$date = getdate($this->SQLquery[$i][3]);
+				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$date["year"]."-".$date["mon"]."-".$date["mday"]."'");
+			}
 			elseif ($this->SQLquery[$i][1] == "topic")
-				$query = $query." (sotf_programmes.id = sotf_prog_topics.prog_id".
+			{
+				$query .= " (sotf_programmes.id = sotf_prog_topics.prog_id".
 				" and sotf_prog_topics.topic_id = sotf_topics.topic_id".
 				" and sotf_topics.language = '$lang'".
 				" and sotf_topics.topic_name";
-			else $query = $query." coalesce(".$this->SQLquery[$i][1].",'')";		//field name (coalesce => if value NULL terurns '')
-			$set = false;
-			switch ($this->SQLquery[$i][2]) {			//= < > != ...
-			    case "bigger":
-				$query = $query." >";
-			        break;
-			    case "smaller":
-				$query = $query." <";
-			        break;
-			    case "is":
-				$query = $query." =";
-			        break;
-			    case "contains":
-				$query = $query." LIKE '%".$this->SQLquery[$i][3]."%'";
-				$set = true;
-			        break;
-			    case "begins_with":
-				$query = $query." LIKE '".$this->SQLquery[$i][3]."%'";
-				$set = true;
-			        break;
-			    case "does_not_contain":
-				$query = $query." NOT LIKE '%".$this->SQLquery[$i][3]."%'";
-				$set = true;
-			        break;
-			    case "is_not_equal":
-				$query = $query." !=";
-			        break;
-			    case "is_not":
-				$query = $query." !=";
-			        break;
+				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."')");
 			}
-			
-			if (!$set)
+			elseif ($this->SQLquery[$i][1] == "title")
 			{
-				if ($this->SQLquery[$i][4] == "number") $query = $query." ".$this->SQLquery[$i][3];	//value
-				elseif ($this->SQLquery[$i][4] == "date")
-					{
-						$date = getdate($this->SQLquery[$i][3]);
-						$query = $query." '".$date["year"]."-".$date["mon"]."-".$date["mday"]."'";	//value
-					}
-				else $query = $query." '".$this->SQLquery[$i][3]."'";	//value
+				$query .= " (coalesce(title,'')";
+				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'");
+				$query .= " OR coalesce(alternative_title,'')";
+				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'");
+				$query .= " OR coalesce(episode_title,'')";
+				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'").")";
 			}
-			if ($this->SQLquery[$i][1] == "topic") $query.=")";
-			
-			if (($this->SQLquery[$i][0] == "OR") && ($this->SQLquery[$i+1][0] != "OR")) $query = $query." )";		//set end of round bracket
+			elseif (($this->SQLquery[$i][4] == "number") or ($this->SQLquery[$i][4] == "genre"))
+			{
+				$query .= " coalesce(".$this->SQLquery[$i][1].",'')";
+				$query .= $this->getEQSign($this->SQLquery[$i][2], $this->SQLquery[$i][3]);
+			}
+			else
+			{
+				$query .= " coalesce(".$this->SQLquery[$i][1].",'')";		//field name (coalesce => if value NULL terurns '')
+				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'");
+			}
+
+			//set end of round bracket
+			if (($this->SQLquery[$i][0] == "OR") && ($this->SQLquery[$i+1][0] != "OR")) $query = $query." )";
 		}
 //		$query = $query." LEFT JOIN sotf_topics ON sotf_topics.topic_id = sotf_programmes.??id";
 		$query = $query." ORDER BY ".$this->sort1.", ".$this->sort2;			//ISBN DESC, BOOK_TITLE 
+//print($query);
+//die();
 		return $query;
 	}
 
@@ -165,6 +181,12 @@ class sotf_AdvSearch
 		    case "expiry_date":
 			$new[4] = "date";
 		        break;
+		    case "modify_date":
+			$new[4] = "date";
+		        break;
+		    case "broadcast_date":
+			$new[4] = "date";
+		        break;
 		    case "owner":
 			$new[4] = "string";
 		        break;
@@ -174,8 +196,17 @@ class sotf_AdvSearch
 		    case "title":
 			$new[4] = "string";
 		        break;
+		    case "seriestitle":
+			$new[4] = "string";
+		        break;
+		    case "seriesdescription":
+			$new[4] = "string";
+		        break;
 		    case "keywords":
 			$new[4] = "string";
+		        break;
+		    case "genre_id":
+			$new[4] = "genre";
 		        break;
 		    case "abstract":
 			$new[4] = "string";
@@ -188,6 +219,12 @@ class sotf_AdvSearch
 		        break;
 		    case "contact_phone":
 			$new[4] = "string";
+		        break;
+		    case "spatial_coverage":
+			$new[4] = "string";
+		        break;
+		    case "temporal_coverage":
+			$new[4] = "date";
 		        break;
 		}
 
@@ -271,17 +308,24 @@ class sotf_AdvSearch
 		$SQLfiels[language] = $page->getlocalized("language");
 		$SQLfiels[author] = $page->getlocalized("author");
 		$SQLfiels[title] = $page->getlocalized("title");
+		$SQLfiels[seriestitle] = $page->getlocalized("seriestitle");
 		$SQLfiels[topic] = $page->getlocalized("topic");
-		$SQLfiels[keywords] = $page->getlocalized("keywords");
 		$SQLfiels[length] = $page->getlocalized("length");
 		$SQLfiels[series] = $page->getlocalized("series");
 		$SQLfiels[track] = $page->getlocalized("track");
-		$SQLfiels[entry_date] = $page->getlocalized("entry_date");
 		$SQLfiels[owner] = $page->getlocalized("owner");
+		$SQLfiels[genre_id] = $page->getlocalized("genre_id");
+		$SQLfiels[keywords] = $page->getlocalized("keywords");
 		$SQLfiels[abstract] = $page->getlocalized("abstract");
+		$SQLfiels[seriesdescription] = $page->getlocalized("seriesdescription");
+		$SQLfiels[entry_date] = $page->getlocalized("entry_date");
+		$SQLfiels[expiry_date] = $page->getlocalized("expiry_date");
+		$SQLfiels[modify_date] = $page->getlocalized("modify_date");
+		$SQLfiels[broadcast_date] = $page->getlocalized("broadcast_date");
+		$SQLfiels[spatial_coverage] = $page->getlocalized("spatial_coverage");
+		$SQLfiels[temporal_coverage] = $page->getlocalized("temporal_coverage");
 		$SQLfiels[contact_email] = $page->getlocalized("contact_email");
 		$SQLfiels[contact_phone] = $page->getlocalized("contact_phone");
-		$SQLfiels[expiry_date] = $page->getlocalized("expiry_date");
 		return $SQLfiels;
 	}
 
@@ -297,8 +341,17 @@ class sotf_AdvSearch
 	{
 		$stationsarray = sotf_Station::listStationNames();
 		$max = count($stationsarray);
-		for($i=0; $i<$max;$i++) $Stations[$stationsarray[$i][id]] = $stationsarray[$i][name];
+		for($i=0; $i<$max;$i++) $Stations[$stationsarray[$i][name]] = $stationsarray[$i][name];
 		return $Stations;
+	}
+
+	function GetGenres()		//returns all the genres
+	{
+		global $repository;
+		$genresarray = $repository->getGenres();
+		$max = count($genresarray);
+		for($i=0; $i<$max;$i++) $Genres[$genresarray[$i][id]] = $genresarray[$i][name];
+		return $Genres;
 	}
 
 	function GetEQdate()		//returns EQ options for dates

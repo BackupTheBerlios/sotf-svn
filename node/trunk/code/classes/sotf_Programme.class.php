@@ -73,9 +73,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		raiseError($stationName);
 	 if(empty($stationName))
 		raiseError("station with id '$stationId' does not exist");
+   if(empty($track))
+     $track = 'prg';
 	 $this->stationName = $stationName;
-    $this->set('entry_date', date('Y-m-d'));
-    $this->set('track', $track);
+   $this->set('entry_date', date('Y-m-d'));
+   $this->set('track', sotf_Utils::makeValidName($track, 32));
 	 $this->getNextAvailableTrackId();
 	 $count = 0;
     while($count < 20) {
@@ -118,26 +120,12 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     return $objects;
   }
 
-  function loadOtherFiles() {
-    if(empty($this->files)) {
-      $this->files = & new sotf_FileList();
-      $this->files->getDir($this->getOtherFilesDir());
-    }
-  }
-
-  function loadAudioFiles() {
-    if(empty($this->audioFiles)) {
-      $this->audioFiles = & new sotf_FileList();
-      $this->audioFiles->getAudioFromDir($this->getAudioDir());
-    }    
-  }
-
   /** deletes the program, and all its data and files
    */
   function delete(){
 	 $this->createDeletionRecord();
 	 sotf_Utils::erase($this->getDir());
-    return parent::delete();
+   return parent::delete();
   }
 
   /** returns the directory where programme files are stored */
@@ -155,6 +143,16 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     return $this->getDir() . '/files';
   }
 
+  function getFilePath($file) {
+    if(!$this->isLocal())
+      raiseError('no_such_file');
+    if($file->tablename == 'sotf_media_files' && $file->get('main_content')=='t') {
+      return $this->getAudioDir() . '/' . $file->get('filename');
+    } else {
+      return $this->getOtherFilesDir() . '/' . $file->get('filename');
+    }
+  }
+
   function isLocal() {
     return is_dir($this->getDir()); 
   }
@@ -165,14 +163,14 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   /** makes a new item available, announces to other nodes */
   function publish() {
-    $this->data['published'] = 't';
-    $this->save();
+    $this->set('published','true');
+    $this->update();
   }
 
   /** marks as withdrawn, but not deletes it */
   function withDraw() {
     $this->data['published'] = 'f';
-    $this->save();
+    $this->update();
   }
 
   /** sets icon for programme */
@@ -192,7 +190,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     $this->db->query("DELETE FROM sotf_stats WHERE id='$id'");
   }
 
-  function addStat($type) {
+  function addStat($filename, $type) {
     if($type != 'listens' && $type != 'downloads')
       die("addStat: type should be 'listens' or 'downloads'");
     $db = $this->db;
@@ -201,19 +199,24 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     $month = $now['mon'];
     $day = $now['mday'];
     $week = date('W');
-    $station = $this->get('station_id');
     $track = $id->trackId;
-    $id = $this->id;
-    $where = " WHERE id='$id' AND year='$year' AND month='$month' AND day='$day' AND week='$week'";
-    $listens = $db->getOne("SELECT count(*) FROM sotf_stats $where");
-    if($listens)
-      {
-        $db->query("UPDATE sotf_stats SET $type=$type+1 $where");
-      }
-    else
-      {
-        $db->query("INSERT INTO sotf_stats (id, station, year, month, week, day, $type) VALUES('$id','$station', '$year', '$month', '$week', '$day', '1')");
-      }
+    $where = " WHERE prog_id='$this->id' AND year='$year' AND month='$month' AND day='$day' AND week='$week'";
+    $id = $db->getOne("SELECT id FROM sotf_stats $where");
+    if($id) {
+      $obj = new sotf_NodeObject("sotf_stats", $id);
+      $obj->set($type, $obj->get($type)+1);
+      $obj->update();
+    } else {
+      $obj = new sotf_NodeObject("sotf_stats");
+      $obj->setAll(array('prog_id' => $this->id,
+                         'station_id' => $this->get('station_id'),
+                         'year' => $year,
+                         'month' => $month,
+                         'week' => $week,
+                         'day' => $day,
+                         $type => 1));
+      $obj->create();
+    }
   }
 
   function getStats() {
@@ -261,29 +264,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     return $results;
   }
 
-
-
-
-  /**
-  * List files available for an item
-  *
-  * @return	array	Array of filenames
-  */
-  function listOtherFiles() {
-    $this->loadOtherFiles();
-    return $this->files->getFileNames();
-  }
-
-  /**
-  * List audio files available for an item
-  *
-  * @return	array	Array of filenames
-  */
-  function listAudioFiles() {
-    $this->loadAudioFiles();
-    return $this->audioFiles->getFileNames();
-  }
-
   /** private
 	  Checks and creates subdirs if necessary.
    */
@@ -307,79 +287,33 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     }
   }
 
-  function getFilePath($id, $name) {
-	return $this->rootdir . '/'. $id->stationId . '/' . $id->date . '/' . $id->trackId . '/files/' . $name;
-  }
-
-  function getAudioFilePath($id, $name) {
-	return $this->rootdir . '/'. $id->stationId . '/' . $id->date . '/' . $id->trackId . '/audio/' . $name;
-  }
-
-  function deleteFile($name) {
-	$name = sotf_Utils::getFileFromPath($name);
-    $targetFile = $this->getOtherFilesDir() . '/'. $name;
-    if (unlink($targetFile))
+  function deleteFile($fid) {
+    $table = $this->repository->getTable($fid);
+    $file = new sotf_NodeObject($table, $fid);
+    if($table == 'sotf_media_files' && $file->get('main_content') == 't')
+      $filepath = $this->getAudioDir() . '/' . $file->get('filename');
+    else
+      $filepath = $this->getOtherFilesDir() . '/' . $file->get('filename');
+    $file->delete();
+    if (unlink($filepath))
       return 0;
     else
-      raiseError("Could not remove file $targetFile");
-  }
-
-  function deleteAudioFile($name) {
-    $targetFile = $this->getAudioDir() . '/'. $name;
-    if (unlink($targetFile))
-      return 0;
-    else
-      raiseError("Could not remove file $targetFile");
-  }
-
-  function moveFileToUserDir($filename, $copy=false) {
-    global $user;
-    $source = $this->getOtherFilesDir . '/' . $filename;
-    $target = $user->getUserDir() . '/' . $filename;
-    while (file_exists($target))
-      {
-        $target .= "_1";
-      }
-    if (is_file($source))
-      {
-        if($copy)
-          copy($source,$target);
-        else {
-          rename($source,$target);
-          //$this->files->remove($source);
-        }
-      }
-  }
-
-  function moveAudioToUserDir($filename, $copy=false) {
-    global $user;
-    $source = $this->getAudioDir . '/' . $filename;
-    $target = $user->getUserDir() . '/' . $filename;
-    while (file_exists($target))
-      {
-        $target .= "_1";
-      }
-    if (is_file($source))
-      {
-        if($copy)
-          copy($source,$target);
-        else {
-          rename($source,$target);
-          //$this->files->remove($source);
-        }
-      }
+      raiseError("Could not remove file $filepath");
   }
 
   function setAudio($filename, $copy=false) {
-    global $user;
+    global $user, $page;
+    $source = $filename;
     $filename = sotf_Utils::getFileFromPath($filename);
-    $source = $user->getUserDir().'/'. $filename;
     if(!is_file($source))
       raiseError("no such file: $source");
     $srcFile = new sotf_AudioFile($source);
-    $target = $this->getAudioDir() .  '/' . $this->track . '_' . $srcFile->getFormatFilename();
+    $target = $this->getAudioDir() .  '/' . $this->get('track') . '_' . $srcFile->getFormatFilename();
     if($srcFile->type != 'audio')
       raiseError("this is not an audio file");
+    if(is_file($target)) {
+      raiseError($page->getlocalized('format_already_present'));
+    }
     if($copy)
       $success = copy($source,$target);
     else
@@ -387,27 +321,19 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     if(!$success)
       raiseError("could not copy/move $source");
     // save into database
-    $this->saveFileInfo($target, false);
+    $this->saveFileInfo($target, true);
   }
 
-  function getAudio($filename, $copy=false) {
-    global $user;
-	$filename = sotf_Utils::getFileFromPath($filename);
-    //$source = $user->getUserDir().'/'. $filename;
-    $source = $this->getAudioDir() . '/' . $filename;
-    if(!is_file($source))
-      raiseError("no such file: $source");
-    $target = $user->getUserDir().'/'. $filename;
-    while (file_exists($target)) {
-      $target .= "_1";
-    }
-    if($copy)
-       $success = copy($source,$target);
-    else
-      $success = rename($source,$target);
-    if(!$success)
-      raiseError("could not copy/move $source");
-    return true;
+  /** Returns an array containing info about the available audio files. */
+  function listAudioFiles($mainContent = 'true') {
+    $objects = $this->db->getAll("SELECT * FROM sotf_media_files WHERE prog_id='$this->id' AND main_content='$mainContent' ORDER BY filename");
+    return $objects;
+  }
+
+  /** Returns an array containing info about the available other files. */
+  function listOtherFiles() {
+    $objects = $this->db->getAll("SELECT * FROM sotf_other_files WHERE prog_id='$this->id' ORDER BY filename");
+    return $objects;
   }
 
   function setOtherFile($filename, $copy=false) {
@@ -444,7 +370,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       $fileInfo->set('play_length', round($file->duration));
       $fileInfo->set('type', $file->type);
       $fileInfo->set('format', $file->getFormatFilename());
-      $fileInfo->set('main_content', 'false');
+      $fileInfo->set('main_content', $mainContent);
     } else {
       $fileInfo = new sotf_NodeObject('sotf_other_files');
     }
@@ -457,25 +383,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     $success = $fileInfo->create();
     if(!$success)
       raiseError("could not write into database");
-  }
-
-  function getOtherFile($filename, $copy=false) {
-    global $user;
-	$filename = sotf_Utils::getFileFromPath($filename);
-    $source = $this->getOtherFilesDir() . '/' . $filename;
-    if(!is_file($source))
-      raiseError("no such file: $source");
-    $target = $user->getUserDir() . '/' . $filename;
-    while (file_exists($target)) {
-      $target .= "_1";
-    }
-    if($copy)
-       $success = copy($source,$target);
-    else
-      $success = rename($source,$target);
-    if(!$success)
-      raiseError("could not copy/move $source");
-    return true;
   }
 
   function saveMetadataFile() {
@@ -492,21 +399,18 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     return true;
   }
 
-  /*
-  // returns all *published* metadata after the given timestamp excluding items from the given node 
-  function getSyncData($timestamp, $excludeNode) {
-    if($excludeNode) {
-      $sql = "SELECT i.*, s.node FROM sotf_items i, sotf_stations s WHERE i.station=s.station AND s.node != '$excludeNode' AND i.published='t'";
-      if($timestamp)
-	$sql .= " AND i.last_change >= '$timestamp' ";
-    } else {
-      $sql = "SELECT * FROM sotf_items";
-      if($timestamp)
-	$sql .= " WHERE last_change >= '$timestamp'";
-    }
-    return $db->getAll($sql, DB_FETCHMODE_ASSOC);
+  function sortTopicsByName($a, $b) {
+    return strcmp($a['name'], $b['name']);
   }
-*/
+
+  function getTopics() { 
+    $topics = $this->getAssociatedObjects('sotf_prog_topics', 'id');
+    for($i=0; $i<count($topics); $i++) {
+      $topics[$i]['name'] = $this->repository->getTopicName($topics[$i]['topic_id']);
+    }
+    usort($topics, array('sotf_Programme', 'sortTopicsByName'));
+    return $topics;
+  }
 
   /**
    * @method static countAll
@@ -515,6 +419,20 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function countAll() {
     global $db;
     return $db->getOne("SELECT count(*) FROM sotf_programmes WHERE published='t'");
+  }
+
+  /** static returns programmes owned/edited by current user */
+  function myProgrammes() {
+    global $permissions, $db, $user;
+		if(!isset($permissions->currentPermissions))
+      return NULL;  // not logged in yet
+    $sql = "SELECT  s.name AS station, se.title AS series, p.* FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id=se.id, sotf_user_permissions u WHERE u.user_id = '$user->id' AND u.object_id=p.id ORDER BY p.entry_date DESC";
+    $plist = $db->getAll($sql);
+    /*
+    foreach($plist as $item) {
+      $retval[] = new sotf_Programme($item['id'], $item);
+    }*/
+    return $plist;
   }
 
 
