@@ -5,8 +5,17 @@
 //////////////////////////////////////////////////////////////////////////
 
 // the sql connection URL
-$sqlDSN = 'pgsql://micsik@samson:5432/node';
-$sqlUserDSN = 'pgsql://micsik@samson:5432/sadm';
+$nodeDbUser = 'micsik';
+$nodeDbHost = 'samson';
+$nodeDbPort = '5432';
+$nodeDbPasswd = '';
+$nodeDbName = 'node';
+
+$userDbUser = 'micsik';
+$userDbHost = 'samson';
+$userDbPort = '5432';
+$userDbPasswd = '';
+$userDbName = 'sadm';
 
 //////////////////////////////////////////////////////////////////////////
 // MAIL --------------------------------------------
@@ -57,12 +66,6 @@ $smartydir = 'C:/sotf/helpers/smarty2.3';
 // where getid3 files are located
 $getid3dir = 'C:/sotf/helpers/getid3';
 
-// where phpdocgen files are located
-$phpdocgendir = 'C:/sotf/helpers/phpdocgen';
-
-// where perl is located
-$perl = 'C:/perl/bin/perl.exe';
-
 // where eZ xml files are located
 //$ezxmldir = '/ezxml';
 
@@ -93,7 +96,7 @@ $maxNumberOfStreams = 30;
 
 $logFile = "$basedir/code/logs/log";
 
-$debug = true;		// true for on, false for off
+$debug = true;		// here you can set the default on, false for off
 $debug_type = 'later';	// 'now' for output to browser
 			// 'log' for output to the admin log
 $sqlDebug = true;	// print all executed SQL statements into log
@@ -102,7 +105,9 @@ $sqlDebug = true;	// print all executed SQL statements into log
 // LANGUAGE SETUP  --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-$outputLanguages = array("en", "de");
+// selectable languages for user interface
+$outputLanguages = array("en");
+#$outputLanguages = array("en", "de");
 
 $defaultLanguage = "en";
 

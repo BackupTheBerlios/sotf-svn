@@ -68,6 +68,10 @@
                       | <a class="menu" href="{$ROOTDIR}/about.php">{#About#}</a> 
                       {if $DEBUG}
                       | <a class="menu" href="{$VIEWLOG}">View log</a>
+                      | <a target="doc" class="menu" href="/node/code/doc/php/">View doc</a>
+                      | <a target="doc" class="menu" href="debug.php?okURL={$smarty.server.REQUEST_URI|escape}">Debug off</a>
+                      {else}
+                      | <a target="doc" class="menu" href="debug.php?on=1&okURL={$smarty.server.REQUEST_URI|escape}">Debug on</a>
                       {/if}
                       <!-- end navbar -->
                   </td>

@@ -150,10 +150,40 @@ class sotf_Utils
 			$$varname = sotf_Utils::getParameter($varname);
 		}
 	}
+
+	/**
+	* Characters to replace in a query parameter to be used safely as filename
+	*
+	* @attribute 	array	$unsafeChars
+	*/
+  var $unsafeChars = array( "\\" => "_",
+                             "/" => "_",
+                             "|" => "_",
+                             ";" => "_",
+                             "{" => "_",
+                             "}" => "_",
+                             "[" => "_",
+                             "]" => "_",
+                             "~" => "_",
+                             "`" => "_",
+                             "'" => "_",
+                             "\"" => "_",
+                             "!" => "_",
+                             "@" => "_",
+                             "#" => "_",
+                             "\$" => "_",
+                             "%" => "_",
+                             "^" => "_",
+                             "&" => "_",
+                             "=" => "_",
+                             ":" => "_",
+                             "<" => "_",
+                             ">" => "_"
+                             );
 	
 	function killUnsafeChars($text)
 	{
-		return trim(strtr($text, "\\|;{}[]~`'\"!@#$%^&=:<>/", '                                        '));
+    return trim(strtr($text, $this->unsafeChars));
 	}
 	
 	function getFileSafeParameter($name)

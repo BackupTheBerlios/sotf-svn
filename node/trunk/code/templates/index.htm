@@ -102,67 +102,22 @@
           </td>
         </tr>
         <tr> 
-          <td bgcolor="#eeeeee"><strong><a href="search.php">{#Search#}</a>:<br>
+          <td bgcolor="#eeeeee"><strong>{#New_shows#}:<br>
             </strong> 
-            <form name="searchform" method="get" action="search.php">
               <table width="100%" border="0" cellspacing="0" cellpadding="2">
                 <tr> 
-                  <td width="60%"> 
-                    <input type="text" name="pattern" style="width: 100%">
+                  {if count($NEWS) gt 0 }
+                  {section name=i loop=$LOCAL_NEWS}
+                  <td>
+                    <a href=""><b>{$NEWS[i]->data.title}</b></a>
                   </td>
-                  <td width="20%"> 
-                    <select name="language" style="width: 100%">
-                        {html_options values=$searchLangs selected="any_language" output=$langNames}
-                    </select>
-                  </td>
-                  <td width="1"> 
-                    <input type="submit" name="search" value="{#Search#}">
-                  </td>
-                </tr>
-                <tr>
-                    <td><font size=2><A href="advsearch.php">{#advSearch#}</a></font>
-                    </tr>
-              </table>
-            </form>
-            <strong> </strong></td>
-        </tr>
-        <tr> 
-          <td><strong><a href="stations.php">{#Stations#}</a>:</strong><br>
-            <form name="stationsform" method="get" action="">
-              <table width="100%" border="0" cellspacing="0" cellpadding="2">
-                <tr> 
-                  <td width="100%"> 
-                    <select name="station" style="width: 100%">
-                          {html_options values=$STATIONS output=$STATIONS}
-                    </select>
-                  </td>
-                  <td width="1"> 
-                    <input type="submit" name="select_station" value="{#Go#}">
-                  </td>
+                  {/section}
+                  {else}
+                  <td>{#No_news#}</td>
+                  {/if}
                 </tr>
               </table>
-            </form>
-          </td>
-        </tr>
-        <tr> 
-          <td bgcolor="#eeeeee"><strong>{#topics#}:</strong><br>
-            <form name="topicsform" method="get" action="">
-              <table width="100%" border="0" cellspacing="0" cellpadding="2">
-                <tr> 
-                  <td width="100%"> 
-                    <select name="topic" style="width: 100%">
-                          <option name="1">Politics</option>
-                          <option name="2">Health</option>
-                          <option name="3">Leisure</option>
-                    </select>
-                  </td>
-                  <td width="1"> 
-                    <input type="submit" name="select_topic" value="{#Go#}">
-                  </td>
-                </tr>
-              </table>
-            </form>
-          </td>
+           </td>
         </tr>
       </table>
     </td>
@@ -170,39 +125,59 @@
               <!-- <p><strong>{#recent_uploads#}:</strong></p> -->
       <table width="40" border="0" cellspacing="0" cellpadding="2">
         <tr> 
-          <td nowrap bgcolor="#CCCCCC"><strong>{#new_local_shows#}</strong></td>
+          <td nowrap bgcolor="#CCCCCC"><strong><A href="advsearch.php">{#Search#}</a></strong></td>
         </tr>
       </table>
       <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#CCCCCC">
         <tr> 
-            {if count($LOCAL_NEWS) gt 0 }
-            {section name=i loop=$LOCAL_NEWS}
-            <td bgcolor="#FFFFFF">
-              <a href=""><b>{$LOCAL_NEWS[i]->data.title}</b></a>
-            </td>
-            {/section}
-            {else}
-            <td bgcolor="#FFFFFF">{#No_local_news#}</td>
-            {/if}
-        </tr>
+            <form name="searchform" method="get" action="search.php">
+              <td bgcolor="#FFFFFF">
+                <input type="text" name="pattern" style="width: 100%">
+                <select name="language" style="width: 100%">
+                  {html_options values=$searchLangs selected="any_language" output=$langNames}
+                </select>
+                <input type="submit" name="search" value="{#Search#}">
+              </td>
+              </form>
+          </tr>
       </table>
       <br>
       <table width="40" border="0" cellspacing="0" cellpadding="2">
         <tr> 
-          <td nowrap bgcolor="#CCCCCC"><strong>{#new_network_shows#}</strong></td>
+          <td nowrap bgcolor="#CCCCCC"><strong><a href="stations.php">{#Stations#}</a>:</strong></td>
         </tr>
       </table>
       <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#CCCCCC">
         <tr> 
-            {if count($OTHER_NEWS) gt 0 }
-            {section name=i loop=$OTHER_NEWS}
-            <td bgcolor="#FFFFFF">
-              <a href=""><b>{$OTHER_NEWS[i]->data.title}</b></a>
-            </td>
-            {/section}
-            {else}
-            <td bgcolor="#FFFFFF">{#No_other_news#}</td>
-            {/if}
+            <form name="stationsform" method="get" action="stations.php">
+                <td width="100%" bgcolor="#FFFFFF"> 
+                    <select name="station" style="width: 100%">
+                          {html_options values=$STATIONS output=$STATIONS}
+                    </select>
+                    <input type="submit" name="select_station" value="{#Go#}">
+                  </td>
+            </form>
+        </tr>
+      </table>
+
+      <br>
+      <table width="40" border="0" cellspacing="0" cellpadding="2">
+        <tr> 
+          <td nowrap bgcolor="#CCCCCC"><strong><a href="topics.php">{#topics#}</a></strong></td>
+        </tr>
+      </table>
+      <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#CCCCCC">
+        <tr> 
+            <form name="topicsform" method="get" action="topics.php">
+                  <td width="100%" bgcolor="#FFFFFF"> 
+                    <select name="topic" style="width: 100%">
+                          <option name="1">Politics</option>
+                          <option name="2">Health</option>
+                          <option name="3">Leisure</option>
+                    </select>
+                    <input type="submit" name="select_topic" value="{#Go#}">
+                  </td>
+            </form>
         </tr>
       </table>
     </td>

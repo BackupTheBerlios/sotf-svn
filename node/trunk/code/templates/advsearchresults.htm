@@ -3,11 +3,11 @@
 <INPUT type="hidden" name="SQLquerySerial" value="{$SQLquerySerial}">
 
 <TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="80%" BGCOLOR="{#searchBgColor1#}">
-	<TR BGCOLOR="{#searchBgColor1#}">
+	<TR>
 		<TD COLSPAN=4>{#your_query_is#}:</TD>
 	</TR>
 	<TR>
-		<TD">&nbsp;&nbsp;</TD>
+		<TD>&nbsp;&nbsp;</TD>
 		<TD BGCOLOR="#FFFFFF" align=center COLSPAN=2>
 		{section name=i loop=$SQLquery}
 		{if $smarty.section.i.index != 0}{$HumanReadable[i][0]}{/if}
@@ -20,11 +20,23 @@
 		</TD>
 		<TD>&nbsp;&nbsp;</TD>
 	<TR>
+		<TD COLSPAN=4>&nbsp;</TD>
+	</TR>
+	<TR>
 		<TD>&nbsp;</TD>
-		<TD ALIGN="left"><INPUT type="submit" name="refresh" value="{#refresh#}"></TD>
-		<TD ALIGN="right"><INPUT type="submit" name="back" value="{#back#}"></TD>
+		<TD ALIGN="center" BGCOLOR="#FFFFFF"><INPUT type="submit" name="back" value="{#back#}"></TD>
+		<TD ALIGN="center" BGCOLOR="#FFFFFF">
+			<INPUT type="submit" name="first" value="{#first#}">&nbsp;
+			<INPUT type="submit" name="prev" value="{#prev#}">&nbsp;
+			<INPUT type="submit" name="refresh" value="{#refresh#}">&nbsp;
+			<INPUT type="submit" name="next" value="{#next#}">
+			<INPUT type="submit" name="last" value="{#last#}">
+		</TD>
 		<TD>&nbsp;</TD>
-		</TR>
+	</TR>
+	<TR>
+		<TD COLSPAN=4>&nbsp;</TD>
+	</TR>
 </TABLE>
 
 <BR />

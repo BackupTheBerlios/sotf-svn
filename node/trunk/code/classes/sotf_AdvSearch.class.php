@@ -2,9 +2,8 @@
 /**
 * This class represents a query for the advanced search
 *
-* @uthor Mate Pataki MTA SZTAKI DSD
+* @author Mate Pataki MTA SZTAKI DSD
 *
-* @package streamonthefly/node
 */
 class sotf_AdvSearch
 {

@@ -71,7 +71,7 @@ include('config.inc.php');
 //////////////////////////////////////////////////////////////////////////
 
  
-// this is a way to remotely switch debugging on
+// these are ways to remotely switch debugging on
 if($_GET['debug'] || $_POST['debug']) {
   error_log("Debugging turned on remotely!",0);
   $debug = true;		// true for on, false for off
@@ -79,6 +79,10 @@ if($_GET['debug'] || $_POST['debug']) {
                                 // 'log' for output to the admin log
   $sqlDebug = true;	// print all executed SQL statements into log
   $smartyDebug = true;	// enable compile check and debugging console for smarty
+}
+if($_COOKIE['debug']) {
+  $debug = $_COOKIE['debug'] == 'yes';
+  debug("debug set from cookie to", $debug);
 }
 
 ini_set("error_log", $logFile);
@@ -89,6 +93,19 @@ if($debug)
 {
 	error_log("\n---------------------------------------------------------------------------------\n" .  getenv("REQUEST_URI") . "\n",3, $logFile);
 	error_log(getenv('REMOTE_HOST') . ": " . getenv('HTTP_USER_AGENT') ,0);
+  foreach($_GET as $key => $value) {
+    error_log("GET: $key = $value",0);
+  }
+  foreach($_POST as $key => $value) {
+    error_log("POST: $key = $value",0);
+  }
+  foreach($_COOKIE as $key => $value) {
+    error_log("COOKIE: $key = $value",0);
+  }
+  foreach($_ENV as $key => $value) {
+    error_log("ENV: $key = $value",0);
+  }
+
 }
 
 // the base URL for the whole site
@@ -151,6 +168,10 @@ function raiseError($msg) {
 }
 
 // create database connections
+
+$sqlDSN = "pgsql://$nodeDbUser:$nodeDbPasswd@$nodeDbHost:$nodeDbPort/$nodeDbName";
+$sqlUserDSN = "pgsql://$userDbUser:$userDbPasswd@$userDbHost:$userDbPort/$userDbName";
+
 $db = db_Wrap::getDBConn($sqlDSN, false);
 if (!$db or DB::isError($db))
 {
