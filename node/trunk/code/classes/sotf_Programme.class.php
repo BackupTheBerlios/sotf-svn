@@ -30,7 +30,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
    * constructor
    */
   function sotf_Programme($id='', $data='') {
-    $this->binaryFields = array('icon', 'jingle');
 	 $this->sotf_ComplexNodeObject('sotf_programmes', $id, $data);
 	 if($id) {
 		$this->stationName = $this->db->getOne("SELECT name FROM sotf_stations WHERE id='" . $this->get('station_id') . "'");
@@ -182,7 +181,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	{
     if(parent::setIcon($file)) {
       $iconFile = $this->getDir() . '/icon.png';
-      sotf_Utils::save($iconFile, $this->getBlob('icon'));
+      sotf_Utils::save($iconFile, $this->getIcon());
       return true;
 		} else
       return false;

@@ -6,8 +6,12 @@ include_once($peardir . '/DB/pgsql.php');
 
 class db_Wrap extends DB_pgsql {
 
+  var $debug = false;
+
 	function getDBConn($dsn, $persistent) {
 	  @$obj = & new db_Wrap;
+    global $debug;
+    $obj->debug = $debug;
 	  debug("DB","connecting to: $dsn");
 	  $dsninfo = DB::parseDSN($dsn);
 	  $obj->connect($dsninfo, $persistent);
@@ -18,8 +22,7 @@ class db_Wrap extends DB_pgsql {
 	  $err = parent::errorNative();
 	  error_log("PGSQL error: $err",0);
 	  error_log("in query: " . substr($this->last_query,0,254) ,0);
-    global $debug;
-    if($debug)
+    if($this->debug)
       raiseError("SQL error: $err in \n " . $this->last_query);
     else
       raiseError("SQL error!");
@@ -106,17 +109,14 @@ class db_Wrap extends DB_pgsql {
 
 	// just don't forget this...
 	function limitQuery($query, $from, $count) {
-	  global $sqlDebug;
-	  if($sqlDebug)
-	    debug("DB","LimitQuery: $from, $count, " . substr($query,0,254));
+	  if($this->debug)
+	    logger("DB","LimitQuery: $from, $count, " . substr($query,0,250));
 	  return parent::limitQuery($query, $from, $count);
 	}
 	
 	function query($query) {
-	  global $sqlDebug;
-	  if($sqlDebug) {
-      $q = substr($query, 0, 250);
-	    debug("DB","Query: $q");
+	  if($this->debug) {
+	    logger("DB","Query: " . substr($query, 0, 250));
     }
 	  return parent::query($query);
 	}
@@ -126,7 +126,7 @@ class db_Wrap extends DB_pgsql {
 	{
 		$bytea = "";
 		for ($i=0;$i<strlen($binary);$i++)
-			$bytea .= '\\\\'.sprintf("%03o",ord(substr($binary,$i,1)));
+			$bytea .= '\\'.sprintf("%03o",ord(substr($binary,$i,1)));
 		return $bytea;
 	}
 
@@ -139,14 +139,12 @@ class db_Wrap extends DB_pgsql {
 	/** Loads a binary object from database. SELECT $field FROM $table WHERE $idKey = '$id' */
 	function getBlob($table, $id, $idKey, $field)
 	{
-	    debug("DB","getBlob: Table: $table, ID: $id, IDKey: $idKey, Field: $field");
 		return $this->unescape_bytea(parent::getOne("SELECT $field FROM $table WHERE $idKey = '$id'"));
 	}
 
 	/** Stores a binary object in database. UPDATE $table SET $field = '$binary' WHERE $idKey = '$id' */
 	function setBlob($table, $id, $idKey, $field, $binary)
 	{
-	    debug("DB","setBlob: Table: $table, ID: $id, IDKey: $idKey, Field: $field");
 		parent::query("UPDATE $table SET $field = '".$this->escape_bytea($binary)."' WHERE $idKey = '$id'");
 	}
 

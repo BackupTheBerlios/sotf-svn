@@ -3,45 +3,46 @@
 // $Id$
 
 /**
-* 
-*
 * @author Andras Micsik - micsik@sztaki.hu
 */
 class sotf_Blob extends sotf_NodeObject {
 
+  /** constructor */
 	function sotf_Blob($id='', $data='') {
     $this->tablename = 'sotf_blobs';
+    $this->binaryFields = array('data');
 		$this->sotf_NodeObject($this->tablename, $id, $data);
 	}
 
-  /** static */
+  /** Static: returns the blob with the given name for the given object ('id'). */
   function findBlob($id, $name) {
     $obj = new sotf_Blob();
     $obj->set('object_id', $id);
     $obj->set('name', $name);
     $obj->find();
-    if($obj->exists())
-      return $obj->getBlob('data');
-    else
+    if($obj->exists()) {
+      return $obj->get('data');
+    } else
       return NULL;
   }
     
-  /** static */
+  /** Static: saves the blob for the given object ('id') under the given name. */
   function saveBlob($id, $name, $blob) {
     $obj = new sotf_Blob();
+    //debug("saving blob", substr($blob, 0, 40));
     $obj->set('object_id', $id);
     $obj->set('name', $name);
     $obj->find();
+    $obj->set('data', $blob);
     if($obj->exists()) {
       if($blob) {
-        $obj->setBlob('data', $blob);
+        $obj->update();
       } else {
         $obj->delete();
       }
     } else {
       if($blob) {
         $obj->create();
-        $obj->setBlob('data', $blob);
       }
       // else nothing to do!
     }
@@ -65,9 +66,11 @@ class sotf_Blob extends sotf_NodeObject {
       return false;
     // TODO: cache cleanup!
     ////debug("cache: ". filesize($fname) ."==" . strlen($icon));
+    /* todo: touch!
     if(is_readable($fname) && filesize($fname)==strlen($icon)) {
       return true;
     }
+    */
     debug("cached icon for", $id);
     sotf_Utils::save($fname, $icon);
     return true;

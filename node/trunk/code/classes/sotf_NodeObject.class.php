@@ -9,17 +9,17 @@
 */
 class sotf_NodeObject extends sotf_Object {
 
-  var $nodeId;
-  var $lastChange;
+  /** Contains the administrative fields needed for replication. */
+  var $internalData;
 
   /** constructor
    * @return (void)
    */
   function sotf_NodeObject($tablename, $id='', $data='') {
-    //debug("constructor", 'sotf_NodeObject');
     $this->sotf_Object($tablename, $id, $data);
-  }						
+  }
 
+  /** Generates the ID for a new persistent object. */
   function generateID() {
     $localId = $this->db->nextId($this->tablename);
     $id = sprintf("%03d%2s%d", $this->nodeId, $this->repository->getTableCode($this->tablename), $localId);
@@ -27,60 +27,42 @@ class sotf_NodeObject extends sotf_Object {
 	 return $id;
   }
 
-	function saveReplica() {
-    if($this->id) {
-      $changed = $this->db->getOne("SELECT last_change FROM sotf_node_objects WHERE id='$this->id' ");
-      //debug("changed", $changed);
-      //debug("lch", $this->lastChange);
-      if($changed) {
-        if($this->lastChange && (strtotime($this->lastChange) > strtotime($changed))) {
-          sotf_NodeObject::update();
-          reset($this->binaryFields);
-          while(list(,$field)=each($this->binaryFields)) {
-            sotf_Object::setBlob($field, $this->db->unescape_bytea($this->data[$field]));
-          }
-          debug("updated ", $this->id);
-          return true;
-        } else {
-          debug("arrived older version of", $this->id);
-          return false;
-        }
-      }
-    }
-		$success = sotf_NodeObject::create();
-    debug("created ", $this->id);
-    return $success;
-	}
-
+  /** Creates a new persistent replicated object */
   function create() {
-	 global $nodeId;
-   if(!$this->nodeId)
-     $this->nodeId = $nodeId;
-   if(!$this->lastChange)
-     $this->lastChange = $this->db->getTimestampTz();
+	 global $nodeId, $sotfVars;
    if(empty($this->id)) {
      $this->id = $this->generateID();
+     $this->adminObject->id = $this->id;
    }
-	 $this->db->query("INSERT INTO sotf_node_objects (id, node_id, last_change, arrived) VALUES('$this->id','$this->nodeId', '$this->lastChange', CURRENT_TIMESTAMP)");
+   $this->internalData['node_id'] = $nodeId;
+   $this->internalData['arrived_stamp'] = $sotfVars->get('sync_stamp', 0);
+   $this->internalData['arrived'] = $this->db->getTimestampTz();
+   $this->internalData['last_change'] = $this->db->getTimestampTz();
+   $this->internalData['change_stamp'] = 0;
+   $internalObj = new sotf_Object('sotf_node_objects', $this->id, $this->internalData);
+   $internalObj->create();
 	 $success = parent::create();
    if(!$success) {
-     $this->db->query("DELETE FROM sotf_node_objects WHERE id='$this->id'");
+     $internalObj->delete();
+     //$this->db->query("DELETE FROM sotf_node_objects WHERE id='$this->id'");
    }
    return $success;
   }
 
-  /** private */
-  function updateInternalData() {
-    if(!$this->lastChange)
-      $this->lastChange = $this->db->getTimestampTz();
-    $this->db->query("UPDATE sotf_node_objects SET last_change='$this->lastChange', arrived=CURRENT_TIMESTAMP WHERE id='" . $this->id . "'");
-  }
-
+  /** Updates the fields of the object. */
   function update() {
-	 parent::update();
-   $this->updateInternalData();
+    global $sotfVars;
+    parent::update();
+    $this->internalData = $this->db->getRow("SELECT * FROM sotf_node_objects WHERE id='$this->id' ");
+    $this->internalData['arrived_stamp'] = $sotfVars->get('sync_stamp', 0);
+    $this->internalData['arrived'] = $this->db->getTimestampTz();
+    $this->internalData['last_change'] = $this->db->getTimestampTz();
+    $this->internalData['change_stamp']++;
+    $internalObj = new sotf_Object('sotf_node_objects', $this->internalData['id'], $this->internalData);
+    $internalObj->update();
   }
 
+  /** Deletes the object. */
   function delete() {
 	 $this->db->query("DELETE FROM sotf_node_objects WHERE id='" . $this->id . "'");
    // propagate deletion to other nodes
@@ -90,21 +72,64 @@ class sotf_NodeObject extends sotf_Object {
    $this->db->query("DELETE FROM sotf_user_permissions WHERE object_id='$this->id'");
   }
 
-	function setBlob($prop_name, $prop_value) {
-    parent::setBlob($prop_name, $prop_value);
-    $this->updateInternalData();
-  }
-
+  /** Creates a deletion record: used when a replicated object is deleted. */
   function createDeletionRecord() {
 	 $dr = new sotf_NodeObject('sotf_deletions');
 	 $dr->set('del_id', $this->id);
 	 $dr->create();
   }
 
-  // **** sync support
+  /**************************************************
+   *
+   *                SYNC SUPPORT
+   *
+   **************************************************/
 
+  /** Private! Compares a replicated object to the local one and saves it if it's newer than the local. */
+	function saveReplica() {
+    global $sotfVars;
+    $oldData = $this->db->getRow("SELECT * FROM sotf_node_objects WHERE id='$this->id' ");
+    //debug("changed", $changed);
+    //debug("lch", $this->lastChange);
+    if(count($oldData) > 0) {
+      if($this->internalData['change_stamp'] && 
+         $this->internalData['change_stamp'] > $oldData['change_stamp']) {
+        // this is newer, save it
+        sotf_Object::update();
+        // save internal data
+        $this->internalData['arrived_stamp'] = $sotfVars->get('sync_stamp', 0);
+        $this->internalData['arrived'] = $this->db->getTimestampTz();
+        $internalObj = new sotf_Object('sotf_node_objects', $this->internalData['id'], $this->internalData);
+        $internalObj->update();
+        // save binary fields
+        /*
+        reset($this->binaryFields);
+        while(list(,$field)=each($this->binaryFields)) {
+          sotf_Object::setBlob($field, $this->db->unescape_bytea($this->data[$field]));
+        }
+        */
+        debug("updated ", $this->id);
+        return true;
+      } else {
+        debug("arrived older version of", $this->id);
+        return false;
+      }
+    } else {
+      $this->internalData['node_id'] = $nodeId;
+      $this->internalData['arrived_stamp'] = $sotfVars->get('sync_stamp', 0);
+      $this->internalData['arrived'] = $this->db->getTimestampTz();
+      $internalObj = new sotf_Object('sotf_node_objects', $this->id, $this->internalData);
+      $internalObj->create();
+      $success = sotf_Object::create();
+      if(!$success) {
+        $internalObj->delete();
+      }
+      debug("created ", $this->id);
+      return $success;
+    }
+	}
 
-  /** static */
+  /** Static: collects the objects to send to the neighbour node. */
   function getModifiedObjects($remoteNode, $date='', $updatedObjects = array()) {
     global $db, $nodeId, $repository;
     // an ordering in which objects should be retrieved because of foreign keys
@@ -129,7 +154,7 @@ class sotf_NodeObject extends sotf_Object {
     return $objects;
   }
 
-  /** static */
+  /** Static: saves the objects received from a neighbour node. */
   function saveModifiedObjects($objects) {
     global $repository;
     $updatedObjects = array();
@@ -138,8 +163,8 @@ class sotf_NodeObject extends sotf_Object {
       while(list(,$objData) = each($objects)) {
         debug("saving modified object", $objData['id']);
         $obj = $repository->getObject($objData['id'], $objData['data']);
-        $obj->lastChange = $objData['last_change'];
-        $obj->nodeId = $objData['node_id'];
+        unset($objData['data']);
+        $obj->internalData = $objData;
         reset($obj->data);
         // url decoding and else
         /*

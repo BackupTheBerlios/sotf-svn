@@ -1,32 +1,41 @@
 
-<h3>{#admin#}</h3>
+  <h3>{#admin#}</h3>
 
-<table class="tab">
-  <tr> 
-    <td nowrap class="tab">{#general_data#}</td>
-  </tr>
-</table>
-<table class="tabarea">
-<tr> 
-  <td class="tabarea"> 
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#general_data#}</td>
+    </tr>
+  </table>
+  <table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
         <table width="100%">
           <tr><td><a target="log" href="log.php?end">{#view_log#}</a>
-              <br>set debugging, tune server variables, etc. yet to be done
-<!--
-              <form method="post">
-                <table>
-                  <tr>
-                    <td>{#station_name#}:</td>
-                    <td><b><a href="showStation.php?stationid={$STATION_ID}">{$STATION}</a></b></td>
-                  </tr>
-                  <tr>
-                    <td>{#description#}:</td>
-                    <td><textarea onChange="if(value != defaultValue) data_changed++;" cols="50" rows="3" name="desc">{$STATION_DATA.description}</textarea></td>
-                  </tr>
+              <br /><a target="config" href="viewConfig.php">{#view_config#}</a>
+              <br /><a href="admin.php?retemplate=1">{#recompile_templates#}</a>
+                  <form method="post">
+                    <table>
+                      <tr>
+                        <td>
+                          <input type="checkbox" name="debug" {if $VARS.debug}CHECKED{/if} >
+                        </td>
+                        <td>{#debug_expl#}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" name="debug_smarty" {if $VARS.debug_smarty}CHECKED{/if} >
+                        </td>
+                        <td>{#debug_smarty_expl#}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="checkbox" name="debug_sql" {if $VARS.debug_sql}CHECKED{/if} >
+                        </td>
+                        <td>{#debug_sql_expl#}</td>
+                      </tr>
                 </table>
-                <input type="submit" name="save" value="{#save#}">
+                <input type="submit" name="save_debug" value="{#save#}">
               </form>
--->
             </td></tr>
         </table>
   </td>

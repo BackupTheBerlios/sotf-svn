@@ -35,7 +35,9 @@ CREATE TABLE "sotf_node_objects" (
 -- basis of replication + generic node object properties
 	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
+   "change_stamp" int2 DEFAULT 0,
 	"arrived" timestamptz DEFAULT CURRENT_TIMESTAMP,
+	"arrived_stamp" int DEFAULT 0,
 	"node_id" int2 --- REFERENCES sotf_nodes(node_id)
 );
 
@@ -72,6 +74,7 @@ CREATE TABLE "sotf_neighbours" (
 	"use_for_outgoing" bool DEFAULT 't'::bool,
 	"last_sync" timestamptz,
 	"last_sync_out" timestamptz,
+	"sync_stamp" int,
 	"errors" int,
 	"success" int,
 	"pending_url" varchar(200),

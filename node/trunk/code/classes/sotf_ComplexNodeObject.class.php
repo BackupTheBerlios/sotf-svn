@@ -9,8 +9,8 @@
 */
 class sotf_ComplexNodeObject extends sotf_NodeObject {
 
+  /** constructor */
 	function sotf_ComplexNodeObject($tablename, $id='', $data='') {
-		//debug("constructor", 'sotf_ComplexNodeObject');
 		$this->sotf_NodeObject($tablename, $id, $data);
 	}						
 
@@ -20,9 +20,10 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
     $retval['icon'] = sotf_Blob::cacheIcon($this->id);
     return $retval;
   }
-
-  //************************* ROLE MANAGEMENT **************************************
-
+  
+  /************************* ROLE MANAGEMENT **************************************/
+  
+  /** Retrieves roles and contacts associated with this object */
   function getRoles() {
     $roles = $this->db->getAll("SELECT id, contact_id, role_id FROM sotf_object_roles WHERE object_id='$this->id' ORDER BY role_id, contact_id");
     for($i=0; $i<count($roles); $i++) {
@@ -33,13 +34,14 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
     return $roles;
   }
 
-  /** static */
+  /** Static: finds the id for a given role (if exists). */
   function findRole($objectId, $contactId, $roleId) {
     global $db;
     $id = $db->getOne("SELECT id FROM sotf_object_roles WHERE object_id='$objectId' AND contact_id='$contactId' AND role_id='$roleId' ");
     return $id;
   }
 
+  /** Adds a new role/contact to the object. */
   function addRole($contactId, $roleId) {
     $ro = new sotfNodeObject("sotf_object_roles");
     $ro->set('contact_id', $contactId);
@@ -48,6 +50,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
     return $ro->id;
   }
 
+  /** Changes an existing role/contact pair. */
   function changeRole($id, $contactId, $roleId) {
     $ro = new sotfNodeObject("sotf_object_roles", $id);
     $ro->set('contact_id', $contactId);
@@ -101,12 +104,15 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
       } else
         raiseError("could not open icon file!");
     }
-    if(is_file($tmpfile))
-      unlink($tmpfile);
+    if(is_file($tmpfile)) {
+      debug("tmpfile", $tmpfile);
+      //unlink($tmpfile);
+    }
 		return true;
 	} // end func setIcon
 
 
+  /** Resizes the given image 'imgfile', converts it into PNG and puts it into 'newfile'. */
 	function prepareIcon($imgfile, $newfile, $iconWidth = 100, $iconHeight = 100) {
 		global $magickDir;
 		if ($imgfile == "") { 

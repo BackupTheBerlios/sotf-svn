@@ -5,14 +5,14 @@
 //////////////////////////////////////////////////////////////////////////
 
 // the sql connection URL
-$nodeDbUser = 'micsik';
-$nodeDbHost = 'samson';
+$nodeDbUser = 'user';
+$nodeDbHost = 'host';
 $nodeDbPort = '5432';
 $nodeDbPasswd = '';
 $nodeDbName = 'node';
 
-$userDbUser = 'micsik';
-$userDbHost = 'samson';
+$userDbUser = 'user';
+$userDbHost = 'host';
 $userDbPort = '5432';
 $userDbPasswd = '';
 $userDbName = 'sadm';
@@ -22,24 +22,17 @@ $userDbName = 'sadm';
 //////////////////////////////////////////////////////////////////////////
 
 // e-mails sent by the code will have this address as From:
-$mailFromAddress = "micsik@dsd.sztaki.hu";
+$mailFromAddress = "nobody@nowhere.com";
 
 //////////////////////////////////////////////////////////////////////////
 // NODE SETUP --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-// id of this node in the node network
-$nodeId = "1";
+// id of this node in the node network: you should negotiate this with others in the network
+$nodeId = "";
 
 // the short name of this node in the network
-$nodeName = "HU1";
-
-// the description of this node
-$nodeDesc = "This is the first Nigerian node.";
-
-// list of node ids with repository URLs
-$neighbourNodes = array( "HU2" => 'http://sotf.dsd.sztaki.hu'
-			);
+$nodeName = "XXd";
 
 //////////////////////////////////////////////////////////////////////////
 // FILE LOCATIONS  --------------------------------------------
@@ -109,26 +102,108 @@ $maxNumberOfStreams = 30;
 
 $logFile = "$basedir/code/logs/log";
 
-$debug = true;		// here you can set the default on, false for off
-$debug_type = 'later';	// 'now' for output to browser
-			// 'log' for output to the admin log
-$sqlDebug = true;	// print all executed SQL statements into log
-
 //////////////////////////////////////////////////////////////////////////
 // LANGUAGE SETUP  --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
 // selectable languages for user interface
 $outputLanguages = array("en");
-#$outputLanguages = array("en", "de");
 
 $defaultLanguage = "en";
 
+// languages appearing in language select boxes
 $languages = array("en", "de", "hu", "it", "es", "cz", "fr", "ro", "ru");
 
 //////////////////////////////////////////////////////////////////////////
 // AUDIO OPTIONS ------------------------------------------------------
 //////////////////////////////////////////////////////////////////////////
+
+/**
+* Specifies a directory where convert stuffs can be found.
+*
+* @package	StreamOnTheFly
+* @variable	string	$helperdir
+*/
+$helperdir = "C:\sotf\helpers";
+
+/**
+* Path of LAME.
+*
+* LAME can encode and decode MP3 files.
+* @package	StreamOnTheFly
+* @variable	string	$lame
+*/
+$lame = $helperdir."/lame";
+
+/**
+* Path of SoX.
+*
+* SoX is able to generate a stereo PCM data array from a mono one.
+* @package	StreamOnTheFly
+* @variable	string	$sox
+*/
+$sox = $helperdir."/sox";
+
+/**
+* Path of oggenc.
+*
+* oggenc can encode Ogg Vorbis audio streams.
+* @package	StreamOnTheFly
+* @variable	string	$oggenc
+*/
+$oggenc = $helperdir."/oggenc";
+
+/**
+* Path of oggdec.
+*
+* oggdec can decode Ogg Vorbis audio streams.
+* @package	StreamOnTheFly
+* @variable	string	$oggdec
+*/
+$oggdec = $helperdir."/oggdec";
+
+/**
+* Progress bar character.
+*
+* @package	StreamOnTheFly
+* @variable	string	$progressBarChar
+*/
+$progressBarChar = '|';
+
+/**
+* Length of progress bar.
+*
+* @package	StreamOnTheFly
+* @variable	string	$progressBarLength
+*/
+$progressBarLength = 100;
+
+/**
+* Perl regexp for parse oggenc output.
+*
+* @package	StreamOnTheFly
+* @variable	string	$oggencRegexp
+*/
+$oggencRegexp = "/^\t\[(...)\..%\].*$/";
+
+/**
+* Perl regexp for parse lame output during encode.
+*
+* @package	StreamOnTheFly
+* @variable	string	$lameencRegexp
+*/
+$lameencRegexp = "/^.{6}?\/.{7}?\((..)%\)\|.*$/";
+
+/**
+* Bitrate tolerance.
+*
+* Specifies how much can differ the current avarage bitrate
+* from one of the predefined values for variable bitrate streams.
+* @package	StreamOnTheFly
+* @variable	float	$bitrateTolerance
+*/
+$bitrateTolerance = 10;
+
 
 /**
 * Required formats.
@@ -155,16 +230,18 @@ $audioFormats = array(
 						'samplerate' => '22050'),
 				);
 
-$iconWidth = 100;
-$iconHeight = 100;
-
-$lame = 'C:/sotf/helpers/lame';
+// index of the preferred streaming format from the list above
+$preferredStreamingFormat = 1;
 
 //////////////////////////////////////////////////////////////////////////
 // MISC OPTIONS ------------------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-// known MIME types for uploaded documents
+// width and height of programme/station/series/contact icons
+$iconWidth = 100;
+$iconHeight = 100;
+
+// MIME types to determine type of uploaded documents
 $mimetypes = array(
 				'doc'=>'application/msword',
 				'gif'=>'image/gif',

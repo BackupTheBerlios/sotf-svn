@@ -14,7 +14,7 @@ function createGenre($id, $english) {
 }
 
 createGenre( 1, 'Actuality');
-createGenre( 2, 'Advert');
+createGenre( 2, 'Advert / jingle / spot');
 createGenre( 3, 'Announcement');
 createGenre( 4, 'Call-in show');
 createGenre( 5, 'Children / youth');
@@ -23,17 +23,18 @@ createGenre( 7, 'Dance');
 createGenre( 8, 'Documentary');
 createGenre( 9, 'Drama');
 createGenre( 10, 'Education');
-createGenre( 11, 'Feature / spot');
+createGenre( 11, 'Feature');
 createGenre( 12, 'Game show');
 createGenre( 13, 'Interview');
-createGenre( 14, 'Jingle');
+//createGenre( 14, 'Jingle');
 createGenre( 15, 'Magazine');
-createGenre( 16, 'Mocroprogramme');
+//createGenre( 16, 'Mocroprogramme');
 createGenre( 17, 'Music');
 createGenre( 18, 'News');
 createGenre( 19, 'Oral history / storytelling');
 createGenre( 20, 'Talk show / discussion');
 createGenre( 21, 'Training');
+createGenre( 22, 'Community media');
 
 ?>
 

@@ -37,23 +37,28 @@ function logError($msg) {
 /** this creates a log entry if $debug is true*/
 function debug($name, $msg='', $type='default') {
   global $debug, $debug_type;
+  // the $debug_type is set in config.inc.php
   if ($debug) {
-    // the $debug_type is set in config.inc.php
-    if ($type == 'default') {
-      $type = $debug_type;
-    }
-    if(is_array($msg)) {
-      ob_start();
-      //var_dump($msg);
-      print_r($msg);
-      $msg = "\n" . ob_get_contents();
-      ob_end_clean();
-    }
-    error_log(getHostName() . ": $name: $msg", 0);
-    if ($type == 'now' && headers_sent() ) {
-      echo "<small><pre> Debug: $name: $msg </pre></small><br>\n";
-    } 
+    logger($name, $msg, $type);
   }
+}
+
+/** this creates a log entry */
+function logger($name, $msg='', $type='default') {
+  if ($type == 'default') {
+    $type = $debug_type;
+  }
+  if(is_array($msg)) {
+    ob_start();
+    //var_dump($msg);
+    print_r($msg);
+    $msg = "\n" . ob_get_contents();
+    ob_end_clean();
+  }
+  error_log(getHostName() . ": $name: $msg", 0);
+  if ($type == 'now' && headers_sent() ) {
+    echo "<small><pre> Debug: $name: $msg </pre></small><br>\n";
+  } 
 }
 
 function getHostName()
@@ -68,44 +73,20 @@ function getHostName()
 require_once('config.inc.php');
 //////////////////////////////////////////////////////////////////////////
 
- 
-// these are ways to remotely switch debugging on
-if($_GET['debug'] || $_POST['debug']) {
-  error_log("Debugging turned on remotely!",0);
-  $debug = true;		// true for on, false for off
-  $debug_type = 'now';	// 'now' for output to browser
-                                // 'log' for output to the admin log
-  $sqlDebug = true;	// print all executed SQL statements into log
-  $smartyDebug = true;	// enable compile check and debugging console for smarty
-}
+// this is valid only until we have an SQL connection to get persistent vars
+$debug = true;
+$debug_type = 'later';	// 'now' for output to browser
+
+/*
 if($_COOKIE['debug']) {
   $debug = $_COOKIE['debug'] == 'yes';
   debug("debug set from cookie to", $debug);
 }
+*/
 
 ini_set("error_log", $logFile);
 ini_set("log_errors", true);
 error_reporting (E_ALL ^ E_NOTICE);
-
-if($debug)
-{
-	error_log("\n---------------------------------------------------------------------------------\n" .  getenv("REQUEST_URI") . "\n",3, $logFile);
-	error_log(getenv('REMOTE_HOST') . ": " . getenv('HTTP_USER_AGENT') ,0);
-  error_log("REFERER: " . getenv('HTTP_REFERER'),0);
-  foreach($_GET as $key => $value) {
-    error_log("GET: $key = $value",0);
-  }
-  foreach($_POST as $key => $value) {
-    error_log("POST: $key = $value",0);
-  }
-  foreach($_COOKIE as $key => $value) {
-    error_log("COOKIE: $key = $value",0);
-  }
-  //  foreach($_ENV as $key => $value) {
-  //  error_log("ENV: $key = $value",0);
-  //}
-
-}
 
 // the base URL for the whole site
 $rootdir = 'http://' . $_SERVER['HTTP_HOST'] . $localPrefix;
@@ -204,14 +185,42 @@ if (DB::isError($userdb))
 }
 $userdb->setFetchmode(DB_FETCHMODE_ASSOC);
 
+// persistent server variables
+$sotfVars = new sotf_Vars($db, 'sotf_vars');
+
+$debug = $sotfVars->get('debug', 0);
+
+$userdb->debug = $sotfVars->get('debug_sql', 0);
+$db->debug = $sotfVars->get('debug_sql', 0);
+
+if($debug)
+{
+	//error_log("\n---------------------------------------------------------------------------------\n" .  getenv("REQUEST_URI") . "\n",3, $logFile);
+  error_log("REQUEST_URI: " . getenv("REQUEST_URI"), 0);
+	error_log(getenv('REMOTE_HOST') . ": " . getenv('HTTP_USER_AGENT') ,0);
+  error_log("REFERER: " . getenv('HTTP_REFERER'),0);
+  foreach($_GET as $key => $value) {
+    error_log("GET: $key = $value",0);
+  }
+  foreach($_POST as $key => $value) {
+    error_log("POST: $key = $value",0);
+  }
+  foreach($_COOKIE as $key => $value) {
+    error_log("COOKIE: $key = $value",0);
+  }
+  //  foreach($_ENV as $key => $value) {
+  //  error_log("ENV: $key = $value",0);
+  //}
+}
+
 // configure smarty for HTML output
 $smarty = new Smarty;
 $smarty->template_dir = "$basedir/code/templates";
 $smarty->compile_dir = "$basedir/code/templates_c";
 $smarty->config_dir = "$basedir/code/configs";
-$smarty->compile_check = $debug;
-$smarty->debugging = $debug;
-$smarty->show_info_include = $debug;
+$smarty->compile_check = $sotfVars->get('debug_smarty', 0);
+$smarty->debugging = $sotfVars->get('debug_smarty', 0);
+$smarty->show_info_include = $sotfVars->get('debug_smarty', 0);
 
 // this object contains various utilities
 $utils = new sotf_Utils;
@@ -221,9 +230,6 @@ $page = new sotf_Page;
 
 // permissions object is for managing and asking for permissions
 $permissions = new sotf_Permission;
-
-// persistent server variables
-$sotfVars = new sotf_Vars($db, 'sotf_vars');
 
 // the repository of radio stations
 $repository = new sotf_Repository($repositoryDir, $db);

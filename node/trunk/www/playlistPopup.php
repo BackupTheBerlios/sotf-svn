@@ -20,6 +20,7 @@ if (sotf_Utils::getParameter("close") == "true")
 
 	}
 	$page->redirect("closeAndRefresh.php");
+	//var_dump($lista);
 	//die("<HTML><HEAD></HEAD><BODY onload='javascript:window.opener.location.reload();window.close();'></BODY></HTML>");
 }
 

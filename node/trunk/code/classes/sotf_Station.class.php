@@ -16,7 +16,6 @@ class sotf_Station extends sotf_ComplexNodeObject {
 		 * @param string id id within node
 	 */
 	function sotf_Station($id='', $data=''){
-    $this->binaryFields = array('icon', 'jingle');
 		$this->sotf_ComplexNodeObject('sotf_stations', $id, $data);
 	}
 
@@ -90,7 +89,7 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	{
     if(parent::setIcon($file)) {
       $iconFile = $this->getStationDir() . '/icon.png';
-      sotf_Utils::save($iconFile, $this->getBlob('icon'));
+      sotf_Utils::save($iconFile, $this->getIcon());
       return true;
 		} else
       return false;
@@ -121,7 +120,6 @@ class sotf_Station extends sotf_ComplexNodeObject {
       raiseError("could not copy/move $source");
     return true;
     //TODO? save into database
-    //$this->setBlob('icon', file_get_contents($target));
 	}
 
 	/**

@@ -73,43 +73,45 @@ class sotf_Object {
 	function update() {
 		reset($this->data);
 		while(list($key,$val)=each($this->data)){
-			if($key != $this->idKey && !in_array($key, $this->binaryFields)) {
+			if($key != $this->idKey) {
 				if($val === NULL || $val == ''){
 					$my_sql[] = $key . " = NULL";
 				}else{
-					$my_sql[] = $key . " = '" . sotf_Utils::magicQuotes($val) . "'";
+          //dump($val, 'val');
+          if(in_array($key, $this->binaryFields)) {
+            //if(strpos($val, "'"))
+            //  raiseError("invalid character in binary field data");
+            $my_sql[] = $key . " = '". addslashes($val) . "'";
+          } else {
+            $my_sql[] = $key . " = '" . sotf_Utils::magicQuotes($val) . "'";
+          }
 				}
 			}
 		}
 		$my_sql = implode(", ", $my_sql);
 
-	 //execute the query
-	 $res = $this->db->query("UPDATE " . $this->tablename . " SET " . $my_sql . " WHERE " . $this->idKey . "='" . $this->id . "' ");
-	 
-	 //if the query is dead, stop executio, output error
-	 if(DB::isError($res)){
-		raiseError($res);
-	 }
-	}
-
-  function updateBinaryFields() {
-    reset($this->binaryFields);
-    while(list(,$field)=each($this->binaryFields)) {
-      $this->setBlob($field, $this->data[$field]);
+    //execute the query
+    $res = $this->db->query("UPDATE " . $this->tablename . " SET " . $my_sql . " WHERE " . $this->idKey . "='" . $this->id . "' ");
+    
+    //if the query is dead, stop executio, output error
+    if(DB::isError($res)){
+      raiseError($res);
     }
-  }
+	}
 
 	/** creates db record with all fields from 'data' */
 	function create() {
 		reset($this->data);
 		while(list($key,$val)=each($this->data)){
-			if(in_array($key, $this->binaryFields))
-				continue;
 			$keys[] = $key;
 			if($val === NULL || $val == '') {
 				$values[] = "NULL";
-			}else{
-				$values[] = "'" . sotf_Utils::magicQuotes($val) . "'";
+			} else {
+        if(in_array($key, $this->binaryFields)) {
+          $values[] = "'" . addslashes($val) . "'";
+        } else {
+          $values[] = "'" . sotf_Utils::magicQuotes($val) . "'";
+        }
 			}
 		}
 		if($this->id) {		//	because ''==0 in PHP :-(
@@ -124,8 +126,6 @@ class sotf_Object {
 		//execute query
 		$res = $this->db->query("INSERT INTO " . $this->tablename . "(" . $keys . ") VALUES(" . $values . ")");
 		
-    $this->updateBinaryFields();
-
 		//if the query is dead, stop executio, output error
 		if(DB::isError($res)){
 			addError($res);
@@ -161,7 +161,10 @@ class sotf_Object {
 			raiseError($res);
 		}
 		if (count($res) > 0) {
-      $this->setAll($res);
+      $this->data = $res;
+      if($this->data[$this->idKey] != $this->id) {
+        raiseError("returned id does not match with original id");
+      }
     } else {
 			logError("No such id: '$this->id' in '$this->tablename'");
       $this->data = array();
@@ -207,82 +210,22 @@ class sotf_Object {
 	/**
 	 * sotf :: set()
 	 * 
-	 * purpose: to set a property. If you want this property to
-	 *					be the object ID, pass TRUE as a third parameter
+	 * purpose: to set a property.
 	 * 
 	 * @return (void)
 	 */
-	function set($prop_name, $prop_value, $id=false){
+	function set($prop_name, $prop_value){
 		$this->changed = true;
+    if(in_array($prop_name, $this->binaryFields)) {
+      debug("set blob", $prop_name);
+      $prop_value = $this->db->escape_bytea($prop_value);
+    }
 		$this->data[$prop_name] = $prop_value;
-		if($id){
+		if($prop_name == $this->idKey) {
 			$this->id = $prop_value;
 		}
 	}
 
-	/**
-	 * sotf :: set()
-	 * 
-	 * purpose: to set a property. If you want this property to
-	 *					be the object ID, pass TRUE as a third parameter
-	 * 
-	 * @return (void)
-	 */
-	function setWithParam($prop_name, $param_name='', $id=false) {
-		if(!$param_name)
-			$param_name = $prop_name;
-		$this->set($prop_name, sotf_Utils::getParameter($param_name), $id);
-	}
-	
-	/**
-	 * sotf :: setBlob()
-	 * 
-	 * purpose: to set a binary property.
-	 * 
-	 * @return (void)
-	 */
-	function setBlob($prop_name, $prop_value){
-		if(empty($prop_value))
-			$v = 'NULL';
-		else
-			$v = "'" . sotf_Utils::magicQuotes($this->db->escape_bytea($prop_value)) . "'";
-		$res = $this->db->query("UPDATE " . $this->tablename . " SET $prop_name = $v WHERE " . $this->idKey . "='" . $this->id . "' ");
-		if(DB::isError($res))
-			raiseError("Error in setBlob: $res");
-		$this->data[$prop_name] = $v;
-	}
-	
-	/**
-	 * sotf::get()
-	 * 
-	 * purpose: to get a property, will return FALSE
-	 *					in case the property has not been set
-	 * 
-	 * @param	string	$prop_name	Undocumented by Alex
-	 * @return 
-	 */
-	function get($prop_name){
-		if(!isset($this->data[$prop_name])){
-			return false;
-		}
-		return $this->data[$prop_name];
-	}
-	
-	/**
-	 * sotf::getBlob()
-	 * 
-	 * purpose: to get a binary property
-	 * 
-	 * @param	string	$prop_name	Undocumented by Alex
-	 * @return 
-	 */
-	function getBlob($prop_name){
-		if(!isset($this->data[$prop_name])){
-			return false;
-		}
-		return $this->db->unescape_bytea($this->data[$prop_name]);
-	}
-	
 	/**
 	 * 
 	 * purpose: set the whole data array
@@ -296,8 +239,41 @@ class sotf_Object {
 		if($this->data[$this->idKey]) {
 			$this->id = $this->data[$this->idKey];
 		}
+    foreach($this->binaryFields as $bf) {
+      $this->data[$bf] = $this->db->escape_bytea($this->data[$bf]);
+    }
 		$this->changed = TRUE;
 		return true;
+	}
+
+	/** Sets field 'prop_name' with the value of the CGI parameter 'param_name'. 
+   * If 'param_name' is empty, 'prop_name' is used as parameter name.
+	 */
+	function setWithParam($prop_name, $param_name='') {
+		if(!$param_name)
+			$param_name = $prop_name;
+		$this->set($prop_name, sotf_Utils::getParameter($param_name));
+	}
+	
+	/**
+	 * sotf::get()
+	 * 
+	 * purpose: to get a property, will return FALSE
+	 *					in case the property has not been set
+	 * 
+	 * @return 
+	 */
+	function get($prop_name){
+		if(!isset($this->data[$prop_name])){
+			return false;
+		} else {
+      if(in_array($prop_name, $this->binaryFields)) {
+        debug("get blob", $prop_name);
+        return $this->db->unescape_bytea($this->data[$prop_name]);
+      } else {
+        return $this->data[$prop_name];
+      }
+    }
 	}
 	
 	/**
@@ -306,7 +282,11 @@ class sotf_Object {
 	 * @return (array)
 	 */
 	function getAll(){
-		return $this->data;
+		$retval = $this->data;
+    foreach($this->binaryFields as $bf) {
+      $retval[$bf] = $this->db->unescape_bytea($retval[$bf]);
+    }
+    return $retval;
 	}
 	
 	/**
@@ -315,11 +295,7 @@ class sotf_Object {
 	 * @return (array)
 	 */
 	function getKeys(){
-		reset($this->data);
-		while(list($key,$val)=each($this->data)){
-			$my_keys[] = $key;
-		}
-		return $my_keys;
+    return array_keys($this->data);
 	}
 	
 	/**

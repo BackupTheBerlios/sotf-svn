@@ -17,7 +17,6 @@ class sotf_Series extends sotf_ComplexNodeObject {
      * @param string id id within node
    */
   function sotf_Series($id='', $data='') {
-    $this->binaryFields = array('icon', 'jingle');
     $this->sotf_ComplexNodeObject('sotf_series', $id, $data);
     if($id) {
       //$this->stationName = $this->db->getOne("SELECT name FROM sotf_stations WHERE id='" . $this->get('station_id') . "'");

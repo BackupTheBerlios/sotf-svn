@@ -12,17 +12,33 @@ if (!hasPerm('node', "change")) {
   raiseError("You have no permission to change node settings!");
 }
 
-/*
+// recompile Smarty templates
+if(sotf_Utils::getParameter('retemplate')) {
+  $smarty->clear_compiled_tpl();
+  $page->redirect("admin.php");
+  exit;  
+}
+
 // save general data
+$save = sotf_Utils::getParameter('save_debug');
+if($save) {
+  $sotfVars->set('debug', sotf_Utils::getParameter('debug'));
+  $sotfVars->set('debug_sql', sotf_Utils::getParameter('debug_sql'));
+  $sotfVars->set('debug_smarty', sotf_Utils::getParameter('debug_smarty'));
+  $page->redirect("admin.php");
+  exit;
+}
+
+// save network data
 $save = sotf_Utils::getParameter('save');
 if($save) {
   $desc = sotf_Utils::getParameter('desc');
-  $st->set('description', $desc);
-  $st->update();
-  $page->redirect("editStation.php?stationid=$stationid");
+  $localNode = sotf_Node::getLocalNode();
+  $localNode->set('description', $desc);
+  $localNode->update();
+  $page->redirect("admin.php#network");
   exit;
 }
-*/
 
 // sync
 $sync = sotf_Utils::getParameter('sync');
@@ -89,6 +105,8 @@ $smarty->assign('NEIGHBOURS',$neighbourData);
 
 // user permissions: editors and managers
 $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized('node'));
+
+$smarty->assign("VARS", $sotfVars->getAll());
 
 $page->send();
 

@@ -24,11 +24,49 @@ if(empty($k))
 */
 
 
-//$prog = new sotf_Programme('001pr4');
+$series = new sotf_Series('001se1');
+$iconfile = 'C:/sotf/node/www/tmp/1043930362.png';
+
+$fp = fopen($iconfile,'rb');
+$data = fread($fp,filesize($iconfile));
+fclose($fp);
+
+//dump($data, 'data');
+
+//dump($db->unescape_bytea($db->escape_bytea($data), 'escaped'));
+dump($db->escape_bytea($data), 'escaped');
+//echo pg_host(1);
+
+//dump(pg_escape_bytea($data), 'escaped2');
+
+
+//exit;
+
+sotf_Blob::saveBlob($series->id, 'icon', $data);
+
+dump(sotf_Blob::findBlob($series->id, 'icon'), 'icon');
+
+/*
+$obj = new sotf_Blob();
+$obj->set('object_id', $series->id);
+$obj->set('name', 'icon');
+$obj->find();
+$obj->set('data', $data);
+*/
+
+//dump($obj->data['data'], 'objbol1');
+
+//$obj->update();
+
+//dump($obj->data['data'], 'objbol2');
+
+//dump($obj->get('data'), 'data2');
+
 //$prog->setBlob('icon', $prog->get('icon'));
 
 //echo "Icon saved";
 
+/*
 $ids = $db->getCol("select id from sotf_programmes");
 while(list(, $id) = each($ids)) {
   $obj = new sotf_Programme($id);
@@ -60,6 +98,8 @@ while(list(, $id) = each($ids)) {
   $obj->saveBlob('icon', $icon);
   echo "<br>icon saved for $id";
 }
+
+*/
 
 ?>
 
