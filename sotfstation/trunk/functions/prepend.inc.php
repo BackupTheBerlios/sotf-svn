@@ -2,7 +2,7 @@
 	/**
 	 * pageFinish() - to output contents of the SMARTY template to the screen
 	 * 
-	 * @return 
+	 * @return (echo)
 	 */
 	function pageFinish($action,$errorReporting=TRUE){
 		global $smarty,$myNav,$myError;
@@ -23,7 +23,7 @@
 	/**
 	 * pageFinishPopup() - same as above, but loaded in a pop-up window
 	 * 
-	 * @return 
+	 * @return (echo)
 	 */
 	function pageFinishPopup(){
 		global $smarty, $myError;

@@ -14,8 +14,8 @@
 	* either using the existing connection to SADM oresle make
 	* an XMLRCP call.
 	************************/
-	include("init.inc.php");							# include the global framwork
-	$myNav->add('Login','index.php');			# add entry to Navigation Bar Stack
+	include("init.inc.php");												# include the global framwork
+	$myNav->add($SECTION['LOGIN'],'index.php');			# add entry to Navigation Bar Stack
 	
 	//process login call
 	if($_POST['login']){

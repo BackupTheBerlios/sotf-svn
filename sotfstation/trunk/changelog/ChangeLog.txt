@@ -1,0 +1,21 @@
+Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
+
+************************************************************************************************
+ 08.11.2002
+************************************************************************************************
+
+Overall page generation framework is now fully integrated together with the garbage collector. Any errors spawned during page generation will be reported in a nice form to the user.
+
+Multilangiage support built in, which relies on the HTTP_ACCEPT_LANG global variable and will be by default set to english.
+
+Error lang file has been introduced.
+
+Failure of Local Database Connection will force the server down and spawn an error message. Failure in Remote Database Connection (SADM) will spawn an error message for the garbage collector.
+
+PHP error handler has been overriden with custom error handling routines.
+
+User Authentication runs through SADM, no matter whether it is on a local server or found remotely. In the latter case it will be accessed via XMLRPC. The two various access methods are seamless for the client and the best one should be choosen at setup time. Error reporting included.
+
+No Access page has been defined and linked to appropriate authentication handling routines
+
+Overall Navigation Menu has been linked with Access Parameters
