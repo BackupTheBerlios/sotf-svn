@@ -37,7 +37,7 @@
           </tr>
           {cycle name="progs" values="list1,list2" print=false advance=false}
           {foreach item=item from=$result}
-          <tr valign="top" class="{cycle name="progs"}">
+          <tr valign="top" class="{cycle name="progs"}" >
             <td width="1%">
               {if $item.icon }
                  <img src="{$CACHEDIR}/{$item.id}.png">

@@ -76,13 +76,13 @@ debug("sending url", $url);
 // send playlist to client
 header("Content-type: audio/x-mpegurl\n");
 //header("Content-transfer-encoding: binary\n");
-header("Content-length: " . strlen($url) . "\n");
+//header("Content-length: " . strlen($url) . "\n");
 	
 // send playlist
-echo $url;
+echo "$url";
 
 // save stats
-//$prg->addStat($file->get('filename'), 'listens');
+$prg->addStat($file->get('filename'), 'listens');
 
 $page->logRequest();
 

@@ -12,6 +12,15 @@ if (!hasPerm('node', "change")) {
   raiseError("You have no permission to change node settings!");
 }
 
+// update CVS
+if(sotf_Utils::getParameter('updatecvs')) {
+  chdir($basedir);
+  header("Content-type: text/plain\n");
+  system('cvs update');
+  //$page->redirect("admin.php");
+  exit;
+}
+
 // recompile Smarty templates
 if(sotf_Utils::getParameter('retemplate')) {
   $smarty->clear_compiled_tpl();
@@ -32,6 +41,7 @@ if($save) {
   $sotfVars->set('debug', sotf_Utils::getParameter('debug'));
   $sotfVars->set('debug_sql', sotf_Utils::getParameter('debug_sql'));
   $sotfVars->set('debug_smarty', sotf_Utils::getParameter('debug_smarty'));
+  $sotfVars->set('smarty_compile_check', sotf_Utils::getParameter('smarty_compile_check'));
   $page->redirect("admin.php");
   exit;
 }

@@ -411,11 +411,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       $fileInfo->set('type', $file->type);
       if(is_numeric($file->bitrate)) {
         // constant bitrate
-        $fileInfo->set('kbps', $file->bitrate);
+        $fileInfo->set('kbps', round($file->bitrate));
         $fileInfo->set('vbr', 'f');
       } else {
         // variable bitrate
-        $fileInfo->set('kbps', $file->average_bitrate);
+        $fileInfo->set('kbps', round($file->average_bitrate));
         $fileInfo->set('vbr', 't');
       }
       $fileInfo->set('format', $file->getFormatFilename());

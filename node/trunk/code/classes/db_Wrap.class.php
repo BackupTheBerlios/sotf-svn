@@ -15,6 +15,7 @@ class db_Wrap extends DB_pgsql {
   /** When debug is on, logged query texts will be truncated to this length. */
   var $traceLength = 350;
 
+  /*
 	function getDBConn($dsn, $persistent) {
 	  @$obj = & new db_Wrap;
     global $debug;
@@ -23,6 +24,15 @@ class db_Wrap extends DB_pgsql {
 	  $dsninfo = DB::parseDSN($dsn);
 	  $obj->connect($dsninfo, $persistent);
 	  return $obj;
+	}
+  */
+
+	function makeConnection($dsn, $persistent) {
+    if($this->debug)
+      logger("DB","connecting to: $dsn");
+	  $dsninfo = DB::parseDSN($dsn);
+	  $success = $this->connect($dsninfo, $persistent);
+    return $success;
 	}
 
 	function errorNative() {

@@ -50,8 +50,11 @@ class sotf_Page
 		$user = $this->user;
 
 		// determine language
-		if($this->user)
+		if($this->user) {
 		  $lang = $this->user->language;
+      if(!in_array($lang, $outputLanguages))
+        $lang = ''; // user's language is not allowed yet
+    }
 		if(!$lang && in_array($_SERVER['HTTP_ACCEPT_LANGUAGE'], $outputLanguages))
 		  $lang = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 		if(!$lang)

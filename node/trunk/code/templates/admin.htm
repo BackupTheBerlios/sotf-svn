@@ -14,6 +14,7 @@
               <br /><a target="config" href="viewConfig.php">{#view_config#}</a>
               <br /><a href="admin.php?retemplate=1">{#recompile_templates#}</a>
               <br /><a href="admin.php?updatetopics=1">{#update_topic_counts#}</a>
+              <br /><a href="admin.php?updatecvs=1">{#update_from_cvs#}</a>
                   <form method="post">
                     <table>
                       <tr>
@@ -24,15 +25,21 @@
                       </tr>
                       <tr>
                         <td>
+                          <input type="checkbox" name="debug_sql" {if $VARS.debug_sql}CHECKED{/if} >
+                        </td>
+                        <td>{#debug_sql_expl#}</td>
+                      </tr>
+                      <tr>
+                        <td>
                           <input type="checkbox" name="debug_smarty" {if $VARS.debug_smarty}CHECKED{/if} >
                         </td>
                         <td>{#debug_smarty_expl#}</td>
                       </tr>
                       <tr>
                         <td>
-                          <input type="checkbox" name="debug_sql" {if $VARS.debug_sql}CHECKED{/if} >
+                          <input type="checkbox" name="smarty_compile_check" {if $VARS.smarty_compile_check}CHECKED{/if} >
                         </td>
-                        <td>{#debug_sql_expl#}</td>
+                        <td>{#compile_check_expl#}</td>
                       </tr>
                 </table>
                 <input type="submit" name="save_debug" value="{#save#}">

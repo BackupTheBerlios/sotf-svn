@@ -74,7 +74,7 @@ require_once('config.inc.php');
 //////////////////////////////////////////////////////////////////////////
 
 // this is valid only until we have an SQL connection to get persistent vars
-$debug = true;
+$debug = $debug ? false : true;
 $debug_type = 'later';	// 'now' for output to browser
 
 if($debug) {
@@ -91,6 +91,8 @@ if($_COOKIE['debug']) {
 ini_set("error_log", $logFile);
 ini_set("log_errors", true);
 error_reporting (E_ALL ^ E_NOTICE);
+
+logger('debug', $debug);
 
 // the base URL for the whole site
 $rootdir = 'http://' . $_SERVER['HTTP_HOST'] . $localPrefix;
@@ -177,17 +179,22 @@ function hasPerm($object, $perm) {
 $sqlDSN = "pgsql://$nodeDbUser:$nodeDbPasswd@$nodeDbHost:$nodeDbPort/$nodeDbName";
 $sqlUserDSN = "pgsql://$userDbUser:$userDbPasswd@$userDbHost:$userDbPort/$userDbName";
 
-$db = db_Wrap::getDBConn($sqlDSN, false);
-if (!$db or DB::isError($db))
+$db = new db_Wrap;
+$db->debug = $debug;
+$success = $db->makeConnection($sqlDSN, false);
+if (DB::isError($success))
 {
-  die ("Node DB connection failed: " . $db->getMessage());
+  die ("Node DB connection to $sqlDSN failed: \n" . $success->getMessage());
 } 
 $db->setFetchmode(DB_FETCHMODE_ASSOC);
 
-$userdb = db_Wrap::getDBConn($sqlUserDSN, false);
-if (DB::isError($userdb))
+
+$userdb = new db_Wrap;
+$userdb->debug = $debug;
+$success = $userdb->makeConnection($sqlUserDSN, false);
+if (DB::isError($success))
 {
-  die ("User DB connection failed: " . $userdb->getMessage());
+  die ("User DB connection to $sqlUserDSN failed: \n" . $success->getMessage());
 }
 $userdb->setFetchmode(DB_FETCHMODE_ASSOC);
 
@@ -225,7 +232,7 @@ $smarty = new Smarty;
 $smarty->template_dir = "$basedir/code/templates";
 $smarty->compile_dir = "$basedir/code/templates_c";
 $smarty->config_dir = "$basedir/code/configs";
-$smarty->compile_check = $sotfVars->get('debug_smarty', 0);
+$smarty->compile_check = $sotfVars->get('smarty_compile_check', 0);
 $smarty->debugging = $sotfVars->get('debug_smarty', 0);
 $smarty->show_info_include = $sotfVars->get('debug_smarty', 0);
 
