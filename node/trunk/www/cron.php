@@ -60,7 +60,7 @@ while($entry = $dir->read()) {
 }
 $dir->close();
 foreach($XBMF as $xbmfFile) {
-	$id = sotf_Programme::importXBMF("$xbmfInDir/$xbmfFile");
+	$id = sotf_Programme::importXBMF("$xbmfInDir/$xbmfFile", $publishxbmf);
 	if($id) {
 		debug("CRON","Imported new XBMF: $xbmfFile");
     unlink("$xbmfInDir/$xbmfFile");
