@@ -1,0 +1,110 @@
+Undefined Topic
+development
+	agriculture
+	aid
+	capacity building
+	children
+	cities
+	community / local groups
+	education
+	emergency relief
+	energy
+	fisheries
+	food
+	gender
+	intermediate technology
+	international cooperation
+	labour / work
+	land
+	men
+	migration
+	old age / retirement
+	population
+	poverty
+	refugees
+	shelter/housing
+	social exclusion
+	tourism
+	transport
+	volunteering
+	water/sanitation
+	women
+	youth
+economy
+	business
+	consumption / consumerism
+	corporations
+	credit / investment
+	debt
+	finance
+	microcredit
+	social enterprise
+	trade
+environment
+	animals
+	atmosphere
+	biodiversity
+	climate change
+	conservation
+	environmental activism
+	forests
+	genetics
+	nuclear issues
+	oceans
+	pollution
+	renewable energy
+	rivers
+	rural life
+	soils
+health
+	aids
+	disease / treatment
+	infant mortality
+	malaria
+	narcotics
+	nutrition / malnutrition
+human rights
+	civil rights / civil liberties
+	disability
+	indigenous rights
+	race politics
+	religion
+	sexuality
+	social exclusion
+information & media
+	art
+	communications
+	culture
+	film
+	freedom of expression
+	internet
+	knowledge
+	media
+	radio
+	science
+	sport
+	television
+politics
+	activism / protest
+	civil society
+	class issues
+	codes of conduct
+	democracy
+	ethics / value systems
+	geopolitics
+	globalisation
+	governance
+	justice / crime
+	law
+	transparency / corruption
+	unionism / trade unions
+	United Nations
+war & peace
+	arms/military
+	conflict
+	conflict resolution
+	landmines
+	nuclear issues
+	peace
+	security
+	terrorism

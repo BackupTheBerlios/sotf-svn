@@ -22,7 +22,7 @@
                 </tr>
                 <tr bgcolor="#F4F4F4"> 
                   <td nowrap> <div align="right">*{#series_desc#}:</div></td>
-                  <td nowrap><textarea name="series_description" rows="5" wrap="VIRTUAL" class="myinput" id="series_description">{$submit_series_description}</textarea></td>
+                  <td nowrap><textarea name="series_description" class="myinput" id="series_description">{$submit_series_description}</textarea></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
                   <td colspan="2" nowrap bgcolor="#dddddd" class=whitesmall><strong>{#prog_data#}</strong></td>
@@ -56,7 +56,76 @@
                      {html_options options=$special_needs selected=$submit_special_needs}
                     </select></td>
                 </tr>
-                <tr bgcolor="#dddddd"> 
+                
+				<tr bgcolor="#dddddd"> 
+                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>SOTF 
+                      network meta data</strong></div></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">Alternative Title:</div></td>
+                  <td nowrap><input name="programme_title2" type="text" class="myinput" id="programme_title2" maxlength="255" value="{$submit_programme_title}"></td>
+                </tr>
+				
+				<tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">*Keywords (comma separated):</div></td>
+                  <td nowrap><input name="programme_title2" type="text" class="myinput" id="programme_title2" maxlength="255" value="{$submit_programme_title}"></td>
+                </tr>
+				
+				<tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*Programme Description:</div></td>
+                  <td nowrap><textarea name="programme_title2" rows="4" class="myinput" id="programme_title2">{$submit_programme_title}</textarea></td>
+                </tr>
+				
+				<tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">Contributors (comma separated):</div></td>
+                  <td nowrap><input name="programme_title2" type="text" class="myinput" id="programme_title2" maxlength="255" value="{$submit_programme_title}"></td>
+                </tr>
+				
+				<tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*Date Created:</div></td>
+                  <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=dcr 
+                    time=$stime}</td>
+                </tr>
+				
+				<tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">*Date Issued:</div></td>
+                  <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=dis 
+                    time=$stime}</td>
+                </tr>
+				
+				<tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*Type:</div></td>
+                  <td nowrap><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="1">Topic:</td>
+                        <td width="1">
+<select name="select">
+{html_options options=$sotf_topics selected=$submit_sotf_topic}
+                          </select>
+                        </td>
+                        <td width="1">&nbsp;Genre:</td>
+                        <td><select name="select2">
+								{html_options options=$sotf_genres selected=$submit_sotf_genre}
+                          </select></td>
+                      </tr>
+                    </table></td>
+                </tr>
+				
+				<tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">*Language:</div></td>
+                  <td nowrap><select name="select3">
+				  		{html_options options=$sotf_lang selected=$submit_sotf_lang_default}
+                    </select></td>
+                </tr>
+				
+				<tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*Rights:</div></td>
+                  <td nowrap><input name="programme_title2" type="text" class="myinput" id="programme_title2" maxlength="255" value="{$submit_programme_title}"></td>
+                </tr>
+				
+				
+				
+				<tr bgcolor="#dddddd"> 
                   <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#owner_data#}</strong></div></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 

@@ -71,6 +71,7 @@
 		case 'status':			{$sortstring = 'user_access.id';break;}
 		case 'involvement':	{$sortstring = 'involvement';break;}
 		case 'lastlogin':		{$sortstring = 'intime';break;}
+		case 'role':				{$sortstring = 'user_map.role';break;}
 		default:						{$sortstring = 'user_map.auth_id';}
 	}
 	
@@ -95,12 +96,13 @@
 																	user_map.auth_id AS id,
 																	user_map.name AS user_name,
 																	user_access.name AS access_name,
-																	count(series.id) AS involvement 
+																	count(series.id) AS involvement,
+																	user_map.role AS role 
 																	FROM
 																	user_map
 																	LEFT JOIN user_access ON (user_map.access_id = user_access.id)
 																	LEFT JOIN series ON (user_map.auth_id = series.owner)
-																	GROUP BY user_map.auth_id, user_map.name, user_access.name, user_access.id 
+																	GROUP BY user_map.auth_id, user_map.name, user_access.name, user_access.id, user_map.role
 																	ORDER BY $sortstring
 																	LIMIT " . $_SESSION['USER']->get("per_page") . " OFFSET $db_block
 																");

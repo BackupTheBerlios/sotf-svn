@@ -196,7 +196,7 @@
 	$smarty->assign(array(
 													"series_period" => array(1=>"Every 1st Week",2=>"Every 2nd Week",3=>"Every 3rd Week",4=>"Every 4th Week",5=>"Every Last Week",6=>"Every Week",7=>"Every Even Week",8=>"Every Odd Week"),
 													"series_active" => array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
-													"series_owner" => $db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name")
+													"series_owner" => $db->getAssoc("SELECT auth_id, name || ': '::\"varchar\" || role AS name FROM user_map WHERE access_id < 4 ORDER BY name")
 												));
 												
 	//page output :)	

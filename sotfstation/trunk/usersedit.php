@@ -19,14 +19,14 @@
 	if($_POST['Submit']){
 		$_POST = clean($_POST);
 		
-		if($db->getOne("SELECT access_id FROM user_map WHERE auth_id = '$_GET[id]'") == 1){
+		if($db->getOne("SELECT access_id FROM user_map WHERE auth_id = '$_GET[id]'") == 1 AND $_POST['access_level'] != 1){
 			if($db->getOne("SELECT count(*) FROM user_map WHERE access_id = 1")<=1){
 				$myError->add($ERR[14]);
 			}
 		}
 		
 		if($myError->getLength()==0){
-			$db->query("UPDATE user_map SET access_id = '$_POST[access_level]' WHERE auth_id = '$_GET[id]'");
+			$db->query("UPDATE user_map SET access_id = '$_POST[access_level]', role = '$_POST[role]' WHERE auth_id = '$_GET[id]'");
 			$smarty->assign(array("window_destroy"=>true,"destination"=>"users.php"));
 		}
 	}
@@ -37,6 +37,7 @@
 												"user_id"=>$myData['auth_id'],
 												"user_mail"=>$myData['mail'],
 												"submit_access_level"=>$myData['access_id'],
+												"submit_role"=>$myData['role'],
 												"user_fname"=>$myData['name']
 												));
 	
@@ -52,6 +53,10 @@
 	
 	//output possible access levels
 	$smarty->assign("access_levels",$db->getAssoc("SELECT id, name FROM user_access ORDER BY id"));
+	
+	//get roles
+	include('common/getroles.inc.php');
+	$smarty->assign("roles",$myroles);
 											
 	//page output :)	
 	pageFinishPopup('usersedit.htm');							# enter the desired template name as a parameter

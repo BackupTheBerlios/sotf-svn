@@ -29,6 +29,15 @@
 				  {html_options options=$access_levels selected=$submit_access_level}
                     </select></td>
                 </tr>
+				
+				 <tr bgcolor="#eeeeee"> 
+                  <td width="10%"> 
+                    <div align="right">{#role#}:</div></td>
+                  <td nowrap><select name="role" id="role" class="myselect">
+				  {html_options options=$roles selected=$submit_role}
+                    </select></td>
+                </tr>
+				
                 <tr bgcolor="#eeeeee"> 
                   <td width="10%" nowrap>
 <div align="right">{#real_name#}:</div></td>

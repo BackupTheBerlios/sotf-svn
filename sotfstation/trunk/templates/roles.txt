@@ -1,0 +1,21 @@
+Undefined Role
+Artist
+Author
+Commentator
+Composer
+Copyright Holder
+Correspondent
+Designer
+Director
+Editor
+Funder / Sponsor
+Interviewee
+Interviewer
+Narrator
+Participant
+Performer
+Producer
+Production Personnel
+Speaker
+Transcriber
+Translator

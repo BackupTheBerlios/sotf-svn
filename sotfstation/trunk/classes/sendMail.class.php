@@ -60,14 +60,14 @@
 		/********************
 		* Return all the CC recepients
 		**/
-		function getCC(){
+		function getCC2(){
 			return $this->cc;		
 		}
 		
 		/********************
 		* Return all the BCC recepients
 		**/
-		function getBCC(){
+		function getBCC2(){
 			return $this->bcc;
 		}
 		

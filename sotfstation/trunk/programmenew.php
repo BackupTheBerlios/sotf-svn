@@ -81,12 +81,51 @@
 		$smarty->assign("stime",$start_time);
 		$smarty->assign("time",$start_time + 60*60);
 		$smarty->assign("submit_series_owner",$_SESSION['USER']->get("auth_id"));
+		$smarty->assign("submit_sotf_lang_default","eng");
 	}
+	
+	//############### GET DATA FROM FILES ##############################################
+	//get language array
+	$file = fopen('templates/langs.txt', "r");
+	$contents = fread($file, filesize('templates/langs.txt'));
+	fclose($file);
+	$contents = explode("\n",$contents);
+	$langs = array();
+	reset($contents);
+	while(list($key,$val) = each($contents)){
+		$val = explode(";",$val);
+		$myKey = trim($val[1]);
+		$langs[$myKey] = trim($val[0]);
+	}
+	
+	//get topics array
+	$file = fopen('templates/topics.txt', "r");
+	$topics = fread($file, filesize('templates/topics.txt'));
+	fclose($file);
+	$topics = explode("\n",$topics);
+	reset($topics);
+	while(list($key,$val) = each($topics)){
+		$mytopics[$val] = str_replace("\t","-- ",ucfirst($val));
+	}
+	
+	//get genres array
+	$file = fopen('templates/genres.txt', "r");
+	$genres = fread($file, filesize('templates/genres.txt'));
+	fclose($file);
+	$genres = explode("\n",$genres);
+	reset($genres);
+	while(list($key,$val) = each($genres)){
+		$mygenres[$val] = $val;
+	}
+	//##### END GET DATA ########
 	
 	//assign default data to drop down boxes
 	$smarty->assign(array(
 													"special_needs" => array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
-													"series_owner" => $db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name")
+													"series_owner" => $db->getAssoc("SELECT auth_id, name || ': '::\"varchar\" || role AS name FROM user_map WHERE access_id < 4 ORDER BY name"),
+													"sotf_lang"	=> $langs,
+													"sotf_genres"	=> $mygenres,
+													"sotf_topics"	=> $mytopics
 												));
 												
 	//page output :)	

@@ -187,12 +187,14 @@
 				$get_stuff[] = $key . "=" . $val;
 			}
 			$get_stuff = implode("&",$get_stuff);
+		}else{
+			$my_id = $_GET['id'];
 		}
 		
 		//assign default data to drop down boxes (if admin)
 		$smarty->assign(array(
 													"special_needs" 				=> array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
-													"series_owner" 					=> $db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name"),
+													"series_owner" 					=> $db->getAssoc("SELECT auth_id, name || ': '::\"varchar\" || role AS name FROM user_map WHERE access_id < 4 ORDER BY name"),
 													"series_active" 				=> array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
 													"prog_active" 					=> array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
 													"submit_special_needs" 	=> $prog_special,

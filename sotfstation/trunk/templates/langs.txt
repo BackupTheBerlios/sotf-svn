@@ -1,0 +1,456 @@
+Abkhazian ; abk   
+Achinese ; ace   
+Acoli ; ach   
+Adangme ; ada   
+Afar ; aar   
+Afrihili ; afh   
+Afrikaans ; afr   
+Afro-Asiatic (Other) ; afa   
+Akan ; aka   
+Akkadian ; akk   
+Albanian ; alb   
+Aleut ; ale   
+Algonquian languages ; alg   
+Altaic (Other) ; tut   
+Amharic ; amh   
+Apache languages ; apa   
+Arabic ; ara   
+Aragonese ; arg   
+Aramaic ; arc   
+Arapaho ; arp   
+Araucanian ; arn   
+Arawak ; arw   
+Armenian ; arm   
+Artificial (Other) ; art   
+Assamese ; asm   
+Asturian ; ast   
+Athapascan languages ; ath   
+Australian languages ; aus   
+Austronesian (Other) ; map   
+Avaric ; ava   
+Avestan ; ave   
+Awadhi ; awa   
+Aymara ; aym   
+Azerbaijani ; aze   
+Bable ; ast   
+Balinese ; ban   
+Baltic (Other) ; bat   
+Baluchi ; bal   
+Bambara ; bam   
+Bamileke languages ; bai   
+Banda ; bad   
+Bantu (Other) ; bnt   
+Basa ; bas   
+Bashkir ; bak   
+Basque ; baq   
+Batak (Indonesia) ; btk   
+Beja ; bej   
+Belarusian ; bel   
+Bemba ; bem   
+Bengali ; ben   
+Berber (Other) ; ber   
+Bhojpuri ; bho   
+Bihari ; bih   
+Bikol ; bik   
+Bini ; bin   
+Bislama ; bis   
+Bokmal, Norwegian ; nob   
+Bosnian ; bos   
+Braj ; bra   
+Breton ; bre   
+Buginese ; bug   
+Bulgarian ; bul   
+Buriat ; bua   
+Burmese ; bur   
+Caddo ; cad   
+Carib ; car   
+Castilian, Spanish ; spa   
+Catalan ; cat   
+Caucasian (Other) ; cau   
+Cebuano ; ceb   
+Celtic (Other) ; cel   
+Central American Indian (Other) ; cai   
+Chagatai ; chg   
+Chamic languages ; cmc   
+Chamorro ; cha   
+Chechen ; che   
+Cherokee ; chr   
+Chewa, Chichewa, Nyanja ; nya   
+Cheyenne ; chy   
+Chibcha ; chb   
+Chinese ; chi   
+Chinook jargon ; chn   
+Chipewyan ; chp   
+Choctaw ; cho   
+Chuang, Zhuang ; zha   
+Church Slavic, Old Bulgarian ; chu   
+Chuukese ; chk   
+Chuvash ; chv   
+Coptic ; cop   
+Cornish ; cor   
+Corsican ; cos   
+Cree ; cre   
+Creek ; mus   
+Creoles and pidgins ; crp   
+Creoles and pidgins, English-based ; cpe   
+Creoles and pidgins, French-based ; cpf   
+Creoles and pidgins, Portuguese-based ; cpp   
+Croatian ; scr   
+Cushitic (Other) ; cus   
+Czech ; cze   
+Dakota ; dak   
+Danish ; dan   
+Dayak ; day   
+Delaware ; del   
+Dinka ; din   
+Divehi ; div   
+Dogri ; doi   
+Dogrib ; dgr   
+Dravidian (Other) ; dra   
+Duala ; dua   
+Dutch, Flemish ; dut   
+Dutch, Middle (ca. 1050-1350) ; dum   
+Dyula ; dyu   
+Dzongkha ; dzo
+Efik ; efi   
+Egyptian (Ancient) ; egy   
+Ekajuk ; eka   
+Elamite ; elx   
+English ; eng   
+English, Middle (1100-1500) ; enm   
+English, Old (ca.450-1100) ; ang   
+Esperanto ; epo   
+Estonian ; est   
+Ewe ; ewe   
+Ewondo ; ewo   
+Fang ; fan   
+Fanti ; fat   
+Faroese ; fao   
+Fijian ; fij   
+Finnish ; fin   
+Finno-Ugrian (Other) ; fiu   
+Flemish, Dutch ; dut   
+Fon ; fon   
+French ; fre   
+French, Middle (ca.1400-1600) ; frm   
+French, Old (842-ca.1400) ; fro   
+Frisian ; fry   
+Friulian ; fur   
+Fulah ; ful   
+Ga ; gaa   
+Gaelic, Scottish Gaelic ; gla   
+Gallegan ; glg   
+Ganda ; lug   
+Gayo ; gay   
+Gbaya ; gba   
+Geez ; gez   
+Georgian ; geo   
+German ; ger   
+German, Low ; nds   
+German, Middle High (ca.1050-1500) ; gmh   
+German, Old High (ca.750-1050) ; goh   
+Germanic (Other) ; gem   
+Gikuyu, Kikuyu ; kik   
+Gilbertese ; gil   
+Gondi ; gon   
+Gorontalo ; gor   
+Gothic ; got   
+Grebo ; grb   
+Greek, Ancient (to 1453) ; grc   
+Greek, Modern (1453-) ; gre   
+Greenlandic, Kalaallisut ; kal   
+Guarani ; grn   
+Gujarati ; guj   
+Gwich?in ; gwi   
+Haida ; hai   
+Hausa ; hau   
+Hawaiian ; haw   
+Hebrew ; heb   
+Herero ; her   
+Hiligaynon ; hil   
+Himachali ; him   
+Hindi ; hin   
+Hiri Motu ; hmo   
+Hittite ; hit   
+Hmong ; hmn   
+Hungarian ; hun   
+Hupa ; hup
+Iban ; iba   
+Icelandic ; ice   
+Ido ; ido   
+Igbo ; ibo   
+Ijo ; ijo   
+Iloko ; ilo   
+Inari Sami ; smn   
+Indic (Other) ; inc   
+Indo-European (Other) ; ine   
+Indonesian ; ind   
+Interlingua ; ina   
+Interlingue ; ile   
+Inuktitut ; iku   
+Inupiaq ; ipk   
+Iranian (Other) ; ira   
+Irish ; gle   
+Irish, Middle (900-1200) ; mga   
+Irish, Old (to 900) ; sga   
+Iroquoian languages ; iro   
+Italian ; ita   
+Japanese ; jpn   
+Javanese ; jav   
+Judeo-Arabic ; jrb   
+Judeo-Persian ; jpr   
+Kabyle ; kab   
+Kachin ; kac   
+Kalaallisut, Greenlandic ; kal   
+Kamba ; kam   
+Kannada ; kan   
+Kanuri ; kau   
+Kara-Kalpak ; kaa   
+Karen ; kar   
+Kashmiri ; kas   
+Kawi ; kaw   
+Kazakh ; kaz   
+Khasi ; kha   
+Khmer ; khm   
+Khoisan (Other) ; khi   
+Khotanese ; kho   
+Kikuyu, Gikuyu ; kik   
+Kimbundu ; kmb   
+Kinyarwanda ; kin   
+Kirghiz ; kir   
+Komi ; kom   
+Kongo ; kon   
+Konkani ; kok   
+Korean ; kor   
+Kosraean ; kos   
+Kpelle ; kpe   
+Kru ; kro   
+Kuanyama, Kwanyama ; kua   
+Kumyk ; kum   
+Kurdish ; kur   
+Kurukh ; kru   
+Kutenai ; kut   
+Kwanyama, Kuanyama ; kua   
+Ladino ; lad   
+Lahnda ; lah   
+Lamba ; lam   
+Lao ; lao   
+Latin ; lat   
+Latvian ; lav   
+Letzeburgesch, Luxembourgish ; ltz   
+Lezghian ; lez   
+Limburgan, Limburger, Limburgish ; lim   
+Lingala ; lin   
+Lithuanian ; lit   
+Low German, Low Saxon  ; nds   
+Lozi ; loz   
+Luba-Katanga ; lub   
+Luba-Lulua ; lua   
+Luiseno ; lui   
+Lule Sami ; smj   
+Lunda ; lun   
+Luo (Kenya and Tanzania) ; luo   
+Lushai ; lus   
+Luxembourgish, Letzeburgesch ; ltz   
+Macedonian ; mac   
+Madurese ; mad   
+Magahi ; mag   
+Maithili ; mai   
+Makasar ; mak   
+Malagasy ; mlg   
+Malay ; may   
+Malayalam ; mal   
+Maltese ; mlt   
+Manchu ; mnc   
+Mandar ; mdr   
+Mandingo ; man   
+Manipuri ; mni   
+Manobo languages ; mno   
+Manx ; glv   
+Maori ; mao   
+Marathi ; mar   
+Mari ; chm   
+Marshallese ; mah   
+Marwari ; mwr   
+Masai ; mas   
+Mayan languages ; myn   
+Mende ; men   
+Micmac ; mic   
+Minangkabau ; min   
+Mohawk ; moh   
+Moldavian ; mol   
+Mon-Khmer (Other) ; mkh   
+Mongo ; lol   
+Mongolian ; mon   
+Mossi ; mos   
+Munda languages ; mun   
+Nahuatl ; nah   
+Nauru ; nau   
+Navaho, Navajo ; nav   
+Navajo, Navaho ; nav   
+Ndebele, North ; nde   
+Ndebele, South ; nbl   
+Ndonga ; ndo   
+Neapolitan ; nap   
+Nepali ; nep   
+Newari ; new   
+Nias ; nia   
+Niger-Kordofanian (Other) ; nic   
+Nilo-Saharan (Other) ; ssa   
+Niuean ; niu   
+Norse, Old ; non   
+North American Indian (Other) ; nai   
+Northern Sami ; sme   
+North Ndebele ; nde   
+Norwegian ; nor   
+Norwegian Bokmal ; nob   
+Norwegian Nynorsk ; nno   
+Nubian languages ; nub   
+Nyamwezi ; nym   
+Nyanja, Chichewa, Chewa ; nya   
+Nyankole ; nyn   
+Nynorsk, Norwegian ; nno   
+Nyoro ; nyo   
+Nzima ; nzi
+Occitan (post 1500), Provencal ; oci   
+Ojibwa ; oji   
+Old Bulgarian, Old Slavonic ; chu   
+Oriya ; ori   
+Oromo ; orm   
+Osage ; osa   
+Ossetian, Ossetic ; oss   
+Ossetic, Ossetian ; oss   
+Otomian languages ; oto   
+Pahlavi ; pal   
+Palauan ; pau   
+Pali ; pli   
+Pampanga ; pam   
+Pangasinan ; pag   
+Panjabi ; pan   
+Papiamento ; pap   
+Papuan (Other) ; paa   
+Persian ; per   
+Persian, Old (ca.600-400 B.C.) ; peo   
+Philippine (Other) ; phi   
+Phoenician ; phn   
+Pohnpeian ; pon   
+Polish ; pol   
+Portuguese ; por   
+Prakrit languages ; pra   
+Provencal, Occitan (post 1500)  ; oci   
+Provencal, Old (to 1500) ; pro   
+Pushto ; pus
+Salishan languages ; sal   
+Samaritan Aramaic ; sam   
+Sami languages (Other) ; smi   
+Samoan ; smo   
+Sandawe ; sad   
+Sango ; sag   
+Sanskrit ; san   
+Santali ; sat   
+Sardinian ; srd   
+Sasak ; sas   
+Saxon, Low, German, Low ; nds   
+Scots ; sco   
+Scottish Gaelic, Gaelic ; gla   
+Selkup ; sel   
+Semitic (Other) ; sem   
+Serbian ; scc   
+Serer ; srr   
+Shan ; shn   
+Shona ; sna   
+Sidamo ; sid   
+Sign languages ; sgn   
+Siksika ; bla   
+Sindhi ; snd   
+Sinhalese ; sin   
+Sino-Tibetan (Other) ; sit   
+Siouan languages ; sio   
+Skolt Sami ; sms   
+Slave (Athapascan) ; den   
+Slavic (Other) ; sla   
+Slovak ; slo   
+Slovenian ; slv   
+Sogdian ; sog   
+Somali ; som   
+Songhai ; son   
+Soninke ; snk   
+Sorbian languages ; wen   
+Sotho, Northern ; nso   
+Sotho, Southern ; sot   
+South American Indian (Other) ; sai   
+Southern Sami ; sma   
+South Ndebele ; nbl   
+Spanish, Castilian ; spa   
+Sukuma ; suk   
+Sumerian ; sux   
+Sundanese ; sun   
+Susu ; sus   
+Swahili ; swa   
+Swati ; ssw   
+Swedish ; swe   
+Syriac ; syr   
+Tagalog ; tgl   
+Tahitian ; tah   
+Tai (Other) ; tai   
+Tajik ; tgk   
+Tamashek ; tmh   
+Tamil ; tam   
+Tatar ; tat   
+Telugu ; tel   
+Tereno ; ter   
+Tetum ; tet   
+Thai ; tha   
+Tibetan ; tib   
+Tigre ; tig   
+Tigrinya ; tir   
+Timne ; tem   
+Tiv ; tiv   
+Tlingit ; tli   
+Tok Pisin ; tpi   
+Tokelau ; tkl   
+Tonga (Nyasa) ; tog   
+Tonga (Tonga Islands) ; ton   
+Tsimshian ; tsi   
+Tsonga ; tso   
+Tswana ; tsn   
+Tumbuka ; tum   
+Tupi languages ; tup   
+Turkish ; tur   
+Turkish, Ottoman (1500-1928) ; ota   
+Turkmen ; tuk   
+Tuvalu ; tvl   
+Tuvinian ; tyv   
+Twi ; twi
+Ugaritic ; uga   
+Uighur ; uig   
+Ukrainian ; ukr   
+Umbundu ; umb   
+Undetermined ; und   
+Urdu ; urd   
+Uzbek ; uzb   
+Vai ; vai   
+Venda ; ven   
+Vietnamese ; vie   
+Volapuk ; vol   
+Votic ; vot   
+Wakashan languages ; wak   
+Walamo ; wal   
+Walloon ; wln   
+Waray ; war   
+Washo ; was   
+Welsh ; wel   
+Wolof ; wol   
+Xhosa ; xho   
+Yakut ; sah   
+Yao ; yao   
+Yapese ; yap   
+Yiddish ; yid   
+Yoruba ; yor   
+Yupik languages ; ypk   
+Zande ; znd   
+Zapotec ; zap   
+Zenaga ; zen   
+Zhuang, Chuang ; zha   
+Zulu ; zul   
+Zuni ; zun    
