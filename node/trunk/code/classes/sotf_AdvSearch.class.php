@@ -87,7 +87,7 @@ class sotf_AdvSearch
 		for($i=1; $i < $max; $i++)
 		{			//TODO: | char as a sepecial char so replace it
 			$term = explode("|B", $terms[$i]);
-			if (count($term == 5) AND in_array($term[1], $this->SQLfields))			//to be sure :-)
+			if (count($term == 5) AND in_array($term[1], $this->SQLFields))			//to be sure :-)
 				$this->SQLquery[]=$term;
 		}
 		return $this->SQLquery;
