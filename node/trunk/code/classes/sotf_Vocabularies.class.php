@@ -26,17 +26,19 @@ class sotf_Vocabularies {
 
   function getTopicName($topicId) {
     global $lang;
-    if($topicId) {
+    if(!empty($topicId)) {
       $db = $this->db;
       $name = $db->getOne("SELECT topic_name FROM sotf_topics WHERE topic_id='$topicId' AND language='$lang'");
+			if(!$name)
+				$name = '????';
       $tid = $db->getOne("SELECT supertopic FROM sotf_topic_tree_defs WHERE id='$topicId'");
       //debug("tid", "X${tid}X");
-      while($tid != '0') {
+      while($tid != '0' && $tid) {
         $n1 = $db->getOne("SELECT topic_name FROM sotf_topics WHERE topic_id='$tid' AND language='$lang'");
         $tid = $db->getOne("SELECT supertopic FROM sotf_topic_tree_defs WHERE id='$tid'");
-		  if($tid)
-			 $name = $n1 . ' / ' . $name;
-			//debug("tid", "X${tid}X");
+				if($tid)
+					$name = $n1 . ' / ' . $name;
+				//debug("tid", "X${tid}X");
       }
     } else {
       $name = '???';
