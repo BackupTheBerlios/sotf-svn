@@ -234,9 +234,11 @@ class sotf_Station extends sotf_ComplexNodeObject {
 			}
 		 }
 	  }
-	  reset($langs);
-	  while(list($k,)=each($langs)) {
-		 $langs[$k] = $page->getlocalized($k);
+	  if(is_array($langs)) {
+		 reset($langs);
+		 while(list($k,)=each($langs)) {
+			$langs[$k] = $page->getlocalized($k);
+		 }
 	  }
 	  return $langs;
 	}

@@ -595,14 +595,16 @@ INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'admin');
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('2', 'change');
 SELECT nextval('sotf_permissions_id_seq');
-INSERT INTO "sotf_permissions" ("id", "permission") VALUES('3', 'add_prog'); -- not used any more!
-SELECT nextval('sotf_permissions_id_seq');
+-- INSERT INTO "sotf_permissions" ("id", "permission") VALUES('3', 'add_prog'); -- not used any more!
+-- SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('4', 'create');
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('5', 'delete');
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('6', 'authorize');
 SELECT nextval('sotf_permissions_id_seq');
+
+-- collection of some useful sql statementsm no neeed to run these!
 
 -- alter table sotf_stats rename to sotf_stats_old
 -- insert into sotf_stats (prog_id, station_id, year, week, month, day, listens, downloads, visits) select prog_id, station_id, year, week, month, day, listens, downloads, visits from sotf_stats_old

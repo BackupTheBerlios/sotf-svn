@@ -785,8 +785,18 @@ if (RunTest($id, "Node administrator", 7)) // OR isset($install_node_admin))
 
   if($admin_name && $admin_pass) {
 	 $aid = $userdb->getOne("SELECT auth_id FROM authenticate WHERE username='$admin_name' AND passwd='$admin_pass'");
-	 $db->query("INSERT INTO sotf_user_prefs (id,username) VALUES($aid, '$admin_name')");
-	 $db->query("INSERT INTO sotf_user_permissions (object_id, user_id, permission_id) VALUES('node',$aid,1)");
+	 if(!$aid) {
+		trigger_error("Invalid username or password");
+	 } else {
+		$count = $db->getOne("SELECT count(*) FROM sotf_user_permissions WHERE user_id='$aid' AND object_id='node' AND permission_id='1'");
+		if($count==0) {
+		  $db->query("INSERT INTO sotf_user_permissions (object_id, user_id, permission_id) VALUES('node',$aid,1)");
+		}
+		$count = $db->getOne("SELECT count(*) FROM sotf_user_prefs WHERE id='$aid' OR username='$admin_name'");
+		if($count==0) {
+		  $db->query("INSERT INTO sotf_user_prefs (id,username) VALUES($aid, '$admin_name')");
+		}
+	 }
   }
 
   // check for correct node admin
