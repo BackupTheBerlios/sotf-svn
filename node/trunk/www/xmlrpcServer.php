@@ -1,4 +1,12 @@
 <?php
+/*  -*- tab-width: 3; indent-tabs-mode: 1; -*-
+ * $Id$
+ *
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
+
 require("init.inc.php");
 require_once("$classdir/rpc_Utils.class.php");
 
@@ -8,6 +16,8 @@ define("XMLRPC_ERR_NO_ACCESS", $xmlrpcerruser+2);
 
 // this can be long duty!
 set_time_limit(18000);
+// don't garble reply message with warnings in HTML
+ini_set("display_errors", 0);
 
 debug("--------------- XML-RPC SERVER STARTED -----------------------------------");
 

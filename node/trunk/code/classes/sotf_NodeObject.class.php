@@ -152,16 +152,19 @@ class sotf_NodeObject extends sotf_Object {
     //debug("OBJECTS1", $objects1);
     // collect object data for selected objects
     $objects = array();
-    while(list(,$obj) = each($objects1)) {
-      // don't send back the same object
-      if(!in_array($obj['id'], $updatedObjects)) {   
-        $tablename = $repository->getTable($obj['id']);
-        $data = $db->getRow("SELECT * FROM $tablename WHERE id = '" . $obj['id'] . "'");
-        // don't send occasional empty records
-        if(count($data) > 1) {         
-          $obj['data'] = $data;
-          $objects[] = $obj;
-          debug("sending modified object", $obj['id']);
+    if(count($objects1) > 0) {
+      reset($objects1);
+      while(list(,$obj) = each($objects1)) {
+        // don't send back the same object
+        if(!in_array($obj['id'], $updatedObjects)) {   
+          $tablename = $repository->getTable($obj['id']);
+          $data = $db->getRow("SELECT * FROM $tablename WHERE id = '" . $obj['id'] . "'");
+          // don't send occasional empty records
+          if(count($data) > 1) {         
+            $obj['data'] = $data;
+            $objects[] = $obj;
+            debug("sending modified object", $obj['id']);
+          }
         }
       }
     }
