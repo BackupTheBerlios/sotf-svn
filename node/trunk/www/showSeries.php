@@ -36,6 +36,7 @@ $page->setTitle($series->get('name'));
 $smarty->assign('SERIES_ID',$seriesid);
 $smarty->assign('SERIES_DATA',$series->getAllWithIcon());
 $smarty->assign('STATION_DATA',$station->getAllWithIcon());
+$smarty->assign('HOME_URL', sotf_Node::getHomeNodeRootUrl($series));
 $smarty->assign('ROLES', $series->getRoles());
 if($series->getJingle())
 	  $smarty->assign('JINGLE', 1);

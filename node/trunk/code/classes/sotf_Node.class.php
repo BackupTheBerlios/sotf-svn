@@ -42,15 +42,25 @@ class sotf_Node extends sotf_NodeObject {
 	function redirectToHomeNode($obj, $script) {
 	  global $page;
 
-	  // have to send user to home node of this programme
-	  $node = sotf_Node::getNodeById($obj->getNodeId());
-	  if(!$node) {
-		 raiseError("Could not find home node for programme: " . $prg->id);
-	  }
+	  $url = sotf_Node::getHomeNodeRootUrl($obj);
 	  $oldParams = substr(strstr(myGetenv("REQUEST_URI"), '.php'), 4);
-	  $url = $node->get('url') . "/$script" . $oldParams;
+	  $url = $url . "/$script" . $oldParams;
 	  $page->redirect($url);
 	  exit;
+	}
+
+	/** static */
+	function getHomeNodeRootUrl($obj) {
+	  if($obj->isLocal()) {
+		 global $config;
+		 return $config['rootUrl'];
+	  } else {
+		 $node = sotf_Node::getNodeById($obj->getNodeId());
+		 if(!$node) {
+			raiseError("Could not find home node for programme: " . $obj->id);
+		 }
+		 return $node->get('url');
+	  }
 	}
 
 	/** returns a list of all such objects: can be slow!!

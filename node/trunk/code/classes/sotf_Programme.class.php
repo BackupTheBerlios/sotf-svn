@@ -445,10 +445,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
    ************************************************/
 
   /** Returns an array containing info about the available audio files. */
-  function listAudioFiles($mainContent = 'true') {
+  function listAudioFiles($mainContent = 'true', $orderBy = 'filename') {
 	 global $db;
 
-	 $objects = $db->getAll("SELECT * FROM sotf_media_files WHERE prog_id='$this->id' AND main_content='$mainContent' ORDER BY filename");
+	 $objects = $db->getAll("SELECT * FROM sotf_media_files WHERE prog_id='$this->id' AND main_content='$mainContent' ORDER BY $orderBy");
 	 return $objects;
   }
 

@@ -21,9 +21,12 @@ set_time_limit(18000);
 ini_set("display_errors", 0);
 
 debug("--------------- XML-RPC SERVER STARTED -----------------------------------");
+if(preg_match('!methodName>(\S+)</methodName!',$HTTP_RAW_POST_DATA, $mm)) {
+  $methodName = $mm[1];
+}
 $headers = getallheaders();
 if($headers['Content-Length'])
-  debug("XML-RPC REQUEST SIZE: ", $headers['Content-Length']);
+  debug("XML-RPC REQUEST $methodName", $headers['Content-Length']);
 
 $map['sotf.sync'] = array('function' => 'syncResp');
 $map['sotf.forward'] = array('function' => 'forwardResp');

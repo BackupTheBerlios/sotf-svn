@@ -47,9 +47,13 @@ $file = & new sotf_File($filename);
 if ($file->type != "none")
 {
 	header("Content-type: " . $file->mimetype . "\n");
-	header("Content-transfer-encoding: binary\n"); 
 	header("Content-length: " . filesize($filename) . "\n");   
-
+	//if($mainAudio) {  //this is somehow needed for iPodder
+	//  header("Accept-Ranges: bytes");
+	//  header('ETag: "' . md5(file_get_contents($filename)) . '"');
+	//} else {
+	  header("Content-transfer-encoding: binary\n"); 
+	  //}
 	// send file
 	readfile($filename);
 }

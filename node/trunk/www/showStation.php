@@ -50,6 +50,7 @@ if($delprog) {
 $smarty->assign('STATION_ID',$stationid);
 $smarty->assign('STATION',$st->get('name'));
 $smarty->assign('STATION_DATA',$st->getAllWithIcon());
+$smarty->assign('HOME_URL', sotf_Node::getHomeNodeRootUrl($st));
 if($st->isLocal()) {
   $smarty->assign('IS_LOCAL',1);
 }

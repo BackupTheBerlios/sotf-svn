@@ -11,6 +11,7 @@
         </td>
         <td class="title2" width="10%" align="right" valign="bottom">
           {if $JINGLE}<a href="{$ROOT_URL}/listen.php?id={$SERIES_DATA.id}&jingle=1">{#jingle#}</a>, {/if}
+          <a href="{$HOME_URL}/podcast.php?series={$SERIES_DATA.id}">podcast</a><br />
           <a href="{$ROOT_URL}/rss.php?series={$SERIES_DATA.id}&uiLang={$LANG}">RSS</a><br />
           {if hasPerm($SERIES_DATA,'change') }
           <input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('{$ROOT_URL}/editSeries.php?seriesid={$SERIES_DATA.id}','EditSeries',550,550,true)">
