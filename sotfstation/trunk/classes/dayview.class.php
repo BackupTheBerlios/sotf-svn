@@ -100,7 +100,7 @@
 									 <img height=16 src=\"{class_root}templates/img/i-remindergray.gif\" width=24 border=0></td></tr></tbody>
                    </table></td></tr>
 									 <tr> 
-          <td><div align=\"right\"><img src=\"{class_root}templates/img/shadow1.gif\" width=\"289\" height=\"9\"></div></td>
+          <td><div align=\"right\"><img src=\"{class_root}templates/img/shadow1.gif\" height=\"9\"></div></td>
         </tr>
 									 </tbody></table>";
 									 

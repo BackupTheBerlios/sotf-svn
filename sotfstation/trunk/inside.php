@@ -25,7 +25,8 @@
 	
 	$myDay = new dayView();
 	$myDay->addBlock(1,'11:00','13:30','Da Bomb of da bombing clan');
-	$myDay->addBlock(2,'12:40','14:30','Asda',2,'alex');
+	$myDay->addBlock(2,'12:40','14:30','Asda',2,'Alex');
+	$myDay->addBlock(3,'9:40','10:30','Great Opening',3,'Da DeeJey');
 	$smarty->assign('day',$myDay->show());
 	
 	//create help message
