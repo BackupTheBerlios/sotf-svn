@@ -352,23 +352,19 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         <p>{#stats_may_be_old#}: {$STATS.last_change}</p>
         <table width="100%">
           <tr>
-            <td>
+            <td valign="top">
               <a name="stats"></a>
               <table>
-                <tr>
-                  <td>{#Visits#}:</td>
-                  <td>{if $STATS.visits}{$STATS.visits}{else}0{/if}</td>
+                <tr class="listhead">
+                  <th>{#Visits#}</th>
+                  <th>{#Listens#}</th>
+                  <th>{#Downloads#}</th> 
+                  <th>{#Rating#}</th> 
                 </tr>
                 <tr>
-                  <td>{#Listens#}:</td>
-                  <td>{if $STATS.listens}{$STATS.listens}{else}0{/if}</td>
-                </tr>
-                <tr>
-                  <td>{#Downloads#}:</td> 
-                  <td>{if $STATS.downloads}{$STATS.downloads}{else}0{/if}</td>
-                </tr>
-                <tr>
-                  <td>{#Rating#}:</td> 
+                  <td align="center">{$STATS.visits} ({$STATS.unique_visits})</td>
+                  <td>{$STATS.listens} ({$STATS.unique_listens})</td>
+                  <td>{$STATS.downloads} ({$STATS.unique_downloads})</td>
                   <td>{if $RATING}{$RATING.rating_value} ({#by#} {$RATING.rating_count}){else}-{/if}</td>
                 </tr>
                 {if $REFERENCES}

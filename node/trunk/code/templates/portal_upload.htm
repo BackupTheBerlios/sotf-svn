@@ -11,7 +11,7 @@
 {#portal_http#}:<br><input type="portal_http" name="portal_http" value="{$old_upload}" size="60"><br>
 <input type="hidden" name="type" value="{$type}"><br>
 <input type="hidden" name="data" value="{$data}"><br>
-<input type="submit" name="submit" value="{#ok#}">
+<input type="submit" name="submit" value="{if $type == "query"}{#upload_query#}{elseif $type == "prglist"}{#upload_playlist#}{else}{#upload#}{/if}" onclick="javascript:this.value='{#please_wait#}'">
 
 </form>
 </body>
