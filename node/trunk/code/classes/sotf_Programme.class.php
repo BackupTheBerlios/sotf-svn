@@ -123,7 +123,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   /** deletes the program, and all its data and files
    */
   function delete(){
-	 $this->createDeletionRecord();
 	 sotf_Utils::erase($this->getDir());
    return parent::delete();
   }

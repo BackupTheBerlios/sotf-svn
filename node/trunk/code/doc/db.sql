@@ -38,6 +38,8 @@ CREATE TABLE "sotf_node_objects" (
 	"node_id" int2 --- REFERENCES sotf_nodes(node_id)
 );
 
+CREATE SEQUENCE "sotf_nodes_seq";
+
 CREATE TABLE "sotf_nodes" (
 -- data about nodes in the network 
 -- REPLICATED

@@ -1,11 +1,9 @@
 <?php
-
-global $xmlrpcdir;
 include_once("$xmlrpcdir/xmlrpc.inc");  
 
 class rpc_Utils {
 
-function xmlrpcCall($url, $method, $params) {
+function call($url, $method, $params) {
   // xmlrpc encode parameters
   for($i=0;$i<count($params);$i++){
     if(get_class($params[$i]) != 'xmlrpcval') {
@@ -25,10 +23,10 @@ function xmlrpcCall($url, $method, $params) {
   // process response
   debug("XML-RPC Response", $response->serialize());
   if (!$response) {
-    debug("No response","probably host is unreachable");
+    logError("No response","probably host is unreachable");
   } elseif ($response->faultCode() != 0) {
     // there was an error
-    debug("Error response: ", $response->faultCode() . "  " . $response->faultString());
+    logError("Error response: ", $response->faultCode() . "  " . $response->faultString());
   } else {
     $retval = $response->value();
     if($retval)

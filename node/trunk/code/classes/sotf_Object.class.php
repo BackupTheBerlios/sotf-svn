@@ -59,15 +59,14 @@ class sotf_Object {
 	}
 
 	function save() {
-	 if($this->id) {
-		//$res = $this->db->getOne("SELECT count(*) AS tot FROM " . $this->tablename . " WHERE " . $this->idKey . "='" . $this->id . "' ");
-		//if(is_numeric($res) && $res > 0) { //UPDATE!
-		if($this->exists()) {
-			$this->update();
-		}
-	 } else {
+    if($this->id) {
+      $exists = $this->db->getOne("SELECT count(*) FROM " . $this->tablename . " WHERE " . $this->idKey . "='" . $this->id . "' ");
+      if($exists) {
+        $this->update();
+        return;
+      }
+    }
 		$this->create();
-	 }
 	}
 
 	/** updates fields in 'data' except binary fields */

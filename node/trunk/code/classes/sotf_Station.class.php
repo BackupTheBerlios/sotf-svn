@@ -48,8 +48,6 @@ class sotf_Station extends sotf_ComplexNodeObject {
 		// delete files from the repository
     debug("deleting: ", $this->getDir());
 		sotf_Utils::erase($this->getDir());
-		// propagate deletion to other nodes
-    $this->createDeletionRecord();
 		// delete from sql db
 		return parent::delete();
 	}

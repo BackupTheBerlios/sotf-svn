@@ -29,6 +29,11 @@ function dump($what, $name='')
 	echo "</PRE></TD></TR></TABLE>";
 }
 
+/** this creates a log entry */
+function logError($msg) {
+  error_log(getHostName() . "ERROR: $msg", 0);
+}
+
 /** this creates a log entry if $debug is true*/
 function debug($name, $msg='', $type='default') {
   global $debug, $debug_type;

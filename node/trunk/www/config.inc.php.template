@@ -78,6 +78,9 @@ $magickDir = 'C:/Program Files/ImageMagick';
 // Path to the class files
 $classdir = $basedir . '/code/classes';
 
+// Path to XML-RPC libraries
+$xmlrpcdir = $basedir . '/code/xmlrpc';
+
 // path to PHP scripts and images
 $wwwdir = $basedir . '/www';
 

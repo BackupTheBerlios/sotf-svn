@@ -11,7 +11,7 @@ require($classdir . '/sotf_Utils.class.php');
 /* This is for remote view of log file */
 
 $full = sotf_Utils::getParameter("full");
-$lines = sotf_Utils::getFileSafeParameter("lines");
+$lines = sotf_Utils::getParameter("lines");
 if(!$lines || !is_numeric($lines))
      $lines = 300;
 if($full) {

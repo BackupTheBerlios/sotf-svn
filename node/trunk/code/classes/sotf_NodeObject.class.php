@@ -9,6 +9,9 @@
 */
 class sotf_NodeObject extends sotf_Object {
 
+  var $nodeId;
+  var $lastChange;
+
   /** constructor
    * @return (void)
    */
@@ -25,22 +28,48 @@ class sotf_NodeObject extends sotf_Object {
 	 return $id;
   }
 
+	function saveReplica() {
+    if($this->id) {
+      $exists = $this->db->getOne("SELECT count(*) FROM " . $this->tablename . " WHERE " . $this->idKey . "='" . $this->id . "' ");
+      $changed = $this->db->getOne("SELECT last_change FROM sotf_node_object WHERE id='$this->id' ");
+      if($exists) {
+        if($this->lastChange && (strtotime($this->lastChange) > strtotime($changed))) {
+          $this->update();
+          debug("updated " $this->id);
+        } else {
+          debug("arrived older version of" $this->id);
+        }
+        return;
+      }
+    }
+		$this->create();
+    debug("created " $this->id);
+	}
+
   function create() {
 	 global $nodeId;
-	 $this->id = $this->generateID();
-	 $this->db->query("INSERT INTO sotf_node_objects (id, node_id) VALUES('" . $this->id . "','$nodeId')");
+   if(empty($this->id)) {
+     $this->id = $this->generateID();
+   }
+   if(!$this->nodeId)
+     $this->nodeId = $nodeId;
+   if(!$this->lastChange)
+     $this->lastChange = $this->db->getTimestampTz();
+	 $this->db->query("INSERT INTO sotf_node_objects (id, node_id, last_change) VALUES('$this->id','$this->nodeId', '$this->lastChange')");
 	 return parent::create();
   }
 
   function update() {
 	 parent::update();
-	 $this->db->query("UPDATE sotf_node_objects SET last_change='" . $this->db->getTimestampTz() . "' WHERE id='" . $this->id . "'");
+   if(!$this->lastChange)
+     $this->lastChange = $this->db->getTimestampTz();
+	 $this->db->query("UPDATE sotf_node_objects SET last_change='$this->lastChange' WHERE id='" . $this->id . "'");
   }
 
   function delete() {
-	 // delete access rights if any
-	 //$this->db->query("DELETE FROM sotf_user_groups WHERE object_id='" . $this->id . "'");
 	 $this->db->query("DELETE FROM sotf_node_objects WHERE id='" . $this->id . "'");
+   // propagate deletion to other nodes
+   $this->createDeletionRecord();
 	 //parent::delete();  // not needed because of cascading delete
   }
 
@@ -54,6 +83,51 @@ class sotf_NodeObject extends sotf_Object {
 	 $dr->set('del_id', $this->id);
 	 $dr->create();
   }
+
+  // **** sync support
+
+  /** static */
+  function getModifiedObjects($date, $localOnly = true) {
+    global $db, $nodeId;
+    if($localOnly)
+      $whereClause = "node_id='$nodeId'";
+    if($date && $localOnly)
+      $whereClause .= " AND ";
+    if($date)
+      $whereClause .= "last_change >= '$date'";
+    $objects1 = $db->getAll("SELECT * FROM sotf_node_objects WHERE $whereClause ORDER BY substring(id, 4, 2), id");
+    //debug("OBJECTS__1", $objects);
+    while(list(,$obj) = each($objects)) {
+      $tablename = $this->repository->getTable($obj['id']);
+      $data = $db->getRow("SELECT * FROM $tablename WHERE id = '" . $obj['id'] . "'");
+      if(count($data) > 1) {         // don't send occasional empty records
+        $obj['data'] = $data;
+        $objects[] = $obj;
+      }
+    }
+    //debug("OBJECTS__2", $objects);
+    return $objects;
+  }
+
+  /** static */
+  function saveModifiedObjects($objects) {
+    global $repository;
+    reset($objects);
+    while(list(,$objData) = each($objects)) {
+      debug("saving modified object", $objData['id']);
+      $tablename = $repository->getTable($objData['id']);
+      $obj = new sotf_NodeObject($tablename, $objData['id'], $objData['data']);
+      $obj->saveReplica();
+      // handle deletions
+      if($tablename == 'sotf_deletions') {
+        $delId = $obj->get('del_id');
+        debug("deleting object", $delId);
+        $obj = $repository->getObject($delId);
+        $obj->delete();
+      }
+    }
+  }
+  
 
 }
 

@@ -52,52 +52,6 @@ class sotf_Node extends sotf_NodeObject {
 		return $db->getOne("SELECT count(*) FROM sotf_nodes WHERE up='t'");
 	}
 
-
-	/**
-	* Adds a new administrator to the node.
-	*
-	* @param	string	$username	Username
-	* @return	boolean	Returns true if succeeded
-	* @use	$db
-	*/
-	function addAdmin($username)
-	{
-		global $db;
-
-		$user_id = sotf_User::getUserid($username);
-		if ($user_id !== false)
-		{
-			$sm = $db->getCol("SELECT user_id FROM sotf_user_permissions WHERE user_id='$user_id' AND object_id IS NULL");
-			if (count($sm) == 0)
-			{
-				$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission = 'admin'");	// get admin permission id
-				$db->query("INSERT INTO sotf_user_permissions (user_id, object_id, permission_id) VALUES('$user_id', NULL, $permission_id)");
-				return true;
-			}
-		}
-		return false;
-	} // end func addAdmin
-
-	/**
-	* Removes an administrator from the node.
-	*
-	* @param	string	$username	Username
-	* @return	boolean	Returns true if succeeded
-	* @use	$db
-	*/
-	function removeAdmin($username)
-	{
-		global $db;
-
-		$user_id = sotf_User::getUserid($username);
-		if ($user_id !== false)
-		{
-			$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission = 'admin'");	// get admin permission id
-			$db->query("DELETE FROM sotf_user_permissions WHERE user_id = $user_id AND object_id IS NULL");
-			return true;
-		}
-		return false;
-	} // end func removeAdmin
 }
 
 ?>

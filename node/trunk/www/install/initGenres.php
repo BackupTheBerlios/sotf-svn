@@ -1,5 +1,5 @@
 <?php
-require("init.inc.php");
+require("../init.inc.php");
 
 $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
 $db->query("DELETE FROM sotf_genres");
