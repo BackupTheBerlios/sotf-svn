@@ -19,7 +19,6 @@ startTiming();
 require_once('config.inc.php');
 //////////////////////////////////////////////////////////////////////////
 
-
 // this is valid only until we have an SQL connection to get persistent vars
 $config['debug'] = $config['debug'] ? false : true;
 $config['debugType'] = 'later';	// 'now' for output to browser
@@ -53,6 +52,7 @@ $config['cacheDir'] = $config['wwwdir'] . '/tmp/cache';
 $config['cacheUrl'] =  $config['rootUrl'] . '/tmp/cache';
 
 umask(0002);
+
 
 // load system files
 
@@ -236,5 +236,16 @@ $smarty->assign("UI_LANGS", $config['outputLanguages']);
 debug("action", $page->action);
 debug("lang", $lang);
 debug("userid", $user->id);
+
+// character encoding tricks
+/*
+if(!ini_set('default_charset', 'UTF-8')) {
+	logError("Could not change default charset");
+}
+debug("default_charset", ini_get('default_charset'));
+*/
+//if(!in_array($page->action, array('getFile','getIcon','getJingle','getUserFile','listen'))) {
+header("Content-Type: text/html; charset=UTF-8");
+
 
 ?>
