@@ -1,6 +1,15 @@
 <?php
 require("init.inc.php");
 
+require_once("$classdir/rpc_Utils.class.php");
+
+$rpc = new rpc_Utils;
+$rpc->debug = true;
+$response = $rpc->call($tamburineURL, 'version', '');
+
+
+
+/*
 require_once($classdir . '/unpackXML.class.php');
 
 $myPack = new unpackXML("$basedir/metasample.txt");	
@@ -22,6 +31,7 @@ sotf_Programme::importXBMF("$xbmfInDir/test.xbmf");
 
 
 exit;
+*/
 
 //echo "<br>getenv:" . getenv('REMOTE_ADDR');
 //echo "<br>_SERVER:" . $_SERVER['REMOTE_ADDR'];

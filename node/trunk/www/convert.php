@@ -170,6 +170,16 @@ function convertWithSox($cmd)
 	flush();
 }
 
+function checkFile($file) {
+  if(!is_readable($file)) {
+	 raiseError("conversion_failed");
+  }
+}
+
+function rmFile($file) {
+  unlink($file) or logError("Could not delete file: $file");
+}
+
 $id = sotf_Utils::getParameter('id'); 
 $index = sotf_Utils::getParameter('index'); 
 
@@ -216,11 +226,14 @@ if (($audioFormats[$index]['format'] == 'mp3') && ($audioFiles->list[$sourceinde
 	{
 		$tempname1 = getTempWavName();
 		decodeWithLame("$lame --decode \"$source\" \"$tempname1\"");
+		checkFile($tempname1);
 		$tempname2 = getTempWavName();
 		convertWithSox("$sox \"$tempname1\" -c2 \"$tempname2\"");
-		unlink($tempname1);
+		checkFile($tempname2);
+		rmFile($tempname1);
 		encodeWithLame("$lame --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname2\" \"$target\"");
-		unlink($tempname2);
+		checkFile($target);
+		rmFile($tempname2);
 	}
 	else
 	{
@@ -231,58 +244,70 @@ elseif (($audioFormats[$index]['format'] == 'ogg') && ($audioFiles->list[$source
 {
 	$tempname1 = getTempWavName();
 	decodeWithLame("$lame --decode \"$source\" \"$tempname1\"");
+	checkFile($tempname1);
 	if (($audioFormats[$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
 	{
 		$tempname2 = getTempWavName();
 		convertWithSox("$sox \"$tempname1\" -c2 \"$tempname2\"");
-		unlink($tempname1);
+		checkFile($tempname2);
+		rmFile($tempname1);
 		encodeWithOgg("$oggenc -b $bitrate -m $bitrate -M $bitrate --resample $samplerate -o \"$target\" \"$tempname2\"");
-		unlink($tempname2);
+		checkFile($target);
+		rmFile($tempname2);
 	}
 	else
 	{
 		if (($audioFormats[$index]['channels'] == 1) && ($audioFiles->list[$sourceindex]->channels == 2))
 			$addparam = "--downmix";
 		encodeWithOgg("$oggenc -b $bitrate -m $bitrate -M $bitrate --resample $samplerate $addparam -o \"$target\" \"$tempname1\"");
-		unlink($tempname1);
+		checkFile($target);
+		rmFile($tempname1);
 	}
 }
 elseif (($audioFormats[$index]['format'] == 'mp3') && ($audioFiles->list[$sourceindex]->format == 'ogg'))
 {
 	$tempname1 = getTempWavName();
 	decodeWithOgg("$oggdec -o \"$tempname1\" \"$source\"");
+	checkFile($tempname1);
 	if (($audioFormats[$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
 	{
 		$tempname2 = getTempWavName();
 		convertWithSox("$sox \"$tempname1\" -c2 \"$tempname2\"");
-		unlink($tempname1);
+		checkFile($tempname2);
+		rmFile($tempname1);
 		encodeWithLame("$lame --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname2\" \"$target\"");
-		unlink($tempname2);
+		checkFile($target);
+		rmFile($tempname2);
 	}
 	else
 	{
 		encodeWithLame("$lame --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname1\" \"$target\"");
-		unlink($tempname1);
+		checkFile($target);
+		rmFile($tempname1);
 	}
 }
 elseif (($audioFormats[$index]['format'] == 'ogg') && ($audioFiles->list[$sourceindex]->format == 'ogg'))
 {
 	$tempname1 = getTempWavName();
 	decodeWithOgg("$oggdec -o \"$tempname1\" \"$source\"");
+	checkFile($tempname1);
 	if (($audioFormats[$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
 	{
 		$tempname2 = getTempWavName();
 		convertWithSox("$sox \"$tempname1\" -c2 \"$tempname2\"");
-		unlink($tempname1);
+		checkFile($tempname2);
+		rmFile($tempname1);
 		encodeWithOgg("$oggenc -b $bitrate -m $bitrate -M $bitrate --resample $samplerate -o \"$target\" \"$tempname2\"");
-		unlink($tempname2);
+		checkFile($target);
+		rmFile($tempname2);
 	}
 	else
 	{
 		if (($audioFormats[$index]['channels'] == 1) && ($audioFiles->list[$sourceindex]->channels == 2))
 			$addparam = "--downmix";
 		encodeWithOgg("$oggenc -b $bitrate -m $bitrate -M $bitrate --resample $samplerate $addparam -o \"$target\" \"$tempname1\"");
-		unlink($tempname1);
+		checkFile($target);
+		rmFile($tempname1);
 	}
 }
 $prg->setAudio($target);
