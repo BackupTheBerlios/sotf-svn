@@ -16,7 +16,7 @@ class sotf_Permission
 	* Checks whether we have the requested permission
 	*
 	* @param	string	$permission	Permission type
-	* @param	string	$station	ID of the station, if NULL it means the permission is global
+	* @param	int	$station	ID of the station, if NULL it means the permission is global
 	* @return	boolean	If we have the the requested permission returns true, else false
 	* @use	$user
 	*/
@@ -53,7 +53,7 @@ class sotf_Permission
 		$users = sotf_User::listUsers();
 		if (in_array($username,$users))
 		{
-			$sm = $db->getCol("SELECT username FROM sotf_user_group WHERE username='$username' AND (station='' OR station IS NULL) AND group_id='station_manager'");
+			$sm = $db->getCol("SELECT user_id FROM sotf_user_global_groups WHERE user_id='$username' AND (station='' OR station IS NULL) AND group_id='station_manager'");
 			if (count($sm) == 0)
 			{
 				$db->query("INSERT INTO sotf_user_group (username, station, group_id) VALUES('$username', NULL, 'station_manager')");
@@ -183,11 +183,11 @@ class sotf_Permission
 
 		$username = sotf_Utils::clean($username);
 		$station = sotf_Utils::clean($station);
-		$db->query("DELETE FROM sotf_user_group WHERE username='$username' AND station='$station'");
+		$db->query("DELETE FROM sotf_station_access WHERE user_id='$userid' AND station_id='$stationid'");
 		return true;
 	} // end func delUserFromGroup
 
-  /** list stations for which the current user has the given right right */
+  /** list stations for which the current user has the given right */
   function listStationsWithPermission($perm = 'upload') {
     global $user;
     while (list($stationname,$station) = each($user->permissions))

@@ -83,40 +83,40 @@ class sotf_User
 	
 		    // get some more data from sadm
 			$data = $userdb->getRow("SELECT * FROM user_preferences WHERE auth_id = $id");
-		    $this->realname = $data['realname'];
-		    $this->language = $data['language'];
-		    $this->email = $data['email'];
-		    $this->exist = true;
+			$this->realname = $data['realname'];
+			$this->language = $data['language'];
+			$this->email = $data['email'];
+			$this->exist = true;
 		    
-		    // load permissions for user
-		    $this->permissionsGlobal = 
-	        $db->getCol("SELECT permission FROM sotf_user_group, sotf_group_permission WHERE sotf_user_group.group_id = sotf_group_permission.group_id " .
-			       " AND sotf_user_group.username = '$name' AND ( sotf_user_group.station IS NULL OR sotf_user_group.station='')");
-	
-		    $result = $db->query("SELECT DISTINCT station FROM sotf_user_group WHERE username = '$name'");
-		    while ($row = $result->fetchRow())
-		    {
-		        if (($row['station'] != NULL) && ($row['station'] != ''))
-				{
-		            $stations[] = $row['station'];
-				}
-			}
-		    if ($stations)
-			{
-				foreach ($stations as $station)
-				{
-					$groups[$station] = $db->getCol("SELECT group_id FROM sotf_user_group WHERE username = '$name' AND station='$station'");
-				}
-				while (list($stationname, $station) = each($groups))
-	            {
-					foreach($station as $group);
+			// load permissions for user
+			$this->permissionsGlobal = 
+	        $db->getCol("SELECT permission FROM sotf_user_global_groups, sotf_group_permission, sotf_permissions " .
+							  "WHERE sotf_user_global_groups.group_id = sotf_group_permission.group_id " .
+							  " AND sotf_user_global_groups.user_id = '$id' " . 
+							  " AND sotf_group_permission.permission_id = sotf_permissions.id");
+			
+			//select station_id, permission from sotf_station_access a, sotf_group_permission g, sotf_permissions p WHERE a.user_id=1 AND a.group_id=g.group_id AND g.permission_id=p.id;
+
+			$result = $db->query("SELECT DISTINCT station FROM sotf_user_group WHERE username = '$name'");
+			while ($row = $result->fetchRow())
+			  {
+				 if (($row['station'] != NULL) && ($row['station'] != ''))
 					{
-						$this->permissions[$stationname] = $db->getCol("SELECT permission FROM sotf_group_permission WHERE group_id='$group'");
+					  $stations[] = $row['station'];
 					}
-	            }
+			  }
+			if ($stations) {
+			  foreach ($stations as $station) {
+					$groups[$station] = $db->getCol("SELECT group_id FROM sotf_user_group WHERE username = '$name' AND station='$station'");
+				 }
+			  while (list($stationname, $station) = each($groups)) {
+				 foreach($station as $group) {
+					$this->permissions[$stationname] = $db->getCol("SELECT permission FROM sotf_group_permission WHERE group_id='$group'");
+				 }
+			  }
 			}
 		}
-	    // TODO: load user profile
+		// TODO: load user profile
 	}
 
   function isEditor() {
