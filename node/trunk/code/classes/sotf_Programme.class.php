@@ -524,13 +524,13 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     $myPack = new unpackXML($pathToFile . $folderName . "/XBMF/Metadata.xml");	//note that the unpacker needs AN ABSOLUTE path to the file
     if(!$myPack->error){		//if the file has been found
       $metadata = $myPack->process();
-			if(!$metadata){	//process it into an associative array
-				//error during import
-				sotf_Utils::delete($pathToFile . $folderName);
-				trigger_error("The import did not succeed!",2);
-				return false;	//did not succeed
-			}
     }
+		
+		if(!$metadata or $myPack->error){ //errors during import - stop execution
+			sotf_Utils::delete($pathToFile . $folderName);
+			trigger_error("The import did not succeed!",2);
+			return false;	//did not succeed
+		}
 	
     //dump($metadata, "METADATA");
 
