@@ -15,6 +15,7 @@
 		var $error = false;
 		var $data = array();
 		var $encoding;
+		var $outencoding = "iso-8859-1";
 	
 		/**
 		 * unpackXML::unpackXML() - constructor
@@ -27,8 +28,7 @@
 				$this->error = true;
 				return array('error'=>'File ' . $file . ' not found at specified location. DOMXML needs an absolute path to this file starting from htdocs root or a URI!');
 			}else{
-				/**
- * //get encoding - doesn't
+				//get encoding - doesn't
 				$myfile = fopen($file, "r");
 				$contents = fread($myfile, 64);
 				fclose($myfile);
@@ -39,8 +39,7 @@
 				}else{	
 					$this->encoding = "UTF-8";
 				}
- */
-				$this->encoding = "UTF-8";
+				
 				//set root
 				$this->root = $this->xml->root();
 			}
@@ -56,7 +55,10 @@
 		 */
 		function process(){
 			$this->parse($this->root, $this->data);
-			return $this->data;
+			if(!empty($this->data)){
+				return $this->data;
+			}
+			return false;
 		}
 		
 		
@@ -97,11 +99,12 @@
 				}
 			}else{
 				//charset converter
-				if(iconv($this->encoding,"ISO-8859-1",$reference->get_content())){
-					$data = iconv($this->encoding,"ISO-8859-1",$reference->get_content());
-				}else{
+				if($this->encoding == $this->outencoding){	//don't convert
 					$data = $reference->get_content();
+				}else{
+					$data = iconv($this->encoding,"ISO-8859-1",$reference->get_content());	//convert
 				}
+				//$data = iconv("UTF-8","ISO-8859-1",$reference->get_content());	//convert
 				$data = str_replace("%%rgt%%",">",$data);
 				$data = str_replace("%%lgt%%","<",$data);
 			}
