@@ -8,14 +8,25 @@
 
 require("init.inc.php");
 
+
+require_once($config['classdir'] . "/rpc_Utils.class.php");
+
+$rpc = new rpc_Utils;
+$rpc->debug = true;
+//$response = $rpc->callTamburine('version', '');
+//$response = $rpc->callTamburine('setpls', array('/home/micsik/ok.mp3', '/home/micsik/china.mp3'));
+$response = $rpc->callTamburine('getpls', 1);
+//$response = $rpc->callTamburine('quit', 1);
+
+dump($response, "RESPONSE");
+exit;
+
+
+
+
 $prg = $repository->getObject('005pr27');
 dump($prg->getCreatorNames());
 
-exit;
-
-$fileinfo = GetAllFileInfo('/pub/sotf/node/repository/DooBeeDoo/2003-05-30/Wissen_aktuell/audio/Wissen_aktuell_128kbps_2chn_44100Hz.mp3');
-//$fileinfo = GetAllFileInfo('/pub/sotf/node/repository/DooBeeDoo/2003-05-30/Wissen_aktuell/audio/Wissen_aktuell_24kbps_1chn_16000Hz.mp3');
-dump($fileinfo, 'FINFO');
 exit;
 
 /* 
@@ -41,19 +52,6 @@ exit;
             [genre] => Unknown
         )
 
-*/
-
-/*
-require_once($config['classdir'] . "/rpc_Utils.class.php");
-
-$rpc = new rpc_Utils;
-$rpc->debug = true;
-//$response = $rpc->callTamburine('version', '');
-$response = $rpc->callTamburine('setpls', array('/home/micsik/ok.mp3', '/home/micsik/china.mp3'));
-//$response = $rpc->callTamburine('quit', 2);
-
-dump($response, "RESPONSE");
-exit;
 */
 
 /*

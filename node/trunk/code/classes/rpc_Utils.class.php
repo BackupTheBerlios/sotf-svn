@@ -92,7 +92,7 @@ class rpc_Utils {
     $rawMessage .= "\n</params>\n</methodCall>";
     
     //prepare request header
-    $rawRequest = "POST $path HTTP/1.1
+    $header = "POST $path HTTP/1.1
 Accept: */*
 Accept-Encoding: deflate
 TE: trailers,deflate
@@ -103,7 +103,7 @@ Date: Tue, 17 Jun 2003 08:59:10 GMT
 Content-Length: " . strlen($rawMessage) . "
 Content-Type: text/xml
 
-$rawMessage";
+";
 
 	 $fp=fsockopen($host, $port, $errno, $errstr, $this->timeout);
 	 if (!$fp) {
@@ -111,9 +111,14 @@ $rawMessage";
    }
    if(!socket_set_timeout($fp, $this->timeout)) 
      logError("could not set coket timeout");
-	 if (!fputs($fp, $rawRequest, strlen($rawRequest))) {
+	 if (!fputs($fp, $header, strlen($header))) {
 		  raiseError('Streaming error: Write error');
    }
+   fflush($fp);
+	 if (!fputs($fp, $rawMessage, strlen($rawMessage))) {
+		  raiseError('Streaming error: Write error');
+   }
+   //fflush($fp);
    while (!feof($fp)) {
      $rep = fread ($fp, 1024);
      if($rep === FALSE)

@@ -162,11 +162,7 @@ class sotf_Playlist {
 	 $this->stopMyStream();
 
 	 if($config['tamburineURL']) {
-		// tamburine-based streaming
-
-		if($_SESSION['playlist_id']) {
-		  //TODO? kill old stream
-		}
+		// streaming with tamburine + XML-RPC
 
 		// playlist
 		reset($this->audioFiles);
@@ -178,12 +174,13 @@ class sotf_Playlist {
 		//$rpc->debug = true;
       $response = $rpc->callTamburine('setpls', $songs);
 		if(is_null($response)) {
-		  debug("no reply from tamburine server");
+		  raiseError("no reply from tamburine server");
 		} else {
-		  $this->url = $response[0];
-		  $id = $response[1];
-		  $_SESSION['playlist_id'] = $id;
+		  $this->url = $response[2];
+		  $this->streamId = $response[1];
 		}
+		if(!$this->url)
+		  raiseError("Could not find mount point for stream!");
 
 	 } elseif($config['tamburineCMD']) {
 		// streaming with tbrcmd
@@ -194,8 +191,8 @@ class sotf_Playlist {
 		$cmd = $config['tamburineCMD'] . " setpls " . $this->localPlaylist . " 2>&1";
 		exec($cmd, $output, $retval);
 		debug("cmd", $cmd);
-		debug("output", $output);
-		debug("retval", $retval);
+		//debug("output", $output);
+		//debug("retval", $retval);
 
 		$lines = array_values(preg_grep('/Fatal Error:/', $output));
 		if(count($lines) > 0) {
@@ -258,47 +255,66 @@ class sotf_Playlist {
 
 	 debug("stop stream", $streamData);
 
-	 if($config['tamburineCMD']) {
+	 if($config['tamburineURL']) {
+		$rpc = new rpc_Utils;
+		//$rpc->debug = true;
+      $response = $rpc->callTamburine('quit', $streamData['pid']);
+		if(is_null($response)) {
+		  raiseError("no reply from tamburine server");
+		}
+	 } elseif($config['tamburineCMD']) {
 		// streaming with tbrcmd
 		
 		$cmd = $config['tamburineCMD'] . " quit " . $streamData['pid'] . " 2>&1";
 		exec($cmd, $output, $retval);
 		debug("cmd", $cmd);
-		debug("output", $output);
-		debug("retval", $retval);
-
-		$db->query("DELETE FROM sotf_streams WHERE pid='" . $streamData['pid'] . "'");
+		//debug("output", $output);
+		//debug("retval", $retval);
 	 }
+
+	 $db->query("DELETE FROM sotf_streams WHERE pid='" . $streamData['pid'] . "'");
   }
 
   function getStreamInfo($streamData) {
 	 global $config, $db;
 
-	 if($config['tamburineCMD']) {
+	 if($config['tamburineURL']) {
+		$rpc = new rpc_Utils;
+		//$rpc->debug = true;
+      $response = $rpc->callTamburine('getpls', $streamData['pid']);
+		if(is_null($response)) {
+		  logError("no reply from tamburine server");
+		} else {
+		  $offset = $response[2];
+		  $filename = $response[2+$offset];
+		  //debug("response", $response);
+		  //debug("fname", $filename);
+		}
+	 } elseif($config['tamburineCMD']) {
 		// streaming with tbrcmd
 		$cmd = $config['tamburineCMD'] . " getpls " . $streamData['pid'] . " 2>&1";
 		exec($cmd, $output, $retval);
 		debug("cmd", $cmd);
-		debug("output", $output);
-		debug("retval", $retval);
+		//debug("output", $output);
+		//debug("retval", $retval);
 		foreach($output as $line) {
 		  if(preg_match('/\-\>(\/\S+)\s*$/', $line, $mm)) {
 			 $filename = $mm[1];
 			 break;
 		  }
 		}
-		if($filename) {
-		  $prg = sotf_Programme::getPrgFromFilename($filename);
-		  if(is_object($prg)) {
-			 return array('name' => $prg->get('title'),
-							  'url' => $config['localPrefix'] . "/get.php/" . $prg->id);
-		  } else {
-			 return array('name' => $prg);
-		  }
+	 }
+	 if($filename) {
+		$prg = sotf_Programme::getPrgFromFilename($filename);
+		if(is_object($prg)) {
+		  return array('name' => $prg->get('title'),
+							'url' => $config['localPrefix'] . "/get.php/" . $prg->id);
 		} else {
-		  debug("Could not get stream info");
-		  // TODO: stop stream!
+		  return array('name' => $prg);
 		}
+	 } else {
+		debug("Could not get stream info");
+		// TODO: stop stream!
 	 }
   }
 
