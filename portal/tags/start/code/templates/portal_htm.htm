@@ -1,0 +1,25 @@
+	<table border="0" cellpadding="0" cellspacing="0" width="100%">
+		{if $edit}<tr bgcolor="#{$portal.bg2}">
+			<td>&nbsp;&nbsp;&nbsp;</td>
+			<td>&nbsp;&nbsp;&nbsp;<input type="hidden" name="edit" value="1"></td>
+			<td align="left"><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><input type="image" src="{$IMAGEDIR}/plusz2.gif" alt="{#insert_row#}" name="insert_row" value="--1" onclick="javascript:this.form.edit.value = this.value"><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /></td>
+		</tr>{else}
+		<tr><td colspan="4">&nbsp;</td></tr>
+		{/if}
+		{foreach key=row_number name=outer item=row from=$table}
+		<tr>
+			{if $edit}<td align="center" valign="middle" bgcolor="#{$portal.bg2}"><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><input type="image" alt="{#delete_row#}" src="{$IMAGEDIR}/minusz2.gif" name="delete_row" value="-{$row_number}" onclick="javascript:this.form.edit.value = this.value"><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /></td>
+			{else}<td>&nbsp;&nbsp;&nbsp;</td>{/if}
+			<td width="100%">
+				<table border="{if $edit}1{else}0{/if}" cellpadding="0" cellspacing="0" width="100%" height="100%"{if $bgcolor} bgcolor="#{$bgcolor}"{/if}>
+					<tr>{foreach key=col_number item=cell from=$row}
+					<td align="{$cell.align != ""}" valign="{$cell.valign != ""}"{if $cell.width != ""} width="{$cell.width}"{/if}{if $cell.color != ""} bgcolor="{$cell.color}"{/if}{if $edit} onClick="javascript:window.open('{$rootdir}/portal_popup.php/{$portal_name}?row={$row_number}&col={$col_number}','','scrollbars=yes,width=640,height=340,left=320,top=200'); return false"{/if}>{if $cell.html !=""}{$cell.html}{else}&nbsp;{/if}</td>
+					{/foreach}
+					</tr>
+				</table>
+			</td>
+			{if $edit}<td align="center" valign="bottom" bgcolor="#{$portal.bg2}"><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><input type="image" src="{$IMAGEDIR}/plusz2.gif" alt="{#insert_row#}" name="insert_row" value="-{$row_number}" onclick="javascript:this.form.edit.value = this.value"><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /><img src="{$IMAGEDIR}/transp.gif" /></td>
+			{else}<td>&nbsp;&nbsp;&nbsp;</td>{/if}
+		</tr>
+		{/foreach}
+	</table>

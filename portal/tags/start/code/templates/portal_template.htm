@@ -1,0 +1,18 @@
+{config_load file="$LANG.conf" section="$ACTION"}
+<html>
+<head>
+<title>{#portal_editor#}</title>
+</head>
+<body {if $view OR $edit}bgcolor="#{$home.bg}" background="{$home.wall}" text="{$home.font}" link="{$home.link}" alink="{$home.alink}" vlink="{$home.vlink}"{elseif $id}bgcolor="#{$programmes.bg}" background="{$programmes.wall}" text="{$programmes.font}" link="{$programmes.link}" alink="{$programmes.alink}" vlink="{$programmes.vlink}"{else}bgcolor="#{$portal.bg2}"{/if} topmargin="0" leftmargin="0" marginwidth="0" marginheight="0">
+<form action="portal_template.php" method="post" name="myform">
+
+<input type="submit" name="t1" value="Load kangaroo template">
+<br>
+<input type="submit" name="t2" value="Load concrete template">
+<br>
+<input type="submit" name="t3" value="Load saved template">
+
+</form>
+
+</body>
+</html>
