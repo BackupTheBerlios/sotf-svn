@@ -116,7 +116,7 @@
                 <tbody><tr><td width=24>{bell}</td>
                 <td bgcolor={color_on}>{content_owner}<font size=-1><a href=\"appointment.php?id={content_id}\" onclick=\"NewWindow(this.href,'14','620','400','yes');return false\">{content_name}</a></font>&nbsp;&nbsp;<font size=-1 color={color_text}>({content_start_time}-{content_end_time})</font></td></tr></tbody></table>";
 		
-		var $content_owner = "<font color={color_text}>(<a href=\"overview.php?user={owner_id}\" class=date2>{owner_name}</a>)</font> ";
+		var $content_owner = "<font color={color_text}>(<a href=\"overview.php?user={owner_id}\" class=date2 onclick=\"NewWindow(this.href,'14','620','400','yes');return false\">{owner_name}</a>)</font> ";
 		
 		var $bell_on = "<img height=16 src=\"{class_root}templates/img/i-reminder.gif\" width=24 border=0>";
 				
