@@ -6,12 +6,11 @@ require("init.inc.php");
 
 #$page->send();
 
-/*
 $repository->updateTopicCounts();
 
+/*
 $mainContent = false;
 echo ($mainContent ? 't' : 'f');
-*/
 
 if(is_array(NULL))
      print "ARRAY IS NULL";
@@ -22,6 +21,7 @@ if(empty($k))
      print("empty");
      else
      print("not");
+*/
 
 ?>
 
