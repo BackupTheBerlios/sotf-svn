@@ -49,8 +49,8 @@
 			or !$myError->checkLength($myProg['prog_desc'],2) 
 			or !$myError->checkLength($myProg['prog_datecreated'],2) 
 			or !$myError->checkLength($myProg['prog_dateissued'],2) 
-			or !$myError->checkLength($myProg['prog_topic'],1) 
-			or !$myError->checkLength($myProg['prog_genre'],1) 
+			or !$myError->checkLength($myProg['prog_topic'],0) 
+			or !$myError->checkLength($myProg['prog_genre'],0) 
 			or !$myError->checkLength($myProg['prog_lang'],1) 
 			or !$myError->checkLength($myProg['prog_rights'],1))
 		{

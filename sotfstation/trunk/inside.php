@@ -13,11 +13,11 @@
 	* This page will display the whole station schedule including the
 	* past and the future
 	************************/
-	include("init.inc.php");											# include the global framwork
+	include("init.inc.php");							# include the global framwork
 	include("classes/calendar.class.php");				# calendar handler
-	include("classes/dayview.class.php");					# current day calendar handler
-	$myNav->add($SECTION[INSIDE],'index.php');		# add entry to Navigation Bar Stack
-	authorize('edit_station',false);							# check access rights
+	include("classes/dayview.class.php");				# current day calendar handler
+	$myNav->add($SECTION[INSIDE],'index.php');			# add entry to Navigation Bar Stack
+	authorize('edit_station',false);					# check access rights
 	
 	//fix missing date (if any)
 	if(!$_GET['date']){
@@ -25,9 +25,9 @@
 	}
 	
 	//create calendar
-	$myCal = new calendar($_GET['date']);					# create new calendar object (the month overview thing)
-	$myCal->select($_GET['date']);								# selects the selected day (default: today)
-	$myDay = new dayView();												# create the new day representer
+	$myCal = new calendar($_GET['date']);				# create new calendar object (the month overview thing)
+	$myCal->select($_GET['date']);						# selects the selected day (default: today)
+	$myDay = new dayView('','',$_GET['date']);				# create the new day representer
 	
 	//mark full calendar days
 	//process limits
@@ -60,7 +60,8 @@
 														series 
 														LEFT JOIN programme ON (series.id = programme.series_id)
 														LEFT JOIN user_map ON (series.owner = user_map.auth_id)
-														WHERE programme.intime > '$start' AND programme.intime < '$end'
+														WHERE (programme.intime > '$start' AND programme.intime < '$end')
+														OR (programme.outtime > '$start' AND programme.outtime < '$end')
 											 ",DB_FETCHMODE_ASSOC);
 	
 	//process the resultset									 
@@ -70,7 +71,7 @@
 		}
 		
 		//add calendar blocks
-		$myDay->addBlock($val['prog_id'],date("H:i",$val['intime']),date("H:i",$val['outtime']),$val['prog_title'],$val['series_owner'],$val['owner_name'],$val['special']);
+		$myDay->addBlock($val['prog_id'],$val['intime'],$val['outtime'],$val['prog_title'],$val['series_owner'],$val['owner_name'],$val['special']);
 	}
 	
 	//output to smarty

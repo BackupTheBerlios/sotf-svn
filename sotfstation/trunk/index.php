@@ -72,7 +72,7 @@
 			//send query
 			$res = $sdb->getRow("SELECT auth_id FROM authenticate WHERE username = '" . $_POST['user'] . "' AND passwd = '" . $_POST['pass'] . "'",DB_FETCHMODE_ASSOC);
 			 
-			$vbnum = $sdb->getOne("SELECT extension FROM pvx_mapping WHERE mapped_id = '" . $res['auth_id'] . "'");
+			//$vbnum = $sdb->getOne("SELECT extension FROM pvx_mapping WHERE mapped_id = '" . $res['auth_id'] . "'");
 			
 			
 			//filter response

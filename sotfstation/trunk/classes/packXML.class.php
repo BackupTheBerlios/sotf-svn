@@ -39,11 +39,24 @@
 				$data[$key] = utf8_encode($val);
 			}
 			
-			$title = $this->root->new_child('title',null);
-			$title->new_child('basetitle',$data['series_title']);	
-			$title->new_child('alternative',$data['prog_alt_title']);	
-			$title->new_child('episodesequence',$data['series_id']);
-			$title->new_child('episodetitle',$data['prog_title']);
+			$this->root->new_child('title',$data['prog_title']);
+			$this->root->new_child('alternative',$data['prog_alt_title']);
+			
+			//series data
+			$series = $this->root->new_child('series',null);
+			$series->new_child('id',$data['series_id']);
+			$series->new_child('title',$data['series_title']);
+			$series->new_child('description',$data['series_desc']);
+			
+			$this->root->new_child('stationid',SOTF_STATION_ID);
+			$this->root->new_child('language',$data['prog_lang']);
+			$this->root->new_child('rights',$data['prog_rights']);
+			$this->root->new_child('genre',$data['prog_genre']);
+			$this->root->new_child('topic',$data['prog_topic']);
+			
+			$this->root->new_child('description',$data['prog_desc']);
+			$this->root->new_child('contributor',$data['prog_contrib']);
+			$this->root->new_child('identifier',$data['prog_id']);
 			
 			$creator = $this->root->new_child('creator',null);
 			$entity = $creator->new_child('entity',null);	
@@ -68,22 +81,6 @@
 			$entity->new_child('address',SOTF_PUB_ADR);
 			$entity->new_child('logo',SOTF_PUB_LOGO);
 			$entity->new_child('uri',SOTF_PUB_URI);
-			
-			//series data
-			$series = $this->root->new_child('series',null);
-			$series->new_child('id',$data['series_id']);
-			$series->new_child('title',$data['series_title']);
-			$series->new_child('description',$data['series_desc']);
-			
-			$this->root->new_child('stationid',SOTF_STATION_ID);
-			$this->root->new_child('language',$data['prog_lang']);
-			$this->root->new_child('rights',$data['prog_rights']);
-			$this->root->new_child('subject',$data['prog_genre']);
-			$this->root->new_child('type',$data['prog_topic']);
-			
-			$this->root->new_child('description',$data['prog_desc']);
-			$this->root->new_child('contributor',$data['prog_contrib']);
-			$this->root->new_child('identifier',$data['prog_id']);
 			
 			$date = $this->root->new_child('date',$data['prog_datecreated']);
 			$date->set_attribute('type','created');

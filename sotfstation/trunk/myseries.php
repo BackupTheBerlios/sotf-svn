@@ -14,14 +14,20 @@
 	* this station and their access levels. The Administrator can always
 	* add new users to the list or take away privileges or even delete them...
 	************************/
-	include("init.inc.php");											# include the global framwork
+	include("init.inc.php");							# include the global framwork
 	include("classes/pageSplit.class.php");				# include the page splitting utility
-	$myNav->add($SECTION[SERIES],'myseries.php');	# add entry to Navigation Bar Stack
-	authorize('edit_series');											# check access rights
+	$myNav->add($SECTION[SERIES],'myseries.php');		# add entry to Navigation Bar Stack
+	authorize('edit_series');							# check access rights
 	$me = $_SESSION['USER']->get("auth_id");			# global ME :)
 	
 	//can I edit this?
-	if(($_SESSION['USER']->get("edit_station")==2) or ($_SESSION['USER']->get("auth_id") == $db->getOne("SELECT series.owner FROM series WHERE series.id = '$_GET[id]'"))){
+	if($_GET['id']){
+		if($_SESSION['USER']->get("auth_id") == $db->getOne("SELECT series.owner FROM series WHERE series.id = '$_GET[id]'")){
+			$mod = true;
+		}
+	}
+	
+	if(($_SESSION['USER']->get("edit_station")==2) or ($mod)){
 		$mod_flag = TRUE;
 	}
 	

@@ -61,7 +61,7 @@
 		}
 	}
 	$d->close();
-	$smarty->assign("path",PROG_DIR . $_GET['id'] . "/XBMF/" . "audio/");
+	$smarty->assign("path","progs/" . $_GET['id'] . "/XBMF/" . "audio/");
 	$smarty->assign("audiofiles",$audiofiles);
 	
 	##### OTHER FILES

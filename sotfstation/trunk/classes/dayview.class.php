@@ -127,7 +127,7 @@
                 <tbody><tr><td width=24>{bell}</td>
                 <td bgcolor={color_on}>{content_owner}<font size=-1><a href=\"showprogrammedetails.php?id={content_id}\" onclick=\"NewWindow(this.href,'14','620','500','yes');return false\">{content_name}</a></font>&nbsp;{special}&nbsp;<font size=-1 color={color_text}>({content_start_time}-{content_end_time})</font></td></tr></tbody></table>";
 		
-		var $content_owner = "<font color={color_text}>(<a href=\"showuserdata.php?user={owner_id}\" class=date2 onclick=\"NewWindow(this.href,'14','620','460','yes');return false\">{owner_name}</a>)</font> ";
+		var $content_owner = "<font color={color_text}>({owner_name})</font> ";
 		
 		var $bell_on = "<img height=16 src=\"{class_root}templates/img/i-reminder.gif\" width=24 border=0>";
 				
@@ -152,7 +152,7 @@
 			//timestamp is a date
 			}else if(strpos($timestamp,"-")>0){
 				$myDate = explode("-",$timestamp);
-				$timestamp = mktime(0,0,0,$myDate[1],$myDate[0],$myDate[2]);
+				$timestamp = mktime(0,0,1,$myDate[1],$myDate[0],$myDate[2]);
 				
 				if($timestamp==-1){
 					$timestamp = time();
@@ -196,6 +196,8 @@
 				$end_time = mktime($myTimes[0],$myTimes[1],0,date("m",$this->timestamp),date("d",$this->timestamp),date("Y",$this->timestamp));
 			}
 			
+			
+			
 			$new_block = new dayBlock($id,$start_time,$end_time,$desc,$owner,$owner_name);
 			
 			if($special){
@@ -214,7 +216,8 @@
 		 */
 		function show($owner=0, $access_level=0, $root="",$checked=""){
 			//lets rock
-			$out = $this->header;			# append header to overall HTML template
+			$out = $this->header;		# append header to overall HTML template
+			$dayStart = mktime(0,0,0,date("m",$this->timestamp),date("d",$this->timestamp),date("Y",$this->timestamp));
 			for($x=0;$x<=23;$x++){		# loop though all the hours of the calendar
 				//define this hour
 				$myBlockStart = mktime($x,0,0,date("m",$this->timestamp),date("d",$this->timestamp),date("Y",$this->timestamp));
@@ -227,11 +230,15 @@
 					
 					reset($this->blocks);
 					while(list($key,$val)=each($this->blocks)){			# loop though all the blocks that lie whithin THIS hour
+						if(
+							(($val->getStart() >= $myBlockStart) and ($val->getStart() < $myBlockEnd)) or 
+							(($val->getEnd() > $myBlockStart) and ($val->getEnd() <= $myBlockEnd)) or
+							(($val->getEnd() > $myBlockEnd) and ($val->getStart() < $myBlockStart))
+						){
 						
-						if((($val->getStart() >= $myBlockStart) and ($val->getStart() < $myBlockEnd)) or 
-							 (($val->getEnd() > $myBlockStart) and ($val->getEnd() <= $myBlockEnd)) or
-							 (($val->getEnd() > $myBlockEnd) and ($val->getStart() < $myBlockStart))){
-						
+							//echo date("Y-m-d H:i",$myBlockStart) . " -- $x -- " . date("Y-m-d H:i",$val->getStart()) . "<br>";
+							//echo date("Y-m-d H:i",$myBlockEnd) . " -- $x -- " . date("Y-m-d H:i",$val->getEnd()) . "<br>";
+							
 							//$myRow = str_replace("{content}",$this->content,$this->row);
 							$this_row_content .= $this->content;
 							
