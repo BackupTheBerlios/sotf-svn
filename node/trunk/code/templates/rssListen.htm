@@ -8,7 +8,7 @@
 
 {foreach item=item from=$AUDIO_FILES}
   {if $item.main_content eq 't' and $item.download_access eq 't' }
-    <br /><a target="_blank" href="{$ROOT_URL}/getFile.php/{$item.filename}?audio=1&id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/disk.gif" border="0"> {#download_as#} {$item.bitrate} kbps 
+    <br /><a target="_blank" href="{$ROOT_URL}/getFile.php/{$item.filename}?audio=1&id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/download.gif" border="0"> {#download_as#} {$item.bitrate} kbps 
            {$item.format}</a> ({$item.playtime_string})
   {/if}
 {/foreach}
