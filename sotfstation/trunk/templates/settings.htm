@@ -43,7 +43,7 @@
                 <tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right">{#user_mail#}:</div></td>
                   <td nowrap><input name="mail" type="text" class="myinput" id="mail2" maxlength="100" value="{$submit_mail}"></td>
-                </tr>
+                </tr><!--
 				<tr bgcolor="#eeeeee"> 
                   <td nowrap><div align="right">Telephone Number:</div></td>
                   <td nowrap><input name="tel" type="text" class="myinput" id="mail2" maxlength="100" value="{$submit_tel}"></td>
@@ -59,7 +59,7 @@
 				<tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right">Voice Box Number:</div></td>
                   <td nowrap>{$vbnum}</td>
-                </tr>
+                </tr>-->
                 {section name=error_cell show=$error_out} 
                 <tr bgcolor="#FFCCCC"> 
                   <td colspan="2">{section name=errors loop=$error_list show=$error_out} 

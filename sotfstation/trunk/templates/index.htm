@@ -14,7 +14,7 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#FFFFFF">
   <tr> 
     <td width="150" bgcolor="#660000">&nbsp;</td>
-    <td bgcolor="#660000">&nbsp;<span class="whitesmall">PVX Station Management 
+    <td bgcolor="#660000">&nbsp;<span class="whitesmall">Station Management 
       :: build {$build_id}</span></td>
   </tr>
   <tr> 
@@ -55,9 +55,9 @@
         <tr>
           <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}inside.php" class="menu2l">{#overview#}</a><br>
 		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}programmenew.php" class="menu2l">{#new_prog#}</a>
-		  {if $edit_presentbox == 2}
+		  <!--{if $edit_presentbox == 2}
 		  <br>
-		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}presentbox.php" class="menu2l">Present Box</a>{/if}</td>
+		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}presentbox.php" class="menu2l">Present Box</a>{/if}--></td>
         </tr>
 		{/if}
         <tr>
@@ -72,8 +72,8 @@
         </tr>
         <tr>
           <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}myseries.php" class="menu2l">{#overview#}</a><br>
-            &nbsp;&nbsp;&nbsp; <a href="{$server_root}seriesnew.php" class="menu2l">{#new_ser#}</a><br>
-			&nbsp;&nbsp;&nbsp; <a href="{$server_root}seriesforum.php" class="menu2l">Series Forum</a></td>
+            &nbsp;&nbsp;&nbsp; <a href="{$server_root}seriesnew.php" class="menu2l">{#new_ser#}</a><!--<br>
+			&nbsp;&nbsp;&nbsp; <a href="{$server_root}seriesforum.php" class="menu2l">Series Forum</a>--></td>
         </tr>
 		{/if}
         <tr>
@@ -102,10 +102,10 @@
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
         <tr>
-          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}settings.php" class="menu2l">{#my_set#}</a><br>
+          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}settings.php" class="menu2l">{#my_set#}</a><!--<br>
 		  {if $edit_presentbox == 2}
 		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}prsettings.php" class="menu2l">Present Box</a><br>{/if}
-		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}voicemail.php" class="menu2l">Voice Box</a></td>
+		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}voicemail.php" class="menu2l">Voice Box</a>--></td>
         </tr>
 		{/if}
 		<tr>

@@ -1,0 +1,106 @@
+{if $error_out} 
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+              <tr bgcolor="#FFCCCC"> 
+                <td width="100%" class="title"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr> 
+                      <td width="20" nowrap><strong><img src="{$root}img/block.gif" width="27" height="21"></strong></td>
+                      <td class=title><strong>{#error#}</strong></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr bgcolor="#FFCCCC"> 
+                <td bgcolor="#eeeeee">{section name=errors loop=$error_list show=$error_out} 
+                  <div align=center> 
+                    <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
+                  {/section}</td>
+              </tr>
+            </table></td>
+        </tr>
+        <tr> 
+          <td><div align="right"><img src="{$root}img/shadow1.gif" height="9"></div></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+<br>
+{/if} {if !$failed} 
+<table width="100%" border="0" cellspacing="0" cellpadding="2"><tr>
+    <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+              <tr bgcolor="#ddddff"> 
+                <td colspan="6" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr> 
+                      <td width="20" nowrap><strong><img src="{$root}img/i-users.gif" width="27" height="21"></strong></td>
+                      <td class=title><strong>Voice Mail</strong></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr bgcolor="#eeeeee"> 
+                <td width="20%" nowrap> <div align="center"><strong> <a href="{$server_root}voicemail.php?block={$block}&sortby=msg_caller_number&orderby={if $sortby == 'msg_caller_number' and $order == 'asc'}desc{else}asc{/if}" class="title2">Caller 
+                    Number </a>{if $sortby == 'msg_caller_number'} {if $order == 'asc'}<img src="{$root}img/arrowdown.gif">{else}<img src="{$root}img/arrowup.gif">{/if}{/if}</strong></div></td>
+                <td width="20%" nowrap> <div align="center"><strong><a href="{$server_root}voicemail.php?block={$block}&sortby=msg_ts&orderby={if $sortby == 'msg_ts' and $order == 'asc'}desc{else}asc{/if}" class="title2">Timestamp</a>{if 
+                    $sortby == 'msg_ts'} {if $order == 'asc'}<img src="{$root}img/arrowdown.gif">{else}<img src="{$root}img/arrowup.gif">{/if}{/if}</strong></div></td>
+                <td width="20%" nowrap> <div align="center"><strong>Message Download 
+                    </strong></div></td>
+                <td width="20%" nowrap> <div align="center"><strong>Options</strong></div></td>
+             
+              </tr>
+              {section name=data loop=$db_result show=$db_result} 
+              <tr bgcolor="#eeeeee"> 
+                <td nowrap><div align="center">{$db_result[data][0]}</div></td>
+                <td nowrap><div align="center">{$db_result[data][1]}</div></td>
+                <td nowrap><div align="center"><a href="voicemail.php?action=servefile&id={$db_result[data][2]}">Download</a></div></td>
+                <td nowrap><div align="center"><a href="{$server_root}voicemail.php?block={$block}&sortby={$sortby}&orderby={$order}&action=delete&id={$db_result[data][2]}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" alt="{#delete#}" width="24" height="16" border="0"></a></div></td>
+              
+              </tr>
+              {sectionelse} 
+              <tr bgcolor="#eeeeee"> 
+                <td colspan="4" nowrap><br> <div align="center">{#no_data#}<br>
+                    <br>
+                  </div></td>
+              </tr>
+              {/section} {if $pageSplit} 
+              <tr bgcolor="#eeeeee"> 
+                <td colspan="4"><div align="center">{$pageSplit}</div></td>
+              </tr>
+              {/if} </table></td>
+        </tr>
+        <tr> 
+          <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+{else}
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+  <tr> 
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+              <tr bgcolor="#FFCCCC"> 
+                <td width="100%" class="title"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr> 
+                      <td width="20" nowrap><strong><img src="{$root}img/block.gif" width="27" height="21"></strong></td>
+                      <td class=title><strong>{#error#}</strong></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr bgcolor="#FFCCCC"> 
+                <td bgcolor="#eeeeee"><div align="center">You do not yet have 
+                    a personal Voice Box configured. Please define all the neccessary 
+                    details in your <a href="setting.php">settings</a> panel.</div></td>
+              </tr>
+            </table></td>
+        </tr>
+        <tr> 
+          <td><div align="right"><img src="{$root}img/shadow1.gif" height="9"></div></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+{/if}

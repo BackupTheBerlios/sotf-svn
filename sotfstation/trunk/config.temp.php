@@ -28,39 +28,6 @@
 	define('DB_USER','Dolce');																	# Database User :: accepted (string)
 	define('DB_PASS','1234');																	# Database Access Password :: accepted (string)
 	
-	//Voice Box DB ACCESS
-	define('VDB_TYPE','pgsql');																# Type of Database :: accepted (string)
-	define('VDB_HOST','xaos.grendelkom.com');									# Where the Database is located :: accepted (string)
-	define('VDB_NAME','voicebox');														# Database Name :: accepted (string)
-	define('VDB_USER','alex');																# Database User :: accepted (string)
-	define('VDB_PASS','1234');																# Database Access Password :: accepted (string)
-	
-	//Present Box DB ACCESS
-	define('PDB_TYPE','pgsql');																# Type of Database :: accepted (string)
-	define('PDB_HOST','xaos.grendelkom.com');									# Where the Database is located :: accepted (string)
-	define('PDB_NAME','present_box');													# Database Name :: accepted (string)
-	define('PDB_USER','alex');																# Database User :: accepted (string)
-	define('PDB_PASS','1234');																# Database Access Password :: accepted (string)
-	
-	/*
-	* Present Box Settings 
-	**/
-	// the root dir of this package
-	$config['base_dir'] = 'e:/local/htdocs/work/pvx/present_box';
-	// path for all recorded audio
-	$config['recorded_dir'] = 'e:/local/htdocs/work/pvx/present_box/recorded';
-	// place of log file
-	$config['log_file'] = 'e:/local/htdocs/work/pvx/present_box/log';
-	// the place where PublicVoiceXML puts recorded audio
-	// set this empty on Windows
-	$config['tmp_record_dir'] = '/usr/src/build/publicVoiceXML/PVX_1.2.11/OpenVXI_2.0.1/bin/';
-	
-	/*
-	* Voice Box Settings
-	**/
-	define('VBBASEURL','http://localhost/work/pvx/pvxmailbox/');
-	define('REC_DIR','/usr/local/apache/htdocs/pvxmailbox/message_dir/');
-	
 	/*
 	* Now, there are TWO ways to get around the the user authentication database, in case it runs on
 	* your local server, then the ideal way will be to build a direct connection to it (SADM), otherwise
@@ -84,7 +51,7 @@
 	define('SADM_SERVER','/work/sadm3/server.php');						# location of the XMLRPS SADM Server
 	define('SADM_PORT',80);																		# SADM XMLRPC Access Port
 	
-	define('SADM_GROUP',40);																	# This is the default member id, to which all the station users will belong to
+	define('SADM_GROUP',1);																	# This is the default member id, to which all the station users will belong to
 	
 	//SOTF META DATA CONFIG
 	define('SOTF_PUB','Radio Tienes');												# publisher of the resorces
@@ -105,7 +72,7 @@
 	* controls the way your station looks and behaves
 	*/
 	//Mail Settings
-	define('MAILBOT','alex@pvl.at');													# from this address all notifications will be sent
+	define('MAILBOT','you@domain.at');													# from this address all notifications will be sent
 	
 	//Names
 	define('STATION_NAME','Da Station');											# Name of this station
@@ -127,8 +94,6 @@
 	define('XMLRPC_PATH','xmlrpc');														# Path to the XMLRPC routines, by default these are included with this distro
 																														# and you don't have to change this entry, but you may with to use an external
 																														# library. (relative) :: accepted (string)
-	
-	define('REC_DIR','/usr/local/apache/htdocs/pvxmailbox/message_dir');
 	
 	//Other Settings
 	define('SPLITOFFSET', 30);																# mp3 Split offset in seconds

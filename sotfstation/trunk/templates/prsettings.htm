@@ -1,0 +1,105 @@
+<form action="prsettings.php" method="post" enctype="multipart/form-data" name="form1">
+  <table width="100%" border="0" cellspacing="0" cellpadding="2">
+    <tr> 
+      <td width="100%" valign="top"><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+          <tr bgcolor="#ddddff"> 
+            <td colspan="2" class="title2"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr> 
+                  <td width="20" nowrap><strong><img src="{$root}img/i-users.gif" width="27" height="21"></strong></td>
+                  <td class=title><strong>Your Present Box Settings</strong></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr bgcolor="#dddddd"> 
+            <td width="420" colspan="2" class=whitesmall> <strong>{#general_pref#}</strong></td>
+          </tr>
+          <tr bgcolor="#eeeeff"> 
+            <td width="20%" bgcolor="#eeeeff" > <div align="right">{#presentb_phone#}: 
+              </div></td>
+            <td> <input type="text" name="phone_number" size="20" value="{$PHONE_NUMBER}" class="myinput"> 
+            </td>
+          </tr>
+          <tr bgcolor="#eeeeff"> 
+            <td> <div align="right">{#presentb_admin#}:&nbsp; </div></td>
+            <td> <input type="text" name="admin_number" size="20" value="{$ADMIN_NUMBER}" class="myinput"> 
+            </td>
+          </tr>
+          <tr bgcolor="#eeeeff"> 
+            <td> <div align="right">{#presentb_notif#}:</div></td>
+            <td> <input type="text" name="email" size="20" value="{$EMAIL}" class="myinput"> 
+            </td>
+          </tr>
+          <tr bgcolor="#eeeeff"> 
+            <td> <div align="right">{#notif_subject#}:</div></td>
+            <td> <input type="text" name="subject" size="40" value="{$SUBJECT}" class="myinput"> 
+            </td>
+          </tr>
+          <tr bgcolor="#dddddd"> 
+            <td colspan="2" class="whitesmall"> <strong>{#recorded_sounds#}</strong> 
+            </td>
+          </tr>
+          <tr bgcolor="#eeeeff"> 
+            <td > <div align="right"><strong>{#presentb_intro#}: </strong><br>
+                {#example_begin#}{#presentb_intro_eg#}{#example_end#} </div></td>
+            <td > <input name="intro" type="file"> <br />
+              {if $intro_file}<a href="getMessage.php?general=intro">{#listen#}</a> 
+              {else}{#empty#} {/if} </td>
+          </tr>
+          <tr bgcolor="#eeeeff"> 
+            <td > <div align="right"><strong>{#presentb_help#}: </strong><br>
+                {#example_begin#}{#presentb_help_eg#}{#example_end#} </div></td>
+            <td > <input name="help" type="file"> <br />
+              {if $help_file}<a href="getMessage.php?general=help">{#listen#}</a> 
+              {else}{#empty#} {/if} </td>
+          </tr>
+          <tr bgcolor="#eeeeff"> 
+            <td > <div align="right"><strong>{#presentb_navigation#}: </strong><br>
+                {#example_begin#}{#presentb_navigation_eg#}{#example_end#} </div></td>
+            <td > <input name="navigation" type="file"> <br />
+              {if $navigation_file}<a href="getMessage.php?general=navigation">{#listen#}</a> 
+              {else}{#empty#} {/if} </td>
+          </tr>
+          <tr bgcolor="#eeeeff"> 
+            <td > <div align="right"><strong>{#applicant_intro#}: </strong><br>
+                {#example_begin#}{#applicant_intro_eg#}{#example_end#} </div></td>
+            <td > <input name="applicant_intro" type="file"> <br />
+              {if $applicant_intro_file}<a href="getMessage.php?general=applicant_intro">{#listen#}</a> 
+              {else}{#empty#} {/if} </td>
+          </tr>
+          <tr bgcolor="#eeeeff"> 
+            <td > <div align="right"><strong>{#applicant_help#}: </strong><br>
+                {#example_begin#}{#applicant_help_eg#}{#example_end#} </div></td>
+            <td > <input name="applicant_help" type="file"> <br />
+              {if $applicant_help_file}<a href="getMessage.php?general=applicant_help">{#listen#}</a> 
+              {else}{#empty#} {/if} </td>
+          </tr>
+          <tr bgcolor="#eeeeee"> 
+            <td colspan="2"> <div align="center"> 
+                <input name="imageField2" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
+                <input name="save_general" type="hidden" id="save_general" value="do">
+                &nbsp;&nbsp; 
+                <input name="save_general2" type="hidden" id="save_messages" value="do">
+              </div></td>
+          </tr>
+        </table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+			{if $error_out} 
+          <tr> 
+            <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+                
+                <tr bgcolor="#FFCCCC"> 
+                  <td width="10">{section name=errors loop=$error_list show=$error_out} 
+                    <div align=center> 
+                      <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
+                    {/section}</td>
+                </tr>
+                 </table></td>
+          </tr>
+		  {/if}
+          <tr> 
+            <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+</form>

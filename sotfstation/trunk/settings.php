@@ -13,7 +13,7 @@
 	include("init.inc.php");													# include the global framwork
 	$myNav->add($SECTION[SETTINGS],'settings.php');		# add entry to Navigation Bar Stack
 	
-	$vdb = DB::connect("pgsql://" . VDB_USER . ":" . VDB_PASS . "@" . VDB_HOST . "/" . VDB_NAME,false);
+	//$vdb = DB::connect("pgsql://" . VDB_USER . ":" . VDB_PASS . "@" . VDB_HOST . "/" . VDB_NAME,false);
 	
 	//process submit
 	if($_POST['Submit']){
@@ -61,6 +61,7 @@
 			$db->query("UPDATE user_map SET name = '$_POST[name]', mail = '$_POST[mail]', per_page = '$_POST[per_page]' WHERE auth_id = '" . $_SESSION['USER']->get("auth_id") . "'");
 			
 			//check if an entry exists
+			/*
 			if($vdb->getOne("SELECT owner_id FROM vb_data WHERE owner_id = '" . $_SESSION['USER']->get("auth_id") . "'")){	#yes
 				$vdb->query("UPDATE vb_data SET 
 																			owner_telnr = '$_POST[tel]',
@@ -74,6 +75,7 @@
 				mkdir("../pvxmailbox/message_dir/" . $_SESSION['USER']->get("auth_id"));
 				//echo $appRecDir . "/" . $_SESSION['USER']->get("auth_id");
 			}
+			* */
 				
 			//update session
 			$_SESSION['USER']->set("per_page",$_POST[per_page]);
@@ -103,7 +105,7 @@
 															 		user_map
 															 	LEFT JOIN user_access ON (user_map.access_id = user_access.id)
 															 	WHERE auth_id = '" . $_SESSION['USER']->get("auth_id") . "'",DB_FETCHMODE_ASSOC));
-		
+		/*
 		$smarty->assign($vdb->getRow("SELECT 
 																	owner_telnr AS submit_tel, 
 																	owner_pin AS submit_pin, 
@@ -111,7 +113,7 @@
 															 	FROM
 															 		vb_data
 															 	WHERE owner_id = '" . $_SESSION['USER']->get("auth_id") . "'",DB_FETCHMODE_ASSOC));
-		
+		*/
 		//check if autologin is valid
 		if($db->getOne("SELECT auth_id FROM user_autologin WHERE auth_id = '$_COOKIE[auto_login_id]' AND next_key = '$_COOKIE[auto_login_key]'")){
 			$smarty->assign("submit_autologin","t");
@@ -120,7 +122,7 @@
 	
 	//drop down fill											 
 	$smarty->assign("per_page",array(5=>5,10=>10,15=>15,20=>20,25=>25,30=>30,35=>35,40=>40,45=>45,50=>50));
-	$smarty->assign("vbnum",$_SESSION['USER']->get("vbnum"));
+	//$smarty->assign("vbnum",$_SESSION['USER']->get("vbnum"));
 	
 	//create help message
 	$myHelp = new helpBox(2,'90%');										# this will fetch a help message from the database and output it
