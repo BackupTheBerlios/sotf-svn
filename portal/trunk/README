@@ -1,0 +1,40 @@
+
+StreamOnTheFly portal software
+------------------------------
+
+Alpha pre-release!
+
+Created for the StreamOnTheFly project (IST-2001-32226)
+Authors: Máté Pataki, András Micsik
+         at MTA SZTAKI DSD, http://dsd.sztaki.hu
+Contact: micsik 'at' sztaki.hu
+
+PREREQUISITES:
+
+- Apache version 1 or 2: http://www.apache.org
+- PHP version >= 4.2: http://www.php.net
+- PEAR (bundled with PHP)
+- PostgreSQL DBMS version >= 7.2: http://www.postgresql.org/
+- Smarty template engine version >= 2.3: http://smarty.php.net/
+- An operational StreamOnTheFly node server
+
+INSTALLATION
+
+- Check that the PHP scripts in portal/www directory can be run by your
+  web server.
+
+- Make some directories under portal writeable by the web server
+  process (e.g. logs, code/templates_c)
+
+- Create a new database in Postgres, and feed it with portal/code/doc/db.sql
+
+- Copy portal/www/config.inc.php.template into portal/www/config.inc.php ,
+  and edit it according to your local settings.
+
+- Go to portal/www/portal.php/kanga with your browser.
+
+NOTES
+
+On Apache 2 you have to set 'AcceptPathInfo on'!
+
+We strongly suggest to set register_globals off in PHP.
