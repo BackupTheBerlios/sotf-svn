@@ -1,12 +1,20 @@
 
 StreamOnTheFly node software
+----------------------------
+
+Created for the StreamOnTheFly project (IST-2001-32226)
+Authors: András Micsik, Máté Pataki, Tamás Déri 
+         at MTA SZTAKI DSD, http://dsd.sztaki.hu
+Contact: micsik 'at' sztaki.hu
 
 PREREQUISITES:
 
-- Apache + PHP + PEAR
-- PostgreSQL DBMS: http://www.postgresql.org/
+- Apache version 1 or 2: http://www.apache.org
+- PHP version >= 4.2: http://www.php.net
+- PEAR (bundled with PHP)
+- PostgreSQL DBMS version >= 7.2: http://www.postgresql.org/
 - SelfAdmin tool from PublicVoiceLab (for user authentication)
-- Smarty template engine: http://smarty.php.net/
+- Smarty template engine version >= 2.3: http://smarty.php.net/
 - icecast streaming server: http://www.icecast.org/
 - tamburine streamer: http://tamburine.dyne.org/
   - w3c-libwww - http://www.w3c.org/Library (5.4.0)
@@ -14,17 +22,20 @@ PREREQUISITES:
 - lame mp3 tool: http://lame.sourceforge.net/
 - ogg/vorbis tool (optional) http://www.vorbis.com/
 - SoX sound conversion tool: http://sox.sourceforge.net/
-- getid3 PHP media file parser: http://getid3.sourceforge.net/
+- getid3 PHP media file parser version 1.6.0: http://getid3.sourceforge.net/
 - ImageMagick image conversion tool: http://www.imagemagick.org/
-
+- ProFTPd (optional): http://www.proftpd.org
+   (if users want to upload audio files via FTP)
 
 INSTALLATION
 
 - Check that the PHP scripts in node/www directory can be run by your
-web server.
+  web server.
 
-- Edit node/www/config.inc.php, then run node/www/install/install.php
-from your browser.
+- Copy node/www/config.inc.php.template into node/www/config.inc.php ,
+  and edit it according to your local settings.
+
+- Run node/www/install/install.php from your browser.
 
 - After a successful install login as admin 
 

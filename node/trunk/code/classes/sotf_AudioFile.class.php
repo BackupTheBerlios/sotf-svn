@@ -66,33 +66,19 @@ class sotf_AudioFile extends sotf_File
 	{
 		$parent = get_parent_class($this);
 		parent::$parent($path);		// Call the constructor of the parent class. lk. super()
-		$audioinfo = GetAllMP3info($this->path);
-		if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg')
-		{
+		$fileinfo = GetAllFileInfo($this->path);
+		//if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg') {
+    if (isset($fileinfo['audio'])) {
+      $audioinfo = $fileinfo['audio'];
 			$this->type = "audio";
-			$this->format = $audioinfo["fileformat"];
+			$this->format = $fileinfo["fileformat"];
 			if ($audioinfo["bitrate_mode"] == 'vbr')
 				$this->bitrate = "VBR";
-			else
-				$this->bitrate = $audioinfo["bitrate_audio"]/1000;
-			if (!$this->bitrate)
-				$this->bitrate = $audioinfo["bitrate"]/1000;
-			if (!$this->bitrate && $this->format == 'mp3')
-				$this->bitrate = $audioinfo["mpeg"]["audio"]["bitrate"]/1000;
-			$this->average_bitrate = $audioinfo["bitrate_audio"]/1000;
-			if (!$this->average_bitrate && is_numeric($this->bitrate))
-				$this->average_bitrate = $this->bitrate;
-			$this->samplerate = $audioinfo["frequency"];
-			if (!$this->samplerate && $this->format == 'mp3')
-				$this->samplerate = $audioinfo["mpeg"]["audio"]["frequency"];
-			if (!$this->samplerate && $this->format == 'ogg')
-				$this->samplerate = $audioinfo["ogg"]["samplerate"];
+      $this->bitrate = round($audioinfo["bitrate"]/1000);
+			$this->average_bitrate = round($audioinfo["bitrate"]/1000);
+			$this->samplerate = $audioinfo["sample_rate"];
 			$this->channels = $audioinfo["channels"];
-			if (!$this->channels && $this->format == 'mp3')
-				$this->channels = $audioinfo["mpeg"]["audio"]["channels"];
-			if (!$this->channels && $this->format == 'ogg')
-				$this->channels = $audioinfo["ogg"]["numberofchannels"];
-			$this->duration = $audioinfo["playtime_seconds"];
+			$this->duration = round($audioinfo["playtime_seconds"]);
 			$this->mimetype = $this->determineMimeType($this->format);
 		}
 	} // end func sotf_AudioFile

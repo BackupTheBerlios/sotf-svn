@@ -53,8 +53,11 @@ fwrite($fp,$filepath . "\n");
 fclose($fp);
 
 // prepare streaming command
-$mp3info = GetAllMP3info($filepath);
-$bitrate = (string) $mp3info['mpeg']['audio']['bitrate'];
+$mp3info = GetAllFileInfo($filepath);
+debug('mp3info', $mp3info);
+$bitrate = (string) $mp3info['audio']['bitrate'];
+if(!$bitrate)
+     raiseError("Could not determine bitrate, maybe this is not an audio file...");
 
 $mystreamCmd = str_replace('__PLAYLIST__', $tmpfile, $streamCmd);
 $mystreamCmd = str_replace('__NAME__', $name, $mystreamCmd);

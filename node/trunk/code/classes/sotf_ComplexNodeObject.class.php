@@ -124,7 +124,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
       return false;
     }
 	
-		//$info = GetAllMP3info($file->getPath());
+		//$info = GetAllFileInfo($file->getPath());
 		//if (($info['png']['width'] == $iconWidth) && ($info['png']['height'] == $iconHeight))
 
     debug("imgfile", $imgfile);

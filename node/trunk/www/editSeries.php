@@ -65,7 +65,7 @@ if($delperm) {
 // upload icon
 $uploadIcon = sotf_Utils::getParameter('uploadicon');
 if($uploadIcon) {
-  $file =  sotf_Utils::getFileInDir($user->getUserDir(), $_FILES['userfile']['name']);
+  $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
   if ($series->setIcon($file)) {
     //$page->addStatusMsg("ok_icon");

@@ -58,8 +58,8 @@ class sotf_FileList
 		{
 			if (!$this->pathExist($path))
 			{
-				$audioinfo = GetAllMP3info($path);
-				if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg')
+				$audioinfo = GetAllFileInfo($path);
+				if (isset($audioinfo["audio"]))
 					$this->list[] = & new sotf_AudioFile($path);
 				else
 					$this->list[] = & new sotf_File($path);

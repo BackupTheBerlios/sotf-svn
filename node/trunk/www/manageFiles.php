@@ -11,7 +11,7 @@ $page->forceLogin();
 // upload to my files
 $upload = sotf_Utils::getParameter('upload');
 if($upload) {
-  $file =  sotf_Utils::getFileInDir($user->getUserDir(), $_FILES['userfile']['name']);
+  $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
   $page->redirect("manageFiles.php");
   exit;
