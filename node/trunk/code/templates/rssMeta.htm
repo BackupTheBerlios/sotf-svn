@@ -1,8 +1,4 @@
 {config_load file="$LANG.conf" section="rss"}
-    <br /><i>{#station#}:</i> <a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a>
-    {if $SERIES_DATA}
-    <br /><i>{#series#}:</i> <a href="{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}">{$SERIES_DATA.name}</a>
-    {/if}
     <br /><i>{#title#}:</i> {$PRG_DATA.title}
     {if $PRG_DATA.alternative_title}
     <br /><i>{#alternative_title#}:</i> {$PRG_DATA.alternative_title}
@@ -17,32 +13,11 @@
     {if $PRG_DATA.abstract}
     <br /><i>{#abstract#}:</i> {$PRG_DATA.abstract}
     {/if}
-    {if $PRG_DATA.keywords}
-    <br /><i>{#keywords#}:</i> {$PRG_DATA.keywords}
-    {/if}
     {if $PRG_DATA.genre_id}
     <br /><i>{#genre#}:</i> {$GENRE.name}
     {/if}
-    {if $TOPICS}
-    <br /><i>{#topics#}:</i>
-          {foreach item=item from=$TOPICS}
-              {$item.name}
-          {/foreach}
-    {/if}
-    {if $PRG_DATA.temporal_coverage}
-    <br /><i>{#temporal_coverage#}:</i> {$PRG_DATA.temporal_coverage}
-    {/if}
-    {if $PRG_DATA.spatial_coverage}
-    <br /><i>{#spatial_coverage#}:</i> {$PRG_DATA.spatial_coverage}
-    {/if}
-    {if $PRG_DATA.production_date}
-    <br /><i>{#production_date#}:</i> {$PRG_DATA.production_date}
-    {/if}
     {if $PRG_DATA.broadcast_date}
     <br /><i>{#broadcast_date#}:</i> {$PRG_DATA.broadcast_date}
-    {/if}
-    {if $PRG_DATA.entry_date}
-    <br /><i>{#entry_date#}:</i> {$PRG_DATA.entry_date}
     {/if}
     {if $RIGHTS}
       <br /><i>{#Rights#}:</i>

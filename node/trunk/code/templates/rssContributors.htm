@@ -1,3 +1,3 @@
 {foreach item=item from=$ROLES}
-  <br /><a href="{$ROOT_URL}/showContact.php/{$item.contact_data.id}">{$item.contact_data.name}</a> ({$item.role_name})
+  <br />{$item.contact_data.name}</a> ({$item.role_name})
 {/foreach}

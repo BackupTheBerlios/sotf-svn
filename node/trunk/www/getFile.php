@@ -14,6 +14,9 @@ $id = sotf_Utils::getParameter('id');
 $mainAudio = sotf_Utils::getParameter('audio');
 $prg = & new sotf_Programme($id);
 
+if(!$prg)
+	  raiseError("no_such_object");
+
 if(!$prg->isLocal()) {
   // have to send user to home node of this programme
   sotf_Node::redirectToHomeNode($prg, 'getFile.php');

@@ -1,5 +1,3 @@
 {config_load file="$LANG.conf" section="rss"}
 
-<br />{#Listens#}: {$STATS.listens|default:"0"}
-<br />{#Downloads#}: {$STATS.downloads|default:"0"}
 <br />{if $RATING}{#Rating#}: {$RATING.rating_value} ({#by#} {$RATING.rating_count}){else}{#no_rating#}{/if}

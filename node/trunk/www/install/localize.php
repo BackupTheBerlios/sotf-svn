@@ -37,7 +37,7 @@ foreach($eng as $line) {
     $val = trim($m[2]);
     //print("$section: $key = $val\n");
     if($langConf && $key) {
-      $transl = $langConf->get("$lang.conf", $section, $key);
+      $transl = utf8_encode($langConf->get("$lang.conf", $section, $key));
       //print_r($transl);
     } else
       $transl = NULL;
