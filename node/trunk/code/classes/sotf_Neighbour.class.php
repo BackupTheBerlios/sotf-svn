@@ -175,19 +175,23 @@ class sotf_Neighbour extends sotf_Object {
     $remoteId = $this->get('node_id');
     $currentStamp = $sotfVars->get('sync_stamp', 0);
     $lastSyncStamp = $this->lastSyncStamp();
-    $count = sotf_NodeObject::countModifiedObjects($remoteId, $lastSyncStamp);
-    if($chunkInfo['this_chunk'] == $chunkInfo['num_chunks']) {
-      // last chunk: no limits
-      $objectsPerPage = 100000;
-    } else {
-      $objectsPerPage = ceil($count / $chunkInfo['num_chunks']);
-    }
     $chunkInfo['old_stamp'] = $lastSyncStamp;
     $chunkInfo['current_stamp'] = $currentStamp;
-    $from = $objectsPerPage * $chunkInfo['this_chunk'] + 1;
-    debug("chunk info", $chunkInfo);
-    // get new objects to send as reply
-    $objects = sotf_NodeObject::getModifiedObjects($this->get('node_id'), $lastSyncStamp, $from, $objectsPerPage, $updatedObjects);
+    $count = sotf_NodeObject::countModifiedObjects($remoteId, $lastSyncStamp);
+    if($count > 0) {
+      if($chunkInfo['this_chunk'] == $chunkInfo['num_chunks']) {
+        // last chunk: no limits
+        $objectsPerPage = 1000000;
+      } else {
+        $objectsPerPage = ceil($count / $chunkInfo['num_chunks']);
+      }
+      $from = $objectsPerPage * ($chunkInfo['this_chunk'] -1) + 1;
+      debug("chunk info", $chunkInfo);
+      // get new objects to send as reply
+      $objects = sotf_NodeObject::getModifiedObjects($this->get('node_id'), $lastSyncStamp, $from, $objectsPerPage, $updatedObjects);
+    } else {
+      $objects = array();
+    }
     // save time of this sync
     $this->saveSyncStatus($timestamp, $currentStamp);
     return array($chunkInfo, $objects);
