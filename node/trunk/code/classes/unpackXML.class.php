@@ -102,9 +102,8 @@
 				if($this->encoding == $this->outencoding){	//don't convert
 					$data = $reference->get_content();
 				}else{
-					$data = iconv($this->encoding,"ISO-8859-1",$reference->get_content());	//convert
+					$data = iconv($this->encoding,$this->outencoding,$reference->get_content());	//convert
 				}
-				//$data = iconv("UTF-8","ISO-8859-1",$reference->get_content());	//convert
 				$data = str_replace("%%rgt%%",">",$data);
 				$data = str_replace("%%lgt%%","<",$data);
 			}
