@@ -137,6 +137,7 @@ CREATE TABLE "sotf_stations" (
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"name" varchar(32) UNIQUE NOT NULL,
 	"description" text,
+	"language" varchar(20),											-- 2-letter codes separeted by comma
 	"entry_date" date DEFAULT CURRENT_DATE
 );
 
@@ -148,6 +149,7 @@ CREATE TABLE "sotf_series" (
 	"station_id" varchar(12) NOT NULL,
 	"title" varchar(255) DEFAULT 'untitled' NOT NULL,
 	"description" text,
+	"language" varchar(20),											-- 2-letter codes separeted by comma
 	"entry_date" date DEFAULT CURRENT_DATE,
 	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE
 );
@@ -177,7 +179,7 @@ CREATE TABLE "sotf_programmes" (
 	"type" varchar(50) DEFAULT 'sound',							-- DCMI type (audio/video/etc.)
 	"genre_id" int2,														-- SOMA genre (ref. to sotf_genres)
 	"length" int2,														-- dc.format.extent = duration in seconds
-	"language" varchar(10),											-- dc.language
+	"language" varchar(20),											-- dc.language (2-letter codes separeted by comma)
 	"spatial_coverage" text,										-- dc.coverage.spatial
 	"temporal_coverage" date,										-- dc.coverage.temporal
 	"published" bool DEFAULT 'f'::bool,							-- unpublished items are not searchable nor browsable
@@ -393,6 +395,7 @@ CREATE TABLE "sotf_ratings" (
 	-- todo: delete ratings of a deleted user or not?
 	"rate" SMALLINT NOT NULL DEFAULT '0',
 	"host" varchar(100) NOT NULL,									-- host from where the rating arrived
+	"portal" varchar(255),											-- the portal URL from where rating arrived XXX
 	"entered" timestamptz NOT NULL DEFAULT '-infinity',		-- date when rating arrived
 	"auth_key" varchar(50),											-- anti-abuse thingie
 	"problem" varchar(50) default NULL,							-- if any suspicious thing occurred during rating
@@ -424,7 +427,13 @@ CREATE TABLE "sotf_refs" (
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"prog_id" varchar(12) NOT NULL,							-- programme being referenced
 	"station_id" varchar(12) NOT NULL,
-	"url" varchar(255) NOT NULL,					-- URL of portal article referencing to the program
+	"url" varchar(255) NOT NULL,					-- URL of portal referencing to the program
+	"start_date" timestamptz,						-- date when prog appeared on portal  XXX
+	"end_date" timestamptz, 						-- date when prog disappeared from portal
+	"visits" int,										-- number of visits
+	"listens" int,										-- number of listens initiated from the portal
+	"rating" float,									-- rating on the portal
+	"raters" int,										-- number of raters on the portal
 	"comments" int2 DEFAULT '0',					-- number of comments
 	CONSTRAINT "sotf_refs_u" UNIQUE ("prog_id", "url"),
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
@@ -447,6 +456,36 @@ CREATE TABLE "sotf_stats" (
 	"visits" int DEFAULT '0',					-- number of times page has been visited
 	CONSTRAINT "sotf_stats_u" UNIQUE ("prog_id", "month", "year", "day"),
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
+);
+
+CREATE TABLE "sotf_comments" (
+-- comments for a radio programme XXX
+	"id" serial PRIMARY KEY,
+	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
+	"from_email" varchar(60),		-- e-mail from where comment arrived
+	"from_name" varchar(60),		-- user name-like thing
+	"entered" timestamptz,			-- when user entered the comment
+	"portal" varchar(255),			-- the portal URL where the comment was made
+	"comment_text" text				-- full text of the comment
+);
+
+CREATE TABLE "sotf_to_forward" (
+-- data to forward to another node XXX
+-- host??
+	"id" serial PRIMARY KEY,
+	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
+	"type" varchar(10),  -- type of data
+	"data" text			-- data to be sent
+);
+
+CREATE TABLE "sotf_access" (
+-- memory to calculate unique access to prg
+	"id" serial PRIMARY KEY,
+	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
+	"ip" varchar(100),			-- host or IP
+	"auth_key" varchar(50),		-- anti-abuse thingie
+	"action" char(1),				-- type of access
+	"when" timestamptz			-- time of access
 );
 
 CREATE TABLE "sotf_user_progs" (
@@ -473,5 +512,4 @@ INSERT INTO "sotf_permissions" ("id", "permission") VALUES('5', 'delete');
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('6', 'authorize');
 SELECT nextval('sotf_permissions_id_seq');
-
 
