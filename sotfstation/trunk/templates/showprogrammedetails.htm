@@ -135,17 +135,27 @@
                   <td nowrap><select name="special_needs" id="special_needs">
                      {html_options options=$special_needs selected=$submit_special_needs}
                     </select> </td>
-{if $submit_series_active == 't'}
-                </tr>
-				  <tr bgcolor="#f4f4f4"> 
+                  {if $submit_series_active == 't'} </tr>
+                <tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right">*{#prog_active#}:</div></td>
                   <td nowrap><select name="prog_active" class="myselect">
 				  		{html_options options=$prog_active selected=$submit_prog_active}
                     </select></td>
                 </tr>
-{else}
-<input type=hidden name="prog_active" value={$submit_prog_active}>
-{/if}
+                {else} 
+                <input type=hidden name="prog_active" value={$submit_prog_active}>
+                {/if} 
+				 <tr bgcolor="#eeeeee"> 
+                  <td nowrap> 
+                    <div align="right">*{#options#}</div></td>
+                  <td nowrap> 
+                    <table width="100" border="0" cellspacing="0" cellpadding="1">
+                      <tr>
+                        <td><a href="showprogrammedetails.php?id={$programme_id}&action=delete&timestamp={$prog_intimets}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" width="24" height="16" border=0></a></td>
+                        <td nowrap><a href="showprogrammedetails.php?id={$programme_id}&action=delete&timestamp={$prog_intimets}" OnClick="return confirmLink(this,'');">{#delete_programme#}</a></td>
+                      </tr>
+                    </table></td>
+                </tr>
                 <tr bgcolor="#dddddd"> 
                   <td width="100%" colspan=2 class=whitesmall><strong>{#series_data#}</strong></td>
                 </tr>
@@ -172,6 +182,17 @@
                   <td nowrap><select name="series_active" class="myselect">
 				  		{html_options options=$series_active selected=$submit_series_active}
                     </select></td>
+                </tr>
+				 <tr bgcolor="#eeeeee"> 
+                  <td nowrap> 
+                    <div align="right">*{#options#}</div></td>
+                  <td nowrap> 
+                    <table width="100" border="0" cellspacing="0" cellpadding="1">
+                      <tr>
+                        <td><a href="showprogrammedetails.php?id={$programme_id}&action=delete_series&series_id={$series_id}&timestamp={$prog_intimets}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" width="24" height="16" border=0></a></td>
+                        <td nowrap><a href="showprogrammedetails.php?id={$programme_id}&action=delete_series&series_id={$series_id}&timestamp={$prog_intimets}" OnClick="return confirmLink(this,'');">{#delete_series#}</a> ({#delete_series_help#})</td>
+                      </tr>
+                    </table></td>
                 </tr>
                 {section name=error_cell show=$error_out} 
                 <tr bgcolor="#FFCCCC"> 

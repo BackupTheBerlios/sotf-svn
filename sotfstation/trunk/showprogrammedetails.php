@@ -24,6 +24,24 @@
 		$smarty->assign("station_access",$mod_flag);
 	}
 	
+	####################################################################
+	//process Programme Delete Call
+	if(($_GET['action']=='delete') and ($mod_flag)){
+		$db->query("DELETE FROM programme WHERE id = '$_GET[id]'");
+		
+		//close window
+		$smarty->assign(array("window_destroy"=>true,"destination"=>"inside.php","get_data"=>"date=" . date("d-m-Y",$_GET['timestamp'])));
+	}else if(($_GET['action']=='delete_series') and ($mod_flag)){
+		//drop all programmes related to this sereis
+		$db->query("DELETE FROM programme WHERE series_id = '$_GET[series_id]'");
+		
+		//drop the series
+		$db->query("DELETE FROM series WHERE id = '$_GET[series_id]'");
+		
+		//close window
+		$smarty->assign(array("window_destroy"=>true,"destination"=>"inside.php","get_data"=>"date=" . date("d-m-Y",$_GET['timestamp'])));
+	}
+	
 	####################################################################################################################
 	//PROCESS SUBMIT (if admin)
 	if($mod_flag and $_POST['Submit']){

@@ -91,7 +91,7 @@
 	$smarty->assign("per_page",array(5=>5,10=>10,15=>15,20=>20,25=>25,30=>30,35=>35,40=>40,45=>45,50=>50));
 	
 	//create help message
-	$myHelp = new helpBox(2,'98%');										# this will fetch a help message from the database and output it
+	$myHelp = new helpBox(2,'90%');										# this will fetch a help message from the database and output it
 																										# in the template (if allowed to do so)																						
 	//page output :)	
 	pageFinish('settings.htm');												# enter the desired template name as a parameter

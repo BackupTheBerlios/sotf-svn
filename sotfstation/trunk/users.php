@@ -110,7 +110,10 @@
 	$smarty->assign(array("block"=>$_GET['block'],"order"=>$_GET['orderby'],"sortby"=>$_GET['sortby']));
 	$mySplit = new pageSplit($_GET['block'],$total,"users.php",$_SESSION['USER']->get("per_page"));
 	$smarty->assign("pageSplit",$mySplit->out());
-																				
+	
+	//create help message
+	$myHelp = new helpBox(3,'90%');
+				
 	//page output :)	
 	pageFinish('users.htm');											# enter the desired template name as a parameter
 ?>
