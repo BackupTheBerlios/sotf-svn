@@ -1,0 +1,306 @@
+tree_id=1
+name=SOTF arbre général de matière
+shortname=SOTF général
+description=Une tentative de créer un arbre général de matieère pour les radios.
+url=
+
+# End of tree definition
+      
+  1  1 Arts, medias, divertissement et loisirs
+
+  2  2 nouvelles
+  3  2 nouveaux médias (Internet, CD, DVD, Mini Disque, etc) 
+  4  2 presse
+  5  2 radio
+  6  2 télévision
+  7  2 publicité et relations publiques
+  8  2 nouvelles étrangères (devrait rester)
+  9  2 films de cinéma (documentaire, fiction)
+ 10  2 arts de représentation (théâtre, danse, cirque, etc...)
+ 11  2 musique (tous les genres - comprenant l'opéra, le concert classique, etc...)
+ 12  2 arts en plastique (peinture, sculpture, photographie, bandes dessinées, etc...)
+ 13  2 architecture et urbainisme
+ 14  2 littérature (poésie, fiction, essais, etc...)
+ 15  2 romans policiers
+ 16  2 schience-fiction et fantaisie
+ 17  2 dessins animés, caricatures et bandes dessinées
+ 18  2 activités récréationnelles
+ 19  2 voyage et tourisme
+ 20  2 jeux
+
+ 21  1 pratiques humaines et issues sociales
+
+ 22  2 femmes
+ 23  2 hommes
+ 24  2 les jeunes gens
+ 25  2 les gens âgés 
+ 26  2 famille
+ 27  2 personnes handicapées
+
+ 28  2 pratiques de corps 
+ 29  2 sexualité
+ 30  2 drogues
+ 31  2 pauvreté
+ 32  2 migration
+
+ 33  2 multiculturalisme
+ 34  2 féminisme
+ 35  2 homo oder gay
+
+ 36  2 issues de la communauté (planification de logement, de transport, de secteur, communautés urbaines, communautés rurales)
+ 37  2 folklore
+ 38  2 religion, métaphysique
+ 39  2 racisme
+ 40  2 sexisme
+
+
+ 41  1 curatif et médecine
+
+ 42  2 maladies physiques
+ 43  2 diseases santé/maladies mentale
+ 44  2 substance curative
+ 45  2 sida
+ 46  2 hygiène
+ 47  2 santé publique
+ 48  2 drogues légales
+ 49  2 drogues illégales
+ 50  2 curatif traditionnel
+ 51  2 examen médical
+ 52  2 médecine alternative
+ 53  2 premiers soins
+ 54  2 épidémie
+ 55  2 recherche médicale
+ 56  2 bio technologie (génétique)
+
+
+ 57  1 enseignement, apprenant et étudier
+
+ 58  2 universités
+ 59  2 écoles
+ 60  2 apprendre pour toujours
+ 61  2 cours et formation 
+ 62  2 étude de distance
+ 63  2 éducateurs
+ 64  2 méthodes d'enseignement
+ 65  2 éducation spéciale
+ 66  2 
+ 67  2 éducation
+ 68  2 pédagogie
+ 69  2 alphabétisation 
+ 70  2 biographie
+ 71  2 programmes d'études
+ 72  2 cours
+
+
+ 73  1 sciences et technologies
+
+ 74  2 sciences naturelles (ethologie, écologie, botanique, etc) 
+ 75  2 sciences géologiques (astronomie, géographie, océanographie, climatologie, géologie, etc...)
+ 76  2 sciences naturelles (Physique, Chimie, etc) 
+ 77  2 Sciences générales (biologie, génétique, anatomie, etc...)
+ 78  2 sciences sociales (Sociologie, Anthropologie, etc) 
+ 79  2 psychologie et psychiatrie
+ 80  2 archéologie et paléontologie
+ 81  2 histoire
+ 82  2 communications, télécommunication et internet
+ 83  2 énergie, énergie nucléaire et production d'énergie durable 
+ 84  2 informatique 
+
+
+ 85  1 issues environnementales, agriculture et technologies relatives
+
+ 86  2 agriculture et technologies relatives
+ 87  2 agriculture biologique
+ 88  2 technologie alimentaire
+ 89  2 ressources biologiques
+ 90  2 chasse et pêche
+ 91  2 espèce en danger
+ 92  2 climat
+ 93  2 population
+ 94  2 approvisionnement en eau
+ 95  2 systèmes écologiques 
+ 96  2 élevage
+ 97  2 problèmes environnementaux 
+ 98  2 famine
+ 99  2 diversité bio
+100  2 organisme génétiquement modifié 
+101  2 pollution
+
+
+102  1 justice et gouvernemental
+
+103  2 coopération internationale
+104  2 géopolitique
+105  2 politique intérieure
+106  2 politique de développement
+107  2 politique sociale (politique d'emploi, bien-être)
+108  2 O.N.G.
+109  2 syndicats
+110  2 systèmes des gouvernements et des états
+111  2 aide humanitaire
+112  2 travail
+113  2 défense
+
+114  2 persécution politique (prisonniers, réfugiés...) 
+115  2 droits de l'homme (droit d'asile, liberté de parole)
+116  2 services de police 
+117  2 prison
+118  2 crime et délinquance
+119  2 terrorisme
+120  2 copyleft Licences ???
+
+
+121  1 politiques, systèmes politiques, et guerres
+
+122  2 anarchisme
+123  2 capitalisme
+124  2 communisme
+125  2 partis verts
+126  2 élections
+127  2 fascime et nazisme (incluant partis)
+128  2 Libéralisme
+129  2 partis politiques
+130  2 pacifisme
+131  2 socialisme
+132  2 nationalisme
+133  2 systèmes démocratiques
+134  2 systèmes autoritaires 
+135  2 groupes révolutionnaires et subversifs (activisme) 
+136  2 globalisation
+
+137  2 rébellion
+138  2 guerre
+139  2 guerre civile et révolution
+140  2 armes 
+
+
+141  1 sport
+
+142  2 course aventure
+143  2 Airsoft
+144  2 combat animal 
+145  2 tir à l'arc
+146  2 badminton
+147  2 base-ball
+148  2 basket-ball 
+149  2 billard 
+150  2 boule
+151  2 boomerang
+152  2 bowling
+153  2 boxing
+154  2 cheerleading (supporter)
+155  2 cricket
+156  2 croquet
+157  2 cyclisme
+158  2 flèches
+159  2 équestre
+160  2 sports extrêmes
+161  2 escrime
+162  2 pêche
+163  2 lancement de disque
+164  2 football
+165  2 gaélique
+166  2 goal-ball
+167  2 golf
+168  2 courses de lévrier
+169  2 gymnastique
+170  2 hand-ball
+171  2 hockey
+172  2 courses de chevaux
+173  2 chasse
+174  2 sports informels
+175  2 jai-alai
+176  2 kabbadi
+177  2 korf-ball
+178  2 lacrosse
+179  2 bûcheron
+180  2 sports motorisés
+181  2 multi-sport
+182  2 net-ball
+183  2 orientation
+184  2 paddle-ball
+185  2 paint-ball
+186  2 pétanque
+187  2 racquet-ball
+188  2 rodéo
+189  2 sauter de corde
+190  2 base-ball
+191  2 courir
+192  2 sepak takraw
+193  2 tir
+194  2 skateboarding
+195  2 skating
+196  2 football
+197  2 balle-molle
+198  2 squash
+199  2 sports de force
+200  2 ping-pong
+201  2 tchoukball
+202  2 équipe de hand-ball
+203  2 tennis
+204  2 athlétisme
+205  2 volley-ball
+206  2 marche
+207  2 sports nautiques
+208  2 sports d'hiver
+209  2 wrestling
+
+
+210  1 affaires
+
+211  2 comptabilité
+212  2 coopératives
+213  2 service à la clientèle
+214  2 commerce électronique
+215  2 éducation et formation
+216  2 emploi
+217  2 ressources humaines
+218  2 affaires et commerce internationaux
+219  2 investissement
+220  2 sociétés principales
+221  2 gestion
+222  2 marketing et publicité 
+223  2 petit commerce
+224  2 services d'affaires
+225  2 services financiers
+226  2 commerce de gros
+
+
+227  1 achats et produits de consommation
+
+228  2 antiquités et pièces de collection
+229  2 produits de beauté
+230  2 livres
+231  2 enfants
+232  2 vêtements
+233  2 ordinateurs
+234  2 électronique grand public
+235  2 arts et métiers
+236  2 pompes funèbres
+237  2 divertissement
+238  2 ethnique et régional
+239  2 fleurs
+240  2 alimentation
+241  2 meubles
+242  2 marchandises générales
+243  2 cadeaux
+244  2 santé 
+245  2 vacances
+246  2 maison et jardin 
+247  2 bijoux 
+248  2 musique
+249  2 fournitures de bureau  
+250  2 animaux de compagnie
+251  2 photographie 
+252  2 publications
+253  2 récréation
+254  2 tabac 
+255  2 outils 
+256  2 jouets et jeux 
+257  2 voyages
+258  2 véhicules 
+259  2 mariages  
+260  2 vente en gros 
+
+
+

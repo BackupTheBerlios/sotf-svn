@@ -22,10 +22,10 @@ ini_set("log_errors", true);
 error_reporting (E_ALL ^ E_NOTICE);
 
 function dbug($msg) {
-  error_log($msg,0);
+  error_log("INSTALL: $msg",0);
 }
 
-dbug("-------------------------");
+dbug("-----INSTALL---------------------------------------------");
 dbug("install.php started");
 
 function PrintTitle($number)		//'header' af all tests
@@ -315,23 +315,29 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		else
 		{
 			include("../config.inc.php");
-			if ($config['nodeDbHost'] != NULL)		//in iclude successfull
+			if ($config['nodeDbHost'] != NULL)		//if include successfull
 			{
 					//set default parameter if first time successfull or reload button pressed
 				if (($install_color[$id] != $install_green) or ($install_reload != NULL))
 				{
-					$install_user = $config['userDbUser'];			//username for DB
-					$install_pass = $config['userDbPasswd'];			//password for DB
-					$install_host = $config['userDbHost'];			//host for DB
-					$install_port = $config['userDbPort'];			//port for DB
+					$install_user = $config['nodeDbUser'];			//username for DB
+					$install_pass = $config['nodeDbPasswd'];			//password for DB
+					$install_host = $config['nodeDbHost'];			//host for DB
+					$install_port = $config['nodeDbPort'];			//port for DB
 					
-					
-					$install_sadm_user = $config['userDbUser'];		//username for DB
-					$install_sadm_pass = $config['userDbPasswd'];		//password for DB
-					$install_sadm_host = $config['userDbHost'];		//host for DB
-					$install_sadm_port = $config['userDbPort'];		//port for DB
-					$install_sadm_db_name = $config['userDbName'];		//DB name
-					
+					if($config['selfUserDb']) {
+					  $install_sadm_user = $config['nodeDbUser'];		//username for DB
+					  $install_sadm_pass = $config['nodeDbPasswd'];		//password for DB
+					  $install_sadm_host = $config['nodeDbHost'];		//host for DB
+					  $install_sadm_port = $config['nodeDbPort'];		//port for DB
+					  $install_sadm_db_name = $config['nodeDbName'];		//DB name
+					} else {
+					  $install_sadm_user = $config['userDbUser'];		//username for DB
+					  $install_sadm_pass = $config['userDbPasswd'];		//password for DB
+					  $install_sadm_host = $config['userDbHost'];		//host for DB
+					  $install_sadm_port = $config['userDbPort'];		//port for DB
+					  $install_sadm_db_name = $config['userDbName'];		//DB name
+					}
 					
 					$install_node_user = $config['nodeDbUser'];		//username for DB
 					$install_node_pass = $config['nodeDbPasswd'];		//password for DB
@@ -412,23 +418,22 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 
 	$id = 4;	//////////////////////////Test 4
-	if (RunTest($id, "PostgreSQL connection"))
-	{
-	  dbug("TEST 4");
-		$conn = pg_connect("host=$install_host port=$install_port user=$install_user dbname=template1 password=$install_pass");
-		if (!$conn)
-		{
-			$install_test_result[$id] = "Connecting to PostGreSQL failed";
-			$install_color[$id] = $install_red;
-		}
-		else
-		{
-			$install_test_result[$id] = "OK";
-			$install_color[$id] = $install_green;
+	if (RunTest($id, "PostgreSQL connection")) {
+	  dbug("TEST 4: pgsql connection");
+	  dbug("pg_connect: host=$install_host port=$install_port user=$install_user dbname=template1 password=$install_pass");
+	  $conn = pg_connect("host=$install_host port=$install_port user=$install_user dbname=template1 password=$install_pass");
+		if (!$conn) {
+		  dbug("Connection failed");
+		  $install_test_result[$id] = "Connecting to PostGreSQL failed";
+		  $install_color[$id] = $install_red;
+		} else {
+		  dbug("Connection succeeded");
+		  $install_test_result[$id] = "OK";
+		  $install_color[$id] = $install_green;
 		}
 		pg_close($conn);
 	}
-	PrintTitle($id);
+   PrintTitle($id);
 	print('
 	<DIV ALIGN="center">
 	Username: <INPUT type="text" name="user" value="'.$install_user.'"><BR />
@@ -438,85 +443,36 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	PrintButton($id);
 
 
-	$id = 5;	//////////////////////////Test 5
-	if (RunTest($id, "DB connection to SelfAdmin", 4))		//////////////////////////Test 4 should be OK to run this test
+
+//////////////////////////Test 5
+
+	$id = 5;	
+	if (RunTest($id, "DB connection to 'node'", 4) && !$install_createdb)		//Test 4 should be OK to run this test
 	{
-	  dbug("TEST 5");
+	  dbug("TEST 5: node database");
+	  dbug("pg_connect: host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
 
-		$conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
-		if (!$conn)
-		{
-			$conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=template1 user=$install_sadm_user password=$install_sadm_pass");
-			if (!$conn)
-			{
-				$install_test_result[$id] = "Could not connect.";
-				$install_color[$id] = $install_red;
-			}
-			else
-			{
-				$install_test_result[$id] = "Database 'sadm' not found, please install SADM.";
-				$install_color[$id] = $install_red;
-			}
-		}
-		else
-		{
-			$sql = "select count(*) from authenticate where username = 'admin'";
-			$result = pg_exec($conn, $sql);
-			$a = pg_fetch_row($result, 0);
-			if ( $a[0] != 1)
-			{
-				$install_test_result[$id] = "Admin user in table authenticate not found.";
-				$install_color[$id] = $install_red;
-			}
-			else
-			{
-				$install_test_result[$id] = "OK";
-				$install_color[$id] = $install_green;
-			}
-		}
-		pg_close($conn);
+	  $conn = pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
+	  if (!$conn) {
+		 dbug("Connect failed");
+		 $install_test_result[$id] = "Database '".$install_node_db_name."' not found";
+		 $install_color[$id] = $install_red;
+	  } else {
+		 dbug("Connect success");
+		 $install_test_result[$id] = "OK";
+		 $install_color[$id] = $install_green;
+		 pg_close($conn);
+	  }
 	}
-//$install_writeback_sadm
-	PrintTitle($id);
-	print('
-	Username: <INPUT type="text" name="sadm_user" value="'.$install_sadm_user.'"><BR />
-	Password: <INPUT type="password" name="sadm_pass" value="'.$install_sadm_pass.'"><BR />
-	Hostname: <INPUT type="text" name="sadm_host" value="'.$install_sadm_host.'"> Port: <INPUT type="text" name="sadm_port" value="'.$install_sadm_port.'" SIZE=5><BR />
-	Database name: <INPUT type="text" name="sadm_db_name" value="'.$install_sadm_db_name.'"><BR />');
-	if ( ($install_color[$id] == $install_green) AND ( ($install_sadm_user != $userDbUser) OR ($install_sadm_pass != $userDbPasswd)
-		   OR ($install_sadm_host != $userDbHost) OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) ) {
-	  print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="writeback_sadm" value="Write new values to config.inc.php" disabled=true></DIV>');
-	}
-	PrintButton($id);
-
-
-//////////////////////////Test 6
-
-	$id = 6;	
-	if (RunTest($id, "DB connection to 'node'", 5) && !$install_createdb)		//////////////////////////Test 5 should be OK to run this test
-	{
-	  dbug("TEST 6");
-
-		$conn = pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
-		if (!$conn)
+if ($install_createdb)			//if create node db button pressed
+  {
+	 dbug("pg_connect: host=$install_node_host port=$install_node_port user=$install_node_user dbname=template1 password=$install_node_pass");
+	 $conn = pg_connect("host=$install_node_host port=$install_node_port user=$install_node_user dbname=template1 password=$install_node_pass");	//connect
+	 if (!$conn)
 		{
-			$install_test_result[$id] = "Database '".$install_node_db_name."' not found";
-			$install_color[$id] = $install_red;
-		}
-		else
-		{
-			$install_test_result[$id] = "OK";
-			$install_color[$id] = $install_green;
-		}
-		pg_close($conn);
-	}
-	if ($install_createdb)			//if create node db button pressed
-	{
-		$conn = pg_connect("host=$install_host port=$install_port user=$install_user dbname=template1 password=$install_pass");	//connect
-		if (!$conn)
-		{
-			$install_test_result[$id] = "Could not connect.";
-			$install_color[$id] = $install_red;
+		  dbug("Connect failed");
+		  $install_test_result[$id] = "Could not connect.";
+		  $install_color[$id] = $install_red;
 		}
 		else
 		{
@@ -524,57 +480,61 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$result = pg_exec($conn, $sql);
 			if (!$result)
 			{
-				$install_test_result[$id] = "Could not create db.";
-				$install_color[$id] = $install_red;
+			  dbug("Create database failed");
+			  $install_test_result[$id] = "Could not create db.";
+			  $install_color[$id] = $install_red;
 			}
 			else
 			{
-				pg_close($conn);		//close old connection
-				$conn = pg_connect("host=$install_host port=$install_port user=$install_user dbname=$install_node_db_name password=$install_pass");	//Connect to the new DB
+			  dbug("Database created");
+			  pg_close($conn);		//close old connection
+			  dbug("pg_connect: host=$install_host port=$install_port user=$install_user dbname=$install_node_db_name password=$install_pass");
+			  $conn = pg_connect("host=$install_host port=$install_port user=$install_user dbname=$install_node_db_name password=$install_pass");	//Connect to the new DB
 				if (!$conn)
 				{
-					$install_test_result[$id] = "Could not connect to the new db.";
-					$install_color[$id] = $install_red;
+				  dbug("Connect to new db failed");
+				  $install_test_result[$id] = "Could not connect to the new db.";
+				  $install_color[$id] = $install_red;
 				}
 				else
 				{
-					//Read SQL commands from db.sql and execute them
-					$fd = fopen ($config['basedir'] ."/code/share/db.sql", "r");
-					if (!$fd)
-					{
-						$install_test_result[$id] = "Sql file (". $config['basedir'] ."/code/share/db.sql) not found.";
-						$install_color[$id] = $install_red;
-					}
-					else
-					{
-						$buffer = "";
-						while (!feof ($fd))			//read the whole file
-						{
-							$line = fgets($fd, 1024);	//read a line with max lengts 1024 byte
-							$pos = strpos($line, "--");	//find comment position
-							if ($pos === false) $buffer .= $line;	//if no in line add it to the buffer
-							else $buffer .= substr($line, 0, $pos);		//if any comment remove it first
-						}
-						fclose ($fd);
+				  dbug("Connected to new db");
+				  //Read SQL commands from db.sql and execute them
+				  $fd = fopen ($config['basedir'] ."/code/share/db.sql", "r");
+				  if (!$fd) {
+					 dbug("Sql file (". $config['basedir'] ."/code/share/db.sql) not found.");
+					 $install_test_result[$id] = "Sql file (". $config['basedir'] ."/code/share/db.sql) not found.";
+					 $install_color[$id] = $install_red;
+				  } else {
+					 $buffer = "";
+					 //read the whole file
+					 while (!feof ($fd)) {
+						$line = fgets($fd, 1024);	//read a line with max lengts 1024 byte
+						$pos = strpos($line, "--");	//find comment position
+						if ($pos === false) $buffer .= $line;	//if no in line add it to the buffer
+						else $buffer .= substr($line, 0, $pos);		//if any comment remove it first
+					 }
+					 fclose ($fd);
 
-						$buffer = rtrim($buffer);				//delete spaces from end
-						$sql = explode(";", $buffer);				//divide into single commands
-
-						$max = count($sql);					//count commands
-						$install_color[$id] = $install_green;
-						$install_test_result[$id] = "";				//delete pervious results
-						for($i=0; $i<$max; $i++) if ($sql[$i] != '')		//execute all commands if not empty
-						{
-							$result = pg_exec($conn, $sql[$i]);
-							//$result = $db->query();
-							if (!$result)
-								{
-								$install_test_result[$id] .= "<BR><DIV ALIGN='center'>-------".pg_last_error($conn)."-------<BR>".$sql[$i]."<BR></DIV>";
-								$install_color[$id] = $install_red;
-								}
+					 $buffer = rtrim($buffer);				//delete spaces from end
+					 // insert correct path into ftp_auth view needed by proftpd
+					 $buffer = str_replace("__PATH_TO_USER_DIRS__", $config['userDirs'], $buffer);
+					 $sql = explode(";", $buffer);				//divide into single commands
+					 
+					 $max = count($sql);					//count commands
+					 $install_color[$id] = $install_green;
+					 $install_test_result[$id] = "";				//delete pervious results
+					 //execute all commands if not empty
+					 for($i=0; $i<$max; $i++) if ($sql[$i] != '') {
+						$result = pg_exec($conn, $sql[$i]);
+						//$result = $db->query();
+						if (!$result) {
+						  $install_test_result[$id] .= "<BR><DIV ALIGN='center'>-------".pg_last_error($conn)."-------<BR>".$sql[$i]."<BR></DIV>";
+						  $install_color[$id] = $install_red;
 						}
-						if ($install_color[$id] == $install_green) $install_test_result[$id] = "OK";
-					}
+					 }
+					 if ($install_color[$id] == $install_green) $install_test_result[$id] = "OK";
+				  }
 				}
 			}
 		}
@@ -592,6 +552,54 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	}
 	if ($install_color[$id] == $install_red) print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="createdb" value="Create NODE db"></DIV>');
 	PrintButton($id);
+
+//////////////////////////Test 6
+	$id = 6;	
+	if (RunTest($id, "DB connection to SelfAdmin", 5))		//////////////////////////Test 5 should be OK to run this test
+	  {
+		 dbug("TEST 6: user database");
+		 dbug("pg_connect: host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
+		 
+		 $conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
+		 if (!$conn) {
+			dbug("Connection failed");
+			dbug("pg_connect host=$install_sadm_host port=$install_sadm_port dbname=template1 user=$install_sadm_user password=$install_sadm_pass");
+			$conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=template1 user=$install_sadm_user password=$install_sadm_pass");
+			if (!$conn) {
+			  dbug("Could not connect");
+			  $install_test_result[$id] = "Could not connect.";
+			  $install_color[$id] = $install_red;
+			} else {
+			  dbug("Database sadm not found");
+			  $install_test_result[$id] = "Database 'sadm' not found, please install SADM.";
+			  $install_color[$id] = $install_red;
+			}
+		 } else {
+			// initialize user DB
+			if(!include_once($config['classdir'] . '/' . $config['userDbClass'] . '.class.php')) {
+			  dbug("include user db handler class failed");
+			  $install_test_result[$id] = "Check \$config['userDbClass']: class cannot be found.";
+			  $install_color[$id] = $install_red;
+			} else {
+			  $install_test_result[$id] = "OK";
+			  $install_color[$id] = $install_green;
+			}
+		}
+		pg_close($conn);
+	}
+//$install_writeback_sadm
+	PrintTitle($id);
+	print('
+	Username: <INPUT type="text" name="sadm_user" value="'.$install_sadm_user.'"><BR />
+	Password: <INPUT type="password" name="sadm_pass" value="'.$install_sadm_pass.'"><BR />
+	Hostname: <INPUT type="text" name="sadm_host" value="'.$install_sadm_host.'"> Port: <INPUT type="text" name="sadm_port" value="'.$install_sadm_port.'" SIZE=5><BR />
+	Database name: <INPUT type="text" name="sadm_db_name" value="'.$install_sadm_db_name.'"><BR />');
+	if ( ($install_color[$id] == $install_green) AND ( ($install_sadm_user != $userDbUser) OR ($install_sadm_pass != $userDbPasswd)
+		   OR ($install_sadm_host != $userDbHost) OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) ) {
+	  print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="writeback_sadm" value="Write new values to config.inc.php" disabled=true></DIV>');
+	}
+	PrintButton($id);
+
 
 ////////////////////////// Test 7
 	$id = 7;
@@ -618,10 +626,11 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$vocabularies->importRoles(file($config['basedir']."/code/share/roles_eng.txt"), 'eng');
 			$vocabularies->importRoles(file($config['basedir']."/code/share/roles_ger.txt"), 'ger');
 			$vocabularies->importRoles(file($config['basedir']."/code/share/roles_hun.txt"), 'hun');
+			$vocabularies->importRoles(file($config['basedir']."/code/share/roles_fra.txt"), 'fra');
 
 			$db->query("UPDATE sotf_roles SET creator='t' WHERE role_id='2' OR role_id='5' OR role_id='8' OR role_id='9' OR role_id='12' OR role_id='16' OR role_id='22' OR role_id='24'");
 			
-			$sotfVars->set('roles_langs', 'eng,ger,hun');
+			$sotfVars->set('roles_langs', 'eng,ger,hun,fra');
 			
 			// create genres
 			
@@ -633,8 +642,9 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$vocabularies->importGenres(file($config['basedir']."/code/share/genres_eng.txt"), 'eng');
 			$vocabularies->importGenres(file($config['basedir']."/code/share/genres_ger.txt"), 'ger');
 			$vocabularies->importGenres(file($config['basedir']."/code/share/genres_hun.txt"), 'hun');
+			$vocabularies->importGenres(file($config['basedir']."/code/share/genres_fra.txt"), 'fra');
 
-			$sotfVars->set('genres_langs', 'eng,ger,hun');
+			$sotfVars->set('genres_langs', 'eng,ger,hun,fra');
 
 			// delete topics 
 
@@ -661,6 +671,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$vocabularies->importTopicTree(file($config['basedir']."/code/share/topictree_sotf_eng.txt"), 'eng');
 			$vocabularies->importTopicTree(file($config['basedir']."/code/share/topictree_sotf_ger.txt"), 'ger');
 			$vocabularies->importTopicTree(file($config['basedir']."/code/share/topictree_sotf_hun.txt"), 'hun');
+			$vocabularies->importTopicTree(file($config['basedir']."/code/share/topictree_sotf_fra.txt"), 'fra');
 			$vocabularies->importTopicTree(file($config['basedir']."/code/share/topictree_soma_eng.txt"), 'eng');
 
 			// not really  needed any more, just here for safety
@@ -743,11 +754,21 @@ if (RunTest($id, "Node administrator", 7)) // OR isset($install_node_admin))
   dbug("TEST 8");
   require_once("../init.inc.php");
 
-  if($admin_name && $admin_pass) {
-	 $aid = $userdb->getOne("SELECT auth_id FROM authenticate WHERE username='$admin_name' AND passwd='$admin_pass'");
-	 if(!$aid) {
-		trigger_error("Invalid username or password");
+  $adminId = $db->getOne("SELECT user_id FROM sotf_user_permissions WHERE object_id='node' AND permission_id='1'");
+
+  if(!$adminId && $admin_name && $admin_pass) {
+	 if(!sotf_User::getUserid($admin_name)) {
+		// let's register the new admin user
+		$error = sotf_User::register($admin_pass, $admin_name, '', 'en', '');
+	 }
+	 if(!$error)
+		$error = sotf_User::login($admin_name, $admin_pass);
+	 if($error) {
+		  $install_test_result[$id] = "Invalid username or password";
+		  $install_color[$id] = $install_red;
+		  //trigger_error("Invalid username or password");
 	 } else {
+		$aid = $user->id;
 		$count = $db->getOne("SELECT count(*) FROM sotf_user_permissions WHERE user_id='$aid' AND object_id='node' AND permission_id='1'");
 		if($count==0) {
 		  $db->query("INSERT INTO sotf_user_permissions (object_id, user_id, permission_id) VALUES('node',$aid,1)");
@@ -762,7 +783,8 @@ if (RunTest($id, "Node administrator", 7)) // OR isset($install_node_admin))
   // check for correct node admin
   $adminId = $db->getOne("SELECT user_id FROM sotf_user_permissions WHERE object_id='node' AND permission_id='1'");
   if($adminId)
-	 $adminName = $userdb->getOne("SELECT username FROM authenticate WHERE auth_id='$adminId'");
+	 $adminName = sotf_User::getUsername($adminId);
+	 //$adminName = $userdb->getOne("SELECT username FROM authenticate WHERE auth_id='$adminId'");
 
   if (!$adminName) {
 	 $install_test_result[$id] = "Please select node administrator";
@@ -775,7 +797,7 @@ if (RunTest($id, "Node administrator", 7)) // OR isset($install_node_admin))
 }
 
 PrintTitle($id);
-print('<div align="center">Please type in the username and password of an existing user in SelfAdmin, who will be the node administrator.</div');
+print('<div align="center">Please type in the username and password for the node administrator.</div');
 //print("<p>Node administrator is: $adminName</p>");
 print('<br /><br /><DIV ALIGN="center">
 	Username: <INPUT type="text" name="admin_name" value="' . $admin_name .'"><BR />
@@ -817,11 +839,13 @@ print('<br /><br /><DIV ALIGN="center">
 	}
 	if ($install_erroronpage) {
     print('<DIV ALIGN="center"><BR /><BIG>Please run again the \'red marked\' tests!</BIG><BR /></DIV>');	//if no error write 'ALL OK'
-	} elseif ( ($install_node_user != $config['nodeDbUser']) OR ($install_node_pass != $config['nodeDbPasswd'])
-             OR ($install_node_host != $config['nodeDbHost']) OR ($install_node_port != $config['nodeDbPort'])
-             OR ($install_node_db_name != $config['nodeDbName']) OR ($install_sadm_user != $config['userDbUser'])
-             OR ($install_sadm_pass != $config['userDbPasswd']) OR ($install_sadm_host != $config['userDbHost'])
-             OR ($install_sadm_port != $config['userDbPort']) OR ($install_sadm_db_name != $config['userDbName']) 
+	} elseif(($install_node_user != $config['nodeDbUser']) OR ($install_node_pass != $config['nodeDbPasswd'])
+				OR ($install_node_host != $config['nodeDbHost']) OR ($install_node_port != $config['nodeDbPort'])
+				OR ($install_node_db_name != $config['nodeDbName']) 
+				OR (!$config['selfUserDb'] 
+					 AND (($install_sadm_user != $config['userDbUser'])
+							OR ($install_sadm_pass != $config['userDbPasswd']) OR ($install_sadm_host != $config['userDbHost'])
+							OR ($install_sadm_port != $config['userDbPort']) OR ($install_sadm_db_name != $config['userDbName'])))
           ) {print('<DIV ALIGN="center"><BR /><BIG>The database settings here do not match with the setting in config.inc.php, please update it.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
 	} else {
 	  print('<DIV ALIGN="center"><BR /><BIG>ALL OK, you are now ready to use the <A HREF="../index.php">system</A>. Log in using the admin login.</BIG><BR /></DIV>');	//if no error write 'ALL OK'

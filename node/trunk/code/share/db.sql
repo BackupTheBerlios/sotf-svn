@@ -19,6 +19,30 @@ CREATE TABLE "sotf_permissions" (
 "permission" varchar(20) UNIQUE NOT NULL
 );
 
+CREATE TABLE "sotf_users" (
+-- users table, if you are not using a separate db for user management
+	"id" serial PRIMARY KEY,
+ 	"username" varchar(50),
+	"realname" varchar(100),
+  "language" char(3),
+  "email" varchar(100),
+  "password" varchar(50) DEFAULT '' NOT NULL,
+  "last_visit" timestamptz,
+  "num_logins" int4 DEFAULT '0',
+  "getmail" char(1) DEFAULT 'N' NOT NULL
+);
+
+CREATE VIEW "ftp_auth" AS SELECT 
+	sotf_users.username, 
+	'www-data' AS groupname, 
+	33000 AS uid, 
+	33 AS gid, 
+	sotf_users.password AS passwd, 
+	'__PATH_TO_USER_DIRS__' || sotf_users.username AS homedir, 
+	0 AS count, 
+	'/bin/sh' AS shell 
+	FROM sotf_users;
+
 CREATE TABLE "sotf_user_prefs" (
 -- user preferences stored as serialized objects
 "id" int PRIMARY KEY,					-- same as auth_id in sadm

@@ -21,7 +21,17 @@ $config['nodeDbPort'] = '5432';
 $config['nodeDbPasswd'] = '';
 $config['nodeDbName'] = 'node';
 
-// the sql connection parameters for the SelfAdmin database
+// set this to false if you will use a separate database for user management
+$config['selfUserDb'] = true;
+
+// by default we don't use external database for user management
+$config['userDbClass'] = 'userdb_node';
+// uncomment this if you using the Self Admin Toolkit (SADM) for user management
+//$config['userDbClass'] = 'userdb_sadm';
+
+// the sql connection parameters for the user database
+// only fill in if you specified selfUserDb = false!!
+$config['userDbType'] = 'pgsql';              //pgsql or mysql
 $config['userDbUser'] = 'user';
 $config['userDbHost'] = 'host';
 $config['userDbPort'] = '5432';
@@ -152,7 +162,8 @@ $config['debug'] = true;
 $config['outputLanguages'] = array(
 								           array("eng", "in English"),
 											  array("ger", "Deutsch"),
-											  array("hun", "magyarul")
+											  array("hun", "magyarul"),
+											  array("fra", "en Francais"),
 											);
 
 // default language if user's language cannot be determined

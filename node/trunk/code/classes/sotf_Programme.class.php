@@ -243,7 +243,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $xml = $xml . "\n</$name>\n";
 	 // TODO: save more data from other tables as well !!!!!
 
-	 $file = $this->getDir() . '/metadump.xml';
+	 $file = $this->getMetaDir() . '/metadump.xml';
 	 debug("dumping metadata xml in", $file);
 	 $fp = fopen("$file", "w");
 	 fwrite($fp, $xml);
@@ -849,10 +849,18 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 }
 	 $dir->close();
 
+	 // insert metadata
+	 if(is_readable($metaFile)) {
+		debug("insert meta", $metaFile);
+		$target = $newPrg->getMetaDir() . '/metadata.xml';
+		if(!copy($metaFile, $target))
+		  logError("Could not copy metadata into $target");
+	 }
+
 	 // insert icon
 	 $logoFile = $pathToFile . $folderName . "/icon.png";
 	 if(is_readable($logoFile)) {
-		debug("insert icon", $currentFile);
+		debug("insert icon", $logoFile);
 		$newPrg->setIcon($logoFile);
 	 }
 
