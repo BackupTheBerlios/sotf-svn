@@ -45,6 +45,7 @@ function checkAccess($url, $nodeId) {
   if(count($allowedIPs) == 0)
     logError("DNS does not work, cannor resolve host name!");
   $ip = getenv("REMOTE_ADDR");
+  debug("allowedIPs", $allowedIPs);
   if(!in_array($ip, $allowedIPs)) {
     logError(getenv('REMOTE_HOST') . " XML-RPC access denied");
     return "this IP is not from neighbour " . $nodeId;

@@ -89,8 +89,8 @@ function myGetenv($name) {
 function addError($msg, $private='') {
   global $page;
   if(DB::isError($msg)) {
-    $msg = "SQL error"; 
 		$private .= ' - ' . $msg->getMessage();
+    $msg = "SQL error"; 
 	}
   logError($msg, $private);
 	if(!strstr($msg, ' '))
