@@ -7,7 +7,8 @@ Change Log was started from build 12, which has taken place at 1700 on the 7th o
 The stations users navigation panel has been developed massively. Page Splitting has been
 introduced 'software wide'. The interface has been adopted to allow sorting data by columns
 in either ascending or descending order. JavaScript added to support user deletion. The last
-admin user will not be deleted from the list.
+admin user will not be deleted from the list. Users running one or more series will not be
+deleted from the list. Usability at max, precise error messages will be generated! :)
 
 
 ************************************************************************************************

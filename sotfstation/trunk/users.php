@@ -18,10 +18,39 @@
 	include("classes/pageSplit.class.php");				# include the page splitting utility
 	$myNav->add($SECTION[USERS],'users.php');			# add entry to Navigation Bar Stack
 	
+	function redirect($destination='index.php'){
+		global $_GET;
+		
+		unset($_GET['action']);
+		reset($_GET);
+		while(list($key,$val)=each($_GET)){
+			$OPTIONS[] = $key . "=" . $val;
+		}
+		$destination = $destination . "?" . implode("&",$OPTIONS);
+		header("Location: $destination");
+		exit;
+	}
 	
-	//create help message
-	//$myHelp = new helpBox(1,'98%');							# this will fetch a help message from the database and output it
-																								# in the template (if allowed to do so)
+	################# PROCESS ACTIONS ##########################################################
+	if($_GET['action']=='delete'){
+		//check if the user owns any series
+		if($db->getOne("SELECT count(*) FROM series WHERE owner = '$_GET[id]'") > 0){
+			$myError->add($ERR[6]);
+		}
+		
+		if($db->getOne("SELECT count(*) FROM user_map WHERE access_id = 1")<=1){
+			$myError->add($ERR[7]);
+		}
+		
+		if($myError->getLength()==0){
+			$db->query("DELETE FROM user_map WHERE auth_id = '$_GET[id]'");
+			redirect('users.php');
+		}
+	}
+	
+	
+	
+	################# END PROCESS ACTIONS ######################################################
 	
 	//define order by strings
 	switch ($_GET['sortby']){

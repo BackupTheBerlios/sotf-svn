@@ -1,4 +1,34 @@
- <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr>
+{section name=error_cell show=$error_out} 
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+  <tr>
+    <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+              <tr bgcolor="#FFCCCC"> 
+                <td width="100%" class="title"> <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr> 
+                      <td width="20" nowrap><strong><img src="{$root}img/block.gif" width="27" height="21"></strong></td>
+                      <td class=title><strong>{#error#}</strong></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              <tr bgcolor="#FFCCCC"> 
+                <td bgcolor="#eeeeee">{section name=errors loop=$error_list show=$error_out} 
+                  <div align=center> 
+                    <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
+                  {/section}</td>
+              </tr>
+            </table></td>
+        </tr>
+        <tr> 
+          <td><div align="right"><img src="{$root}img/shadow1.gif" height="9"></div></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+<br>
+{/section}
+<table width="100%" border="0" cellspacing="0" cellpadding="2"><tr>
     <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr> 
           <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
@@ -25,7 +55,7 @@
                 <td nowrap><div align="center">{$db_result[data][2]}</div></td>
                 <td nowrap><div align="center">{$db_result[data][4]} Series</div></td>
                 <td nowrap><div align="center">{$db_result[data][3]}</div></td>
-                <td nowrap><div align="center"><a href="a"><img src="{$root}img/i-edit.gif" alt="{#edit#}" width="24" height="16" border="0"></a><a href="a" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" alt="{#delete#}" width="24" height="16" border="0"></a></div></td>
+                <td nowrap><div align="center"><a href="a"><img src="{$root}img/i-edit.gif" alt="{#edit#}" width="24" height="16" border="0"></a><a href="{$server_root}users.php?block={$block}&sortby={$sortby}&orderby={$order}&action=delete&id={$db_result[data][0]}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" alt="{#delete#}" width="24" height="16" border="0"></a></div></td>
               </tr>
               {sectionelse} 
               <tr bgcolor="#eeeeee"> 

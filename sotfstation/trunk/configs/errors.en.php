@@ -19,7 +19,9 @@
 		'2'		=> 'Unable to connect to specified RPC Server',
 		'3'		=> 'Unable to connect to local Station Database',
 		'4'		=> 'Unable to connect to SADM Database',
-		'5'		=> 'An XMLRPC Error has occured'
+		'5'		=> 'An XMLRPC Error has occured',
+		'6'		=> 'Cannot delete user, the specified user is still running series on the station, please move to other users!',
+		'7'		=> 'Cannot delete user, The specified user is the last admin of the station, and hence cannot be deleted!'
 	);
 	
 	//section names, used for building the navigation bar
