@@ -38,6 +38,7 @@ class sotf_Node extends sotf_NodeObject {
 		$res = $db->getAll($sql);
 		if(DB::isError($res))
 			raiseError($res);
+    $slist = array();
 		foreach($res as $st) {
 			$slist[] = new sotf_Node($st['id'], $st);
 		}

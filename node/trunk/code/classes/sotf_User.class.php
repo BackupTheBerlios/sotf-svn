@@ -88,6 +88,7 @@ class sotf_User
 		}
 	}
 
+  // TODO: when deleting user delete from sotf_user_permissions
 	
 	function getUserDir() {
 		global $userDirs;

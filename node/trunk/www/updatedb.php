@@ -105,6 +105,22 @@ elseif ($name == "editorpub")		//editor bublished checkboxes
 	else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
 	print("kesz");
 }
+elseif ($name == "editorflag")		//editor programme flags
+{
+	$x = new sotf_Object("sotf_user_progs");
+	$x->set('user_id', $user->id);
+	$x->set('prog_id', $id);
+	$x->find();
+	$x->set('flags', $value);
+	if ($x->id)
+	{
+		if ($value == "none") $x->delete();
+		else $x->update();
+	}
+	else $x->create();
+//	else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
+	print("kesz");
+}
 elseif ($name == "addplaylist")		//get.htm add a programm to the playlist
 {
   $playlist = new sotf_Playlist;

@@ -27,11 +27,9 @@ class sotf_Permission
     $permtable = $db->getAll("SELECT sotf_user_permissions.object_id, sotf_permissions.permission FROM sotf_user_permissions, sotf_permissions WHERE sotf_user_permissions.user_id = '$userid' AND sotf_user_permissions.permission_id = sotf_permissions.id");
     //debug("permtable", $permtable);
     // make an associative array containing the permissions for all objects
-    for ($i=0;$i<count($permtable);$i++)
-      if (!empty($permtable[$i]["object_id"]))
-        $permissions[$permtable[$i]["object_id"]][] = $permtable[$i]["permission"];	// object permission
-      else
-        $permissions["node"][] = $permtable[$i]["permission"];	// node permission
+    while(list(,$row) = each($permtable)) {
+      $permissions[$row["object_id"]][] = $row["permission"];	// object permission
+    }
     //debug("current permissions: ", $permissions);
     return $permissions;
   }
@@ -109,13 +107,12 @@ class sotf_Permission
     for($i=0;$i<count($retval);$i++) {
       $retval[$i]['name'] = $user->getUserName($retval[$i]['id']);
     }
-    //debug("listNodeUsersWithPerm", $retval);
     return $retval;
   }
 
 	function listUsersAndPermissionsLocalized($objectId) {
     global $db, $user, $page;
-		$plist = $db->getAll("SELECT u.user_id AS id, p.permission AS perm FROM sotf_user_permissions u, sotf_permissions p WHERE p.id = u.permission_id AND u.object_id='$objectId'");
+		$plist = $db->getAll("SELECT u.user_id AS id, p.permission AS perm FROM sotf_user_permissions u, sotf_permissions p WHERE p.id = u.permission_id AND u.object_id = '$objectId'");
     if(DB::isError($retval))
       raiseError($retval);
     $retval = array();
@@ -123,11 +120,11 @@ class sotf_Permission
       $name = $user->getUserName($perm['id']);
       $retval[$name][] = $page->getlocalized('perm_' . $perm['perm']);
     }
-    //debug("listNodeUsersWithPerm", $retval);
     ksort($retval);
     return $retval;
 	}
 
+  /*
 	function hasNodePermission($perm) {
 		if ($this->currentPermissions && $this->currentPermissions['node'] ) {
 			if (in_array($perm,$this->currentPermissions["node"]) || in_array('admin',$this->currentPermissions["node"]))
@@ -136,34 +133,30 @@ class sotf_Permission
 		return false;
 	}
 
-	function addNodePermission($perm, $userid) {
+	function addNodePermission($userid, $perm) {
 		global $db;
+		if(!is_numeric($userid) || $userid < 1)
+			raiseError("Invalid user id: '$userid'");
+    if($perm=='admin') {
+      $db->query("DELETE FROM sotf_user_permissions WHERE user_id='$userid' AND object_id IS NULL");
+    }
 		$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
 		$res = $db->query("INSERT INTO sotf_user_permissions (user_id, object_id, permission_id) VALUES($userid, NULL, $permission_id)");
     if(DB::isError($res))
       raiseError($res);
 	}
 
-	function delNodePermission($perm, $userid) {
+	function delNodePermission($userid) {
 		global $db;
 		if(!is_numeric($userid) || $userid < 1)
 			raiseError("Invalid user id: '$userid'");
-		$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
-		$res = $db->query("DELETE FROM sotf_user_permissions WHERE user_id = '$userid' AND object_id IS NULL AND permission_id = $permission_id");
+		$res = $db->query("DELETE FROM sotf_user_permissions WHERE user_id = '$userid' AND object_id IS NULL");
     if(DB::isError($res))
       raiseError($res);
 	}
 
-	function listNodeUsersWithPerm($perm) {
-		global $db, $user;
-		$retval = $db->getAll("SELECT u.user_id AS id, p.permission AS perm FROM sotf_user_permissions u, sotf_permissions p WHERE u.object_id IS NULL AND p.id = u.permission_id AND ( p.permission='$perm' OR p.permission='admin')");
-    for($i=0;$i<count($retval);$i++) {
-      $retval[$i]['name'] = $user->getUserName($retval[$i]['id']);
-    }
-    debug("listNodeUsersWithPerm", $retval);
-    return $retval;
-	}
-
+  */
+ 
   function listStationsForEditor() {
 		if(!isset($this->currentPermissions))
       return NULL;  // not logged in yet
@@ -174,11 +167,15 @@ class sotf_Permission
 
   /** returns series (id,title) within given station owned/edited by current user */
   function mySeriesData($stationId) {
-		if(!isset($this->currentPermissions))
+    global $page, $db, $user;
+		if(!$page->loggedIn())
       return NULL;  // not logged in yet
-    global $db, $user;
     $stationId = sotf_Utils::magicQuotes($stationId);
-    $sql = "SELECT s.id AS id, s.title AS title FROM sotf_series s, sotf_user_permissions u WHERE u.user_id = '$user->id' AND u.object_id=s.id AND s.station_id='$stationId' ORDER BY s.title";
+    $sql = "SELECT s.id AS id, s.title AS title FROM sotf_series s, sotf_user_permissions u".
+    		" WHERE u.user_id = '$user->id'";
+//    		" AND u.object_id=s.id";
+    if ($stationId) $sql .= " AND s.station_id='$stationId'";
+    $sql .= " ORDER BY s.title";
     $sdata = $db->getAll($sql);
     return $sdata;
   }

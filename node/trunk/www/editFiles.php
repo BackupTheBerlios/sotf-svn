@@ -43,19 +43,21 @@ if(!hasPerm($id, 'change')) {
   exit;
 }
 
+// delete link
 $delLink = sotf_Utils::getParameter('dellink');
 $linkid = sotf_Utils::getParameter('linkid');
 if($delLink) {
   $link = new sotf_NodeObject("sotf_links", $linkid);
   $link->delete();
-  $page->redirect("editFiles.php?id=$id");
+  $page->redirect("editFiles.php?id=$id#links");
   exit;
 }
 
+// delete file
 $delFile = sotf_Utils::getParameter('delfile');
 if($delFile) {
   $prg->deleteFile($delFile);
-  $page->redirect("editFiles.php?id=$id");
+  $page->redirect("editFiles.php?id=$id#mfiles");
   exit;
 }
 

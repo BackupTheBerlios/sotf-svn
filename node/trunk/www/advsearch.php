@@ -94,6 +94,7 @@ elseif (($run or ($run_image=="0")) and $SQLquery!=NULL)			////run query button 
 	//$_SESSION["SQLquery"] = $SQLquery;
 	//$_SESSION["SQLquerySerial"] = $advsearch->Serialize();
 	$SQLquerySerial = $advsearch->Serialize();
+	$_SESSION["SQLquerySerial"] = $SQLquerySerial;	//save the new query to the session
 	$page->redirect("advsearchresults.php?SQLquerySerial=$SQLquerySerial");
 }
 elseif ($new)									////new query button pressed

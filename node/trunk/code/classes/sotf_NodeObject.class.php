@@ -21,9 +21,8 @@ class sotf_NodeObject extends sotf_Object {
   }						
 
   function generateID() {
-    global $nodeId;
     $localId = $this->db->nextId($this->tablename);
-    $id = sprintf("%03d%2s%d", $nodeId, $this->repository->getTableCode($this->tablename), $localId);
+    $id = sprintf("%03d%2s%d", $this->nodeId, $this->repository->getTableCode($this->tablename), $localId);
     debug("generated ID", $id);
 	 return $id;
   }
@@ -48,13 +47,13 @@ class sotf_NodeObject extends sotf_Object {
 
   function create() {
 	 global $nodeId;
-   if(empty($this->id)) {
-     $this->id = $this->generateID();
-   }
    if(!$this->nodeId)
      $this->nodeId = $nodeId;
    if(!$this->lastChange)
      $this->lastChange = $this->db->getTimestampTz();
+   if(empty($this->id)) {
+     $this->id = $this->generateID();
+   }
 	 $this->db->query("INSERT INTO sotf_node_objects (id, node_id, last_change) VALUES('$this->id','$this->nodeId', '$this->lastChange')");
 	 return parent::create();
   }
@@ -71,6 +70,8 @@ class sotf_NodeObject extends sotf_Object {
    // propagate deletion to other nodes
    $this->createDeletionRecord();
 	 //parent::delete();  // not needed because of cascading delete
+   // delete user permissions
+   $this->db->query("DELETE FROM sotf_user_permissions WHERE object_id='$this->id'");
   }
 
 	function setBlob($prop_name, $prop_value) {
@@ -118,6 +119,8 @@ class sotf_NodeObject extends sotf_Object {
       debug("saving modified object", $objData['id']);
       $tablename = $repository->getTable($objData['id']);
       $obj = new sotf_NodeObject($tablename, $objData['id'], $objData['data']);
+      $obj->lastChange = $objData['last_change'];
+      $obj->nodeId = $objData['node_id'];
       $obj->saveReplica();
       // handle deletions
       if($tablename == 'sotf_deletions') {

@@ -156,6 +156,25 @@ class sotf_Object {
 		$this->setAll($res);
 	}
 
+  function find() {
+    reset($this->data);
+		while(list($key,$val)=each($this->data)){
+			if($key != $this->idKey && !in_array($key, $this->binaryFields)) {
+        $my_sql[] = $key . " = '" . sotf_Utils::magicQuotes($val) . "'";
+			}
+		}
+		$my_sql = implode(" AND ", $my_sql);
+    
+    //execute the query
+    $res = $this->db->getCol("SELECT $this->idKey FROM $this->tablename WHERE $my_sql ");
+    if(count($res) > 1)
+      raiseError("not unique");
+    if(count($res) == 1 ) {
+      $this->id = $res[0];
+      $this->load();
+    }
+  }
+
 	/**
 	 * sotf::getID()
 	 *

@@ -41,7 +41,7 @@ if($delrole) {
   $role->delete();
   //$msg = $page->getlocalizedWithParams("deleted_contact", $c->get('name'));
   //$page->addStatusMsg($msg, false);
-  $page->redirect("editSeries.php?seriesid=$seriesid");
+  $page->redirect("editSeries.php?seriesid=$seriesid#roles");
   exit;
 }
 
@@ -56,7 +56,7 @@ if($delperm) {
   $permissions->delPermission($series->id, $userid);
   $msg = $page->getlocalizedWithParams("deleted_permissions_for", $username);
   $page->addStatusMsg($msg, false);
-  $page->redirect("editSeries.php?seriesid=$seriesid");
+  $page->redirect("editSeries.php?seriesid=$seriesid#perms");
   exit;
 }
 

@@ -25,7 +25,7 @@ class sotf_Neighbour extends sotf_Object {
   /** returns a list of all such objects: can be slow!!
    * @method static listAll
    */
-  function getAll() {
+  function listAll() {
     global $db;
     $sql = "SELECT * FROM sotf_neighbours ORDER BY id";
     $res = $db->getAll($sql);
@@ -46,11 +46,14 @@ class sotf_Neighbour extends sotf_Object {
     $rpc = new rpc_Utils;
     $response = $rpc->call($remoteNode->get('url') . '/xmlrpcServer.php', 'sync', $objs);
     // save received data
-
+    if(count($response) > 0) {
+      sotf_NodeObject::saveModifiedObjects($objects);
+    }
     // save last_sync
-
+    $this->set('last_outgoing', $timestamp);
+    $this->update();
+    // send receipt of successful sync??
   }
-
 
 }
 

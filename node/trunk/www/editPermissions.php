@@ -11,6 +11,13 @@ $username = sotf_Utils::getParameter('username');
 $save = sotf_Utils::getParameter('save');
 $userid = $user->getUserid($username);
 
+if (!hasPerm($objectid, "change")) {
+  raiseError("You have no permission to change user permissions!");
+}
+if(empty($userid) || !is_numeric($userid)) {
+  raiseError("Invalid username: $username");
+}
+
 if($save) {
   $userPerms = $permissions->getPermissions($objectid, $userid);
   debug("userPerms", $userPerms);
@@ -33,16 +40,6 @@ if($save) {
     }
   }
   $page->redirect('closeAndRefresh.php?anchor=perms');
-}
-
-
-
-if(empty($userid) || !is_numeric($userid)) {
-  raiseError("Invalid username: $username");
-}
-
-if (!hasPerm($objectid, "change")) {
-  raiseError("You have no permission to change user permissions!");
 }
 
 $smarty->assign('CONTEXT', $context);

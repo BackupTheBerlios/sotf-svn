@@ -63,7 +63,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 
 <p></p>
 
-<form>
+<form method="get">
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#my_progs#}</td>
@@ -75,19 +75,17 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 
 <table width="100%" bgcolor="{#editorBgColor2#}">
 <tr>
-      <td>
-        <select name="series">
-          <option name="s1">Series 1</option>
-          <option name="s2">Series 2</option>
+      <td align="center">{#series#}<br>
+        <select name="series" onchange="javascript:this.form.submit();">
+		{html_options options=$mySeriesData selected=$series}
         </select>
       </td>
-      <td>{#Filter#} 
-        <select name="filter">
-          <option name="all">All</option>
-          <option name="unpub">Unpublished</option>
+      <td align="center">{#Filter#}<br>
+        <select name="filter" onchange="javascript:this.form.submit();">
+		{html_options options=$filters selected=$filter}
         </select>
       </td>
-      <td>{#sortby#}
+      <td align="center">{#sortby#}<br>
         <select name="sort1">
 		{html_options options=$sortby selected=$sort1}
         </select>
@@ -95,11 +93,15 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 		{html_options options=$sortby selected=$sort2}
         </select>
       </td>
-      <td>
+      <td align="center">
+	<input type="submit" name="{#submit#}" value="{#submit#}">
+      </td>
+      <td align="center">
 		{include file="splitList.htm"}
       </td>
 </tr></table>
 
+{if count($MYPROGS) > 0}
 <table width="100%">
 <tr class="listhead">
       <!--<th>{#Flag#}</th>-->
@@ -107,7 +109,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
       <th>{#Station_series#}</th>
       <th>{#Dates#}</th>
       <th>{#Stats#}</th>
-      <th>{#Published#}</th>
+      <th>{#Flags#}</th>
       <th>{#Actions#}</th>
 </tr>
 
@@ -136,7 +138,8 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
                 {if $item.rating_value}<br />{#rating#}: {$item.rating_value} ({#by#} {$item.rating_count}){/if}
       </td>
       <td align="center">
-         <input type="checkbox" onclick="javascript:setvalue('editorpub', '{$item.id}', this.checked);return true;"{ if $item.published eq 't' } CHECKED="1"{/if} />
+         {#Published#} <input type="checkbox" onclick="javascript:setvalue('editorpub', '{$item.id}', this.checked);return true;"{ if $item.published eq 't' } CHECKED="1"{/if} /><br>
+         <select name="flag" onchange="javascript:setvalue('editorflag', '{$item.id}', this.options[this.selectedIndex].value);return true;">{html_options options=$flags selected=$item.flags}</select>
       </td>
       <td>
               <input class="action" type="button" name="b1" value="{#Edit_files#}" onClick="redir(this.form, 'editFiles.php?id={$item.id|escape}&okURL={$OKURL|escape}')" />
@@ -146,6 +149,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 		{/foreach}
 
 </table>
+{/if}
 
 </td></tr>
 </table>

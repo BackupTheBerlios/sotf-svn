@@ -25,7 +25,7 @@ CREATE TABLE "sotf_user_prefs" (
 CREATE TABLE "sotf_user_history" (
 -- past actions of the user, may be used for collaborative filtering
 	"id" serial PRIMARY KEY, -- just an id
-	"user_id" int, -- cannot reference to sadm.authenticate(auth_id)
+	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE, -- cannot reference to sadm.authenticate(auth_id)
 	"action" varchar(30), -- type of action the user did with object
 	"object_id" varchar(12),
 	"when" timestamptz
@@ -49,7 +49,7 @@ CREATE TABLE "sotf_nodes" (
 	"url" varchar(255) NOT NULL,
 	"authorizer" varchar(40) NOT NULL,
 	"ip" inet,
-	"description" varchar(255),
+	"description" text,
 	"up" bool NOT NULL,
 	"last_sync" timestamptz
 );
@@ -69,8 +69,8 @@ CREATE TABLE "sotf_user_permissions" (
 -- a user may have a set of permissions on object or globally
 	"id" serial PRIMARY KEY, -- just an id
 	"user_id" int, -- cannot reference to sadm.authenticate(auth_id) 
-	"object_id" varchar(12) REFERENCES sotf_node_objects(id) ON DELETE CASCADE, 
-				-- the object in which group permissions apply (if null, the permissions are global)
+	"object_id" varchar(12), 
+				-- the object in which group permissions apply (can be object_id or string: node, topictree, etc.)
 	"permission_id" int REFERENCES sotf_permissions(id) ON DELETE CASCADE,
 	CONSTRAINT "sotf_user_permissions_uniq" UNIQUE ("user_id", "object_id", "permission_id")
 );
@@ -357,7 +357,7 @@ CREATE TABLE "sotf_playlists" (
 -- user_id + order_id should be unique, but please don't put a constraint on this!
 	"id" serial PRIMARY KEY, -- just an id
 	"prog_id" varchar(12) NOT NULL,
-	"user_id" int, -- cannot reference to sadm.authenticate(auth_id)
+	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE, -- cannot reference to sadm.authenticate(auth_id)
 	"order_id" int,
 	"type" VARCHAR(10), -- use unclear yet
 	CONSTRAINT "sotf_playlists_u" UNIQUE ("prog_id", "user_id"),
@@ -440,6 +440,7 @@ CREATE TABLE "sotf_user_progs" (
 	"flags" varchar(20)				-- various flags (e.g. important, to-do)
 );
 
+CREATE SEQUENCE "sotf_user_progs_seq";
 
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'admin');
 SELECT nextval('sotf_permissions_id_seq');
@@ -456,5 +457,5 @@ SELECT nextval('sotf_permissions_id_seq');
 
 INSERT INTO "sotf_user_prefs" ("id", "username") VALUES(1, 'admin');
 
-INSERT INTO "sotf_user_permissions" ("user_id", "permission_id") VALUES(1,1);
+INSERT INTO "sotf_user_permissions" ("object_id", "user_id", "permission_id") VALUES('node',1,1);
 

@@ -10,7 +10,7 @@ function deleteStationConfirm() {
 
 <form>
 
-{if hasPerm('node', 'create') or hasPerm('node', 'config')}
+{if hasPerm('node', 'create') or hasPerm('node', 'change')}
   <table width="100%" border="0" cellspacing="0" cellpadding="2">
     <tr> 
       <td align="right" nowrap bgcolor="{#adminBgColor#}">
@@ -18,8 +18,8 @@ function deleteStationConfirm() {
           {if hasPerm('node', 'create') }
           <input class="action" type="button" name="b1" value="{#create_station#}" onClick="redir(this.form, 'createStation.php')" />
           {/if}
-          {if hasPerm('node', 'config') }
-          <input class="action" type="button" name="b1" value="{#edit_node_rights#}" onClick="redir(this.form, 'editRightsNode.php')" />
+          {if hasPerm('node', 'change') }
+          <input class="action" type="button" name="b1" value="{#edit_node_rights#}" onClick="redir(this.form, 'admin.php#perms')" />
           {/if}
       </td>
     </tr>

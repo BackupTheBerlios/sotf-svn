@@ -448,11 +448,26 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   /** static returns programmes owned/edited by current user */
-  function myProgrammes() {
+  function myProgrammes($series, $filter, $sort, $count = false) {
     global $permissions, $db, $user;
 		if(!isset($permissions->currentPermissions))
       return NULL;  // not logged in yet
-    $sql = "SELECT  s.name AS station, se.title AS series, stats.visits, stats.listens, stats.downloads, rating.*, p.* FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id=se.id LEFT JOIN sotf_prog_rating rating ON p.id=rating.prog_id LEFT JOIN (SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads, prog_id FROM sotf_stats GROUP BY prog_id) AS stats ON stats.prog_id=p.id, sotf_user_permissions u WHERE u.user_id = '$user->id' AND u.object_id=p.id ORDER BY p.entry_date DESC";
+    $sql = "SELECT  s.name AS station, se.title AS series, stats.visits, stats.listens, stats.downloads, flags.flags, rating.*, p.*".
+    	" FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id".
+    	" LEFT JOIN sotf_series se ON p.series_id=se.id".
+    	" LEFT JOIN sotf_prog_rating rating ON p.id=rating.prog_id".
+    	" LEFT JOIN sotf_user_progs flags ON p.id=flags.prog_id AND flags.user_id='$user->id'".
+    	" LEFT JOIN (SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads, prog_id".
+    	" FROM sotf_stats GROUP BY prog_id) AS stats ON stats.prog_id=p.id, sotf_user_permissions u".
+    	" WHERE u.user_id = '$user->id' AND u.object_id=p.id";
+    if ($series != "allseries") $sql .= " AND p.series_id='$series'";
+    if ($filter == "all") ;
+    elseif ($filter == "published") $sql .= " AND p.published='t'";
+    elseif ($filter == "unpublished") $sql .= " AND p.published='f'";
+    else $sql .= " AND flags = '$filter'";
+    if ($sort) $sql .= " ORDER BY $sort";
+    
+    if ($count) return $db->getOne("SELECT count(*) FROM ($sql) as a");
     $plist = $db->getAll($sql);
     /*
     foreach($plist as $item) {

@@ -39,7 +39,7 @@ if($delrole) {
   $role->delete();
   //$msg = $page->getlocalizedWithParams("deleted_contact", $c->get('name'));
   //$page->addStatusMsg($msg, false);
-  $page->redirect("editStation.php?stationid=$stationid");
+  $page->redirect("editStation.php?stationid=$stationid#roles");
   exit;
 }
 
@@ -54,7 +54,7 @@ if($delperm) {
   $permissions->delPermission($st->id, $userid);
   $msg = $page->getlocalizedWithParams("deleted_permissions_for", $username);
   $page->addStatusMsg($msg, false);
-  $page->redirect("editStation.php?stationid=$stationid");
+  $page->redirect("editStation.php?stationid=$stationid#perms");
   exit;
 }
 
