@@ -1,9 +1,9 @@
-<?php 
-// -*- tab-width: 3; indent-tabs-mode: 1; -*-
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 // $Id$
 
-/**
-* This is a class for handling users
+/** 
+* This is a class for basic handling of users. Preferences and
+* playlists are handled in separate classes.
 *
 * @author Andras Micsik SZTAKI DSD micsik@sztaki.hu
 */
@@ -92,42 +92,8 @@ class sotf_User
   // TODO: when deleting user delete from all tables (no foreign key)
   function delete() {
   }
-	
-	function getUserDir() {
-		global $userDirs;
-		$dir = "$userDirs/" . $this->name;
-		if(!is_dir($dir)) {
-			if(!mkdir($dir, 0775))
-        raiseError("Could not create directory for user");
-    }
-		return $dir;
-	}
 
-	function getUserFiles() {
-		$dir = $this->getUserDir();
-		$handle = opendir($dir) or die("could not open user dir: $dir");
-		while (false!==($f = readdir($handle))) {
-			if ($f == "." || $f == "..")
-				continue;
-      if(is_dir($f))
-        continue;
-			$list[] = $f;
-		}
-		closedir($handle);
-		if ($list)
-			sort($list);
-		return $list;
-	}
-
-	function deleteFile($filename)
-	{
-    $targetFile =  sotf_Utils::getFileInDir($this->getUserDir(), $filename);
-    if (unlink($targetFile))
-      return 0;
-    else
-      raiseError("Could not remove file $targetFile");
-	}
-
+  /** Checks if the given user name is already in use by someone else. */
 	function userNameCheck($username) {
 		global $userdb, $page;
 		$data = $userdb->getOne("SELECT username FROM authenticate WHERE username='". sotf_Utils::magicQuotes($username) . "'");
@@ -136,7 +102,8 @@ class sotf_User
 		return false;
 	}
 
-	function save($password) {
+  /** Saves the current user data. If user password is given as parameter, then it is changed. */
+	function save($password='') {
 		global $userdb;
 		if($password) {
 			$pwdChange = " ,password='". sotf_Utils::magicQuotes($password) . "' ";
@@ -161,7 +128,7 @@ class sotf_User
       $db->query("INSERT INTO sotf_user_prefs (id, username, email) VALUES('$this->id', '$this->name', '$this->email')");
   }
 
-  /** static */
+  /** static method: Register new user with given data. */
 	function register($password, $name, $realname, $language, $email) {
 		// TODO: check not to change user name!!
 		global $userdb, $db, $page;
@@ -214,16 +181,7 @@ class sotf_User
 		$_SESSION['currentUserId'] = '';
 	}
 
-	function listUsers() {
-		global $userdb;
-		return $userdb->getCol("SELECT username FROM authenticate ORDER BY username");
-	}
-
-	function countUsers() {
-		global $userdb;
-		return $userdb->getOne("SELECT count(*) FROM authenticate");
-	}
-
+  /** Returns the name of the user given with ID. */
 	function getUsername($user_id) {
 		global $userdb;
 		if (is_numeric($user_id))
@@ -231,6 +189,7 @@ class sotf_User
 		return false;
 	}
 
+  /** Retrieves userid for a username. */
 	function getUserid($username) {
 		global $userdb;
 		return $userdb->getOne("SELECT auth_id FROM authenticate WHERE username = '$username'");
@@ -245,7 +204,7 @@ class sotf_User
     return $userFtpUrl;
   }
 
-  /** Get user preferences */
+  /** Get user preferences: returns a class of type sotf_UserPrefs containing all preferences data for the user. */
   function getPreferences() {
     global $db;
     if(isset($this->preferences))
@@ -254,6 +213,64 @@ class sotf_User
     return $this->preferences;
 	}
   
+  /*****************************************************************
+   *
+   *    HANDLING of USERS' FILES
+   *
+   *****************************************************************/
+	
+	function getUserDir() {
+		global $userDirs;
+		$dir = "$userDirs/" . $this->name;
+		if(!is_dir($dir)) {
+			if(!mkdir($dir, 0775))
+        raiseError("Could not create directory for user");
+    }
+		return $dir;
+	}
+
+	function getUserFiles() {
+		$dir = $this->getUserDir();
+		$handle = opendir($dir) or die("could not open user dir: $dir");
+		while (false!==($f = readdir($handle))) {
+			if ($f == "." || $f == ".." || $f == ".quota" )
+				continue;
+      if(is_dir($f))
+        continue;
+			$list[] = $f;
+		}
+		closedir($handle);
+		if ($list)
+			sort($list);
+		return $list;
+	}
+
+	function deleteFile($filename)
+	{
+    $targetFile =  sotf_Utils::getFileInDir($this->getUserDir(), $filename);
+    if (unlink($targetFile))
+      return 0;
+    else
+      raiseError("Could not remove file $targetFile");
+	}
+
+  /*****************************************************************
+   *
+   *    FUNCTIONS on ALL USERS
+   *
+   *****************************************************************/
+
+  /** List all users. */
+	function listUsers() {
+		global $userdb;
+		return $userdb->getCol("SELECT username FROM authenticate ORDER BY username");
+	}
+
+  /** Count all users. */
+	function countUsers() {
+		global $userdb;
+		return $userdb->getOne("SELECT count(*) FROM authenticate");
+	}
 
 
 }

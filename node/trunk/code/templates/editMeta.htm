@@ -19,6 +19,7 @@ function myonload() {
 disable("temporal_coverage", {if $PRG_DATA.temporal_coverage == ""}1{else}0{/if});
 disable("broadcast_date", {if $PRG_DATA.broadcast_date == ""}1{else}0{/if});
 disable("production_date", {if $PRG_DATA.production_date == ""}1{else}0{/if});
+disable("expiry_date", {if $PRG_DATA.expiry_date == ""}1{else}0{/if});
 {literal}
 }
 window.onload=myonload;
@@ -145,7 +146,9 @@ window.onload=myonload;
             <tr valign="top" class="list1">
               <td class="meta">{#expiry_date#}:</td>
               <td>
+                  <input type="radio" name="expiry_date_radio0" value="selected" onclick="javascript:disable('expiry_date', 0)" >
                   {html_select_date time=$PRG_DATA.expiry_date end_year="+5" prefix="expiry_date" month_format="%m" field_order="YMD" field_separator="-"}
+                  <br><input type="radio" name="expiry_date_radio1" value="unselected" onclick="javascript:disable('expiry_date', 1)" >{#no_expiry#}
               </td>
             </tr>
           </table>
