@@ -80,7 +80,7 @@
 					$this->parse($child,$data[$name]);
 				}
 			}else{
-				$data = $reference->get_content();
+				$data = iconv("UTF-8","ISO-8859-1",$reference->get_content());
 			}
 		}
 	}
