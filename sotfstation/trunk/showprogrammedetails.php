@@ -18,7 +18,7 @@
 	$programme_data = $db->getRow("SELECT 
 									to_char(programme.intime,'DD-MM-YYYY') AS prog_date,
 									to_char(programme.intime,'HH24:MI') AS prog_intime,
-									to_char(programme.intime,'HH24:MI') AS prog_outtime,
+									to_char(programme.outtime,'HH24:MI') AS prog_outtime,
 									programme.title AS prog_title,
 									programme.special AS prog_special,
 									programme.series_id AS series_id,

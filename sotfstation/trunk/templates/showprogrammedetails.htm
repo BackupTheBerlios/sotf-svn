@@ -55,23 +55,13 @@
                   <td nowrap><div align="right">Series Owner:</div></td>
                   <td nowrap>{$series_owner}</td>
                 </tr>
-                {section name=error_cell show=$error_out} 
-                <tr bgcolor="#FFCCCC"> 
-                  <td colspan="3">{section name=errors loop=$error_list show=$error_out} 
-                    <div align=center> 
-                      <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
-                    {/section}</td>
-                </tr>
-                {/section} {section name=buttons show=$buttons} 
+                
                 <tr bgcolor="#eeeeee"> 
                   <td colspan="2" nowrap><div align="center"> 
-                      <input name="Submit" type="hidden" id="Submit" value="da">
-                      <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
-                      &nbsp; 
                       <input name="imageField2" type="image" src="{$root}img/b_back.gif" width="90" height="16" border="0" onClick="window.close();">
                     </div></td>
                 </tr>
-                {/section} </table></td>
+                </table></td>
           </tr>
           <tr> 
             <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
