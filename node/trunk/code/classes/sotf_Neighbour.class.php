@@ -91,7 +91,7 @@ class sotf_Neighbour extends sotf_Object {
 		$page->addStatusMsg($msg);
   }
 
-  var $objectsPerRPCRequest = 30;
+  var $objectsPerRPCRequest = 20;
 
   function sync($console = false) {
 	global $db;
