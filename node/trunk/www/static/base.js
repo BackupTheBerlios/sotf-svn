@@ -34,3 +34,6 @@ function checkIfEmpty(input, message) {
     return true;
 }
 
+function deleteConfirm(msg) {
+    return confirm(msg);
+}

@@ -22,7 +22,7 @@ $upload = sotf_Utils::getParameter('upload');
 if($upload) {
   $fname = $_FILES['userfile']['name'];
   $file =  sotf_Utils::getFileInDir($user->getUserDir(), $fname);
-  move_uploaded_file($_FILES['userfile']['tmp_name'], $file);
+  moveUploadedFile('userfile',  $file);
   $prg = new sotf_Programme($prgId);
   if($main) {
     $prg->setAudio($file);

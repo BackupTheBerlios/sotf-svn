@@ -4,10 +4,17 @@ StreamOnTheFly node software
 PREREQUISITES:
 
 - icecast: http://www.icecast.org/
-- tamburine: 
+(- tamburine: )
 
 INSTALLATION
 
 Check that the PHP scripts in node/www directory can be run by your
 web server.  Edit node/www/config.inc.php, then run
 node/www/install.php from your browser.
+
+PROBLEMS
+
+On Apache 2 you have to set 'AcceptPathInfo on', otherwise listening
+to streams, viewing images and donwloading files will not work!
+
+

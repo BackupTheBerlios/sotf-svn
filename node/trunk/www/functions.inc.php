@@ -102,11 +102,23 @@ function noErrors() {
   return empty($page->errors);
 }
 
-// this one is used from smarty to check permissions
-function hasPerm($object, $perm) {
+/** shortcut for permission check: hasPerm(<objectId>, <permName1>, <permName2>, ...)
+will return true if the current user has at least on of the listed permissions for the object.
+Also used in smarty templates to check permissions. */
+function hasPerm($object) {
   global $permissions;
-  return $permissions->hasPermission($object, $perm);
+	$perm_list = func_get_args();
+	for ($i = 1; $i <count($perm_list); $i++) {
+		debug('checking for', $perm_list[$i]);
+		if($permissions->hasPermission($object, $perm_list[$i]))
+			return true;
+	}
+	return false;
 }
 
+function moveUploadedFile($fieldName, $file) {
+  move_uploaded_file($_FILES[$fieldName]['tmp_name'], $file);
+  chmod($file, '0660');
+}
 
 ?>

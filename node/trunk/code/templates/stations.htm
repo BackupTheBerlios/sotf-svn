@@ -1,12 +1,3 @@
-{literal}
-<script>
-
-function deleteStationConfirm() {
-    return confirm("{/literal}{#delete_station_confirm#}{literal}");
-}
-
-</script>
-{/literal}
 
 <form>
 
@@ -56,7 +47,7 @@ function deleteStationConfirm() {
         <td width="6">&nbsp;</td>
         <td width="1%" valign="bottom">
 			{if hasPerm('node','delete')  and $STATIONS[station].isLocal}
-              <input class="action" type="button" name="b1" value="{#delete#}" onClick="if(deleteStationConfirm())redir(this.form, 'stations.php?delete=1&station={$STATIONS[station].id}')" />
+              <input class="action" type="button" name="b1" value="{#delete#}" onClick="if(deleteConfirm('{#delete_station_confirm#}'))redir(this.form, 'stations.php?delete=1&station={$STATIONS[station].id}')" />
 			{/if}
 			{if hasPerm($STATIONS[station].id, 'change') and $STATIONS[station].isLocal}
               <br/><input class="action" type="button" name="b1" value="{#edit#}" onClick="redir(this.form, 'editStation.php?stationid={$STATIONS[station].id}')" />

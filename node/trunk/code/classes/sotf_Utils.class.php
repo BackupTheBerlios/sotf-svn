@@ -42,11 +42,13 @@ class sotf_Utils
 				}
 			}
 			closedir($handle);
-			rmdir($file);
+			if(!rmdir($file))
+        logger("Could not delete dir", $file);
 		}
 		else
 		{
-			unlink($file);
+			if(!unlink($file))
+        logger("Could not delete file", $file);
 		}
 	}
 

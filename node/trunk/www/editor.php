@@ -11,9 +11,12 @@ if (!$permissions->isEditor()) {
 	exit;
 }
 
-if(sotf_Utils::getParameter('upload')) {
-  move_uploaded_file($_FILES['userfile']['tmp_name'], $user->getUserDir() . '/' . $_FILES['userfile']['name']);
-  $page->redirect($_SERVER['SCRIPT_NAME']);
+// delete prog
+if(sotf_Utils::getParameter('delprog')) {
+  $prgid = sotf_Utils::getParameter('prgid');
+  $prg = new sotf_Programme($prgid);
+  $prg->delete();
+  $page->redirect("editor.php");
   exit;
 }
 

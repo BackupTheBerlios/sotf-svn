@@ -47,6 +47,29 @@ if(count($neighbours) > 0) {
   }
 }
 
+//********* IMPORT ARRIVED XBMF
+$dirPath = $xbmfInDir;
+$dir = dir($dirPath);
+while($entry = $dir->read()) {
+	if ($entry != "." && $entry != "..") {
+		$currentFile = $dirPath . "/" .$entry;
+		if (!is_dir($currentFile)) {
+			$XBMF[] = basename($currentFile);
+		}
+	}
+}
+$dir->close();
+foreach($XBMF as $xbmfFile) {
+	$id = sotf_Programme::importXBMF("$xbmfInDir/$xbmfFile");
+	if($id) {
+		debug("CRON","Imported new XBMF: $xbmfFile");
+    unlink("$xbmfInDir/$xbmfFile");
+	} else {
+    logger("CRON","Import FAILED for XBMF: $xbmfFile");
+	}
+}
+
+
 //******** Expire old programmes
 
 // *** regenerate metadata files??

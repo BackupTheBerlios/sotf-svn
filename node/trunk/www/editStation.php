@@ -73,8 +73,8 @@ if($deljingle) {
 // upload icon
 $uploadicon = sotf_Utils::getParameter('uploadicon');
 if($uploadicon) {
-  $file =  sotf_Utils::getFileInDir($user->getUserDir(),$_FILES['userfile']['name']);
-  move_uploaded_file($_FILES['userfile']['tmp_name'], $file);
+  $file =  sotf_Utils::getFileInDir($user->getUserDir(), $_FILES['userfile']['name']);
+  moveUploadedFile('userfile',  $file);
   $st->setIcon($file);
   $page->redirect("editStation.php?stationid=$stationid#icon");
   exit;
@@ -83,8 +83,8 @@ if($uploadicon) {
 // upload jingle
 $uploadjingle = sotf_Utils::getParameter('uploadjingle');
 if($uploadjingle) {
-  $file =  sotf_Utils::getFileInDir($user->getUserDir(),$_FILES['userfile']['name']);
-  move_uploaded_file($_FILES['userfile']['tmp_name'], $file);
+  $file =  sotf_Utils::getFileInDir($user->getUserDir(), $_FILES['userfile']['name']);
+  moveUploadedFile('userfile',  $file);
   $st->setJingle($file);
   $page->redirect("editStation.php?stationid=$stationid#icon");
   exit;

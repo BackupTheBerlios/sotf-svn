@@ -112,7 +112,7 @@ class sotf_AudioFile extends sotf_File
 		for ($i=0;$i<count($audioFormats);$i++)
 			if (abs($audioFormats[$i]['bitrate'] - $this->bitrate) < $bitrateTolerance)
 				$bitrate = $audioFormats[$i]['bitrate'];
-		return $bitrate . 'kbps_' . $this->channels . 'chn_' . $this->samplerate . 'Hz.' . $this->format;
+		return round($bitrate) . 'kbps_' . $this->channels . 'chn_' . $this->samplerate . 'Hz.' . $this->format;
 	} // end func getFormatFilename
 
   /** static method converts format encoded into filename back to array of format characteristics. */

@@ -397,7 +397,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     if(!$success)
       raiseError("could not copy/move $source to $target");
     // save into database
-    $this->saveFileInfo($target, false);
+    return $this->saveFileInfo($target, false);
   }
 
   function saveFileInfo($filepath, $mainContent = false) {
@@ -435,6 +435,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     $success = $fileInfo->create();
     if(!$success)
       raiseError("could not write into database");
+    return $fileInfo->id;
   }
 
   function saveMetadataFile() {
@@ -443,7 +444,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       $xml = $xml . "  <$key>" . htmlspecialchars($value) . "</$key>\n";
     }
     $xml = $xml . "</xml>\n";
-    $file = $this->getDir() . '/metadata.xml';
+    $file = $this->getDir() . '/metadump.xml';
     $fp = fopen("$file", "w");
     fwrite($fp, $xml);
     fclose($fp);
@@ -504,19 +505,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   /** static: import a programme from the given XBMF archive */
   function importXBMF($fileName) {
-    global $db, $xbmfInDir, $permissions;
+    global $db, $xbmfInDir, $permissions, $repository;
     
-    //untarring
-    /*
-     * logic is as follows:
-     * 1. create temp folder with unique name
-     * 2. untar contents of file to folder
-     * 3. process contents
-     * 4. unlink folder
-     */
     
     $pathToFile = $xbmfInDir .'/';
-    
     // create temp folder with unique name
     $folderName = uniqid("xbmf");
     mkdir($pathToFile . $folderName);
@@ -552,13 +544,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
      * PART 2.1 - Move the audio data to the specified station folder
      */
     
-    // not done, needs integration with the node
-    // $metadata assoc array contains all the data from xml file
-    
-    /*
-     * PART 2.2 - Insert all the relevant data from the xml file into the database
-     */
-
     // insert audio
     $dirPath = $pathToFile . $folderName . "/audio";
     $dir = dir($dirPath);
@@ -573,13 +558,18 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     $dir->close();
 
     // insert other files
-    $dirPath = $pathToFile . $folderName . "/audio";
+    $dirPath = $pathToFile . $folderName . "/files";
     $dir = dir($dirPath);
     while($entry = $dir->read()) {
       if ($entry != "." && $entry != "..") {
         $currentFile = $dirPath . "/" .$entry;
         if (!is_dir($currentFile)) {
-          $newPrg->setOtherFile($currentFile, true);
+          $id = $newPrg->setOtherFile($currentFile, true);
+          if($id) {
+            $fileInfo = $repository->getObject($id);
+            $fileInfo->set('public_access', 't');
+            $fileInfo->update();
+          }
         }
       }
     }
@@ -591,9 +581,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       $newPrg->setIcon($logoFile);
     }
 
-    //////////////////////
-    // insert metadata
-    //////////////////////
+    /*
+     * PART 2.2 - Insert all the relevant data from the xml file into the database
+     */
 
     // basic metadata
     $newPrg->set('title', $metadata['title']['basetitle']);
@@ -637,7 +627,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
      */
     
     sotf_Utils::delete($pathToFile . $folderName);
-    //unlink($filename);
     
     return $newPrg->id;
   }
@@ -645,6 +634,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   /** static: create contact record from metadata */
   function importContact($cdata, $roleSel, $prgId, $station) {
     global $permissions;
+
     // TODO: check if exists...
     $contact = new sotf_Contact();
     $name = $cdata['organizationname'];
