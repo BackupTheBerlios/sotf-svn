@@ -46,6 +46,10 @@
               <p>{$SERIES_DATA.description}</p>
               {/if}
 
+		{if $SERIES_DATA.url}
+		<p><a href="{$SERIES_DATA.url}">{$SERIES_DATA.url}</a></p>
+		{/if}
+
               {if $ROLES}
               <h4>{#persons_involved#}</h4>
               <table>

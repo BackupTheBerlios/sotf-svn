@@ -44,6 +44,10 @@
               <p>{$STATION_DATA.description}</p>
               {/if}
 
+		  {if $STATION_DATA.url}
+		  <p><a href="{$STATION_DATA.url}">{$STATION_DATA.url}</a></p>
+		  {/if}
+
               {if $ROLES}
               <h4>{#persons_involved#}</h4>
               <table>

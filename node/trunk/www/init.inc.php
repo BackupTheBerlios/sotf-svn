@@ -237,6 +237,9 @@ if($config['debug']) {
   $smarty->assign("VIEWLOG", $page->logURL());
 }
 $smarty->assign("UI_LANGS", $config['outputLanguages']);
+if(!empty($config['adminEmail'])) {
+	$smarty->assign("ADMIN_EMAIL", $config['adminEmail']);
+}
 
 debug("action", $page->action);
 debug("lang", $lang);

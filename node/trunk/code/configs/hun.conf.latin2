@@ -20,6 +20,8 @@ sec = s
 optional = opcionális
 Metadata = Metaadatok
 
+contact_node_admin = A csomópont rendszergazdája ezen a címen érhetõ el:
+
 # stream info
 # name for stream mountpoint
 playlist_name = lista
@@ -190,6 +192,7 @@ listens_and_downloads = letöltés vagy meghallgatás
 users = regisztrált felhasználó
 
 contacts = Kapcsolat
+node_admin = Rendszergazda
 contacts_text = <a target="_blank" href="http://www.streamonthefly.com">StreamOnTheFly projekt</a><br><a target="_blank" href="http://dsd.sztaki.hu">MTA SZTAKI DSD</a>
 
 recent_uploads = Friss anyagok
@@ -768,6 +771,7 @@ keywords = Kulcsszavak
 abstract = Kivonat
 language = Nyelv
 genre = Mûfaj
+no_genre = nincs megadva
 temporal_coverage = Kapcsolódó idõpont
 spatial_coverage = Kapcsolódó helyszín
 
@@ -789,8 +793,6 @@ add_new_right = Új jog felvétele
 for_whole_prg = Az egész mûsorra vonatkozóan
 
 general_data = Általános adatok
-station_name = Rádió ??
-description = Leírás ??
 save = Fenti adatok mentése
 access_permissions = Jogosultságok megváltoztatása
 Permissions = Jogosultságok
@@ -905,7 +907,7 @@ user_dir_ftp_access = Ftp hozzáférés a fájljaimhoz
 [manageFiles]
 manage_files = Fájljaim kezelése
 add_files = Fájlok hozzáadása ??
-userfiles = Fájljaim ??
+userfiles = Fájljaim kezelése
 userfiles_expl = 
 upload_file = Fájl feltöltése
 del_selected = Kiválaszott fájlok törlése
@@ -915,7 +917,7 @@ close = Bezárás
 
 [editRight]
 not_integer = A kezdõ és végzõ idõpontot egész számmal kell megadni!
-edit_right = Edit rights ??
+edit_right = Jog modositas
 change_right = Jog módosítása
 new_right = Új jog felvétele
 start_time = Kezdete (sec)
