@@ -533,6 +533,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 			trigger_error("The import did not succeed!");
 			return false;	//did not succeed
 		}else{
+			echo "Came In: " . $metadata->encoding . "<br>";
+			echo "Went Out: " . $metadata->outencoding . "<br>";
 			echo "<pre>";
 			print_r($metadata);
 			echo "</pre>";
