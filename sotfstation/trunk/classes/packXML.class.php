@@ -1,9 +1,15 @@
 <?
-	define('DEFAULT_DATA',1);							// data not needing further splitting
-	define('COMMA_SEPARATED_VALUES',2);		// data needing further splitting
-	
+	/*
+	* class - packXML
+	* 				will prepare data from DB for XML export and generate
+	* 				neccessary file upon request.
+	* 
+	* @author Kulikov Alexey <alex@pvl.at, alex@ita-studio.com>
+	* @date		01.02.03
+	* @version 1.0
+	* @requires DOMXML extension enabled in PHP
+	****/
 	class packXML{
-		var $XMLData = array();		// data to be packed into XML (private)
 		var $xml;									// DOM XML OBJECT
 		var $root;								// DOM XML root node
 		
@@ -29,7 +35,7 @@
 		 */
 		function addSeriesData($sData){
 			$sNode = $this->root->new_child('series',null);
-			$sNode->set_attribute('id',$sData['series_id']);		
+			$sNode->new_child('id',$sData['series_id']);		
 			$sNode->new_child('title',$sData['series_title']);
 			$sNode->new_child('description',$sData['series_desc']);		
 		}
@@ -43,7 +49,7 @@
 		 */
 		function addProgrammeData($pData){
 			$pNode = $this->root->new_child('programme',null);
-			$pNode->set_attribute('id',$pData['prog_id']);
+			$pNode->new_child('id',$pData['prog_id']);
 			$pNode->new_child('title',$pData['prog_title']);
 			$pNode->new_child('alternative_title',$pData['prog_alt_title']);
 			
