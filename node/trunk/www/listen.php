@@ -30,6 +30,7 @@ $playlist->addProg($prg, $fileid);
 
 $playlist->startStreaming();
 
+// must start stream before! otherwise we don't know stream url
 $playlist->sendRemotePlaylist();
 
 $page->logRequest();

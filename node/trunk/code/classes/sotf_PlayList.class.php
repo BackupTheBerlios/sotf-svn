@@ -8,6 +8,7 @@ class sotf_Playlist {
   var $localPlaylist;
   var $streamName;
   var $tmpId;
+  var $mountPoint;
   var $url;
   var $name;
 
@@ -39,11 +40,25 @@ class sotf_Playlist {
 		raiseError("no_listen_access");
 	 }
 
-	 // add jingle
+	 $filepath = $prg->getFilePath($file);
+	 $index = sotf_AudioCheck::getRequestIndex(new sotf_AudioFile($filepath));
+	 debug("audio index", $index);
+	 if(!$index)
+		$index = '0';
+
+	 // add jingle for station (if exists)
 	 $station = $prg->getStation();
-	 $jfile = $station->getJingle();
+	 $jfile = $station->getJingle($index);
 	 if($jfile)
 		$this->add(array('path' => $jfile, 'jingle' => 1));
+
+	 // add jingle for series (if exists)
+	 $series = $prg->getSeries();
+	 if($series) {
+		$jfile = $series->getJingle($index);
+		if($jfile)
+		  $this->add(array('path' => $jfile, 'jingle' => 1));
+	 }
 
 	 // add program file
 	 $filepath = $prg->getFilePath($file);
@@ -59,17 +74,35 @@ class sotf_Playlist {
   }
 
   function getTmpId() {
-	 global $user;
+	 global $user, $page;
 	 if(!$this->tmpId) {
-		if($this->name)
-		  $this->tmpId = $this->name . '_';
-		$userid = urlencode(preg_replace('/\s+/', '_', $user->name));
-		if(!$userid)
+		if($page->loggedIn()) {
+		  //$userid = urlencode(preg_replace('/\s+/', '_', $user->name));
+		  $userid = 'u' . $user->id;
+		} else {
 		  $userid = 'guest';
-		$this->tmpId = $this->tmpId . $userid . '_' . time();
-		//$this->tmpId = $this->tmpId . '_' . time();
+		}
+		$this->tmpId = $userid . '_' . time();
 	 }
 	 return $this->tmpId;
+  }
+
+  function getMountPoint() {
+	 global $user, $page;
+	 if(!$this->mountPoint) {
+		//$userid = urlencode(preg_replace('/\s+/', '_', $user->name));
+		//if(!$userid)
+		//  $userid = 'guest';
+		if($this->name) {
+		  $this->mountPoint = substr($this->name, 0, 20);
+		  $this->mountPoint .= '_' . time();
+		} else {
+		  $this->mountPoint = $page->getlocalized('playlist_name');
+		  $this->mountPoint .= '_' . time();
+		}
+		$this->mountPoint = preg_replace('/_+/', '_', $this->mountPoint);
+	 }
+	 return $this->mountPoint;
   }
 
   /** Saves the local playlist */
@@ -134,7 +167,7 @@ class sotf_Playlist {
 	 } else {
 		// command-line streaming
 		
-		$this->url = 'http://' . $config['iceServer'] . ':' . $config['icePort'] . '/' . $this->getTmpId() . "\n";
+		$this->url = 'http://' . $config['iceServer'] . ':' . $config['icePort'] . '/' . $this->getMountPoint() . "\n";
 		//$url = preg_replace('/^.*\/repository/', 'http://sotf2.dsd.sztaki.hu/node/repository', $filepath);
 		
 		// TODO: calculate bitrate from all files...
@@ -142,7 +175,7 @@ class sotf_Playlist {
 		if(!$bitrate)
 		  $bitrate = 24;
 		
-		$this->cmdStart($this->localPlaylist, $this->getTmpId(), $bitrate);
+		$this->cmdStart($this->localPlaylist, $this->getMountPoint(), $bitrate);
 		//$this->cmdStart2($bitrate);
 
 	 }
@@ -188,6 +221,7 @@ User-Agent: PHP
 		{
 		  raiseError('Streaming error: Write error');
 		}
+
   }
 
   /** old alternative, does not work under Windows and some Unices */

@@ -329,7 +329,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	* @return	mixed	Returns the path of the jingle if exist, else return boolean false
 	* @use	$config['audioFormats']
 	*/
-	function getJingle($index = 1)
+	function getJingle($index = 0)
 	{
 		global $config;
 

@@ -10,6 +10,7 @@ ini_set("log_errors", true);
 
 $mystreamCmd = str_replace('__PLAYLIST__', $_GET['pl'] , $config['streamCmd']);
 $mystreamCmd = str_replace('__NAME__', $_GET['n'], $mystreamCmd);
+$mystreamCmd = str_replace('__MOUNTPOINT__', $_GET['mp'], $mystreamCmd);
 $bitrate = $_GET['br'];
 $mystreamCmd = str_replace('__BITRATE__', $bitrate, $mystreamCmd);
 $kbrate = round($bitrate/100);

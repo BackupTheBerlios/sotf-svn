@@ -114,7 +114,6 @@ class sotf_AudioCheck
 	function getRequestIndex($audiofile)
 	{
 		global $config;
-		global $config;
 		for($i=0;$i<count($config['audioFormats']);$i++)			// walk thru the requested formats
 		{
 			if ($audiofile->type != "audio")

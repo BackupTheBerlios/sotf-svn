@@ -1,12 +1,12 @@
 <a name="{$anchor}">
 <TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="100%">
 	<TR>
-	<TD ALIGN="center" VALIGN="middle" width="50%">{if $rp_count != 0}<b>{$rp_from}</b> {#to#} <b>{$rp_to}</b> {#of#} <b>{$rp_count}</b>{else}{#no_results#}{/if}</TD>
-	<TD ALIGN="center" VALIGN="middle" width="50%">{if $rp_first_url}<a href="{$rp_first_url}">{/if}<IMG src="{$IMAGE_URL}/left2.gif"
+	<TD ALIGN="center" VALIGN="middle" width="40%"><nobr>{if $rp_count != 0}<b>{$rp_from}</b> {#to#} <b>{$rp_to}</b> {#of#} <b>{$rp_count}</b>{else}{#no_results#}{/if}</nobr></TD>
+	<TD ALIGN="center" VALIGN="middle" width="60%"><nobr>{if $rp_first_url}<a href="{$rp_first_url}">{/if}<IMG src="{$IMAGE_URL}/left2.gif"
 		alt="{#first#}" border="0" />{if $rp_first_url}</a>{/if}<IMG SRC="{$IMAGE_URL}/transp.gif" border="0" width="6" />{if $rp_prev_url}<a href="{$rp_prev_url}">{/if}<IMG src="{$IMAGE_URL}/left.gif"
 		alt="{#prev#}" border="0">{if $rp_prev_url}</a>{/if}<IMG SRC="{$IMAGE_URL}/transp.gif" border="0" width="6" /><a href="{$rp_refresh_url}"><IMG src="{$IMAGE_URL}/reload.gif"
 		alt="{#refresh#}" border="0"></a><IMG SRC="{$IMAGE_URL}/transp.gif" border="0" width="6" />{if $rp_next_url}<a href="{$rp_next_url}">{/if}<IMG src="{$IMAGE_URL}/right.gif"
 		alt="{#next#}" border="0">{if $rp_next_url}</a>{/if}<IMG SRC="{$IMAGE_URL}/transp.gif" border="0" width="6" />{if $rp_last_url}<a href="{$rp_last_url}">{/if}<IMG src="{$IMAGE_URL}/right2.gif"
-		alt="{#last#}" border="0">{if $rp_last_url}</a>{/if}</TD>
+		alt="{#last#}" border="0">{if $rp_last_url}</a>{/if}</nobr></TD>
 	</TR>
 </TABLE>

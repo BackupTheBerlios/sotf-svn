@@ -45,12 +45,16 @@ while (scalar(@ARGV) > 0) {
 					$port = shift @ARGV;
 					last SWITCH;
 				};
-		$1 =~ /p/	&& do {
+		$1 =~ /^p$/	&& do {
 					$password = shift @ARGV;
 					last SWITCH;
 				};
 		$1 =~ /l$/	&& do {
 					$playlist = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /mp/	&& do {
+					$mountPoint = shift @ARGV;
 					last SWITCH;
 				};
 		$1 =~ /lf/	&& do {
@@ -153,6 +157,7 @@ icy-br: $bitrate\r
 EEE
 
 # new style headers
+#if(!$mountPoint) { $mountPoint="iceplay";}
 $headers2 = <<EAA;
 SOURCE $password /$name
 x-audiocast-name: $name
