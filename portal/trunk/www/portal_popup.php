@@ -1,5 +1,13 @@
 <?php
 
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: Máté Pataki, András Micsik
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ * 
+ */
+
 require("portal_login.php");
 
 $row = sotf_Utils::getParameter('row');

@@ -1,17 +1,28 @@
 <?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
+/*  
+ * $Id$
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: Máté Pataki, András Micsik
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ * 
+ *  Copy this file into config.inc.php and edit to reflect your site settings.
+ *
+ */
+
+
 //////////////////////////////////////////////////////////////////////////
 // SQL SETUP --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-// the sql connection URL
+// your sql connection to the portal database
 $nodeDbUser = 'user';
 $nodeDbHost = 'localhost';
 $nodeDbPort = '5432';
 $nodeDbPasswd = '';
 $nodeDbName = 'portal';
 
-// SOTF site
+// Your nearest SOTF node
 $sotfSite = 'http://sotf2.dsd.sztaki.hu/node/www/';
 
 //////////////////////////////////////////////////////////////////////////
@@ -43,7 +54,7 @@ $xmlrpcdir = $basedir . '/code/xmlrpc';
 // path to PHP scripts and images
 $wwwdir = $basedir . '/www';
 
-// The URL prefix for code/www subdir
+// The URL prefix for the www subdir (i.e. how it appears in www browser)
 $localPrefix = '/portal/www';
 
 
@@ -85,9 +96,6 @@ $logFile = "$basedir/logs/log";
 // Temp. solution for debugging after install
 $debug = true;
 
-//the max depth to display by the comments on the programmes page
-$MAX_COMMENT_DEPTH = 4;
-
 //////////////////////////////////////////////////////////////////////////
 // LANGUAGE SETUP  --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
@@ -104,7 +112,7 @@ $languages = array("en", "de", "hu", "it", "es", "cz", "fr", "ro", "ru");
 // MISC  --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-//the max depth to display by the comments on the programmes page
+//the max depth for indentation of comments on the programmes page
 $MAX_COMMENT_DEPTH = 4;
 
 ?>
