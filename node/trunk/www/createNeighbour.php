@@ -28,7 +28,7 @@ if($createNew) {
     $neighbor->set('accept_incoming', 't');
     $neighbor->set('pending_url', $url);
     $neighbor->create();
-    $page->redirect("closeAndRefresh?anchor=network");
+    $page->redirect("closeAndRefresh.php?anchor=network");
     exit;
   }
   $page->redirect("createNeighbour.php?node_id=$nid&url=" . urlencode($url) . "#network");

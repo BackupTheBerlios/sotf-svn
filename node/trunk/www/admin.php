@@ -60,7 +60,8 @@ $neighbours = sotf_Neighbour::listAll();
 while(list(,$nei)= each($neighbours)) {
   $node = sotf_Node::getNodeById($nei->get('node_id'));
   $data = $nei->getAll();
-  $data['node'] = $node->getAll();
+  if($node)
+    $data['node'] = $node->getAll();
   $neighbourData[] = $data;
 }
 $smarty->assign('NEIGHBOURS',$neighbourData);

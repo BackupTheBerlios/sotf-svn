@@ -234,7 +234,7 @@ class sotf_Page
 		 debug("alertWithErrors()");
 		 print("\n<script type=\"text/javascript\" language=\"javascript1.1\">");
 		 foreach($this->errors as $err) {
-			print "\nalert('" . htmlspecialchars(strtr($err, "\n\r\t\0",'  '), ENT_QUOTES) . "');";
+			print "\nalert('" . addslashes(strtr($err, "\n\r\t\0",'  ')) . "');";
 		 }
 		 print("\nhistory.back();");
 		 print("\n</script>");

@@ -55,26 +55,30 @@
             {foreach item=item from=$NEIGHBOURS}
             <tr class="{cycle name=roles}">
               <td>
-              <a href="{$item.node.url}">{$item.node.name}</a>
-            </td>
-            <td>
-              {if $item.accept_incoming}{#Yes#}{else}{#No#}{/if}
-            </td>
-            <td>
-              {$item.last_incoming}
-            </td>
-            <td>
-              {if $item.use_for_outgoing}{#Yes#}{else}{#No#}{/if}
-            </td>
-            <td>
-              {$item.last_outgoing}
-            </td>
-            <td nowrap>
-              <input class="action" type="button" name="b1" value="{#sync#}" onClick="redir(this.form, 'admin.php?sync=1&nodeid={$item.node_id}')" />
-              <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editNeighbour.php?nodeid={$item.node_id}','{#editNeighbour#}',350,400,false)" />
-              <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'admin.php?delneighbour=1&nodeid={$item.node_id}')" />
-            </td>
-          </tr>
+                {if $item.pending_url}
+                <a href="{$item.pending_url}">{#pending#}: {$item.node_id}</a>
+                {else}
+                <a href="{$item.node.url}">{$item.node.name}</a>
+                {/if}
+              </td>
+              <td>
+                {if $item.accept_incoming}{#Yes#}{else}{#No#}{/if}
+              </td>
+              <td>
+                {$item.last_incoming}
+              </td>
+              <td>
+                {if $item.use_for_outgoing}{#Yes#}{else}{#No#}{/if}
+              </td>
+              <td>
+                {$item.last_outgoing}
+              </td>
+              <td nowrap>
+                <input class="action" type="button" name="b1" value="{#sync#}" onClick="redir(this.form, 'admin.php?sync=1&nodeid={$item.node_id}')" />
+                  <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editNeighbour.php?nodeid={$item.node_id}','{#editNeighbour#}',350,400,false)" />
+                    <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'admin.php?delneighbour=1&nodeid={$item.node_id}')" />
+              </td>
+            </tr>
           {/foreach}
         </table>
         {else}

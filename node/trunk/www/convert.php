@@ -56,6 +56,7 @@ function progressBar($cmd,$regexp)
 	$out = 0;
 	$left = $progressBarLength;
 
+	debug('execute',$cmd);
 	$fp = popen($cmd . ' 2>&1', 'r');
 	while(!feof($fp))
 	{
@@ -109,6 +110,7 @@ function decodeWithLame($cmd)
 
 	echo "<p>Decoding MP3 file to PCM data...<br />\n";
 	flush();
+	debug('execute',$cmd);
 	exec($cmd);
 	for ($i=0;$i<$progressBarLength;$i++)
 		echo $progressBarChar;
@@ -136,6 +138,7 @@ function decodeWithOgg($cmd)
 
 	echo "<p>Decoding OGG file to PCM data...<br />\n";
 	flush();
+	debug('execute',$cmd);
 	exec($cmd);
 	for ($i=0;$i<$progressBarLength;$i++)
 		echo $progressBarChar;
@@ -150,6 +153,7 @@ function convertWithSox($cmd)
 
 	echo "<p>Convert mono PCM data to stereo...<br />\n";
 	flush();
+	debug('execute',$cmd);
 	exec($cmd);
 	for ($i=0;$i<$progressBarLength;$i++)
 		echo $progressBarChar;
