@@ -69,7 +69,7 @@ $db->debug = $debug;
 $success = $db->makeConnection($sqlDSN, false);
 if (DB::isError($success))
 {
-  die ("Portal DB connection to $sqlDSN failed: \n" . $success->getMessage());
+  die ("Portal DB connection failed: \n" . $success->getMessage());
 } 
 $db->setFetchmode(DB_FETCHMODE_ASSOC);
 

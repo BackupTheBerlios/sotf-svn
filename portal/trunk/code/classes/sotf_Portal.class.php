@@ -552,8 +552,8 @@ class sotf_Portal
 				$url = $sotfSite."xmlrpcServer.php";
 				$objs = array($query);
 
-				if ($type == 1) $result = $rpc->call($url, 'portal.query', $objs);
-				else $result = $rpc->call($url, 'portal.playlist', array($objs));	//if($type == 2)
+				if ($type == 1) $result = $rpc->call($url . "/portal.query", 'portal.query', $objs);
+				else $result = $rpc->call($url . "/portal.playlist", 'portal.playlist', array($objs));	//if($type == 2)
 				if ($result === NULL)		//if some error occured
 				{
 					debug("error", "Connection error!!! (".$result." instead of ".count($events).")");
@@ -566,7 +566,6 @@ class sotf_Portal
 			if ($result === NULL)	//if some error occured
 			{
 				if ($cached === NULL) return array();	//if not in cache and not available
-
 				return unserialize(base64_decode($cached['value']));
 			}
 			else		//if got result, set last successful connection to current time
@@ -818,7 +817,7 @@ class sotf_Portal
 
 		if ($type == "query")
 		{
-			$sql="SELECT query FROM portal_queries WHERE portal_id = '$this->portal_id' AND query='".$data['query']."'";
+			$sql="SELECT name FROM portal_queries WHERE portal_id = '$this->portal_id' AND query='".$data['query']."'";
 			$result = $db->getOne($sql);
 			if ($result == NULL)		//if not exists
 			{
@@ -831,7 +830,7 @@ class sotf_Portal
 				}
 				else return $page->getlocalized("name_exists");
 			}
-			else return $page->getlocalized("query_exists");
+			else return $page->getlocalizedWithParams("query_exists", $result);
 		}
 		elseif ($type == "prg")
 		{
@@ -884,9 +883,9 @@ class sotf_Portal
 		global $db, $user, $page;
 
 		$IPaddr = $_SERVER['REMOTE_ADDR'];
-		$comment = nl2br(htmlentities($comment));
-		$title = htmlentities(substr($title, 0, 30));
-		$email = htmlentities(substr($email, 0, 100));
+		$comment = nl2br(htmlspecialchars($comment));
+		$title = htmlspecialchars(substr($title, 0, 30));
+		$email = htmlspecialchars(substr($email, 0, 100));
 		if (($title == "") OR ($comment == "")) return false;		//if not filled out
 		$level = 0;
 		$path = "0";
@@ -1127,9 +1126,32 @@ class sotf_Portal
 					$events[$key]['portal_url'] = $rootdir."/portal.php/".$events[$key]['portal_name'];
 				}
 				
-				$objs = array($events);
 
-				$result = $rpc->call($url, 'portal.events', $objs);
+				// SPLIT the events into smaller chunks
+				$ecount = 0;
+				$ec2 = 0;
+				foreach ($events as $event)
+				{
+					$es[$ec2][] = $event;
+					$ecount++;
+					if ($ecount == 100)
+					{
+						$ec2++;
+						$ecount = 0;
+					}
+				}
+
+				// send all chunks
+				$result = 0;
+				foreach($es as $e)
+				{
+					$objs = array($e);
+					$r = $rpc->call($url . "/portal.events", 'portal.events', $objs);
+					if ($r != count($e)) break;
+					$result += $r;
+				}
+
+				//test if all OK
 				if ($result != count($events))		//if some error occured (return value must be the number of events sent)
 				{
 					if ($result === NULL) $result = "NULL";
@@ -1146,7 +1168,6 @@ class sotf_Portal
 				}
 	
 			}
-			
 			$db->commit();
 		}
 
