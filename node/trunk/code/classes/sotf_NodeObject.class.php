@@ -35,7 +35,7 @@ class sotf_NodeObject extends sotf_Object {
     $tc = $repository->getTableCode($tablename);
     //debug('tc', $tc);
     if($tc == 'tt' || $tc == 'td' || $tc == 'to' || $tc == 'ge' || $tc == 'ro' || $tc == 'rn') {
-      debug("vocabulary entry");
+      //debug("vocabulary entry");
       return true;
     } else {
       return false;

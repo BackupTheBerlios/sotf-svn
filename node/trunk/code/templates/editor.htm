@@ -148,7 +148,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
                 {/if}
                 {if $item.rating_value}<br />{#rating#}: {$item.rating_value} ({#by#} {$item.rating_count}){/if}
       </td>
-      <td align="center">
+      <td align="center" {if $item.published ne 't'}bgcolor="F7DCC3"{/if}>
          {#Published#} <input type="checkbox" onclick="javascript:setvalue('editorpub', '{$item.id}', this.checked);return true;"{ if $item.published eq 't' } CHECKED="1"{/if} /><br>
          <select name="flag" onchange="javascript:setvalue('editorflag', '{$item.id}', this.options[this.selectedIndex].value);return true;">{html_options options=$flags selected=$item.flags}</select>
       </td>
