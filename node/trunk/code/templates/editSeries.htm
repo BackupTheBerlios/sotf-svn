@@ -74,12 +74,12 @@
 
 <p></p>
 
+<a name="permissions"></a>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#access_permissions#}</td>
   </tr>
 </table>
-<a name="permissions"></a>
 <table class="tabarea">
 <tr> 
   <td class="tabarea"> 
@@ -149,7 +149,7 @@ function getSelected() {
           <input type="hidden" name="seriesid" value="{$SERIES_ID}">
           <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
           <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
-          <input type="submit" name="seticon" value="{#set_icon#}" onClick="return confirmUnsaved()">
+          <input type="submit" name="seticon" value="{#set_icon#}" onClick="return confirmUnsaved()"  onClick="return confirmUnsaved()" >
           <br \><small>{#userfiles_expl#}</small>
         </form>
         {else}
@@ -160,7 +160,7 @@ function getSelected() {
             <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
             <input type="hidden" name="seriesid" value="{$SERIES_ID}" />
             <input name="userfile" type="file" />
-            <input type="submit" name="uploadicon" value="{#set_icon#}" onClick="return confirmUnsaved()">
+            <input type="submit" name="uploadicon" value="{#set_icon#}" onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()">
             <br />{#upload_expl#}
           </form>
         </small>

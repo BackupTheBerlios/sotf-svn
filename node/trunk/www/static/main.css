@@ -70,6 +70,10 @@ TD.titlehead {
   FONT-WEIGHT: bold; FONT-SIZE: larger; background: #F0B989;
 }
 
+TABLE.login {
+  background: #EFF4FE;
+}
+
 .prevnext {
   background: #A8C3F7; text-align: center; width: 20%;
 }

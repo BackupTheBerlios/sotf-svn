@@ -49,7 +49,7 @@ if($save) {
     $rights->create();
   } else
     $rights->update();
-  $page->redirect("closeAndRefresh.php?part=perms");
+  $page->redirect("closeAndRefresh.php?anchor=rights");
 }
 
 // general data

@@ -32,7 +32,7 @@ if($save) {
         $permissions->delPermission($objectid, $userid, $perm);
     }
   }
-  $page->redirect('closeAndRefresh.php');
+  $page->redirect('closeAndRefresh.php?anchor=perms');
 }
 
 

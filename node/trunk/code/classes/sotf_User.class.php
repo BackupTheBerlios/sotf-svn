@@ -64,10 +64,9 @@ class sotf_User
 			
 		if ($id)
 		{
-			// find user in userdb
-				$data = $userdb->getRow("SELECT * FROM authenticate WHERE auth_id = $id");
-				if (count($data) == 0)
-			{
+			// find user in sadm
+      $data = $userdb->getRow("SELECT * FROM authenticate WHERE auth_id = '$id'");
+      if (count($data) == 0) {
 				$this->exist = false;
 				return;
 			}
@@ -75,14 +74,16 @@ class sotf_User
 			$this->name = $data['username'];
 			$this->id = $data['auth_id'];
 			$id = $this->id;
-	
-				// get some more data from sadm
-			$data = $userdb->getRow("SELECT * FROM user_preferences WHERE auth_id = $id");
+      
+      // get some more data from sadm
+			$data = $userdb->getRow("SELECT * FROM user_preferences WHERE auth_id = '$id'");
 			$this->realname = $data['realname'];
 			$this->language = $data['language'];
 			$this->email = $data['email'];
 			$this->exist = true;
 
+      // get e-mail
+      $this->email = $db->getOne("SELECT email FROM sotf_user_prefs WHERE id='$id'");
       // user permissions are stored in $permission
 		}
 	}
@@ -121,7 +122,7 @@ class sotf_User
 
 	function userNameCheck($username) {
 		global $userdb, $page;
-		$data = $userdb->getOne("SELECT username FROM authenticate WHERE username='". sotf_Utils::clean($username) . "'");
+		$data = $userdb->getOne("SELECT username FROM authenticate WHERE username='". sotf_Utils::magicQuotes($username) . "'");
 		if($data)
 			return $page->getlocalized("username_in_use");
 		return false;
@@ -130,43 +131,57 @@ class sotf_User
 	function save($password) {
 		global $userdb;
 		if($password) {
-			$pwdChange = " ,password='". sotf_Utils::clean($password) . "' ";
-			$query = "UPDATE authenticate SET passwd='". sotf_Utils::clean($password) . "' WHERE auth_id='" . sotf_Utils::clean($this->id) . "'";
+			$pwdChange = " ,password='". sotf_Utils::magicQuotes($password) . "' ";
+			$query = "UPDATE authenticate SET passwd='". sotf_Utils::magicQuotes($password) . "' WHERE auth_id='" . sotf_Utils::magicQuotes($this->id) . "'";
 			$userdb->query($query);
 		}
-		$query = "UPDATE user_preferences SET RealName='". sotf_Utils::clean($this->realname) ."', language='". sotf_Utils::clean($this->language) . "' WHERE auth_id='" . sotf_Utils::clean($this->id) . "'";
-			//"', email='". sotf_Utils::clean($this->email) . "' $pwdChange WHERE username='" . sotf_Utils::clean($this->name) ."' ";
+		$query = "UPDATE user_preferences SET RealName='". sotf_Utils::magicQuotes($this->realname) ."', language='". sotf_Utils::magicQuotes($this->language) . "' WHERE auth_id='" . sotf_Utils::magicQuotes($this->id) . "'";
 		$userdb->query($query);
+    $this->saveEmail();
 	}
 
+  /** saves email as in field, e-mails are stored in sotf_user_prefs as a workaround */
+  function saveEmail() {
+    global $db;
+    // TODO instead of magicquotes, check e-mail format??
+    $email = sotf_Utils::magicQuotes($this->email);
+    $db->query("UPDATE sotf_user_prefs SET email='$email' WHERE id='$this->id'");
+    debug('rows', $db->affectedRows());
+    if($db->affectedRows()==0)
+      $db->query("INSERT INTO sotf_user_prefs (id, username, email) VALUES('$this->id', '$this->name', '$this->email')");
+  }
+
+  /** static */
 	function register($password, $name, $realname, $language, $email) {
 		// TODO: check not to change user name!!
-		global $userdb, $page;
+		global $userdb, $db, $page;
 		if(strlen($name)==0) {
 			debug("USERDB", "attempt to register with empty userid");
 			return $page->getlocalized("invalid_username");
 		}
 		debug("USERDB", "registering user: ". $name);
-		$name = sotf_Utils::clean($name);
-		$passwd = sotf_Utils::clean($password);
+		$name = sotf_Utils::magicQuotes($name);
+		$passwd = sotf_Utils::magicQuotes($password);
 		$query = "INSERT INTO authenticate (username,passwd) VALUES('$name','$password')";
 		$userdb->query($query);
 		$id = $userdb->getOne("SELECT auth_id FROM authenticate WHERE username='$name'");
 		//		$query = "INSERT INTO user_preferences (RealName,language,last_visit,num_logins) ";
 		$query = "INSERT INTO user_preferences (auth_id, realname, language,last_visit,num_logins) ";
 		$query .= "VALUES('$id','"
-						. sotf_Utils::clean($realname) . "','" 
-			. sotf_Utils::clean($language) 
-			// . "','" . sotf_Utils::clean($email) 
+						. sotf_Utils::magicQuotes($realname) . "','" 
+			. sotf_Utils::magicQuotes($language) 
 			. "','". db_Wrap::getSQLDate() . "',1)";
 		$userdb->query($query);
+    // TODO: check email??
+    $email = sotf_Utils::magicQuotes($email);
+    $db->query("INSERT INTO sotf_user_prefs (id, username, email) VALUES('$id', '$name', '$email')");
 	}
 
 	function login($name, $password)
 	{
 		global $user, $userdb, $page;
 
-		$res = $userdb->getRow("SELECT auth_id, passwd FROM authenticate WHERE username='".sotf_Utils::clean($name)."'");
+		$res = $userdb->getRow("SELECT auth_id, passwd FROM authenticate WHERE username='".sotf_Utils::magicQuotes($name)."'");
 		if(DB::isError($res))
       raiseError($res);
 		if($res['passwd'] != $password)
@@ -190,7 +205,7 @@ class sotf_User
 
 	function listUsers() {
 		global $userdb;
-		return $userdb->getCol("SELECT username FROM authenticate");
+		return $userdb->getCol("SELECT username FROM authenticate ORDER BY username");
 	}
 
 	function getUsername($user_id) {

@@ -83,21 +83,6 @@ if($save || $finish || $finishpublish) {
 $smarty->assign('PRG_ID', $prgId);
 $smarty->assign('PRG_TITLE', $prg->get('title'));
 
-
-// upload icon
-$uploadIcon = sotf_Utils::getParameter('uploadicon');
-if($uploadIcon) {
-  $file = $user->getUserDir() . '/' . $_FILES['userfile']['name'];
-  move_uploaded_file($_FILES['userfile']['tmp_name'], $file);
-  if ($prg->setIcon($file)) {
-    //$page->addStatusMsg("ok_icon");
-  } else {
-    $page->addStatusMsg("error_icon");
-  }  
-  $page->redirect("editMeta.php?id=$prgId#icon");
-  exit;
-}
-
 // delete role
 $delrole = sotf_Utils::getParameter('delrole');
 $roleid = sotf_Utils::getParameter('roleid');
@@ -139,6 +124,22 @@ if($delperm) {
 }
 
 // icon and jingle
+
+// upload icon
+$uploadIcon = sotf_Utils::getParameter('uploadicon');
+if($uploadIcon) {
+  $file = $user->getUserDir() . '/' . $_FILES['userfile']['name'];
+  move_uploaded_file($_FILES['userfile']['tmp_name'], $file);
+  if ($prg->setIcon($file)) {
+    //$page->addStatusMsg("ok_icon");
+  } else {
+    $page->addStatusMsg("error_icon");
+  }  
+  $page->redirect("editMeta.php?id=$prgId#icon");
+  exit;
+}
+
+// select icon from user files
 $seticon = sotf_Utils::getParameter('seticon');
 $filename = sotf_Utils::getParameter('filename');
 if($seticon) {
@@ -149,6 +150,7 @@ if($seticon) {
     //$page->addStatusMsg("error_icon");
   }
   $page->redirect("editMeta.php?id=$prgId#icon");
+  exit;
 }
 
 // generate output

@@ -93,8 +93,12 @@
           </td>
         </tr>
         <tr valign="top"> 
-          <td bgcolor="#eeeeee"><strong>{#New_shows#}:<br>
-            </strong> 
+          <td bgcolor="#eeeeee">
+              {if $DEF_QUERY}
+              <strong>{#Default_query#}</strong>
+              {else}
+              <strong>{#New_shows#}</strong>
+              {/if}
               <table width="100%" border="0" cellspacing="0" cellpadding="2">
                 {if count($NEWS) gt 0 }
                 {foreach item=item from=$NEWS}
@@ -116,8 +120,20 @@
                   </td>
                 </tr>
                 {/foreach}
+                  {if $DEF_QUERY}
+                     <tr bgcolor="#FFFFFF" height="1"><td colspan="2"></td></tr>
+                     <tr><td colspan="2" align="right">({#total#} {$DEF_QUERY_MAX})</td></tr>
+                  {/if}
                 {else}
-                <tr><td>{#No_news#}</td></tr>
+                <tr>
+                  <td>
+                    {if $DEF_QUERY}
+                    {#No_results#}
+                    {else}
+                    {#No_news#}
+                    {/if}
+                  </td>
+                </tr>
                 {/if}
                 </tr>
               </table>

@@ -1,23 +1,58 @@
-<BR />
-{if $count == 0}
-<h3>{#empty#}<h3>
-{else}
-<form name="taskform" method="POST" action="playlist.php">
-<table width="100%">
-	<tr>
-	<td>
-		<table>
-		{foreach name=outer item=item from=$result}
-			<tr>
-				<td width="50" align="center"><input type="checkbox" value="{$item.id}" name="checkbox[]" /> </td>
-				<td>{if $item.icon}<img src="getIcon.php/icon.png?id={$item.id}">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
-				<td><b><a href="get.php?id={$item.id}">{$item.title}</a></b><BR></td>
-			</tr>
-		{/foreach}
-		</table>
-	</td>
-	</tr>
-</table>
+
+  <form>
+    <table class="title" cellspacing="0" cellpadding="5" width="100%">
+      <tr valign="bottom">
+        <td class="titlehead" width="20%">
+          {#Playlist#}
+        </td>
+        <td class="title2" width="80%" align="right" valign="bottom">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="titlehead" height="5">
+        </td>
+      </tr>
+    </table>
+  </form>
+  
+  <p></p>
+  
+  <table class="tabarea" width="100%">
+    <tr> 
+      <td class="tabarea"> 
+        {if $count == 0}
+        <h3>{#empty#}<h3>
+            {else}
+            <form name="taskform" method="POST" action="playlist.php">
+              <table width="100%">
+                <tr>
+                  <td>
+                    <table>
+                      {foreach name=outer item=item from=$result}
+                      <tr valign="top">
+                        <td width="5%" align="center"><input type="checkbox" value="{$item.id}" name="checkbox[]" /> </td>
+                        <td width="1%">
+                          {if $item.icon }
+                          <img src="{$CACHEDIR}/{$item.id}.png">
+                            {else}
+                            <img src="{$IMAGEDIR}/noicon.png">
+                              {/if}
+                        </td>
+                        <td width="98%">
+                          <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> ({$item.entry_date})
+                          {if $item.alternative_title}<br>{$item.alternative_title}{/if}
+                          {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
+                          {if $item.abstract}
+                          <div class="abstract">{$item.abstract|truncate:300}</div>
+                          {/if}
+                        </td>
+                      </tr>
+                      {/foreach}
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
 <div align="center">
 <table width="80%" align="center">
 	<tr align="center">
@@ -37,3 +72,7 @@
 	<BR />___________________________________________________________<BR />
 {/foreach}
 -->
+
+</td>
+</tr>
+</table>

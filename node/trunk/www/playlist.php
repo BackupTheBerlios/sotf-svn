@@ -15,7 +15,7 @@ if (sotf_Utils::getParameter("delete_selected") != "")
 	$page->redirect("playlist.php");
 }
 
-$query="SELECT prog_id as id, order_id, title, icon FROM sotf_playlists".
+$query="SELECT prog_id as id, order_id, sotf_programmes.* FROM sotf_playlists".
 	" LEFT JOIN sotf_programmes ON sotf_programmes.id = sotf_playlists.prog_id".
 	" WHERE user_id = ".$user->id." ORDER BY order_id";
 $result = $db->getAll($query);
@@ -27,6 +27,7 @@ print("</pre>");
 $programmes = array();
 foreach($result as $key => $value)
 {
+  sotf_ComplexNodeObject::cacheIcon($value['id'], $db->unescape_bytea($value['icon']));
 	$programmes["0:".$key] = $value["title"];
 }
 

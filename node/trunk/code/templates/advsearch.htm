@@ -64,8 +64,8 @@
 	<TD ALIGN="center" BGCOLOR="{#searchBgColor2#}">
 	<TABLE BORDER=0 CELLPADDING=3>
 		<TR><TD><B>{#box2#}</B></TD></TR>
-		<TR><TD ALIGN=center>{#sort1#} <SELECT name="sort1"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$SQLfields selected=$sort1}</SELECT></TD></TR>
-		<TR><TD ALIGN=center>{#sort2#} <SELECT name="sort2"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$SQLfields selected=$sort2}</SELECT></TD></TR>
+		<TR><TD ALIGN=center>{#sort1#} <SELECT name="sort1"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort1}</SELECT></TD></TR>
+		<TR><TD ALIGN=center>{#sort2#} <SELECT name="sort2"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort2}</SELECT></TD></TR>
 		<TR><TD ALIGN=center><INPUT type="submit" name="run" value="{#run#}"{if $SQLquery == ""} disabled="true"{/if}></TD></TR>
 	</TABLE>
 	</TD>

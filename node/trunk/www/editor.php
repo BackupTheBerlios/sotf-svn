@@ -6,7 +6,6 @@ $page->forceLogin();
 $smarty->assign("OKURL", $_SERVER['PHP_SELF']);
 
 
-
 if (!$permissions->isEditor()) {
 	raiseError("You have no permission to upload to any station");
 	exit;
@@ -36,6 +35,9 @@ if(sotf_Utils::getParameter('addprog')) {
   exit;
 }
 
+$stationId = sotf_Utils::getParameter('stationid');
+if($stationId)
+	  $smarty->assign('SELECTED_STATION', $stationId);
 
 $userFtpUrl = str_replace('ftp://', "ftp://$user->name@", $userFTP . $user->name);
 	$smarty->assign("USERFTPURL", $userFtpUrl); 

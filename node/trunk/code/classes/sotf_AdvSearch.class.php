@@ -21,12 +21,16 @@ class sotf_AdvSearch
 
 	function GetSort1()					//gives back the current query
 	{
-		return $this->sort1;
+		$pos = strpos($this->sort1, " DESC");
+		if (!$pos) return $this->sort1;
+		return substr($this->sort1, 0, $pos);
 	}
 
 	function GetSort2()					//gives back the current query
 	{
-		return $this->sort2;
+		$pos = strpos($this->sort2, " DESC");
+		if (!$pos) return $this->sort2;
+		return substr($this->sort2, 0, $pos);
 	}
 
 	function DeleteQuery()					//start a new query
@@ -52,11 +56,12 @@ class sotf_AdvSearch
 		$terms = explode("|A", $serial);
 		$max = count($terms);
 		$term = explode("|B", $terms[0]);		//sort order is the first array
-		$this->SetSortOrder($term[0], $term[1]);	//SetSortOrder
+		if (array_key_exists($term[1], $this->getOrderFields()) AND array_key_exists($term[1], $this->getOrderFields())) $this->SetSortOrder($term[0], $term[1]);	//SetSortOrder
+		else $this->SetSortOrder();
 		for($i=1; $i < $max; $i++)
-		{			//Need | char as a sepecial char so replace it
+		{			//TODO: | char as a sepecial char so replace it
 			$term = explode("|B", $terms[$i]);
-			if (count($term == 5))			//to be sure :-)
+			if (count($term == 5) AND array_key_exists($term[1], $this->GetSQLfields()))			//to be sure :-)
 				$this->SQLquery[]=$term;
 		}
 		return $this->SQLquery;
@@ -171,7 +176,7 @@ class sotf_AdvSearch
 			//set end of round bracket
 			if (($this->SQLquery[$i][0] == "OR") && ($this->SQLquery[$i+1][0] != "OR")) $query = $query." )";
 		}
-		$query = $query." ORDER BY ".$this->sort1.", ".$this->sort2;			//ISBN DESC, BOOK_TITLE 
+		$query = $query." ORDER BY ".$this->sort1.", ".$this->sort2;			//ISBN, TITLE 
 		//print($query);
 		//die();
 		return $query;
@@ -294,12 +299,10 @@ class sotf_AdvSearch
 		return $this->SQLquery;
 	}
 
-	function SetSortOrder($sort1 = "", $sort2 = "")		//set the sort order
+	function SetSortOrder($sort1 = "production_date", $sort2 = "station")		//set the sort order
 	{
-		if ($sort1 == "") $this->sort1 = "production_date";
-		else $this->sort1 = $sort1;
-		if ($sort2 == "") $this->sort2 = "station";
-		else $this->sort2 = $sort2;
+		$this->sort1 = $sort1;
+		$this->sort2 = $sort2;
 	}
 	
 	function GetHumanReadable()			//translates fieldnames for all rows of the query
@@ -369,6 +372,13 @@ class sotf_AdvSearch
 		$SQLfiels[contact_email] = $page->getlocalized("contact_email");
 		$SQLfiels[contact_phone] = $page->getlocalized("contact_phone");
 		return $SQLfiels;
+	}
+
+	function getOrderFields()		//translates fieldnames for dropdown box
+	{
+		$SQLfiels = $this->GetSQLfields();
+		foreach($SQLfiels as $key => $value) if ($key != "person") $OrderFields[$key] = $value;
+		return $OrderFields;
 	}
 
 	function GetLanguages()		//returns all the languages

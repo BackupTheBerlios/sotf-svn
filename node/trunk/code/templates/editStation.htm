@@ -1,5 +1,3 @@
-<SCRIPT>var data_changed=0; 
-</SCRIPT>
 
 <h3>{#edit_station#}</h3>
 
@@ -76,17 +74,17 @@
 
 <p></p>
 
-<form>
+<a name="perms"></a>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#access_permissions#}</td>
   </tr>
 </table>
-<a name="perms"></a>
 <table class="tabarea">
 <tr> 
   <td class="tabarea"> 
         {if $PERMISSIONS}
+        <form>
         <table>
           <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
           {cycle name="perms" values="list1,list2" print=false advance=false}
@@ -105,6 +103,7 @@
           </tr>
           {/foreach}
         </table>
+        </form>
         {else}
         <p>{#no_users#}</p>
         {/if}
@@ -117,9 +116,9 @@
       </td>
     </tr>
 </table>
-</form>
 
 <p></p>
+<a name="series"></a>
 
 <form>
 <table class="tab">
@@ -127,7 +126,6 @@
     <td nowrap class="tab">{#series#}</td>
   </tr>
 </table>
-<a name="series"></a>
 <table class="tabarea">
 <tr> 
   <td class="tabarea"> 
@@ -158,6 +156,7 @@
 
 <p></p>
 
+        <a name="icon"></a>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#icons_and_jingles#}</td>
@@ -218,7 +217,6 @@
             </td></tr>
         </table>
                        </form>
-        <a name="icon"></a>
 
         {if $USERFILES}
 {literal}
@@ -234,8 +232,8 @@ function getSelected() {
           <input type="hidden" name="stationid" value="{$STATION_ID}">
           <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
           <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
-          <input type="submit" name="seticon" value="{#set_icon#}">
-          <input type="submit" name="setjingle" value="{#set_jingle#}">
+          <input type="submit" name="seticon" value="{#set_icon#}" onClick="return confirmUnsaved()" >
+          <input type="submit" name="setjingle" value="{#set_jingle#}" onClick="return confirmUnsaved()" >
           <br \><small>{#userfiles_expl#}</small>
         </form>
         {else}
@@ -246,8 +244,8 @@ function getSelected() {
             <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
             <input type="hidden" name="stationid" value="{$STATION_ID}" />
             <input name="userfile" type="file" />
-            <input type="submit" name="uploadicon" value="{#set_icon#}" />
-            <input type="submit" name="uploadjingle" value="{#set_jingle#}" />
+            <input type="submit" name="uploadicon" value="{#set_icon#}"  onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
+            <input type="submit" name="uploadjingle" value="{#set_jingle#}"  onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
             <br />{#upload_expl#}
           </form>
         </small>

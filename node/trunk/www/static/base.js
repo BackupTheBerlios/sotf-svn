@@ -1,4 +1,6 @@
 
+// confirmUnsaved() is declared in main.htm and main_popup.htm as it needs localization via Smarty
+
 function popup(url, name, height, width, scroll) {
   if(!confirmUnsaved())
     return;

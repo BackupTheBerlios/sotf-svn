@@ -58,8 +58,9 @@ if($filled)
 		else // new user
 		{
 			$error = sotf_User::register($password, $username, $realname, $language, $email);
-      if(!$error)
+      if(!$error) {
         $error = sotf_User::login($username, $password);
+      }
       if($error)
         $smarty->assign('ERRORMSG',$error);
 		}

@@ -50,13 +50,18 @@ if($save) {
     $role->set('role_id', $roleSelected);
     $role->update();
   } else {
+    if(sotf_ComplexNodeObject::findRole($objectId, $contactId, $roleSelected)) {
+      // this role already exists
+      $page->addStatusMsg("role_exists");
+      $page->redirectSelf();
+    }
     $role = new sotf_NodeObject("sotf_object_roles");
     $role->set('object_id', $objectId);
     $role->set('contact_id', $contactId);
     $role->set('role_id', $roleSelected);
     $role->create();
   }
-  $page->redirect("closeAndRefresh.php");
+  $page->redirect("closeAndRefresh.php?anchor=roles");
 }
 
 // general data

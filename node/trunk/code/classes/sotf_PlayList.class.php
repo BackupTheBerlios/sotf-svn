@@ -1,22 +1,9 @@
-<?php
+<?php  //-*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/**
-* This is a class for handling playlist.
-*
-* @author	Mate Pataki SZTAKI DSD
-* @package	StreamOnTheFly
-* @version	0.1
-*/
-class Playlist
-{
-	var $list = array();
-	var $userid;
+class sotf_Playlist {
 
-	function Playlist($id)
-	{
 
-	}
+
 
 }
-
 ?>

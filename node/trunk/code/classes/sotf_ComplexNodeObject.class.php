@@ -25,6 +25,13 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
     return $roles;
   }
 
+  /** static */
+  function findRole($objectId, $contactId, $roleId) {
+    global $db;
+    $id = $db->getOne("SELECT id FROM sotf_object_roles WHERE object_id='$objectId' AND contact_id='$contactId' AND role_id='$roleId' ");
+    return $id;
+  }
+
   function addRole($contactId, $roleId) {
     $ro = new sotfNodeObject("sotf_object_roles");
     $ro->set('contact_id', $contactId);
@@ -79,6 +86,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
     if(is_readable($fname) && filesize($fname)==strlen($icon)) {
       return;
     }
+    debug("cached icon for", $id);
     sotf_Utils::save($fname, $icon);
   }
 

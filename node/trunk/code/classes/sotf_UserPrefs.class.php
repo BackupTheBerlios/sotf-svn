@@ -26,6 +26,15 @@ class sotf_UserPrefs
     
   }
 
+  function getDefaultQuery() {
+    reset($this->savedQueries);
+    while(list(,$query)=each($this->savedQueries)) {
+      if($query['default'])
+        return $query['query'];
+    }
+    return '';
+  }
+
   function save() {
     global $db, $user;
     $data = serialize($this);

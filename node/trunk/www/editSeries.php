@@ -26,7 +26,7 @@ if($save || $finish) {
   $series->setWithParam('description');
   $series->update();
   if($finish)
-    $page->redirect("closeAndRefresh.php?part=series");
+    $page->redirect("closeAndRefresh.php?anchor=series");
   else
     $page->redirect("editSeries.php?seriesid=$seriesid");
   exit;

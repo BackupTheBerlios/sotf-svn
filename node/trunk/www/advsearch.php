@@ -39,6 +39,8 @@ $SQLeq = $paramcache->getRegistered('SQLeq');			//= < > ... values array
 $SQLstring = $paramcache->getRegistered('SQLstring');		//last parameter value array
 $SQLquerySerial = $paramcache->getRegistered('SQLquerySerial');	//the serialized query
 
+if ($SQLquerySerial == "") $SQLquerySerial = $_SESSION["SQLquerySerial"];
+
 if ($SQLquerySerial == "")			//get old search query from session if none in hidden field	
 {
 	$SQLquery = $_SESSION["SQLquery"];		//get array from session
@@ -49,9 +51,8 @@ else 						//else get it from hidden field
 	$advsearch = new sotf_AdvSearch();		//create new search object object
 	$SQLquery = $advsearch->Deserialize($SQLquerySerial);	//deserialize the content of the hidden field
 }
-
-if ($SQLquery == NULL) $advsearch->SetSortOrder("", "");	//set default sort order for new queries
-else $advsearch->SetSortOrder($sort1, $sort2);			//set sort order
+if ($SQLquery == NULL) $advsearch->SetSortOrder();	//set default sort order for new queries
+else if(isset($sort1) AND isset($sort2)) $advsearch->SetSortOrder($sort1, $sort2);			//set sort order
 
 $max = count($SQLeq);
 $k = 0;
@@ -81,15 +82,15 @@ if($add)									////add term button pressed
 }
 elseif (($run or ($run_image=="0")) and $SQLquery!=NULL)			////run query button pressed, run if any terms
 {
-	$_SESSION["SQLquery"] = $SQLquery;
-	$_SESSION["SQLquerySerial"] = $advsearch->Serialize();
-
-	$page->redirect("advsearchresults.php");
+	//$_SESSION["SQLquery"] = $SQLquery;
+	//$_SESSION["SQLquerySerial"] = $advsearch->Serialize();
+	$SQLquerySerial = $advsearch->Serialize();
+	$page->redirect("advsearchresults.php?SQLquerySerial=$SQLquerySerial");
 }
 elseif ($new)									////new query button pressed
 {
 	$SQLquery = $advsearch->DeleteQuery();
-	$advsearch->SetSortOrder("", "");		//set back default sort order for new queries
+	$advsearch->SetSortOrder();		//set back default sort order for new queries
 }
 elseif ($load)									////load button pressed
 {
@@ -173,6 +174,7 @@ $smarty->assign("SQLfields", $advsearch->GetSQLfields());		//name of all possibb
 $smarty->assign("SQLfieldDefault", key($advsearch->GetSQLfields()));	//set default selected to the first element
 
 //box 2
+$smarty->assign("OrderFields", $advsearch->getOrderFields());		//name of all possibble columns
 $smarty->assign("sort1", $advsearch->GetSort1());			//current sort1
 $smarty->assign("sort2", $advsearch->GetSort2());			//current sort2
 

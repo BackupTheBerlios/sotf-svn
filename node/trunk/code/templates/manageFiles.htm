@@ -39,7 +39,7 @@
             <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
             <input type="hidden" name="stationid" value="{$STATION_ID}" />
             <input name="userfile" type="file" />
-            <input type="submit" name="upload" value="{#upload_file#}" />
+                <input type="submit" name="upload" value="{#upload_file#}" onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}')" />
           </form>
 
       </td>

@@ -20,39 +20,39 @@
 		</tr>
 		<tr valign="top">
 			<td>{#alias#}:</td>
-			<td><input size="50" maxlength="100" name="alias" value="{$CONTACT_DATA.alias}"></td>
+			<td><input size="50" maxlength="100" name="alias" value="{$CONTACT_DATA.alias}" onChange="if(value != defaultValue) data_changed++;" ></td>
 		</tr>
 		<tr valign="top">
 			<td>{#acronym#}:</td>
-			<td><input size="30" maxlength="30" name="acronym" value="{$CONTACT_DATA.acronym}"></td>
+			<td><input size="30" maxlength="30" name="acronym" value="{$CONTACT_DATA.acronym}" onChange="if(value != defaultValue) data_changed++;" ></td>
 		</tr>
 		<tr valign="top">
 			<td>{#intro#}:</td>
-			<td><textarea cols="50" rows="10" name="intro">{$CONTACT_DATA.intro}</textarea></td>
+			<td><textarea cols="50" rows="10" name="intro" onChange="if(value != defaultValue) data_changed++;" >{$CONTACT_DATA.intro}</textarea></td>
 		</tr>
 		<tr valign="top">
 			<td>{#email#}:</td>
-			<td><input size="50" maxlength="100" name="email" value="{$CONTACT_DATA.email}"></td>
+			<td><input size="50" maxlength="100" name="email" value="{$CONTACT_DATA.email}" onChange="if(value != defaultValue) data_changed++;" ></td>
 		</tr>
 		<tr valign="top">
 			<td>{#address#}:</td>
-			<td><input size="50" maxlength="255" name="address" value="{$CONTACT_DATA.address}"></td>
+			<td><input size="50" maxlength="255" name="address" value="{$CONTACT_DATA.address}" onChange="if(value != defaultValue) data_changed++;" ></td>
 		</tr>
 		<tr valign="top">
 			<td>{#phone#}:</td>
-			<td><input size="20" maxlength="20" name="phone" value="{$CONTACT_DATA.phone}"></td>
+			<td><input size="20" maxlength="20" name="phone" value="{$CONTACT_DATA.phone}" onChange="if(value != defaultValue) data_changed++;" ></td>
 		</tr>
 		<tr valign="top">
 			<td>{#cellphone#}:</td>
-			<td><input size="20" maxlength="20" name="cellphone" value="{$CONTACT_DATA.cellphone}"></td>
+			<td><input size="20" maxlength="20" name="cellphone" value="{$CONTACT_DATA.cellphone}" onChange="if(value != defaultValue) data_changed++;" ></td>
 		</tr>
 		<tr valign="top">
 			<td>{#fax#}:</td>
-			<td><input size="20" maxlength="20" name="fax" value="{$CONTACT_DATA.fax}"></td>
+			<td><input size="20" maxlength="20" name="fax" value="{$CONTACT_DATA.fax}" onChange="if(value != defaultValue) data_changed++;" ></td>
 		</tr>
 		<tr valign="top">
 			<td>{#url#}:</td>
-			<td><input size="50" maxlength="255" name="url" value="{$CONTACT_DATA.url}"></td>
+			<td><input size="50" maxlength="255" name="url" value="{$CONTACT_DATA.url}" onChange="if(value != defaultValue) data_changed++;" ></td>
 		</tr>
 	</table>
 	<input type="submit" name="save" value="{#save#}">
@@ -65,6 +65,8 @@
 </table>
 
 <p></p>
+
+<a name="icon"></a>
 
 <table class="tab">
   <tr> 
@@ -92,7 +94,7 @@ function getSelected() {
 	<input type="hidden" name="id" value="{$CONTACT_ID}">
 	<p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
 	<input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
-	<input type="submit" name="seticon" value="{#set_icon#}">
+	<input type="submit" name="seticon" value="{#set_icon#}" onClick="return confirmUnsaved()" >
 <br \><small>{#userfiles_expl#}</small>
 	</form>
 	{else}
@@ -102,7 +104,7 @@ function getSelected() {
           <form enctype="multipart/form-data" method="post">
             <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
             <input name="userfile" type="file" />
-            <input type="submit" name="uploadicon" value="{#set_icon#}" />
+            <input type="submit" name="uploadicon" value="{#set_icon#}" onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()"  />
             <br />{#upload_expl#}
           </form>
   </small>

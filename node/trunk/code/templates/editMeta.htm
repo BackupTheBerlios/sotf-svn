@@ -111,6 +111,7 @@
   </form>
 
 <p></p>
+  <a name="topics"></a>
 
 <form>
 <table class="tab">
@@ -121,7 +122,6 @@
 <table class="tabarea">
 <tr> 
   <td class="tabarea">
-                  <a name="topics"></a>
                   {if $TOPICS}
                   <table>
                     {foreach item=item from=$TOPICS}
@@ -145,6 +145,7 @@
 </form>
 
 <p></p>
+        <a name="roles"></a>
 
 <form>
 <table class="tab">
@@ -155,7 +156,6 @@
 <table class="tabarea">
 <tr> 
   <td class="tabarea">
-        <a name="roles"></a>
         {if $ROLES}
         <table>
           <tr class="listhead"><th>{#Role#}</th><th>{#Contact#}</th><th>{#actions#}</th></tr>
@@ -188,6 +188,7 @@
 </form>
 
 <p></p>
+        <a name="rights"></a>
 
 <form>
 <table class="tab">
@@ -198,7 +199,6 @@
 <table class="tabarea">
 <tr> 
   <td class="tabarea">
-        <a name="rights"></a>
         {if $RIGHTS}
         <table>
           <tr class="listhead"><th>{#start_time#}</th><th>{#stop_time#}</th><th>{#rights_text#}</th><th></th></tr>
@@ -238,7 +238,7 @@
 
 <p></p>
 
-<form>
+  <a name="perms"></a>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#access_permissions#}</td>
@@ -247,8 +247,8 @@
 <table class="tabarea">
 <tr> 
   <td class="tabarea"> 
-        <a name="perms"></a>
         {if $PERMISSIONS}
+        <form>
         <table>
           {cycle name="perms" values="list1,list2" print=false advance=false}
           <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
@@ -267,6 +267,7 @@
           </tr>
           {/foreach}
         </table>
+        </form>
         {else}
         <p>{#no_users#}</p>
         {/if}
@@ -279,10 +280,10 @@
       </td>
     </tr>
 </table>
-</form>
 
 <p></p>
 
+        <a name="icon"></a>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#icon#}</td>
@@ -297,7 +298,6 @@
         {else}
           <table><tr><td>{#no_icon#}</td></tr></table>
         {/if}
-        <a name="icon"></a>
 
         {if $USERFILES}
 {literal}
@@ -312,7 +312,7 @@ function getSelected() {
           <input type="hidden" name="id" value="{$PRG_ID}">
           <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
           <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
-          <input type="submit" name="seticon" value="{#set_icon#}">
+          <input type="submit" name="seticon" value="{#set_icon#}" onClick="return confirmUnsaved()" >
           <br \><small>{#userfiles_expl#}</small>
         </form>
         {else}
@@ -323,8 +323,7 @@ function getSelected() {
             <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
             <input type="hidden" name="id" value="{$PRG_ID}" />
             <input name="userfile" type="file" />
-            <input type="submit" name="uploadicon" value="{#set_icon#}" />
-            <!-- <input type="submit" name="upload" value="{#upload_file#}" /> -->
+            <input type="submit" name="uploadicon" value="{#set_icon#}"  onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
             <br />{#upload_expl#}
           </form>
         </small>

@@ -50,7 +50,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
           { else }
           <select name="station">
             {foreach from=$STATIONS item=station}
-            <option value="{$station.id}" >{$station.name}</option>
+            <option value="{$station.id}" {if $station.id == $SELECTED_STATION}SELECTED=1{/if} >{$station.name}</option>
             {/foreach}
           </select>
           {/if}

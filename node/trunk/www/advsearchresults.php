@@ -3,20 +3,16 @@ require("init.inc.php");
 require("$classdir/sotf_AdvSearch.class.php");
 
 $SQLquerySerial = sotf_Utils::getParameter('SQLquerySerial');			//the serialized query in the hidden field
-
 $advsearch = new sotf_AdvSearch();						//create new search object object with this array
 
-//if ($SQLquerySerial == "") print("SESSION");
-//	else print("HIDDEN");
-
-if ($SQLquerySerial == "")							//get old search query from session if none in hidden field	
-	$SQLquerySerial = $_SESSION["SQLquerySerial"];				//get array from session
+//if ($SQLquerySerial == "")							//get old search query from session if none in url
+//	$SQLquerySerial = $_SESSION["SQLquerySerial"];				//get array from session
 
 $SQLquery = $advsearch->Deserialize($SQLquerySerial);				//deserialize the content of the hidden field
 
 if (sotf_Utils::getParameter('back') != NULL)					//if go back pressed
 {
-	$_SESSION["SQLquery"] = $SQLquery;					//save the new quey to the session
+	$_SESSION["SQLquerySerial"] = $SQLquerySerial;					//save the new quey to the session
 	$page->redirect("advsearch.php");
 }
 
@@ -26,7 +22,7 @@ $query = $advsearch->GetSQLCommand();
 $max = $db->getAll("SELECT count(*) FROM (".$query.") as count");	//get the number of results
 $max = $max[0]["count"];
 
-$limit = $page->splitList($max, "$php_self?ID=$ID&NAME=$NAME");
+$limit = $page->splitList($max, "?SQLquerySerial=$SQLquerySerial");
 $result = $db->getAll($query.$limit["limit"]);
 
 $allfields = $advsearch->GetSQLfields();		//get all possible fileld names with translation
@@ -85,7 +81,7 @@ for($i =0; $i<$max; $i++)	//$selected will contain all the information about the
 //print("<BR />".count($result));
 
 $smarty->assign("SQLquery", $SQLquery);					//the query
-$smarty->assign("SQLquerySerial", $advsearch->Serialize());		//the serialized query
+$smarty->assign("SQLquerySerial", "&SQLquerySerial=$SQLquerySerial");		//the serialized query
 //$smarty->assign("SQLqueryfields", $advsearch->GetSQLqueryfields());	//translated name for all fieldnames of the query
 //$smarty->assign("SQLqueryEQs", $advsearch->GetSQLqueryEQs());		//translated name for all EQs (<, >, = ...) of the query
 $smarty->assign("HumanReadable", $advsearch->GetHumanReadable());	//human readable format for the query fileds

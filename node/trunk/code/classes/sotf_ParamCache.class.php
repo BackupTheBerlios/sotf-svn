@@ -47,7 +47,6 @@ class sotf_ParamCache
 		$this->TIMEID = $_GET["PCID"];			//get the ID variable
 		if ( isset($this->TIMEID) AND !isset($_SESSION[$this->TIMEID]) ) unset($this->TIMEID);	//user opened a second window, need a new ID
 		if ( (count($_POST) == 0) AND isset($this->TIMEID) ) return $this->TIMEID;	//return ID (reload can be pressed no problem)
-
 		$this->TIMEID = "PCID".substr(time(), -10);			//crate new ID, max length 10
 
 		if (isset($_POST["PCOLDID"])) session_unregister($_POST["PCOLDID"]);	//delete old ID if any defined in the form itself
@@ -60,13 +59,15 @@ class sotf_ParamCache
 				$this->TIMEID = PCID1037288531;		//nothing pressed, set standard ID always
 				return $this->TIMEID;			//if no data posted return new ID
 			}
-
 		$_SESSION[$this->TIMEID]["POST"] = $_POST;	//save posted data
+		//$_SESSION[$this->TIMEID]["GET"] = $_GET;	//save posted data
 		$_SESSION[$this->TIMEID]["FILES"] = $_FILES;	//save posted data
 		$_SESSION[$this->TIMEID]["PROCESSED"] = false;	//set processed to false (can be used by the user)
 
 		if (!$redir) return($this->TIMEID);			//if radir false return ID
-		header ("Location: ".$PHP_SELF."?PCID=".$this->TIMEID."\r\n");	//else redirect page to the same with ID set
+		if (substr($PHP_SELF, "?")) $PCID = "&PCID=";
+		else  $PCID = "?PCID=";
+		header ("Location: ".$PHP_SELF.$PCID.$this->TIMEID."\r\n");	//else redirect page to the same with ID set
 		die(0);							//exit
 	}
 
@@ -100,9 +101,11 @@ class sotf_ParamCache
 
 	function getRegistered($name)				//gives back variables from POST and SetParameter
 	{
+		//$value = $_SESSION[$this->TIMEID]["GET"][$name];
+		//if (isset($value)) return $value;
 		$value = $_SESSION[$this->TIMEID]["POST"][$name];
-		if (!isset($value)) return NULL;
-		return $value;
+		if (isset($value)) return $value;
+		return NULL;
 	}
 
 	function getFiles($name, $data = NULL)				//gives back variables from FILES

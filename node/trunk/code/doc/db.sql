@@ -18,7 +18,7 @@ CREATE TABLE "sotf_user_prefs" (
 -- user preferences stored as serialized objects
 	"id" int PRIMARY KEY,					-- same as auth_id in sadm
 	"username" varchar(50) NOT NULL,
-	"e-mail" varchar(100),			-- temporary solution
+	"email" varchar(100),			-- temporary solution
 	"prefs" text
 );
 

@@ -1,6 +1,5 @@
 <h3>Advanced search results</h3>
 <FORM method="post" action="advsearchresults.php">
-<INPUT type="hidden" name="SQLquerySerial" value="{$SQLquerySerial}">
 
 <div align="center">
 <TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="80%" BGCOLOR="{#searchBgColor1#}">
@@ -26,7 +25,7 @@
 	<TR>
 		<TD>&nbsp;</TD>
 		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="33%">
-		<a href="advsearchresults.php?back=true" class="menu"><big>[ {#back#} ]</big></a>
+		<a href="advsearchresults.php?back=true{$SQLquerySerial}" class="menu"><big>[ {#back#} ]</big></a>
 <!--		<INPUT type="submit" name="back" value="{#back#}"> -->
 		</TD>
 		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="66%">
