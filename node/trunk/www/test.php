@@ -10,10 +10,6 @@ require("init.inc.php");
 
 require_once($config['classdir'] . "/rpc_Utils.class.php");
 
-dump( (int)'0009');
-dump(sprintf('%03d', $config['nodeId']) . 'st');
-exit;
-
 $rpc = new rpc_Utils;
 $rpc->debug = true;
 //$response = $rpc->callTamburine('version', '');
