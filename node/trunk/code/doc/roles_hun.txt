@@ -16,7 +16,7 @@
 16 Gyártásvezetõ
 17 Gyártásban közremûködõ
 18 Bemondó
-19 Átíró
+19 Transcriber
 20 Fordító
 21 Egyéb
 22 Alkotó

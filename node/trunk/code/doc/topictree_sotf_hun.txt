@@ -28,151 +28,151 @@ url=
 119 2 Utazás és turizmus
 120 2 Játékok
 
-121 1 Human Practices and Social Issues
+121 1 Emberi tényezõk, szociális ügyek
 
-122 2 Women 
-123 2 Men 
-124 2 Young people 
-125 2 Elderly people 
-126 2 Family 
-127 2 Handicapped persons 
+122 2 Nõk
+123 2 Férfiak 
+124 2 Fiatalok 
+125 2 Idõsek
+126 2 Család
+127 2 Hátrányos helyzetûek
 
-128 2 Body practices 
-129 2 Sexuality 
-130 2 Drugs 
-131 2 Poverty 
-132 2 Migration 
+128 2 Body practices (?) 
+129 2 Szexualitás
+130 2 Kábítószer 
+131 2 Szegénység 
+132 2 Kivándorlás
 
-133 2 Multiculturalism 
-134 2 Feminism 
-135 2 Queer 
+133 2 Multiculturalism (?) 
+134 2 Feministák
+135 2 Queer (?)
 
-136 2 Community Issues (Housing, Transportation, Area planning, Urban communities, Rural communities) 
-137 2 Folklore 
-138 2 Religion, Metaphysics 
-139 2 Racism 
-140 2 Sexism 
-
-
-141 1 Healing and Medicine
-
-142 2 Physical diseases 
-143 2 Mental health/diseases 
-144 2 Healing Substance 
-145 2 AIDS 
-146 2 Hygiene 
-147 2 Public health 
-148 2 Legal drugs 
-149 2 Illegal drugs 
-150 2 Traditional healings 
-151 2 Clinical Test 
-152 2 Altenative Medicine 
-153 2 First Aid 
-154 2 Epidemic 
-155 2 Medical Research 
-156 2 Bio technology (genetic engineering) 
+136 2 Közösségek (lakás, közlekedés, településtervezés, stb.)
+137 2 Folklór
+138 2 Vallás, metafizika
+139 2 Rasszizmus, fajgyûlölet 
+140 2 Szexizmus
 
 
-157 1 Teaching, Learning and Studying
+141 1 Egészség, gyógyítás
 
-158 2 Universities 
-159 2 Schools 
-160 2 Life long learning 
-161 2 Cources and Training 
-162 2 Distance Learning 
-163 2 Educators 
-164 2 Teaching Methods 
-165 2 Special Education 
+142 2 Fizikai betegségek
+143 2 Mentális egészség, mentális betegségek
+144 2 Healing Substance (?) 
+145 2 AIDS
+146 2 Higiénia 
+147 2 Közegészségügy
+148 2 Legális gyógyszerek
+149 2 Illegális gyógyszerek
+150 2 Hagyományos gyógymódok
+151 2 Clinical Test (?)
+152 2 Alternatív gyógymódok 
+153 2 Elsõsegély
+154 2 Járványok
+155 2 Orvosi kutatás 
+156 2 Bio technológia (pl. génsebészet) 
+
+
+157 1 Oktatás, tanítás, tanulás
+
+158 2 Egyetemek
+159 2 Iskolák
+160 2 Élethosszig tartó tanulás
+161 2 Tanfolyamok, tréningek
+162 2 Távoktatás
+163 2 Oktatók, nevelõk
+164 2 Oktatási módszerek 
+165 2 Különleges oktatás
 166 2 e-learning 
 
-167 2 Education 
-168 2 Pedagogie 
-169 2 Literacy 
-170 2 Biography 
-171 2 Curricula 
-172 2 Lecture
+167 2 Oktatás
+168 2 Pedagógia 
+169 2 Mûveltség
+170 2 Életrajzok 
+171 2 Tananyagok, tantervek
+172 2 Elõadások
 
 
-173 1 Sciences and Technologies 
+173 1 Tudomány és technológia
 
-174 2 Natural Sciences (Ethology, Ecology, Botanique, etc.) 
-175 2 Earth Sciences (Astronomy, Geography, Oceanography, Climatology, Geology,etc.) 
-176 2 Material Sciences (Physics, Chemistry, etc.) 
-177 2 Live Sciences (Biology, Genetic, Anatomy, etc.) 
-178 2 Social Sciences (Sociology, Anthropology, etc.) 
-179 2 Psychology and psychiatry 
-180 2 Archeology and Palentology 
-181 2 History 
-182 2 Communications, telecommuncation and Internet 
-183 2 Energy, Nuclear energy and sustanaible energy production 
-184 2 Computer science 
-
-
-185 1 Environmental Issues, Agriculture and related technologies
-
-186 2 Agriculture & related technologies 
-187 2 Organic farming 
-188 2 Food technology 
-189 2 Biological resources 
-190 2 Hunting & fishing 
-191 2 Endagered Species 
-192 2 Climate 
-193 2 Population 
-194 2 Water supply 
-195 2 Ecological systems 
-196 2 Stockbreeding 
-197 2 Environmental problems 
-198 2 Famine 
-199 2 Bio diversity 
-200 2 GMO-Genetically modified organism 
-201 2 Pollution 
+174 2 Természettudományok (etológia, ökológia, botanika, stb.)
+175 2 Földtudományok (csillagászat, földrajz, geológia, stb.)
+176 2 Anyagtudományok (fizika, kémia, stb.)
+177 2 Élettudományok (biológia, genetika, anatómia, stb.)
+178 2 Társadalomtudományok (szociológia, antropológia, stb.)
+179 2 Pszichológia és pszichiátria
+180 2 Régészet, õslénytan
+181 2 Történelem
+182 2 Kommunikáció, telekommunikáció és Internet
+183 2 Energetika, atomenergia, fenntartható energiatermelés
+184 2 Számítógéptudomány
 
 
-202 1 Justice and Governmental
+185 1 Környezet, környezetvédelem, mezõgazdaság
 
-203 2 International cooperation 
-204 2 Geopolitics 
-205 2 Domestic policy 
-206 2 Development policies 
-207 2 Social policy (Employment policies, Welfare) 
+186 2 Mezõgazdaság, mezõgazdasági technológiák
+187 2 Organic farming (?)
+188 2 Élelmiszergyártási technológiák
+189 2 Biológiai erõforrások
+190 2 Vadászat és halászat
+191 2 Veszélyeztetett fajták
+192 2 Klíma
+193 2 Népesség 
+194 2 Vízgazdálkodás
+195 2 Ökológiai rendszerek 
+196 2 Állattenyésztés
+197 2 Környezeti problémák
+198 2 Éhínség
+199 2 Biodiverzitás 
+200 2 Genetikailag módosított organizmusok, táplálék
+201 2 Szennyezés
+
+
+202 1 Állam és igazságügy
+
+203 2 Nemzetközi együttmûködés
+204 2 Geopolitika
+205 2 Belpolitika
+206 2 Fejlesztési irányelvek
+207 2 Szociális politika (munkavállalás, jólét)
 208 2 NGO 
-209 2 Labor unions (Trade unions) 
-210 2 Systems of governments and states 
-211 2 Humanitarian aid 
-212 2 Labor 
-213 2 Defense 
+209 2 Szakszervezetek
+210 2 Államszervezetek, kormányzat
+211 2 Humanitárius segély
+212 2 Munka
+213 2 Védelem
 
-214 2 Political persecution (prisoners, refugees, ...) 
-215 2 Human rights (Right of asylum, Freedom of speech 
-216 2 Police services 
-217 2 Prison 
-218 2 Crime & delinquency 
-219 2 Terrorism 
-220 2 Licences and copyright/copyleft 
+214 2 Politika üldözés (rabok, menekültek)
+215 2 Emberi jogok (menedékjog, szólásszabadság)
+216 2 Rendõrség
+217 2 Börtönök
+218 2 Bûnözés
+219 2 Terrorizmus 
+220 2 Liszenszek és szerzõi jogok
 
 
-221 1 Politic, politic systems and Wars
+221 1 Politika, politikai rendszerek, háborúk
  
-222 2 Anarchism 
-223 2 Capitalism 
-224 2 Communism 
-225 2 Green parties 
-226 2 Elections 
-227 2 Fascim and Nazism (including parties) 
-228 2 Liberalism 
-229 2 Political parties 
-230 2 Pacifism 
-231 2 Socialism 
-232 2 Nationalism 
-233 2 Democratic systems 
-234 2 Authoritarian systems 
-235 2 Revolutionary and subversive groups (activism) 
-236 2 Globalization 
+222 2 Anarchizmus
+223 2 Kapitalizmus
+224 2 Kommunizmus
+225 2 Zöld pártok 
+226 2 Választások 
+227 2 Fasizmus, nácizmus
+228 2 Liberalizmus
+229 2 Politikai pártok
+230 2 Pacifizmus
+231 2 Szocializmus
+232 2 Nacionalizmus
+233 2 Demokratikus rendszerek
+234 2 Tekintélyuralmi rendszerek
+235 2 Forradalmi és felforgató csoportok (aktivizmus)
+236 2 Globalizáció
 
-237 2 Rebellion 
-238 2 War 
-239 2 Civil war and revolution 
-240 2 Weapons 
+237 2 Felkelés
+238 2 Háború
+239 2 Polgárháború és forradalom
+240 2 Fegyverek
 
 
 241 1 Sport
@@ -180,7 +180,7 @@ url=
 242 2 Adventure Racing 
 243 2 Airsoft 
 244 2 Animal Fighting 
-245 2 Archery 
+245 2 Íjászat
 246 2 Badminton 
 247 2 Baseball 
 248 2 Basketball 
@@ -247,9 +247,9 @@ url=
 309 2 Wrestling
 
 
-310 1 Business
+310 1 Üzlet
 
-311 2 Accounting 
+311 2 Könyvelés 
 312 2 Cooperatives 
 313 2 Customer Service 
 314 2 E-Commerce 
@@ -267,39 +267,39 @@ url=
 326 2 Wholesale Trade 
 
 
-327 1 Shopping and consumer products
+327 1 Vásárlás és termékek
 
-328 2 Antiques and Collectibles 
-329 2 Beauty Products
-330 2 Books 
-331 2 Children 
-332 2 Clothing  
-333 2 Computers  
-334 2 Consumer Electronics  
-335 2 Crafts 
-336 2 Death Care  
-337 2 Entertainment
-338 2 Ethnic and Regional  
-339 2 Flowers 
-340 2 Food  
-341 2 Furniture 
-342 2 General Merchandise  
-343 2 Gifts  
-344 2 Health  
-345 2 Holidays  
-346 2 Home and Garden  
-347 2 Jewelry  
-348 2 Music 
-349 2 Office Products  
-350 2 Pets  
-351 2 Photography  
-352 2 Publications 
-353 2 Recreation  
-354 2 Tobacco  
-355 2 Tools  
-356 2 Toys and Games  
-357 2 Travel 
-358 2 Vehicles  
-359 2 Weddings  
-360 2 Wholesale  
+328 2 Antik tárgyak, gyûjtemények (bélyeg, kupak, stb.) 
+329 2 Szépségipari termékek
+330 2 Könyvek
+331 2 Gyermekeknek
+332 2 Ruházat
+333 2 Számítógép  
+334 2 Szórakoztató elektronika
+335 2 Iparmûvészet, kézmûipar
+336 2 Death Care (?)  
+337 2 Szórakoztatás
+338 2 Ethnic and Regional (?)
+339 2 Virágok
+340 2 Élelmiszer
+341 2 Bútor 
+342 2 General Merchandise (?)  
+343 2 Ajándékok  
+344 2 Egészség
+345 2 Nyaralás, szabadidõ  
+346 2 Otthon és kert
+347 2 Ékszerek  
+348 2 Zene 
+349 2 Irodai termékek
+350 2 Állatok
+351 2 Fotózás  
+352 2 Publications (?)
+353 2 Recreation (?)
+354 2 Dohányáru  
+355 2 Szerszámok 
+356 2 Játékok
+357 2 Utazás
+358 2 Jármûvek  
+359 2 Esküvõ  
+360 2 Nagybani kereskedés
 
