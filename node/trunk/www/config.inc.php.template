@@ -53,7 +53,7 @@ $musicDir = "$basedir/music";
 // the directory under which users have FTP or other access to send files to
 $userDirs = "$basedir/users";
 
-// the FTP URL for user directories (defined above)
+// the FTP URL for user directories (defined above), with a trailing slash
 $userFTP = 'ftp://foo.foo.org:8989/';
 
 // the directory where incoming programmes (XBMF) are from stations

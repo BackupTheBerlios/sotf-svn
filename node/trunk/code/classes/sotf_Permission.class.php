@@ -31,7 +31,7 @@ class sotf_Permission
       $permissions[$row["object_id"]][] = $row["permission"];	// object permission
     }
     if($debug) {
-      debug("current permissions: ");
+      debug("current permissions");
       if(count($permissions) > 0) {
         foreach($permissions as $key => $value) {
           error_log("PERMISSION: $key = " . join(' ',$value),0);

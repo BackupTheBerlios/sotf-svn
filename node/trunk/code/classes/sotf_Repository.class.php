@@ -108,7 +108,7 @@ class sotf_Repository {
   /** Tells if the given object id is for one of the global controlled vocabularies (roles, genres, topics). */
   function isVocabularyTable($tablename) {
     $tc = $this->getTableCode($tablename);
-    debug('tc', $tc);
+    //debug('tc', $tc);
     if($tc == 'tt' || $tc == 'td' || $tc == 'to' || $tc == 'ge' || $tc == 'ro' || $tc == 'rn') {
       debug("vocabulary entry");
       return true;

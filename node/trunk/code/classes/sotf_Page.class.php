@@ -35,10 +35,10 @@ class sotf_Page
 		global $nodeId, $basedir, $lang, $rootdir, $imagedir, $smartyDebug, $debug;
 
 		// load user data
-		if($_SESSION['userid'])
+		if($_SESSION['currentUserId'])
 		{
-      //debug("userid", $_SESSION['userid']);
-			$this->user = new sotf_User($_SESSION['userid']);
+      //debug("userid", $_SESSION['currentUserId']);
+			$this->user = new sotf_User($_SESSION['currentUserId']);
 		}
 		// Currently it is not needed
 		/*else

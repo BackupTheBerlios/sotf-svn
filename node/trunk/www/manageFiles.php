@@ -44,8 +44,7 @@ if($close) {
 
 $smarty->assign('USERFILES',$user->getUserFiles());
 
-$userFtpUrl = str_replace('ftp://', "ftp://".$user->name."@", "$userFTP$userid");
-$smarty->assign("USERFTPURL", $userFtpUrl); 
+$smarty->assign("USERFTPURL", $user->getUrlForUserFTP()); 
 
 $page->sendPopup();
 

@@ -109,8 +109,9 @@ function hasPerm($object) {
   global $permissions;
 	$perm_list = func_get_args();
 	for ($i = 1; $i <count($perm_list); $i++) {
-		debug('checking for permission', $perm_list[$i]);
-		if($permissions->hasPermission($object, $perm_list[$i]))
+		$perm = $permissions->hasPermission($object, $perm_list[$i]);
+		debug("checking for permission " . $perm_list[$i], $perm);
+		if($perm)
 			return true;
 	}
 	return false;

@@ -95,8 +95,10 @@ class sotf_User
 	function getUserDir() {
 		global $userDirs;
 		$dir = "$userDirs/" . $this->name;
-		if(!is_dir($dir))
-			mkdir($dir, 0775);
+		if(!is_dir($dir)) {
+			if(!mkdir($dir, 0775))
+        raiseError("Could not create directory for user");
+    }
 		return $dir;
 	}
 
@@ -197,15 +199,17 @@ class sotf_User
 		else
 		{
 			$user = new sotf_User($res['auth_id']);
+      debug("Login successful", $user->name . ' = ' . $user->id );
 			$userdb->query("UPDATE user_preferences SET num_logins=num_logins+1, last_visit='" . db_Wrap::getSQLDate() . "' WHERE auth_id='" . $user->id . "' ");
-			$_SESSION['userid'] = $user->id;
+			$_SESSION['currentUserId'] = $user->id;
 		}
 	}
 	
 	function logout() {
 		global $user;
+    debug("user logout", $user->name . ' = ' . $user->id );
 		$user = '';
-		$_SESSION['userid'] = '';
+		$_SESSION['currentUserId'] = '';
 	}
 
 	function listUsers() {
@@ -230,6 +234,15 @@ class sotf_User
 		return $userdb->getOne("SELECT auth_id FROM authenticate WHERE username = '$username'");
 	}
   
+  /** Returns the URL for the FTP access to the users personal upload directory. */
+  function getUrlForUserFTP() {
+    global $userFTP;
+    if(substr($userFTP, -1) != '/')
+      $userFTP = $userFTP . '/';
+    $userFtpUrl = str_replace('ftp://', "ftp://".$this->name."@" , $userFTP . $this->name);
+    return $userFtpUrl;
+  }
+
   /** Get user preferences */
   function getPreferences() {
     global $db;

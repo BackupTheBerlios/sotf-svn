@@ -129,7 +129,7 @@ if($debug)
 {
   error_log("------------------------------------------", 0);
   error_log("REQUEST_URI: " . myGetenv("REQUEST_URI"), 0);
-	error_log("REMOTE_HOST: " . myGetenv('REMOTE_HOST') ,0);
+	error_log("REMOTE_HOST: " . getHostName() ,0);
   error_log("USER_AGENT: " . myGetenv('HTTP_USER_AGENT') ,0);
   error_log("REFERER: " . myGetenv('HTTP_REFERER'),0);
   foreach($_GET as $key => $value) {
