@@ -61,7 +61,7 @@ class sotf_Blob extends sotf_NodeObject {
 
   function cacheIcon2($data) {
     global $repository;
-    debug('cacheIcon2', $data);
+    //debug('cacheIcon2', $data);
     $found = sotf_Blob::cacheIcon($data['id']);
     if($found)
       return $data['id'] . '.png';
@@ -89,6 +89,7 @@ class sotf_Blob extends sotf_NodeObject {
       if(time() - $stat['mtime'] <= $cacheTimeout)
         return true;
       else {
+	debug("cached icon of $id expired");
 	if(!unlink($fname))
 	  logError("Could not delete $fname");
       }

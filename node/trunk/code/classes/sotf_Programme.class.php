@@ -266,6 +266,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function saveMetadataFile() {
 	 global $permissions;
 
+	 if(!is_dir($this->getMetaDir())) {
+		addError("Programme dir not found", $this->getMetaDir());
+		return false;
+	 }
+
 	 $name = get_class($this);
 	 $name = str_replace("sotf_", "", $name);
 	 $xml = "<$name>";

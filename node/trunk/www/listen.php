@@ -34,6 +34,7 @@ if(empty($id)) {
 $playlist = new sotf_Playlist();
 
 if($jingle) {
+  // play the jingle of station/series
   $obj = $repository->getObject($id);
   if(!$obj)
 	 raiseError("no_such_object", $id);
@@ -45,8 +46,10 @@ if($jingle) {
   $playlist->addJingle($obj);
 } else {
   // add normal programme 
-  $prg = new sotf_Programme($id);
-  
+  $prg = $repository->getObject($id);
+  if(!$prg)
+	 raiseError("no_such_object", $id);
+
   if(!$prg->isLocal()) {
 	 // have to send user to home node of this programme
 	 sotf_Node::redirectToHomeNode($prg, 'listen.php');
