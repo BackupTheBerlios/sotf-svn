@@ -64,3 +64,26 @@ SELECT * FROM "sotf_user_permissions" where permission_id=3; -- if any exists, y
 -- 2003-06-18
 
 ALTER TABLE sotf_streams ADD COLUMN "url" varchar(200);
+
+-- 2003-06-20
+
+UPDATE sotf_roles SET creator='t' WHERE role_id=2;
+UPDATE sotf_roles SET creator='t' WHERE role_id=8;
+UPDATE sotf_roles SET creator='t' WHERE role_id=9;
+UPDATE sotf_roles SET creator='t' WHERE role_id=22;
+
+ALTER TABLE "sotf_prog_refs" ADD COLUMN "portal_name" varchar(200);
+
+ALTER TABLE "sotf_comments" ADD COLUMN "comment_title" text;
+
+CREATE TABLE "sotf_portals" (
+-- list of portals connected to this node 
+	"id" serial PRIMARY KEY, 					-- just an id
+	"name" varchar(50) NOT NULL,				-- name of portal
+	"url" varchar(255) UNIQUE NOT NULL,		-- url of portal (identifies portal)
+	"page_impression" int,						-- number of downloads of starting page 
+	"reg_users" int2,								-- number of registered users
+	"last_access" timestamptz,
+	"last_update" timestamptz
+);
+

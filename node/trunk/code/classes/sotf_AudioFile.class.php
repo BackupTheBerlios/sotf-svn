@@ -56,6 +56,8 @@ class sotf_AudioFile extends sotf_File
 	*/
 	var $duration;
 
+  var $allInfo;
+
 	/**
 	* Sets up sotf_AudioFile object
 	*
@@ -67,6 +69,7 @@ class sotf_AudioFile extends sotf_File
 		$parent = get_parent_class($this);
 		parent::$parent($path);		// Call the constructor of the parent class. lk. super()
 		$fileinfo = GetAllFileInfo($this->path);
+    $this->allInfo = $fileInfo;
 		//if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg') {
     //debug("finfo", $fileinfo);
     if (isset($fileinfo['audio'])) {

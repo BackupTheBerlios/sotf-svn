@@ -8,6 +8,42 @@
 
 require("init.inc.php");
 
+$prg = $repository->getObject('005pr27');
+dump($prg->getCreatorNames());
+
+exit;
+
+$fileinfo = GetAllFileInfo('/pub/sotf/node/repository/DooBeeDoo/2003-05-30/Wissen_aktuell/audio/Wissen_aktuell_128kbps_2chn_44100Hz.mp3');
+//$fileinfo = GetAllFileInfo('/pub/sotf/node/repository/DooBeeDoo/2003-05-30/Wissen_aktuell/audio/Wissen_aktuell_24kbps_1chn_16000Hz.mp3');
+dump($fileinfo, 'FINFO');
+exit;
+
+/* 
+   [id3v1] => Array
+        (
+            [title] => Wissen aktuell
+            [artist] => Oe1
+            [album] => Oe1 on demand Wissenschaft & B
+            [year] => 
+            [comment] => oe1 all rights reserved
+            [genreid] => 255
+            [genre] => Unknown
+        )
+    [id3v1] => Array
+        (
+            [title] => Wissen_aktuell
+            [artist] => Who knows?
+            [album] => vow vow vow
+            [year] => 1239
+            [comment] => COmmenttttt
+            [genreid] => 255
+            [track] => 2
+            [genre] => Unknown
+        )
+
+*/
+
+/*
 require_once($config['classdir'] . "/rpc_Utils.class.php");
 
 $rpc = new rpc_Utils;
@@ -18,6 +54,7 @@ $response = $rpc->callTamburine('setpls', array('/home/micsik/ok.mp3', '/home/mi
 
 dump($response, "RESPONSE");
 exit;
+*/
 
 /*
 echo "<h1>" , htmlspecialchars("árvízt&#369;r&#337; tükörfúrógép", ENT_QUOTES), "</h1>";

@@ -607,14 +607,14 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			}
 			
 			createRole( 1, 'Artist');
-			createRole( 2, 'Author');
+			createRole( 2, 'Author', 't');
 			createRole( 3, 'Commentator');
 			createRole( 4, 'Composer');
 			createRole( 5, 'Copyright holder');
 			createRole( 6, 'Correspondent');
 			createRole( 7, 'Designer');
-			createRole( 8, 'Director');
-			createRole( 9, 'Editor');
+			createRole( 8, 'Director', 't');
+			createRole( 9, 'Editor', 't');
 			createRole( 10, 'Funder / Sponsor');
 			createRole( 11, 'Interviewee');
 			createRole( 12, 'Interviewer');
@@ -627,7 +627,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			createRole( 19, 'Transcriber');
 			createRole( 20, 'Translator');
 			createRole( 21, 'Other');
-			createRole( 22, 'Creator');
+			createRole( 22, 'Creator', 't');
 			createRole( 23, 'Publisher');
 			createRole( 24, 'Contributor');
 			

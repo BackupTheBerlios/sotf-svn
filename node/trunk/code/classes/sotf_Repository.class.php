@@ -153,6 +153,12 @@ class sotf_Repository {
     return $id;
   }
 
+  function getNodeId($objectId) {
+	 if(!preg_match('/\d{3}[a-z]{2}\d+/', $objectId))
+		raiseError("invalid object id: $id");
+	 return (int)substr($objectId, 0, 3);
+  }
+
   /************************************************
    *      OBJECT CACHING
    ************************************************/
@@ -531,6 +537,158 @@ class sotf_Repository {
       return "DB error";
     }
     return $retval;
+  }
+
+  /************************************************
+   *      PORTALS
+   ************************************************/
+
+  function processPortalEvent($event) {
+	 debug("processing event", $event);
+    switch($event['name']) {
+    case 'programme_added':
+      $obj = new sotf_NodeObject('sotf_prog_refs');
+      $obj->set('prog_id', $event['value']);
+      $obj->set('url', $event['url']);
+      $obj->find();
+      if(!$obj->exists()) {
+        $prg = &$this->getObject($obj->get('prog_id'));
+		  if(!$prg)
+			 break;
+        $obj->set('station_id', $prg->get('station_id'));
+      }
+      $obj->set('start_date', $event['timestamp']);
+      $obj->set('portal_name', $event['portal_name']);
+      $obj->save();
+      break;
+    case 'programme_deleted':
+      $obj = new sotf_NodeObject('sotf_prog_refs');
+      $obj->set('prog_id', $event['value']);
+      $obj->set('url', $event['url']);
+      $obj->find();
+      if(!$obj->exists()) {
+        logError("unknown prog ref arrives: " . $event['url']);
+        $prg = &$this->getObject($obj->get('prog_id'));
+		  if(!$prg)
+			 break;
+        $obj->set('station_id', $prg->get('station_id'));
+        $obj->set('portal_name', $event['portal_name']);
+      }
+      $obj->set('end_date', $event['timestamp']);
+      //$obj->set('portal_name', $event['portal_name']);
+      $obj->save();
+      break;
+    case 'visit':
+      $obj = new sotf_NodeObject('sotf_prog_refs');
+      $obj->set('prog_id', $event['value']['prog_id']);
+      $obj->set('url', $event['url']);
+      $obj->find();
+      if(!$obj->exists()) {
+        logError("unknown prog ref arrives: " . $event['url']);
+        $prg = &$this->getObject($obj->get('prog_id'));
+ 		  if(!$prg)
+			 break;
+       $obj->set('station_id', $prg->get('station_id'));
+        $obj->set('start_date', $event['timestamp']);
+        $obj->set('portal_name', $event['portal_name']);
+      }
+      $obj->set('visits', (int)$obj->get('visits')+1);
+      // TODO: count unique accesses
+      $obj->save();
+      break;
+    case 'page_impression':
+      $obj = new sotf_Object('sotf_portals');
+      $obj->set('url', $event['url']);
+      $obj->find();
+      $obj->set('name', $event['portal_name']);
+      $obj->set('page_impression', $event['value']);
+      $obj->set('last_access', $event['timestamp']);
+      $obj->save();
+      break;
+    case 'portal_updated':
+      $obj = new sotf_Object('sotf_portals');
+      $obj->set('url', $event['url']);
+      $obj->find();
+      $obj->set('name', $event['portal_name']);
+      $obj->set('last_update', $event['timestamp']);
+      $obj->save();
+      break;
+    case 'users':
+      $obj = new sotf_Object('sotf_portals');
+      $obj->set('url', $event['url']);
+      $obj->find();
+      //$obj->set('name', $event['portal_name']);
+      //$obj->set('last_update', $event['timestamp']);
+      $obj->set('reg_users', $event['value']);
+      $obj->save();
+      break;
+    case 'rating':
+		// first save in prog_refs
+      $obj = new sotf_NodeObject('sotf_prog_refs');
+      $obj->set('prog_id', $event['value']['prog_id']);
+      $obj->set('url', $event['url']);
+      $obj->find();
+      if(!$obj->exists()) {
+        logError("unknown prog ref arrives: " . $event['url']);
+        $prg = &$this->getObject($obj->get('prog_id'));
+		  if(!$prg)
+			 break;
+        $obj->set('station_id', $prg->get('station_id'));
+        $obj->set('start_date', $event['timestamp']);
+        $obj->set('portal_name', $event['portal_name']);
+      }
+      $obj->set('rating', $event['value']['RATING_VALUE']);
+      $obj->set('raters', $event['value']['RATING_COUNT']);
+      $obj->save();
+		// TODO second, put into global rating database
+		/*
+		$rating = new sotf_Rating();
+		$id = $event['value']['prog_id'];
+		$obj = & $this->getObject($id);
+		if($obj->isLocal()) {
+		  $data = $event['value'];
+		  $rating->setRemoteRating($data);
+		} else {
+		  logError("received rating for non-local object!");
+		}
+		*/
+		break;
+	 case 'comment':
+		// first save in prog_refs
+      $obj = new sotf_NodeObject('sotf_prog_refs');
+      $obj->set('prog_id', $event['value']['prog_id']);
+      $obj->set('url', $event['url']);
+      $obj->find();
+      if(!$obj->exists()) {
+        logError("unknown prog ref arrives: " . $event['url']);
+        $prg = &$this->getObject($obj->get('prog_id'));
+        $obj->set('station_id', $prg->get('station_id'));
+        $obj->set('start_date', $event['timestamp']);
+        $obj->set('portal_name', $event['portal_name']);
+      }
+      $obj->set('comments', (int)$obj->get('comments')+1);
+      $obj->save();
+		// save comment
+      $obj = new sotf_Object('sotf_comments');
+      $obj->set('prog_id', $event['value']['prog_id']);
+      $obj->set('portal', $event['url']);
+      $obj->set('entered', $event['timestamp']);
+      $obj->set('comment_title', $event['value']['title']);
+      $obj->set('comment_text', $event['value']['comment']);
+      $obj->set('from_name', $event['value']['user_name']);
+      $obj->set('from_email', $event['value']['email']);
+		$obj->create();
+		// TODO forward to authors
+		break;
+    case 'query_added':
+      //debug("query from portal", $event);
+    case 'query_deleted':
+    case 'file_uploaded':
+      // silently ignored
+      break;
+    default:
+      logError("unknown portal event: " . $event['name']);
+    }
   }
 
 }

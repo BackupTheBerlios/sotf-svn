@@ -14,6 +14,7 @@ define("TRACKNAME_LENGTH", 32);
 require_once($config['classdir'] . '/Tar.php');
 require_once($config['classdir'] . '/unpackXML.class.php');
 require_once($config['classdir'] . '/sotf_Statistics.class.php');
+require_once($config['getid3dir'] . "/getid3.putid3.php");
 
 class sotf_Programme extends sotf_ComplexNodeObject {
   
@@ -272,7 +273,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	global $db;
 
 	 $id = $this->id;
-	 $result = $db->getAll("SELECT * FROM sotf_prog_refs WHERE id='$id'" );
+	 $result = $db->getAll("SELECT * FROM sotf_prog_refs WHERE prog_id='$id'" );
 	 if(DB::isError($result))
 		return array();
 	 else
@@ -516,7 +517,28 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $success = $fileInfo->save();
 	 //if(!$success)
 	 //	raiseError("could not write into database");
+
+	 // change id3 tags in file
+	 $this->saveID3($file);
+
 	 return $fileInfo->id;
+  }
+
+  /** saves some info into ID3 $file=sotf_AudioFile object */
+  function saveID3($file) {
+	 global $config;
+	 $fileInfo = $file->allInfo;
+	 $id3 = $fileInfo['id3v1'];
+	 $id3['comment'] =  $config['rootUrl'];
+	 $id3['album'] =  "id: " . $this->id;
+	 if(!$id3['title'])
+		$id3['title'] = $this->get('title');
+	 if(!$id3['artist'])
+		$id3['artist'] = $this->getCreatorNames();
+	 debug("writing ID3V1", $id3);
+	 $succ = WriteID3v1($file->path, $id3['title'], $id3['artist'], $id3['album'], $id3['year'], $id3['comment'], $id3['genre'], NULL /*track*/);
+	 if(!$succ)
+		logError("Could not change ID3V1 tags in file ". $file->path);
   }
 
   function deleteFile($fid) {

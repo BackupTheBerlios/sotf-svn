@@ -356,26 +356,44 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
               <a name="stats"></a>
               <table>
                 <tr class="listhead">
+                  <th></th>
                   <th>{#Visits#}</th>
                   <th>{#Listens#}</th>
                   <th>{#Downloads#}</th> 
                   <th>{#Rating#}</th> 
+                  <th></th> 
+                  <th></th> 
                 </tr>
                 <tr>
+                  <td>{#Nodes#}</td>
                   <td align="center">{$STATS.visits} ({$STATS.unique_visits})</td>
-                  <td>{$STATS.listens} ({$STATS.unique_listens})</td>
-                  <td>{$STATS.downloads} ({$STATS.unique_downloads})</td>
+                  <td align="center">{$STATS.listens} ({$STATS.unique_listens})</td>
+                  <td align="center">{$STATS.downloads} ({$STATS.unique_downloads})</td>
                   <td>{if $RATING}{$RATING.rating_value} ({#by#} {$RATING.rating_count}){else}-{/if}</td>
+                  <td></td> 
+                  <td></td> 
                 </tr>
-                {if $REFERENCES}
-                <tr valign="top">
-                  <td>{#References#}:</td>
-                  <td>
-                    {section name=i loop=$REFERENCES}
-                    <div><a href="{$REFERENCES[i].url}">{$REFERENCES[i].url}</a> ({$REFERENCES[i].comments} {#Comments#})</div>
-                    {/section}
-                  </td>
-                </tr>
+                {if $REFS}
+                 <tr class="listhead">
+                   <th>{#Portals#}</th>
+                   <th>{#Visits_p#}</th>
+                   <th>{#Listens_p#}</th>
+                   <th>{#Comments#}</th> 
+                   <th>{#Rating#}</th> 
+                   <th>{#From#}</th> 
+                   <th>{#Until#}</th> 
+                 </tr>
+                 {foreach item=item from=$REFS}
+                   <tr>
+                     <td><a target="_blank" href="{$item.url}">{$item.portal_name}</a></td>
+                     <td align="center">{$item.visits}</td>
+                     <td align="center">{$item.listens}</td>
+                     <td align="center">{$item.comments}</td>
+                     <td>{if $item.rating} {$item.rating} ({#by#} {$item.raters}){else}-{/if}</td>
+                     <td>{$item.start_date}</td>
+                     <td>{$item.end_date}</td>
+                   </tr>
+                 {/foreach}
                 {/if}
               </table>
             </td>
