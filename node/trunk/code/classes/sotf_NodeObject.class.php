@@ -160,8 +160,8 @@ class sotf_NodeObject extends sotf_Object {
 	**************************************************/
 
   /** Private! Compares a replicated object to the local one and saves it if it's newer than the local. */
-	function saveReplica() {
-	  global $db;
+	function saveReplica($fromNode) {
+	  global $db, $repository;
 	  
 	  $oldData = $db->getRow("SELECT * FROM sotf_node_objects WHERE id='$this->id' ");
 	  //debug("changed", $changed);
@@ -182,9 +182,12 @@ class sotf_NodeObject extends sotf_Object {
 		  }
 			*/
 			debug("updated ", $this->id);
+			$this->addToRefreshTable($this->id, $fromNode);
+			$this->removeFromRefreshTable($this->id, $fromNode);
 			$changed = true;
-		 } elseif($this->internalData['change_stamp'] && $this->internalData['change_stamp'] == $oldData['change_stamp']) {
+		 } elseif($this->internalData['change_stamp'] == $oldData['change_stamp']) {
 			debug("arrived same version of", $this->id);
+			$this->removeFromRefreshTable($this->id, $fromNode);
 			$changed = false;
 		 } else {
 			debug("arrived older version of", $this->id);
@@ -200,7 +203,17 @@ class sotf_NodeObject extends sotf_Object {
 			logError("Could not create object: " . $this->id);
 		 } else {
 			debug("created ", $this->id);
+			$this->addToRefreshTable($this->id, $fromNode);
+			$this->removeFromRefreshTable($this->id, $fromNode);
 		 }
+	  }
+	  // handle deletions
+	  if($changed && $this->tablename == 'sotf_deletions') {
+		 $delId = $this->get('del_id');
+		 debug("deleting object", $delId);
+		 $obj = $repository->getObjectNoCache($delId);
+		 if($obj)
+			$obj->delete();
 	  }
 	  return $changed;
 	}
@@ -276,19 +289,9 @@ class sotf_NodeObject extends sotf_Object {
 		  // save object
 		  if($objData['node_id'] == $config['nodeId']) {
 			 logError("Received my own object back via replication: ". $objData['id']);
-		  } elseif($obj->saveReplica()) {
-			 $updatedObjects++;
-			 // handle refresh table
-			 $obj->addToRefreshTable($obj->id, $fromNode);
-			 $obj->removeFromRefreshTable($obj->id, $fromNode);
-			 // handle deletions
-			 if($obj->tablename == 'sotf_deletions') {
-				$delId = $obj->get('del_id');
-				debug("deleting object", $delId);
-				$obj = $repository->getObjectNoCache($delId);
-				if($obj)
-				  $obj->delete();
-			 }
+		  } else {
+			 if($obj->saveReplica($fromNode))
+				$updatedObjects++;
 		  }
 		}
 	 }

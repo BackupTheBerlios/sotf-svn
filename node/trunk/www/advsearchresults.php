@@ -56,7 +56,15 @@ for($i =0; $i<$max; $i++)	//$selected will contain all the information about the
 {
 	foreach($result[$i] as $key => $value)
 		if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
-		if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
+		if ($key == 'language' AND $value != "")			//language need to be translated
+		{
+			$languages = explode(',', $value);
+			foreach ($languages as $language)
+			{
+				if ($values[$fields[$key]] == "") $values[$fields[$key]] .= $page->getlocalized($language);
+				else $values[$fields[$key]] .= ", ".$page->getlocalized($language);
+			}
+		}
 		else $values[$fields[$key]] = $value;
 	if (array_key_exists("person", $fields))		//person is a special filed
 	{

@@ -163,7 +163,7 @@ CREATE TABLE "sotf_series" (
 CREATE SEQUENCE "sotf_programmes_seq";
 
 CREATE TABLE "sotf_programmes" (
--- used to store generic and searchable metadata about radio programmes
+-- used to store generic and searchable metadata about radio programmes XXX
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"guid" varchar(76) UNIQUE NOT NULL,							-- globally unique id
