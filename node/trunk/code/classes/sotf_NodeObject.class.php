@@ -130,7 +130,13 @@ class sotf_NodeObject extends sotf_Object {
 	 $db->query("INSERT INTO sotf_object_status SELECT id, '$newId' AS node_id FROM sotf_node_objects WHERE node_id != '$newId' OR node_id IS NULL");
 	 $db->commit();
   }
-  
+ 
+  /** can be static */
+  function nodeLeavingNetwork($nodeId) {
+	 global $db;
+	 $db->query("DELETE FROM sotf_object_status WHERE node_id='$nodeId'");
+  }
+ 
   /** can be static */
   function removeFromRefreshTable($id, $nodeId = 0) {
 	 global $db;
