@@ -1,11 +1,11 @@
 <?php
 require_once("$xmlrpcdir/xmlrpc.inc");  
 require_once("$xmlrpcdir/xmlrpcs.inc");  
-require_once('C:/sotf/helpers/ezxml/ezxml.php');
+//require_once('C:/sotf/helpers/ezxml/ezxml.php');
 
 class rpc_Utils {
 
-var $xmlrpcDebug = 1;
+var $xmlrpcDebug = 0;
 
 function call($url, $method, $params) {
   // xmlrpc encode parameters
@@ -46,6 +46,7 @@ function call($url, $method, $params) {
   return NULL;
 }
 
+/*
 function display_xml_object($object)
 {
 	if ($object->type == TYPE_ELEMENT)
@@ -106,7 +107,7 @@ function display_xml($document)
 	$this->display_xml_tree($tree);
 	echo '</tt>';
 }
-
+*/
 
 }
 
