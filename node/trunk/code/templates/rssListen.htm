@@ -2,14 +2,13 @@
 
 {foreach item=item from=$AUDIO_FILES}
   {if $item.main_content eq 't' and $item.stream_access eq 't' }
-    <br /><a href="{$ROOT_URL}/listen.php/audio.m3u?id={$ID}&fileid={$item.id}">{#listen_as#} {$item.bitrate} kbps 
-           {$item.format}</a> ({$item.playtime_string})
+    <br /><a target="_blank" href="{$ROOT_URL}/listen.php/audio.m3u?id={$ID}&fileid={$item.id}"><img src="{$IMAGE_URL}/listen.gif" border="0"> {#listen_as#} {$item.bitrate} kbps {$item.format}</a> ({$item.playtime_string})
   {/if}
 {/foreach}
 
 {foreach item=item from=$AUDIO_FILES}
   {if $item.main_content eq 't' and $item.download_access eq 't' }
-    <br /><a href="{$ROOT_URL}/getFile.php/{$item.filename}?audio=1&id={$ID}&filename={$item.filename}">{#download_as#} {$item.bitrate} kbps 
+    <br /><a target="_blank" href="{$ROOT_URL}/getFile.php/{$item.filename}?audio=1&id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/disk.gif" border="0"> {#download_as#} {$item.bitrate} kbps 
            {$item.format}</a> ({$item.playtime_string})
   {/if}
 {/foreach}

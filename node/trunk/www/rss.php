@@ -54,10 +54,10 @@ if($prgId) {
 
   // define channel
   $properties=array();
-  $properties["description"]= $prg->get('description');
   $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
   $properties["title"]= $prg->get('title');
-  //$properties["language"]="en";
+  $properties["description"]= $prg->get('abstract');
+  $properties["dc:language"]= $prg->get('language');  // TODO won't work if multiple langs
   $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
   $rss_writer_object->addchannel($properties);
 
@@ -75,6 +75,7 @@ if($prgId) {
 
   // add metadata as item
   $properties=array();
+  /*
   $smarty->assign('ID', $prgId);
   //  $smarty->assign('LANG', 'eng');
   // general data
@@ -97,19 +98,29 @@ if($prgId) {
   $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
   $text = $smarty->fetch('rssMeta.htm');
   $properties["description"] = $text;
+  */
+
+  $properties["title"]= $page->getlocalized('abstract');
+  $properties["description"] = $prg->get('abstract');
   $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . '#general';
-  debug("LANG in rss", $lang);
-  $properties["title"]= ''; //$page->getlocalized('Metadata');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
 
   // add contributors as item
   $properties=array();
+  /*
   $smarty->assign('ROLES', $prg->getRoles());
   $text = $smarty->fetch('rssContributors.htm');
   $properties["description"] = $text;
-  $properties["link"]= ""; //$config['rootUrl'] . "/get.php/" . $prgId . '#roles';
+  */
+  $text = '';
+  foreach($prg->getRoles() as $role) {
+	 if($text) $text .= ', ';
+	 $text = $text . $role['contact_data']['name'] . ' (' . $role['role_name'] . ')';
+  }
   $properties["title"]= $page->getlocalized('Roles');
+  $properties["link"]= "x"; //$config['rootUrl'] . "/get.php/" . $prgId . '#roles';
+  $properties["description"] = $text;
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
 
@@ -125,7 +136,7 @@ if($prgId) {
   $properties["description"] = $text;
   $properties["link"]= ''; //$config['rootUrl'] . "/get.php/" . $prgId . '#mfiles';
   //$properties["link"]= $config['rootUrl'] . '/listen.php/audio.m3u?id=' . $prgId;
-  $properties["title"]= "<img src=\"" . $config['imageUrl'] . "/listen.gif\" border=\"0\"> " . $page->getlocalized('listen');
+  $properties["title"]= $page->getlocalized('listen');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
 
@@ -141,9 +152,25 @@ if($prgId) {
   $text = $smarty->fetch('rssRating.htm');
   $properties["description"] = $text;
   $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . "#stats";
-  $properties["title"]= ''; //$page->getlocalized('Statistics');
+  $properties["title"]= $page->getlocalized('Statistics');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
+
+  // add links
+  
+  $properties=array();
+  $links = $prg->getAssociatedObjects('sotf_links', 'caption');
+  $text = '';
+  foreach($links as $link) {
+	 if($text) $text .= ' <br /> ';
+	 $text = $text . "<a target=\"_blank\" href=\"" . $link['url'] . '">' . $link['caption'] . '</a>';
+  }
+  $properties["title"]= $page->getlocalized('Links');
+  $properties["link"]= "x"; //$config['rootUrl'] . "/get.php/" . $prgId . '#roles';
+  $properties["description"] = $text;
+  //$properties["dc:date"]= $prog->get('production_date');
+  $rss_writer_object->additem($properties);
+
 
   $db->commit();
 } elseif($stationName) {
