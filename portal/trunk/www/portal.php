@@ -4,7 +4,6 @@
 //header("Expires: $anhour");
 
 require("portal_login.php");
-if (sotf_Utils::getParameter('id')) require("$classdir/portal_Rating.php");
 
 $error = "";			//to collect the (error) messages for the user
 
@@ -53,7 +52,16 @@ else $settings = $portal->loadSettings();	//if not admin load saved portal setti
 
 if ($portal->isAdmin($user->getId()))		//only for admin users
 {
-	if (sotf_Utils::getParameter('save_style'))		//in edit style mode SAVE button pressed
+	$save_style = sotf_Utils::getParameter('save_style');
+	$file_upload = sotf_Utils::getParameter('file_upload');
+	$save_changes = sotf_Utils::getParameter('save_changes');
+	if (!$save_style AND !$file_upload AND sotf_Utils::getParameter('update_and_save'))
+	{	//if save button (menu) pressed on style editor page get form data and save also
+		$save_style = true;
+		$save_changes = true;
+	}
+
+	if ($save_style)		//in edit style mode SAVE button pressed
 	{
 		//Portal menu
 		$settings["portal"]["bg1"] = $portal->correctColor(sotf_Utils::getParameter('portal_bg1'));
@@ -66,7 +74,7 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		$image = @getimagesize($settings["portal"]["picture"]);
 		if ($image == false) $settings["portal"]["picture_tiled"] = false;
 		$settings["portal"]["picture_height"] = $image[1];
-		$settings["portal"]["css"] = sotf_Utils::getParameter('portal_css');
+		if ($settings["css"]) $settings["portal"]["css"] = sotf_Utils::getParameter('portal_css');
 	
 		//Portal home
 		$settings["home"]["bg"] = $portal->correctColor(sotf_Utils::getParameter('home_bg'));
@@ -75,7 +83,7 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		$settings["home"]["alink"] = $portal->correctColor(sotf_Utils::getParameter('home_alink'));
 		$settings["home"]["vlink"] = $portal->correctColor(sotf_Utils::getParameter('home_vlink'));
 		$settings["home"]["wall"] = sotf_Utils::getParameter('home_wall');
-		$settings["home"]["css"] = sotf_Utils::getParameter('home_css');
+		if ($settings["css"]) $settings["home"]["css"] = sotf_Utils::getParameter('home_css');
 	
 		//Programmes page
 		$settings["programmes"]["bg"] = $portal->correctColor(sotf_Utils::getParameter('programmes_bg'));
@@ -84,7 +92,7 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		$settings["programmes"]["alink"] = $portal->correctColor(sotf_Utils::getParameter('programmes_alink'));
 		$settings["programmes"]["vlink"] = $portal->correctColor(sotf_Utils::getParameter('programmes_vlink'));
 		$settings["programmes"]["wall"] = sotf_Utils::getParameter('programmes_wall');
-		$settings["programmes"]["css"] = sotf_Utils::getParameter('programmes_css');
+		if ($settings["css"]) $settings["programmes"]["css"] = sotf_Utils::getParameter('programmes_css');
 	
 		$style = "1";		//do not go from the style page
 
@@ -94,14 +102,15 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		//elseif (sotf_Utils::getParameter('goto') == "view") $view = true;
 		//elseif (sotf_Utils::getParameter('goto') == "admin") $admin = true;
 	}
-	elseif (sotf_Utils::getParameter('file_upload'))	//Upload file (picture or CSS) on edit style page
+	elseif ($file_upload)	//Upload file (picture or CSS) on edit style page
 	{
 		//sotf_Utils::getParameter('file_name')
 		$q = $portal->uploadFile($_FILES['file_file']['tmp_name'], $_FILES['file_file']['name'], NULL, sotf_Utils::getParameter('file_name'));
 		if ($q === "QUOTA") $error .= $page->getlocalized("quota_exceeded");
 		$style = "1";
 	}
-	elseif (sotf_Utils::getParameter('save_changes'))		//admin page save button pressed
+
+	if ($save_changes)		//admin page save button pressed
 	{
 		$portal->addEvent("portal_updated", "$portal_name");
 		if ($admin)			//if on admin page
@@ -122,12 +131,11 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 
 			if (sotf_Utils::getParameter('change_password'))
 			{
-				$password_old = sotf_Utils::getParameter('password_old');
 				$password_new1 = sotf_Utils::getParameter('password_new1');
 				$password_new2 = sotf_Utils::getParameter('password_new2');
 				if ($password_new1 == "") $error .= $page->getlocalized("password_empty");
 				elseif ($password_new1 != $password_new2) $error .= $page->getlocalized("password_different");
-				elseif ($portal->changePortalPassword($password_old, $password_new1)) $error .= $page->getlocalized("password_incorrect");
+				elseif ($portal->changePortalPassword($password_new1)) $error .= $page->getlocalized("password_incorrect");
 				else $error .= $page->getlocalized("password_changed");
 			}
 		}
@@ -215,12 +223,19 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		elseif ($type == "q")
 		{
 			$results = $portal->runQuery($value);
+			$q = $portal->getQueries();
+			$smarty->assign("query_name", $q[$value]);
 			$smarty->assign("is_query", $value);
 		}
 		elseif ($type == "p")
 		{
 			$results = $portal->runPlaylist($value);
-			if ($value != "unsorted") $smarty->assign("is_playlist", $value);	//if not the Uploaded prglist (which can not be deleted)
+			if ($value != "unsorted")
+			{
+				$smarty->assign("is_playlist", $value);	//if not the Uploaded prglist (which can not be deleted)
+				$p = $portal->getPlaylists();
+				$smarty->assign("playlist_name", $p[$value]);
+			}
 		}
 		else	//current programmes
 		{
@@ -241,9 +256,9 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 			if (($filter == "something") AND ($prgprop['teaser'] != "") AND ($prgprop['text'] != "")) continue;	//if only the ones without somting are needed
 			
 			if ($prgprop['teaser'] != "") {$item['teaser'] = substr($prgprop['teaser'], 0, 200);if (strlen($item['teaser']) == 200) $item['teaser'].="...";}
-				else $item['teaser'] = $page->getlocalized("none");
+				//else $item['teaser'] = $page->getlocalized("no_teaser");
 			if ($prgprop['text'] != "") {$item['text'] = substr($prgprop['text'], 0, 200);if (strlen($item['text']) == 200) $item['text'].="...";}
-				else $item['text'] = $page->getlocalized("none");
+				//else $item['text'] = $page->getlocalized("no_text");
 
 			foreach($result as $key => $value)
 				if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
@@ -272,6 +287,7 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 			$item['icon'] = $result['icon'];
 			$item['files'] = $prgprop['files'];
 			$item['comments'] = $prgprop['comments'];
+			$item['rating'] = $prgprop['rating'];
 			$item['values'] = $values;
 			$selected_result[] = $item;
 			$item = "";

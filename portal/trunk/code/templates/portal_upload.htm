@@ -17,7 +17,7 @@
 	{if $type == "query"}{#name#}<input type="text" name="name" value="{$name}"><br>{/if}
 	<input type="hidden" name="type" value="{$type}"><br>
 	<input type="hidden" name="data" value="{$data}"><br>
-	<input type="submit" name="submit" value="{if $type == "query"}{#upload_query#}{elseif $type == "prglist"}{#upload_prglist#}{else}{#upload_prg#}{/if}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="{#close_window#}" onclick="javascript:window.close();">
+	<input type="submit" name="submit" value="{if $type == "query"}{#upload_query#}{elseif $type == "prglist"}{#upload_prglist#}{else}{#upload_prg#}{/if}" onclick="javascript:this.value='{#please_wait#}'">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="{#close_window#}" onclick="javascript:window.close();">
 {/if}
 
 </form>

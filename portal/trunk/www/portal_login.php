@@ -13,6 +13,7 @@ sets variables:
 */
 
 require("init.inc.php");
+require("$classdir/portal_Rating.php");
 require("$classdir/sotf_Portal.class.php");
 
 if (strpos($_SERVER['PHP_SELF'], "portal_login.php")) $page->redirect($rootdir."/index.php");		//if called directly

@@ -191,6 +191,7 @@ class sotf_Portal
 				$item['text'] = $prgprop['text'];
 				$item['files'] = $prgprop['files'];
 				$item['comments'] = $prgprop['comments'];
+				$item['rating'] = $prgprop['rating'];
 				$item['listen'] = array();
 
 				foreach($result as $key => $value)
@@ -677,7 +678,7 @@ class sotf_Portal
 
 	function getPrgProperties($progid)
 	{
-		global $db;
+		global $db, $page;
 		$sql="SELECT teaser, text FROM programmes_description WHERE portal_id = '$this->portal_id' AND progid = '$progid'";
 		$properties = $db->getRow($sql);
 
@@ -692,6 +693,12 @@ class sotf_Portal
 		}
 
 		$properties['comments'] = $this->countComments($progid);	//number of comments
+
+		$rating = new Rating();
+		$r = $rating->getRating($progid);
+		$average = round((float)$r['RATING_VALUE']);
+		$properties['rating']['average'] = $page->getlocalized("rating_".$average);
+		$properties['rating']['users_rated'] = $r['RATING_COUNT'];
 
 		return $properties;
 	}
@@ -790,10 +797,10 @@ class sotf_Portal
 		}
 	}
 
-	function changePortalPassword($old, $new)		//for changeing the portal (upload) password
+	function changePortalPassword($new)		//for changeing the portal (upload) password
 	{
 		global $db;
-		if ($old != $this->portal_password) return true;
+		//if ($old != $this->portal_password) return true;
 		$query = "UPDATE portal_settings SET password='$new' WHERE id='$this->portal_id'";
 		$db->query($query);
 		return false;
@@ -1199,7 +1206,7 @@ class portal_user
 	{
 		global $db;
 		if (($username == "") OR ($new_password == "")) return true;
-		$sql = "SELECT id FROM portal_users WHERE portal_id=$portal_id AND name='$username'";
+		$sql = "SELECT id FROM portal_users WHERE portal_id=$portal_id AND name='$username' AND password='$old_password'";
 		if ($db->getOne($sql) == NULL) return true;		//if not exsist
 		else
 		{
