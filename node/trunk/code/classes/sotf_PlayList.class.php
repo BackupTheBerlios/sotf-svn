@@ -9,6 +9,7 @@ class sotf_Playlist {
   var $streamName;
   var $tmpId;
   var $url;
+  var $name;
 
   function add($item) {
 	 $mp3info = GetAllFileInfo($item['path']);
@@ -47,6 +48,10 @@ class sotf_Playlist {
 	 // add program file
 	 $filepath = $prg->getFilePath($file);
 	 $this->add(array('path' => $filepath));
+	 
+	 // temp: set title
+	 $this->name = urlencode($prg->get("title"));
+
 
 	 // save stats
 	 $prg->addStat($file->get('filename'), 'listens');
@@ -55,10 +60,13 @@ class sotf_Playlist {
   function getTmpId() {
 	 global $user;
 	 if(!$this->tmpId) {
+		//if($this->name)
+		//  $this->tmpId = $this->name;
 		$userid = $user->id;
 		if(!$userid)
 		  $userid = 'guest';
-		$this->tmpId = $userid . '_' . time();
+		$this->tmpId = $this->tmpId . '_' . $userid . '_' . time();
+		//$this->tmpId = $this->tmpId . '_' . time();
 	 }
 	 return $this->tmpId;
   }
@@ -123,7 +131,7 @@ class sotf_Playlist {
 		}
 
 	 } else {
-		// Perl-based streaming
+		// command-line streaming
 		
 		$this->url = 'http://' . $iceServer . ':' . $icePort . '/' . $this->getTmpId() . "\n";
 		//$url = preg_replace('/^.*\/repository/', 'http://sotf2.dsd.sztaki.hu/node/repository', $filepath);
@@ -133,14 +141,9 @@ class sotf_Playlist {
 		if(!$bitrate)
 		  $bitrate = 24;
 		
-		$mystreamCmd = str_replace('__PLAYLIST__', $this->localPlaylist , $streamCmd);
-		$mystreamCmd = str_replace('__NAME__', $this->getTmpId(), $mystreamCmd);
-		$mystreamCmd = str_replace('__BITRATE__', $bitrate, $mystreamCmd);
-		
-		debug("starting stream with cmd", $mystreamCmd);
-		
-		exec($mystreamCmd);
-		debug("streaming process detached");
+		$this->cmdStart($this->localPlaylist, $this->getTmpId(), $bitrate);
+		//$this->cmdStart2($bitrate);
+
 	 }
   }
 
@@ -156,6 +159,49 @@ class sotf_Playlist {
 	 debug("sent playlist", $this->url);
   }
 
+  function cmdStart($playlist, $name, $bitrate) {
+	 global $localPrefix;
+
+	 $url = "$localPrefix/startStream.php?pl=$playlist&n=$name&br=$bitrate";
+
+	 $server='localhost';
+	 $port= myGetenv('SERVER_PORT');
+	 $host = myGetenv('SERVER_NAME');
+	 debug("host", $host);
+	 debug("port", $port);
+	 
+	 $op= "GET $url HTTP/1.1
+Accept: */*
+Host: $host
+User-Agent: PHP
+
+";
+
+	 $fp=fsockopen($host, $port, $errno, $errstr);
+	 if (!$fp)
+		{
+		  raiseError('Streaming error: Connect error');
+		}
+
+	 if (!fputs($fp, $op, strlen($op)))
+		{
+		  raiseError('Streaming error: Write error');
+		}
+  }
+
+  /** old alternative, does not work under Windows and some Unices */
+  function cmdStart2($bitrate) {
+	 global $streamCmd;
+
+	 $mystreamCmd = str_replace('__PLAYLIST__', $this->localPlaylist , $streamCmd);
+	 $mystreamCmd = str_replace('__NAME__', $this->getTmpId(), $mystreamCmd);
+	 $mystreamCmd = str_replace('__BITRATE__', $bitrate, $mystreamCmd);
+		
+	 debug("starting stream with cmd", $mystreamCmd);
+		
+	 system($mystreamCmd);
+	 debug("streaming process detached");
+  }
 
 }
 ?>

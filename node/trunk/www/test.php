@@ -1,12 +1,40 @@
 <?php
-require("init.inc.php");
 
+$server='vas.dsd.sztaki.hu';
+$port='80';
+
+$op= "GET /node/www/xx.php HTTP/1.1
+Accept: */*
+Host: sotf.dsd.sztaki.hu
+User-Agent: PHP
+
+
+";
+
+$fp=fsockopen($server, $port,$errno, $errstr);
+if (!$fp)
+{
+  die('Connect error');
+}
+
+if (!fputs($fp, $op, strlen($op)))
+{
+  die('Write error');
+}
+
+exit;
+
+//require("init.inc.php");
+
+
+
+/*
 require_once("$classdir/rpc_Utils.class.php");
 
 $rpc = new rpc_Utils;
 $rpc->debug = true;
 $response = $rpc->call($tamburineURL, 'version', '');
-
+*/
 
 
 /*
