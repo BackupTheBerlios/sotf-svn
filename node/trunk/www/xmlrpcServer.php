@@ -69,7 +69,9 @@ function cvGet($params) {
   $name = xmlrpc_decoder($params->getParam(1));
   $lang = xmlrpc_decoder($params->getParam(2));
   $retval = $vocabularies->getCVocabulary($type, $name, $lang);
+  //debug("RETVAL0", $retval);
   $retval = xmlrpc_encoder($retval);
+  //debug("RETVAL", $retval);
   return new xmlrpcresp($retval);
 }
 

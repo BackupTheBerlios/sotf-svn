@@ -9,7 +9,7 @@ function popup(url, name, height, width, scroll) {
 	if (scroll) {
 		features +=",scrollbars=yes";
 	}
-	var win = window.open(url,name, features);
+	var win = window.open(url, name, features);
 	win.focus();
 }
 

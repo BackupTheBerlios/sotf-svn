@@ -539,6 +539,10 @@ class sotf_Vocabularies {
 
   /** type=(topics,roles,genres) */
   function getCVocabulary($type, $name, $language) {
+		debug("type", $type);
+		debug("name", $name);
+		debug("language", $language);
+
     if($type=='topics') {
       $retval = $this->getTree($name, $language);
     } elseif($type=='roles') {

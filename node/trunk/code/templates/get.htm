@@ -169,14 +169,14 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
               {$item.role_name}
             </td>
             <td>
-              <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">{$item.contact_data.name}</a>
+              <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',400,400,true)">{$item.contact_data.name}</a>
               {if $item.contact_data.url}<br>(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
                 {elseif $item.contact_data.email}<br>(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
                   {/if}
             </td>
             <td>
               {if $item.contact_data.icon }{strip}
-              <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">
+              <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',400,400,true)">
                 <img hheight="50%" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
               </a>{/strip}
               {/if}
@@ -262,7 +262,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
             </td>
             <td>
               { if $item.download_access eq 't'}
-                <!-- <input class="action" type="button" name="b1" value="{#Download#}" onClick="popup('{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}','{#viewpopup#}',500,500,true)" /> -->
+                <!-- <input class="action" type="button" name="b1" value="{#Download#}" onClick="popup('{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}','ViewPopup',500,500,true)" /> -->
                 <a href="{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/download.gif" border="0" alt="{#Download#}"></a>
               {/if}
             </td>
@@ -297,7 +297,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
             </td>
             <td nowrap>
               {if $item.public_access eq 't' }
-                <!-- <input class="action" type="button" name="b1" value="{#View#}" onClick="popup('{$ROOT_URL}/getFile.php/{$item.filename}?id={$ID}&filename={$item.filename}','{#viewpopup#}',500,500,true)" /> -->
+                <!-- <input class="action" type="button" name="b1" value="{#View#}" onClick="popup('{$ROOT_URL}/getFile.php/{$item.filename}?id={$ID}&filename={$item.filename}','ViewPopup',500,500,true)" /> -->
                   <a target="link" href="{$ROOT_URL}/getFile.php/{$item.filename}?id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/download.gif" border="0" alt="{#Download#}"></a>
               {/if}
             </td>

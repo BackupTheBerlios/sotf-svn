@@ -104,7 +104,7 @@ else  window.location.href = this.location.href
           {/foreach}    
           <tr>
               <td colspan="4" align="left">
-                 <input class="action" type="button" name="b1" value="{#add_content#}" onClick="popup('addFiles.php?main=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)" />
+                 <input class="action" type="button" name="b1" value="{#add_content#}" onClick="popup('addFiles.php?main=1&prgid={$PRG_ID}','AddFiles',500,500,true)" />
               </td>
               <td colspan="8" align="right">
                 {if $MAIN_AUDIO_COUNT gt 0 and $MISSING}
@@ -224,7 +224,7 @@ else  window.location.href = this.location.href
    {if !$AUDIO_FILES and !$OTHER_FILES }
         <p>{#no_files#}</p>
    {/if}
-          <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?prgid={$PRG_ID}','{#addfiles#}',500,500,true)" />
+          <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?prgid={$PRG_ID}','AddFiles',500,500,true)" />
  
   </td>
 </tr>
@@ -264,7 +264,7 @@ else  window.location.href = this.location.href
               <input type="checkbox" onclick="javascript:setvalue('links', '{$item.id}', this.checked);return true;"{ if $item.public_access eq 't' } CHECKED="1"{/if} />
             </td>
             <td nowrap>
-                <input class="action" type="button" name="i1" value="{#change#}" onClick="popup('editLink.php?linkid={$item.id}&prgid={$PRG_ID}','{#edit_link#}',350,400,false)" />
+                <input class="action" type="button" name="i1" value="{#change#}" onClick="popup('editLink.php?linkid={$item.id}&prgid={$PRG_ID}','EditLink',250,500,false)" />
                   <input class="action" type="button" name="i2" value="{#delete#}" onClick="redir(this.form,'editFiles.php?dellink=1&linkid={$item.id}&id={$PRG_ID}')" />
 
             </td>
@@ -274,7 +274,7 @@ else  window.location.href = this.location.href
     {else}
                 <p>{#no_links#}</p>
     {/if}
-          <input class="action" type="button" name="i3" value="{#add_link#}" onClick="popup('editLink.php?new=1&prgid={$PRG_ID}','{#edit_link#}',400,400,false)" />
+          <input class="action" type="button" name="i3" value="{#add_link#}" onClick="popup('editLink.php?new=1&prgid={$PRG_ID}','EditLink',250,500,false)" />
   </td>
 </tr>
 </table>

@@ -663,7 +663,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $pathToFile = $config['xbmfInDir'] . '/';
 	 // create temp folder with unique name
 	 $folderName = uniqid("xbmf");
-	 mkdir($pathToFile . $folderName);
+	 if(!mkdir($pathToFile . $folderName)) {
+		logError("Could not create dir for XBMF", $pathToFile . $folderName);
+		return false;
+	 }
 	
 	 // untar contents of file to folder
 	 $tar = new Archive_Tar($fileName, true);								// create archive handler
@@ -676,7 +679,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 if(!is_file($metaFile)) {
 		$metaFile = $pathToFile . $folderName . "/XBMF/metadata.xml";
 		if(!is_file($metaFile)) {
-		  raiseError("no metadata file found in XBMF!");
+		  logError("no metadata file found in XBMF!", $folderName);
+		  return false;
 		}
 	 }
 	 $myPack = new unpackXML($metaFile);
@@ -688,6 +692,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 if(!$metadata or $myPack->error){ //errors during import - stop execution
 		sotf_Utils::delete($pathToFile . $folderName);
 		echo "<font color=#FF0000><b>The import of $fileName did not succeed!</b></font>";
+		logError("XML processing failed within this XBMF", $folderName);
 		return false;	//did not succeed
 	 }else{
 		/*
@@ -710,7 +715,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 }
 	 $station = &$repository->getObject($stId);
 	 if(!$station) {
-		raiseError("invalid stationid: ". $metadata['stationid']);
+		logError("invalid stationid: ". $metadata['stationid']);
+		return false;
 		// by default I put the programme into the first station
 		//$stId = $db->getOne("SELECT id FROM sotf_stations ORDER BY id");
 		//$station = &$repository->getObject($stId);
@@ -724,8 +730,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		// updating an exisiting programme
 		debug("updating existing programme", $prgId);
 		$newPrg =  new sotf_Programme($prgId);
-		if($station->id != $newPrg->get('station_id'))
-		  raiseError("station provided in metadata is different from the station saved previously!");
+		if($station->id != $newPrg->get('station_id')) {
+		  logError("station provided in metadata is different from the station saved previously!");
+		  return false;
+		}
 		//$station = &$repository->getObject($newPrg->get('station_id'));
 		$updatingPrg = 1;
 	 } else {
@@ -1032,7 +1040,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 			 $contents .= $data;
 		  } while(0);
 		  fclose($handle);
-		  $tmpFile = tempnam($config['xbmfInDir'], 'logo_u');
+		  $tmpFile = tempnam($config['tmpDir'], 'logo_u');
 		  debug("received logo from", $url);
 		  sotf_Utils::save($tmpFile, $contents);
 		  $contact->setIcon($tmpFile);

@@ -65,7 +65,7 @@
             </td>
             <td nowrap>
               <input class="action" type="button" name="b1" value="{#sync#}" onClick="redir(this.form, 'admin.php?sync=1&nodeid={$item.node_id}')" />
-                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editNeighbour.php?nodeid={$item.node_id}','{#editNeighbour#}',350,400,false)" />
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editNeighbour.php?nodeid={$item.node_id}','EditNeighbour',350,400,false)" />
                   <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'admin.php?delneighbour=1&nodeid={$item.node_id}')" />
                       <!-- <a href="admin.php?sync=1&full=1&nodeid={$item.node_id}">{#full_sync#}</a> {#full_sync_expl#} -->
 
@@ -77,7 +77,7 @@
         <p>{#standalone_node#}</p>
         {/if}
         <p>
-          <input class="action" type="button" name="b1" value="{#add_neighbour#}" onClick="popup('createNeighbour.php','{#createNeighbour#}',400,400,false)" />
+          <input class="action" type="button" name="b1" value="{#add_neighbour#}" onClick="popup('createNeighbour.php','CreateNeighbour',400,400,false)" />
         </p>
       </form>
       </td>
@@ -122,7 +122,7 @@
         {else}
         <p>{#no_users#}</p>
         {/if}
-        <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=node&objectid=node&objectname={#node#}','{#Permissions#}',450,450, false)">
+        <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=node&objectid=node&objectname={#node#}','Permissions',450,450, false)">
       </td>
     </tr>
 </table>

@@ -13,7 +13,7 @@
           {if $JINGLE}<a href="{$ROOT_URL}/listen.php?id={$SERIES_DATA.id}&jingle=1">{#jingle#}</a>, {/if}
           <a href="{$ROOT_URL}/rss.php?series={$SERIES_DATA.id}&uiLang={$LANG}">RSS</a><br />
           {if hasPerm($SERIES_DATA,'change') }
-          <input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('{$ROOT_URL}/editSeries.php?seriesid={$SERIES_DATA.id}','{#series#}',550,550,true)">
+          <input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('{$ROOT_URL}/editSeries.php?seriesid={$SERIES_DATA.id}','EditSeries',550,550,true)">
             {/if}
           {if hasPerm($SERIES_DATA, 'create')}
             <input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, '{$ROOT_URL}/editor.php?&stationid={$SERIES_DATA.station_id}')" />
@@ -59,14 +59,14 @@
                     {$item.role_name}
                   </td>
                   <td>
-                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">{$item.contact_data.name}</a>
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',400,400,true)">{$item.contact_data.name}</a>
                     {if $item.contact_data.url}<br>(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
                     {elseif $item.contact_data.email}<br>(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
                     {/if}
                   </td>
                   <td>
                     {if $item.contact_data.icon }{strip}
-                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',400,400,true)">
                       <img hheight="50%" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
                     </a>{/strip}
                     {/if}

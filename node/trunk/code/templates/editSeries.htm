@@ -77,9 +77,9 @@
               {$item.contact_data.name}
             </td>
             <td nowrap>
-                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$SERIES_ID}','{#edit_role#}',300,550,false)" />
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$SERIES_ID}','EditRole',300,550,false)" />
              {if $item.change_contact }
-                  <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)" />
+                  <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="popup('editContact.php?id={$item.contact_id}','EditContact',500,500,true)" />
              {/if}
                     <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editSeries.php?delrole=1&roleid={$item.id}&seriesid={$SERIES_ID}')" />
             </td>
@@ -90,7 +90,7 @@
         <p>{#no_roles#}</p>
         {/if}
         <p>
-            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$SERIES_ID}','{#edit_role#}',300,550,false)" />
+            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$SERIES_ID}','EditRole',300,550,false)" />
         </p>
       </td>
     </tr>
@@ -138,7 +138,7 @@
         {else}
         <p>{#inherited_perms#}</p>
         {/if}
-        <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES|escape}','{#Permissions#}',450,450, false)">
+        <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES|escape}','Permissions',450,450, false)">
       </td>
     </tr>
 </table>

@@ -57,14 +57,14 @@
                     {$item.role_name}
                   </td>
                   <td>
-                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">{$item.contact_data.name}</a>
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',400,400,true)">{$item.contact_data.name}</a>
                     {if $item.contact_data.url}<br>(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
                     {elseif $item.contact_data.email}<br>(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
                     {/if}
                   </td>
                   <td>
                     {if $item.contact_data.icon }{strip}
-                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',400,400,true)">
                       <img hheight="50%" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
                     </a>{/strip}
                     {/if}
@@ -76,7 +76,7 @@
 
               {if hasPerm($STATION_DATA,'create') }
               <p align="right">
-              <input class="action" type="button" name="b1" value="{#add_series#}" onClick="popup('{$ROOT_URL}/createSeries.php?stationid={$STATION_ID}','{#series#}',550,550,true)" />
+              <input class="action" type="button" name="b1" value="{#add_series#}" onClick="popup('{$ROOT_URL}/createSeries.php?stationid={$STATION_ID}','EditSeries',550,550,true)" />
               </p>
               {/if}
             </td>
@@ -120,7 +120,7 @@
             </td>
             <td width="1%" valign="bottom">
               {if hasPerm($item, 'change', 'authorize')}
-              <br/><input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('{$ROOT_URL}/editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
+              <br/><input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('{$ROOT_URL}/editSeries.php?seriesid={$item.id}','EditSeries',550,550,true)" />
                   {/if}
               {if hasPerm($item, 'delete')}
               <input class="action" type="button" name="b1" value="{#delete_series#}" onClick="if(deleteConfirm('{#delete_series_confirm#}'))redir(this.form, '{$PHP_SELF}?delseries=1&seriesid={$item.id}')" />
