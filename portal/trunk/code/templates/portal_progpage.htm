@@ -59,7 +59,7 @@
 				<br />
 			{/if}
 			</p>
-			<br />
+			{if $rating AND ($is_logged_in OR $a_rating)}<br />
 			<p>
 			<b>{#rating#}:</b>
 			{#average#}:{$rating_average}<br>
@@ -67,6 +67,7 @@
 			<select name="rating" size="1">{html_options options=$ratings selected=$rating.RATING_OUTPUT}</select>
 			<input type="submit" name="rate_it" value="Submit">
 			</p>
+			{/if}
 			</font>
 		</td>
 	</tr>

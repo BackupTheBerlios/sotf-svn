@@ -80,19 +80,20 @@
 	</tr>
 	{/if}
 </table>
-<br>
+<br />
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
-		<td align="center"><input type="submit" name="insert_before" value="{#create_cell_before#}"></td>
-		<td align="center"><input type="submit" name="delete" value="{#delete_cell#}" onclick="javascript:return confirm('{#delete_the_cell#}');"></td>
-		<td align="center"><input type="submit" name="insert_after" value="{#create_cell_after#}"></td>
+		<td align="center" width="33%"><input type="reset" value="{#reset_cell#}"></select></td>
+		<td align="center" width="33%"><input type="button" value="{#cancel#}" onclick="window.close()"></select></td>
+		<td align="center" width="33%"><input type="submit" value="{#submit_cell#}"></td>
 	</tr>
 </table>
-<br>
+<br /><br />
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
-		<td align="center"><input type="submit" value="{#submit_cell#}"></td>
-		<td align="center"><input type="reset" value="{#reset_cell#}"></select></td>
+		<td align="center" width="33%"><input type="submit" name="insert_before" value="{#create_cell_before#}"></td>
+		<td align="center" width="33%"><input type="submit" name="delete" value="{#delete_cell#}" onclick="javascript:return confirm('{#delete_the_cell#}');"></td>
+		<td align="center" width="33%"><input type="submit" name="insert_after" value="{#create_cell_after#}"></td>
 	</tr>
 </table>
 </form>

@@ -329,9 +329,11 @@ class sotf_Portal
 
 	function uploadFile($filename, $name, $prg_id = NULL, $custom_name = NULL)
 	{
-		global $db;
+		global $db, $user, $page, $QUOTA;
 		if (!file_exists($filename)) return false;
 		$newdirname = $_SERVER['DOCUMENT_ROOT'].str_replace('portal.php', "", $_SERVER["SCRIPT_NAME"]).$this->portal_name;
+		if ( (filesize($filename) + $this->dir_size($newdirname)) > $QUOTA * 1024) return "QUOTA";
+
 		$newfilename = $newdirname."/".$name;
 		$i = 0;
 		$dot = strrpos($name, '.');
@@ -359,7 +361,8 @@ class sotf_Portal
 			$sql="INSERT INTO portal_files(portal_id, file_location, filename) values('$this->portal_id', '$url', '$name')";
 			$db->query($sql);
 		}
-
+		$this->addEvent("file_uploaded", array("filename" => $name, "location" => $url, "prog_id" => $progid, "user_name" => $user->getName(), "email" => $email, "host" => getHostName(), "authkey" => $page->getAuthKey()));
+		return true;
 	}
 
 	function deleteFile($filename, $prg_id = NULL)
@@ -367,16 +370,43 @@ class sotf_Portal
 		global $db;
 		if ($prg_id == NULL)
 		{
+			if (@unlink($_SERVER["DOCUMENT_ROOT"].$filename) OR !file_exists($_SERVER["DOCUMENT_ROOT"].$filename))
+			{
+				$sql="DELETE FROM portal_files WHERE portal_id = $this->portal_id AND file_location = '$filename'";
+				return $db->query($sql);
+			}
+			else return false;
 		}
 		else
 		{
-			if (@unlink($_SERVER["DOCUMENT_ROOT"].$filename))
+			if (@unlink($_SERVER["DOCUMENT_ROOT"].$filename) OR !file_exists($_SERVER["DOCUMENT_ROOT"].$filename))
 			{
 				$sql="DELETE FROM portal_files WHERE portal_id = $this->portal_id AND file_location = '$filename' AND progid = '$prg_id'";
 				return $db->query($sql);
 			}
 			else return false;
 		}
+	}
+
+	function dir_size($dir)		//gets the size of all fles in a directory (copied from http://hu2.php.net/manual/en/function.filesize.php)
+	{
+		$totalsize=0;
+		if ($dirstream = @opendir($dir))
+		{
+			while (false !== ($filename = readdir($dirstream)))
+			{
+				if ($filename!="." && $filename!="..")
+				{
+					if (is_file($dir."/".$filename))
+					$totalsize+=filesize($dir."/".$filename);
+					
+					if (is_dir($dir."/".$filename))
+					$totalsize+=dir_size($dir."/".$filename);
+				}
+			}
+		}
+		closedir($dirstream);
+		return $totalsize;
 	}
 
 	function getUploadedFiles()
@@ -390,13 +420,44 @@ class sotf_Portal
 		if ($result == NULL) return $files;
 		foreach ($result as $file) $files[$file['file_location']] = $file['filename'];
 
-//		$files = array(	"static/next.png" => "next.png",
-//				"http://www.pbs.org/kratts/world/aust/kangaroo/images/kangaroo.jpg" => "kangaroo.jpg",
-//				"http://www.dsd.sztaki.hu/~mate/pm205/bg.jpg" => "bg.jpg",
-//				"http://dsd.sztaki.hu/belsolap_components/belsolap.css" => "dsd.css",
-//				"http://members.iinet.net.au/~oneilg/scouts/pix/badges/scout/patrol/kangaroo.jpg" => "kangaroo2.jpg");
-//		return $files;
+		//return $files;
 		return array_merge(array("none" => $page->getlocalized("choose")), $files);
+	}
+
+	function getProgrammesWithFiles()
+	{
+		global $page, $db;
+
+		$sql="SELECT DISTINCT progid FROM portal_files WHERE portal_id = '$this->portal_id' AND progid IS NOT NULL";
+		$result = $db->getCol($sql);
+
+		if ($result == NULL) return array();	//if no result
+
+		return $this->getProgrammes($result);
+	}
+
+	function getFilesWithoutProgrammes($list = NULL)
+	{
+		global $page, $db;
+
+		if ($list == NULL)
+		{
+			$list = array();
+			$programmes = $this->getProgrammesWithFiles();
+			foreach ($programmes as $prg) $list[] = $prg['id'];
+		}
+
+		$sql="SELECT file_location, filename, progid FROM portal_files WHERE portal_id = '$this->portal_id'";
+		$result = $db->getAll($sql);
+
+		$files = array();
+		if ($result == NULL) return $files;
+		foreach ($result as $file)
+		{
+			if (!in_array($file['progid'], $list)) $files[$file['file_location']] = $file['filename'];
+		}
+
+		return $files;
 	}
 
 	function getStyles()
@@ -490,7 +551,7 @@ class sotf_Portal
 				else $result = $rpc->call($url, 'portal.playlist', array($objs));	//if($type == 2)
 				if ($result === NULL)		//if some error occured
 				{
-					debug("Connection error!!!");
+					debug("error", "Connection error!!! (".$result." instead of ".count($events).")");
 					//set the last try to the current time
 					$sql = "UPDATE portal_statistics SET timestamp='".$db->getTimestampTz()."' WHERE name='last_connection_try'";
 					$db->query($sql);
@@ -592,6 +653,27 @@ class sotf_Portal
 		return false;
 	}
 
+	function deletePlaylist($id)
+	{
+		global $db;
+
+		if (!is_numeric($id)) return false;		//if not real ID
+
+		$sql="DELETE FROM portal_programmes WHERE portal_id = '$this->portal_id' AND prglist_id = $id";
+		$db->query($sql);
+
+		$sql="DELETE FROM portal_prglist WHERE portal_id = '$this->portal_id' AND id = $id";
+		return $db->query($sql);
+	}
+
+	function deleteQuery($query)
+	{
+		global $db;
+
+		$query = addslashes($query);
+		$sql="DELETE FROM portal_queries WHERE portal_id = '$this->portal_id' AND query = '$query'";
+		return $db->query($sql);
+	}
 
 	function getPrgProperties($progid)
 	{
@@ -839,7 +921,7 @@ class sotf_Portal
 		//$sql="SELECT id, path, portal_users.name, email, timestamp, title, comment, level FROM programmes_comments WHERE portal_id=$this->portal_id AND progid = '$progid' AND user_id=portal_users.id ORDER BY path";
 		//$sql="SELECT id, path, email as name, timestamp, title, comment, level FROM programmes_comments WHERE portal_id=$this->portal_id AND progid = '$progid' ORDER BY path";
 
-		$sql="SELECT programmes_comments.id, path, portal_users.name, programmes_comments.email, timestamp, title, comment, level FROM programmes_comments LEFT JOIN portal_users ON programmes_comments.user_id=portal_users.id WHERE programmes_comments.portal_id=$this->portal_id AND progid = '$progid' ORDER BY path";
+		$sql="SELECT programmes_comments.id, path, portal_users.name, programmes_comments.email, programmes_comments.timestamp, title, comment, level FROM programmes_comments LEFT JOIN portal_users ON programmes_comments.user_id=portal_users.id WHERE programmes_comments.portal_id=$this->portal_id AND progid = '$progid' ORDER BY path";
 
 		$result = $db->getAll($sql);
 		$comments = array();
@@ -907,7 +989,7 @@ class sotf_Portal
 			$sql="INSERT INTO portal_events(name, timestamp, portal_name, value) VALUES('$name', '$timestamp', '$this->portal_name', '$value')";
 			$db->query($sql);
 		}
-		elseif (($name == 'comment') OR ($name == 'rating'))
+		elseif (($name == 'comment') OR ($name == 'rating') OR ($name == 'file_uploaded'))
 		{
 			$timestamp = $db->getTimestampTz();		//current timestamp
 			$serial = base64_encode(serialize($value));
@@ -920,6 +1002,7 @@ class sotf_Portal
 			$serial = base64_encode(serialize($value));
 			$sql="UPDATE portal_events SET timestamp='$timestamp' WHERE name='$name' AND portal_name = '$this->portal_name' AND value = '$serial'";
 			$db->query($sql);
+			$aa=$db->affectedRows();
 			if ($db->affectedRows() == 0)
 			{
 				$sql="INSERT INTO portal_events(name, timestamp, portal_name, value) VALUES('$name', '$timestamp', '$this->portal_name', '$serial')";
@@ -945,14 +1028,17 @@ class sotf_Portal
 		}
 	}
 
+	//this is for statistical purposes
+	//this function is called after all queries and programmes have been refreshed (they will have the cuttent time as timestamp)
 	function searchOldEvents()
 	{
-		global $db, $MIN_REMOVAL_TIME, $MIN_EVENT_SENDING, $sotfSite;
+		global $db, $MIN_REMOVAL_TIME, $MIN_EVENT_SENDING, $ERROR_REFRESH_TIME, $sotfSite, $rootdir;
 
 		$sql="SELECT * FROM portal_statistics WHERE (name='query' OR name='programme') AND portal_id='$this->portal_id'";
 		$result = $db->getAll($sql);
 		foreach ($result as $event)
 		{
+			//all events older than MIN_REMOVAL_TIME will be deleted from here and added as event (sent to the node)
 			if ($db->diffTimestamp($db->getTimestamp(), $event['timestamp2']) > $MIN_REMOVAL_TIME)
 			{
 				$sql="DELETE FROM portal_statistics WHERE id=".$event['id'];
@@ -961,48 +1047,68 @@ class sotf_Portal
 			}
 		}
 
-		$sql = "SELECT timestamp FROM portal_statistics WHERE name='events_sent'";
-		$last_refresh = $db->diffTimestamp($db->getTimestamp(), $db->getOne($sql));
 
-		if ($last_refresh < $MIN_EVENT_SENDING)
+		////this part will connect to the node, tble will be blocked so only one process will send the data
+
+		//if failed to connect in the last $ERROR_REFRESH_TIME seconds don't try again
+		$sql = "SELECT timestamp FROM portal_statistics WHERE name='last_connection_try'";
+		$last_error = $db->diffTimestamp($db->getTimestamp(), $db->getOne($sql));
+
+		//$MIN_EVENT_SENDING=10;$ERROR_REFRESH_TIME =10;	//to test it
+		if ($last_error > $ERROR_REFRESH_TIME)
 		{
-			debug("Sending events...");
-			$rpc = new rpc_Utils;
-			$url = $sotfSite."xmlrpcServer.php";
-
-			$sql="SELECT id, name, portal_id as portal_name, timestamp, number as value FROM portal_statistics WHERE name='page_impression'";
-			$page_impression = $db->getAll($sql);
-
-			$sql="SELECT * FROM portal_events WHERE true";
-			$events = $db->getAll($sql);
-
-			$sql="DELETE FROM portal_events WHERE WHERE true";
-			//$db->query($sql);
-
-			$events = array_merge($events, $page_impression);
-			foreach($events as $key => $event)
+			$db->begin();	//begin transaction
+			$db->lockTable("portal_statistics");
+	
+			$sql = "SELECT timestamp FROM portal_statistics WHERE name='events_sent'";
+			$last_refresh = $db->diffTimestamp($db->getTimestamp(), $db->getOne($sql));
+			if ($last_refresh > $MIN_EVENT_SENDING)
 			{
-				if ($event['name'] == 'page_impression') $events[$key]['portal_name'] = $this->portal_name;
-				elseif (($event['name'] == 'comment') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit'))
-					$events[$key]['value'] = unserialize(base64_decode(($event['value'])));
+				debug("Sending events...");
+				$rpc = new rpc_Utils;
+				$url = $sotfSite."xmlrpcServer.php";
+	
+				$sql="SELECT portal_statistics.id, portal_statistics.name, portal_settings.name as portal_name, timestamp, number as value FROM portal_statistics WHERE name='page_impression' AND portal_id = portal_settings.id";
+				$page_impression = $db->getAll($sql);
+	
+				$sql="SELECT * FROM portal_events WHERE true";
+				$events = $db->getAll($sql);
+				$sql="DELETE FROM portal_events WHERE true";
+				$db->query($sql);
+	
+				$events = array_merge($events, $page_impression);
+				foreach($events as $key => $event)
+				{
+					//decode encoded values
+					if (($event['name'] == 'comment') OR($event['name'] == 'file_uploaded') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit'))
+						$events[$key]['value'] = unserialize(base64_decode(($event['value'])));
+					//make an URL which leads directly to the portal/programme on the portal
+					if ($event['name'] == 'file_uploaded') $events[$key]['url'] = "http://".$_SERVER['HTTP_HOST'].$events[$key]['value']['location'];
+					elseif (($event['name'] == 'comment') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit')) $events[$key]['url'] = $rootdir."/portal.php/".$events[$key]['portal_name']."?id=".$events[$key]['value']['prog_id'];
+					else $events[$key]['url'] = $rootdir."/portal.php/".$events[$key]['portal_name'];
+				}
+				
+				$objs = array($events);
+	
+				$result = $rpc->call($url, 'portal.events', $objs);
+				if ($result != count($events))		//if some error occured (return value must be the number of events sent)
+				{
+					if ($result === NULL) $result = "NULL";
+					debug("error", "Connection error!!! (".$result." instead of ".count($events).")");
+					//set the last try to the current time
+					$db->rollback();
+					$sql = "UPDATE portal_statistics SET timestamp='".$db->getTimestampTz()."' WHERE name='last_connection_try'";
+					$db->query($sql);
+				}
+				else
+				{
+					$sql = "UPDATE portal_statistics SET timestamp='".$db->getTimestampTz()."' WHERE name='events_sent'";
+					$db->query($sql);
+				}
+	
 			}
 			
-			$objs = array($events);
-
-			$result = $rpc->call($url, 'portal.events', $objs);
-			if ($result === NULL)		//if some error occured
-			{
-				debug("Connection error!!!");
-				//set the last try to the current time
-				$sql = "UPDATE portal_statistics SET timestamp='".$db->getTimestampTz()."' WHERE name='last_connection_try'";
-				$db->query($sql);
-			}
-			else
-			{
-				$sql = "UPDATE portal_statistics SET timestamp='".$db->getTimestampTz()."' WHERE name='events_sent'";
-				$db->query($sql);
-			}
-
+			$db->commit();
 		}
 
 
@@ -1043,7 +1149,7 @@ class portal_user
 
 	function sendMail($portal_id, $username, $type = "password")
 	{
-		global $db, $page;
+		global $db, $page, $rootdir, $portal_name;
 		$sql = "SELECT email, activate, password FROM portal_users WHERE portal_id=$portal_id AND name='$username'";
 		$data = $db->getRow($sql);
 		if ($email == NULL)		//if not exsist
@@ -1053,11 +1159,15 @@ class portal_user
 			$password = $data['password'];
 			if ($type == "password")
 			{
-				mail($email, $page->getlocalized("your_password"), $page->getlocalized("your_password2")." $password");
+				mail($email, $page->getlocalized("your_password"), $page->getlocalized("your_password2")." $password\n".$page->getlocalized("portal_address").$rootdir."/portal.php/".$portal_name);
 			}
 			if ($type == "activate")
 			{
-				mail($email, $page->getlocalized("activation_code"), $page->getlocalized("activation_code2")." $activate");
+				mail($email, $page->getlocalized("activation_code"), $page->getlocalized("activation_code2")." $activate\n".$page->getlocalized("portal_address").$rootdir."/portal.php/".$portal_name);
+			}
+			if ($type == "deactivate")
+			{
+				mail($email, $page->getlocalized("de_activation"), $page->getlocalized("de_activation2")."\n".$page->getlocalized("portal_address").$rootdir."/portal.php/".$portal_name);
 			}
 			else return false;
 		}
@@ -1068,13 +1178,14 @@ class portal_user
 	function addNewUser($portal_id, $username, $user_password, $email)
 	{
 		global $db, $page;
+		$this->deleteOldUsers($portal_id);	//delete not activated users from portal
 		if (($username =="") OR ($user_password =="") OR ($email == ""));
 		$sql = "SELECT id FROM portal_users WHERE portal_id=$portal_id AND name='$username'";
 		if ($db->getOne($sql) == NULL)		//if not exsist
 		{
 			srand();
 			$activate = rand(1, 30000);
-			$sql="INSERT INTO portal_users (portal_id, name, password, email, activate) VALUES ('$portal_id', '$username', '$user_password', '$email', $activate)";
+			$sql="INSERT INTO portal_users (portal_id, name, password, email, activate, timestamp) VALUES ('$portal_id', '$username', '$user_password', '$email', $activate, '".$db->getTimestampTz()."')";
 			$result = $db->query($sql);
 			$sql = "SELECT id FROM portal_users WHERE portal_id=$portal_id AND name='$username' AND password='$user_password'";
 			$user_id = $db->getOne($sql);
@@ -1082,6 +1193,25 @@ class portal_user
 			return $user_id;
 		}
 		else return false;
+	}
+
+	function deleteOldUsers($portal_id)
+	{
+		global $db, $page, $WAIT_TO_ACTIVATE;
+		$sql = "SELECT id, name, timestamp FROM portal_users WHERE activate IS NOT NULL AND portal_id=$portal_id";
+		$users = $db->getAll($sql);
+
+		foreach ($users as $user)
+			if ($db->diffTimestamp($db->getTimestamp(), $user['timestamp']) > $WAIT_TO_ACTIVATE)
+			{
+				$sql = "SELECT admin_id FROM portal_settings WHERE id=$portal_id";
+				$admin = $db->getOne($sql);
+				if ($admin == $user['id']) return false;		//do not delete admin user
+
+				$this->sendMail($portal_id, $user['name'], "deactivate");
+				$sql = "DELETE FROM portal_users WHERE id = ".$user['id'];
+				$db->query($sql);
+			}
 	}
 
 	function activateUser($portal_id, $username, $user_password, $activate)

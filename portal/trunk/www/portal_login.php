@@ -24,11 +24,6 @@ $portal = new sotf_Portal($portal_name);
 $portal_id = $portal->getId();
 
 //count page_impression
-		$query = "UPDATE portal_ratings SET rate='$rating', host='" . getHostName() . "', ";
-		$query .= "entered='" . $db->getTimestampTz() . "' ";
-		$query .= "WHERE prog_id='$prog_id' AND user_id='$userid'";
-
-
 if ($portal_id == NULL) $query = "UPDATE portal_statistics SET number=number+1, timestamp='".$db->getTimestampTz()."' WHERE name='page_impression' AND portal_id IS NULL";
 else $query = "UPDATE portal_statistics SET number=number+1, timestamp='".$db->getTimestampTz()."' WHERE name='page_impression' AND portal_id = $portal_id";
 $db->query($query);
@@ -51,7 +46,7 @@ if (isset($portal_id))
 		$user = new portal_user($portal_id, $username, $password);	//create user object with given data
 
 		if (isset($a_number))
-			if (!$user->activateUser($portal_id, $username, $password, $a_number)) $page->redirect($_SERVER["PHP_SELF"]."?login=3");
+			if (!$user->activateUser($portal_id, $username, $password, $a_number)) $page->redirect($_SERVER["PHP_SELF"]."?login=1&activate=1&uname=$username");
 		else	//create new user object
 			$user = new portal_user($portal_id, $username, $password);	//create user object with given data
 

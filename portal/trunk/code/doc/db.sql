@@ -30,7 +30,8 @@ CREATE TABLE "portal_users" (
    "name" varchar NOT NULL,
    "password" varchar NOT NULL,
    "email" varchar,
-   "activate" int4
+   "activate" int4,
+   "timestamp" datetime DEFAULT date('now'::datetime) NOT NULL
 );
 
 CREATE TABLE "portal_prglist" (

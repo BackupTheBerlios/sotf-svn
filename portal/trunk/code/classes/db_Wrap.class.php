@@ -146,6 +146,10 @@ class db_Wrap extends DB_pgsql {
     return $this->query("ROLLBACK");
   }
 
+  function lockTable($table) {
+    return $this->query("LOCK TABLE $table");
+  }
+
 	// just don't forget this...
 	function limitQuery($query, $from, $count) {
 	  if($this->debug)

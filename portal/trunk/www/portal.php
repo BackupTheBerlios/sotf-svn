@@ -31,6 +31,8 @@ if ( (count($_POST) > 0) OR (isset($prglist) AND isset($filter)) )
 ////get parameter which mode is active
 $login = sotf_Utils::getParameter('login');		//login page
 $id = sotf_Utils::getParameter('id');			//programme view mode (programmes page)
+$preferences = sotf_Utils::getParameter('preferences');			//user preferences mode
+
 if ($portal->isAdmin($user->getId()))		//only for admin users
 {
 	$playlist = sotf_Utils::getParameter('playlist');	//programme editor mode
@@ -39,7 +41,7 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 	$admin = sotf_Utils::getParameter('admin');		//admin page
 
 	////settings for the portal, table and others
-	$settings = $_SESSION["settings"];			//load current settings from session
+	if ($_SESSION["portal_name"] == $portal_name)$settings = $_SESSION["settings"];			//load current settings from session
 	if ($settings["table"] == "")
 	{
 		$settings = $portal->loadSettings();	//if not found load saved portal
@@ -58,6 +60,12 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		$settings["portal"]["bg2"] = $portal->correctColor(sotf_Utils::getParameter('portal_bg2'));
 		$settings["portal"]["font"] = $portal->correctColor(sotf_Utils::getParameter('portal_font'));
 		$settings["portal"]["picture"] = sotf_Utils::getParameter('menu_picture');
+		$settings["portal"]["picture_align"] = sotf_Utils::getParameter('menu_picture_align');
+		if (sotf_Utils::getParameter('menu_picture_tiled')) $settings["portal"]["picture_tiled"] = true;
+			else $settings["portal"]["picture_tiled"] = false;
+		$image = @getimagesize($settings["portal"]["picture"]);
+		if ($image == false) $settings["portal"]["picture_tiled"] = false;
+		$settings["portal"]["picture_height"] = $image[1];
 		$settings["portal"]["css"] = sotf_Utils::getParameter('portal_css');
 	
 		//Portal home
@@ -89,7 +97,8 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 	elseif (sotf_Utils::getParameter('file_upload'))	//Upload file (picture or CSS) on edit style page
 	{
 		//sotf_Utils::getParameter('file_name')
-		$portal->uploadFile($_FILES['file_file']['tmp_name'], $_FILES['file_file']['name'], NULL, sotf_Utils::getParameter('file_name'));
+		$q = $portal->uploadFile($_FILES['file_file']['tmp_name'], $_FILES['file_file']['name'], NULL, sotf_Utils::getParameter('file_name'));
+		if ($q === "QUOTA") $error .= $page->getlocalized("quota_exceeded");
 		$style = "1";
 	}
 	elseif (sotf_Utils::getParameter('save_changes'))		//admin page save button pressed
@@ -163,10 +172,21 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 			$portal->deleteProgrammeFromList($prg_id, substr($_SESSION['prglist'], 1));		//first char is p for programme list
 		}
 	}
+	elseif (sotf_Utils::getParameter('delete_playlist'))		//delete this list link pressed on programmes editor page
+	{
+		$portal->deletePlaylist(sotf_Utils::getParameter('delete_playlist'));
+		$_SESSION['prglist']='current';
+	}
+	elseif (sotf_Utils::getParameter('delete_query'))		//delete this query link pressed on programmes editor page
+	{
+		$portal->deleteQuery(sotf_Utils::getParameter('delete_query'));
+		$_SESSION['prglist']='current';
+	}
 	elseif (sotf_Utils::getParameter('upload_file'))		//upload button pressed on programmes editor page
 	{
 		$prg_id = sotf_Utils::getParameter('upload_file');		//id of the program to which the file belongs
-		$portal->uploadFile($_FILES['uploaded_file_'.$prg_id]['tmp_name'], $_FILES['uploaded_file_'.$prg_id]['name'], $prg_id);
+		$q = $portal->uploadFile($_FILES['uploaded_file_'.$prg_id]['tmp_name'], $_FILES['uploaded_file_'.$prg_id]['name'], $prg_id);
+		if ($q === "QUOTA") $_SESSION['error'] .= $page->getlocalized("quota_exceeded");
 		$page->redirect($_SERVER["PHP_SELF"]."?playlist=1&anchor=".$prg_id);		//redirect page, prevent resend of data
 	}
 	elseif (sotf_Utils::getParameter('delete_file'))		//delete button pressed on programmes editor page
@@ -183,13 +203,24 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 	
 		$type = $prglist{0};			//first char indicates wther its a query or statik prg list
 		$value = substr($prglist,1);		//the others are the data
-		if ($type == "q")
+		if ($prglist == "with_files")
+		{
+			$results = $portal->getProgrammesWithFiles();
+			$list = array();
+			foreach ($results as $prg) $list[] = $prg['id'];
+
+			$files = $portal->getFilesWithoutProgrammes($list);
+			if (count($files) > 0) $smarty->assign("other_files", $files);
+		}
+		elseif ($type == "q")
 		{
 			$results = $portal->runQuery($value);
+			$smarty->assign("is_query", $value);
 		}
 		elseif ($type == "p")
 		{
 			$results = $portal->runPlaylist($value);
+			if ($value != "unsorted") $smarty->assign("is_playlist", $value);	//if not the Uploaded prglist (which can not be deleted)
 		}
 		else	//current programmes
 		{
@@ -254,7 +285,9 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 			$playlists["p".$key] = "&nbsp;-&nbsp;&nbsp;".$value;
 	
 		$prglists = array_merge(
-				array("current" => "&nbsp;-&nbsp;&nbsp;".$page->getlocalized("prg_on_portal"),
+				array(
+					"current" => "&nbsp;-&nbsp;&nbsp;".$page->getlocalized("prg_on_portal"),
+					"with_files" => "&nbsp;-&nbsp;&nbsp;".$page->getlocalized("prg_with_files"),
 					"queries" => $page->getlocalized("queries").":"),
 				$queries,
 				array("playlists" => $page->getlocalized("static_lists").":"),
@@ -274,6 +307,7 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 	{
 		////save cuttent portal table to the session
 		$_SESSION["settings"] = $settings;			//save current settings
+		$_SESSION["portal_name"] = $portal_name;			//to ensure that they will only be loaded for the same portal
 		$smarty->assign("unsaved", true);			//set in smary as well
 	}
 	else
@@ -291,7 +325,7 @@ if ($id)	//if programmes view
 	$comments = $portal->getComments($id);
 	$rating = new Rating();
 
-	$portal->addEvent("visit", array("user_name" => $user->getName(),"user_email" => $user->getEmail(), "host" => getHostName(), "authkey" => $page->getAuthKey()));
+	$portal->addEvent("visit", array("prog_id" => $id, "user_name" => $user->getName(),"user_email" => $user->getEmail(), "host" => getHostName(), "authkey" => $page->getAuthKey()));
 
 	if ($portal->isAdmin($user->getId()))	//if admin user
 	{
@@ -345,13 +379,14 @@ if ($id)	//if programmes view
 		$smarty->assign('email', $_SESSION['email']);
 	}
 
-	if ( ($user->loggedIn()) OR ($settings["a_rating"]) )	//if logged in or anonym rating enabled
+	if ($settings["rating"] AND ($user->loggedIn() OR $settings["a_rating"]))	//if logged in or anonym rating enabled
 	{
 		$value = (integer)sotf_Utils::getParameter('rating');
 		if (sotf_Utils::getParameter('rate_it') AND ($value != 0))	//programme rating
 		{
 			$rating->setRating($id, $value);
 			$r = $rating->getRating($id);
+			$r['prog_id'] = $id;
 			$r['user_name'] = $user->getName();
 			$r['user_email'] = $user->getEmail();
 			$r['host'] = getHostName();
@@ -365,6 +400,8 @@ if ($id)	//if programmes view
 	$result = $portal->getProgrammes(array($id));
 
 	$result = $result[0];
+
+	if ($result === NULL) $page->redirect($_SERVER["PHP_SELF"]);	//if programme does not exsists go back to the page TODO: maybe an error page that programme not found
 
 	$fields = $portal->getAllFieldnames();
 
@@ -488,7 +525,9 @@ elseif (sotf_Utils::getParameter('resend_pass'))		//if resend password pressed o
 	$user->sendMail($portal->getId(), $uname, "password");
 	$smarty->assign('reply', $page->getlocalized("pass_sent"));
 }
-
+elseif ($preferences)
+{
+}
 
 $smarty->assign('activate', $activate);
 $smarty->assign('uname', sotf_Utils::getParameter('uname'));
@@ -501,6 +540,7 @@ elseif ($style) $subpage="style";
 elseif ($edit) $subpage="edit";
 elseif ($id) $subpage="id";
 elseif ($admin) $subpage="admin";
+elseif ($preferences) $subpage="preferences";
 else {$subpage="view";$view = true;}	//set default to view mode
 $smarty->assign("subpage", $subpage);
 
@@ -511,6 +551,7 @@ $smarty->assign("edit", $edit);		//in edit mode
 $smarty->assign("view", $view);		//in view result mode
 $smarty->assign("id", $id);		//in view programme mode
 $smarty->assign("admin", $admin);	//admin page
+$smarty->assign("preferences", $preferences);	//user preferences page
 
 //prevent browsers from reload/reprocess the page
 

@@ -14,14 +14,23 @@ if (sotf_Utils::getParameter('create_new_portal'))
 	$user_password = sotf_Utils::getParameter('user_password');
 	$email = sotf_Utils::getParameter('email');
 	
-	if ($name != "" AND $portal_password != "" AND $username != "" AND $user_password != "" AND $email != "")
+
+	$error = "none";
+	if ($name == "") $error = $page->getlocalized("error_name_missing");
+	elseif (preg_match ("/^\w*$/", $name) == 0) $error = $page->getlocalized("error_alphanumeric");
+	elseif ($portal_password == "") $error = $page->getlocalized("error_portal_password_missing");
+	elseif ($username == "") $error = $page->getlocalized("error_username_missing");
+	elseif ($user_password == "") $error = $page->getlocalized("error_user_password_missing");
+	elseif ($email == "") $error = $page->getlocalized("error_email_missing");
+
+	if ($error == "none")
 	{
 		$sql= "SELECT id FROM portal_settings WHERE name='$name'";
 		//print($sql);
 		$portal_id = $db->getOne($sql);
 		if ($portal_id != NULL)
 		{
-			$smarty->assign("error", "Already exists");
+			$smarty->assign("error", $page->getlocalized("portal_exsists"));
 		}
 		else
 		{
@@ -46,7 +55,7 @@ if (sotf_Utils::getParameter('create_new_portal'))
 			$page->redirect($rootdir."/portal.php/$name");
 		}
 	}
-	else $smarty->assign("error", "All fields are required!");
+	else $smarty->assign("error", $error);
 	
 	
 	$smarty->assign("php_self", $_SERVER['PHP_SELF']);		//php self for the form submit and hrefs
