@@ -155,6 +155,26 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	  $smarty->assign('PRG_LANG3', $langs[2]);
 	}
 
+	function get2LetterLanguageCode($languages = '') {
+	  if(!$languages)
+		 $languages = $this->get('language');
+	  if(!empty($languages)) {
+		 $langs = explode(',',$languages);
+		 switch($langs[0]) {
+		 case 'eng': return 'en';
+		 case 'ger':
+		 case 'deu': return 'de';
+		 case 'hun': return 'hu';
+		 case 'fra': return 'fr';
+		 case 'dut': return 'nl';
+		 default:
+         return '';
+			logError("Unknown translation to 2-letter code: " . $langs[0]);
+		 }
+	  } else {
+		 return 'en';
+	  }
+	}
 
 	/************************* ROLE MANAGEMENT **************************************/
 	

@@ -56,9 +56,12 @@ if($prgId) {
   $properties=array();
   $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
   $properties["title"]= $prg->get('title');
-  $properties["description"]= $prg->get('abstract');
-  $properties["dc:language"]= $prg->get('language');  // TODO won't work if multiple langs
-  $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
+  if(empty($properties["title"]))
+	 $properties["title"] = 'Untitled';
+  $properties["description"]= ($prg->get('abstract') ? $prg->get('abstract') : '  ');
+  $properties["dc:language"]= $prg->get2LetterLanguageCode();
+  $properties["dc:date"]= date("Y-m-d\TH:i:sO");// 1997-07-16T19:20:30+01:00  "2002-05-06T00:00:00Z";
+  $properties["dc:date"] = substr($properties["dc:date"], 0, -2) . ':' . substr($properties["dc:date"], -2);
   $rss_writer_object->addchannel($properties);
 
   // get and cache programme icon
@@ -119,7 +122,7 @@ if($prgId) {
 	 $text = $text . $role['contact_data']['name'] . ' (' . $role['role_name'] . ')';
   }
   $properties["title"]= $page->getlocalized('Roles');
-  $properties["link"]= "x"; //$config['rootUrl'] . "/get.php/" . $prgId . '#roles';
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . '#roles';
   $properties["description"] = $text;
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
@@ -134,7 +137,7 @@ if($prgId) {
   $smarty->assign('AUDIO_FILES', $audioFiles);
   $text = $smarty->fetch('rssListen.htm');
   $properties["description"] = $text;
-  $properties["link"]= ''; //$config['rootUrl'] . "/get.php/" . $prgId . '#mfiles';
+  $properties["link"] = $config['rootUrl'] . "/get.php/" . $prgId . '#mfiles';
   //$properties["link"]= $config['rootUrl'] . '/listen.php/audio.m3u?id=' . $prgId;
   $properties["title"]= $page->getlocalized('listen');
   //$properties["dc:date"]= $prog->get('production_date');
@@ -151,8 +154,8 @@ if($prgId) {
   $smarty->assign('STATS', $prg->getStats());
   $text = $smarty->fetch('rssRating.htm');
   $properties["description"] = $text;
-  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . "#stats";
-  $properties["title"]= $page->getlocalized('Statistics');
+  $properties["link"] = $config['rootUrl'] . "/get.php/" . $prgId . "#stats";
+  $properties["title"] = $page->getlocalized('Statistics');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
 
@@ -166,11 +169,9 @@ if($prgId) {
 	 $text = $text . "<a target=\"_blank\" href=\"" . $link['url'] . '">' . $link['caption'] . '</a>';
   }
   $properties["title"]= $page->getlocalized('Links');
-  $properties["link"]= "x"; //$config['rootUrl'] . "/get.php/" . $prgId . '#roles';
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . '#links';
   $properties["description"] = $text;
-  //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
-
 
   $db->commit();
 } elseif($stationName) {
