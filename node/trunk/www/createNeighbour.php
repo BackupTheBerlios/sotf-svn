@@ -11,29 +11,31 @@ if (!hasPerm('node', "change")) {
   raiseError("You have no permission to change node settings!");
 }
 
+$url = sotf_Utils::getParameter('url');
+$nid = sotf_Utils::getParameter('node_id');
+
 //
 $createNew = sotf_Utils::getParameter('create_new_node');
 if($createNew) {
-  $node = new sotf_Node;
-  $nid = sotf_Utils::getParameter('node_id');
-  $name = sotf_Utils::getParameter('name');
-  $url = sotf_Utils::getParameter('url');
-  // todo: check exists?
-  $node->nodeId = $nid;
-  $node->set('node_id', $nid);
-  $node->set('name', $name);
-  $node->set('url', $url);
-  $node->create();
-  
-  $neighbor = new sotf_Neighbour();
-  $neighbor->set('node_id', $nid);
-  $neighbor->set('use_for_outgoing', 'f');
-  $neighbor->set('accept_incoming', 't');
-  $neighbor->create();
- 
-  $page->redirect("closeAndRefresh?anchor=network");
+  if(!$url) {
+    $page->addStatusMsg('no_url_given');
+  } elseif(sotf_Node::getNodeById($nid)) {
+    $page->addStatusMsg('node_id_occupied');
+  } else {
+    $neighbor = new sotf_Neighbour();
+    $neighbor->set('node_id', $nid);
+    $neighbor->set('use_for_outgoing', 'f');
+    $neighbor->set('accept_incoming', 't');
+    $neighbor->set('pending_url', $url);
+    $neighbor->create();
+    $page->redirect("closeAndRefresh?anchor=network");
+    exit;
+  }
+  $page->redirect("createNeighbour.php?node_id=$nid&url=" . urlencode($url) . "#network");
   exit;
 }
+
+
 
 // generate output
 
@@ -45,7 +47,9 @@ while(list(,$node)= each($nodes)) {
   }
 }
 
-$smarty->assign('NODES',$nodeData);
+ $smarty->assign('NODES',$nodeData);
+ $smarty->assign('NID', $nid);
+ $smarty->assign('URL', $url);
 
 
 $page->sendPopup();

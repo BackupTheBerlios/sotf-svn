@@ -45,15 +45,11 @@
                 <table>
                   <tr>
                     <td nowrap>{#id#}:</td>
-                    <td><input name="node_id" value="{$SERIES_DATA.title}" size="3" maxlength="255"  /></td>
-                  </tr>
-                  <tr>
-                    <td>{#name#}:</td>
-                    <td><input name="name" value="{$SERIES_DATA.title}" size="20" maxlength="255" /></td>
+                    <td><input name="node_id" value="{$NID}" size="3" maxlength="3"  /></td>
                   </tr>
                   <tr>
                     <td>{#url#}:</td>
-                    <td><input name="url" value="{$SERIES_DATA.title}" size="50" maxlength="255"  />
+                    <td><input name="url" value="{$URL}" size="50" maxlength="200"  />
                  </tr>
                 </table>
                 <input type="submit" name="create_new_node" value="{#create#}">

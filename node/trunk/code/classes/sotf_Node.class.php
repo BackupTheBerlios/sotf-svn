@@ -18,7 +18,10 @@ class sotf_Node extends sotf_NodeObject {
 		$id = $db->getOne("SELECT id FROM sotf_nodes WHERE node_id = '$nodeId'");
 		if(DB::isError($id))
 			raiseError($id);
-		return new sotf_Node($id);
+    if($id)
+      return new sotf_Node($id);
+    else
+      return NULL;
 	}
 
 	/** 

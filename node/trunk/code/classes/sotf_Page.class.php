@@ -230,13 +230,16 @@ class sotf_Page
 	}
 
 	function alertWithErrors() {
-	  if(!noErrors()) {
+	  if(count($this->errors)>0) {
 		 debug("alertWithErrors()");
-		 print("<script type=\"text/javascript\" language=\"javascript1.1\">");
+		 print("\n<script type=\"text/javascript\" language=\"javascript1.1\">");
 		 foreach($this->errors as $err) {
-			print "alert('$err');";
+			print "\nalert('" . htmlspecialchars(strtr($err, "\n\r\t\0",'  '), ENT_QUOTES) . "');";
 		 }
-		 print("</script>");
+		 print("\nhistory.back();");
+		 print("\n</script>");
+	  } else {
+		 debug("no errors");
 	  }
 	}
 

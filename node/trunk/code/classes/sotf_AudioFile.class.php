@@ -101,14 +101,16 @@ class sotf_AudioFile extends sotf_File
 	* Encode format to a filename.
 	*
 	* @return	string	Encoded format. Example: 24kbps_1chn_22050Hz.mp3
+	* @use	$audioFormats, $bitrateTolerance
 	*/
 	function getFormatFilename()
 	{
 		global $audioFormats;
+		global $bitrateTolerance;
 
 		$bitrate = $this->bitrate;
 		for ($i=0;$i<count($audioFormats);$i++)
-			if (abs($audioFormats[$i]['bitrate'] - $this->bitrate) < 10)
+			if (abs($audioFormats[$i]['bitrate'] - $this->bitrate) < $bitrateTolerance)
 				$bitrate = $audioFormats[$i]['bitrate'];
 		return $bitrate . 'kbps_' . $this->channels . 'chn_' . $this->samplerate . 'Hz.' . $this->format;
 	} // end func getFormatFilename

@@ -16,7 +16,7 @@ class sotf_Neighbour extends sotf_Object {
 		global $db;
 		$data = $db->getRow("SELECT * FROM sotf_neighbours WHERE node_id = '$nodeId'");
     if(!$data) {
-			logError('no such neighbour: $nodeId');
+			//logError('no such neighbour: $nodeId');
       return null;
     }
 		return new sotf_Node($data['id'], $data);

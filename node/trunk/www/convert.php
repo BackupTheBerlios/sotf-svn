@@ -1,20 +1,7 @@
 <?php
-/** This special PHP doesn't use Smarty, because it generates HTML on-the-fly
-    Works in Mozilla 1.0 and Internet Explorer 5.0 */
+/** This special PHP doesn't use Smarty, because it generates HTML on-the-fly */
 
 require("init.inc.php");
-
-$helperdir = "C:\sotf\helpers";
-$lame = $helperdir."/lame";
-$sox = $helperdir."/sox";
-$oggenc = $helperdir."/oggenc";
-$oggdec = $helperdir."/oggdec";
-
-$progressBarChar = '|';
-$progressBarLength = 100;
-
-$oggencRegexp = "/^\t\[(...)\..%\].*$/";
-$lameencRegexp = "/^.{6}?\/.{7}?\((..)%\)\|.*$/";
 
 $page->popup = true;
 

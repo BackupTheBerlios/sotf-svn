@@ -160,7 +160,7 @@ function addError($msg) {
   global $page;
   if(DB::isError($msg)) 
     $msg = "SQL error: " . $msg->getMessage();
-  debug("added error", $msg);
+  logError($msg);
   $page->errors[] = $page->getlocalized($msg);
 }
 
@@ -168,7 +168,7 @@ function raiseError($msg) {
   global $page;
   if(DB::isError($msg)) 
     $msg = "SQL error: " . $msg->getMessage();
-  debug("raised error", $msg);
+  logError($msg);
   $page->errors[] = $page->getlocalized($msg);
   $page->halt();
   exit;

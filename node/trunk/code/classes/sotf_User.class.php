@@ -88,7 +88,9 @@ class sotf_User
 		}
 	}
 
-  // TODO: when deleting user delete from sotf_user_permissions
+  // TODO: when deleting user delete from all tables (no foreign key)
+  function delete() {
+  }
 	
 	function getUserDir() {
 		global $userDirs;

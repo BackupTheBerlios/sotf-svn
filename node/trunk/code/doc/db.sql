@@ -25,7 +25,7 @@ CREATE TABLE "sotf_user_prefs" (
 CREATE TABLE "sotf_user_history" (
 -- past actions of the user, may be used for collaborative filtering
 	"id" serial PRIMARY KEY, -- just an id
-	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE, -- cannot reference to sadm.authenticate(auth_id)
+	"user_id" int, -- cannot reference to sadm.authenticate(auth_id)
 	"action" varchar(30), -- type of action the user did with object
 	"object_id" varchar(12),
 	"when" timestamptz
@@ -57,11 +57,12 @@ CREATE TABLE "sotf_nodes" (
 CREATE TABLE "sotf_neighbours" (
 -- the neighbours of this node
 	"id" serial PRIMARY KEY, 	-- just an id
-	"node_id" int2 REFERENCES sotf_nodes(node_id) ON DELETE CASCADE,
+	"node_id" int2, -- same as in sotf_nodes, except for pending nodes
 	"accept_incoming" bool DEFAULT 't'::bool,
 	"use_for_outgoing" bool DEFAULT 't'::bool,
 	"last_incoming" timestamptz,
 	"last_outgoing" timestamptz,
+	"pending_url" varchar(200),
 	CONSTRAINT "sotf_neighbours_uniq" UNIQUE ("node_id")
 );
 
@@ -357,7 +358,7 @@ CREATE TABLE "sotf_playlists" (
 -- user_id + order_id should be unique, but please don't put a constraint on this!
 	"id" serial PRIMARY KEY, -- just an id
 	"prog_id" varchar(12) NOT NULL,
-	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE, -- cannot reference to sadm.authenticate(auth_id)
+	"user_id" int, -- cannot reference to sadm.authenticate(auth_id)
 	"order_id" int,
 	"type" VARCHAR(10), -- use unclear yet
 	CONSTRAINT "sotf_playlists_u" UNIQUE ("prog_id", "user_id"),
@@ -370,7 +371,6 @@ CREATE TABLE "sotf_ratings" (
 	"prog_id" varchar(12) NOT NULL,											-- sotf programme id
 	"user_node_id" int2,												-- node from where user came
 	"user_id" int,														-- user who rated or NULL if anonymous
-	-- REFERENCES sotf_user_prefs(id) ON DELETE CASCADE
 	-- todo: delete ratings of a deleted user or not?
 	"rate" SMALLINT NOT NULL DEFAULT '0',
 	"host" varchar(100) NOT NULL,									-- host from where the rating arrived
@@ -434,7 +434,7 @@ CREATE TABLE "sotf_user_progs" (
 -- stores editor-specific private settings for programmes
 -- REPLICATED
 	"id" serial PRIMARY KEY, 		-- just an id
-	"user_id"  int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE, 				-- cannot reference to sadm.authenticate(auth_id)
+	"user_id"  int, 				-- cannot reference to sadm.authenticate(auth_id)
 	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
 	"comments" text,					-- editor's private comments
 	"flags" varchar(20)				-- various flags (e.g. important, to-do)

@@ -40,11 +40,12 @@ class sotf_AudioCheck
 	*
 	* @constructor sotf_AudioCheck
 	* @param	object	$list	FileList object contains list of files to be checked
-	* @use	$audioFormats
+	* @use	$audioFormats, $bitrateTolerance
 	*/
 	function sotf_AudioCheck($list)
 	{
 		global $audioFormats;
+		global $bitrateTolerance;
 
 		$this->list = & $list;
 		for($i=0;$i<count($audioFormats);$i++)			// walk thru the requested formats
@@ -59,7 +60,7 @@ class sotf_AudioCheck
 					continue;							// This is not the one we need, get another one
 				//if ($audioFormats[$i]['bitrate'] != $this->list->list[$j]->bitrate)
 				//	continue;							// This is not the one we need, get another one
-				if (abs($this->list->list[$j]->avarange_bitrate - $audioFormats[$i]['bitrate']) > 10)
+				if (abs($this->list->list[$j]->avarange_bitrate - $audioFormats[$i]['bitrate']) > $bitrateTolerance)
 					continue;							// This is not the one we need, get another one
 				else
 				{
@@ -108,12 +109,12 @@ class sotf_AudioCheck
 	*
 	* @param	object	$audiofile	sotf_AudioFile object to be checked
 	* @return	mixed	If the audio file satisfies any requestment returns an integer which is an index of the $audioFormats global variable. If the file satisfy any requestment returns boolean false
-	* @use	$audioFormats
+	* @use	$audioFormats, $bitrateTolerance
 	*/
 	function getRequestIndex($audiofile)
 	{
 		global $audioFormats;
-
+		global $bitrateTolerance;
 		for($i=0;$i<count($audioFormats);$i++)			// walk thru the requested formats
 		{
 			if ($audiofile->type != "audio")
@@ -122,7 +123,7 @@ class sotf_AudioCheck
 				continue;								// This is not the one we need, get another one
 			//if ($audioFormats[$i]['bitrate'] != $audiofile->bitrate)
 			//	continue;								// This is not the one we need, get another one
-			if (abs($audiofile->avarange_bitrate - $audioFormats[$i]['bitrate']) > 10)
+			if (abs($audiofile->avarange_bitrate - $audioFormats[$i]['bitrate']) > $bitrateTolerance)
 				continue;							// This is not the one we need, get another one
 			if ($audioFormats[$i]['channels'] != $audiofile->channels)
 				continue;								// This is not the one we need, get another one
