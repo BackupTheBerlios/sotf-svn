@@ -1,0 +1,1045 @@
+# general translations
+ok = Ok
+cancel = Abbrechen
+Save = Sichern
+Date = Datum
+Station = Sender
+Change = Ändern
+close = Schließen
+Search = Suche starten
+node = Node
+Yes = Ja.
+No = Nein.
+Up = Nach oben
+Down = Nach unten
+Preferences = Voreinstellungen
+Username = User name
+Password = Passwort
+More = Mehr...
+sec = s
+optional = optional
+Metadata = Metadaten
+
+contact_node_admin = Node administrator:
+
+# stream info
+# name for stream mountpoint
+playlist_name = Mein Programm
+now_playing = Jetzt spielt:
+reconnect = Erneut verbinden
+stop = Stop
+jingle = Jingle
+unknown_audio = Unbekanntes Audio
+
+# languages
+alb = Albanisch
+eng = Englisch
+deu = Deutsch
+dut = Holländisch
+hun = Ungarisch
+ita = Italienisch
+esl = Spanisch
+ces = Tschechisch
+slo = Slovakisch
+pol = Polnisch
+fra = Französisch
+rum = Rumänisch
+rom = Romanisch
+rus = Russisch
+any_language = Beliebige Sprache
+no_lang = keine Sprache
+no_second_lang = keine zweite Sprache
+no_third_lang = keine dritte Sprache
+
+#navigation bar
+Home = Home
+Help = Hilfe
+About = Impressum
+Playlist = Mein Programm
+Personal = Voreinstellungen
+Logout = Abmelden
+Login = Anmelden
+Register = Anmelden
+EditorPage = Programmkonsole
+AdminPage = Admin
+advSearch = Expertensuche
+Stations = Sender
+Topics = Themen
+
+#permissions
+perm_admin = Administrator
+perm_change = Ändern
+perm_create = Erstellen
+perm_delete = Löschen
+perm_authorize = Berechtigungen
+
+#this is needed for the XML-RPC server
+comment_notification_subject = Es wurde ein Kommentar zu Ihrer Radioshow abgegeben
+
+#error window
+or = oder
+errors_occured = Fehler bei der Ausführung
+error_exclaim = Der Fehler wurde protokolliert. Sie können nun:
+error_go_back = Zurück zur vorigen Seite
+error_go_safe_page = Zurück zu einer sicheren Seite
+error_go_home = Zurück zur Hauptseite
+error_close = Fenster schliessen
+
+#common errors
+invalid_url = Ungültige URL
+not_an_image = Die Datei konnte nicht als Bild verarbeitet werden.
+not_a_number = Keine Zahl
+select_file = Bitte Datei auswählen!
+format_already_present = Dieses Format existiert schon. Bitte vorher die Datei löschen!
+no_such_file = Die Datei eistiert nicht.
+cannot_rate_no_authkey = Ohne Cookie können keine Beurteilungen angenommen werden.
+no_file_to_listen = Es ist keine Audiodatei freigegeben.
+conversion_not_supported = Diese Audiokonvertierung wird nicht unterstützt.
+audio_length_no_match = Die Länge dieser Audiodatei weicht von den anderen ab.
+no_permission = Sie würden Zugriffsrecht %1 brauchen, umd das zu tun!
+conversion_failed = Audio-Konvertierung fehlgeschlagen!
+operation_for_local_objects_only = Diese Operation ist nur fŸr lokale Objekte erlaubt!
+no_such_object = Objekt mit dieser ID kann nich aufgefunden werden
+
+confirm_unsaved = Bitte sichern Sie zuerst. Wollen Sie die Änderungen verwerfen?
+
+#list splitting
+of = von
+refresh = Neu laden
+first = Erste
+prev = Vorherige
+next = Nächste
+last = Letzte
+to = -
+no_results = Keine Ergebnisse
+
+# translations for database field names
+station = Sendername
+production_date = Produktionsdatum
+language = Sprache
+expiry_date = Verfallsdatum
+series = Serie
+track = Track
+topic = Thema
+entry_date = Erstellungsdatum
+broadcast_date = Sendedatum
+modify_date = Letzte Änderung
+owner = Eigentümer
+person = Person
+title = Titel
+keywords = Schlagworte
+abstract = Beschreibung
+length = Länge
+rating = Bewertung
+contact_email = Kantakt e-Mail
+contact_phone = Kontakt Telefonnummer
+seriestitle = Serien-Titel
+seriesdescription = Serien-Beschreibung
+spatial_coverage = regionale Zuordnung
+temporal_coverage = zeitliche Zuordnung
+genre_id = Genre
+alternative_title = Alternativer Titel
+episode_title = Episoden-Titel
+
+# audio conversion messages
+conversion_started = Konvertieren in:
+encoding_mp3 = In MP3 Datei wandeln...
+decoding_mp3 = MP3 Datei in PCM Datei dekodieren...
+encoding_ogg = In OggVorbis Datei wandeln...
+decoding_ogg = OggVorbis Datei in PCM dekodieren...
+convert_mono = Mono PCM Datei in Stereo PCM wandeln...
+
+[rss]
+search_in_station = Suche '%1'
+new_programmes = Neue Sendungen:
+Statistics = Statistik
+Rights = Rechte
+for_whole_prg = Für die ganze Sendung
+listen = Listen the program from the "StreamOnTheFly Archiv" here:
+# the program from the "StreamOnTheFly Archiv" here:
+listen_as = Hören
+download_as = Runterladen
+no_rating = keine Bewertung
+by = von
+Roles = Mitwirkende
+Listens = Hörer
+Downloads = Downloads
+Rating = Bewertung
+station = Sender
+series = Serie
+title = Titel
+alternative_title = Alternativer Titel
+episode_title = Episoden-Titel
+episode_sequence = Episoden-Reihe
+Links = Links
+genre = Art
+
+[search]
+Results = Ergebnisse durchsuchen
+No_results = Keine Ergebnisse
+
+[topics]
+topics_title = Themen
+
+[index]
+intro = Willkommen bei <a href="/sotf/index.htm">StreamOnTheFly!</a>
+Login_tab = Anmelden
+logged_in_as = Angemeldet als:
+Go = Go
+my_playlist = Mein Programm
+
+statistics = Statistik
+nodes = Nodes
+stations = Sender
+progs = Sendungen
+mb_of_audio = MB Audiodaten
+hours_of_audio = Stunden Audio
+listens_and_downloads = Hörer und Downloads
+users = Registrierte User
+
+contacts = Kontakt
+node_admin = Node operator
+contacts_text = <a target="_blank" href="http://www.streamonthefly.com">StreamOnTheFly Projekt</a><br><a target="_blank" href="http://dsd.sztaki.hu">SZTAKI DSD</a>
+
+recent_uploads = Neueste Sendungen
+topics = Themen
+top_topics = Topthemen:
+New_shows = Neue Sendungen:
+No_news = Keine neuen Sendungen
+Default_query = Standardsuche:
+No_results = Keine Ergebnisse
+total = Alle Ergebnisse:
+
+[stations]
+admin_tasks = Als privilegierter Benutzer können sie:
+create_station = Sender erzeugen
+newest_first = Sortiert nach Datum
+by_name = Sortiert nach Namen
+change_mode = Sortierung/Filter ändern
+logo = Logo
+languages = Sprache(n):
+add_prg = Programm hinzufügen
+delete = Sender löschen
+delete_station_confirm = Sind sie sicher, diesen Sender zu löschen?
+managed_by = Verwaltet von
+edit_node_rights = Benutzerrechte auf dem Node bearbeiten
+stations = Sender
+icon = Logo
+edit = Einstellungen bearbeiten
+no_station = Noch keine Sender hinzugefügt.
+create_ok = Sender erfolgreich erstellt
+delete_ok = Sender erfolgreich gelöscht
+
+[createStation]
+create_station = Sender hinzufügen
+station_name = Sendername
+description = Beschreibung
+station_manager = Sender-Manager
+create = Erzeugen
+no_permission = Keine Berechtigung, um einen Sender zu erzeugen.
+userlist = Benutzerliste
+select_manager = Bitte wählen sie einen Benutzer als Sender-Manager.
+name_in_use = Bereits ein Sender mit dem selben Namen vorhanden.
+illegal_name = Der Sendername enthält nicht erlaubte Zeichen.
+station_created = Neuer Sender erfolgreich erzeugt
+
+[editStation]
+edit_station = Einstellungen für Sender bearbeiten
+general_data = Allgemeine Informationen
+station_name = Sendername
+url = Webseite (wenn vorhanden)
+languages = Verwendete Sprachen
+description = Beschreibung
+save = Speichern
+illegal_name = Der Sendername enthält nicht erlaubte Zeichen.
+access_permissions = Redakteure und Berechtigungen
+Permissions = Berechtigungen
+icons_and_jingles = Logo und Jingle
+username = Benutzername
+permissions = Berechtigungen
+actions = Aktionen
+delete = Löschen
+inherited_perms = von höherer Ebene vorgegebene Zugangsrechte
+no_perms = Niemand hat Berechtigungen für diesen Sender ?
+change_perm = Benutzerrechte ändern/hinzufügen
+change = Ändern
+deleted_permissions_for = Alle Berechtigungen für Benutzer %1 gelöscht
+deleted_contact = Kontakt %1 gelöscht
+ok_icon = Die neue Datei wurde als Logo gesetzt.
+error_icon = Diese Datei kann nicht als Logo verwendet werden.
+ok_jingle = Die neue Datei wurde als Jinge gesetzt.
+error_jingle = Diese Datei kann nicht als Jingle verwendet werden.
+userfiles = Meine Dateien
+userfiles_expl = Sie können hier eine Datei auswählen und dann als Logo oder Jingle verwenden.
+upload_file = Meiner Dateiliste hinzufügen
+view = Betrachten
+set_jingle = Als Jingle setzten
+set_icon = Als Logo setzten
+no_files = Noch keine Dateien vorhanden.
+upload_expl = Wenn die Datei, die sie als Jingle oder Icon verwenden wollen, noch nicht in ihrer Dateiliste vorhanden ist, dann können sie eine Datei hier raufladen.
+icon = Logo
+no_icon = Kein Logo
+jingle_list = Jingle Liste
+format = Format
+bitrate = Bitrate
+channels = Kanäle
+samplerate = Samplerate
+no_jingle = Kein Jingle
+upload_jingle = Jingle raufladen
+missing = fehlt
+exists = vorhanden
+convert = Von anderen konvertieren
+delete = Löschen
+
+# roles and contacts
+Roles = Kontakte und Rollen
+Role = Funktion
+Contact = Kontakt
+no_roles = Keine Kontake vorhanden.
+add_new_role = Neue Funktion hinzufügen
+edit_role = Funktion editieren
+edit_contact = Kontakt bearbeiten
+editcontact = Kontakt bearbeiten
+series = Serien
+series_title = Titel
+no_series = Keine Serien
+add_series = Serie hinzufügen
+
+[changeStation]
+changeStation = Sender für diese Sendung wechseln
+Add = Verschieben
+
+[createSeries]
+create_series = Serie erstellen
+Create = Erstellen
+
+[addToSeries]
+addtoseries = Programm einer Serie hinzufügen
+Add = Hinzufügen
+
+[editSeries]
+edit_series = Einstellungen für Serien ändern
+create_series = Serie hinzufügen
+general_data = Allgemeine Daten
+title = Titel
+url = Webseite (wenn vorhanden)
+languages = Funktion
+description = Beschreibung
+save = Speichern
+illegal_name = Der eingebene Sendername enthält nicht erlaubte Zeichen.
+icons_and_jingles = Logo
+
+#perms
+access_permissions = Redakteure und Berechtigungen
+Permissions = Berechtigungen
+username = Benutzername
+permissions = Berechtigungen
+actions = Aktionen
+delete = Löschen
+inherited_perms = vom "node" bzw. der "station" vorgegebene Zugangsrechte
+change_perm = Benutzerrechte hinzufügen/ändern
+change = Ändern
+deleted_permissions_for = Alle Berechtigungen für Benutzer %1 gelöscht
+deleted_contact = Kontakt %1 gelöscht
+ok_icon = Die neue Datei wurde als Logo gesetzt.
+error_icon = Diese Datei kann nicht als Logo verwendet werden.
+ok_jingle = Die neue Datei wurde als Jingle gesetzt.
+error_jingle = Diese Datei kann nicht als Jingle verwendet werden.
+userfiles = Meine Dateien
+userfiles_expl = Sie können hier eine Datei wählen und als Logo oder Jingle verwenden.
+upload_file = Meinen Dateien hinzufügen
+view = Betrachten
+set_jingle = Als Jingle setzten
+set_icon = Als Logo setzten
+no_files = Noch keine Dateien vorhanden.
+upload_expl = Wenn die Datei, die sie als Jingle oder Icon verwenden wollen, noch nicht in ihrer Dateiliste vorhanden ist, dann können sie eine Datei hier raufladen.
+icon = Logo
+no_icon = Kein Logo
+jingle_list = Jingle-Liste
+format = Format
+bitrate = Bitrate
+channels = Kanäle
+samplerate = Samplerate
+send_text = Audiodatei auswählen
+no_jingle = Kein Jingle
+upload_jingle = Jingle raufladen
+havejingle = Der Sender hat einen Jingle im folgenden Format
+nohavejingle = Der Sender hat keinen Jingle im folgenden Format
+missing = fehlt
+exists = vorhanden
+convert = Von anderen konvertieren
+delete = Löschen
+# roles and contacts
+Roles = Kontakte und Funktionen
+Role = Funktion
+Contact = Kontakt
+no_roles = Keine Kontakte vorhanden
+add_new_role = Neue Funktion hinzufügen
+edit_role = Funktion bearbeiten
+edit_contact = Kontakt ändern
+editcontact = Kontakt bearbeiten
+
+finish = Bearbeiten beenden
+
+[editPermissions]
+change_permissions = Berechtigungen ändern
+target = Ziel
+user = Benutzer
+admin = Vollzugriff
+admin_expl = Alle folgenden Berechtigungen
+change = Ändern
+change_expl = Einstellungen für dieses Objekt ändern (z.B. Beschreibung oder Logo)
+create = Erzeugen
+create_expl = Neue Teile im Objekt erzeugen (z.B. Sender, Serien, ...)
+delete = Löschen
+delete_expl = Teile in dem Objekt löschen (z.B. Programm eines Senders)
+authorize = Berechtigen
+authorize_expl = Anderen Personen Berechtigungen für dieses Objekt erlauben oder nicht
+save = Speichern
+self_perm_change_not_allowed = Die eigenen Berechtigungen zu ändern ist nicht erlaubt!
+
+too_many_matches = Zu viele Benutzer gefunden:
+no_matches = Keine Benutzer gefunden.
+find_user = Benutzer suchen
+prefix_search = Prefix match
+new_search = Neue Benutzersuche starten
+use_template = Berechtigungsmaske verwenden
+owner = Eigentümer
+manager = Manager
+editor = Redakteur
+special_perms = Spezielle Berechtigungen
+
+[editRole]
+edit_role = Funktion bearbeiten
+change_role = Funktion ändern
+new_role = Neue Funktion
+Name = Name
+Role = Funktion
+give_contact_name = Bitte einen Namen eingeben!
+Create_new = Neuen Kontakt anlegen
+Change = Ändern
+Add = Hinzufügen
+role_exists = Dieser Kontakt mit dieser Funktion existiert bereits in der Datenbank!
+
+how_to_select_contact = Wie einen Kontakt suchen/auswählen?
+select_scope = Welche Kontakte sollen in der oberen Liste angezeigt werden:
+my_scope = Kontakte, die ich angelegt habe
+series_scope = Kontakte, die in der Serie verwendet werden
+station_scope = Kontakte, die im Sender verwendet werden
+local_scope = Alle Kontakte dieses Nodes (lange Liste!)
+all_scope = Alle Kontakte (sehr lange Liste!)
+change_scope = Ändern
+search_contact = Kontakt suchen
+search = Suchen
+
+create_new_if_needed = Bei Bedarf neuen Kontakt erstellen:
+no_contacts_found = Keine Kontakte.
+contact_search_for = Kontakt suchen für:
+
+
+[createContact]
+create_contact = Neuen Kontakt anlegen
+contact_name_exists = Name existiert bereits!
+Create = Erzeugen
+Icon = Logo
+
+[showContact]
+name = Name
+alias = Alias
+acronym = Kurzbezeichung
+intro = Kurze Beschreibung
+email = e-Mail
+address = Adresse
+phone = Telefon
+cellphone = Mobil
+fax = Fax
+url = Webseite
+edit_contact = Kontakt bearbeiten
+has_programs = Beiträge für %1 Programme
+#in_station = %1 of station %2 (*)
+#in_series = %1 of series %2 (*)
+of_station = von Sender
+of_series = von Serie
+
+[showContactProgs]
+programs_by = Programm von %1
+contributions = Sendungen mit
+show_contact = Kontakt anzeigen
+
+[editContact]
+delete_contact = Kontakt löschen
+delete_contact_confirm = Sind Sie sicher, diesen Kontakt zu löschen? Alle Funktionen für diesen Kontakt werden ebenfalls gelöscht
+edit_contact = Kontakt bearbeiten
+general_data = Allgemeine Daten
+name = Name
+alias = Alias
+acronym = Kurzbezeichung
+intro = Kurze Beschreibung
+email = e-Mail
+address = Adresse
+phone = Telefon
+cellphone = Mobil
+fax = Fax
+url = Webseite
+save = Speichern
+userfiles = Meine Dateien
+userfiles_expl = Sie können hier eine Datei auswählen und es als Icon für diesen Kontakt verwenden.
+upload_file = Meinen Dateien hinzufügen
+view = Betrachten
+set_icon = Als Logo setzten
+no_files = Noch keine Dateien vorhanden.
+upload_expl = Wenn die Datei, die sie als Jingle oder Icon verwenden wollen, noch nicht in ihrer Dateiliste vorhanden ist, dann können sie eine Datei hier raufladen.
+icon = Logo
+no_icon = Kein Icon
+icon_ok = Icon erfolgreich geändert
+icon_error = Icon konnte nicht geändert werden!
+finish = Bearbeiten beenden
+
+# perms
+access_permissions = Redakteure und Berechtigungen
+Permissions = Berechtigungen
+username = Benutzername
+permissions = Berechtigungen
+actions = Aktionen
+delete = Löschen
+inherited_perms = vom "node" bzw. der "station" vorgegebene Zugangsrechte
+change_perm = Benutzerrechte hinzufügen/ändern
+change = Ändern
+deleted_permissions_for = Alle Berechtigungen für Benutzer %1 gelöscht
+
+[showStation]
+persons_involved = Beiträge von
+edit_station = Einstellungen für den Sender ändern
+show_contact = Kontakt anzeigen
+general = Allgemeine Daten
+station = Sender
+series = Serie
+add_series = Serie hinzufügen
+programmes = Programme
+edit_series = Einstellungen ändern
+delete_series = Serie löschen
+delete_series_confirm = Sind Sie sicher, dies Serie zu löschen?
+edit_prog = Einstellungen ändern
+delete_prog = Programm löschen
+delete_prog_confirm = Sind sie sicher, dieses Programm zu löschen?
+add_prg = Programm hinzufügen
+
+
+[showSeries]
+show_contact = Kontakt anzeigen
+series = Serie
+station = Sender
+general = Allgemeine Daten
+persons_involved = Beiträge von
+programmes = Programme
+edit_series = Einstellungen ändern
+edit_prog = Einstellungen ändern
+delete_prog = Programm löschen
+delete_prog_confirm = Sind sie sicher, dieses Programm zu löschen?
+add_prg = Programm hinzufügen
+
+[editor]
+will_expire = Sie haben %1 Programm(e), die in %2 Tagen ablaufen!
+manage_files = Eigene Dateien verwalten
+managefiles = Dateiverwaltung
+add_programme = Als neues Programm hinzufügen
+user_ftp_access = FTP-Zugriff auf die eigenen Dateien
+upload_file = Den eigenen Dateien hinzufügen
+select_file = Bitte eine Datei auswählen
+refresh = Anzeige der unbearbeiteten Dateien
+pending_audio = noch zu bearbeitende Dateien
+create_new_prg = Neues Programm hinzufügen
+manage_files = Eigene Dateien verwalten
+my_progs = Meine Programme
+Filter = Filter
+sortby = Sortieren nach
+Flag = Markierung
+Flags = Markierungen
+Title_abs = Titel / Beschreibung
+Station_series = Sender / Serie
+Dates = Datum
+exp_d = Verfallsdatum
+entry_d = Erstellungsdatum
+prod_d = Produziert
+broadcast_d = Gesendet
+Published = Veröffentlicht
+Stats = Statistik
+visits = Besuche
+listens = Hörer
+downloads = Downloads
+rating = Bewertung
+by = von
+Actions = Aktionen
+Edit_files = Dateien bearbeiten
+Edit_meta = Metadaten bearbeiten
+Delete = Löschen
+delete_prog_confirm = Sind sie sicher, dieses Programm zu löschen?
+
+allseries = Alle Serien
+title = Titel
+series = Serie
+station = Sender
+entry_date = Erstellungsdatum
+expiry_date = Verfallsdatum
+all = Alle
+published = Veröffentlicht
+unpublished = Unveröffentlicht
+urgent = Dringend
+todo = Zu Erledigen
+cat1 = Benutzerdefiniert1
+cat2 = Benutzerdefiniert2
+cat3 = Benutzerdefiniert3
+cat4 = Benutzerdefiniert4
+cat5 = Benutzerdefiniert5
+none = Kein
+
+submit = Aktualisieren
+
+export = Ausgabe in Format:
+get_xbmf = XBMF
+get_soma = SOMA-Metadaten
+
+[test]
+
+[advsearch]
+Advanced_search = Erweiterte Suche
+after = nach
+before = vor
+is = ist
+contains = enthält
+begins_with = beginnt mit
+does_not_contain = enthält nicht
+is_not_equal = nicht gleich
+is_not = ist nicht
+shorter = ist kürzer
+longer = ist länger
+
+your_query_is = Ihre Suche
+empty = ist leer
+AND = UND
+OR = ODER
+delete = Suchbegriff löschen
+seconds = Sekunden
+delete = Suchbegriff löschen
+
+box1 = 1. Suchbegriff hinzufügen
+add = Zur Suche hinzufügen
+new_search = Neue Suche
+
+box2 = 2. Sortierung wählen
+sort1 = Ergebnis sortieren nach
+sort2 = und
+run = Suche starten
+upload_query = Abfrage raufladen
+desc = absteigend
+portal_http = Portal Adresse (z.B. http://sotf.dsd.sztaki.hu/portal/portal.php/portal_name)
+URL_missing = URL nicht gefunden
+
+box3 = 3. Suche/n verwalten
+load = Suche laden
+default = Zu Standard machen
+deleteq = Suche lüschen
+save = Suche speichern
+
+[advsearchresults]
+Results = Suchergebnis
+by = von
+on_date = am
+No_results = Keine Ergebnisse
+
+is = ist
+contains = enthält
+begins_with = beginnt mit
+does_not_contain = enthält nicht
+is_not_equal = nicht gleich
+is_not = ist nicht
+bigger = nach
+smaller = vor
+
+your_query_is = Ihre Suche lautet
+AND = UND
+OR = ODER
+back = Zurück
+
+upload_query = Abfrage an ihr Portal schicken
+portal_http = Portal-Adresse (z.B. http://sotf.dsd.sztaki.hu/portal/portal.php/portal_name)
+
+[portal_upload]
+portal_http = Portal-Adresse (z.B. http://sotf.dsd.sztaki.hu/portal/www/portal.php/portal_name)
+URL_not_found = URL nicht gefunden
+upload = Programm raufladen
+upload_query = Abfrage raufladen
+upload_playlist = Mein Programm raufladen
+please_wait = Bitte Warten...
+
+[login]
+missing_parameters = Bitte Benutzername und Passwort eingeben
+invalid_login = Ungültiger Benutzername / Passwort!
+
+[register]
+username_in_use = Benutzername bereits vorhanden
+invalid_username = Ungültiger Benutzername
+Password_confirm = Passwort bestätigen
+password_too_short = Passwort zu kurz
+password_mismatch = Passwörter nicht gleich
+Realname = Aufrufe
+Email = e-Mail
+Language = Sprache
+
+[get]
+not_published_yet = Dieses Programm ist noch nicht für die Öffentlichkeit freigegeben.
+unpublished_warning = Unveröffentlicht
+please_enter = Bitte geben sie die ID (Nummer) des ausgewählten Programms ein!
+Visits = Aufrufe
+Listens = Hörer
+Downloads = Downloads
+Rating = Beurteilung
+References = Portale
+Edit = Bearbeiten
+Content = Inhalt
+Statistics = Statistik
+no_references = Keine Referenzen
+Comments = Kommentare
+From = Von
+Until = Bis
+Nodes = Node-Netztwerk
+Portals = Portale
+Visits_p = Besucher
+Listens_p = Hörer
+
+prog = Programm
+station = Sender
+series = Serie
+title = Titel
+alternative_title = Untertitel
+episode_title = Episodentitel
+episode_sequence = Episode
+author = Autor
+production_date = Produktionsdatum
+broadcast_date = Sendedatum
+expiry_date = Verfallsdatum
+modify_date = Lezte Änderung
+entry_date = Speicherdatum
+keywords = Stichworte
+abstract = Inhaltsangabe
+language = Sprache
+genre = Art
+temporal_coverage = zeitliche Zuordnung
+spatial_coverage = regionale Zuordnung
+topics = Themen
+
+Roles = Mitwirkende
+
+Rights = Rechte
+no_rights = Keine Rechte definiert
+for_whole_prg = Für die ganze Sendung
+
+stats_may_be_old = Die hier gezeigten Daten wurden das letzte Mal aktualisiert am
+Download = Runterladen
+Listen = Hören
+edit_files = Manage files
+edit_meta = Metadaten ändern
+audio_file_list = Audiodateien:
+other_file_list = Andere Dateien
+no_files = Keine Dateien
+bytes = Byte
+View = Ansicht/Download
+viewpopup = Ansicht
+programme_audio = Audio
+
+Links = Links
+put_into_playlist = Zu meinem Programm hinzufügen
+upload_to_portal = Auf mein Portal raufladen
+rate_it = Diese Sendung beurteilen
+change_rating = Beurteilung ändern
+by = von
+
+[editMeta]
+New_prog_step1 = Neues Programm hinzufügen - Schritt 2
+goto_step1 = Zurück zu Schritt 1
+editmeta = Metadaten bearbeiten
+edit_files = Dateien verwalten
+
+General_metadata = Allgemeine Metadaten
+
+station = Sender
+change_station = Sender wechseln
+changestation = SenderWechseln
+series = Serie
+not_in_series = in keiner Serie
+change_series = Serie hinzufügen/ändern
+changeseries = Serie ändern
+remove_from_series = Aus Serie löschen
+title = Titel
+alternative_title = Alternativer Titel
+episode_title = Episodentitel
+episode_sequence = Episoden-Reihe
+author = Autor
+production_date = Produktionsdatum
+broadcast_date = Sendedatum
+broadcast_time = zeit:
+expiry_date = Verfallsdatum
+keywords = Schlagworte
+abstract = Beschreibung
+language = Sprache
+genre = Art
+no_genre = kein
+temporal_coverage = zeitliche Zuordnung
+spatial_coverage = regionale Zuordnung
+
+topics = Themen
+no_topics = Noch keine Themen vorhanden
+topicpopup = Thema hinzufügen
+add_topic = Thema hinzufügen
+
+finish_not_publish = Beenden ohne Veröffentlichung
+finish_publish = Beenden und veröffentlichen
+
+Rights = Rechte
+no_rights = Keine speziellen Rechte für dieses Programm
+start_time = Startzeit(en)
+stop_time = Stopzeit
+rights_text = Rechte
+edit_right = Recht bearbeiten
+add_new_right = Neue Rechte-Definition hinzufügen
+for_whole_prg = Für das gesamte Programm
+
+general_data = Allgemeine Daten
+station_name = Sendername
+description = Beschreibung
+save = Speichern
+access_permissions = Berechtigungen ändern
+Permissions = Berechtigungen
+
+icons_and_jingles = Logo und Jingle
+username = Benutzername
+permissions = Berechtigungen
+actions = Aktionen
+delete = Löschen
+inherited_perms = vom "node" bzw. der "station" vorgegebene Zugangsrechte
+change_perm = Benutzerrechte hinzufügen/ändern
+change = Ändern
+deleted_permissions_for = Alle Berechtigungen für Benutzer %1 gelöscht
+deleted_contact = Kontakt %1 gelöscht
+ok_icon = Die neue Datei wurde als Logo gesetzt.
+error_icon = Diese Datei kann nicht als Logo verwendet werden.
+userfiles = Meine Dateien
+userfiles_expl = Sie können hier eine Datei wählen und als Logo oder Jingle verwenden.
+upload_file = Meinen Dateien hinzufügen
+view = Betrachten
+set_icon = Als Logo setzten
+no_files = Noch keine Dateien vorhanden.
+upload_expl = Wenn die Datei, die sie als Jingle oder Icon verwenden wollen, noch nicht in ihrer Dateiliste vorhanden ist, dann können sie eine Datei hier raufladen.
+icon = Logo
+no_icon = Kein Icon
+
+# roles and contacts
+Roles = Kontakte und Funktionen
+Role = Funktion
+Contact = Kontakt
+no_roles = Keine Kontakte vorhanden
+add_new_role = Neue Funktion hinzufügen
+edit_role = Funktion bearbeiten
+edit_contact = Kontakt ändern
+editcontact = Kontakt bearbeiten
+not_available = Nicht verfügbar
+no_expiry = Kein Verfallsdatum
+
+[editFiles]
+New_prog_step1 = Neues Programm hinzufügen - Schritt 1
+goto_step2 = Zu Schritt 2 von 2
+Edit_files = Dateien und Links für dieses Programm
+edit_meta = Metadaten bearbeiten
+Links = Links
+filename = Dateinamen
+caption = Benennung
+filesize = Grösse
+last_modified = Zuletzt geändert
+play_length = Länge
+stream_access = Streaming erlauben
+download_access = Download erlauben
+public_access = Öffentlich
+format = Format
+mime_type = MIME Art
+url = URL
+actions = Aktionen
+public = Öffentlich
+add_link = Neuen Link hinzufügen
+no_links = Keine Links
+change = Ändern
+delete = Löschen
+change_caption = Benennung verändern
+add_content = Andere format hinzufügen
+add_files = Datei(en) hinzufügen
+missing = fehlt
+convert = Von anderen konvertieren
+convert_all = Alle benötigten Formate konvertieren
+
+main_audio_count_mismatch = Die Audiodatei ist möglicherweise defekt!
+missing_from_sql = Die Beschreibung der Datei %1 fehlt in der SQL-Datenbank.
+
+no_files = Keine Dateien
+no_user_files = Keine Benutzer-Dateien
+Prg_files = Programm Audio
+Files = verbundene Dateien
+audio_file_list = Audio-Dateien:
+other_file_list = Andere Dateien:
+Add_to_audio = <<< Zu Audiodateien hinzufügen <<<
+Add_to_other = <<< Zu anderen Dateien hinzufügen <<<
+Add_as_icon = <<< Als Logo setzten <<<
+Move_back_to_user = >>> Zurück zu den Benutzerdateien >>>
+copy = kopieren
+move = verschieben
+prgfiles = Programm-Dateien
+userfiles = Benutzerdateien
+select_all = Alle auswählen
+deselect_all = Alle deselektieren
+delete_selected = Ausgewählte löschen
+upload_file = Datei in Benutzerverzeichnis laden
+send_file = Datei Senden
+
+[editLink]
+edit_link = Link bearbeiten
+url = URL
+caption = Benennung
+public_access = Öffentlicher Zugriff
+save = Speichern
+
+[addFiles]
+add_files = Datei(en) hinzufügen
+userfiles = Meine Dateien
+userfiles_expl = 
+upload_file = Datei raufladen
+add_selected = Selektierte Datei dem Programm hinzufügen
+no_files = Sie haben noch keine Dateien raufgeladen.
+direct_upload = Direkt raufladen
+upload_expl = Wenn die Datei, die sie als Jingle oder Icon verwenden wollen, noch nicht in ihrer Dateiliste vorhanden ist, dann können sie eine Datei hier raufladen.
+copy_files = Eine Kopie in meinem Verzeichnis lassen
+move_files = Datei ins Programm verschieben
+user_dir_ftp_access = FTP-Zugang zum Benutzerverzeichnis
+
+[manageFiles]
+manage_files = Eigene Dateien verwalten
+add_files = Datei(en) hinzufügen
+userfiles = Meine Dateien
+userfiles_expl = 
+upload_file = Meinen Dateien hinzufügen
+del_selected = Selektierte Dateien löschen
+no_files = Sie haben noch keine Dateien raufgeladen.
+upload_expl = Wenn die Datei, die sie als Jingle oder Icon verwenden wollen, noch nicht in ihrer Dateiliste vorhanden ist, dann können sie eine Datei hier raufladen.
+close = Fenster schliessen
+
+[editRight]
+not_integer = Start und Stopzeit sollten ganze Zahlen sein!
+edit_right = Rechte bearbeiten
+change_right = Rechte ändern
+new_right = Neue Rechte
+start_time = Startzeit
+stop_time = Stopzeit
+rights_text = Rechte
+Add = Hinzufügen
+Change = Ändern
+for_whole_prg = Das Recht steht für das ganze Programm
+
+[topicTree]
+add = Hinzufügen
+
+[topicSearch]
+topic_search = Thema suchen
+subtopics = Unterthema
+no_progs = Kein(e) Programm(e) für dieses Thema
+topic_tree = Themenübersicht
+selected_tree = Ausgewählte Themen
+change_tree = Ändern
+other_trees = Verfügbare Themen
+
+[convert]
+encode = Kodieren
+decode = Dekodieren
+progress_bar = Verlauf
+
+[listen]
+no_listen_access = Diese Sendung ist nicht freigegeben
+
+[playlist]
+delete = Löschen
+change_order = Reihenfolge ändern
+delete_selected = Markierte Sendungen löschen
+play_selected = Markierte Sendungen abspielen
+empty = Ihr Programm ist noch leer
+select_all = Alles auswählen
+invert_selection = Auswahl umkehren
+send_selected = Zu meinem Portal schicken
+
+[playlistPopup]
+top = Ganz nach oben
+up = Nach oben
+down = Nach unten
+buttom = Ganz nach unten
+save = Sichern
+
+[admin]
+admin = Node-Administratoren Kontrollfeld
+general_data = Allgemeine Daten
+save = Speichern
+access_permissions = Administratoren und Berechtigungen
+Permissions = Berechtigungen
+username = Benutzername
+userlist = Benutzerliste
+permissions = Berechtigungen
+actions = Aktionen
+delete = Löschen
+no_perms = Niemand hat Berechtigungen für diesen Node !?
+change_perm = Benutzerrechte hinzufügen/ändern
+change = Ändern
+deleted_permissions_for = Alle Berechtigungen für Benutzer %1 gelöscht
+debug_log = Debugging and logging
+
+view_log = Protokolldatei anzeigen
+view_config = Konfiguration anzeigen
+debug_expl = Debug-Info der Programmierer mitprotokollieren
+debug_smarty_expl = Smarty Debug-Console anzeigen
+debug_sql_expl = Alle SQL-Befehle mitprotokollieren
+compile_check_expl = Auf geänderte Smarty-Vorlagen prüfen und neu kompilieren
+recompile_templates = Alle Smarty-Vorlagen neu kompilieren
+update_topic_counts = Anzahl Themen aktualisieren
+update_from_cvs = Via CVS aktualisieren
+
+Node_network = Node-Netzwerk
+node_id = Node ID
+node_name = Node-Name
+node_desc = Beschreibung
+
+standalone_node = Dieser Node ist in keinem Node-Netzwerk.
+add_neighbour = Nachbar-Node hinzufügen
+accept_incoming = Hereinkommende Sync-Anfragen akzeptieren
+use_for_outgoing = Abgehende Synchronisierung
+last_sync_out = letzter Aufruf zur Sendesynchronisierung
+last_sync_in = letzter Empfangssynchronisierung
+sync = Synchronisierung
+full_sync = komplette Synchronisierung
+full_sync_expl = Sende alle Daten zum nächsten Node
+pending = wartender Node
+err_succ = Erfolg/Fehler
+
+arrived_xbmf = eingetroffene XBMF
+import = Importieren
+
+[createNeighbour]
+create_neighbour = Neuen Nachbar erzeugen
+create_from_nodes = Einen bestehenden Node als Nachbar verwenden
+create_new_node = Einen neuen Nachbar-Node erzeugen
+create = Erzeugen
+id = Node ID
+name = Name
+url = URL
+node_id_occupied = Diese Node ID wird bereits verwendet.
+no_url_given = Bitte die URL des Nodes eingeben.
+
+[editNeighbour]
+edit_neighbour = Einstellungen für Nachbar-Node ändern
+neighbour = Nachbar
+use_in = Empfangssynchronisierung des Nachbarnodes annehmen
+use_out = Synchronisierung mit Nachbarnode
+save = Speichern
+
