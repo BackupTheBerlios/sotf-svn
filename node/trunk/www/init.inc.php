@@ -142,6 +142,7 @@ if($config['debug'])
   error_log("REFERER: " . myGetenv('HTTP_REFERER'),0);
   error_log("HTTP_HOST: " . myGetenv('HTTP_HOST'),0);
   error_log("SERVER_NAME: " . myGetenv('SERVER_NAME'),0);
+  error_log("HTTP_ACCEPT_LANGUAGE: " . myGetenv('HTTP_ACCEPT_LANGUAGE'),0);
   foreach($_GET as $key => $value) {
     error_log("GET: $key = $value",0);
   }

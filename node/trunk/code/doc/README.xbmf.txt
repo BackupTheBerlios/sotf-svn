@@ -2,9 +2,9 @@ Suggestions:
 
 the thing has an id, which has a local part, let's call it track name.
 
-our raw metadata file is stored as <TRACK>.xml
+our raw metadata file is stored as metadata.xml
 
-SOMA file is stored as  <TRACK>-soma.xml
+SOMA file is stored as  metadata-soma.xml
 
 there is a subdirectory called 'other' which may contain arbitrary
 files/urls (urls are stored in separate files or in a single one?)
@@ -24,8 +24,9 @@ files:
 Example for an xbmf:
 
 IST_MAX_MULLER <dir>
-        IST_MAX_MULLER.xml
-        IST_MAX_MULLER-soma.xml
+        metadata.xml
+        metadata-soma.xml
+	icon.png
         other <dir>
                 max_muller_at_night.gif
                 max_muller.com.lnk
@@ -35,6 +36,13 @@ IST_MAX_MULLER <dir>
                 IST_MAX_MULLER_64kbps_2chn_44100Hz.ogg
                 IST_MAX_MULLER_24kbps_1chn_44100Hz.mp3
 
+Importing XBMF
 
-Is this enough to be really general?
-Do we need audio in several parts?
+XBMF can be imported manually under admin
+...
+
+...
+
+// whether imported files are published by default
+$config['publishxbmf'] = false;
+

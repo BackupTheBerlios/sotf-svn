@@ -50,7 +50,8 @@ $smarty->assign('searchLangs', $searchLangs);
 $smarty->assign('langNames', $langNames);
 
 $now = getDate();
-$dayInThePast = mktime(0,0,0, $now['mon'], $now['mday']-10, $now['year']);
+//$dayInThePast = mktime(0,0,0, $now['mon'], $now['mday']-10, $now['year']);
+$dayInThePast = time() - (60*60*24*30); // 30 days back
 $fromDay = date('Y-m-d', $dayInThePast);
 
 
