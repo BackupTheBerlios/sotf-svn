@@ -44,11 +44,11 @@ CREATE TABLE "sotf_node_objects" (
 	"arrived" timestamptz DEFAULT CURRENT_TIMESTAMP,
 	"node_id" int2 --- REFERENCES sotf_nodes(node_id)
 ---	"st_id" varchar(40), -- id used at the station management side
----	"comments" varchar(10)  XXXX
+---	"comments" varchar(10) 
 );
 
 CREATE TABLE "sotf_object_status" (
--- data needed for replication mechanism XXX
+-- data needed for replication mechanism 
 	"id" varchar(12),
 	"node_id" int2, --- REFERENCES sotf_nodes(node_id)
 	CONSTRAINT "sotf_object_status_uniq" UNIQUE ("id", "node_id")
@@ -68,26 +68,26 @@ CREATE TABLE "sotf_blobs" (
 CREATE SEQUENCE "sotf_nodes_seq";
 
 CREATE TABLE "sotf_nodes" (
--- data about nodes in the network XXX
+-- data about nodes in the network 
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"node_id" int2 UNIQUE NOT NULL, 				-- this id and name
 	"name" varchar(40) UNIQUE NOT NULL,			-- will be negotiated via e-mail within a node network
 	"description" text,
 	"url" varchar(255) NOT NULL,
-	"neighbours" varchar(255), -- XXX
-	"last_sync_in" timestamptz,							-- time of last sync XXX
-	"last_sync_out" timestamptz							-- time of last sync XXX
+	"neighbours" varchar(255), -- 
+	"last_sync_in" timestamptz,							-- time of last sync 
+	"last_sync_out" timestamptz							-- time of last sync 
 );
 
 CREATE TABLE "sotf_neighbours" (
--- the neighbours of this node XXX
+-- the neighbours of this node 
 	"id" serial PRIMARY KEY, 	-- just an id
 	"node_id" int2, -- same as in sotf_nodes, except for pending nodes
 	"accept_incoming" bool DEFAULT 't'::bool,
 	"use_for_outgoing" bool DEFAULT 't'::bool,
 	"last_sync_in" timestamptz,
-	"last_sync_out" timestamptz,  -- XXX
+	"last_sync_out" timestamptz,  -- 
 	"errors" int DEFAULT 0,
 	"success" int DEFAULT 0,
 	"pending_url" varchar(200),
@@ -139,7 +139,7 @@ CREATE TABLE "sotf_object_roles" (
 CREATE SEQUENCE "sotf_stations_seq";
 
 CREATE TABLE "sotf_stations" (
--- REPLICATED XXX
+-- REPLICATED 
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"name" varchar(32) UNIQUE NOT NULL,
 	"description" text,
@@ -151,10 +151,10 @@ CREATE TABLE "sotf_stations" (
 CREATE SEQUENCE "sotf_series_seq";
 
 CREATE TABLE "sotf_series" (
--- REPLICATED XXX
+-- REPLICATED 
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"station_id" varchar(12) NOT NULL,
-	"title" varchar(255) DEFAULT 'untitled' NOT NULL,
+	"name" varchar(255) DEFAULT 'untitled series' NOT NULL,  -- XXX
 	"description" text,
 	"url" varchar(100), 						-- URL for radio series website, if any
 	"language" varchar(40),											-- 2-letter codes separeted by comma
@@ -165,7 +165,7 @@ CREATE TABLE "sotf_series" (
 CREATE SEQUENCE "sotf_programmes_seq";
 
 CREATE TABLE "sotf_programmes" (
--- used to store generic and searchable metadata about radio programmes XXX
+-- used to store generic and searchable metadata about radio programmes 
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"guid" varchar(76) UNIQUE NOT NULL,							-- globally unique id
@@ -196,7 +196,7 @@ CREATE TABLE "sotf_programmes" (
 	FOREIGN KEY("series_id") REFERENCES sotf_series("id") ON DELETE CASCADE --??
 );
 
-CREATE INDEX prg_lang_idx ON sotf_programmes (language);  -- XXX
+CREATE INDEX prg_lang_idx ON sotf_programmes (language);  -- 
 -- TODO more indexes
 
 CREATE SEQUENCE "sotf_rights_seq";
@@ -407,7 +407,7 @@ CREATE TABLE "sotf_ratings" (
 	-- todo: delete ratings of a deleted user or not?
 	"rate" SMALLINT NOT NULL DEFAULT '0',
 	"host" varchar(100) NOT NULL,									-- host from where the rating arrived
-	"portal" varchar(255),											-- the portal URL from where rating arrived XXX
+	"portal" varchar(255),											-- the portal URL from where rating arrived 
 	"entered" timestamptz NOT NULL DEFAULT '-infinity',		-- date when rating arrived
 	"auth_key" varchar(50),											-- anti-abuse thingie
 	"problem" varchar(50) default NULL,							-- if any suspicious thing occurred during rating
@@ -418,32 +418,32 @@ CREATE TABLE "sotf_ratings" (
 CREATE SEQUENCE "sotf_prog_rating_seq";
 
 CREATE TABLE "sotf_prog_rating" (
--- calculated overall rating for a programme is stored here XXX
+-- calculated overall rating for a programme is stored here 
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"prog_id" varchar(12) NOT NULL,						-- id of programme rated
 	"rating_value" float,									-- value of rating
 	"nodes_only" float,										-- value calculated excluding ratings from portals
-	"alt_value" float,										-- rating calculated in an alternative way XXX
+	"alt_value" float,										-- rating calculated in an alternative way 
 	"rating_count" int DEFAULT 0,							-- total number of raters	
 	"rating_count_reg" int DEFAULT 0,					-- number of registered raters	
 	"rating_count_anon" int DEFAULT 0,					-- number of anonymous raters
 	"rating_sum_reg" int DEFAULT 0,						-- sum of ratings by registered raters	
 	"rating_sum_anon" int DEFAULT 0,						-- sum of ratings by anonymous raters
-	"detail" text,												-- may contain more detailed structured data on rating XXX
+	"detail" text,												-- may contain more detailed structured data on rating 
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_prog_refs_seq";
 
 CREATE TABLE "sotf_prog_refs" (
--- referencing portal URLs for a radio programme XXX
+-- referencing portal URLs for a radio programme 
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"prog_id" varchar(12) NOT NULL,							-- programme being referenced
 	"station_id" varchar(12) NOT NULL,
 	"url" varchar(255) NOT NULL,					-- URL of portal referencing to the program
-	"start_date" timestamptz,						-- date when prog appeared on portal  XXX
+	"start_date" timestamptz,						-- date when prog appeared on portal  
 	"end_date" timestamptz, 						-- date when prog disappeared from portal
 	"visits" int,										-- number of visits
 	"listens" int,										-- number of listens initiated from the portal
@@ -458,7 +458,7 @@ CREATE TABLE "sotf_prog_refs" (
 CREATE SEQUENCE "sotf_prog_stats_seq";
 
 CREATE TABLE "sotf_prog_stats" (
--- download and listen statistics for a radio programme XXX
+-- download and listen statistics for a radio programme 
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"prog_id" varchar(12) NOT NULL,			-- programme being referenced
@@ -475,7 +475,7 @@ CREATE TABLE "sotf_prog_stats" (
 );
 
 CREATE TABLE "sotf_stats" (
--- detailed download and listen statistics for a radio programme XXX
+-- detailed download and listen statistics for a radio programme 
 	"id" serial PRIMARY KEY,
 	"prog_id" varchar(12) NOT NULL,
 	"station_id" varchar(12) NOT NULL,
@@ -495,7 +495,7 @@ CREATE TABLE "sotf_stats" (
 );
 
 CREATE TABLE "sotf_comments" (
--- comments for a radio programme XXX
+-- comments for a radio programme 
 	"id" serial PRIMARY KEY,
 	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
 	"from_email" varchar(60),		-- e-mail from where comment arrived
@@ -506,7 +506,7 @@ CREATE TABLE "sotf_comments" (
 );
 
 CREATE TABLE "sotf_to_forward" (
--- data to forward to another node XXX
+-- data to forward to another node 
 -- host??
 	"id" serial PRIMARY KEY,
 	"node_id" int2,	-- id of node to forward to
@@ -517,7 +517,7 @@ CREATE TABLE "sotf_to_forward" (
 );
 
 CREATE TABLE "sotf_to_update" (
--- data to update  XXX
+-- data to update  
 	"id" serial PRIMARY KEY,
 	"tablename" varchar(40),	-- 
 	"row_id" varchar(12),				-- id within table
@@ -525,7 +525,7 @@ CREATE TABLE "sotf_to_update" (
 );
 
 CREATE TABLE "sotf_unique_access" (
--- memory to calculate unique access to prg XXX
+-- memory to calculate unique access to prg 
 	"id" serial PRIMARY KEY,
 	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
 	"sub_id" varchar(12),		-- id of file within programme
@@ -544,7 +544,7 @@ CREATE TABLE "sotf_user_progs" (
 );
 
 CREATE TABLE "sotf_streams" (
--- list of started streams XXX
+-- list of started streams 
 	"id" serial PRIMARY KEY, 		-- just an id
 	"pid" int,							-- process id of streamer
 	"user_id"  int, 					-- identify

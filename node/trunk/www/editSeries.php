@@ -30,7 +30,7 @@ $finish = sotf_Utils::getParameter('finish');
 $finish2 = sotf_Utils::getParameter('finish2');
 if($save || $finish) {
   checkPerm($series->id, "change");
-  $series->setWithParam('title');
+  $series->setWithParam('name');
   $series->setWithParam('description');
   $series->update();
 }
@@ -106,7 +106,7 @@ if($seticon) {
 
 // general data
 $smarty->assign('SERIES_ID',$seriesid);
-$smarty->assign('SERIES',$series->get('title'));
+$smarty->assign('SERIES',$series->get('name'));
 
 $smarty->assign('SERIES_DATA',$series->getAll());
 $smarty->assign('SERIES_MANAGER',true);

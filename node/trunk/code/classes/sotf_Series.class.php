@@ -31,6 +31,20 @@ class sotf_Series extends sotf_ComplexNodeObject {
     }
   }
 
+  function getDir() {
+	 global $repository;
+	 $station = $this->getObject($this->get('station_id'));
+	 $name = $this->get("id");
+	 if(empty($name))
+		raiseError("this station has no name!");
+	 return $station->getDir() . '/series_' . $this->get('id');
+  }
+
+	function getJingleDir() {
+		return $this->getDir() . '/station';
+	}
+
+
   function getStation() {
     return new sotf_Station($this->get('station_id'));
   }

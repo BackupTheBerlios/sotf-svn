@@ -41,7 +41,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         {if $SERIES_DATA and $SERIES_DATA.icon}
           {strip}
           <a href="{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}">
-            <img height="50" border="0" src="{$CACHE_URL}/{$SERIES_DATA.id}.png"  alt="{#series#}: {$SERIES_DATA.title}">
+            <img height="50" border="0" src="{$CACHE_URL}/{$SERIES_DATA.id}.png"  alt="{#series#}: {$SERIES_DATA.name}">
           </a>
           {/strip}
         {/if}
@@ -85,7 +85,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         <table width="100%">
             <tr valign="top"><td class="meta" nowrap width="10%">{#station#}:</td><td><a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a></td></tr>
             {if $SERIES_DATA}
-            <tr valign="top"><td class="meta" nowrap>{#series#}:</td><td><a href="{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}">{$SERIES_DATA.title}</a></td></tr>
+            <tr valign="top"><td class="meta" nowrap>{#series#}:</td><td><a href="{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}">{$SERIES_DATA.name}</a></td></tr>
             {/if}
             <tr valign="top"><td class="meta" nowrap>{#title#}:</td><td>{$PRG_DATA.title}</td></tr>
             {if $PRG_DATA.alternative_title}

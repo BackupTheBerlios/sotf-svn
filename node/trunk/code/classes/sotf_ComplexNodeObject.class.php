@@ -21,7 +21,48 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 		$retval['icon'] = sotf_Blob::cacheIcon($this->id);
 		return $retval;
 	}
+
+	/** can be static */
+	function getLanguagesLocalized($languages = '') {
+	  global $page;
+	  if(!$languages)
+		 $languages = $this->get('language');
+	  $langs = explode(',',$languages);
+	  for($i=0; $i<count($langs); $i++) {
+		 if($i>0)
+			$lstring .= ', ';
+		 $lstring .= $page->getlocalized($langs[$i]);
+	  }
+	  return $lstring;
+	}
 	
+	// language hack
+	function setLanguageWithParams() {
+	  $langs = sotf_Utils::getParameter('language1');
+	  $l2 = sotf_Utils::getParameter('language2');
+	  $l3 = sotf_Utils::getParameter('language3');
+	  if($l2) {
+		 $langs .= ",$l2";
+		 if($l3) {
+			$langs .= ",$l3";
+		 }
+	  }  
+	  $this->set('language', $langs);
+	}
+
+	function getLanguageSelectBoxes() {
+	  global $smarty, $config, $page;
+	  for($i=0; $i<count($config['languages']); $i++) {
+		 $langNames[$i] = $page->getlocalized($config['languages'][$i]);
+	  }
+	  $smarty->assign('LANG_CODES', $config['languages']);
+	  $smarty->assign('LANG_NAMES', $langNames);
+	  $langs = explode(',',$this->get('language'));
+	  $smarty->assign('PRG_LANG1', $langs[0]);
+	  $smarty->assign('PRG_LANG2', $langs[1]);
+	  $smarty->assign('PRG_LANG3', $langs[2]);
+	}
+
 	/************************* ROLE MANAGEMENT **************************************/
 	
 	/** Retrieves roles and contacts associated with this object */
@@ -178,5 +219,78 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
 	return true;
 	}
+
+	//********************** JINGLE management ***********************************
+
+	  /** THis could be an abstract method, implemented in sotf_Station and sotf_Series */
+	  //function getJingleDir() {
+	  //function getDir()
+
+	/**
+	* Sets jingle of the station.
+	* @use	$config['audioFormats']
+	*/
+	function setJingle($filename, $copy=false) {
+		global $config, $page;
+
+		$source = $filename;
+		if(!is_file($source))
+			raiseError("no such file: $source");
+		$srcFile = new sotf_AudioFile($source);
+		$target = $this->getJingleDir() .	'/jingle_' . $srcFile->getFormatFilename();
+		debug("jingle file", $target);
+		if($srcFile->type != 'audio')
+			raiseError("this is not an audio file");
+		if(is_file($target)) {
+			raiseError($page->getlocalized('format_already_present'));
+		}
+		if($copy)
+			$success = copy($source,$target);
+		else
+			$success = rename($source,$target);
+		if(!$success)
+			raiseError("could not copy/move $source");
+		return true;
+		//TODO? save into database
+	}
+
+	/**
+	* Gets a jingle of the station.
+	*
+	* @param	integer	$index	Format index of the jingle in the $config['audioFormats'] global variable
+	* @return	mixed	Returns the path of the jingle if exist, else return boolean false
+	* @use	$config['audioFormats']
+	*/
+	function getJingle($index = 1)
+	{
+		global $config;
+
+		$file = $this->getJingleDir() . '/jingle_' . sotf_AudioCheck::getFormatFilename($index);
+		debug("searching for", $file);
+
+		if (is_file($file) && !is_file($file.'.lock'))
+		{
+			return $file;
+		}
+		else
+		{
+			return false;
+			//return new PEAR_Error($stationId . " has no jingle!");
+		}
+	}
+
+	/** Deletes a jingle */
+	function deleteJingle($file, $index='') {
+
+		if(!preg_match("/^jingle/", $file))
+			raiseError("Invalid filename");
+		$file = sotf_Utils::getFileInDir($this->getJingleDir(), $file);
+		debug("delete file", $file);
+		if(!unlink($file)) {
+			addError("Could not delete jingle $index!");
+		}
+		// TODO: delete from SQL???
+	}
+
 
 }

@@ -86,7 +86,7 @@ class sotf_Station extends sotf_ComplexNodeObject {
 		return $repository->rootdir . '/' . $name;
 	}
 
-	function getStationDir() {
+	function getJingleDir() {
 		return $this->getDir() . '/station';
 	}
 
@@ -94,9 +94,9 @@ class sotf_Station extends sotf_ComplexNodeObject {
 		return is_dir($this->getDir()); 
 	}
 
-	/** removes logo of the station */
+ 	/** removes logo of the station */
 	function deleteIcon() {
-		$iconFile = $this->getStationDir() . '/icon.png';
+		$iconFile = $this->getJingleDir() . '/icon.png';
 		if(is_readable($iconFile)) {
 			parent::deleteIcon();
 			if(!unlink($iconFile))
@@ -116,76 +116,12 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	function setIcon($file) {
 
 		if(parent::setIcon($file)) {
-			$iconFile = $this->getStationDir() . '/icon.png';
+			$iconFile = $this->getJingleDir() . '/icon.png';
 			sotf_Utils::save($iconFile, $this->getIcon());
 			return true;
 		} else
 			return false;
 	} // end func setIcon
-
-	/**
-	* Sets jingle of the station.
-	* @use	$config['audioFormats']
-	*/
-	function setJingle($filename, $copy=false) {
-		global $config, $page;
-
-		$source = $filename;
-		if(!is_file($source))
-			raiseError("no such file: $source");
-		$srcFile = new sotf_AudioFile($source);
-		$target = $this->getStationDir() .	'/jingle_' . $srcFile->getFormatFilename();
-		debug("jingle file", $target);
-		if($srcFile->type != 'audio')
-			raiseError("this is not an audio file");
-		if(is_file($target)) {
-			raiseError($page->getlocalized('format_already_present'));
-		}
-		if($copy)
-			$success = copy($source,$target);
-		else
-			$success = rename($source,$target);
-		if(!$success)
-			raiseError("could not copy/move $source");
-		return true;
-		//TODO? save into database
-	}
-
-	/**
-	* Gets a jingle of the station.
-	*
-	* @param	integer	$index	Format index of the jingle in the $config['audioFormats'] global variable
-	* @return	mixed	Returns the path of the jingle if exist, else return boolean false
-	* @use	$config['audioFormats']
-	*/
-	function getJingle($index = 1)
-	{
-		global $config;
-
-		$file = $this->getStationDir() . '/jingle_' . sotf_AudioCheck::getFormatFilename($index);
-		if (is_file($file) && !is_file($file.'.lock'))
-		{
-			return $file;
-		}
-		else
-		{
-			return false;
-			//return new PEAR_Error($stationId . " has no jingle!");
-		}
-	}
-
-	/** Deletes a jingle */
-	function deleteJingle($file, $index='') {
-
-		if(!preg_match("/^jingle/", $file))
-			raiseError("Invalid filename");
-		$file = sotf_Utils::getFileInDir($this->getStationDir(), $file);
-		debug("delete file", $file);
-		if(!unlink($file)) {
-			addError("Could not delete jingle $index!");
-		}
-		// TODO: delete from SQL???
-	}
 
 	/** get number of published programmes */
 	function numProgrammes($onlyPublished = true) {
@@ -230,7 +166,7 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	global $db;
 
 		$id = $this->id;
-		$slist = $db->getAll("SELECT * FROM sotf_series WHERE station_id='$id' ORDER BY title");
+		$slist = $db->getAll("SELECT * FROM sotf_series WHERE station_id='$id' ORDER BY name");
 		if(DB::isError($slist))
 			raiseError($slist);
 		return $slist;
@@ -250,7 +186,7 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	global $db;
 
 		$id = $this->id;
-		$slist = $db->getAll("SELECT * FROM sotf_series WHERE station_id='$id' ORDER BY title ");
+		$slist = $db->getAll("SELECT * FROM sotf_series WHERE station_id='$id' ORDER BY name ");
 		if(DB::isError($slist))
 			raiseError($slist);
 		while (list (, $val) = each ($slist)) {

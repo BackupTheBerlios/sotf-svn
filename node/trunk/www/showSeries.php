@@ -28,7 +28,7 @@ $series = & $repository->getObject($seriesid);
 $station = $series->getStation();
 
 $page->errorURL = "showSeries.php/$seriesid";
-$page->setTitle($series->get('title'));
+$page->setTitle($series->get('name'));
 
 $smarty->assign('SERIES_ID',$seriesid);
 $smarty->assign('SERIES_DATA',$series->getAllWithIcon());

@@ -269,6 +269,7 @@ class sotf_Utils
     $retval = preg_replace("/[^a-zA-Z0-9_-]/","_",$str);
     $retval = preg_replace("/[_-]+/","_", $retval);
     $retval = preg_replace('/_+$/','', $retval);
+    $retval = preg_replace('/^_+/','', $retval);
     return substr($retval, 0, $len);
   }
 

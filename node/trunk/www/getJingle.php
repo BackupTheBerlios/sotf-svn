@@ -10,11 +10,12 @@
 require("init.inc.php");
 
 $id = sotf_Utils::getParameter('id');
-$index = sotf_Utils::getParameter('index');
+$file = sotf_Utils::getParameter('file');
 
 $obj = $repository->getObject($id);
 
-$jingleFile = $obj->getJingle($index);
+$jingleFile = sotf_Utils::getFileInDir($obj->getJingleDir(), $file);
+debug("jingleFile", $jingleFile);
 
 if($jingleFile)
 {

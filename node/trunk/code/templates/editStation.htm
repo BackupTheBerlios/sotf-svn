@@ -19,6 +19,26 @@
                     <td><b><a href="showStation.php/{$STATION_ID}">{$STATION}</a></b></td>
                   </tr>
                   <tr>
+                    <td>{#languages#}:</td>
+                    <td>                
+                      <select name="language1">
+                        {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG1}
+                      </select>
+                      <select name="language2">
+                        <option value="0">{#no_second_lang#}</option>
+                        {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG2}
+                      </select>
+                      <select name="language3">
+                        <option value="0">{#no_third_lang#}</option>
+                        {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG3}
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{#url#}:</td>
+                    <td><input name="url" onChange="if(value != defaultValue) data_changed++;" value="{$STATION_DATA.url}" size="50" /></td>
+                  </tr>
+                  <tr>
                     <td>{#description#}:</td>
                     <td><textarea onChange="if(value != defaultValue) data_changed++;" cols="50" rows="10" name="desc">{$STATION_DATA.description}</textarea></td>
                   </tr>
@@ -154,7 +174,7 @@
           {cycle name="perms" values="list1,list2" print=false advance=false}
           {foreach item=item from=$SERIES}
           <tr class="{cycle name=perms}">
-            <td><a href="showSeries.php/{$item.id}">{$item.title}</a></td>
+            <td><a href="showSeries.php/{$item.id}">{$item.name}</a></td>
             <td nowrap>
                 {if hasPerm($item.id, 'change') }
               <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
@@ -208,7 +228,7 @@
                 <tr class="{cycle}">
                   <td>
                     {if $item.filename}
-                    <a href="getJingle.php/{$item.filename}?id={$STATION_ID}&index={$item.index}">{#exists#}</a>
+                    <a href="getJingle.php/{$STATION}_jingle.mp3?id={$STATION_ID}&file={$item.filename}">{#exists#}</a>
                     {else}
                     <font color="red">{#missing#}</font>
                     {/if}

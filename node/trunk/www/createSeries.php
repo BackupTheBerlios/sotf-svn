@@ -13,14 +13,14 @@ $page->popup = true;
 $page->forceLogin();
 
 $stationId = sotf_Utils::getParameter('stationid');
-$seriesTitle = sotf_Utils::getParameter('title');
+$seriesName = sotf_Utils::getParameter('name');
 
 checkPerm($stationId, "create");
 
-if($seriesTitle) {
+if($seriesName) {
   // create a new series
   $series = new sotf_Series();
-  $series->set('title', $seriesTitle);
+  $series->set('name', $seriesName);
   $series->set('station_id', $stationId);
   $series->set('entry_date', date('Y-m-d'));
   $status = $series->create();
@@ -34,7 +34,7 @@ if($seriesTitle) {
 }
 
 // general data
-$smarty->assign("TITLE", $seriesTitle);
+$smarty->assign("NAME", $seriesName);
 
 $page->sendPopup();
 

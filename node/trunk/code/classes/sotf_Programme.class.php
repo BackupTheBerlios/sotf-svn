@@ -465,7 +465,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
 		if(!isset($permissions->currentPermissions))
 		return NULL;  // not logged in yet
-	 $sql = "SELECT  s.name AS station, se.title AS series, stats.visits, stats.listens, stats.downloads, flags.flags, rating.*, p.*".
+	 $sql = "SELECT  s.name AS station, se.name AS series, stats.visits, stats.listens, stats.downloads, flags.flags, rating.*, p.*".
 		" FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id".
 		" LEFT JOIN sotf_series se ON p.series_id=se.id".
 		" LEFT JOIN sotf_prog_rating rating ON p.id=rating.prog_id".

@@ -82,16 +82,7 @@ if($save || $finish || $finishpublish) {
     $prg->set($param, $value);
   }
   // language hack
-  $langs = sotf_Utils::getParameter('language1');
-  $l2 = sotf_Utils::getParameter('language2');
-  $l3 = sotf_Utils::getParameter('language3');
-  if($l2) {
-	 $langs .= ",$l2";
-	 if($l3) {
-		$langs .= ",$l3";
-	 }
-  }
-  $prg->set('language', $langs);
+  $prg->setLanguageWithParams();
   // save
   if ($finishpublish) {
     $prg->publish();
@@ -215,15 +206,7 @@ array_unshift($genres, array('id'=>0, 'name'=> $page->getlocalized("no_genre")))
 $smarty->assign('GENRES_LIST', $genres);
 
 // languages
-for($i=0; $i<count($config['languages']); $i++) {
-  $langNames[$i] = $page->getlocalized($config['languages'][$i]);
-}
-$smarty->assign('LANG_CODES', $config['languages']);
-$smarty->assign('LANG_NAMES', $langNames);
-$langs = explode(',',$prg->get('language'));
-$smarty->assign('PRG_LANG1', $langs[0]);
-$smarty->assign('PRG_LANG2', $langs[1]);
-$smarty->assign('PRG_LANG3', $langs[2]);
+$prg->getLanguageSelectBoxes();
 
 // rights sections
 $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));

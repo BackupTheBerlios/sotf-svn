@@ -127,7 +127,7 @@ class sotf_AdvSearch
 			if ($this->SQLquery[$i][1] == "topic")	{$topic = true;	break;}
 
 		$query="SELECT distinct programmes.* FROM (";
-		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription, sotf_prog_rating.rating_value as rating";
+		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.name as seriestitle, sotf_series.description as seriesdescription, sotf_prog_rating.rating_value as rating";
 		if ($topic) $query.=", sotf_topics.topic_name as topic_name";
 		$query.=" FROM sotf_programmes";
 		$query.=" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id";

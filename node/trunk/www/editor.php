@@ -96,7 +96,7 @@ $myProgs = sotf_Programme::myProgrammes($series, $filter, $sort1.", ".$sort2.$li
 $mySeriesData = array();
 $mySeriesData[allseries] = $page->getlocalized("allseries");
 foreach(sotf_Permission::mySeriesData($stationId) as $s)
-	$mySeriesData[$s["id"]] = $s["title"];
+	$mySeriesData[$s["id"]] = $s["name"];
 
 $sortby[title] = $page->getlocalized("title");
 $sortby[series] = $page->getlocalized("series");

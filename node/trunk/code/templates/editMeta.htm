@@ -64,7 +64,7 @@ window.onload=myonload;
             </tr>
             <tr valign="top" class="list2">
               <td class="meta">{#series#}:</td>
-              <td>{if $SERIES_DATA}<a class="goto_object" href="showSeries.php/{$SERIES_DATA.id}">{$SERIES_DATA.title}</a>{else}{#not_in_series#}{/if}
+              <td>{if $SERIES_DATA}<a class="goto_object" href="showSeries.php/{$SERIES_DATA.id}">{$SERIES_DATA.name}</a>{else}{#not_in_series#}{/if}
                 {if !empty($MY_SERIES)}
                    <input class="action" type="button" name="b1" value="{#change_series#}" onClick="popup('addToSeries.php?prgid={$PRG_ID}','{#changeseries#}',120,400,false); return false;" />
                 {/if}

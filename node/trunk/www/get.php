@@ -49,13 +49,7 @@ if($id) {
 
   $smarty->assign('GENRE', $repository->getGenreName($prg->get('genre_id')));
   // language
-  $langs = explode(',',$prg->get('language'));
-  for($i=0; $i<count($langs); $i++) {
-	 if($i>0)
-		$lstring .= ', ';
-	 $lstring .= $page->getlocalized($langs[$i]);
-  }
-  $smarty->assign('LANGUAGE', $lstring);
+  $smarty->assign('LANGUAGE', $prg->getLanguagesLocalized());
   // rights sections
   $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
 
