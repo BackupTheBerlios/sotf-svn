@@ -12,7 +12,7 @@ $submit = sotf_Utils::getParameter('submit');
 
 $d = array();
 if ($type == "query") {$d['query'] = $data; $d['name'] = $name;}
-	else $d = $data;
+else $d = $data;
 $result = $portal->uploadData($type, $d, $portal_password);
 //if ($result == "OK") $page->redirect($rootdir."/closeAndRefresh.php");		//close window
 //else

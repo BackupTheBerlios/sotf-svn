@@ -664,18 +664,25 @@ class sotf_Portal
 		}
 		elseif ($type == "prg")
 		{
-			$sql="SELECT id FROM portal_programmes WHERE portal_id = '$this->portal_id' AND progid='$data' AND prglist_id is NULL";
-			$result = $db->getOne($sql);
-			return $this->addProgrammeToList($data, "unsorted");
-			//if ($result == NULL)		//if not exists
-			//{
-			//	$sql="INSERT INTO portal_programmes(portal_id, progid, prglist_id) values('$this->portal_id', '$data', NULL)";
-			//	$db->query($sql);
-			//}
-			//else return false;
+			$r = $this->addProgrammeToList($data, "unsorted");
+			if ($r == true) return "OK";
+			else return $page->getlocalized("one_not_added");
 		}
 		elseif ($type == "prglist")
 		{
+			$d = explode('|', $data);
+			$max = count($d);
+			$error = 0;
+			for ($i=0; $i<$max; $i++)
+			{
+				if ($d[$i] != "")
+				{
+					$r = $this->addProgrammeToList($d[$i], "unsorted");
+					if ($r != true) $error++;		//could not add
+				}
+			}
+			if ($error == 0) return "OK";
+			else return (string)($error)." ".$page->getlocalized("not_added");
 		}
 		else return $page->getlocalized("bad_type");		//if bad type given
 

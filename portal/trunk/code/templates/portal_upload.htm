@@ -7,15 +7,17 @@
 <form action="{$rootdir}/portal_upload.php/{$portal_name}" method="post">
 
 {if $error == "OK"}
-	{if $type == "query"}{#query_uploaded#}{/if}
+	{if $type == "query"}{#query_uploaded#}<br>{/if}
+	{if $type == "prglist"}{#all_added#}<br>{/if}
+	{if $type == "prg"}{#one_added#}<br>{/if}
 	<br><br><input type="button" value="{#close_window#}" onclick="javascript:window.close();">
 {else}
-	{if $error}<b>{$error}</b><br>{/if}
+	{if $error}<b>{$error}</b><br><br>{/if}
 	{#upload_password#}<input type="password" name="portal_password"><br>
-	{#name#}<input type="text" name="name" value="{$name}"><br>
+	{if $type == "query"}{#name#}<input type="text" name="name" value="{$name}"><br>{/if}
 	<input type="hidden" name="type" value="{$type}"><br>
 	<input type="hidden" name="data" value="{$data}"><br>
-	<input type="submit" name="submit" value="{#ok#}">
+	<input type="submit" name="submit" value="{if $type == "query"}{#upload_query#}{elseif $type == "prglist"}{#upload_prglist#}{else}{#upload_prg#}{/if}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="{#close_window#}" onclick="javascript:window.close();">
 {/if}
 
 </form>
