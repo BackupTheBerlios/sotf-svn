@@ -64,6 +64,11 @@
                       | <a class="menu" href="{$ROOTDIR}/advsearch.php">{#Search#}</a> 
                       | <a class="menu" href="{$ROOTDIR}/stations.php">{#Stations#}</a> 
                       {if $IS_EDITOR} | <a class="menu" href="{$ROOTDIR}/editor.php">{#EditorPage#}</a> {/if} 
+                      {if $loggedIn}
+                      | <a class="menu" href="{$ROOTDIR}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$loggedIn})</a>
+                      {else}
+                      | <a class="menu" href="{$ROOTDIR}/login.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Login#}</a>
+                      {/if}
                       | <a class="menu" href="{$ROOTDIR}/help.php">{#Help#}</a> 
                       | <a class="menu" href="{$ROOTDIR}/about.php">{#About#}</a> 
                       {if $DEBUG}

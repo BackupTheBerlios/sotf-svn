@@ -19,6 +19,24 @@ class sotf_Repository {
     $this->db = $db;
   }
 
+
+  //TODO
+  function getTopicTree($language) {
+
+  }
+
+  //TODO
+  function getRoles($language) {
+
+  }
+
+  //TODO
+  function getGenres($language) {
+
+  }
+
+
+
   /*
 
   function getStation($id) {

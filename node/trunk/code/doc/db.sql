@@ -1,4 +1,5 @@
 -- -*- tab-width: 3; indent-tabs-mode: 1; -*-
+-- todo: define foreign keys, references, checks
 
 CREATE TABLE "sotf_vars" (
 -- global persistent server variables
@@ -183,11 +184,12 @@ CREATE TABLE "sotf_contact" (
 
 CREATE TABLE "sotf_deletions" (
 -- remember and propagate deletions to other nodes
-	"what" varchar(10) NOT NULL,
+-- deletions of many table rows are done via foreign keys!!
+	"table_name" varchar(10) NOT NULL,
 	"id" varchar(100) NOT NULL,
 	"del_time" timestamptz NOT NULL,
 	"node" varchar(20),
-	CONSTRAINT "sotf_del_pkey" PRIMARY KEY ("id")
+	CONSTRAINT "sotf_del_pkey" PRIMARY KEY ("table_name","id")
 );
 
 CREATE TABLE "sotf_refs" (
