@@ -98,7 +98,7 @@ class sotf_Playlist {
 		  $this->mountPoint .= '_' . date('i-s');
 		} else {
 		  $this->mountPoint = $page->getlocalized('playlist_name');
-		  $this->mountPoint .= '_' . date('i-s');
+		  $this->mountPoint .= '_' . date('i_s');
 		}
 		$this->mountPoint = preg_replace('/\s+/', '_', $this->mountPoint);
 		$this->mountPoint = preg_replace('/_+/', '_', $this->mountPoint);
