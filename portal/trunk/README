@@ -37,4 +37,4 @@ NOTES
 
 On Apache 2 you have to set 'AcceptPathInfo on'!
 
-We strongly suggest to set register_globals off in PHP.
+Portal will not work if register_globals is on in PHP.

@@ -8,6 +8,7 @@ require("portal_login.php");
 if (sotf_Utils::getParameter('logout'))			//if logout link pressed
 {
 	$user->logout();				//logout user
+  debug("user logged out");
 	$page->redirect($_SERVER["PHP_SELF"]);		//redirect page
 }
 

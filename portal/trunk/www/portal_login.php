@@ -32,7 +32,6 @@ if (sotf_Utils::getParameter('login_user'))	//if login button pressed
 	$a_number = sotf_Utils::getParameter('a_number');	//get activisation number
 }
 
-
 if (isset($portal_id))
 {
 	if ( isset($username) AND isset($password) )
@@ -44,7 +43,7 @@ if (isset($portal_id))
 		else	//create new user object
 			$user = new portal_user($portal_id, $username, $password);	//create user object with given data
 
-		if ($user->loggedIn()) $page->redirect($_SERVER["PHP_SELF"]);	//redirect page
+		if ($user->loggedIn()) $page->redirect($_SERVER["PHP_SELF"]); //redirect page
 		if ($user->getActivated()) $page->redirect($_SERVER["PHP_SELF"]."?login=1&activate=1&uname=$username");	//redirect page
 		else $page->redirect($_SERVER["PHP_SELF"]."?login=2&uname=$username");		//redirect to login page if bad login
 	}
