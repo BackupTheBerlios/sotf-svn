@@ -305,7 +305,7 @@ class sotf_Repository {
   }
 
   function getGenreName($id) {
-	 return $this->genres[$id];
+	 return $this->genres[$id-1];
   }
 
   /************************************************

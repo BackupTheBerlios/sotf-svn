@@ -8,7 +8,7 @@
 	<table>
 		<tr>
 			<td>{#url#}:</td>
-			<td><input size="50" maxlength="255" name="url" value="{$LINK_DATA.url}"></td>
+			<td><input size="50" maxlength="255" name="url" value="{$LINK_DATA.url|default:"http://"}"></td>
 		</tr>
 		<tr>
 			<td>{#caption#}:</td>
@@ -16,7 +16,7 @@
 		</tr>
 		<tr>
 			<td>{#public_access#}:</td>
-			<td><input type="checkbox" name="public_access" {if $LINK_DATA.public_access eq 't'} CHECKED="1" {/if} /></td>
+			<td><input type="checkbox" name="public_access" {if $LINK_DATA.public_access eq 't' or $LINK_DATA.public_access eq 'true'} CHECKED="1" {/if} /></td>
 		</tr>
 	</table>
 	<input type="submit" name="save" value="{#save#}">

@@ -298,6 +298,17 @@ class sotf_Utils
     }
     return $string;
   } // end func randString
+
+	///////////////////////////////  URL UTILS  ////////////////////////////////////////////////////////
+
+    /** Quick check for valid URL syntax.  */
+    function is_valid_URL($url) {
+      $parsed = @parse_url($url);
+      if(!$parsed['host'])
+        return false;
+      // Could also try to open the URL...
+      return true;
+    }
 	
 	///////////////////////////////  MAIL UTILS  ////////////////////////////////////////////////////////
 	

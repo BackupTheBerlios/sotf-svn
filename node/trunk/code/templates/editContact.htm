@@ -52,7 +52,7 @@
 		</tr>
 		<tr valign="top">
 			<td>{#url#}:</td>
-			<td><input size="50" maxlength="255" name="url" value="{$CONTACT_DATA.url}" onChange="if(value != defaultValue) data_changed++;" ></td>
+			<td><input size="50" maxlength="255" name="url" value="{$CONTACT_DATA.url|default:"http://"}" onChange="if(value != defaultValue) data_changed++;" ></td>
 		</tr>
 	</table>
 	<input type="submit" name="save" value="{#save#}">

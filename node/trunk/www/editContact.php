@@ -63,11 +63,17 @@ if($save || $finish1 || $finish2) {
     $contact->set('phone', sotf_Utils::getParameter('phone'));
     $contact->set('cellphone', sotf_Utils::getParameter('cellphone'));
     $contact->set('fax', sotf_Utils::getParameter('fax'));
-    $contact->set('url', sotf_Utils::getParameter('url'));
+	 $url = sotf_Utils::getParameter('url');
+	 if(sotf_Utils::is_valid_URL($url))
+		$contact->set('url', $url);
+	 else {
+		$error = 1;
+		$page->addStatusMsg("invalid-url");
+	 }
     $contact->update();
   }
 
-  if($save) {
+  if($save || $error) {
     $page->redirect("editContact.php?id=$contactId");
   } else {
     $page->redirect("closeAndRefresh.php?anchor=roles");

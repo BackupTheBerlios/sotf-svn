@@ -11,7 +11,7 @@
         </td>
         <td class="title2" width="10%" align="right" valign="bottom">
           {if hasPerm($SERIES_DATA.id,'change') }
-          <input class="action" type="button" name="b1" value="{#edit_series#}" onClick="redir(this.form, 'editSeries.php?seriesid={$SERIES_DATA.id}')">
+          <input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('editSeries.php?seriesid={$SERIES_DATA.id}','{#series#}',550,550,true)">
             {/if}
           {if hasPerm($SERIES_DATA.id, 'add_prog')}
             <input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, 'editor.php?&stationid={$SERIES_DATA.station_id}')" />
