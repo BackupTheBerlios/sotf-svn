@@ -81,17 +81,28 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		}
   }
 
-  function create($stationId, $track='') {
-	 global $db;
+  function create($stationOrSeriesId, $track='') {
+	 global $db, $repository;
 
 	 $db->begin();
 	 // TODO may need some locking to get unique track id
-	 $this->set('station_id', $stationId);
-	 $stationName = $db->getOne("SELECT name FROM sotf_stations WHERE id='" . $this->get('station_id') . "'");
-	 if(DB::isError($stationName))
-		raiseError($stationName);
+	 $container = & $repository->getObject($stationOrSeriesId);
+	 switch(get_class($container)) {
+	 case 'sotf_series':
+		$this->set('series_id', $container->id);
+		$station = $container->getStation();
+		$this->set('station_id', $station->id);
+		$stationName = $station->get('name');
+		break;
+	 case 'sotf_station':
+		$this->set('station_id', $container->id);
+		$stationName = $container->get('name');
+		break;
+	 default:
+		raiseError("Invalid station or series id!");
+	 }
 	 if(empty($stationName))
-		raiseError("station with id '$stationId' does not exist");
+		raiseError("station does not exist");
 	 if(empty($track))
 		$track = 'prg';
 	 $this->stationName = $stationName;

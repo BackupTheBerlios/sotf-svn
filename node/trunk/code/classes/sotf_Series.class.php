@@ -65,7 +65,8 @@ class sotf_Series extends sotf_ComplexNodeObject {
   }
 
   function getStation() {
-    return new sotf_Station($this->get('station_id'));
+	 global $repository;
+    return $repository->getObject($this->get('station_id'));
   }
 
   /** get number of published programmes */

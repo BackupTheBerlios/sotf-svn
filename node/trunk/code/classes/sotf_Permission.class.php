@@ -14,13 +14,14 @@ class sotf_Permission {
 
   var $debug = false;
   var $currentPermissions;
+  var $isEditor = false;
 
   function sotf_Permission() {
     $this->currentPermissions = $this->getUserPermissions();
   }
 
   function getUserPermissions($userid='') {
-    global $db, $user;
+    global $db, $user, $repository;
     if(!$userid && is_object($user)) {
       $userid = $user->id;
     }
@@ -30,7 +31,18 @@ class sotf_Permission {
 		// make an associative array containing the permissions for all objects
 		while(list(,$row) = each($permtable)) {
 		  $permissions[$row["object_id"]][] = $row["permission"];	// object permission
-		}
+		  /*
+		  if(!$this->isEditor) {
+			 $table = $repository->getTable($row['object_id']);
+			 $perm = $row["permission"];
+			 if(($table == 'sotf_stations' || $table == 'sotf_series') &&
+				 ($perm =='admin' || $perm == 'add_prog')) {
+				$this->isEditor = true;
+				debug("IS_EDITOR", 'true');
+			 }
+		  }
+		  */
+      }
     }
     if($this->debug) {
       error_log("current permissions",0);
@@ -43,25 +55,6 @@ class sotf_Permission {
     return $permissions;
   }
 
-
-	function isEditor() {
-    global $repository;
-		if(empty($this->currentPermissions))
-      return false;
-			
-    reset($this->currentPermissions);
-		
-    while(list($key,$value) = each($this->currentPermissions)) {
-      $table = $repository->getTable($key);
-      if( $table == 'sotf_stations' ) { 
-        if( in_array('admin', $value) || in_array('add_prog', $value) ) {
-          return true;
-        } else 
-          debug("nem jo: $key == $table,  $value");
-      }
-    }
-    return false;
-	}
 
 	function hasPermission($object, $perm, $userid='') {
     if(empty($userid)) {
@@ -195,13 +188,35 @@ class sotf_Permission {
 	}
 
   */
- 
-  function listStationsForEditor() {
-		if(!isset($this->currentPermissions))
-      return NULL;  // not logged in yet
-    global $db, $user;
-    $retval = $db->getAll("SELECT s.name AS name, s.id AS id FROM sotf_stations s, sotf_user_permissions u, sotf_permissions p WHERE u.user_id = '$user->id' AND u.object_id=s.id AND p.id = u.permission_id AND ( p.permission='add_prog' OR p.permission='admin')");
-    return $retval;
+
+
+	function isEditor() {
+	  global $repository;
+	  if(empty($this->currentPermissions))
+		 return false;
+	  
+	  reset($this->currentPermissions);
+	  
+	  while(list($key,$value) = each($this->currentPermissions)) {
+		 $table = $repository->getTable($key);
+		 if( $table == 'sotf_stations' || $table == 'sotf_series') { 
+			if( in_array('admin', $value) || in_array('add_prog', $value) ) {
+			  return true;
+			} else { 
+			  debug("nem jo: $key == $table,  $value");
+			}
+		 }
+	  }
+	  return false;
+	}
+	
+	function listStationsForEditor() {
+	  if(!isset($this->currentPermissions))
+		 return NULL;  // not logged in yet
+	  global $db, $user;
+	  $retval1 = $db->getAll("SELECT 'station' AS type, s.name AS name, s.id AS id FROM sotf_stations s, sotf_user_permissions u, sotf_permissions p WHERE u.user_id = '$user->id' AND u.object_id=s.id AND p.id = u.permission_id AND ( p.permission='add_prog' OR p.permission='admin')");
+	  $retval2 = $db->getAll("SELECT 'series' AS type, s.name AS name, s.id AS id, s.station_id FROM sotf_series s, sotf_user_permissions u, sotf_permissions p WHERE u.user_id = '$user->id' AND u.object_id=s.id AND p.id = u.permission_id AND ( p.permission='add_prog' OR p.permission='admin')");
+    return array_merge($retval1, $retval2);
   }
 
   /** returns series (id,namex) within given station owned/edited by current user */
