@@ -98,15 +98,13 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 	
 		if ($prglist == "queries" OR $prglist == "playlists") $prglist = "current";
 	
-		if ($prglist{0} == "q")			//first char indicates wther its a query or statik prg list
+		$type = $prglist{0};			//first char indicates wther its a query or statik prg list
+		$value = substr($prglist,1);		//the others are the data
+		if ($type == "q")
 		{
-			//$advsearch = new sotf_AdvSearch();			//create new search object object
-			//$SQLquery = $advsearch->Deserialize(substr($prglist, 1));	//deserialize the content (cut first char)
-			//$query = $advsearch->GetSQLCommand();
-			//$results = $db->getAll($query);
-			$results = $portal->runQuery($query);
+			$results = $portal->runQuery($value);
 		}
-		elseif ($prglist{0} == "p")
+		elseif ($type == "p")
 		{
 			$results=array();
 		}

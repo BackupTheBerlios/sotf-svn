@@ -1,3 +1,4 @@
+{config_load file="$LANG.conf"}
 <html>
 <head>
 <title>Upload page</title>
@@ -5,10 +6,11 @@
 <body bgcolor="#{$portal.bg2}">
 
 <form action="{$rootdir}/portal_upload.php/{$portal_name}" method="post">
-<input type="password" name="portal_password">
-<input type="hidden" name="type" value="{$type}">
-<input type="hidden" name="data" value="{$data}">
-
+{#upload_password#}<input type="password" name="portal_password"><br>
+name<input type="text" name="name" value="{$name}"><br>
+type<input type="text" name="type" value="{$type}"><br>
+data<input type="text" name="data" value="{$data}"><br>
+<input type="submit" name="ok" value="{#ok#}">
 
 </form>
 

@@ -26,7 +26,7 @@ elseif (isset($t2))
 	$result = $db->getOne($sql);
 	$settings = unserialize(base64_decode($result));
 	$_SESSION["settings"] = $settings;	//save result
-	$page->redirect("closeAndRefresh.php");		//close window and go back to edit mode
+	$page->redirect($rootdir."/closeAndRefresh.php");		//close window and go back to edit mode
 }
 elseif (isset($t3))
 {
@@ -34,7 +34,7 @@ elseif (isset($t3))
 	$result = $db->getOne($sql);
 	$settings = unserialize(base64_decode($result));
 	$_SESSION["settings"] = $settings;	//save result
-	$page->redirect("closeAndRefresh.php");		//close window and go back to edit mode
+	$page->redirect($rootdir."/closeAndRefresh.php");		//close window and go back to edit mode
 }
 
 $smarty->assign("portal", $settings["portal"]);

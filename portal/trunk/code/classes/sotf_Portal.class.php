@@ -46,9 +46,20 @@ CREATE TABLE "portal_programmes" (
 "progid" varchar (20) NOT NULL,
 "prglist_id" int4 REFERENCES "portal_prglist"("id"));
 
+CREATE TABLE "programmes_description" (
+"id" SERIAL PRIMARY KEY,
+"portal_id" int4 REFERENCES "portal_settings"("id") NOT NULL,
+"progid" varchar (20) NOT NULL,
+"teaser" varchar,
+"teaser_uploaded" bool,
+"text" varchar,
+"text_uploaded" bool);
+
+
 CREATE TABLE "portal_queries" (
 "id" SERIAL PRIMARY KEY, 
 "portal_id" int4 REFERENCES "portal_settings"("id") NOT NULL, 
+"name" varchar NOT NULL,
 "query" varchar);
 
 */
@@ -420,17 +431,14 @@ class sotf_Portal
 
 	function getQueries()
 	{
-		global $user;
+		global $user, $db;
 		$queries = array();
 
-//		$prefs = $user->getPreferences();
-//		foreach ($prefs->savedQueries as $query)
-//			$queries[$query["query"]] = $query["name"];
-
-		//TODO: fake!!!
-		$queries["production_date DESC|Bstation|AAND|Babstract|Bcontains|Bfekete|Bstring"] = "q1";
+		$sql="SELECT name, query FROM portal_queries WHERE portal_id = '$this->portal_id'";
+		$result = $db->getAll($sql);
+		$queries = array();		
+		foreach ($result as $query) $queries[$query['query']] = $query['name'];
 		return $queries;
-//		return array_merge(array("none" => "Choose..."), $queries);
 	}
 
 	function getPlaylists()
@@ -491,14 +499,22 @@ class sotf_Portal
 
 	function uploadData($type, $data, $portal_password)
 	{
+		global $db;
 		if ($this->portal_password != $portal_password) return false;	//if password not right
-		if ($type = "query")
+		if ($type == "query")
 		{
-			
+			$sql="INSERT INTO portal_queries(portal_id, query, name) values('$this->portal_id', '".$data['query']."', '".$data['name']."')";
+			$db->query($sql);
 		}
-		elseif ($type = "prg")
+		elseif ($type == "prg")
+		{
+			$sql="INSERT INTO portal_programmes(portal_id, progid, prglist_id) values('$this->portal_id', '$data', NULL)";
+			$db->query($sql);
+		}
+		elseif ($type == "prglist")
 		{
 		}
+		else return false;		//if bad type given
 
 		return true;
 	}
