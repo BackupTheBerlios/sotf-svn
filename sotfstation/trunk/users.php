@@ -95,14 +95,12 @@
 																	user_map.auth_id AS id,
 																	user_map.name AS user_name,
 																	user_access.name AS access_name,
-																	to_char(user_log.intime,'DD-MM-YYYY HH24:MI') AS intime,
 																	count(series.id) AS involvement 
 																	FROM
 																	user_map
 																	LEFT JOIN user_access ON (user_map.access_id = user_access.id)
-																	LEFT JOIN user_log ON (user_map.auth_id = user_log.auth_id)
 																	LEFT JOIN series ON (user_map.auth_id = series.owner)
-																	GROUP BY user_map.auth_id, user_map.name, user_access.name, user_access.id, user_log.intime 
+																	GROUP BY user_map.auth_id, user_map.name, user_access.name, user_access.id 
 																	ORDER BY $sortstring
 																	LIMIT " . $_SESSION['USER']->get("per_page") . " OFFSET $db_block
 																");

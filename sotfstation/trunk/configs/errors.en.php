@@ -32,7 +32,11 @@
 		'15'	=> 'Please enter a title for the series!',
 		'16'	=> 'Please enter a description for the series!',
 		'17'	=> 'Programme end time must be greater than programme start time!',
-		'403'	=> 'You may not view this section of the Station Management Software! If you feel that this is a mistake, then please contact the Station Administrator'
+		'18'	=> 'Series end date must be greater than the series start date!',
+		'19'	=> 'Cannot create a one day series, please create a singe programme instead!',
+		'20'	=> 'Please select at least one day for the show to run in!',
+		'403'	=> 'You may not view this section of the Station Management Software! If you feel that this is a mistake, then please contact the Station Administrator',
+		'ACC'	=> 'You have Read Only privileges over this section.'
 	);
 	
 	//section names, used for building the navigation bar
@@ -46,7 +50,9 @@
 		'USERSNEW'=> 'Add New User',
 		'SETTINGS'=> 'Settings',
 		'SERIES'	=> 'Series',
-		'CONFIRM'	=> 'Confirmation'
+		'CONFIRM'	=> 'Confirmation',
+		'SERIES'	=> 'Series',
+		'ADDSER'	=> 'Add Series'
 	);
 	
 	$ACTION = array(
@@ -57,11 +63,15 @@
 		'NEWUSER'	=> 'Access Password To Station',
 		'NA'			=> 'Needs Assistance',
 		'PP'			=> 'Pre Produced',
-		'NONE'		=> 'None'
+		'NONE'		=> 'None',
+		'ACTIVE'	=> 'Active',
+		'NOTACTIVE'=>'Not Active'
 	);
 	
 	$CONFIRM = array(
 		1			=> 'A new user has been created, you will be shortly redirected to the user management page!',
-		2			=> 'A new programme has been added to the station management console, you will be shortly redirected to the programme overview page!'
+		2			=> 'A new programme has been added to the station management console, you will be shortly redirected to the programme overview page!',
+		3			=> 'A new series has been added and filled with programmes for the defined period of time, you will be shortly redirected to the programme overview page!',
+		4			=> 'Your personal settings have been updated, you will be shortly redirected to your settings management page!'
 	);
 ?>

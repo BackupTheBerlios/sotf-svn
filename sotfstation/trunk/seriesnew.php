@@ -8,11 +8,10 @@
 	*************************/
 
 	/************************
-	* ProgrammeNew - create a new one-time programme
-	*----------------------------------------
+	* SeriesNew - create a new series
 	************************/
 	include("init.inc.php");												# include the global framwork
-	include("functions/dayfuncs.inc.php");						# date manipulation functions
+	include("functions/dayfuncs.inc.php");					# date manipulation functions
 	$myNav->add($SECTION[SERIES],'inside.php');			# add entry to Navigation Bar Stack
 	$myNav->add($SECTION[ADDSER],'usersnew.php');		# add entry to Navigation Bar Stack
 	authorize('edit_station');											# check access rights
@@ -26,10 +25,21 @@
 	 */
 	function insert($thisDay, $seriesID = 0){
 		global $db;
+		
+		//check if this is a midnight show
+		//figure out if times lie in the same day or not...
+		if(($_POST[edHour]>$_POST[sdHour]) or (($_POST[edHour] == $_POST[sdHour]) and ($_POST[edMinute]>$_POST[sdMinute]))){			
+			// if the end hour is after the start hour, then this is the same day, I presume there are no shows that take more than 24 hours
+			$nextDay = $thisDay;
+		}else{
+			$nextDay = $thisDay + 60*60*24;
+		}
+		
+		//call the query
 		$db->query("INSERT INTO programme(series_id,intime,outtime) VALUES(
 																				'$seriesID',
 																				'" . date("Y-m-d",$thisDay) . " $_POST[sdHour]:$_POST[sdMinute]:00',
-																				'" . date("Y-m-d",$thisDay) . " $_POST[edHour]:$_POST[edMinute]:00')");
+																				'" . date("Y-m-d",$nextDay) . " $_POST[edHour]:$_POST[edMinute]:00')");
 	}
 	
 	###################################### POST PRODUCE ########################################################################

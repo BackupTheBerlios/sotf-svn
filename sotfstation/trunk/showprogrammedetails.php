@@ -25,6 +25,8 @@
 	####################################################################################################################
 	//PROCESS SUBMIT (if admin)
 	if($_SESSION['USER']->get("edit_station")==2 and $_POST['Submit']){
+		//clean POST
+		$_POST = clean($_POST);
 		
 		//figure out if times lie in the same day or not...
 		if(($_POST[edHour]>$_POST[sdHour]) or (($_POST[edHour] == $_POST[sdHour]) and ($_POST[edMinute]>$_POST[sdMinute]))){			
@@ -62,7 +64,7 @@
 			$db->query("UPDATE programme SET title = '$_POST[programme_title]', intime = '$_POST[sdYear]-$_POST[sdMonth]-$_POST[sdDay] $_POST[sdHour]:$_POST[sdMinute]:00', outtime = '$_POST[edYear]-$_POST[edMonth]-$_POST[edDay] $_POST[edHour]:$_POST[edMinute]:00', special = '$_POST[special_needs]' WHERE id = '$_GET[id]'");
 			
 			//close window
-			$smarty->assign(array("window_destroy"=>true,"destination"=>"inside.php?","get_data"=>"date=$_POST[sdDay]-$_POST[sdMonth]-$_POST[sdYear]"));
+			$smarty->assign(array("window_destroy"=>true,"destination"=>"inside.php","get_data"=>"date=$_POST[sdDay]-$_POST[sdMonth]-$_POST[sdYear]"));
 		}else{	//there were errorz, reset data
 			$smarty->assign(array(
 															"prog_title"						=> 	$_POST['programme_title'],

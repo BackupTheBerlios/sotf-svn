@@ -1,4 +1,4 @@
-<form name="form1" method="post" action="usersnew.php">
+<form name="form1" method="post" action="settings.php">
   <table width="100%" border="0" cellspacing="0" cellpadding="2">
     <tr> 
       <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -8,41 +8,40 @@
                   <td colspan="2" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr> 
                         <td width="20" nowrap><strong><img src="{$root}img/i-users.gif" width="27" height="21"></strong></td>
-                        <td class=title><strong>{#create_new_user#}</strong></td>
+                        <td class=title><strong>{#your_set#}</strong></td>
                       </tr>
                     </table></td>
                 </tr>
                 <tr bgcolor="#dddddd"> 
-                  <td colspan="2" nowrap class=whitesmall>{#access_det#}</td>
+                  <td colspan="2" nowrap class=whitesmall><strong>{#disp_opt#}</strong></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td width="10%" nowrap> <div align="right">{#login_name#}:</div></td>
-                  <td nowrap><input name="login" type="text" class="myinput" id="login" value="{$submit_login}" maxlength="32"></td>
-                </tr>
-                <tr bgcolor="#F4F4F4"> 
-                  <td nowrap> <div align="right">{#user_mail#}:</div></td>
-                  <td nowrap><input name="mail" type="text" class="myinput" id="mail" maxlength="100" value="{$submit_mail}"></td>
-                </tr>
-                <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">{#access_level#}:</div></td>
-                  <td nowrap><select name="access_level" id="access_level" class="myselect">
-				  {html_options options=$access_levels selected=$submit_access_level}
+                  <td width="10%" nowrap> <div align="right">{#rec_pp#}:</div></td>
+                  <td nowrap><select name="per_page" id="per_page">
+                    {html_options options=$per_page selected=$submit_per_page}
                     </select></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td colspan="2" nowrap bgcolor="#dddddd" class=whitesmall><strong>{#access_password#}</strong> 
-                    ({#access_password_comm#})</td>
+                  <td colspan="2" nowrap bgcolor="#dddddd" class=whitesmall><strong>{#log_opt#}</strong></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">{#password#}:</div></td>
-                  <td nowrap><input name="pass" type="text" class="myinput" id="pass" maxlength="32" value="{$submit_pass}"></td>
+                  <td nowrap><div align="right">{#autologin#}:</div></td>
+                  <td nowrap><input name="autologin" type="checkbox" id="autologin" value="t" {if $submit_autologin == 't'}checked{/if}></td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">{#access_level#}:</div></td>
+                  <td nowrap>{$access_level}</td>
                 </tr>
                 <tr bgcolor="#dddddd"> 
-                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#formal_data#}</strong></div></td>
+                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#your_data#}</strong></div></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
                   <td nowrap><div align="right">{#real_name#}:</div></td>
                   <td nowrap><input name="name" type="text" class="myinput" id="name" maxlength="32" value="{$submit_name}"></td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">{#user_mail#}:</div></td>
+                  <td nowrap><input name="mail" type="text" class="myinput" id="mail2" maxlength="100" value="{$submit_mail}"></td>
                 </tr>
                 {section name=error_cell show=$error_out} 
                 <tr bgcolor="#FFCCCC"> 
