@@ -32,8 +32,10 @@ class sotf_Permission
     }
     if($debug) {
       debug("current permissions: ");
-      foreach($permissions as $key => $value) {
-        error_log("PERMISSION: $key = " . join(' ',$value),0);
+      if(count($permissions) > 0) {
+        foreach($permissions as $key => $value) {
+          error_log("PERMISSION: $key = " . join(' ',$value),0);
+        }
       }
     }
     return $permissions;
