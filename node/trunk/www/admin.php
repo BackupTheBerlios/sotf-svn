@@ -15,9 +15,9 @@ if (!hasPerm('node', "change")) {
 // import XBMF
 $xbmfFile = sotf_Utils::getParameter('import_xbmf');
 if($xbmfFile) {
-	$id = sotf_Programme::importXBMF("$xbmfInDir/$xbmfFile");
+	$id = sotf_Programme::importXBMF("$xbmfInDir/$xbmfFile",$publishxbmf);
 	if($id) {
-		echo "Import succesful: <a target=\"_blank\" href=\"editMeta.php?id=$id\">click here</a>";
+		echo "Import succesful: <a target=\"_opener\" href=\"editMeta.php?id=$id\">click here</a>";
 	} else {
 		echo "Import failed";
 	}
