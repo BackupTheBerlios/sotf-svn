@@ -30,7 +30,7 @@ if (!is_file($filepath)) {
 }
 
 // prepare playlist for streaming into icecast
-$fp = fopen($tmpfile,'w');
+$fp = fopen($tmpfile,'wb');
 /* TODO: add jingle
 			$jinglefile = $repo->getStationJingle($station);
 			if (!is_object($jinglefile))
@@ -50,7 +50,10 @@ $mystreamCmd = str_replace('__NAME__', $name, $mystreamCmd);
 $mystreamCmd = str_replace('__BITRATE__', $bitrate, $mystreamCmd);
 debug("Cmd", $mystreamCmd);
 debug("Url", $url);
-$res = exec($mystreamCmd);
+
+exec($mystreamCmd);
+
+//$res = exec($mystreamCmd);
 //debug("Cmd output", $res);
 
 // send playlist to client

@@ -65,11 +65,17 @@ class sotf_Utils
   function getFileInDir($dir, $filename) {
     if(empty($filename))
       raiseError("Filename is empty");
-    $path = realpath($dir . '/' . $filename);
+    if(!$path = realpath($dir . '/' . $filename)) {
+      debug("no such file", $dir . '/' . $filename);
+      raiseError("no_such_file");
+    }
+    /* TODO: this does not work under WIndows, because of / and \ differences
     if(!strstr($path, $dir)) {
       debug("path", $path);
+      debug("dir", $dir);
       raiseError("Attempt to break out directory");
     }
+    */
     return $path;
   }
 

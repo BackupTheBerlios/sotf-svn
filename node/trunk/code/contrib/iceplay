@@ -57,6 +57,10 @@ while (scalar(@ARGV) > 0) {
 					$webfile = shift @ARGV;
 					last SWITCH;
 				};
+		$1 =~ /v/	&& do {
+					$verbose = 1;
+					last SWITCH;
+				};
 		$1 =~ /n/	&& do {
 					$name = shift @ARGV;
 					last SWITCH;
@@ -121,7 +125,7 @@ EEE
 $sock->print($headers);
 
 # can't check for connection success, because icecast is buggy (or Perl)
-print "CONNECTED: " . formatDate() . "\n";
+print "CONNECTED: " . formatDate() . "\n" if $verbose;
 #print "Connected to server...\n";
 #print STDERR time() . "connected\n";
 
@@ -129,10 +133,10 @@ open(PLAYLIST, $playlist) || die "Cannot open playlist: $playlist";
 my @songs = <PLAYLIST>;
 close(PLAYLIST);
 
-my $num_songs = @songs;
+my $num_songs = $#songs;
 
 #print STDERR time() . "playlist loaded: $playlist\n";
-print "Playlist $playlist loaded\n   $num_songs total songs...\n";
+print "Playlist $playlist loaded\n   $num_songs total songs...\n" if $verbose;
 
 # Figure out the sleep time and data size
 my $buffsize = 4000;
@@ -140,12 +144,21 @@ if ($bitrate < 48) {
   $buffsize = 1000;
 }
 my $timetosleep = $buffsize / ($bitrate * 1000 / 8);
+print "buffsize: $buffsize\n" if $verbose;
+print "timetosleep: $timetosleep\n" if $verbose;
+
+
 
 $i=0;
 while ($i <= $num_songs) {
 #  my $song = $songs[rand $num_songs];
   my $song = $songs[$i];
-  open(SONG, $song);
+  if(!open(SONG, $song)) {
+    print "Cannot open: $song\n" if $verbose;
+  } else {
+    print "Playing: $song\n" if $verbose;
+  }
+  binmode SONG; # needed for windows
   $song =~ /.*\/(.*) - (.*)\.mp3/;
   my $artist = $1;
   my $title = $2;
@@ -154,11 +167,14 @@ while ($i <= $num_songs) {
 #  close(WEBFILE);
 
   my ($read, $buff, $sleeptime);
+  $buff='';
   do {
     $read = read(SONG, $buff, $buffsize);
+    print "read: $read\n" if $verbose;
     $sock->print($buff);
     $sleeptime = $timetosleep * $read / $buffsize;
     sleep($sleeptime);
+    print "slept: $sleeptime\n" if $verbose;
   } while ($read == $buffsize);
   close(SONG);
   $i++;
@@ -166,7 +182,7 @@ while ($i <= $num_songs) {
 
 $sock->close();
 
-print "FINISHED: " . formatDate() . "\n";
+print "FINISHED: " . formatDate() . "\n" if $verbose;
 
 exit(0);
 

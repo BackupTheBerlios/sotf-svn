@@ -2,7 +2,7 @@
 
 require("init.inc.php");
 
-$filenameOrig = sotf_Utils::getParameter('filename');
+$filename = sotf_Utils::getParameter('filename');
 $id = sotf_Utils::getParameter('id');
 $mainAudio = sotf_Utils::getParameter('audio');
 $prg = & new sotf_Programme($id);

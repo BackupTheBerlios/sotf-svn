@@ -7,7 +7,7 @@
  */
 class sotf_AdvSearch
 {
-	var $SQLquery, $sort1, $sort2;
+	var $SQLquery, $sort1, $sort2, $allid;
 	
 	function sotf_AdvSearch($array = "")			//constuctor with a starting query
 	{
@@ -432,19 +432,51 @@ class sotf_AdvSearch
 
 	function simpleSearch($words, $language = false)		//searches the words in the most popular fields
 	{
-		$words = htmlspecialchars($words);
-		$word = split(" ", $words);
-		$max = count($word);
-		for ($i=0; $i<$max; $i++)
+		global $db;
+		$this->allid = array();
+		$words = htmlspecialchars($words);		//remove special chars
+		$word = split(" ", $words);			//split into separate words
+		$max = count($word);				//count words
+		for ($i=0; $i<$max; $i++)			//go through all words
 		{
-			$word = trim($word);
-			if ($word == "") next;
+			$word[$i] = trim($word[$i]);			//trim word
+			if ($word[$i] == "") continue;			//in empty get next
+
+			//find word at the most common places
 			$serial = str_replace("XXX", $word[$i], "production_date|Bstation|AAND|Bperson|Bcontains|BXXX|Bstring|AOR|Btitle|Bcontains|BXXX|Bstring|AOR|Bkeywords|Bcontains|BXXX|Bstring|AOR|Babstract|Bcontains|BXXX|Bstring|AOR|Bspatial_coverage|Bcontains|BXXX|Bstring");
-			if ($language) $serial .= "|AAND|Blanguage|Bis|B".$language."|Blang";
-			$this->Deserialize($serial);
-			$query = $this->GetSQLCommand();
-			print($query."<br><br>");
+			if ($language) $serial .= "|AAND|Blanguage|Bis|B".$language."|Blang";		//if language given add to search options
+			$this->Deserialize($serial);		//deserialize query
+			$query = $this->GetSQLCommand();	//get desrialized query
+			$query = "SELECT id FROM (".$query.") as a";
+			$result = $db->getAll($query);
+			$maxk = count($result);				//count words
+			for ($k=0; $k<$maxk; $k++)			//go through all results
+			{
+				if (array_key_exists($result[$k]["id"], $this->allid)) $this->allid[$result[$k]["id"]] += 1;
+				else $this->allid[$result[$k]["id"]] = 1;
+			}
 		}
+		return count($this->allid);
+	}
+
+	function getSimpleSearchResults($from, $to)		//gives back the search results from the simpleSearch
+	{
+		global $db;
+		arsort($this->allid, SORT_NUMERIC);		//sorts the array, bigger numbers first
+		$result = array();
+		$i = -1;
+		foreach($this->allid as $id => $value)
+		{
+			$i++;
+			if ($i < $from) continue;
+			if ($i > $to) break;
+			$query = "SELECT * FROM sotf_programmes WHERE id='$id'";
+			$result = array_merge($result, $db->getAll($query));
+		}
+//		print("<pre>");
+//		var_dump($result);
+//		print("</pre>");
+	return($result);
 	}
 
 }
