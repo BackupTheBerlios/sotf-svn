@@ -54,6 +54,7 @@ class sotf_Statistics extends sotf_Object {
 
   /** static */
   function addRemoteStat($data) {
+	 debug("remote stat", $data);
 	 return sotf_Statistics::recordStat($data);
   }
 
