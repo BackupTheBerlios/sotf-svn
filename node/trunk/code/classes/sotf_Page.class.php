@@ -82,6 +82,13 @@ class sotf_Page
 		}
 	} // end func setAnonymous
 
+	/** THis will change the user interface into the desired language on the next request. */
+	function setUILanguage($lang) {
+		if(!setcookie('uiLang', $lang)) {
+			raiseError("could not set cookie for uilang");
+		}
+	}
+
 	/**
 	* Random key used in cookie to avoid duplicate actions such as rating twice
 	*

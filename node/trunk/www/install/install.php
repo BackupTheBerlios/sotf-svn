@@ -601,7 +601,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			  $o1->create();
 			  $o2 = new sotf_NodeObject("sotf_role_names");
 			  $o2->set('role_id', $id);
-			  $o2->set('language', 'en');
+			  $o2->set('language', 'eng');
 			  $o2->set('name', $english);
 			  $o2->create();
 			}
@@ -610,18 +610,18 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			createRole( 2, 'Author', 't');
 			createRole( 3, 'Commentator');
 			createRole( 4, 'Composer');
-			createRole( 5, 'Copyright holder');
+			createRole( 5, 'Copyright holder', 't');
 			createRole( 6, 'Correspondent');
 			createRole( 7, 'Designer');
 			createRole( 8, 'Director', 't');
 			createRole( 9, 'Editor', 't');
 			createRole( 10, 'Funder / Sponsor');
 			createRole( 11, 'Interviewee');
-			createRole( 12, 'Interviewer');
+			createRole( 12, 'Interviewer', 't');
 			createRole( 13, 'Narrator');
 			createRole( 14, 'Participant');
 			createRole( 15, 'Performer');
-			createRole( 16, 'Producer');
+			createRole( 16, 'Producer', 't');
 			createRole( 17, 'Production Personnel');
 			createRole( 18, 'Speaker');
 			createRole( 19, 'Transcriber');
@@ -629,7 +629,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			createRole( 21, 'Other');
 			createRole( 22, 'Creator', 't');
 			createRole( 23, 'Publisher');
-			createRole( 24, 'Contributor');
+			createRole( 24, 'Contributor', 't');
 			
 			// create genres
 			
@@ -640,7 +640,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			function createGenre($id, $english) {
 			  $o1 = new sotf_NodeObject("sotf_genres");
 			  $o1->set('genre_id', $id);
-			  $o1->set('language', 'en');
+			  $o1->set('language', 'eng');
 			  $o1->set('name', $english);
 			  $o1->create();
 			}

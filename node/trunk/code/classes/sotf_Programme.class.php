@@ -916,7 +916,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
 	 // determine role
 	 if($contactData['role']) {
-		$language = 'en'; // for now
+		$language = 'eng'; // for now
 		$rid = $repository->getRoleId($contactData['role'], $language);
 		if($rid)
 		  $contactRole = $rid;

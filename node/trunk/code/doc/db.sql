@@ -24,6 +24,7 @@ CREATE TABLE "sotf_user_prefs" (
 "id" int PRIMARY KEY,					-- same as auth_id in sadm
 "username" varchar(50) NOT NULL,
 "email" varchar(100),			-- temporary solution
+"feedback" bool DEFAULT 't'::bool,  -- if he wants emails forwarded to him
 "prefs" text
 );
 
@@ -160,7 +161,8 @@ CREATE TABLE "sotf_contacts" (
 "phone" varchar(50),
 "cellphone" varchar(50),
 "fax" varchar(50),
-"url" varchar(255)
+"url" varchar(255),
+"feedback" bool DEFAULT 'f'::bool  -- if he wants comments forwarded to him
 );
 
 CREATE SEQUENCE "sotf_programmes_seq";
@@ -502,12 +504,13 @@ CREATE TABLE "sotf_comments" (
 -- comments for a radio programme 
 "id" serial PRIMARY KEY,
 "prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
-"from_email" varchar(60),		-- e-mail from where comment arrived
-"from_name" varchar(60),		-- user name-like thing
-"entered" timestamptz,			-- when user entered the comment
-"portal" varchar(255),			-- the portal URL where the comment was made
-"comment_title" text,			-- subject of the comment
-"comment_text" text				-- full text of the comment
+"from_email" varchar(60),				-- e-mail from where comment arrived
+"from_name" varchar(60),				-- user name-like thing
+"entered" timestamptz,					-- when user entered the comment
+"portal" varchar(255),					-- the portal URL where the comment was made
+"comment_title" text,						-- subject of the comment
+"comment_text" text,						-- full text of the comment
+"sent" bool DEFAULT 'f'::bool		-- if this has been sent to authors
 );
 
 CREATE TABLE "sotf_to_forward" (

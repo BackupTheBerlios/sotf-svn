@@ -68,7 +68,7 @@ if($stationName) {
 
   // add items
   $newProgs = $station->listProgrammes(0, ITEMS_IN_RSS);
-  debug("progs", $newProgs);
+  //debug("progs", $newProgs);
   foreach($newProgs as $prog) {
 	 $properties=array();
 	 $properties["description"]= $prog->get('abstract');

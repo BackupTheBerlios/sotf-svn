@@ -399,7 +399,7 @@ class sotf_Repository {
 	 $o1 = & new sotf_NodeObject("sotf_topic_trees");
 	 $o1->set('tree_id', $treeId);
 	 $o1->set('name', $treedata['shortname']);
-	 $o1->set('languages', 'en');
+	 $o1->set('languages', 'eng');
 	 $o1->create();
 
 	 // create root description
@@ -412,7 +412,7 @@ class sotf_Repository {
 	 // create root translation
 	 $y = new sotf_NodeObject("sotf_topics");
 	 $y->set('topic_id', $rootId);
-	 $y->set('language', 'en');
+	 $y->set('language', 'eng');
 	 $y->set('topic_name', $treedata['name']);
 	 $y->set('description', $treedata['description']);
 	 $y->create();
@@ -451,7 +451,7 @@ class sotf_Repository {
 		$id = $x->getID();
 		$y = new sotf_NodeObject("sotf_topics");
 		$y->set('topic_id', $id);
-		$y->set('language', 'en');
+		$y->set('language', 'eng');
 		$y->set('topic_name', $name);
 		$y->create();
 		$prevId = $id;
@@ -502,12 +502,12 @@ class sotf_Repository {
 	 global $sotfVars;
 	 // avail langs are stored in sotf_vars and refreshed by cron
 	 // roles
-	 $langs = explode(',', $sotfVars->get('roles_langs', 'en'));
+	 $langs = explode(',', $sotfVars->get('roles_langs', 'eng'));
 	 foreach($langs as $l) {
 		$retval[] = array("roles","",$l);
 	 }
 	 // genres
-	 $langs = explode(',', $sotfVars->get('genres_langs', 'en'));
+	 $langs = explode(',', $sotfVars->get('genres_langs', 'eng'));
 	 foreach($langs as $l) {
 		$retval[] = array("genres","",$l);
 	 }
