@@ -14,37 +14,51 @@
 
 {if $STATION_MANAGER}
 
-
-<div align="left"><b>{#general_data#}</b></div>
-<table width="100%" bgcolor="{#editorBgColor1#}">
-<tr><td>
-	<form method="post">
-	<table>
-		<tr>
-			<td>{#station_name#}:</td>
-			<td><b><a href="showStation.php?stationid={$STATION_ID}">{$STATION}</a></b></td>
-		</tr>
-		<tr>
-			<td>{#description#}:</td>
-			<td><textarea cols="50" rows="10" name="desc">{$STATION_DATA.description}</textarea></td>
-		</tr>
-	</table>
-	<input type="submit" name="save" value="{#save#}">
-	</form>
-</td></tr>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#general_data#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        <table width="100%">
+          <tr><td>
+              <form method="post">
+                <table>
+                  <tr>
+                    <td>{#station_name#}:</td>
+                    <td><b><a href="showStation.php?stationid={$STATION_ID}">{$STATION}</a></b></td>
+                  </tr>
+                  <tr>
+                    <td>{#description#}:</td>
+                    <td><textarea cols="50" rows="10" name="desc">{$STATION_DATA.description}</textarea></td>
+                  </tr>
+                </table>
+                <input type="submit" name="save" value="{#save#}">
+              </form>
+            </td></tr>
+        </table>
+  </td>
+</tr>
 </table>
 
 <p></p>
-<div align="left"><b>{#Roles#}</b></div>
-<table width="100%" bgcolor="{#editorBgColor1#}">
-<tr><td>
 
-	{if $ROLES}
-		<table cellspacing="0" cellpadding="2" border="1">
-		{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
-		<tr bgcolor="{cycle}"><th>{#Role#}</th><th>{#Contact#}</th><th>{#actions#}</th></tr>
-		{foreach item=item from=$ROLES}
-			<tr bgcolor="{cycle}">
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Roles#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $ROLES}
+        <table cellspacing="0" cellpadding="2" border="1">
+          {cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+          <tr bgcolor="{cycle}"><th>{#Role#}</th><th>{#Contact#}</th><th>{#actions#}</th></tr>
+          {foreach item=item from=$ROLES}
+          <tr bgcolor="{cycle}">
             <td>
               {$item.role_name}
             </td>
@@ -53,32 +67,38 @@
             </td>
             <td>
               <a href="javascript:popup('editRole.php?roleid={$item.id}&objectid={$STATION_ID}','{#edit_role#}',350,400,false)">{#change#}</a>
+              <a href="javascript:popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)">{#edit_contact#}</a>
               <a href="editStation.php?delrole=1&roleid={$item.id}&stationid={$STATION_ID}">{#delete#}</a>
             </td>
-      </tr>
-		{/foreach}
-		</table>
-	{else}
-		<p>{#no_roles#}</p>
-	{/if}
-     <p>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_roles#}</p>
+        {/if}
+        <p>
           <a href="javascript:popup('editRole.php?new=1&objectid={$STATION_ID}','{#edit_role#}',400,400,false)">{#add_new_role#}</a>
-     </p>
-
-</td></tr>
+        </p>
+      </td>
+    </tr>
 </table>
 
 <p></p>
-<div align="left"><b>{#access_permissions#}</b></div>
-<table width="100%" bgcolor="{#editorBgColor1#}">
-<tr><td>
 
-	{if $PERMISSIONS}
-		<table cellspacing="0" cellpadding="2" border="1">
-		{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
-		<tr bgcolor="{cycle}"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
-		{foreach item=user key=username from=$PERMISSIONS}
-			<tr bgcolor="{cycle}">
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#access_permissions#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $PERMISSIONS}
+        <table cellspacing="0" cellpadding="2" border="1">
+          {cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+          <tr bgcolor="{cycle}"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
+          {foreach item=user key=username from=$PERMISSIONS}
+          <tr bgcolor="{cycle}">
             <td>{$username}</td>
             <td>
               {section name=i loop=$user}
@@ -89,41 +109,83 @@
               <a href="javascript:popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)">{#change#}</a>
               <a href="editStation.php?delperm=1&username={$username|escape}&stationid={$STATION_ID}">{#delete#}</a>
             </td>
-      </tr>
-		{/foreach}
-		</table>
-	{else}
-		<p>{#no_users#}</p>
-	{/if}
-	<form method="post" name="form1">
-	<input type="hidden" name="stationid" value="{$STATION_ID}">
-    {#username#}: <input name="username"> 
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_users#}</p>
+        {/if}
+        <form method="post" name="form1">
+          <input type="hidden" name="stationid" value="{$STATION_ID}">
+            {#username#}: <input name="username"> 
               <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
-          <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
-	</form>
-
-</td></tr>
+                <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
+        </form>
+      </td>
+    </tr>
 </table>
 
 <p></p>
-<div align="left"><b><a name="logo">{#logos_and_jingles#}</a></b></div>
-<table width="100%" bgcolor="{#editorBgColor1#}">
-<tr><td>
-<p></p>
-	{if $USERFILES}
-	<form method="post" name="userfiles">
-	<input type="hidden" name="okURL" value="{$OKURL}">
-	<input type="hidden" name="stationid" value="{$STATION_ID}">
-	<p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
-	<input type="submit" name="view" value="{#view#}">
-	<input type="submit" name="setjingle" value="{#set_jingle#}">
-	<input type="submit" name="setlogo" value="{#set_logo#}">
-<br \><small>{#userfiles_expl#}</small>
-	</form>
-	{else}
-	<p>{#no_files#}</p>
-	{/if}
-  <small>
+
+<table class="tabarea">
+  <tr> 
+    <td nowrap class="tab">{#logos_and_jingles#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+   <td class="tabarea"> 
+
+     <table>
+          <tr>
+            <th>{#logo#}</th><th>{#jingle_list#}</th>
+          </tr>
+          <tr>
+            <td>
+              {if $LOGO}
+              <img src="getIcon.php/icon.png?id={$STATION_ID}" border="1">
+              {else}
+                {#no_logo#}
+              {/if}
+           </td><td>   
+              <table cellspacing="0" cellpadding="2" border="1">
+                <tr><th>&nbsp;</th><th>{#format#}</th><th>{#bitrate#}</th><th>{#channels#}</th><th>{#samplerate#}</th></tr>
+                {cycle values="#EEEEEE,#FFFFFF" print=false advance=true}
+                {section name=i loop=$JINGLE}
+                <tr bgcolor="{cycle}">
+                  {section name=j loop=$JINGLE[i]}
+                  <td>{$JINGLE[i][j]}</td>
+                  {/section}
+                </tr>
+                {/section}
+                {/if}
+              </table>
+            </td></tr>
+        </table>
+        <a name="logo"></a>
+
+        {if $USERFILES}
+{literal}
+<script language="javascript">
+function getSelected() {
+     return document.userfiles['filename'].options[document.userfiles['filename'].selectedIndex].value;
+}
+</script>
+{/literal}
+
+        <form method="post" name="userfiles">
+          <input type="hidden" name="okURL" value="{$OKURL}">
+          <input type="hidden" name="stationid" value="{$STATION_ID}">
+          <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
+          <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
+          <input type="submit" name="setjingle" value="{#set_jingle#}">
+          <input type="submit" name="setlogo" value="{#set_logo#}">
+          <br \><small>{#userfiles_expl#}</small>
+        </form>
+        {else}
+        <p>{#no_files#}</p>
+        {/if}
+        <small>
           <form enctype="multipart/form-data" method="post">
             <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
             <input type="hidden" name="stationid" value="{$STATION_ID}" />
@@ -131,28 +193,8 @@
             <input type="submit" name="upload" value="{#upload_file#}" />
             <br />{#upload_expl#}
           </form>
-  </small>
-	{if $LOGO}
-		<table><tr><td>{#logo#}:</td><td><img src="getIcon.php/icon.png?id={$STATION_ID}" border="1"></td></tr></table>
-	{else}
-		{#no_logo#}
-	{/if}
-
-	{if $JINGLE}
-	<p>{#jingle_list#}</p>
-	<table cellspacing="0" cellpadding="2" border="1">
-	<tr><th>&nbsp;</th><th>{#format#}</th><th>{#bitrate#}</th><th>{#channels#}</th><th>{#samplerate#}</th></tr>
-	{cycle values="#EEEEEE,#FFFFFF" print=false advance=true}
-	{section name=i loop=$JINGLE}
-		<tr bgcolor="{cycle}">
-		{section name=j loop=$JINGLE[i]}
-			<td>{$JINGLE[i][j]}</td>
-		{/section}
-		</tr>
-	{/section}
-	{/if}
-	</table>
-{/if}
-
-</td></tr>
-</table>
+        </small>
+        
+      </td>
+    </tr>
+  </table>

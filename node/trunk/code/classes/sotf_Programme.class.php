@@ -96,6 +96,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $this->saveMetadataFile();
   }
 
+  function getAssociatedObjects($tableName, $orderBy) {
+    $objects = $this->db->getAll("SELECT * FROM $tableName WHERE prog_id='$this->id' ORDER BY $orderBy");
+    return $objects;
+  }
+
   function loadOtherFiles() {
     if(empty($this->files)) {
       $this->files = & new sotf_FileList();

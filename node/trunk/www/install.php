@@ -554,11 +554,125 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		if (isset($install_create_topic))
 		{
 			require("init.inc.php");
+
+			$id = addParent("development", "Development");
+			addChild($id, "agriculture", "Agriculture");
+			addChild($id, "aid", "Aid");
+			addChild($id, "capacity building", "Capacity Building");
+			addChild($id, "children", "Children");
+			addChild($id, "cities", "Cities");
+			addChild($id, "education", "Education");
+			addChild($id, "emergency relief", "Emergency Relief");
+			addChild($id, "energy", "Energy");
+			addChild($id, "fisheries", "Fisheries");
+			addChild($id, "food", "Food");
+			addChild($id, "gender", "Gender");
+			addChild($id, "intermediate technology", "Intermediate Technology");
+			addChild($id, "international cooperation", "International Cooperation");
+			addChild($id, "labour/work", "Labour/Work");
+			addChild($id, "land", "Land");
+			addChild($id, "migration", "Migration");
+			addChild($id, "population", "Population");
+			addChild($id, "poverty", "Poverty");
+			addChild($id, "refugees", "Refugees");
+			addChild($id, "shelter/housing", "Shelter/Housing");
+			addChild($id, "social exclusion", "Social Exclusion");
+			addChild($id, "tourism", "Tourism");
+			addChild($id, "transport", "Transport");
+			addChild($id, "volunteering", "Volunteering");
+			addChild($id, "water/sanitation", "Water/Sanitation");
+			addChild($id, "youth", "Youth");
+			addChild($id, "old age / retirement", "Old Age / Retirement");
+
+			$id = addParent("economy", "Economy");
+			addChild($id, "business", "Business");
+			addChild($id, "consumption/consumerism", "Consumption/Consumerism");
+			addChild($id, "corporations", "Corporations");
+			addChild($id, "credit/investment", "Credit/Investment");
+			addChild($id, "debt", "Debt");
+			addChild($id, "finance", "Finance");
+			addChild($id, "microcredit", "Microcredit");
+			addChild($id, "social enterprise", "Social Enterprise");
+			addChild($id, "trade", "Trade");
+
+			$id = addParent("environment", "Environment");
+			addChild($id, "animals", "Animals");
+			addChild($id, "atmosphere", "Atmosphere");
+			addChild($id, "biodiversity", "Biodiversity");
+			addChild($id, "climate change", "Climate Change");
+			addChild($id, "conservation", "Conservation");
+			addChild($id, "environmental activism", "Environmental Activism");
+			addChild($id, "forests", "Forests");
+			addChild($id, "genetics", "Genetics");
+			addChild($id, "nuclear issues", "Nuclear Issues");
+			addChild($id, "oceans", "Oceans");
+			addChild($id, "pollution", "Pollution");
+			addChild($id, "renewable energy", "Renewable Energy");
+			addChild($id, "rivers", "Rivers");
+			addChild($id, "soils", "Soils");
+			addChild($id, "rural life", "Rural Life");
+
+			$id = addParent("health", "Health");
+			addChild($id, "aids", "Aids");
+			addChild($id, "disease/treatment", "Disease/Treatment");
+			addChild($id, "infant mortality", "Infant Mortality");
+			addChild($id, "malaria", "Malaria");
+			addChild($id, "narcotics", "Narcotics");
+			addChild($id, "nutrition/malnutrition", "Nutrition/Malnutrition");
+
+			$id = addParent("human rights", "Human Rights");
+			addChild($id, "civil rights/civil liberties", "Civil Rights/Civil Liberties");
+			addChild($id, "disability", "Disability");
+			addChild($id, "indigenous rights", "Indigenous Rights");
+			addChild($id, "race politics", "Race Politics");
+			addChild($id, "religion", "Religion");
+			addChild($id, "sexuality", "Sexuality");
+			addChild($id, "social exclusion", "Social Exclusion");
+
+			$id = addParent("information & media", "Information & Media");
+			addChild($id, "communications", "Communications");
+			addChild($id, "culture", "Culture");
+			addChild($id, "freedom of expression", "Freedom Of Expression");
+			addChild($id, "internet", "Internet");
+			addChild($id, "knowledge", "Knowledge");
+			addChild($id, "media", "Media");
+			addChild($id, "science", "Science");
+			addChild($id, "art", "Art");
+			addChild($id, "sport", "Sport");
+
+			$id = addParent("politics", "Politics");
+			addChild($id, "activism", "Activism");
+			addChild($id, "civil society", "Civil Society");
+			addChild($id, "codes of conduct", "Codes Of Conduct");
+			addChild($id, "democracy", "Democracy");
+			addChild($id, "ethics/value systems", "Ethics/Value Systems");
+			addChild($id, "geopolitics", "Geopolitics");
+			addChild($id, "globalisation", "Globalisation");
+			addChild($id, "governance", "Governance");
+			addChild($id, "justice/crime", "Justice/Crime");
+			addChild($id, "law", "Law");
+			addChild($id, "transparency/corruption", "Transparency/Corruption");
+			addChild($id, "United Nations", "United Nations");
+			addChild($id, "class issues", "Class Issues");
+
+			$id = addParent("war & peace", "War & Peace");
+			addChild($id, "arms/military", "Arms/Military");
+			addChild($id, "conflict", "Conflict");
+			addChild($id, "conflict resolution", "Conflict Resolution");
+			addChild($id, "landmines", "Landmines");
+			addChild($id, "nuclear issues", "Nuclear Issues");
+			addChild($id, "peace", "Peace");
+			addChild($id, "security", "Security");
+			addChild($id, "terrorism", "Terrorism");
 		}
 		if (isset($install_delete_topic))
 		{
 			$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
 			$sql = "DELETE FROM sotf_topic_tree_defs";
+			$result = @pg_query($conn, $sql);
+			$sql = "DELETE FROM sotf_topic_trees";
+			$result = @pg_query($conn, $sql);
+			$sql = "DELETE FROM sotf_topics";
 			$result = @pg_query($conn, $sql);
 			@pg_close($conn);		//close old connection
 		}

@@ -243,6 +243,7 @@ CREATE TABLE "sotf_links" (
 	"prog_id" varchar(12) NOT NULL,
 	"url" varchar(255) NOT NULL,
 	"caption" varchar(255),
+	"public_access" bool DEFAULT 'f'::bool,
 	CONSTRAINT "sotf_links_u" UNIQUE ("prog_id", "url"),
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );

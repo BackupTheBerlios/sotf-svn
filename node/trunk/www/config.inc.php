@@ -69,6 +69,9 @@ $smartydir = 'C:/sotf/helpers/smarty2.3';
 // where getid3 files are located
 $getid3dir = 'C:/sotf/helpers/getid3';
 
+// where ImageMagick is installed
+$magickDir = 'C:/Program Files/ImageMagick';
+
 // where eZ xml files are located
 //$ezxmldir = '/ezxml';
 

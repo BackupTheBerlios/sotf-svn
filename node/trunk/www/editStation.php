@@ -72,11 +72,7 @@ if($delperm) {
 }
 
 // icon and jingle
-if($view)
-{
-  $page->redirect("getUserFile.php/".$filename."?filename=".rawurlencode($filename));
-}
-elseif($setjingle)
+if($setjingle)
 {
   $audiofile = & new sotf_AudioFile($user->getUserDir() . '/' . $filename);
   if ($st->setJingle($audiofile))
@@ -87,11 +83,21 @@ elseif($setjingle)
 }
 elseif($setlogo)
 {
-  $file = & new sotf_File($user->getUserDir().'/'.$filename);
-  if ($st->setLogo($file))
-    $page->addStatusMsg("ok_logo");
-  else
+//  $file = & new sotf_File($user->getUserDir().'/'.$filename);
+  $oldfile = $user->getUserDir().'/'.$filename;
+  $newfile = $user->getUserDir().'/'.time().".img";
+  if (!sotf_Utils::resizeImage($oldfile, $newfile, $iconWidth, $iconHeight))
     $page->addStatusMsg("error_logo");
+  else
+  {
+	  $file = & new sotf_File($newfile);
+	  if ($st->setLogo($file))
+	    $page->addStatusMsg("ok_logo");
+	  else
+	    $page->addStatusMsg("error_logo");
+  }
+  if(is_file($newfile))
+    unlink($newfile);
   $page->redirect("editStation.php?stationid=$stationid#logo");
 }
 

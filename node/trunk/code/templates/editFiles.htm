@@ -38,19 +38,90 @@ function deselectAllOther()
 
 <H3>{#Edit_files#}</H3>
 
-{if $STATUS}
-<p><font color="red">{$STATUS}</font></p>
-{/if}
-{if $DELETED}
-<p><font color="red">
-{section name=i loop=$DELETED}
-"{$DELETED[i]}" deleted!<br>
-{/section}
-</font></p>
-{/if}
 <form name="filesform" method="post">
 <input type="hidden" name="okURL" value="{$OKURL}">
 <input type="hidden" name="id" value="{$ID}">
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Audio_files#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+
+    <table>
+       <tr>
+          <th>{#filename#}</th>
+          <th>{#caption#}</th>
+          <th>{#filesize#}</th>
+          <th>{#stream_access#}</th>
+          <th>{#download_access#}</th>
+          <th>{#filename#}</th>
+          <th>{#filename#}</th>
+          <th>{#filename#}</th>
+       </tr>
+    </table>
+              <p>
+              <a href="javascript:popup('addFiles.php?new=1&prgid={$ID}','{#addfiles#}',500,500,true)">{#add_files#}</a>
+              </p>
+ 
+  </td>
+</tr>
+</table>
+</form>
+
+<form name="linksform" method="post">
+<input type="hidden" name="okURL" value="{$OKURL}">
+<input type="hidden" name="id" value="{$ID}">
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Links#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea">
+   {if $LINKS } 
+    <table>
+       {cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+       <tr bgcolor="{cycle}">
+          <th>{#url#}</th>
+          <th>{#caption#}</th>
+          <th>{#public#}</th>
+          <th>{#actions#}</th>
+       </tr>
+       {foreach item=item from=$LINKS}
+          <tr bgcolor="{cycle}">
+            <td>
+              <a target="link" href="{$item.url}">{$item.url}</a>
+            </td>
+            <td>
+              {$item.caption}
+            </td>
+            <td>
+              <input type="checkbox" { if $item.public_access eq 't' } CHECKED="1" {/if} />
+            </td>
+            <td>
+              <a href="javascript:popup('editLink.php?linkid={$item.id}&prgid={$ID}','{#edit_link#}',350,400,false)">{#change#}</a>
+              <a href="editFiles.php?dellink=1&linkid={$item.id}&id={$ID}">{#delete#}</a>
+            </td>
+          </tr>
+          {/foreach}    
+     </table>
+    {else}
+                {#no_links#}
+    {/if}
+              <p>
+              <a href="javascript:popup('editLink.php?new=1&prgid={$ID}','{#edit_link#}',400,400,false)">{#add_link#}</a>
+              </p>
+  </td>
+</tr>
+</table>
+</form>
+
 
 <table width="100%" cellspacing=5>
 <tr><td>{#prgfiles#}:</td><td>&nbsp;</td><td>{#userfiles#}:</td></tr>

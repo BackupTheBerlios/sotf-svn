@@ -138,11 +138,8 @@ class sotf_Page
 	function logRequest()
 	{
 		global $debug, $startTime, $totalTime, $PHP_SELF;
-		if(!$totalTime)
-		  $totalTime = time() - $startTime;
 		$host = getHostName();
-		// if($sec > 1)
-		error_log("$host: FINISHED IN $totalTime s WITH " . getenv("REQUEST_URI"),0);
+		error_log("$host: FINISHED IN $totalTime ms WITH " . getenv("REQUEST_URI"),0);
 		//if($debug)
 		//  error_log("*********************************************************************************\n",0);
 	}

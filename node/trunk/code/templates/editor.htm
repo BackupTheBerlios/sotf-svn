@@ -1,9 +1,14 @@
 
 {if $USER_AUDIO_FILES}
 
-<div align="left"><b>{#create_new_prg#}</b></div>
-<table width="100%" bgcolor="{#editorBgColor1#}">
-<tr><td>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#create_new_prg#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
 <form method="post">
 
 {#pending_audio#}: 
@@ -33,9 +38,16 @@
 {/if}
 
 <p></p>
-<div align="left"><b>{#manage_files#}</b></div>
-<table width="100%" bgcolor="{#editorBgColor1#}">
-<tr><td>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#manage_files#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        <table><tr><td>
 <a target="ftp" href="{$USERFTPURL}">{#user_ftp_access#}</a>
 
 </td><td>
@@ -51,11 +63,21 @@
 <input name="userfile" type="file">
 <input type="submit" name="upload" value="{#upload_file#}">
 </form>
+</td></tr></table>
 
 </td></tr></table>
 
 <p></p>
-<div align="left"><b>{#my_progs#}</b></div>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#my_progs#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+
 <table width="100%" bgcolor="{#editorBgColor2#}">
 <tr>
       <td>
@@ -114,4 +136,7 @@
     </tr>
 		{/section}
 
+</table>
+
+</td></tr>
 </table>

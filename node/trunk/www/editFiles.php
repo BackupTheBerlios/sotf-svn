@@ -16,7 +16,8 @@ $okURL = sotf_Utils::getParameter('okURL');
 $send = sotf_Utils::getParameter('send');
 $selectedUserFiles = sotf_Utils::getParameter('userfiles');
 $selectedOtherFiles = sotf_Utils::getParameter('otherfiles');
-$deluser = sotf_Utils::getParameter('deluser');
+$delLink = sotf_Utils::getParameter('dellink');
+$addLink = sotf_Utils::getParameter('addlink');
 $delother = sotf_Utils::getParameter('delother');
 
 $itemtoftp = sotf_Utils::getParameter('itemtoftp');
@@ -33,6 +34,14 @@ if(!hasPerm($id, 'change')) {
   raiseError("no permission to change files in this programme");
   exit;
 }
+
+if($delLink) {
+  $link = new sotf_NodeObject("sotf_links", sotf_Utils::getParameter('linkid'));
+  $link->delete();
+  $page->redirect("editFiles.php?id=$id");
+  exit;
+}
+
 
 if ($ok)
 	if ($okURL)
@@ -90,6 +99,7 @@ if ($status)
 	$smarty->assign("STATUS",$status);
 }
 
+$smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));
 $smarty->assign('OTHERFILES', $prg->listOtherFiles());
 $smarty->assign('AUDIOFILES', $prg->listAudioFiles());
 $smarty->assign("USERFILES",$user->getUserFiles());

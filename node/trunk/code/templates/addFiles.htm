@@ -1,0 +1,38 @@
+<h3>{#userfiles#}</h3>
+
+<table width="100%" class="tabarea">
+<tr><td class="tabarea">
+	<form method="post">
+    <input type="hidden" name="linkid" value="{$LINK_ID}">
+    {if $USERFILES}
+        <table>
+       {foreach item=fname from=$USERFILES}
+          <tr bgcolor="{cycle}">
+            <td>
+              <input name="" type="checkbox"  />
+            </td>
+            <td>
+              <a target="link" href="getUserFile.php/{$fname|escape}?filename={$fname|escape}">{$fname}</a>
+            </td>
+            <td>
+              <a href="addFiles.php?delete={$fname|escape}">{#delete#}</a>
+            </td>
+          </tr>
+        {/foreach}    
+        </table>
+                <input type="submit" name="view" value="{#view#}">
+                <br \><small>{#userfiles_expl#}</small>
+        </form>
+    {else}
+                    {#no_files#}    
+    {/if}
+          <form enctype="multipart/form-data" method="post">
+            <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+            <input type="hidden" name="stationid" value="{$STATION_ID}" />
+            <input name="userfile" type="file" />
+            <input type="submit" name="upload" value="{#upload_file#}" />
+            <br />{#upload_expl#}
+          </form>
+
+</td></tr>
+</table>

@@ -1,8 +1,15 @@
 
 <h3>{#edit_contact#}</h3>
 
-<div align="left"><b>{#general_data#}</b></div>
-<table width="100%" bgcolor="{#editorBgColor1#}">
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#general_data#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+<table>
 <tr><td>
 	<form method="post">
             <input type="hidden" name="id" value="{$CONTACT_ID}">
@@ -54,11 +61,26 @@
 </td></tr>
 </table>
 
+</td></tr>
+</table>
+
 <p></p>
-<div align="left"><b><a name="logo">{#Icon#}</a></b></div>
-<table width="100%" bgcolor="{#editorBgColor1#}">
-<tr><td>
-<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#icon#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea">
+
+	{if $LOGO}
+		<img align="left" src="getIcon.php/icon.png?id={$CONTACT_ID}" border="1">
+	{else}
+		<table><tr><td>{#no_icon#}</td></tr></table>
+	{/if}
+
 	{if $USERFILES}
 	<form method="post" name="userfiles">
 {literal}<script language="javascript">
@@ -84,14 +106,11 @@ function getSelected() {
             <br />{#upload_expl#}
           </form>
   </small>
-	{if $LOGO}
-		<table><tr><td>{#icon#}:</td><td><img src="getIcon.php/icon.png?id={$CONTACT_ID}" border="1"></td></tr></table>
-	{else}
-		{#no_icon#}
-	{/if}
+<!--
   <form method="post">
       <input type="hidden" name="id" value="{$CONTACT_ID}">
       <input type="submit" name="finish2" value="{#finish#}">
   </form>
+-->
 </td></tr>
 </table>

@@ -34,3 +34,16 @@ TH {
 	background-image: url(top_r2_c1.gif);
 	background-position: right;
 }
+TD.tab {
+  FONT-WEIGHT: bold; background-color: #CCCCCC;
+}
+TD.tabarea {
+  background-color: #EEEEEE;
+}
+
+TABLE.tabarea {
+  background: #CCCCCC; width: 100%;
+}
+TABLE.tab {
+  background: #CCCCCC; width: 20%;
+}
