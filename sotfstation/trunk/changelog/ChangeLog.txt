@@ -1,6 +1,14 @@
 Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
 
 ************************************************************************************************
+ 22.11.2002
+************************************************************************************************
+
+The framework has been upgraded to a release candidate state and has been fully documented
+such that side developers may use it.
+
+
+************************************************************************************************
  21.11.2002
 ************************************************************************************************
 
@@ -28,6 +36,7 @@ User management has been finalized. The overall framework has been extended to s
 and a special set of popup templates has been developed to support this framework. Herewith
 the overall coding framework is finished. Now user data can be edited by the administrator.
 As with the addition of new users, some logical restrictions apply.
+
 
 ************************************************************************************************
  18.11.2002
