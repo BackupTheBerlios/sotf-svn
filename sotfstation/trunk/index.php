@@ -23,6 +23,35 @@
 		exit;																					# end script processing.
 	}
 	
+	//check for autologin 
+	if(!empty($_COOKIE['auto_login_id'])){	# there exists a mark
+		//lets give it a try then...
+		if($db->getOne("SELECT auth_id FROM user_autologin WHERE auth_id = '$_COOKIE[auto_login_id]' AND next_key = '$_COOKIE[auto_login_key]'")){
+			//great, valid
+			//update keys
+			$new_key = md5(uniqid(microtime(),1));
+			$db->query("UPDATE user_autologin SET next_key = '$new_key' WHERE auth_id = '" . $_COOKIE[auto_login_id] . "'");
+			
+			//prepate values
+			$res['auth_id'] = $_COOKIE['auto_login_id'];
+			$_POST['user'] = $_COOKIE['auto_login_name'];
+			
+			//set cookies
+			setcookie("auto_login_id",$_COOKIE['auto_login_id'],time()+7776000,"/","");
+			setcookie("auto_login_key",$new_key,time()+7776000,"/","");
+			setcookie("auto_login_name",$_COOKIE['auto_login_name'],time()+7776000,"/","");
+			
+			//process session init
+			include("common/loginmod.inc.php");
+		}else{	# the mark is invalid
+			//clean the mark
+			setcookie("auto_login_id",'','',"/","");
+			setcookie("auto_login_key",'','',"/","");
+			setcookie("auto_login_name",'','',"/","");
+		}
+	}
+
+	
 	//process login call
 	if($_POST['login']){
 		//clean inputs
@@ -47,42 +76,13 @@
 			}
 			
 			//send query
-			$res = $sdb->getRow("SELECT auth_id, primary_account FROM authenticate WHERE username = '" . $_POST['user'] . "' AND passwd = '" . $_POST['pass'] . "'",DB_FETCHMODE_ASSOC);
+			$res = $sdb->getRow("SELECT auth_id FROM authenticate WHERE username = '" . $_POST['user'] . "' AND passwd = '" . $_POST['pass'] . "'",DB_FETCHMODE_ASSOC);
 			
 			//filter response
 			if((!empty($res)) and (!$myError->getLength())){	# user and password match
-				//process login
-				$_SESSION['USER'] = new User($res['auth_id']);
-				$_SESSION['USER']->set("name",$_POST['user']);
-				$_SESSION['USER']->set("auth_id",$res['auth_id']);
-			
-				//is this user a SADM primary user?	mark only if true
-				if($res['primary_account']=='t'){
-					$_SESSION['USER']->set("primary_account",$res['primary_account']);
-				}
-				
-				//get group data
-				$membername = $sdb->getRow("select base_id, ent_name from authenticate, base_entities where username ='" . $_POST['user'] . "' and base_id=general_id");
-				$_SESSION['USER']->set("group_name",$membername[1]);
-				$_SESSION['USER']->set("group_id",$membername[0]);
-			
-				//get additional local user related acces level data
-				$data = $db->getRow("SELECT * FROM user_map WHERE auth_id = $res[auth_id]",DB_FETHCMODE_ASSOC);
-				$_SESSION['USER']->set("per_page",$data['per_page']);
-				$_SESSION['USER']->set("mail",$data['mail']);
-				$_SESSION['USER']->set("real_name",$data['name']);
-				
-				//get access permissions
-				$_SESSION['USER']->setAll($db->getRow("SELECT edit_series, edit_station, edit_users FROM user_map LEFT JOIN user_access ON (user_map.access_id = user_access.id) WHERE user_map.auth_id = '$res[auth_id]'",DB_FETCHMODE_ASSOC));
-			
-				//log info (mark the user that he logged in)
-				$myLog->add($res['auth_id'],0);
-				
-				//redirect
-				header("Location: inside.php");	# to the inside of the application
-				exit;														# exit the processing of the code
-			}else{														# user and password don't match
-				$myError->add($ERR[1]);					# add error to error stack
+				include('common/loginmod.inc.php');	
+			}else{																						# user and password don't match
+				$myError->add($ERR[1]);													# add error to error stack
 			}
 						
 		}else{															# SADM is found on remote server

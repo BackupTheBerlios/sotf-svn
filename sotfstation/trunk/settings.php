@@ -33,10 +33,30 @@
 			//fix values
 			if($_POST['autologin']!='t'){
 				$_POST['autologin'] = 'f';
+				
+				//clean cookies
+				setcookie("auto_login_id",'','',"/","");
+				setcookie("auto_login_key",'','',"/","");
+				setcookie("auto_login_name",'','',"/","");
+			}else{
+				//create autologin keys
+				$new_key = md5(uniqid(microtime(),1));
+				
+				//check if an entry exists
+				if($db->getOne("SELECT auth_id FROM user_autologin WHERE auth_id = '" . $_SESSION['USER']->get("auth_id") . "'")){	#yes
+					$db->query("UPDATE user_autologin SET next_key = '$new_key' WHERE auth_id = '" . $_SESSION['USER']->get("auth_id") . "'");
+				}else{	#no, create one
+					$db->query("INSERT INTO user_autologin VALUES('" . $_SESSION['USER']->get("auth_id") . "','$new_key')");
+				}
+				
+				//set cookies
+				setcookie("auto_login_id",$_SESSION['USER']->get("auth_id"),time()+7776000,"/","");
+				setcookie("auto_login_key",$new_key,time()+7776000,"/","");
+				setcookie("auto_login_name",$_SESSION['USER']->get("name"),time()+7776000,"/","");
 			}
 			
 			//update database
-			$db->query("UPDATE user_map SET name = '$_POST[name]', mail = '$_POST[mail]', autologin = '$_POST[autologin]', per_page = '$_POST[per_page]' WHERE auth_id = '" . $_SESSION['USER']->get("auth_id") . "'");
+			$db->query("UPDATE user_map SET name = '$_POST[name]', mail = '$_POST[mail]', per_page = '$_POST[per_page]' WHERE auth_id = '" . $_SESSION['USER']->get("auth_id") . "'");
 			
 			//redirect to confirm
 			header("Location: confirm.php?action=4&next=settings");
@@ -55,12 +75,16 @@
 																	user_map.name AS submit_name, 
 																	user_map.mail AS submit_mail, 
 																	user_map.per_page AS submit_per_page,
-																	user_map.autologin AS submit_autologin,
 																	user_access.name AS access_level
 															 	FROM
 															 		user_map
 															 	LEFT JOIN user_access ON (user_map.access_id = user_access.id)
 															 	WHERE auth_id = '" . $_SESSION['USER']->get("auth_id") . "'",DB_FETCHMODE_ASSOC));
+		
+		//check if autologin is valid
+		if($db->getOne("SELECT auth_id FROM user_autologin WHERE auth_id = '$_COOKIE[auto_login_id]' AND next_key = '$_COOKIE[auto_login_key]'")){
+			$smarty->assign("submit_autologin","t");
+		}
 	}
 	
 	//drop down fill											 

@@ -8,6 +8,10 @@ Series and programme management interface extended. Now programmes and series ca
 and diactivated. If a series is deactivated, then all the programmes belonging to that series
 are deactivated as well. Nice graphical represenatation of active state developed.
 
+Autologin implemented. Now people can check the autologin box in their settings panel and
+stop worrying about their passwords. The autologin will work until the user chooses to
+logout explicitly! :)
+
 
 ************************************************************************************************
  04.12.2002
