@@ -146,7 +146,7 @@ $config['outputLanguages'] = array("en");
 $config['defaultLanguage'] = "en";
 
 // languages appearing in language select boxes
-$config['languages'] = array("en", "de", "hu", "it", "es", "cz", "fr", "ro", "ru");
+$config['languages'] = array("eng", "deu", "hun", "dut", "fra", "ita", "esl", "ces", "slo", "pol", "rum", "rom");
 
 //////////////////////////////////////////////////////////////////////////
 // AUDIO OPTIONS ------------------------------------------------------

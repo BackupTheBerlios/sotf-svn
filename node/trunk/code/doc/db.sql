@@ -188,7 +188,7 @@ CREATE TABLE "sotf_programmes" (
 	"type" varchar(50) DEFAULT 'sound',							-- DCMI type (audio/video/etc.)
 	"genre_id" int2,														-- SOMA genre (ref. to sotf_genres)
 	"length" int2,														-- dc.format.extent = duration in seconds
-	"language" varchar(20),											-- dc.language (2-letter codes separeted by comma)
+	"language" varchar(30),											-- dc.language (2-letter codes separeted by comma)
 	"spatial_coverage" text,										-- dc.coverage.spatial
 	"temporal_coverage" date,										-- dc.coverage.temporal
 	"published" bool DEFAULT 'f'::bool,							-- unpublished items are not searchable nor browsable
@@ -521,7 +521,7 @@ CREATE TABLE "sotf_to_update" (
 -- data to update  
 	"id" serial PRIMARY KEY,
 	"tablename" varchar(40),	-- 
-	"row_id" varchar(12),				-- id within table
+	"row_id" varchar(12),				-- id within table (may be numeric or varchar(12)
 	CONSTRAINT "sotf_to_update_u" UNIQUE ("tablename", "id")
 );
 
@@ -561,7 +561,7 @@ CREATE TABLE "sotf_streams" (
 );
 
 CREATE TABLE "sotf_station_mappings" (
--- provides mapping between ids on station server and ids on node
+-- provides mapping between ids on station server and ids on node XXX
 	"id" serial PRIMARY KEY,		-- just an id
 	"id_at_node" varchar(12) UNIQUE REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of thing at node
 	"id_at_station" varchar(20) UNIQUE  -- id of thing on station server
@@ -585,3 +585,7 @@ SELECT nextval('sotf_permissions_id_seq');
 
 -- select count(*) FROM (select distinct on (language, published) language, published from sotf_programmes) AS foo;
 -- SELECT a FROM test WHERE SUBSTRING(a FROM 1 FOR 1)=B'1';
+
+-- update sotf_programmes set language='deu' where language='de' 
+-- update sotf_programmes set language='eng' where language='en' 
+-- update sotf_programmes set language='hun' where language='hu' 

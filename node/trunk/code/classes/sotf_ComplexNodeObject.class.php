@@ -122,10 +122,11 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	function getLanguageSelectBoxes() {
 	  global $smarty, $config, $page;
 	  for($i=0; $i<count($config['languages']); $i++) {
-		 $langNames[$i] = $page->getlocalized($config['languages'][$i]);
+		 $langNames[$config['languages'][$i]] = $page->getlocalized($config['languages'][$i]);
 	  }
-	  $smarty->assign('LANG_CODES', $config['languages']);
-	  $smarty->assign('LANG_NAMES', $langNames);
+	  asort($langNames);
+	  $smarty->assign('LANG_CODES', array_keys($langNames));
+	  $smarty->assign('LANG_NAMES', array_values($langNames));
 	  $langs = explode(',',$this->get('language'));
 	  $smarty->assign('PRG_LANG1', $langs[0]);
 	  $smarty->assign('PRG_LANG2', $langs[1]);

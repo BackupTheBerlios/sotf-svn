@@ -87,6 +87,8 @@ class sotf_NodeObject extends sotf_Object {
 	 $db->query("DELETE FROM sotf_user_permissions WHERE object_id='$this->id'");
 	 // delete replication status
 	 $this->removeFromRefreshTable($this->id);
+	 // delete from to_update table
+	 $db->query("DELETE FROM sotf_to_update WHERE row_id='$this->id'");
   }
 
   /** Creates a deletion record: used when a replicated object is deleted. */

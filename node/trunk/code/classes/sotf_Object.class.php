@@ -366,7 +366,6 @@ class sotf_Object {
 		}
   }
 
-
 	/** static */
 	function addToUpdate($table, $id) {
 		global $db;
@@ -391,7 +390,8 @@ class sotf_Object {
 				break;
 			case 'sotf_stats':
 				$obj = new sotf_Statistics($rowId);
-				$obj->updateStats();
+				if($obj->exists())
+					$obj->updateStats();
 				break;
 			case 'updateMeta':
 				$obj = $repository->getObject($rowId);
