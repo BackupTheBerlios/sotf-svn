@@ -246,6 +246,7 @@ class sotf_NodeObject extends sotf_Object {
 		 }
 	  } else {
 		 debug("arrived new object", $this->id);
+		 $db->begin();
 		 $this->internalData['arrived'] = $db->getTimestampTz();
 		 $internalObj = new sotf_Object('sotf_node_objects', $this->id, $this->internalData);
 		 $internalObj->create();
@@ -253,16 +254,18 @@ class sotf_NodeObject extends sotf_Object {
 		 $changed = sotf_Object::create();
 		 $db->silent = false;
 		 if(!$changed) {
-			$internalObj->delete();
+			// $internalObj->delete(); //not needed because of transaction
 			if(preg_match('/referential integrity violation/', $this->error)) {
 			  debug("normal problem", $this->error);
 			} else {
 			  logError("Could not create object: " . $this->id . " because of " . $this->error);
 			}
+			$db->rollback();
 		 } else {
 			debug("created ", $this->id);
 			$this->addToRefreshTable($this->id, $fromNode);
 			$this->removeFromRefreshTable($this->id, $fromNode);
+			$db->commit();
 		 }
 	  }
 	  // handle deletions
