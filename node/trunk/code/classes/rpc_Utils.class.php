@@ -32,7 +32,7 @@ function call($url, $method, $params) {
     $retval = $response->value();
     if($retval)
       $retval = xmlrpc_decode($retval);
-    debug("Response", $retval);
+    //debug("Response", $retval);
     return $retval;
   }
   return NULL;

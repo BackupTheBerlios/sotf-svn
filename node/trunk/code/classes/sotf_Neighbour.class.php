@@ -89,7 +89,7 @@ class sotf_Neighbour extends sotf_Object {
     $rpc = new rpc_Utils;
     $response = $rpc->call($url . '/xmlrpcServer.php', 'sotf.sync', $objs);
     // error handling
-    if(!$response) {
+    if(is_null($response)) {
       $this->set('errors', $this->get('errors')+1);
       $this->update();
       return;
@@ -104,7 +104,6 @@ class sotf_Neighbour extends sotf_Object {
     $this->set('success', $this->get('success')+1);
     $this->set('last_sync_out', $timestamp);
     $this->saveSyncStatus($timestamp);
-    $this->update();
     // send receipt of successful sync??
   }
 

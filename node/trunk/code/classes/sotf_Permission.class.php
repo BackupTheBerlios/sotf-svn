@@ -172,8 +172,7 @@ class sotf_Permission
       return NULL;  // not logged in yet
     $stationId = sotf_Utils::magicQuotes($stationId);
     $sql = "SELECT s.id AS id, s.title AS title FROM sotf_series s, sotf_user_permissions u".
-    		" WHERE u.user_id = '$user->id'";
-//    		" AND u.object_id=s.id";
+    		" WHERE u.user_id = '$user->id' AND u.object_id=s.id";
     if ($stationId) $sql .= " AND s.station_id='$stationId'";
     $sql .= " ORDER BY s.title";
     $sdata = $db->getAll($sql);
