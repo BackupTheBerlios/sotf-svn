@@ -11,6 +11,7 @@ class sotf_Playlist {
   var $tmpId;
   var $mountPoint;
   var $url;
+  var $streamId;
   var $name;
 
   function add($item) {
@@ -182,24 +183,22 @@ class sotf_Playlist {
 		debug("output", $output);
 		debug("retval", $retval);
 
+		$lines = array_values(preg_grep('/Fatal Error:/', $output));
+		if(count($lines) > 0) {
+		  raiseError( join(", ", $lines));
+		  // TODO: restart tamburine (??)
+		}
+
 		//$lines = preg_grep('/Stream\[(\d+)\]\s+spawned on (\S+)/', $output);
 		foreach($output as $line) {
 		  if(preg_match('/Stream\[(\d+)\]\s+spawned on (\S+)/', $line, $mm)) {
-			 $streamId = $mm[1];
+			 $this->streamId = $mm[1];
 			 $this->url = $mm[2];
 			 break;
 		  }
 		}
 		if(!$this->url)
 		  raiseError("Could not find mount point for stream!");
-		$streamData = array('pid' => $streamId,
-								  'url' => $this->url,
-								  'started' => $db->getTimestamp(),
-								  'length' => $this->totalLength,
-								  'will_end_at' => $db->getTimestamp(time() + $this->totalLength),
-								  'host' => getHostName(),
-								  );
-		$_SESSION['stream'] = $streamData;
 		
 	 } else {
 		// command-line streaming
@@ -219,10 +218,28 @@ class sotf_Playlist {
 		//$this->cmdStart2($bitrate);
 
 	 }
+
+	 if($this->url) {
+		$streamData = array('pid' => $this->streamId,
+								  'url' => $this->url,
+								  'started' => $db->getTimestamp(),
+								  'length' => round($this->totalLength),
+								  'will_end_at' => $db->getTimestamp(time() + round($this->totalLength)),
+								  'host' => getHostName(),
+								  );
+		debug("streamData", $streamData);
+		$_SESSION['stream'] = $streamData;
+		$obj = new sotf_Object('sotf_streams');
+		$obj->setAll($streamData);
+		$obj->create();
+	 }
+
   }
 
   function stopStream($streamData) {
-	 global $config;
+	 global $config, $db;
+
+	 debug("stop stream", $streamData);
 
 	 if($config['tamburineCMD']) {
 		// streaming with tbrcmd
@@ -232,12 +249,24 @@ class sotf_Playlist {
 		debug("cmd", $cmd);
 		debug("output", $output);
 		debug("retval", $retval);
+
+		$db->query("DELETE FROM sotf_streams WHERE pid='" . $streamData['pid'] . "'");
 	 }
   }
 
   function stopMyStream() {
 	 if($_SESSION['stream']) {
 		$this->stopStream($_SESSION['stream']);
+	 }
+  }
+
+  function stopOldStreams() {
+	 global $config, $db;
+
+	 $dataset = $db->getAll("SELECT * FROM sotf_streams WHERE will_end_at < CURRENT_DATE + interval '1 hours'");
+
+	 foreach($dataset as $data) {
+		$this->stopStream($data);
 	 }
   }
 

@@ -142,6 +142,12 @@ $dir->close();
 
 // TODO remove old sotf_delete objects
 
+// ******** Stop old streams
+
+$playlist = new sotf_Playlist();
+$playlist->stopOldStreams();
+
+
 stopTiming();
 $page->logRequest();
 debug("--------------- CRON FINISHED -----------------------------------");

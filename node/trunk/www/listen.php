@@ -32,6 +32,9 @@ $playlist->addProg($prg, $fileid);
 
 $playlist->startStreaming();
 
+// TODO wait until stream really starts
+sleep(2);
+
 // must start stream before! otherwise we don't know stream url
 $playlist->sendRemotePlaylist();
 
