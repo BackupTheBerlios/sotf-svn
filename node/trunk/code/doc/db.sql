@@ -135,6 +135,8 @@ CREATE TABLE "sotf_stations" (
 	"station" varchar(32) PRIMARY KEY,
 	"node" varchar(20),
 	"description" varchar(250),
+	"contact_email" varchar(60),
+	"contact_phone" varchar(20),
 	"icon" bytea,
 	"jingle" bytea,
 	"last_change" timestamptz
