@@ -484,6 +484,7 @@ if ($id)	//if programmes view
 				}
 			}
 			else $values[$fields[$key]] = $value;
+
 	foreach($result['audioFiles'] as $audioFiles)
 	{
 		$afile['mime_type'] = $audioFiles['mime_type'];
@@ -494,6 +495,7 @@ if ($id)	//if programmes view
 		$afile['vbr'] = $audioFiles['vbr'];
 		$programme['listen'][] = $afile;
 	}
+
 	foreach($result['downloadFiles'] as $downloadFiles)
 	{
 		$dfile['mime_type'] = $downloadFiles['mime_type'];
@@ -508,6 +510,12 @@ if ($id)	//if programmes view
 	$programme['id'] = $result['id'];
 	$programme['icon'] = $result['icon'];
 	$programme['values'] = $values;
+
+if ($_SERVER["REMOTE_ADDR"] == "193.225.87.196")
+{
+//	print("<pre>");
+//	var_dump($programme);
+}
 
 	$smarty->assign('programme', $programme);
 /*

@@ -521,6 +521,7 @@ class sotf_Portal
 		$fields[broadcast_date] = $page->getlocalized("broadcast_date");
 		$fields[station] = $page->getlocalized("station");
 		$fields[language] = $page->getlocalized("language");
+		$fields[abstract] = $page->getlocalized("abstract");
 		//$fields[length] = $page->getlocalized("length");
 		return $fields;
 	}

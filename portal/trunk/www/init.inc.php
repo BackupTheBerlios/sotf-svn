@@ -142,4 +142,6 @@ if($debug) {
 debug("action:", $page->action);
 debug("lang", $lang);
 
+header("Content-Type: text/html; charset=UTF-8");
+
 ?>

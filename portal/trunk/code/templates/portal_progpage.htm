@@ -10,7 +10,7 @@
 		</td>
 		<td width="15">&nbsp;</td>
 		<td align="left" valign="top">
-			<strong><font color="#FFCC33">&deg;&deg;&deg;&nbsp;{$programme.title}</font></strong>
+			<div class="title"><strong><font color="#FFCC33">&deg;&deg;&deg;&nbsp;{$programme.title}</font></strong></div>
 			{if $is_admin}&nbsp;&nbsp;&nbsp;<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$rootdir}/portal.php/{$portal_name}?playlist=1{if !$back}&filter=all&prglist=current{/if}#{$programme.id}">{#edit_it#}</a>]</font>{/if}
 			<br><br><font size="2" face="Arial, Helvetica, sans-serif">
 			{foreach key=key item=cell from=$programme.values}
@@ -19,14 +19,14 @@
 				{/if}
 			{/foreach}
 			<br>
-			<i>{$programme.teaser}</i>
+			<div class="teaser"><i>{$programme.teaser}</i></div>
 			{if $is_admin}<br /><font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="#" onClick="javascript:window.open('{$rootdir}/edit_text.php/{$portal_name}?id={$programme.id}&teaser=1&title={$programme.title}','','scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{#edit_teaser_big#}</a>]</font>{/if}
 			<br>
 			</font>
 		</td>
 		<td align="right" valign="top">
 			<font size="1" face="Verdana, Arial, Helvetica, sans-serif">
-			<p>
+			<div class="listen"><p>
 			{if count($programme.listen) > 0}
 				<b>{#listen_to_this#}:</b><br />
 				{foreach item=file from=$programme.listen}
@@ -45,9 +45,9 @@
 				{/foreach}
 				<br />
 			{/if}
-			</p>
+			</p></div>
 			<br />
-			<p>
+			<div class="download"><p>
 			{if count($programme.download) > 0}
 				<b>{#download_this#}:</b><br />
 				{foreach item=file from=$programme.download}
@@ -65,15 +65,15 @@
 				{/foreach}
 				<br />
 			{/if}
-			</p>
+			</p></div>
 			{if $rating AND ($is_logged_in OR $a_rating)}<br />
-			<p id="rating">
+			<div class="rate"><p id="rating">
 			<b>{#rating#}:</b>
 			{#average#}:{$rating_average}<br>
 			{#users_rated1#} {$users_rated} {#users_rated2#}<br>
 			<select name="rating" size="1">{html_options options=$ratings selected=$rating.RATING_OUTPUT}</select>
 			<input type="submit" name="rate_it" value="Submit">
-			</p>
+			</p></div>
 			{/if}
 			</font>
 		</td>
@@ -86,7 +86,7 @@
 		<td width="100" align="center" valign="top">
 			{if count($programme.files) > 0}
 				<br />
-				<div align="left">
+				<div align="left" class="pfiles">
 				<b>{#uploaded_files#}</b>:<br />
 				{foreach key=filename item=file_location from=$programme.files}
 					&nbsp;&nbsp;&nbsp;&nbsp;<a href="{$file_location}" onclick="javascript:window.open('{$file_location}','','resizable=yes,scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{$filename}</a>&nbsp;{if $is_admin}<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$php_self}?id={$id}&delete_file={$file_location}" onclick="javascript:return confirm('{#delete_the_file#}');">{#delete_file#}</a>]</font>{/if}<br />
@@ -97,7 +97,7 @@
 	
 			{if count($programme.pictures) > 0}
 				<br>
-				<div align="left"><b>{#uploaded_pictures#}</b>:</div><br />
+				<div align="left" class="ppictures"><b>{#uploaded_pictures#}</b>:</div><br />
 				{foreach key=counter item=file from=$programme.pictures}
 					<img src="{$file.location}" width="{$file.width}" height="{$file.height}" onclick="javascript:window.open('{$file.location}','','resizable=yes,scrollbars=yes,width=640,height=340,left=320,top=200');return false;"><br />
 					{$file.name}</a>&nbsp;{if $is_admin}<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$php_self}?id={$id}&delete_file={$file.location}" onclick="javascript:return confirm('{#delete_the_file#}');">{#delete_file#}</a>]</font>{/if}
@@ -108,11 +108,11 @@
 		</td>
 		<td width="15">&nbsp;</td>
 		<td align="left" valign="top">
-			{$programme.text}
+			<div class="ptext">{$programme.text}</div>
 			{if $is_admin}<br /><font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="#" onClick="javascript:window.open('{$rootdir}/edit_text.php/{$portal_name}?id={$programme.id}&text=1&title={$programme.title}','','scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{#edit_text_big#}</a>]</font>{/if}
 
 			{if $chat}
-			<table border="0" cellspacing="20" cellpadding="0" width="100%" id="comments">
+			<div class="chat"><table border="0" cellspacing="20" cellpadding="0" width="100%" id="comments">
 			  <tr> 
 			  <tr> 
 			  <td align="left"> 
@@ -171,7 +171,7 @@
 				{/if}
 			  </td> 
 			  </tr> 
-			</table>
+			</table></div>
 			{/if}
 		</td>
 	</tr>
