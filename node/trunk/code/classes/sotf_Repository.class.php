@@ -93,7 +93,7 @@ class sotf_Repository {
     return array_search($tc, $this->tableCodes);
   }
 
-  function getObjectNoCache($objectId, $data='') {
+  function &getObjectNoCache($objectId, $data='') {
 	 // load it from db
     $tc = substr($objectId, 3,2);
     $class = $this->codeToClass[$tc];
@@ -103,17 +103,20 @@ class sotf_Repository {
       $table = array_search($tc, $this->tableCodes);
       $obj = new sotf_NodeObject($table, $objectId, $data);
     }
-    if(!$obj->exists())
+    if(!$obj->exists()) {
+		debug("Object does not exist",$objectId);
       return NULL;
+	 }
 	 return $obj;
   }
   
-  function getObject($objectId, $data='') {
+  function &getObject($objectId, $data='') {
 	 // get from cache if possible
-	 $object = $this->getFromCache($objectId);
+	 $object = & $this->getFromCache($objectId);
 	 if(is_object($object))
 		return $object;
-	 $obj = $this->getObjectNoCache($objectId, $data);
+	 $obj = & $this->getObjectNoCache($objectId, $data);
+	 //debug("OBJ", $obj);
     if($obj)
 		$this->putInCache($obj);
 	 return $obj;

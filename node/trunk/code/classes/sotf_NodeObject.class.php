@@ -24,7 +24,7 @@ class sotf_NodeObject extends sotf_Object {
   }
 
   /** Comfort method to retrieve an object in a cacheable way. */
-  function getObject($id) {
+  function &getObject($id) {
 	 global $repository;
 	 return $repository->getObject($id);
   }

@@ -184,9 +184,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 }
   }
 
+  /*
   function exists() {
-	 return isset($data['id']);
+	 return isset($this->data['id']);
   }
+  */
 
   /** makes a new item available, announces to other nodes */
   function publish() {
