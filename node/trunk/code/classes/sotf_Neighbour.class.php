@@ -74,6 +74,14 @@ class sotf_Neighbour extends sotf_Object {
       $page->addStatusMsg($msg);
   }
 
+  function lastSyncStamp() {
+    $val = $this->get('sync_stamp');
+    if(empty($val))
+      return 0;
+    else
+      return $val;
+  }
+
   function sync($console = false) {
     global $sotfVars;
     // tunable things
@@ -104,7 +112,7 @@ class sotf_Neighbour extends sotf_Object {
     $localNodeData['url'] = $rootdir;
     // calculate chunking
     $currentStamp = $sotfVars->get('sync_stamp', 0);
-    $lastSyncStamp = $this->get('sync_stamp');
+    $lastSyncStamp = $this->lastSyncStamp();
     $count = sotf_NodeObject::countModifiedObjects($remoteId, $lastSyncStamp);
     $numChunks = ceil($count / $objectsPerRPCRequest);
     $thisChunk = 1;
@@ -166,7 +174,7 @@ class sotf_Neighbour extends sotf_Object {
     debug("number of updatd objects", count($updatedObjects));
     $remoteId = $this->get('node_id');
     $currentStamp = $sotfVars->get('sync_stamp', 0);
-    $lastSyncStamp = $this->get('sync_stamp');
+    $lastSyncStamp = $this->lastSyncStamp();
     $count = sotf_NodeObject::countModifiedObjects($remoteId, $lastSyncStamp);
     if($chunkInfo['this_chunk'] == $chunkInfo['num_chunks']) {
       // last chunk: no limits
