@@ -122,18 +122,25 @@ class sotf_AdvSearch
 	{
 		global $lang;
 		$query="SELECT distinct programmes.* FROM (";
-		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription, sotf_prog_rating.rating_value as rating FROM sotf_programmes";
+		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription, sotf_prog_rating.rating_value as rating, sotf_topics.topic_name as topic_name FROM sotf_programmes";
 		$query.=" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id";
 		$query.=" LEFT JOIN sotf_series ON sotf_programmes.series_id = sotf_series.id";
 		$query.=" LEFT JOIN sotf_prog_rating ON sotf_programmes.id = sotf_prog_rating.id";
-		// added the topics as left join for performance reasons
-		if ($this->SQLquery[$i][1] == "topic")
-		{
-			$query .= "LEFT JOIN sotf_prog_topics ON sotf_programmes.id = sotf_prog_topics.prog_id";
-			$query .= "LEFT JOIN sotf_topics ON sotf_prog_topics.topic_id = sotf_topics.topic_id";
-		}
-		$query.=") as programmes WHERE published = 't'";
+		
 		$max = count($this->SQLquery);					//all rows of the advsearch
+		
+		// added the topics as left join for performance reasons
+		for($i = 0; $i < $max; $i++){
+			if ($this->SQLquery[$i][1] == "topic")
+			{
+				$query .= " LEFT JOIN sotf_prog_topics ON sotf_programmes.id = sotf_prog_topics.prog_id";
+				$query .= " LEFT JOIN sotf_topics ON sotf_prog_topics.topic_id = sotf_topics.topic_id";
+				break;
+			}
+		}
+		
+		$query.=") as programmes WHERE published = 't'";
+		
 		for($i = 0; $i < $max ;$i++)		//go through all terms
 		{
 			//AND or OR words
@@ -196,12 +203,12 @@ class sotf_AdvSearch
 			}
 			elseif (($this->SQLquery[$i][4] == "number") or ($this->SQLquery[$i][4] == "genre"))
 			{
-				$query .= " coalesce(".$this->SQLquery[$i][1].",'')";
+				$query .= " ".$this->SQLquery[$i][1]." ";
 				$query .= $this->getEQSign($this->SQLquery[$i][2], $this->SQLquery[$i][3]);
 			}
 			else
 			{
-				$query .= " coalesce(".$this->SQLquery[$i][1].",'')";		//field name (coalesce => if value NULL terurns '')
+				$query .= " ".$this->SQLquery[$i][1]." ";
 				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'");
 			}
 
