@@ -13,6 +13,9 @@ require("init.inc.php");
 $contactId = sotf_Utils::getParameter('id');
 
 $contact = & $repository->getObject($contactId);
+if(!$contact)
+	  raiseError("no_such_object");
+
 $smarty->assign('PAGETITLE', $contact->get('name'));
 $smarty->assign('CONTACT_ID',$contactId);
 $smarty->assign('CONTACT_NAME',$contact->get('name'));

@@ -18,6 +18,8 @@ if($id) {
   $smarty->assign('ID', $id);
 
   $prg = &$repository->getObject($id);
+  if(!$prg)
+	 raiseError("no_such_object");
 
   if(!$prg->getBool('published')) {
 	 if(!hasPerm($prg->id, 'change')) {

@@ -109,3 +109,8 @@ ALTER TABLE sotf_user_prefs ALTER feedback SET DEFAULT 't'::bool;
 ALTER TABLE sotf_contacts ADD COLUMN "feedback" bool;
 ALTER TABLE sotf_contacts ALTER feedback SET DEFAULT 'f'::bool;
 
+-- 2003-07-29
+
+-- it's better to allow stations with the same name
+DROP INDEX sotf_stations_name_key;
+CREATE INDEX sotf_stations_name_index ON sotf_stations (name);

@@ -19,6 +19,8 @@ if(!$stationid)
      raiseError("No station selected!");
 
 $st = & $repository->getObject($stationid);
+if(!$st)
+	  raiseError("no_such_object");
 
 $page->errorURL = $scriptUrl . '/' . $stationid;
 $page->setTitle($st->get('name'));

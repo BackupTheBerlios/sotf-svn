@@ -25,6 +25,9 @@ if($delprog) {
 }
 
 $series = & $repository->getObject($seriesid);
+if(!$series)
+	  raiseError("no_such_object");
+
 $station = $series->getStation();
 
 $page->errorURL = $scriptUrl . '/' . $seriesid;

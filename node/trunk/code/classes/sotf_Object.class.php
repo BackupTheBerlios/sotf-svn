@@ -28,6 +28,8 @@ class sotf_Object {
   /** if the record exists in db */
   var $exists = NULL;
 
+	var $error = NULL;
+
   /** list of fields which are treated as binary (image, sound) */
   var $binaryFields = array();
 
@@ -142,8 +144,9 @@ class sotf_Object {
 		
 	 //if the query is dead, stop executio, output error
 	 if(DB::isError($res)){
-		addError($res);
-		return false;
+		 addError($res);
+		 $this->error = $res->message . '(' . $res->code . ')';
+		 return false;
 	 }
 
 	 $this->exists = true;

@@ -60,7 +60,7 @@ class sotf_Repository {
 									);
 
   /** The order in which to send table data to neighbour nodes. */
-  var $tableOrder = "no,st,co,se,pr,ri,ed,of,mf,li,td,tt,to,pt,ge,ro,rn,sr,bl,de,ra,re,sx,po";
+  var $tableOrder = "de,no,st,co,se,pr,ri,ed,of,mf,li,td,tt,to,pt,ge,ro,rn,sr,bl,ra,re,sx,po";
 
   var $rootdir;
   var $db;
