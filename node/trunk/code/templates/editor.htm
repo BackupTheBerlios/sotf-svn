@@ -130,7 +130,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
       <!--<td>&nbsp;</td>-->
       <td>
                 <a href="get.php?id={$item.id}"><b>{$item.title}</b></a>
-                <br><font size="-1">{$item.abstract|truncate:200}</font>
+                <br>{$item.abstract|truncate:200}
       </td>
       <td>
                 <a href="showStation.php/{$item.station_id}">{$item.station}</a>
@@ -138,7 +138,14 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
                 <br /><a href="showSeries.php/{$item.series_id}">{$item.series}</a>
                 {/if}
       </td>
-      <td nowrap>{#entry_d#}:&nbsp;{$item.production_date|default:"&nbsp;"}
+      <td nowrap>
+		  {#entry_d#}:&nbsp;{$item.entry_date|default:"&nbsp;"}
+		  {if $item.production_date}
+		    <br />{#prod_d#}:&nbsp;{$item.production_date|default:"&nbsp;"}
+		  {/if}
+		  {if $item.broadcast_date}
+		    <br />{#broadcast_d#}:&nbsp;{$item.broadcast_date|default:"&nbsp;"}
+		  {/if}
                 <br/>{#exp_d#}:{$item.expiry_date|default:"&nbsp;"}</td>
       <td nowrap>
                 {if $item.visits or $item.listens or $item.downloads} 

@@ -150,6 +150,8 @@ class sotf_Object {
 
 	 // mark if this change requires a refresh in the metadata.xml file
 	 $this->markParentToUpdate();
+
+	 return true;
   }
 
   /**
@@ -398,7 +400,7 @@ class sotf_Object {
 	/** decides if there's a need to update metadata description for parent object, and schedules it */
 	function markParentToUpdate() {
 		$mainObjId = $this->getMainObjectId();
-		//debug("MainObjectId", $mainObjId);
+		debug("parentUpdate", $mainObjId);
 		if($mainObjId) {
 			$mainObj = $repository->getObject($mainObjId);
 			if(is_a($mainObj, 'sotf_nodeobject') && $mainObj->isLocal()) {
