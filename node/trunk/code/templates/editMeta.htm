@@ -4,13 +4,17 @@ function disable(name, value) {
 	eval("document.metadata."+name+"Year.disabled="+value);
 	eval("document.metadata."+name+"Month.disabled="+value);
 	eval("document.metadata."+name+"Day.disabled="+value);
+	if(name == 'broadcast_date') {
+	  eval("document.metadata."+name+"Hour.disabled="+value);
+	  eval("document.metadata."+name+"Minute.disabled="+value);
+        }
 	if (value == '0') {
-	eval("document.metadata."+name+"_radio0.checked = true");
-	eval("document.metadata."+name+"_radio1.checked = false");
+	  eval("document.metadata."+name+"_radio0.checked = true");
+	  eval("document.metadata."+name+"_radio1.checked = false");
 	}
 	else {
-	eval("document.metadata."+name+"_radio0.checked = false");
-	eval("document.metadata."+name+"_radio1.checked = true");
+	  eval("document.metadata."+name+"_radio0.checked = false");
+	  eval("document.metadata."+name+"_radio1.checked = true");
 	}
 }
 
@@ -150,7 +154,7 @@ window.onload=myonload;
               <td>
                   <input type="radio" name="broadcast_date_radio0" value="selected" onclick="javascript:disable('broadcast_date', 0)">
                   {html_select_date time=$PRG_DATA.broadcast_date start_year="-20" prefix="broadcast_date" month_format="%m" field_order="YMD" field_separator="-"}
-                  {#broadcast_time#} {html_select_time time="$BROADCAST_TIME" display_seconds="0" use_24_hours="1" prefix="broadcast_time" field_separator=":"}
+                  {#broadcast_time#} {html_select_time time="$BROADCAST_TIME" display_seconds="0" use_24_hours="1" prefix="broadcast_date" field_separator=":"}
                   <br><input type="radio" name="broadcast_date_radio1" value="unselected" onclick="javascript:disable('broadcast_date', 1)">{#not_available#}
             </td>
             </tr>

@@ -106,11 +106,7 @@ class sotf_Object {
 	 $this->changed = false;
 	 
 	 // mark if this change requires a refresh in the metadata.xml file
-	 $mainObj = $this->getMainObjectId();
-	 debug("MainObjectId", $mainObj);
-	 if($mainObj)
-		 $this->addToUpdate('updateMeta', $mainObj);
-
+	 $this->markParentToUpdate();
   }
 
   /** creates db record with all fields from 'data' */
@@ -153,12 +149,7 @@ class sotf_Object {
 	 $this->changed = false;
 
 	 // mark if this change requires a refresh in the metadata.xml file
-	 $mainObj = $this->getMainObjectId();
-	 debug("MainObjectId", $mainObj);
-	 if($mainObj)
-		 $this->addToUpdate('updateMeta', $mainObj);
-
-	 return true;
+	 $this->markParentToUpdate();
   }
 
   /**
@@ -404,6 +395,18 @@ class sotf_Object {
 	 return array_keys($this->data);
   }
 
+	/** decides if there's a need to update metadata description for parent object, and schedules it */
+	function markParentToUpdate() {
+		$mainObjId = $this->getMainObjectId();
+		//debug("MainObjectId", $mainObjId);
+		if($mainObjId) {
+			$mainObj = $repository->getObject($mainObjId);
+			if(is_a($mainObj, 'sotf_nodeobject') && $mainObj->isLocal()) {
+				$this->addToUpdate('updateMeta', $mainObjId);
+			}
+		}		
+	}
+
 	function getMainObjectId() {
 		//debug("class", get_class($this));
 		switch($this->tablename) {
@@ -454,7 +457,8 @@ class sotf_Object {
 				break;
 			case 'updateMeta':
 				$obj = $repository->getObject($rowId);
-				$obj->saveMetadataFile();
+				if(is_object($obj))
+					$obj->saveMetadataFile();
 				break;
 			default:
 				logError("Unknown to_update type: " . $tablename);
