@@ -744,6 +744,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $newPrg->set('alternative_title', sotf_Programme::normalizeText($metadata['alternative'],255));
 	 $newPrg->set('episode_sequence', sotf_Programme::normalizeText($metadata['episodesequence']));
 	 $newPrg->set('abstract', sotf_Programme::normalizeText($metadata['description']));
+	 $newPrg->set('keywords', sotf_Programme::normalizeText($metadata['keywords']));
 	 
 	 $newPrg->set("production_date", date('Y-m-d', strtotime($metadata['created'])));
 	 $newPrg->set("broadcast_date", date('Y-m-d', strtotime($metadata['issued'])));
