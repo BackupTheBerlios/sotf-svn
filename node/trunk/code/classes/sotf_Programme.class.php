@@ -614,7 +614,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     $newPrg->set("production_date", date('Y-m-d', strtotime($metadata['created'])));
     $newPrg->set("broadcast_date", date('Y-m-d', strtotime($metadata['issued'])));
     $newPrg->set("modify_date", date('Y-m-d', strtotime($metadata['modified'])));
-		$newPrg->set("genre_id", $db->getOne("SELECT id FROM sotf_genres WHERE name = '$metadata[subject]'"));
+		$newPrg->set("genre_id", $db->getOne("SELECT genre_id FROM sotf_genres WHERE name = '$metadata[subject]'"));
 
     // type...
     $newPrg->set('language', $metadata['language']);
