@@ -85,7 +85,7 @@ $obj = & $repository->getObject($objectId);
 $smarty->assign("OBJECT_ID", $objectId);
 $smarty->assign("STATION_ID", $obj->getStationId());
 $smarty->assign("ROLE_ID", $roleId);
-$smarty->assign('ROLE_LIST', $repository->getRoles());
+$smarty->assign('ROLE_LIST', $vocabularies->getRoles());
 
 if(!$scope) {
 	  $scope = 1;

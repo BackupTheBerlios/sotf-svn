@@ -96,7 +96,7 @@ if($defQuery) {
 }
 
 // get topics with most content
-$smarty->assign('TOPICS', $repository->getTopTopics(5));
+$smarty->assign('TOPICS', $vocabularies->getTopTopics(5));
 
 $db->commit();
 

@@ -462,8 +462,8 @@ class sotf_AdvSearch
 
 	function GetGenres()		//returns all the genres
 	{
-		global $repository;
-		$genresarray = $repository->getGenres();
+		global $vocabularies;
+		$genresarray = $vocabularies->getGenres();
 		$max = count($genresarray);
 		for($i=0; $i<$max;$i++) $Genres[$genresarray[$i][id]] = $genresarray[$i][name];
 		return $Genres;

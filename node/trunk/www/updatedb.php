@@ -109,7 +109,7 @@ elseif ($name == "caption")		//editFiles
 }
 elseif ($name == "addtree")		//topic_tree
 {
-	$repository->addToTopic($id, $value);
+	$vocabularies->addToTopic($id, $value);
 	print("success");
 }
 elseif ($name == "editorpub")		//editor bublished checkboxes

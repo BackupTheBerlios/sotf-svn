@@ -90,7 +90,7 @@ if($prgId) {
   // topics
   $smarty->assign('TOPICS', $prg->getTopics());
   // genre
-  $smarty->assign('GENRE', $repository->getGenreName($prg->get('genre_id')));
+  $smarty->assign('GENRE', $vocabularies->getGenreName($prg->get('genre_id')));
   // language
   $smarty->assign('LANGUAGE', $prg->getLanguagesLocalized());
   // rights sections

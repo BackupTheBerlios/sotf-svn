@@ -58,7 +58,7 @@ if(sotf_Utils::getParameter('retemplate')) {
 
 // update topic counts
 if(sotf_Utils::getParameter('updatetopics')) {
-  $repository->updateTopicCounts();
+  $vocabularies->updateTopicCounts();
   $page->redirect("admin.php");
   $page->logRequest();
   exit;  

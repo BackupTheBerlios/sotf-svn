@@ -88,6 +88,7 @@ require($config['classdir'] . '/sotf_Object.class.php');
 require($config['classdir'] . '/sotf_Vars.class.php');
 require($config['classdir'] . '/sotf_Permission.class.php');
 require($config['classdir'] . '/sotf_Repository.class.php');
+require($config['classdir'] . '/sotf_Vocabularies.class.php');
 
 //PEAR::setErrorHandling(PEAR_ERROR_TRIGGER);
 //PEAR::setErrorHandling(PEAR_ERROR_DIE);
@@ -202,6 +203,9 @@ $permissions = new sotf_Permission;
 // the repository of radio stations
 $repository = new sotf_Repository($config['repositoryDir'], $db);
 
+// all controlled vocabularies
+$vocabularies = new sotf_Vocabularies($db);
+
 // now you have the following global objects: $config, $db, $userdb, $smarty, $page, $repository, $user, $permission
 // is that too many?
 
@@ -244,8 +248,10 @@ if(!ini_set('default_charset', 'UTF-8')) {
 }
 debug("default_charset", ini_get('default_charset'));
 */
-//if(!in_array($page->action, array('getFile','getIcon','getJingle','getUserFile','listen'))) {
-header("Content-Type: text/html; charset=UTF-8");
 
+//if(!in_array($page->action, array('getFile','getIcon','getJingle','getUserFile','listen'))) {
+if($page->action != 'install') {
+	header("Content-Type: text/html; charset=UTF-8");
+}
 
 ?>

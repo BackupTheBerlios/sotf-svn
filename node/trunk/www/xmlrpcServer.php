@@ -50,22 +50,22 @@ function checkAccess($url, $nodeId) {
 }
 
 function cvListNames($params) {
-  global $repository;
+  global $vocabularies;
   debug("incoming XML-RPC request: sotf.cv.listnames");
   // TODO: check access
-  $retval = $repository->getCVocabularyNames();
+  $retval = $vocabularies->getCVocabularyNames();
   $retval = xmlrpc_encode($retval);
   return new xmlrpcresp($retval);
 }
 
 function cvGet($params) {
-  global $repository;
+  global $vocabularies;
   debug("incoming XML-RPC request: sotf.cv.get");
   // TODO: check access
   $type = xmlrpc_decode($params->getParam(0));
   $name = xmlrpc_decode($params->getParam(1));
   $lang = xmlrpc_decode($params->getParam(2));
-  $retval = $repository->getCVocabulary($type, $name, $lang);
+  $retval = $vocabularies->getCVocabulary($type, $name, $lang);
   $retval = xmlrpc_encode($retval);
   return new xmlrpcresp($retval);
 }

@@ -35,7 +35,7 @@ while(list(,$row)=each($refs)) {
 	 }
     $class = get_class($obj);
     $data = array();
-    $data['role'] = $repository->getRoleName($role);
+    $data['role'] = $vocabularies->getRoleName($role);
 	 $data['name'] = $obj->get('name');
     if($class == 'sotf_station') {
       $data['url'] = $config['rootUrl'] . "/showStation.php/$id";

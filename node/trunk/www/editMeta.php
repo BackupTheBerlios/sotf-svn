@@ -24,7 +24,7 @@ $okURL = sotf_Utils::getParameter('okURL');
 // delete topic
 $delTopic = sotf_Utils::getParameter('deltopic');
 if($delTopic) {
-  $repository->delFromTopic($delTopic);
+  $vocabularies->delFromTopic($delTopic);
   $page->redirect("editMeta.php?id=$prgId#topics");
   exit;
 }
@@ -207,7 +207,7 @@ $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($p
 $smarty->assign('TOPICS', $prg->getTopics());
 
 // genres
-$genres = $repository->getGenres();
+$genres = $vocabularies->getGenres();
 array_unshift($genres, array('id'=>0, 'name'=> $page->getlocalized("no_genre")));
 $smarty->assign('GENRES_LIST', $genres);
 

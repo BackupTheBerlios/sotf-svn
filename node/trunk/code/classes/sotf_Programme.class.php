@@ -566,11 +566,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   function getTopics() {
-	global $repository;
+	global $vocabularies;
  
 	 $topics = $this->getAssociatedObjects('sotf_prog_topics', 'id');
 	 for($i=0; $i<count($topics); $i++) {
-		$topics[$i]['name'] = $repository->getTopicName($topics[$i]['topic_id']);
+		$topics[$i]['name'] = $vocabularies->getTopicName($topics[$i]['topic_id']);
 	 }
 	 usort($topics, array('sotf_Programme', 'sortTopicsByName'));
 	 return $topics;
@@ -594,7 +594,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   /** static: import a programme from the given XBMF archive */
   function importXBMF($fileName, $publish=false, $console=false) {
-	 global $db, $config, $permissions, $repository;
+	 global $db, $config, $permissions, $repository, $vocabularies;
 
 	 $pathToFile = $config['xbmfInDir'] . '/';
 	 // create temp folder with unique name
@@ -654,7 +654,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$newPrg = new sotf_Programme();
 		$stId = trim($metadata['stationid']);
 		if(is_numeric($stId)) {
-		  $stId = $repository->makeId($config['nodeId'],  'sotf_stations', (int)$stId);
+		  $stId = $this->makeId($config['nodeId'],  'sotf_stations', (int)$stId);
 		}
 		$station = &$repository->getObject($stId);
 		if(!$station) {
@@ -760,7 +760,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		
 	 // topic
 	 if($metadata['topic']) {
-		$repository->addToTopic($newPrg->id, $metadata['topic']);
+		$vocabularies->addToTopic($newPrg->id, $metadata['topic']);
 	 }
 	 // genre
 	 $genre = trim($metadata['genre']);
@@ -874,7 +874,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   /** static: create contact record from metadata */
   function importContact($contactData, $contactRole, $prgId, $stationId, $admins) {
-	 global $db, $permissions, $repository, $config;
+	 global $db, $permissions, $repository, $vocabularies, $config;
 
 	 $db->begin();
 
@@ -917,7 +917,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 // determine role
 	 if($contactData['role']) {
 		$language = 'eng'; // for now
-		$rid = $repository->getRoleId($contactData['role'], $language);
+		$rid = $vocabularies->getRoleId($contactData['role'], $language);
 		if($rid)
 		  $contactRole = $rid;
 	 }

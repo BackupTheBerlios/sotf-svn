@@ -14,25 +14,25 @@ $ID = sotf_Utils::getParameter('ID');
 //$NAME = sotf_Utils::getParameter('NAME');
 
 if(!$ID) {
-  $ID = $repository->getTopicTreeRoot($treeId);
+  $ID = $vocabularies->getTopicTreeRoot($treeId);
 }
 
 if($ID) {
-  $info = $repository->getTopicInfo($ID, $lang);
+  $info = $vocabularies->getTopicInfo($ID, $lang);
   $smarty->assign("TOPIC", $info);
   $treeId = $info['tree_id'];
   $NAME = $info['name'];
 }
 
 // collect subtopics
-$subtopics = $repository->getSubTopics($ID, $lang);
+$subtopics = $vocabularies->getSubTopics($ID, $lang);
 $smarty->assign('SUBTOPICS', $subtopics);
 
 // collect supertopics
-$super = $repository->getSuperTopic($ID, $lang);
+$super = $vocabularies->getSuperTopic($ID, $lang);
 while($super) {
   $supertopics[] = $super;
-  $super = $repository->getSuperTopic($super['id'], $lang);
+  $super = $vocabularies->getSuperTopic($super['id'], $lang);
 }
 if($supertopics) {
   $smarty->assign('SUPERTOPICS', array_reverse($supertopics));
@@ -40,17 +40,17 @@ if($supertopics) {
 
 if(!$supertopics) {
   // collect info on topic tree
-  $smarty->assign('TREE', $repository->getTopicTreeInfo($treeId, $lang));
+  $smarty->assign('TREE', $vocabularies->getTopicTreeInfo($treeId, $lang));
   // list all topic trees
-  $smarty->assign('TREES', $repository->listTopicTrees($lang));
+  $smarty->assign('TREES', $vocabularies->listTopicTrees($lang));
 }
 
-$max = $repository->countProgsForTopic($ID);
+$max = $vocabularies->countProgsForTopic($ID);
 
 if($max > 0) {
   $limit = $page->splitList($max, "?ID=$ID");
 
-  $result = $repository->getProgsForTopic($ID, $limit["from"], $limit["maxresults"]);
+  $result = $vocabularies->getProgsForTopic($ID, $limit["from"], $limit["maxresults"]);
 
   // cache icons for results
   for($i=0; $i<count($result); $i++) {

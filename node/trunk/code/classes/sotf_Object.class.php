@@ -25,6 +25,8 @@ class sotf_Object {
   var $data = array();
   /** if it needs saving */
   var $changed;
+  /** if the record exists in db */
+  var $exists = NULL;
 
   /** list of fields which are treated as binary (image, sound) */
   var $binaryFields = array();
@@ -52,7 +54,10 @@ class sotf_Object {
 
   /** tells if this record is from database or not */
   function exists() {
-	 return !empty($this->id) && (count($this->data) > 0);
+		if(is_null($this->exists))
+			return !empty($this->id) && (count($this->data) > 0);
+		else
+			return $this->exists;
   }
 
   function save() {
@@ -96,6 +101,7 @@ class sotf_Object {
 	 if(DB::isError($res)){
 		raiseError($res);
 	 }
+	 $this->changed = false;
 	 
 	 // mark if this change requires a refresh in the metadata.xml file
 	 $mainObj = $this->getMainObjectId();
@@ -140,6 +146,9 @@ class sotf_Object {
 		return false;
 	 }
 
+	 $this->exists = true;
+	 $this->changed = false;
+
 	 // mark if this change requires a refresh in the metadata.xml file
 	 $mainObj = $this->getMainObjectId();
 	 debug("MainObjectId", $mainObj);
@@ -161,6 +170,7 @@ class sotf_Object {
 	 if(DB::isError($res)){
 		raiseError($res);
 	 }
+	 $this->exists = false;
 	 return true;
   }
 	
@@ -173,42 +183,49 @@ class sotf_Object {
 	* @return (bool)
 	*/
   function load(){
-	 global $db;
+		global $db;
 	  
-	 $res = $db->getRow("SELECT * FROM " . $this->tablename . " WHERE " . $this->idKey . " = '" . $this->id . "'",DB_FETCHMODE_ASSOC);
-	 if(DB::isError($res)){
-		raiseError($res);
-	 }
-	 if (count($res) > 0) {
-		$this->data = $res;
-		if($this->data[$this->idKey] != $this->id) {
-		  raiseError("returned id does not match with original id");
+		$res = $db->getRow("SELECT * FROM " . $this->tablename . " WHERE " . $this->idKey . " = '" . $this->id . "'",DB_FETCHMODE_ASSOC);
+		if(DB::isError($res)){
+			raiseError($res);
 		}
-	 } else {
-		logError("No such id: '$this->id' in '$this->tablename'");
-		$this->data = array();
-	 }
+		if (count($res) > 0) {
+			$this->data = $res;
+			if($this->data[$this->idKey] != $this->id) {
+				raiseError("returned id does not match with original id");
+			}
+			$this->exists = true;
+		} else {
+			logger('WARNING', "No such id: '$this->id' in '$this->tablename'");
+			$this->data = array();
+			$this->exists = false;
+		}
   }
 
   function find() {
-	 global $db;
-
-	 reset($this->data);
-	 while(list($key,$val)=each($this->data)){
-		if($key != $this->idKey && !in_array($key, $this->binaryFields)) {
-		  $my_sql[] = $key . " = '" . sotf_Utils::magicQuotes($val) . "'";
+		global $db;
+		
+		reset($this->data);
+		while(list($key,$val)=each($this->data)){
+			//if($key != $this->idKey && !in_array($key, $this->binaryFields)) {
+			if(!in_array($key, $this->binaryFields)) {
+				$my_sql[] = $key . " = '" . sotf_Utils::magicQuotes($val) . "'";
+			}
 		}
-	 }
-	 $my_sql = implode(" AND ", $my_sql);
-	 
-	 //execute the query
-	 $res = $db->getCol("SELECT $this->idKey FROM $this->tablename WHERE $my_sql ");
-	 if(count($res) > 1)
-		raiseError("not unique");
-	 if(count($res) == 1 ) {
-		$this->id = $res[0];
-		$this->load();
-	 }
+		$my_sql = implode(" AND ", $my_sql);
+		
+		//execute the query
+		$res = $db->getCol("SELECT $this->idKey FROM $this->tablename WHERE $my_sql ");
+		if(count($res) > 1)
+			raiseError("not unique");
+		if(count($res) == 1 ) {
+			//debug("find()", $res[0]);
+			$this->id = $res[0];
+			$this->load();
+			$this->exists = true;
+		} else {
+			$this->exists = false;
+		}
   }
 
   /**

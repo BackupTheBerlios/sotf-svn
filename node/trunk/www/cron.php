@@ -101,7 +101,7 @@ if(!empty($prgIds)) {
 //******** Update topic counts
 
 debug("updating", "topic counts");
-$repository->updateTopicCounts();
+$vocabularies->updateTopicCounts();
 
 //******** Clean caches and tmp dirs
 

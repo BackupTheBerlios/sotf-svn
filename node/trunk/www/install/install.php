@@ -28,7 +28,7 @@ dbug("install.php started");
 
 function PrintTitle($number)		//'header' af all tests
 {
-	set_time_limit(30);		//extends the time limit for the next 30 seconds (every test has so max. 30 seconds to run)
+	set_time_limit(120);		//extends the time limit for the next test
 	global $install_test_name, $install_color;
 	print('<TABLE width="100%"><TR><TD BGCOLOR="'.$install_color[$number].'">');		//begin new table row, color is set here
 	print('<DIV ALIGN="center"><B>'.$install_test_name[$number].'<BR /><BR /></B></DIV>');		//prints the name of the test
@@ -537,10 +537,10 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 				else
 				{
 					//Read SQL commands from db.sql and execute them
-					$fd = fopen ($config['basedir'] ."/code/doc/db.sql", "r");
+					$fd = fopen ($config['basedir'] ."/code/share/db.sql", "r");
 					if (!$fd)
 					{
-						$install_test_result[$id] = "Sql file (". $config['basedir'] ."/code/doc/db.sql) not found.";
+						$install_test_result[$id] = "Sql file (". $config['basedir'] ."/code/share/db.sql) not found.";
 						$install_color[$id] = $install_red;
 					}
 					else
@@ -601,7 +601,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		{
 			require_once("../init.inc.php");
 
-			$db->begin();
+			$db->begin(true);
 
 			// create roles
 			
@@ -613,11 +613,13 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$db->query("SELECT setval('sotf_role_names_seq', 1, false)");
 			
 			// create default roles: THE ORDER IS IMPORTANT!
-			$repository->importRoles(file($config['basedir']."/code/doc/roles.txt"), 'eng');
-			$repository->importRoles(file($config['basedir']."/code/doc/roles_ger.txt"), 'ger');
-			$repository->importRoles(file($config['basedir']."/code/doc/roles_hun.txt"), 'hun');
+			$vocabularies->importRoles(file($config['basedir']."/code/share/roles_eng.txt"), 'eng');
+			$vocabularies->importRoles(file($config['basedir']."/code/share/roles_ger.txt"), 'ger');
+			$vocabularies->importRoles(file($config['basedir']."/code/share/roles_hun.txt"), 'hun');
 
 			$db->query("UPDATE sotf_roles SET creator='t' WHERE role_id='2' OR role_id='5' OR role_id='8' OR role_id='9' OR role_id='12' OR role_id='16' OR role_id='22' OR role_id='24'");
+			
+			$sotfVars->set('roles_langs', 'eng,ger,hun');
 			
 			// create genres
 			
@@ -626,9 +628,11 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$db->query("SELECT setval('sotf_genres_seq', 1, false)");
 			
 			// create default genres: THE ORDER IS IMPORTANT!
-			$repository->importGenres(file($config['basedir']."/code/doc/genres.txt"), 'eng');
-			$repository->importGenres(file($config['basedir']."/code/doc/genres_ger.txt"), 'ger');
-			$repository->importGenres(file($config['basedir']."/code/doc/genres_hun.txt"), 'hun');
+			$vocabularies->importGenres(file($config['basedir']."/code/share/genres_eng.txt"), 'eng');
+			$vocabularies->importGenres(file($config['basedir']."/code/share/genres_ger.txt"), 'ger');
+			$vocabularies->importGenres(file($config['basedir']."/code/share/genres_hun.txt"), 'hun');
+
+			$sotfVars->set('genres_langs', 'eng,ger,hun');
 
 			// delete topics 
 
@@ -652,16 +656,19 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			*/
 
 			// create default topic trees: THE ORDER IS IMPORTANT!
-			$repository->importTopicTree(file($config['basedir']."/code/doc/topictree_sotf.txt"), 'eng');
-			$repository->importTopicTree(file($config['basedir']."/code/doc/topictree_soma.txt"), 'eng');
-			$repository->importTopicTree(file($config['basedir']."/code/doc/topictree_sotf_ger.txt"), 'ger');
-			$repository->importTopicTree(file($config['basedir']."/code/doc/topictree_sotf_hun.txt"), 'hun');
+			$vocabularies->importTopicTree(file($config['basedir']."/code/share/topictree_sotf_eng.txt"), 'eng');
+			$vocabularies->importTopicTree(file($config['basedir']."/code/share/topictree_sotf_ger.txt"), 'ger');
+			$vocabularies->importTopicTree(file($config['basedir']."/code/share/topictree_sotf_hun.txt"), 'hun');
+			$vocabularies->importTopicTree(file($config['basedir']."/code/share/topictree_soma_eng.txt"), 'eng');
 
+			// not really  needed any more, just here for safety
 			$result = $db->query("SELECT setval('sotf_topics_seq', ". $config['nodeId'] . "000, false)");
 			$result = $db->query("SELECT setval('sotf_topic_trees_seq', ". $config['nodeId'] . "000, false)");
 			$result = $db->query("SELECT setval('sotf_topic_tree_defs_seq', ". $config['nodeId'] . "000, false)");
 
 			$db->commit();
+
+			$vocabularies->updateTopicCounts();
 
 		}
 		if (isset($install_delete_topic))

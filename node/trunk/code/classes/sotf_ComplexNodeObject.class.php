@@ -160,11 +160,11 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	
 	/** Retrieves roles and contacts associated with this object */
 	function getRoles() {
-		global $db, $repository;
+		global $db, $vocabularies;
 
 		$roles = $db->getAll("SELECT id, contact_id, role_id FROM sotf_object_roles WHERE object_id='$this->id' ORDER BY role_id, contact_id");
 		for($i=0; $i<count($roles); $i++) {
-			$roles[$i]['role_name'] = $repository->getRoleName($roles[$i]['role_id']);
+			$roles[$i]['role_name'] = $vocabularies->getRoleName($roles[$i]['role_id']);
 			$cobj = new sotf_Contact($roles[$i]['contact_id']);
 			$roles[$i]['contact_data'] = $cobj->getAllWithIcon();
 			if(hasPerm($roles[$i]['contact_id'], 'change')) {
@@ -176,7 +176,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
 	/** Retrieves roles and contacts associated with this object */
 	function getCreators() {
-		global $db, $repository;
+		global $db;
 
 		$creators = $db->getAssoc("SELECT c.* FROM sotf_contacts c, sotf_object_roles o, sotf_roles r WHERE c.id = o.contact_id AND  o.role_id=r.role_id AND r.creator='t' AND o.object_id='$this->id' ORDER BY c.name", false, null, DB_FETCHMODE_ASSOC, false);
 		return $creators;
