@@ -439,8 +439,11 @@ class sotf_AdvSearch
 		{
 			$word = trim($word);
 			if ($word == "") next;
-			$flat = "production_date|Bstation|AAND|Bperson|Bcontains|BXXX|Bstring|AOR|Btitle|Bcontains|BXXX|Bstring|AOR|Bkeywords|Bcontains|BXXX|Bstring|AOR|Babstract|Bcontains|BXXX|Bstring|AOR|Bspatial_coverage|Bcontains|BXXX|Bstring"
-			$flat .= "|AAND|Blanguage|Bis|BYYY|Blang"
+			$serial = str_replace("XXX", $word[$i], "production_date|Bstation|AAND|Bperson|Bcontains|BXXX|Bstring|AOR|Btitle|Bcontains|BXXX|Bstring|AOR|Bkeywords|Bcontains|BXXX|Bstring|AOR|Babstract|Bcontains|BXXX|Bstring|AOR|Bspatial_coverage|Bcontains|BXXX|Bstring");
+			if ($language) $serial .= "|AAND|Blanguage|Bis|B".$language."|Blang"
+			$this->Deserialize($serial);
+			$query = $this->GetSQLCommand();
+			print($query."<br><br>")
 		}
 	}
 
