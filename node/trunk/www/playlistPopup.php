@@ -2,7 +2,7 @@
 require("init.inc.php");
 $page->forceLogin();
 
-$playlist = new sotf_Playlist;
+$playlist = new sotf_UserPlaylist;
 
 if (sotf_Utils::getParameter("close") == "true")
 {	

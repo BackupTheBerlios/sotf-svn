@@ -68,7 +68,7 @@ if($id) {
 
   if ($page->loggedIn()) {
     // is in my playlist?
-    $smarty->assign('inplaylist', sotf_Playlist::contains($id));
+    $smarty->assign('inplaylist', sotf_UserPlaylist::contains($id));
   }
 }
 

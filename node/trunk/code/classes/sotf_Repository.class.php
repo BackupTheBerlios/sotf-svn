@@ -17,7 +17,7 @@ require_once($classdir . '/sotf_Series.class.php');
 require_once($classdir . '/sotf_Programme.class.php');
 require_once($classdir . '/sotf_Contact.class.php');
 require_once($classdir . '/sotf_Rating.class.php');
-require_once($classdir . '/sotf_Playlist.class.php');
+require_once($classdir . '/sotf_PlayList.class.php');
 require_once($classdir . '/sotf_UserPlaylist.class.php');
 require_once($classdir . '/sotf_Blob.class.php');
 

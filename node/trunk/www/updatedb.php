@@ -56,7 +56,7 @@ if ($name == "links")		//editFiles
 	elseif  ($value == 'false') $x->set('public_access', 'false');
 	else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
 	$x->update();
-	print("kesz");
+	print("success");
 }
 elseif ($name == "otherfiles")		//editFiles
 {
@@ -65,7 +65,7 @@ elseif ($name == "otherfiles")		//editFiles
 	elseif  ($value == 'false') $x->set('public_access', 'false');
 	else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
 	$x->update();
-	print("kesz");
+	print("success");
 }
 elseif ($name == "audiofilesa")		//editFiles
 {
@@ -74,7 +74,7 @@ elseif ($name == "audiofilesa")		//editFiles
 	elseif  ($value == 'false') $x->set('stream_access', 'false');
 	else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
 	$x->update();
-	print("kesz");
+	print("success");
 }
 elseif ($name == "audiofilesd")		//editFiles
 {
@@ -83,19 +83,19 @@ elseif ($name == "audiofilesd")		//editFiles
 	elseif  ($value == 'false') $x->set('download_access', 'false');
 	else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
 	$x->update();
-	print("kesz");
+	print("success");
 }
 elseif ($name == "caption")		//editFiles
 {
 	$x = new sotf_NodeObject("sotf_other_files", $id);
 	$x->set('caption', addslashes($value));
 	$x->update();
-	print("kesz");
+	print("success");
 }
 elseif ($name == "addtree")		//topic_tree
 {
 	$repository->addToTopic($id, $value);
-	print("kesz");
+	print("success");
 }
 elseif ($name == "editorpub")		//editor bublished checkboxes
 {
@@ -103,7 +103,7 @@ elseif ($name == "editorpub")		//editor bublished checkboxes
 	if ($value == 'true') $x->publish();
 	elseif  ($value == 'false') $x->withdraw();
 	else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
-	print("kesz");
+	print("success");
 }
 elseif ($name == "editorflag")		//editor programme flags
 {
@@ -119,13 +119,13 @@ elseif ($name == "editorflag")		//editor programme flags
 	}
 	else $x->create();
 //	else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
-	print("kesz");
+	print("success");
 }
 elseif ($name == "addplaylist")		//get.htm add a programm to the playlist
 {
-  $playlist = new sotf_Playlist;
+  $playlist = new sotf_UserPlaylist;
   $playlist->add($id);
-	print("kesz");
+	print("success");
 } else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
 
 $page->alertWithErrors();

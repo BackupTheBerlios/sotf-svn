@@ -93,14 +93,19 @@ $localPrefix = '/node/www';
 // STREAMING --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
+// If you have tamburine installed, the URL for its XML-RPC front-end is needed
+// If you don't have tamburine, you can set up streaming with the
+// remaining set of parameters in this section.
+// Example: http://your.host.name:8080/RPC2
+$tamburineURL = '';
+
 // Parameters for connection to icecast streaming server
 $iceServer = "your.host.name";
 $icePort = "8000";
 $encoderPassword = "hackme";
 
 // The command to start streaming __XX__ style tokens are replaced with the actual value
-$streamCmd = "C:/Perl/bin/perl $basedir/code/contrib/iceplay -b __BITRATE__ -s $iceServer -P $icePort -p $encoderPassword -l __PLAYLIST__ -n __NAME__ ";
-##>>logs/play.log 2>&1 &";  
+$streamCmd = "/usr/bin/perl $basedir/code/contrib/iceplay -b __BITRATE__ -s $iceServer -P $icePort -p $encoderPassword -l __PLAYLIST__ -n __NAME__ >>$basedir/logs/play.log 2>&1 &";
 
 // The server will not start more streams than this
 $maxNumberOfStreams = 30;

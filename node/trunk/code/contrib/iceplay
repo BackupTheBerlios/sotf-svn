@@ -22,7 +22,7 @@
 
 #use strict;
 use IO::Socket;
-use Time::HiRes qw( sleep gettimeofday tv_interval );
+#use Time::HiRes qw( sleep gettimeofday tv_interval );
 
 my ($server, $port, $password, $playlist, $webfile, $bitrate, $public);
 my ($name, $genre, $url);
@@ -98,6 +98,7 @@ while (scalar(@ARGV) > 0) {
 }
 
 #print "START: $0\n";
+print "\nIceplay started\n" if $verbose;
 
 $logfile='iceplay.log' if(!$logfile);
 
@@ -114,21 +115,31 @@ sub formatDate {
 }
 
 
-#print "Forking.. \n" if $verbose;
-#defined(my $pid = fork) or die "Can't fork: $!";
-#if($pid) {
-#  print "parent exits now" if $verbose;
-#  exit;
-#}
-#setsid                  or die "Can't start a new session: $!";
-#open STDIN, '/dev/null' or die "Can't read /dev/null: $!";
-#open STDOUT, '/dev/null' or die "Can't write to /dev/null";
-#open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
+print "OS: $^O\n" if $verbose;
+my $fork = false;
 
+if(0 && $^O =~ /linux|unix/i) {
+  print "Forking.. \n" if $verbose;
+  defined(my $pid = fork) or die "Can't fork: $!";
+  if($pid) {
+    select(undef, undef, undef, 2); # waiting a little for the stream to start...
+    print "parent exits now" if $verbose;
+    exit;
+  }
+  setsid                  or die "Can't start a new session: $!";
+  #open STDIN, '/dev/null' or die "Can't read /dev/null: $!";
+  #open STDOUT, $logfile or die "Can't write to STDOUT";
+  #open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
+}
 
 my $sock = IO::Socket::INET->new(Proto => "tcp",
 				 PeerAddr => $server,
 				 PeerPort => $port);
+
+if(!$sock) {
+  print "Connection failed to $server:$port";
+  exit;
+}
 
 $headers = <<EEE;
 $password\r
@@ -144,9 +155,8 @@ EEE
 $sock->print($headers);
 
 # can't check for connection success, because icecast is buggy (or Perl)
-print "CONNECTED: " . formatDate() . "\n" if $verbose;
-#print "Connected to server...\n";
-#print STDERR time() . "connected\n";
+print "\nCONNECTED TO $server:$port AT " . formatDate() . "\n" if $verbose;
+print "BITRATE: $bitrate \n" if $verbose;
 
 open(PLAYLIST, $playlist) || die "Cannot open playlist: $playlist";
 my @songs = <PLAYLIST>;
@@ -158,11 +168,14 @@ my $num_songs = $#songs;
 print "Playlist $playlist loaded\n   $num_songs total songs...\n" if $verbose;
 
 # Figure out the sleep time and data size
-my $buffsize = 4000;
-if ($bitrate < 48) {
-  $buffsize = 1000;
-}
-my $timetosleep = $buffsize / ($bitrate * 1000 / 8);
+#my $buffsize = 4000;
+#if ($bitrate < 48) {
+#  $buffsize = 1000;
+#}
+#my $timetosleep = $buffsize / ($bitrate * 1000 / 8);
+
+my $buffsize = int($bitrate/8);
+my $timetosleep = 1;
 print "buffsize: $buffsize\n" if $verbose;
 print "timetosleep: $timetosleep\n" if $verbose;
 
@@ -192,7 +205,8 @@ while ($i <= $num_songs) {
     print "read: $read\n" if $verbose;
     $sock->print($buff);
     $sleeptime = $timetosleep * $read / $buffsize;
-    sleep($sleeptime);
+    #sleep($sleeptime);
+    select(undef, undef, undef, $sleeptime);
     print "slept: $sleeptime\n" if $verbose;
   } while ($read == $buffsize);
   close(SONG);

@@ -3,7 +3,7 @@ require("init.inc.php");
 $page->forceLogin();
 //sotf_Utils::getParameter("");
 
-$playlist = new sotf_Playlist();
+$playlist = new sotf_UserPlaylist();
 
 if (sotf_Utils::getParameter("delete_selected") != "")			//delete selected button pressed
 {
@@ -17,35 +17,16 @@ if (sotf_Utils::getParameter("delete_selected") != "")			//delete selected butto
 }
 if (sotf_Utils::getParameter("play_selected") != "")			//delete selected button pressed
 {
-	$playlistFiles = array();
+  $pl = new sotf_Playlist();
 	$checkbox = sotf_Utils::getParameter("checkbox");
-	$max =  count($checkbox);
-	for($i=0; $i<$max; $i++)
-	{
-		$playlistFiles[$checkbox[$i]] = $playlist->getFilename($checkbox[$i]);
+	for($i=0; $i < count($checkbox); $i++) {
+    $prg = new sotf_Programme($checkbox[$i]);
+    $pl->addProg($prg);
 	}
-	print("<pre>");
-	var_dump($playlistFiles);
-	print("</pre>");
-//	$page->redirect("playlist.php");
-/*
-	$filename = '';
-	if (is_writable($filename))	// Let's make sure the file exists and is writable first.
-	{
-	    if (!$fp = fopen($filename, 'w'))
-	    {
-	         raiseError("Cannot open file ($filename)");
-	         exit;
-	    }
-	    if (!fwrite($fp, $somecontent))	    // Write $somecontent to our opened file.
-	    {
-	        raiseError("Cannot write to file ($filename)");
-	        exit;
-	    }
-	    fclose($fp);
-	}
-	else raiseError("The file $filename is not writable");
-*/
+  $pl->startStreaming();
+  $pl->sendRemotePlaylist();
+  $page->logRequest();
+  exit;
 }
 
 

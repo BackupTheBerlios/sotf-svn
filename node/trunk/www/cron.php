@@ -76,7 +76,11 @@ foreach($XBMF as $xbmfFile) {
 
 //******** Update topic counts
 
-//******** Clean caches ???
+//******** Clean caches adn tmp dirs
+
+// remove m3us and pngs from tmpdir
+
+
 
 stopTiming();
 $page->logRequest();

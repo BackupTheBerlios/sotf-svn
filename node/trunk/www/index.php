@@ -50,8 +50,8 @@ $fromDay = date('Y-m-d', $dayInThePast);
 
 if ($page->loggedIn()) {
 
-  // get playlist
-  $playlist = new sotf_Playlist();
+  // get users's playlist
+  $playlist = new sotf_UserPlaylist();
   $smarty->assign('PLAYLIST', $playlist->load());
 
   // check if user has default query
