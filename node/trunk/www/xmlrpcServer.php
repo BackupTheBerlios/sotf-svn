@@ -165,7 +165,7 @@ function getProgrammes($params)
 //		debug("------------>".$query." AND id = '$prg'<------------------");
 		$p = $db->getRow($query." AND id = '$prg'");
 		if ($p != NULL) $results[] = $p;
-		else $results[] = array("id" => $prg, "title" => "DELETED");
+		//else $results[] = array("id" => $prg, "title" => "DELETED");
 
 	}
 
