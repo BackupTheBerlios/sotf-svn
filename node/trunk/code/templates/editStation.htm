@@ -82,7 +82,7 @@
     <td nowrap class="tab">{#access_permissions#}</td>
   </tr>
 </table>
-<a name="permissions"></a>
+<a name="perms"></a>
 <table class="tabarea">
 <tr> 
   <td class="tabarea"> 
@@ -111,7 +111,7 @@
         <form method="post" name="form1">
           <input type="hidden" name="stationid" value="{$STATION_ID}">
             {#username#}: <input name="username"> 
-              <input type="button" name="addperm" value="{#change_perm#}" onClick="if(checkIfEmpty(this.form.username,'{#select_user#}')) popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
+              <input type="button" name="addperm" value="{#change_perm#}" onClick="if(checkIfEmpty(this.form.username,'{#select_user#}')) popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username='+escape(this.form['username'].value),'{#Permissions#}',350,400, false)">
                 <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
         </form>
       </td>
