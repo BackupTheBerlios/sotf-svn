@@ -177,7 +177,7 @@ class sotf_Utils
     while(list(,$v)=each($a)) {
       $p = explode('__', $v);
       if(count($p) == 1) {
-        if(!strstr($v, '.m3u'))
+        if(!$pathinfoParams['id'])
           $pathinfoParams['id'] = $v;
       } else {
         $pathinfoParams[$p[0]] = $p[1];
@@ -201,12 +201,11 @@ class sotf_Utils
 	{
     global $pathinfoParams;
 
-    $val = $pathinfoParams[$name];
-    if(isset($val))
-      return $val;
 		$val = $_POST[$name];
 		if(!isset($val))
 			$val = $_GET[$name];
+    if(!isset($val))
+      $val = $pathinfoParams[$name];
     // if(isset($val))
     //$val = sotf_Utils::decodeHTML($val);
     // TODO: strip_tags ???

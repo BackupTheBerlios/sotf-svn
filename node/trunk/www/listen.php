@@ -26,14 +26,6 @@ if(sotf_Utils::getParameter('stop')) {
 $id = sotf_Utils::getParameter('id');
 $fileid = sotf_Utils::getParameter('fileid');
 
-if(!$id) {
-  sotf_Utils::collectPathinfoParams();
-  if(!$id)
-	 $id = $pathinfoParams['id'];
-  if(!$fileid)
-	 $id = $pathinfoParams['fileid'];
-}
-
 if(empty($id)) {
   raiseError("Missing parameters!");
 }

@@ -46,9 +46,9 @@ To run Tamburine as daemon you need to have a
 ~/.tamburinerc:
 
 [icecast]
-desc = Free Software Multiple Streaming Engine
+desc = Try our radio archive network at http://sotf.dsd.sztaki.hu
 url = http://sotf.dsd.sztaki.hu
-name = Streaming with MuSE
+name = StreamOnTheFly: your personalized radio!
 public = 1
 format = 1
 protocol = 1
