@@ -5,11 +5,20 @@ There are several ways to set up streaming:
 2. use ices/holyshout
 3. use Tamburine via XML-RPC
 4. use Tamburine via tbrcmd
+5. use HTTP streaming
 
-Only 3 and 4 support remote listening from other node.
-3. does not always work, try it on your site, and if it does not work,
+Only 3, 4 and 5 support remote listening from other node.
+
+The best is to choose 5 (HTTP streaming). In this case you can stop
+reading this file, you don't have to compile/install icecast and
+Tamburine. Audio files will be listened through Apache HTTP
+connections from the www/tmp directory. (You have to enable following
+symlinks for this directory in Apache config.)
+
+If you want to participate in a node network, you must choose HTTP streaming.
+
+Solution 3. does not always work, try it on your site, and if it does not work,
 choose 4, and set $config['tamburineCMD'] in your config.inc.php!
-
 
 Tamburine (http://tamburine.dyne.org/)
 ---------------------------------------
