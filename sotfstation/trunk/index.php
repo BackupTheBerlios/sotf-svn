@@ -105,6 +105,9 @@
 		$smarty->assign('user',$_POST['user']);
 	}
 	
+	//create help message
+	$myHelp = new helpBox(1);
+	
 	//page output :)
 	pageFinish('login.htm');
 ?>

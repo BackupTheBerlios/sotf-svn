@@ -8,16 +8,17 @@
 	*************************/
 
 	/************************
-	* No Access Page :: 08.11.2002
+	* Template Page Using the pre-build page generation framework
 	*----------------------------------------
-	* Display a No Access Page (403 Error)
-	* 
-	* Note: You may want to use this page as a starting point for the
-	* creation of other subpages of the application.
+	* Purpose of page goes here
 	************************/
 	include("init.inc.php");										# include the global framwork
 	$myNav->add($SECTION[403],'index.php');			# add entry to Navigation Bar Stack
 	
+	//create help message
+	$myHelp = new helpBox(1);										# this will fetch a help message from the database and output it
+																							# in the template (if allowed to do so)
+																							
 	//page output :)
-	pageFinish('noaccess.htm');
+	pageFinish('noaccess.htm');									# enter the desired template name as a parameter
 ?>

@@ -48,7 +48,7 @@
 	//if SADM is accessed via XMLRPC then the
 	//following has a meaning
 	define('SADM_HOST','localhost');													# location of SADM
-	define('SADM_SERVER','/work/sadm/server.php');						# location of the XMLRPS SADM Server
+	define('SADM_SERVER','/work/sadm3/server.php');						# location of the XMLRPS SADM Server
 	define('SADM_PORT',80);																		# SADM XMLRPC Access Port
 	
 	/*

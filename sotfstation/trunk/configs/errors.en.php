@@ -13,6 +13,7 @@
 	* This file acts as a language interface when reporting errors
 	************************/
 	
+	//all the possible errors that may crawl up in the code
 	$ERR = array(
 		'1' 	=> 'Incorrect Combination User / Password',
 		'2'		=> 'Unable to connect to specified RPC Server',
@@ -21,6 +22,7 @@
 		'5'		=> 'An XMLRPC Error has occured'
 	);
 	
+	//section names, used for building the navigation bar
 	$SECTION = array(
 		'LOGIN'		=> 'Login',
 		'HOME'		=> 'Home',

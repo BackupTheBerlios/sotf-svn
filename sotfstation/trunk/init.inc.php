@@ -20,6 +20,7 @@
 	include('classes/error.class.php');					# Error Collector
 	include('classes/user.class.php');					# User Session Wrapper
 	include('classes/navBar.class.php');				# Navigation Bar Processor
+	include('classes/helpBox.class.php');				# Help Box Generator
 	include('functions/eh.inc.php');						# Override PHP's Error's handling routines
 	include('functions/timers.inc.php');				# Timers to reveal bottlenecks
 	include('functions/prepend.inc.php');				# Smarty pre and postpend data for pop-up windows

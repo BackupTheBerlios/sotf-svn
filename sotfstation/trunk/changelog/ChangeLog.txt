@@ -19,3 +19,5 @@ User Authentication runs through SADM, no matter whether it is on a local server
 No Access page has been defined and linked to appropriate authentication handling routines
 
 Overall Navigation Menu has been linked with Access Parameters
+
+HelpBox class created and database scheme designed to support it. Now any section of the website can easily get ondemand help. This is part of the main development framework and must be used to the greatest extent.
