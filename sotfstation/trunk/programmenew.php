@@ -10,14 +10,14 @@
 	/************************
 	* ProgrammeNew - create a new one-time programme
 	************************/
-	include("init.inc.php");												# include the global framwork
-	$myNav->add($SECTION[INSIDE],'inside.php');			# add entry to Navigation Bar Stack
+	include("init.inc.php");						# include the global framwork
+	$myNav->add($SECTION[INSIDE],'inside.php');		# add entry to Navigation Bar Stack
 	$myNav->add($SECTION[ADDPROG],'usersnew.php');	# add entry to Navigation Bar Stack
-	authorize('edit_station');											# check access rights
+	authorize('edit_station');						# check access rights
 	
 	//work around POSTED data
 	if($_POST['Submit']){
-		$_POST = clean($_POST);												# clean bad inputs
+		$_POST = clean($_POST);						# clean bad inputs
 		
 		//figure out if times lie in the same day or not...
 		if(($_POST[edHour]>$_POST[sdHour]) or (($_POST[edHour] == $_POST[sdHour]) and ($_POST[edMinute]>$_POST[sdMinute]))){			
@@ -103,7 +103,7 @@
 		
 			
 			//redirect to confirm page
-			header("Location: confirm.php?action=2&next=inside");
+			header("Location: confirm.php?action=2&next=week");
 		}else{		# errorz :(
 			//assign smarty default data
 			$smarty->assign(array(

@@ -1,4 +1,6 @@
 <?
+	## DEPRECATED ################################################################
+	#                                                                            #
 	/**
 	 * isLastWeek() - returns TRUE if current week is the last week in month
 	 * 
@@ -35,48 +37,96 @@
 		
 		return $days;
 	}
+	#                                                                            #
+	################################################### END DEPRECATED ###########
 		
 		
 	/**
-	 * getDayData() - this will return the week number IN THE MONTH
-	 * 								of the current timestamp
+	 * getDayData() - this will return the occurence number of THIS day in THIS month
 	 * 
 	 * @param $timestamp (timestamp)
-	 * @return (int)
+	 * @return (array)
 	 */
-	function getDayData($day_timestamp){
-		$daysInMonth = date("t",$day_timestamp);			# total days in month
-		$day = date("j",$day_timestamp);							# current day of timestamp				
-		$day_of_week = date("w",$day_timestamp);			# day of week...
-			
-		//parameters definition
-		$first_day_timestamp = mktime(0,0,1,date("n",$day_timestamp),1,date("Y",$day_timestamp));
-		$first_day_of_week = date("w",$first_day_timestamp) - 1;
-			
-		//error correction
-		if($first_day_of_week==-1){		# first day is a sunday...
-			$first_day_of_week = 6;
-		}
-			
-		//more error correction
-		if($day_of_week==0){					# first day is a monday
-			$day_of_week = 7;
+	function getDayData($day){
+		$dayOfWeek = date("w",$day);
+		
+		$dayOfMonth = date("j",$day);
+		$month = date("n",$day);
+		$year = date("Y",$day);
+		
+		//echo "searching for: $dayOfWeek / $dayOfMonth in $month of $year";
+		
+		#### OCCURCE CALCULATION #########################################################
+		#                                                                                #
+		//now calculate the first occurence of $dayOfMonth in $month
+		$firstDayOfMonth = mktime(1,1,1,$month,1,$year);
+		
+		for($i=1;$i<31;$i++){
+			if(date("w",$firstDayOfMonth) == $dayOfWeek){
+				break;
+			}
+			$firstDayOfMonth = $firstDayOfMonth + 60*60*24;
 		}
 		
-		//how many days in first week (default offset)
-		$days_in_first_week = 7 - $first_day_of_week;
-			
-		//what week is this day in?
-		if($day <= $days_in_first_week){
-			$week = 0;
+		$firstOccurenceInMonth = $firstDayOfMonth;
+		$stayInMonth = date("n",$firstOccurenceInMonth);
+		$checkDay = date("j",$firstOccurenceInMonth);
+		
+		//see if it fits, if no match, increment by a week
+		for($i = 1; $i < 6; $i++){
+			if($dayOfMonth == $checkDay and $stayInMonth == $month){
+				$toReturn['occurence'] = $i;
+				break;
+			}
+			$checkDay = $checkDay + 7;
+		}
+		
+		//check if this is the last occurence in this month
+		if(date("n",$firstOccurenceInMonth + $toReturn['occurence']*7*24*60*60) != $month){
+			$toReturn['last'] = true;
+		}
+		#                                                                                #
+		############################################### END OCCURENCE CALCULATION ########
+		
+		#### FULL WEEKNUM CALCULATION ####################################################
+		#                                                                                #
+		$firstDayOfMonth = mktime(1,1,1,$month,1,$year);
+		
+		//if the first day is not a monday, then the first week is not a full week
+		if(date("w",$firstDayOfMonth) != 1){
+		
+			$firstMonday = $firstDayOfMonth + 60*60*24;
+		
+			//now see when the first full week begins
+			for($i=1;$i<7;$i++){
+				if(date("w",$firstMonday) == 1){
+					break;
+				}
+				$firstMonday = $firstMonday + 60*60*24;
+			}
 		}else{
-			$week = ceil(($day - $days_in_first_week) / 7);
+			$firstMonday = $firstDayOfMonth;
 		}
 		
-		//increment weeknum, to avoid zero.
-		$week++;
-		return $week;
+		//now check if day lies in first full week
+		for($weeknum = 1; $weeknum <= 4; $weeknum++){
+			if($day > $firstMonday and $day < ($firstMonday + 60*60*24*7)){
+				$toReturn['fullWeek'] = $weeknum;
+				break;
+			}elseif($day < $firstMonday){
+				$toReturn['fullWeek'] = 0;
+				break;
+			}else{
+				$firstMonday = $firstMonday + 60*60*24*7;
+			}
+		}
+		
+		#                                                                                #
+		############################################# END FULL WEEKNUM CALCULATION #######
+		
+		return $toReturn;
 	}
+	
 	
 	/**
 	 * odd() - returns TRUE if value is ODD
@@ -85,7 +135,7 @@
 	 * @return 
 	 */
 	function odd($var) {
-    return ($var % 2 == 1);
+    	return ($var % 2 == 1);
 	}
 
 	
@@ -96,7 +146,6 @@
 	 * @return 
 	 */
 	function even($var) {
-    return ($var % 2 == 0);
+   		return ($var % 2 == 0);
 	}
-
 ?>
