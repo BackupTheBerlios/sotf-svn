@@ -254,6 +254,7 @@ class sotf_NodeObject extends sotf_Object {
 	 if(count($objects) > 0) {
 		reset($objects);
 		while(list(,$objData) = each($objects)) {
+
 		  debug("arrived object", $objData['id']);
 		  debug("", $objData);
 		  $data = $objData['data'];
@@ -261,12 +262,17 @@ class sotf_NodeObject extends sotf_Object {
 		  $obj = $repository->getObjectNoCache($objData['id'], $objData['data']);
 		  unset($objData['data']);
 		  $obj->internalData = $objData;
+
 		  // handle NULL problems
 		  reset($obj->data);
 		  while(list($k,$v) = each($obj->data)) {
-			 if(is_null($v))
+			 if($v == NULL) {
+				//debug("nulled", $k);
 				$obj->data[$k] = NULL;
+			 }
 		  }
+		  //debug("after nulling", $obj->data);
+
 		  // save object
 		  if($objData['node_id'] == $config['nodeId']) {
 			 logError("Received my own object back via replication: ". $objData['id']);
