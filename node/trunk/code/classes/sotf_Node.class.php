@@ -4,10 +4,10 @@
 
 class sotf_Node extends sotf_NodeObject {
 
-	var $tablename = 'sotf_nodes';
+  var $tablename = 'sotf_nodes';
 
 	function sotf_Node($id='', $data='') {
-		return new sotfNodeObject('sotf_nodes', $id, $data);
+		$this->sotf_NodeObject('sotf_nodes', $id, $data);
 	}
 
 	/** 
@@ -56,7 +56,7 @@ class sotf_Node extends sotf_NodeObject {
 	function hasPermission($perm) {
 		global $user;
 		//if ($db->getOne("SELECT sotf_user_permissions.permission_id FROM sotf_user_permissions, sotf_permissions WHERE sotf_user_permissions.user_id = '$userid' AND sotf_user_permissions.object_id IS NULL AND (sotf_permissions.permission = 'admin' OR sotf_permissions.permission = '$perm')"))
-		if ($user->exist)
+		if ($user->exist && is_array($user->permissions["node"]))
 			if (in_array($perm,$user->permissions["node"]) || in_array('admin',$user->permissions["node"]))
 				return true;
 		return false;

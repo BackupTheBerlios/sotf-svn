@@ -16,9 +16,9 @@ $username = sotf_Utils::getParameter('username');
 if ($station)
 	$st = & new sotf_Station($station);
 
-if (sotf_Node::hasPermission('create'))
+if ($permissions->hasNodePermission('create'))
 {
-	$smarty->assign('NODE_ADMIN',$station);
+	$smarty->assign('NODE_ADMIN', '1');
 	if ($new)
 	{
 		$station_old = $station;
@@ -29,102 +29,85 @@ if (sotf_Node::hasPermission('create'))
 		
 		if ($station != $station_old)
 		{
-			$smarty->assign('STATUS',getlocalized(illegal_trackname));
+			$page->addStatusMsg('illegal_trackname');
 		}
 		else
 		{
-			sotf_Station::create($station, $desc);
-			
-			$page->redirect("editStation.php?station=$station");
+      $st = & new sotf_Station();
+			$st->create($station, $desc);
+      $page->addStatusMsg('station_created');
+			$page->redirect("editStation.php?stationid=" . $st->getID());
 		}
 	}
 	elseif ($delete)
 	{
 		$st = & new sotf_Station($station);
 		$st->delete();
-		$smarty->assign('STATUS',$page->getlocalized('delete_ok'));
+		$page->addStatusMsg('delete_ok');
+    $page->redirect($_SERVER["PHP_SELF"]);
 	}
 	elseif ($save)
 	{
 		$st = & new sotf_Station($station);
-		$st->set('station', $station);
-		$st->set('description', $desc);
-		$st->save();
-		
-		$smarty->assign('STATUS',getlocalized('save_ok'));
+		$st->create($station, $desc);
+		$page->addStatusMsg('save_ok');
+    $page->redirect($_SERVER["PHP_SELF"]);
 	}
 	elseif ($addstationmanager)
 	{
-		//$st = & new sotf_Station($station);
-		//$st->addPermission(, $userid)
-		if (sotf_Permission::addStationManager($username))
-			$smarty->assign('STATUS',$page->getlocalized('addstationmanager_ok'));
-		else
-			$smarty->assign('STATUS',$page->getlocalized('addstationmanager_failed'));
+    $userid = $user->getUserid($username);
+		$permissions->addNodePermission('create', $userid);
+		$page->addStatusMsg('addstationmanager_ok');
+    $page->redirect($_SERVER["PHP_SELF"]);
 	}
 	elseif ($delstationmanager)
 	{
-		if (sotf_Permission::delStationManager($username))
-			$smarty->assign('STATUS',$page->getlocalized('delstationmanager_ok'));
-		else
-			$smarty->assign('STATUS',$page->getlocalized('delstationmanager_failed'));
+    $userid = sotf_Utils::getParameter('userid');
+		$permissions->delNodePermission('create', $userid);
+		$page->addStatusMsg('delstationmanager_ok');
+    $page->redirect($_SERVER["PHP_SELF"]);
 	}
-	$users = sotf_Permission::getStationManagers();
+
+	$users = $permissions->listNodeUsersWithPerm('create');
 	if (count($users)>0)
-	{
-		$smarty->assign('USERS',$users);
-	}
+    {
+      $smarty->assign('USERS',$users);
+    }
 }
+
+
+// TODO: page splitting in station list!
+
 $stations = sotf_Station::listAll();
 
 for($i=0; $i<count($stations); $i++)
 {
-	/*
-	$logo = false;
-	if (isLocalStation($stations[$i]['station']))
-	{
-		if (!is_object($repository->getStationLogo($stations[$i]['station'])))
-		{
-			$logo = '<img border="0" src="getLogo.php?station='.rawurlencode($stations[$i]['station']).'">';
-		}
-	}
-	else
-	{
-		$url = parse_url($repository->getRepositoryURL($stations[$i]['station']));
-		$scheme = $url['scheme'];
-		$host = $url['host'];
-		$path = $url['path'];
-		$logo = '<img border="0" src="'.$scheme.'://'.$host.$path.'/getLogo.php?station='.rawurlencode($stations[$i]['station']).'">';
-		if($url['host'] == "node.streamonthefly.com") {
-		  // This is because Thomas Hassan had not refreshed the CVS when I asked for it cca. 5 times.
-		  debug("replaced AT2 logo");
-		  $logo = '';
-		}
-	}
-	*/
 	
 	if ($stations[$i]->getLogo())
-		$logo = true;
-	else
-		$logo = true;
-	$STATION_LIST[] = array(stationId		=> $stations[$i]->get('station'),
-							desc			=> $stations[$i]->get('description'),
-							numItems		=> $stations[$i]->numProgrammes(),
-							logo			=> $logo,
-							local			=> $stations[$i]->isLocal(),
-							station_manager	=> sotf_Permission::get('station_manager',$stations[$i]->get('station')));
+    $hasLogo = true;
 
-	if (sotf_Permission::get('station_manager',$stations[$i]->get('station')))
-	{
+  // get access rights for station
+  $stationMgr = $permissions->hasPermission($stations[$i]->getId(), 'change');
+	if ($stationMgr)
 		$LOCAL_STATION_MANAGER = true;
-	}
+
+	$STATION_LIST[] = array('id'		=> $stations[$i]->get('id'),
+                          'name'	=> $stations[$i]->get('name'),
+                          'description'	=> $stations[$i]->get('description'),
+                          'numProgs'		=> $stations[$i]->numProgrammes(),
+                          'hasLogo'			=> $hasLogo,
+                          'isLocal'			=> $stations[$i]->isLocal(),
+                          'stationManager'	=> $stationMgr);
+
 }
 if ($LOCAL_STATION_MANAGER)
 {
 	$smarty->assign('LOCAL_STATION_MANAGER',$LOCAL_STATION_MANAGER);
 }
 
-$smarty->assign('STATION_LIST',$STATION_LIST);
+
+
+$smarty->assign('STATIONS',$STATION_LIST);
 
 $page->send();
 

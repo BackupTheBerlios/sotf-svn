@@ -40,12 +40,6 @@ class sotf_User
 	var $email;
 
 	/**
-	* Per station permissions of the user
-	* @var	$permissions	string
-	*/
-	var $permissions;
-
-	/**
 	* True if this is an existing user
 	* @var	$exist	string
 	*/
@@ -82,22 +76,12 @@ class sotf_User
 			$this->language = $data['language'];
 			$this->email = $data['email'];
 			$this->exist = true;
-				
-			// load permissions for user
-			$permtable = $db->getAll("SELECT sotf_user_permissions.object_id, sotf_permissions.permission FROM sotf_user_permissions, sotf_permissions WHERE sotf_user_permissions.user_id = '$this->id' AND sotf_user_permissions.permission_id = sotf_permissions.id");
-			// make an associative array contains the permissions for all objects
-			for ($i=0;$i<count($permtable);$i++)
-				if ($permtable[$i]["object_id"])
-					$this->permissions[$permtable[$i]["object_id"]][] = $permtable[$i]["permission"];	// object permission
-				else
-					$this->permissions["node"][] = $permtable[$i]["permission"];	// node permission
+
+      // user permissions are stored in $permission
 		}
 		// TODO: load user profile
 	}
 
-	function isEditor() {
-		return(isset($this->permissions) && count($this->permissions) > 0);
-	}
 	
 	function getUserDir() {
 		global $userDirs;
@@ -131,8 +115,6 @@ class sotf_User
 				raiseError("Could not remove file $targetFile");
 	}
 
-// --- innen 
-	
 	function userNameCheck($username) {
 		global $userdb, $page;
 		$data = $userdb->getOne("SELECT username FROM authenticate WHERE username='". sotf_Utils::clean($username) . "'");
@@ -216,7 +198,7 @@ class sotf_User
 
 	function getUserid($username) {
 		global $userdb;
-		return $userdb->getOne("SELECT auth_id FROM authenticate WHERE username = '$uesrname'");
+		return $userdb->getOne("SELECT auth_id FROM authenticate WHERE username = '$username'");
 	}
 }
 ?>

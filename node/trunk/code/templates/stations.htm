@@ -1,8 +1,5 @@
 
-{if $STATION_MANAGER}
-	{if $STATUS}
-	<p>{$STATUS}</p>
-	{/if}
+{if $NODE_ADMIN}
 		
 	<h3>{#create_station#}</h3>
 	<form method="post">
@@ -23,8 +20,12 @@
 	{if $USERS}
 		<table cellspacing="0" cellpadding="2" border="1">
 		{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
-		{section name=user loop=$USERS}
-			<tr bgcolor="{cycle}"><td>{$USERS[user]}</td>{if ! $smarty.section.user.first || ! $smarty.section.user.last}<td><a href="stations.php?username={$USERS[user]}&delstationmanager=1">{#delete#}</a>{/if}</td></tr>
+		{section name=i loop=$USERS}
+			<tr bgcolor="{cycle}"><td>{$USERS[i].name}</td>
+         {if ! $smarty.section.i.first || ! $smarty.section.i.last}
+             <td><a href="stations.php?userid={$USERS[i].id}&delstationmanager=1">{#delete#}</a></td>
+         {/if}
+      </tr>
 		{/section}
 		</table>
 	{else}
@@ -43,26 +44,24 @@
 	</form>
 	<hr>
 {/if}
-{if $STATION_LIST}
+{if count($STATIONS) gt 0 }
 	<h3>{#stations#}</h3>
 	<table border="0" cellspacing="0" cellpadding="2">
-	{section name=station loop=$STATION_LIST}
+	{section name=station loop=$STATIONS }
 		<tr valign="top" bgcolor="#EEEEEE">
-			<td>{if $STATION_LIST[station].logo}
-				<a href="listProgrammes.php?&station={$STATION_LIST[station].stationId|escape}"><img src="getStationLogo.php/icon.png?station={$STATION_LIST[station].stationId|escape}" border="0"></a>
-			{else}<img src="{$IMAGEDIR}/transp.gif">
-			{/if}</td>
-			<td><a href="listProgrammes.php?&station={$STATION_LIST[station].stationId|escape}">{$STATION_LIST[station].stationId}</a> ({$STATION_LIST[station].numItems})
-			<br>{$STATION_LIST[station].desc}
-			{if $STATION_MANAGER}
-				{if $STATION_LIST[station].local}
-					<br><a href="editStation.php?&station={$STATION_LIST[station].stationId|escape}">{#edit#}</a>
-					<a href="stations.php?delete=1&station={$STATION_LIST[station].stationId|escape}">{#delete#}</a>
-				{/if}
-			{elseif $LOCAL_STATION_MANAGER}
-				{if $STATION_LIST[station].station_manager}
-					<br><a href="editStation.php?&station={$STATION_LIST[station].stationId|escape}">{#edit#}</a>
-				{/if}
+			<td>{if $STATIONS[station].hasLogo }
+				<a href="listProgrammes.php?&stationid={$STATIONS[station].id}"><img src="getIcon.php/icon.png?id={$STATIONS[station].id}" border="0"></a>
+			{else} <img src="{$IMAGEDIR}/transp.gif">
+			{/if}
+      </td>
+			<td><a href="listProgrammes.php?&stationid={$STATIONS[station].id}">{$STATIONS[station].name}</a> ({$STATIONS[station].numProgs})
+			<br>{$STATIONS[station].description}
+      <br>
+			{if $NODE_ADMIN and $STATIONS[station].isLocal}
+					<a href="stations.php?delete=1&station={$STATIONS[station].id}">{#delete#}</a>
+			{/if}
+			{if $STATIONS[station].stationManager and $STATIONS[station].isLocal}
+					<a href="editStation.php?&stationid={$STATIONS[station].id}">{#edit#}</a>
 			{/if}
       </td>
 		</tr>

@@ -25,7 +25,7 @@ CREATE TABLE "sotf_user_prefs" (
 CREATE TABLE "sotf_user_history" (
 -- past actions of the user, may be used for collaborative filtering
 	"id" serial PRIMARY KEY, -- just an id
-	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE,
+	"user_id" int, -- cannot reference to sadm.authenticate(auth_id)
 	"action" varchar(30), -- type of action the user did with object
 	"object_id" varchar(12),
 	"when" datetime
@@ -66,7 +66,7 @@ CREATE TABLE "sotf_neighbours" (
 CREATE TABLE "sotf_user_permissions" (
 -- a user may have a set of permissions on object or globally
 	"id" serial PRIMARY KEY, -- just an id
-	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE,
+	"user_id" int, -- cannot reference to sadm.authenticate(auth_id) 
 	"object_id" varchar(12) REFERENCES sotf_node_objects(id) ON DELETE CASCADE, 
 				-- the object in which group permissions apply (if null, the permissions are global)
 	"permission_id" int REFERENCES sotf_permissions(id) ON DELETE CASCADE,
@@ -93,9 +93,9 @@ CREATE TABLE "sotf_contacts" (
 	"jingle" bytea
 );
 
-CREATE SEQUENCE "sotf_roles_seq";
+CREATE SEQUENCE "sotf_object_roles_seq";
 
-CREATE TABLE "sotf_roles" (
+CREATE TABLE "sotf_object_roles" (
 -- points from stations/series/etc. to contact records for editors/artists/etc.
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
@@ -304,13 +304,23 @@ CREATE TABLE "sotf_genres" (
 	CONSTRAINT "sotf_genres_u" UNIQUE ("genre_id", "language")
 );
 
+CREATE SEQUENCE "sotf_roles_seq";
+
+CREATE TABLE "sotf_roles" (
+-- defines the roles
+-- REPLICATED
+	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
+	"role_id" int2 UNIQUE NOT NULL,
+	"creator" bool NOT NULL
+);
+
 CREATE SEQUENCE "sotf_role_names_seq";
 
 CREATE TABLE "sotf_role_names" (
 -- defines the accepted list of roles
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-	"role_id" int2 NOT NULL,
+	"role_id" int2 REFERENCES sotf_roles(role_id) ON DELETE CASCADE,
 	"language" varchar(10) NOT NULL,
 	"name" varchar(255) NOT NULL,
 	CONSTRAINT "sotf_role_names_u" UNIQUE ("role_id", "language")
@@ -331,7 +341,7 @@ CREATE TABLE "sotf_playlists" (
 -- registered users may bookmark things
 	"id" serial PRIMARY KEY, -- just an id
 	"prog_id" varchar(12) NOT NULL,
-	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE,
+	"user_id" int, -- cannot reference to sadm.authenticate(auth_id)
 	"type" VARCHAR(10), -- use unclear yet
 	CONSTRAINT "sotf_playlists_u" UNIQUE ("prog_id", "user_id"),
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE

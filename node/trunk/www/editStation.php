@@ -3,7 +3,8 @@
 require("init.inc.php");
 
 $page->forceLogin();
-$station = sotf_Utils::getParameter('station');
+
+$stationid = sotf_Utils::getParameter('stationid');
 $group = sotf_Utils::getParameter('group');
 $username = sotf_Utils::getParameter('username');
 $addusergroup = sotf_Utils::getParameter('addusergroup');
@@ -29,10 +30,17 @@ $errordeluserstation = sotf_Utils::getParameter('errordeluserstation');
 $path_parts = pathinfo(realpath($filename));
 $filename = $path_parts['basename'];
 
-$st = & new sotf_Station($station);
+$st = & new sotf_Station($stationid);
 
-if ($station)
-	$smarty->assign('STATION',$station);
+if(!$st->isLocal()) {
+  raiseError("You can only edit local stations!");
+}
+if (!$st->hasPermission("change")) {
+  raiseError("You have no permission to change station settings!");
+}
+
+$smarty->assign('STATION_ID',$stationid);
+$smarty->assign('STATION',$st->get('name'));
 if ($group)
 	$smarty->assign('GROUP',$group);
 
@@ -58,19 +66,18 @@ if ($okdeluserstation)
 if ($errordeluserstation)
 	$smarty->assign('ERRORDELUSERSTATION',$errordeluserstation);
 
-if ((sotf_Permission::get("station_manager",$station) || sotf_Permission::get("station_manager")) && $st->isLocal($station))
+  /*
+if ($addusergroup)
 {
-	if ($addusergroup)
-	{
-		if (sotf_Permission::addUserToGroup($username,$group,$station))
-			$status = "&okaddusergroup=1";
-		else
-			$status = "&erroraddusergroup=1";
-		$page->redirect("editStation.php?station=".rawurlencode($station).$status."#admin_users");
-	}
-	elseif ($delusergroup)
-	{
-		if (sotf_Permission::delUserFromGroup($username,$group,$station))
+  if (sotf_Permission::addUserToGroup($username,$group,$station))
+    $status = "&okaddusergroup=1";
+  else
+    $status = "&erroraddusergroup=1";
+  $page->redirect("editStation.php?station=".rawurlencode($station).$status."#admin_users");
+}
+elseif ($delusergroup)
+{
+  if (sotf_Permission::delUserFromGroup($username,$group,$station))
 			$status = "&okdelusergroup=1";
 		else
 			$status = "&errordelusergroup=1";
@@ -84,7 +91,10 @@ if ((sotf_Permission::get("station_manager",$station) || sotf_Permission::get("s
 			$status = "&errordeluserstation=1";
 		$page->redirect("editStation.php?station=".rawurlencode($station).$status."#admin_users");
 	}
-	elseif($view)
+	else
+*/
+
+if($view)
 	{
 		$page->redirect("getUserFile.php/".$filename."?filename=".rawurlencode($filename));
 	}
@@ -106,6 +116,7 @@ if ((sotf_Permission::get("station_manager",$station) || sotf_Permission::get("s
 			$status = "&errorlogo=1";
 		$page->redirect("editStation.php?station=".rawurlencode($station).$status."#manage_files");
 	}
+/*
 	$usergroups = sotf_Permission::getUsersAndGroups($station);
 
 	for ($i=0;$i<count($usergroups);$i++)
@@ -123,6 +134,8 @@ if ((sotf_Permission::get("station_manager",$station) || sotf_Permission::get("s
 	}
 
 	$smarty->assign('USERFILES',$user->getUserFiles());
+*/
+
 	if ($st->getLogo())
 	{
 		$smarty->assign('LOGO','getStationLogo.php/icon.png?station='.rawurlencode($station));
@@ -156,10 +169,5 @@ if ((sotf_Permission::get("station_manager",$station) || sotf_Permission::get("s
 	$smarty->assign('STATION_DATA',$st->data);
 	$smarty->assign('STATION_MANAGER',true);
 	$page->send();
-}
-else
-{
-	$page->halt($page->getlocalized('permission_error'));
-}
 
 ?>

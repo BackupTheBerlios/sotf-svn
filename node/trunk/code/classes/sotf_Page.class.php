@@ -11,7 +11,8 @@ class sotf_Page
 	var $lang;
 	/** a Config_File object of Smarty containing localized texts */
 	var $langConf;
-
+	/** an array containing error messages */
+	var $errors;
 
 	function sotf_Page()
 	{
@@ -43,26 +44,11 @@ class sotf_Page
 
 		// load localization constants for language
 		$this->loadLoc();
-		
-		debug("lang",$lang);
-		debug("userid", $_SESSION['userid']);
 
+		// determine the action
 		preg_match('/(\w+)\.php$/', $_SERVER['SCRIPT_NAME'], $m);
 		$this->action = $m[1];
-		debug("action:",  $this->action);
 
-		$smarty->assign("ACTION", $this->action);
-		$smarty->assign("LANG", $lang);
-		if ($this->loggedIn()) {
-		  $smarty->assign("loggedIn", '1');
-		  $smarty->assign("USERNAME", $user->name);
-		  if($user->isEditor())
-			 $smarty->assign("IS_EDITOR", '1');
-		  //$smarty->assign("STATION_MANAGER", sotf_Permission::get("station_manager"));
-		}
-		if($debug) {
-		  $smarty->assign("VIEWLOG", $this->logURL());
-		}
 	}
 
 	function forceLogin()
@@ -112,6 +98,12 @@ class sotf_Page
         }
 	    return $loc_msg;
 	  }
+
+	function addStatusMsg($msg, $localized = true) {
+	  if($localized)
+		 $msg = $this->getlocalized($msg);
+	  $_SESSION['statusMsgs'][] = $msg; 
+	}
 	
 	function getUser()
 	{
@@ -157,6 +149,11 @@ class sotf_Page
 
 	function send($template = 'main.htm'){
 		global $smarty, $totalTime;
+
+		// handle status messages
+		$smarty->assign('STATUS_MESSAGES', $_SESSION['statusMsgs']);
+		unset($_SESSION['statusMsgs']);
+		
 		stopTiming();
 		$smarty->assign("totalTime", $totalTime);
 		$smarty->display($template);
@@ -169,11 +166,10 @@ class sotf_Page
 	}	
 
 	function halt($msg='') {
-    global $smarty, $error;
-    $smarty->assign("ERRORS", $error->e_list);
-    $smarty->assign('ERRORMSG', $msg);
-    $this->send('error.htm');
-		exit;
+	  global $smarty;
+	  $smarty->assign("ERRORS", $this->errors);
+	  $this->send('error.htm');
+	  exit;
 	}
 
 }

@@ -66,6 +66,7 @@
                       {if $IS_EDITOR} | <a class="menu" href="{$ROOTDIR}/editor.php">{#EditorPage#}</a> {/if} 
                       {if $loggedIn}
                       | <a class="menu" href="{$ROOTDIR}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$USERNAME})</a>
+                      | <a class="menu" href="{$ROOTDIR}/logout.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Logout#}</a>
                       {else}
                       | <a class="menu" href="{$ROOTDIR}/login.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Login#}</a>
                       {/if}
@@ -95,6 +96,15 @@
           </tr>
         </table>
         <table width="100%" border="0" cellspacing="0" cellpadding="5">
+          {if $STATUS_MESSAGES}
+            {foreach from=$STATUS_MESSAGES item=MSG}
+                <tr> 
+                  <td class="status">
+                      {$MSG}
+                  </td>
+                </tr>
+            {/foreach}
+          {/if}
           <tr> 
             <td>
               <div align="center"> {include file="$ACTION.htm"} 

@@ -32,7 +32,7 @@ class sotf_Object {
 	 */
 	function sotf_Object($tablename, $id='', $data='') {
 		global $repository;
-    debug("constructor", 'sotf_Object');
+    //debug("constructor", 'sotf_Object');
 		$this->repository=$repository;
 		$this->db = $repository->db;
 		$this->tablename = $tablename;
@@ -133,10 +133,9 @@ class sotf_Object {
 		if(DB::isError($res)){
 			raiseError($res);
 		}
-		if (!$res)
-			return false;
+		if (count($res)==0)
+			raiseError("No such id: '$this->id' in '$this->tablename'");
 		$this->set_all($res);
-		return true;
 	}
 
 	/**
@@ -181,7 +180,7 @@ class sotf_Object {
 	 */
 	function setBlob($prop_name, $prop_value){
 		$this->changed = true;
-		$this->data[$prop_name] = db_Wrap::escape_bytea($prop_value);
+		$this->data[$prop_name] = $this->db->escape_bytea($prop_value);
 	}
 	
 	/**
@@ -212,7 +211,7 @@ class sotf_Object {
 		if(!isset($this->data[$prop_name])){
 			return false;
 		}
-		return db_Wrap::unescape_bytea($this->data[$prop_name]);
+		return $this->db->unescape_bytea($this->data[$prop_name]);
 	}
 	
 	/**

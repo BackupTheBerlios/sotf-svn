@@ -309,12 +309,10 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		$install_test_result[$id] .= "smartydir ($smartydir/Config_File.class.php) ".@GetPerm($smartydir."/Config_File.class.php", "read")."<BR />";	//require($smartydir . '/Config_File.class.php');
 
 		$install_test_result[$id] .= "classdir ($classdir/db_Wrap.class.php) ".@GetPerm($classdir."/db_Wrap.class.php", "read")."<BR />";		//require($classdir . '/db_Wrap.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/error_Control.class.php) ".@GetPerm($classdir."/error_Control.class.php", "read")."<BR />";	//require($classdir . '/error_Control.class.php');
 		$install_test_result[$id] .= "classdir ($classdir/sotf_Utils.class.php) ".@GetPerm($classdir."/sotf_Utils.class.php", "read")."<BR />";		//require($classdir . '/sotf_Utils.class.php');
 		$install_test_result[$id] .= "classdir ($classdir/sotf_User.class.php) ".@GetPerm($classdir."/sotf_User.class.php", "read")."<BR />";		//require($classdir . '/sotf_User.class.php');
 		$install_test_result[$id] .= "classdir ($classdir/sotf_Page.class.php) ".@GetPerm($classdir."/sotf_Page.class.php", "read")."<BR />";		//require($classdir . '/sotf_Page.class.php');
 		$install_test_result[$id] .= "classdir ($classdir/sotf_Permission.class.php) ".@GetPerm($classdir."/sotf_Permission.class.php", "read")."<BR />";	//require($classdir . '/sotf_Permission.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Id.class.php) ".@GetPerm($classdir."/sotf_Id.class.php", "read")."<BR />";		//require($classdir . '/sotf_Id.class.php');
 		$install_test_result[$id] .= "classdir ($classdir/sotf_Vars.class.php) ".@GetPerm($classdir."/sotf_Vars.class.php", "read")."<BR />";		//require($classdir . '/sotf_Vars.class.php');
 		$install_test_result[$id] .= "classdir ($classdir/sotf_Repository.class.php) ".@GetPerm($classdir."/sotf_Repository.class.php", "read")."<BR />";	//require($classdir . '/sotf_Repository.class.php');
 		$install_test_result[$id] .= "classdir ($classdir/sotf_FileList.class.php) ".@GetPerm($classdir."/sotf_FileList.class.php", "read")."<BR />";	//require($classdir . '/sotf_FileList.class.php');

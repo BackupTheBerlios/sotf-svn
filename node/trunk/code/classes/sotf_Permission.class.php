@@ -2,9 +2,6 @@
 // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 // $Id$
 
-require_once("sotf_User.class.php");
-require_once("sotf_Utils.class.php");
-
 /**
 * This is a class for handling permossions.
 *
@@ -12,196 +9,122 @@ require_once("sotf_Utils.class.php");
 * @package	StreamOnTheFly
 * @version	0.1
 */
+
 class sotf_Permission
 {
-	/**
-	* Checks whether we have the requested permission
-	*
-	* @param	string	$permission	Permission type
-	* @param	int	$station	ID of the station, if NULL it means the permission is global
-	* @return	boolean	If we have the the requested permission returns true, else false
-	* @use	$user
-	*/
-	function get($permission, $station = NULL)
-	{
-    /*
-		global $user;
 
-		if ($user)
-			if ($station == NULL)
-			{
-				if ($user->permissionsGlobal)
-					if (in_array($permission, $user->permissionsGlobal))
-						return true;
-			}
-			else
-				if ($user->permissions[$station])
-					if (in_array($permission, $user->permissions[$station]))
-						return true;
-		return false;
-    */
-    return true;
+  var $currentPermissions;
+
+  function sotf_Permission() {
+    $this->currentPermissions = $this->getUserPermissions();
+  }
+
+  function getUserPermissions($userid='') {
+    global $db, $user;
+    if(!$userid && is_object($user)) {
+      $userid = $user->id;
+    }
+    $permtable = $db->getAll("SELECT sotf_user_permissions.object_id, sotf_permissions.permission FROM sotf_user_permissions, sotf_permissions WHERE sotf_user_permissions.user_id = '$userid' AND sotf_user_permissions.permission_id = sotf_permissions.id");
+    //debug("permtable", $permtable);
+    // make an associative array containing the permissions for all objects
+    for ($i=0;$i<count($permtable);$i++)
+      if (!empty($permtable[$i]["object_id"]))
+        $permissions[$permtable[$i]["object_id"]][] = $permtable[$i]["permission"];	// object permission
+      else
+        $permissions["node"][] = $permtable[$i]["permission"];	// node permission
+    debug("current permissions: ", $permissions);
+    return $permissions;
+  }
+
+	function isEditor() {
+    global $repository;
+		if(!isset($this->currentPermissions))
+      return false;
+    while(list($key,$value) = each($this->currentPermissions)) {
+      if($repository->getTable($key) == 'sotf_stations' && (in_array('admin', $value) || in_array('create', $value)))
+        return true;
+    }
+    return false;
 	}
 
-	/**
-	* Adds the user to the global station manager group.
-	*
-	* @param	string	$username	Userid
-	* @return	boolean	Returns true if succeeded
-	* @use	$db
-	*/
-	function addStationManager($username)
-	{
-		global $db;
+	function hasPermission($object, $perm) {
+		if($this->currentPermissions && $this->currentPermissions[$object])
+      return in_array($perm, $this->currentPermissions[$object]) || in_array('admin', $this->currentPermissions[$object]);
+    return false;
+      //			if ($db->getOne("SELECT sotf_user_permissions.permission_id FROM sotf_user_permissions, sotf_permissions WHERE sotf_user_permissions.user_id = '$user->id' AND sotf_user_permissions.object_id = '$this->id' AND (sotf_permissions.permission = 'admin' OR sotf_permissions.permission = '$perm')"))
+	}
 
-		$username = sotf_Utils::clean($username);
-		$users = sotf_User::listUsers();
-		if (in_array($username,$users))
-		{
-			$sm = $db->getCol("SELECT user_id FROM sotf_user_global_groups WHERE user_id='$username' AND (station='' OR station IS NULL) AND group_id='station_manager'");
-			if (count($sm) == 0)
-			{
-				$db->query("INSERT INTO sotf_user_group (username, station, group_id) VALUES('$username', NULL, 'station_manager')");
+	function addPermission($objectId, $userid, $perm) {
+    global $db;
+		if(!is_numeric($userid) || $userid < 1)
+			raiseError("Invalid user id: '$userid'");
+		$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
+		$db->query("INSERT INTO sotf_user_permissions (user_id, object_id, permission_id) VALUES($userid, '$objectId', $permission_id)");
+	}
+
+	function delPermission($objectId, $userid, $perm) {
+    global $db;
+		if(!is_numeric($userid) || $userid < 1)
+			raiseError("Invalid user id: '$userid'");
+		$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
+		$db->query("DELETE FROM sotf_user_permissions WHERE user_id = '$userid' and object_id = '$objectId' AND permission_id = $permission_id");
+	}
+
+	function listUsersAndPermissions($objectId) {
+    global $db;
+    // todo:
+		return $db->getAll("SELECT sotf_user_permissions.user_id, sotf_permissions.permission FROM sotf_user_permissions, sotf_permissions WHERE sotf_permissions.id = sotf_user_permissions.permission_id");
+	}
+
+	function hasNodePermission($perm) {
+		if ($this->currentPermissions && $this->currentPermissions['node'] ) {
+			if (in_array($perm,$this->currentPermissions["node"]) || in_array('admin',$this->currentPermissions["node"]))
 				return true;
-			}
-		}
+    }
 		return false;
-	} // end func addStationManager
+	}
 
-	/**
-	* Removes the user from the global station manager group.
-	*
-	* @param	string	$username	Userid
-	* @return	boolean	Returns true if succeeded
-	* @todo	Error handling
-	* @use	$db
-	*/
-	function delStationManager($username)
-	{
+	function addNodePermission($perm, $userid) {
 		global $db;
+		$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
+		$res = $db->query("INSERT INTO sotf_user_permissions (user_id, object_id, permission_id) VALUES($userid, NULL, $permission_id)");
+    if(DB::isError($res))
+      raiseError($res);
+	}
 
-		$username = sotf_Utils::clean($username);
-		$db->query("DELETE FROM sotf_user_group WHERE username='$username' AND (station='' OR station IS NULL) AND group_id='station_manager'");
-		return true;
-	} // end func addStationManager
-
-	/**
-	* Returns the list of station managers.
-	*
-	* @return	array	List of station managers
-	* @use	$db
-	*/
-	function getStationManagers()
-	{
+	function delNodePermission($perm, $userid) {
 		global $db;
-		return $db->getCol("SELECT username FROM sotf_user_group WHERE group_id='station_manager' AND (station='' OR station IS NULL) ORDER BY username");
-	} // end func getStationManagers
+		if(!is_numeric($userid) || $userid < 1)
+			raiseError("Invalid user id: '$userid'");
+		$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
+		$res = $db->query("DELETE FROM sotf_user_permissions WHERE user_id = '$userid' AND object_id IS NULL AND permission_id = $permission_id");
+    if(DB::isError($res))
+      raiseError($res);
+	}
 
-	/**
-	* List users and groups of a station.
-	*
-	* @param	string	$station	ID of the station
-	* @return	array	List of users and groups
-	* @use	$db
-	*/
-	function getUsersAndGroups($station)
-	{
-		global $db;
+	function listNodeUsersWithPerm($perm) {
+		global $db, $user;
+		$retval = $db->getAll("SELECT u.user_id AS id, p.permission AS perm FROM sotf_user_permissions u, sotf_permissions p WHERE u.object_id IS NULL AND p.id = u.permission_id AND ( p.permission='$perm' OR p.permission='admin')");
+    for($i=0;$i<count($retval);$i++) {
+      $retval[$i]['name'] = $user->getUserName($retval[$i]['id']);
+    }
+    debug("listNodeUsersWithPerm", $retval);
+    return $retval;
+	}
 
-		return $db->getAll("SELECT username, group_id FROM sotf_user_group WHERE station='$station' ORDER BY username, group_id");
-	} // end func getUsersAndGroups
-
-	/**
-	* List all existing groups.
-	*
-	* @return	array	Array of groups
-	* @use	$db
-	*/
-	function getGroups()
-	{
-		global $db;
-
-		return $db->getCol("SELECT DISTINCT group_id FROM sotf_group_permission");
-	} // end func getGroups
-	/**
-	* Adds the user to a group in a station.
-	*
-	* @param	string	$username	Userid
-	* @param	string	$group	ID of the group
-	* @param	string	$station	Station
-	* @return	boolean	Returns true if succeeded
-	* @use	$db
-	*/
-	function addUserToGroup($username,$group,$station)
-	{
-		global $db;
-
-		$username = sotf_Utils::clean($username);
-		$group = sotf_Utils::clean($group);
-		$station = sotf_Utils::clean($station);
-		$users = sotf_User::listUsers();
-		if (in_array($username,$users))
-		{
-			$user = $db->getOne("SELECT username FROM sotf_user_group WHERE username='$username' AND station='$station' AND group_id='$group'");
-			if (!$user)
-			{
-				$db->query("INSERT INTO sotf_user_group (username, station, group_id) VALUES('$username', '$station', '$group')");
-				return true;
-			}
+  // not used yet
+  /*
+	function loadObjectPermissions() {
+		global $user, $db;
+		if($user && $user->id) {
+			$id = $this->id;
+			$userid = $user->id;
+			$this->permissions = $db->getCol("SELECT permission FROM sotf_permissions s, sotf_user_permissions u WHERE u.object_id = '$id' AND u.user_id = '$userId' AND u.permission_id = s.id");
+			if(DB::isError($this->permissions))
+				raiseError($this->permissions);
 		}
-		return false;
-	} // end func addUserToGroup
-
-	/**
-	* Removes the user from a group in a station.
-	*
-	* @param	string	$username	Userid
-	* @param	string	$group	ID of the group
-	* @param	string	$station	Station
-	* @return	boolean	Returns true if succeeded
-	* @todo	Error handling
-	* @use	$db
-	*/
-	function delUserFromGroup($username,$group,$station)
-	{
-		global $db;
-
-		$username = sotf_Utils::clean($username);
-		$group = sotf_Utils::clean($group);
-		$station = sotf_Utils::clean($station);
-		$db->query("DELETE FROM sotf_user_group WHERE username='$username' AND station='$station' AND group_id='$group'");
-		return true;
-	} // end func delUserFromGroup
-
-	/**
-	* Removes the user from station.
-	*
-	* @param	string	$username	Userid
-	* @param	string	$station	Station
-	* @return	boolean	Returns true if succeeded
-	* @todo	Error handling
-	* @use	$db
-	*/
-	function delUserFromStation($username,$station)
-	{
-		global $db;
-
-		$username = sotf_Utils::clean($username);
-		$station = sotf_Utils::clean($station);
-		$db->query("DELETE FROM sotf_station_access WHERE user_id='$userid' AND station_id='$stationid'");
-		return true;
-	} // end func delUserFromGroup
-
-  /** list stations for which the current user has the given right */
-  function listStationsWithPermission($perm = 'upload') {
-    global $user;
-    while (list($stationname,$station) = each($user->permissions))
-      {
-        if (sotf_Permission::get($perm,$stationname))
-          $stations[] = $stationname;
-      }
-    return $stations;
-  }
+	}
+  */
 
 
 } // end class sotf_Permission

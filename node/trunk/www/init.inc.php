@@ -47,7 +47,8 @@ function debug($name, $msg='', $type='default') {
     }
     if(is_array($msg)) {
       ob_start();
-      var_dump($msg);
+      //var_dump($msg);
+      print_r($msg);
       $msg = "\n" . ob_get_contents();
       ob_end_clean();
     }
@@ -67,7 +68,7 @@ function getHostName()
 }
 
 //////////////////////////////////////////////////////////////////////////
-include('config.inc.php');
+require('config.inc.php');
 //////////////////////////////////////////////////////////////////////////
 
  
@@ -115,6 +116,8 @@ $rootdir = 'http://' . $_SERVER['HTTP_HOST'] . $localPrefix;
 // The base URL for images
 $imagedir = $rootdir . '/static';
 
+$cachedir = $wwwdir . '/tmp';
+$cacheprefix =  $rootdir . '/tmp';
 
 umask(0002);
 
@@ -140,37 +143,35 @@ require($peardir . '/DB.php');
 require($smartydir . '/Smarty.class.php');
 require($smartydir . '/Config_File.class.php');
 require($classdir . '/db_Wrap.class.php');
-require($classdir . '/error_Control.class.php');
 require($classdir . '/sotf_Utils.class.php');
 require($classdir . '/sotf_FileList.class.php');
 require($classdir . '/sotf_AudioCheck.class.php');
 require($classdir . '/sotf_User.class.php');
 require($classdir . '/sotf_Page.class.php');
 require($classdir . '/sotf_Object.class.php');
-//require($classdir . '/sotf_Permission.class.php');
-//require($classdir . '/sotf_Id.class.php');
 require($classdir . '/sotf_Vars.class.php');
+require($classdir . '/sotf_Permission.class.php');
 require($classdir . '/sotf_Repository.class.php');
 
 //PEAR::setErrorHandling(PEAR_ERROR_TRIGGER);
 //PEAR::setErrorHandling(PEAR_ERROR_DIE);
 
-$errorControl = new error_Control;
-
 function addError($msg) {
-  global $errorControl;
+  global $page;
   if(DB::isError($msg)) 
     $msg = "SQL error: " . $msg->getMessage();
   debug("added error", $msg);
-  $errorControl->add($msg);
+  $page->errors[] = $msg;
 }
 
 function raiseError($msg) {
-  global $errorControl;
+  global $page;
   if(DB::isError($msg)) 
     $msg = "SQL error: " . $msg->getMessage();
   debug("raised error", $msg);
-  $errorControl->raise($msg);
+  $page->errors[] = $msg;
+  $page->halt();
+  exit;
 }
 
 // create database connections
@@ -208,12 +209,32 @@ $smarty->assign("DEBUG", $debug);
 // page object is for request handling and page generation
 $page = new sotf_Page;
 
+// permissions object is for managing and asking for permissions
+$permissions = new sotf_Permission;
+
 // persistent server variables
 $sotfVars = new sotf_Vars($db, 'sotf_vars');
 
 // the repository of radio stations
 $repository = new sotf_Repository($repositoryDir, $db);
 
-// now you have the following global objects: $db, $userdb, $smarty, $page, $repository
+// now you have the following global objects: $db, $userdb, $smarty, $page, $repository, $user, $permission
+
+$smarty->assign("ACTION", $page->action);
+$smarty->assign("LANG", $lang);
+if ($page->loggedIn()) {
+  $smarty->assign("loggedIn", '1');
+  $smarty->assign("USERNAME", $user->name);
+  if($permissions->isEditor())
+    $smarty->assign("IS_EDITOR", '1');
+  //$smarty->assign("STATION_MANAGER", sotf_Permission::get("station_manager"));
+}
+if($debug) {
+  $smarty->assign("VIEWLOG", $page->logURL());
+}
+
+debug("action:", $page->action);
+debug("lang", $lang);
+debug("userid", $user->id);
 
 ?>

@@ -72,8 +72,11 @@ $getid3dir = 'C:/sotf/helpers/getid3';
 // where eZ xml files are located
 //$ezxmldir = '/ezxml';
 
-// $classdir -> Path to the class directory
+// Path to the class files
 $classdir = $basedir . '/code/classes';
+
+// path to PHP scripts and images
+$wwwdir = $basedir . '/www';
 
 // The URL prefix for code/www subdir
 $localPrefix = '/node/www';

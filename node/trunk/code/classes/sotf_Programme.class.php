@@ -41,7 +41,7 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
   }
   
   function generateGUID() {
-	 $this->set('guid', $this->stationName . GUID_DELIMITER . $this->get('entry_date') . GUID_DELIMITER . $this->get('track');
+	 $this->set('guid', $this->stationName . GUID_DELIMITER . $this->get('entry_date') . GUID_DELIMITER . $this->get('track'));
   }
 
   /** finds the next available track id within the station ($track may be empty) */

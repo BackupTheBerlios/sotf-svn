@@ -1,11 +1,9 @@
 
-<BR><BR>
-<FONT SIZE="+1" color="red">{if $LANG == "en"}ERROR:{elseif $LANG == "de"}FEHLER:{/if} {$ERRORMSG}</FONT>
-<BR><BR>
+<h3>{#errors_occured#}</h3>
 
-<p>
-Other errors: {$ERRORS}
-</p>
+  {foreach from=$ERRORS item=MSG}
+    <p>{$MSG}</p>
+  {/foreach}
 
 <FORM ACTION="index.php">
 <INPUT type="submit" name="ok" value="OK">
