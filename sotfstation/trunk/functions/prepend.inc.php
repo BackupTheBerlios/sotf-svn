@@ -5,7 +5,7 @@
 	 * @return (echo)
 	 */
 	function pageFinish($action,$errorReporting=TRUE){
-		global $smarty,$myNav,$myError;
+		global $smarty,$myNav,$myError,$_SESSION;
 		$smarty->assign("tot_time",stopTiming());
 		$smarty->assign("nav_bar",$myNav->out());
 		$smarty->assign("action",$action);
@@ -14,6 +14,12 @@
 		if(($myError->getLength()>0) and ($errorReporting)){
 			$smarty->assign("error_out",TRUE);
 			$smarty->assign("error_list",$myError->getList());
+		}
+		
+		//user logged in?
+		if($_SESSION['USER']->get("name")){
+			$smarty->assign('logged_in',TRUE);
+			$smarty->assign('user_name',ucfirst($_SESSION['USER']->get("name")));
 		}
 		
 		//output!

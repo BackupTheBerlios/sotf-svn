@@ -1,6 +1,19 @@
 Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
 
 ************************************************************************************************
+ 11.11.2002
+************************************************************************************************
+
+Introduced a dynamic calendar class and a dynamic day view class.
+
+Designed the current day overview page and implemented the above classes to work with 
+the page generation engine and the overall page frameork.
+
+Introduced a security patch, not allowing not logged in users to see whatever is on the internal
+pages.
+
+
+************************************************************************************************
  08.11.2002
 ************************************************************************************************
 

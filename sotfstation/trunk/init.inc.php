@@ -50,7 +50,7 @@
 		include("configs/errors.en.php");
 	}
 	
-	$smarty->assign("build_id","4");													# assigning a 'build id'
+	$smarty->assign("build_id","14");													# assigning a 'build id'
 	
 	//build database connections
 	$db = DB::connect(array(																	# Start a connection to the database

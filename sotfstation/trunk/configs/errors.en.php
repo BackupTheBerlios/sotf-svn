@@ -26,6 +26,7 @@
 	$SECTION = array(
 		'LOGIN'		=> 'Login',
 		'HOME'		=> 'Home',
-		'403'			=> 'No Access'
+		'403'			=> 'No Access',
+		'INSIDE'	=> 'Day Overview'
 	)
 ?>

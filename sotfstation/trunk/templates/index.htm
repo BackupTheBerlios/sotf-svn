@@ -36,7 +36,7 @@
 		{if $logged_in}
         <tr>
           <td height="20"><div align="center"><strong><font size="-2" face="Tahoma, Verdana, Arial">{#hello#}, 
-              Alex</font></strong></div></td>
+              {$user_name}</font></strong></div></td>
         </tr>
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
@@ -71,6 +71,11 @@
         </tr>
 		<tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
+        </tr><tr>
+          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="a" class=menu1>Logout</a></td>
+        </tr>
+		<tr>
+          <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
 {else}
 		<tr>
@@ -101,7 +106,7 @@
   				{/if}
 
 				</div></td>
-                <td width="1" valign="top">&nbsp; </td>
+                
               </tr>
             </table>
           

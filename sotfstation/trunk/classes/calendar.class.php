@@ -67,7 +67,7 @@
 	class day{
 		var $timestamp;
 		var $empty = false;
-		var $color_off = "#e9e9e9";
+		var $color_off = "#d9d9d9";
 		var $color_on = "#000099";
 		var $color_link = "#cccccc";
 		
@@ -333,13 +333,13 @@
 											</tr>
   								 
 									 <tr align=middle bgcolor=#cccccc>
-									 		<td align=center width=30><font class=datee>m</font></td>
-    							 		<td align=center width=30><font class=datee>t</font></td>
-											<td align=center width=30><font class=datee>w</font></td>
-											<td align=center width=30><font class=datee>th</font></td>
-    							 		<td align=center width=30><font class=datee>f</font></td>
-    							 		<td align=center width=30><font class=datee>s</font></td>
-											<td align=center width=30><font class=datee>su</font></td></tr>";
+									 		<td align=center width=30><font class=datee>mo</font></td>
+    							 		<td align=center width=30><font class=datee>di</font></td>
+											<td align=center width=30><font class=datee>mi</font></td>
+											<td align=center width=30><font class=datee>do</font></td>
+    							 		<td align=center width=30><font class=datee>fr</font></td>
+    							 		<td align=center width=30><font class=datee>sa</font></td>
+											<td align=center width=30><font class=datee>so</font></td></tr>";
 											
 		var $footer = "</tbody></table>";
 		
