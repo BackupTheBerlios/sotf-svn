@@ -74,7 +74,7 @@ class sotf_Page
 		  if(!$this->getAuthKey()) {
 			 $key = sotf_Utils::randString(30);
 			 //debug("KEY", $key);
-			 $c = base64_encode(getenv("REMOTE_ADDR") . ':' . $key);
+			 $c = base64_encode(myGetenv("REMOTE_ADDR") . ':' . $key);
 			 if(!setcookie($this->authKeyName, $c, time()+365*24*3600, '/'))
 				debug("could not set cookie for auth key");
 		  }
@@ -97,7 +97,7 @@ class sotf_Page
 	  //debug("CCCCC", $c);
 	  if($c) {
 		 preg_match("/([^:]+):(.*)$/", $c, $m);
-		 if($m[1] != getenv("REMOTE_ADDR"))
+		 if($m[1] != myGetenv("REMOTE_ADDR"))
 			debug("AuthKey", "host IP does not match: ". $m[1]);
 		 return $m[2];
 	  }
@@ -108,7 +108,7 @@ class sotf_Page
 	{
 		if(!$this->loggedIn())
 		{
-			$url = getenv("REQUEST_URI");
+			$url = myGetenv("REQUEST_URI");
 			$this->redirect("login.php?okURL=". urlencode($url));
 			exit;
 		}
@@ -201,7 +201,7 @@ class sotf_Page
 
 	function redirectSelf()
 	{
-	  $url = getenv('REQUEST_URI');
+	  $url = myGetenv('REQUEST_URI');
 	  $this->redirect($url);
 	}
 
@@ -209,7 +209,7 @@ class sotf_Page
 	{
 		global $debug, $startTime, $totalTime, $PHP_SELF;
 		$host = getHostName();
-		error_log("$host: $totalTime ms, " . getenv("REQUEST_URI"),0);
+		error_log("$host: $totalTime ms, " . myGetenv("REQUEST_URI"),0);
 		if($debug)
 		  error_log("--------------------------------------------------------------------\n",0);
 	}
@@ -264,7 +264,7 @@ class sotf_Page
 		 debug("sending error page");
 		 $smarty->assign("ERRORS", $this->errors);
 		 $smarty->assign("ERROR_URL", $this->errorURL);
-		 $smarty->assign("REFERER", getenv('HTTP_REFERER'));
+		 $smarty->assign("REFERER", myGetenv('HTTP_REFERER'));
 		 $this->send('error.htm');
 	  }
 	  exit;
@@ -275,7 +275,7 @@ class sotf_Page
 	  if($this->errors) {
 		 $_SESSION['errorMsgs'] = $this->errors;
 	  }
-	  $url = getenv('HTTP_REFERER');
+	  $url = myGetenv('HTTP_REFERER');
 	  debug("referer", $url);
 	  if(!$url || !strstr($url, $localPrefix))
 		 $url = $this->errorURL;
