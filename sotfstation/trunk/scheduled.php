@@ -3,7 +3,7 @@
 	
 	//anything to start now?
 	$now = date("Y-m-d H:i");
-	$tostart = $db->getOne("SELECT id FROM programme WHERE intime < '$now' AND outtime > '$now' AND special = 'pp' ORDER BY intime LIMIT 1");
+	$tostart = $db->getOne("SELECT id FROM programme WHERE intime <= '$now' AND outtime >= '$now' AND special = 'pp' ORDER BY intime LIMIT 1");
 	
 	//check what is playing now
 	$file = fopen('playing.txt', "w");
