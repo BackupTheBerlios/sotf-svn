@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-{config_load file="layout.conf"}
+{config_load file="general.conf"}
 {config_load file="$LANG.conf" section="$ACTION"}
 <html>
 <head>
@@ -44,6 +44,7 @@
                           <td background="{$IMAGE_URL}/top_r2_c1.gif" class=tablebg> 
                             <table cellSpacing=0 cellPadding=6 width="100%" border=0>
                               <tr> 
+                                     <form>
                                 <td>
                                   <!--
                                   <script language="Javascript1.2" src="{$IMAGE_URL}/cal.js"></script>
@@ -52,7 +53,6 @@
                                   </script>
                                   //-->
                                   {if $STREAM_DATA}
-                                     <form>
                                       {#now_playing#}: {if $STREAM_INFO.url}
                                                            <b><a href="{$STREAM_INFO.url}">{$STREAM_INFO.name}</a></b>
                                                        {elseif $STREAM_INFO}
@@ -63,10 +63,20 @@
                     <input class="action" type="button" name="b1" value="{#reconnect#}" onClick="redir(this.form,'{$ROOT_URL}/listen.php?reconnect=1')" />
                     <input class="action" type="button" name="b1" value="{#stop#}" onClick="redir(this.form,'{$ROOT_URL}/listen.php?stop=1')" />
                                      
-                                     </form>
                                   {/if}
 
                                 </td>
+                                     </form>
+                                  <form>
+                                <td>
+                                   <input type="hidden" name="okURL" value="{$smarty.server.REQUEST_URI|escape}" />
+                                   <select name="uilang" onChange="this.form.submit()">
+                                     {foreach item=item from=$UI_LANGS}                 
+                                       <option value="{$item[0]}" {if $LANG eq $item[0]}SELECTED="1"{/if} >{$item[1]}</option>
+                                     {/foreach}
+                                   </select>
+                                </td>
+                                 </form>
                               </tr>
                             </table>
                           </td>
@@ -101,7 +111,7 @@
                       {else}
                       | <a class="menu" href="{$ROOT_URL}/login.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Login#}</a>
                       {/if}
-                      | <a class="menu" href="{$ROOT_URL}/help.php">{#Help#}</a> 
+                      | <a class="menu" href="javascript:popup('{$ROOT_URL}/help.php?action={$ACTION}&lang={$LANG}','{#Help#}',500,500,true)">{#Help#}</a>
                       {if $DEBUG}
                       <!--
                       | <a class="menu" href="{$VIEWLOG}">View log</a>

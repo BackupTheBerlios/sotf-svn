@@ -89,6 +89,19 @@ require($config['classdir'] . '/sotf_Vars.class.php');
 require($config['classdir'] . '/sotf_Permission.class.php');
 require($config['classdir'] . '/sotf_Repository.class.php');
 
+///////////////////////////////////////////////////
+// Handle language change
+///////////////////////////////////////////////////
+if($_GET['uilang']) {
+	if(!setcookie('uiLang', $_GET['uilang'])) {
+		die("could not set cookie for uilang");
+	}
+	$url = $_GET['okURL'];
+	if(!$url) $url = $config['localPrefix'];
+	header ("Location: " . $url);
+	exit;
+}
+
 //PEAR::setErrorHandling(PEAR_ERROR_TRIGGER);
 //PEAR::setErrorHandling(PEAR_ERROR_DIE);
 
@@ -220,6 +233,7 @@ if ($page->loggedIn()) {
 if($config['debug']) {
   $smarty->assign("VIEWLOG", $page->logURL());
 }
+$smarty->assign("UI_LANGS", $config['outputLanguages']);
 
 debug("action", $page->action);
 debug("lang", $lang);

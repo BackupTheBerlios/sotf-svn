@@ -7,8 +7,11 @@
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
-require("init.inc.php");
+require("config.inc.php");
 
-$page->send();
+$action = $_GET['action'];
+$lang = $_GET['lang'];
+
+header("Location: " . $config['localPrefix'] . "/help/index.$lang.html#$action");
 
 ?>
