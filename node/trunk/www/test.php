@@ -8,6 +8,19 @@
 
 require("init.inc.php");
 
+require_once($config['classdir'] . "/rpc_Utils.class.php");
+
+
+$rpc = new rpc_Utils;
+$rpc->debug = true;
+$response = $rpc->callTamburine('version', '');
+
+echo "<pre>";
+echo $response;
+echo "</pre>";
+exit;
+
+/*
 echo "<h1>" , htmlspecialchars("árvízt&#369;r&#337; tükörfúrógép", ENT_QUOTES), "</h1>";
 
 //$v2 = str_replace(array('ee','ve'), array('ff','vv'), array('k'=>'bee', 'v'=>'vee'));
@@ -37,7 +50,7 @@ Previous value: <?php echo $text ?>
 <?php
 //echo urlencode(utf8_encode('Árvíztûrõ tükörfúrógép AND árvízt&#369;r&#337; tükörfúrógép'));
 exit;
-
+*/
 
 /*
 $v = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_programmes s, sotf_object_roles r WHERE c.id = r.contact_id AND r.object_id=s.id AND s.station_id = '005st1' ORDER BY name");
