@@ -26,12 +26,12 @@ if (sotf_Utils::getParameter("delete_selected") != "")			//delete selected butto
 if (sotf_Utils::getParameter("play_selected") != "")			//delete selected button pressed
 {
   $pl = new sotf_Playlist();
-	$checkbox = sotf_Utils::getParameter("checkbox");
-	for($i=0; $i < count($checkbox); $i++) {
+  $checkbox = sotf_Utils::getParameter("checkbox");
+  for($i=0; $i < count($checkbox); $i++) {
     $prg = new sotf_Programme($checkbox[$i]);
     $pl->addProg($prg);
-	}
-  $pl->startStreaming();
+  }
+  $pl->startStreaming();  
   $pl->sendRemotePlaylist();
   $page->logRequest();
   exit;

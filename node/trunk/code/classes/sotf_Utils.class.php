@@ -177,7 +177,8 @@ class sotf_Utils
     while(list(,$v)=each($a)) {
       $p = explode('__', $v);
       if(count($p) == 1) {
-        $pathinfoParams['id'] = $v;
+        //if(!strstr($v, '.m3u'))
+          $pathinfoParams['id'] = $v;
       } else {
         $pathinfoParams[$p[0]] = $p[1];
       }

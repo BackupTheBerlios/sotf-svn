@@ -6,6 +6,7 @@
 .menu {
 	FONT-WEIGHT: bold; FONT-SIZE: small; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
 }
+
 A.menu:link {
 	COLOR: #000000; TEXT-DECORATION: none
 }

@@ -149,6 +149,17 @@ class sotf_Playlist {
 
   function startStreaming() {
 	 global $config, $page, $db;
+	 
+	 // check if the stream has started already (Win+IE+Media player)
+	 $urls = $db->getCol("SELECT url FROM sotf_streams WHERE host='" . getHostName() . "' AND started < CURRENT_TIMESTAMP AND started > CURRENT_TIMESTAMP - interval '15 seconds'");
+	 if(count($urls) == 1) {
+		debug("found url for Win Explorer", $urls[0]);
+		$this->url = $urls[0];
+		// found stream so we can return
+		return;
+	 }
+  
+	 $this->stopMyStream();
 
 	 if($config['tamburineURL']) {
 		// tamburine-based streaming
@@ -235,6 +246,9 @@ class sotf_Playlist {
 		$obj = new sotf_Object('sotf_streams');
 		$obj->setAll($streamData);
 		$obj->create();
+
+		// TODO wait until stream really starts
+		sleep(3);
 	 }
 
   }
@@ -257,20 +271,60 @@ class sotf_Playlist {
 	 }
   }
 
+  function getStreamInfo($streamData) {
+	 global $config, $db;
+
+	 if($config['tamburineCMD']) {
+		// streaming with tbrcmd
+		$cmd = $config['tamburineCMD'] . " getpls " . $streamData['pid'] . " 2>&1";
+		exec($cmd, $output, $retval);
+		debug("cmd", $cmd);
+		debug("output", $output);
+		debug("retval", $retval);
+		foreach($output as $line) {
+		  if(preg_match('/\-\>(\/\S+)\s*$/', $line, $mm)) {
+			 $filename = $mm[1];
+			 break;
+		  }
+		}
+		if($filename) {
+		  $prg = sotf_Programme::getPrgFromFilename($filename);
+		  if(is_object($prg)) {
+			 return array('name' => $prg->get('title'),
+							  'url' => $config['localPrefix'] . "/get.php/" . $prg->id);
+		  } else {
+			 return array('name' => $prg);
+		  }
+		} else {
+		  debug("Could not get stream info");
+		  // TODO: stop stream!
+		}
+	 }
+  }
+
   function stopMyStream() {
 	 if($_SESSION['stream']) {
 		$this->stopStream($_SESSION['stream']);
+		unset($_SESSION['stream']);
+		sleep(2);
 	 }
   }
 
   function stopOldStreams() {
 	 global $config, $db;
 
-	 $dataset = $db->getAll("SELECT * FROM sotf_streams WHERE will_end_at < CURRENT_DATE + interval '1 hours'");
+	 $dataset = $db->getAll("SELECT * FROM sotf_streams WHERE will_end_at < CURRENT_DATE + interval '10 minutes'");
 
 	 foreach($dataset as $data) {
 		$this->stopStream($data);
 	 }
+  }
+
+  function sendMyRemotePlaylist() {
+	 if($_SESSION['stream']) {
+		$this->url = $_SESSION['stream']['url'];
+	 }
+	 $this->sendRemotePlaylist();
   }
 
   function sendRemotePlaylist() {

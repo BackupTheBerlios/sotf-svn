@@ -267,7 +267,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
             </td>
             <td>
               { if $item.stream_access eq 't' }
-                <a href="{$ROOT_URL}/listen.php/audio.m3u?id={$ID}&fileid={$item.id}"><img src="{$IMAGE_URL}/listen.gif" border="0" alt="{#Listen#}"></a>
+                <a href="{$ROOT_URL}/listen.php/id__{$ID}/fileid__{$item.id}/audio.m3u"><img src="{$IMAGE_URL}/listen.gif" border="0" alt="{#Listen#}"></a>
               {/if}
             </td>
           </tr>

@@ -351,6 +351,32 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 return $db->getCol("SELECT p.id FROM sotf_programmes p, sotf_user_permissions u WHERE p.id=u.object_id AND u.user_id='$user->id' AND u.permission_id=1 AND expiry_date < CURRENT_DATE + interval '$days days'"); 
   }
 
+  /** static */
+  function getPrgFromFilename($filename) {
+	 global $db, $config, $page, $repository;
+	 $repoDir = $config['repositoryDir'];
+	 $len = strlen($repoDir);
+	 debug("fname1", $filename);
+	 if(substr($filename, 0, $len) == $repoDir) {
+		$filename = substr($filename, $len);
+		debug("fname2", $filename);
+		if(preg_match("/\/(.*)\/(.*)\/(.*)\/(audio|files)\/(.*)$/", $filename, $mm)) {
+		  $stationName = $mm[1];
+		  $entryDate = $mm[2];
+		  $track = $mm[3];
+		  $data = $db->getRow("SELECT p.* FROM sotf_programmes p, sotf_stations s WHERE p.entry_date='$entryDate' AND p.track='$track' AND s.id = p.station_id AND s.name='$stationName'");
+		  if($data && !DB::isError($data))
+			 return new sotf_Programme($data['id'], $data);
+		  else
+			 return $page->getlocalized('unknown_audio');
+		} else {
+		  return $page->getlocalized('jingle');
+		}
+	 } else {
+		return $page->getlocalized('unknown_audio');
+	 }
+  }
+
   /************************************************
    *  FILE MANAGEMENT
    ************************************************/
