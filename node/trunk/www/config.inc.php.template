@@ -26,8 +26,10 @@ $config['selfUserDb'] = true;
 
 // by default we don't use external database for user management
 $config['userDbClass'] = 'userdb_node';
-// uncomment this if you using the Self Admin Toolkit (SADM) for user management
+// uncomment this if you use the Self Admin Toolkit (SADM) for user management
 //$config['userDbClass'] = 'userdb_sadm';
+// uncomment this if you use Typo3 for user management
+//$config['userDbClass'] = 'userdb_typo3';
 
 // the sql connection parameters for the user database
 // only fill in if you specified selfUserDb = false!!

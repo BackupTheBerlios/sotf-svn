@@ -1,13 +1,13 @@
 <?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
+
 /*  -*- tab-width: 3; indent-tabs-mode: 1; -*-
  * $Id$
  *
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
- *	    at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ * Authors: Wolfgang Reutz
  */
 
-class db_Wrap extends DB_pgsql {
+class db_Wrap_mysql extends DB_mysql {
 
   /** When true, all executed SQL statements are logged. */
   var $debug = true;
@@ -23,22 +23,22 @@ class db_Wrap extends DB_pgsql {
 
   function makeConnection($dsn, $persistent, $name='') {
     if($this->debug)
-      logger("postgres DB:$name","connecting to: $dsn");
+      logger("mysql DB:$name","connecting to: $dsn");
     $this->name = $name;
     $dsninfo = DB::parseDSN($dsn);
     $success = $this->connect($dsninfo, $persistent);
     return $success;
   }
-
+  
   function errorNative() {
     $err = parent::errorNative();
     //error_log("PGSQL error: $err",0);
     //error_log("in query: " . substr($this->last_query,0,254) ,0);
     if(!$this->silent) {
       if($this->debug)
-		  raiseError("SQL error: $err in \n " . $this->last_query);
+        raiseError("SQL error: $err in \n " . $this->last_query);
       else
-		  raiseError("SQL error!");
+        raiseError("SQL error!");
     }
     return $err;
   }
@@ -63,26 +63,30 @@ class db_Wrap extends DB_pgsql {
     return $date['year'] . '-' . $date['mon'] . '-' . $date['mday'] . ' ' . $date['hours']. ':' . $date['minutes'];
   }
 
+  
   function formatDateTime($fieldName, $formatString) {
-    return " to_char($fieldName, '$formatString') ";
+    return " date_format($fieldName, \"$formatString\") ";
   }
   
   function formatDate($fieldName) {
-    return " to_char($fieldName, 'DD.MM.YYYY') ";
+    return " date_format($fieldName, '%d-%b-%Y') ";
   }
   
   function formatTime($fieldName) {
-    return " to_char($fieldName, 'HH:MI') ";
+    return " date_format($fieldName, '%h:%i') ";
   }
   
   function formatDay($fieldName) {
-    return " to_char($fieldName, 'DD') ";
+    return " date_format($fieldName, '%e') ";
   }
   
+  /* the functions below have not been adaptted for Mysql yet... */
+
+  /*
   function myTZ() {
     return $this->formatTZ(date('Z'));
   }
-  
+
   function formatTZ($sec) {
     $h = intval($sec/3600);
     $m = sprintf('%02d',abs(intval(($sec-$h*3600)/60)));
@@ -90,7 +94,7 @@ class db_Wrap extends DB_pgsql {
       $h = "+$h";
     return "$h:$m";
   }
-  
+
   function getTimestampTz($time = '') {
     static $tz;
     if(!$tz) {
@@ -119,7 +123,7 @@ class db_Wrap extends DB_pgsql {
   function epoch() {
     return "epoch";
   }
-    
+
   function begin($serializable = false) {
     $succ = $this->query("BEGIN TRANSACTION");
     if($serializable)
@@ -134,8 +138,8 @@ class db_Wrap extends DB_pgsql {
   function rollback() {
     return $this->query("ROLLBACK");
   }
-  
-  /** utility method for storing and loading binary data in postgres */
+    
+  // utility method for storing and loading binary data in postgres
   function escape_bytea($binary) {
     $bytea = "";
     for ($i=0;$i<strlen($binary);$i++)
@@ -143,21 +147,23 @@ class db_Wrap extends DB_pgsql {
     return $bytea;
   }
   
-  /** utility method for storing and loading binary data in postgres */
+  // utility method for storing and loading binary data in postgres
   function unescape_bytea($bytea) {
     return eval("return \"".str_replace('$', '\\$', str_replace('"', '\\"', $bytea))."\";");
   }
   
-  /** Loads a binary object from database. SELECT $field FROM $table WHERE $idKey = '$id' */
+  // Loads a binary object from database. SELECT $field FROM $table WHERE $idKey = '$id'
   function getBlob($table, $id, $idKey, $field) {
     return $this->unescape_bytea(parent::getOne("SELECT $field FROM $table WHERE $idKey = '$id'"));
   }
   
-  /** Stores a binary object in database. UPDATE $table SET $field = '$binary' WHERE $idKey = '$id' */
+  // Stores a binary object in database. UPDATE $table SET $field = '$binary' WHERE $idKey = '$id'
   function setBlob($table, $id, $idKey, $field, $binary) {
     parent::query("UPDATE $table SET $field = '".$this->escape_bytea($binary)."' WHERE $idKey = '$id'");
   }
   
+*/
+
 }
 
 ?>

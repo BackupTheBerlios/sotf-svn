@@ -13,6 +13,7 @@ define("TRACKNAME_LENGTH", 32);
 
 require_once($config['classdir'] . '/Tar.php');
 require_once($config['classdir'] . '/unpackXML.class.php');
+//require_once($config['classdir'] . '/packXML.class.php');
 require_once($config['classdir'] . '/sotf_Statistics.class.php');
 require_once($config['getid3dir'] . "/getid3.putid3.php");
 
@@ -248,6 +249,16 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $fp = fopen("$file", "w");
 	 fwrite($fp, $xml);
 	 fclose($fp);
+
+	 // now save in the XBMF format
+	 /*
+	 $myPack = new packXML('sotfPublish');
+	 $myPack->addData(array('series' => $this->getSeries->getAll(),
+									'prog' => $this->getAll(),
+									$myUser,$pubUser));
+	 $myPack->toFile($this->getMetaDir() . '/metadata.xml');
+	 */
+
 	 return true;
   }
 
