@@ -20,7 +20,7 @@
 	//is the user already logged in?
 	if(is_object($_SESSION['USER'])){
 		header("Location: inside.php");								# redirect to the inside of the application
-		exit;																					# end script processing
+		exit;																					# end script processing.
 	}
 	
 	//process login call
