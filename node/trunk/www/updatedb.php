@@ -18,11 +18,27 @@ function windowclose()
 <?php
 //<body>
 require("init.inc.php");
-$page->forceLogin();
+
+$page->popup = true;
+
+//TODO: test
+//$name = sotf_Utils::magicQuotes($_GET["name"]);
+//$id = sotf_Utils::magicQuotes($_GET["id"]);
+//$value = sotf_Utils::magicQuotes($_GET["value"]);
 
 $name = $_GET["name"];
 $id = $_GET["id"];
 $value = $_GET["value"];
+
+if ($name == 'rating') {
+  $rating = new sotf_Rating();
+  $rating->setRating($id, $value);
+  $page->alertWithErrors();
+  print("</body></html>");
+  exit;
+}
+
+$page->forceLogin();
 
 //var_dump($_GET);
 //die();
@@ -73,10 +89,7 @@ elseif ($name == "caption")		//editFiles
 }
 elseif ($name == "addtree")		//topic_tree
 {
-	$x = new sotf_NodeObject("sotf_prog_topics");
-	$x->set('prog_id', addslashes($id));
-	$x->set('topic_id', addslashes($value));
-	$x->create();
+	$repository->addToTopic($id, $value);
 	print("kesz");
 }
 elseif ($name == "editorpub")		//editor bublished checkboxes
@@ -104,8 +117,10 @@ elseif ($name == "addplaylist")		//get.htm add a programm to the playlist
 		$result = $db->query($query);
 	}
 	print("kesz");
-}
-else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
+} else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
+
+$page->alertWithErrors();
+
 ?>
 </body>
 </html>

@@ -4,9 +4,22 @@ $page->forceLogin();
 //sotf_Utils::getParameter("");
 
 if (sotf_Utils::getParameter("close") == "true")
-{
-	var_dump($_POST);
-	//$page->redirect("closeAndRefresh.php");
+{	
+	$lista = sotf_Utils::getParameter("lista");
+	$list = split("\|", $lista);
+	$max = count($list);
+	for($i=1; $i<$max; $i++)
+	{
+		$l = split(":", $list[$i]);
+		if ($l[1] != $i)
+		{
+			//print($l[0].":".$l[1]." -> ".$i."<br>");
+			$query="UPDATE sotf_playlists SET order_id = ".$i." WHERE user_id = ".$user->id." AND order_id = ".$l[1]." AND prog_id = '".$l[0]."'";
+			$result = $db->query($query);
+		}
+
+	}
+	$page->redirect("closeAndRefresh.php");
 	//die("<HTML><HEAD></HEAD><BODY onload='javascript:window.opener.location.reload();window.close();'></BODY></HTML>");
 }
 
@@ -29,9 +42,9 @@ print("</pre>");
 */
 
 $programmes = array();
-foreach($result as $key => $value)
+foreach($result as $value)
 {
-	$programmes["0:".$key] = $value["title"];
+	$programmes[$value["id"].":".$value["order_id"]] = $value["title"];
 }
 
 $smarty->assign("result", $result);

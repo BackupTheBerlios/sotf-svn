@@ -1,11 +1,12 @@
+<a name="{$anchor}">
 <TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="100%">
 	<TR>
 	<TD ALIGN="center" VALIGN="middle" width="50%">{if $rp_count != 0}<b>{$rp_from}</b> {#to#} <b>{$rp_to}</b> {#of#} <b>{$rp_count}</b>{else}{#no_results#}{/if}</TD>
-	<TD ALIGN="center" VALIGN="middle" width="50%">{if $rp_thebeginning == false}<a href="{$rp_url}&rp=rp_first">{/if}<IMG src="{$IMAGEDIR}/left2.gif"
-		alt="{#first#}" border="0" />{if $rp_thebeginning == false}</a>{/if}<IMG SRC="{$IMAGEDIR}/transp.gif" border="0" width="6" />{if $rp_thebeginning == false}<a href="{$rp_url}&rp=rp_prev">{/if}<IMG src="{$IMAGEDIR}/left.gif"
-		alt="{#prev#}" border="0">{if $rp_thebeginning == false}</a>{/if}<IMG SRC="{$IMAGEDIR}/transp.gif" border="0" width="6" /><a href="{$rp_url}&rp=rp_refresh"><IMG src="{$IMAGEDIR}/reload.gif"
-		alt="{#refresh#}" border="0"></a><IMG SRC="{$IMAGEDIR}/transp.gif" border="0" width="6" />{if $rp_theend == false}<a href="{$rp_url}&rp=rp_next">{/if}<IMG src="{$IMAGEDIR}/right.gif"
-		alt="{#next#}" border="0">{if $rp_theend == false}</a>{/if}<IMG SRC="{$IMAGEDIR}/transp.gif" border="0" width="6" />{if $rp_theend == false}<a href="{$rp_url}&rp=rp_last">{/if}<IMG src="{$IMAGEDIR}/right2.gif"
+	<TD ALIGN="center" VALIGN="middle" width="50%">{if $rp_thebeginning == false}<a href="{$rp_url}&rp=rp_first#{$anchor}">{/if}<IMG src="{$IMAGEDIR}/left2.gif"
+		alt="{#first#}" border="0" />{if $rp_thebeginning == false}</a>{/if}<IMG SRC="{$IMAGEDIR}/transp.gif" border="0" width="6" />{if $rp_thebeginning == false}<a href="{$rp_url}&rp=rp_prev#{$anchor}">{/if}<IMG src="{$IMAGEDIR}/left.gif"
+		alt="{#prev#}" border="0">{if $rp_thebeginning == false}</a>{/if}<IMG SRC="{$IMAGEDIR}/transp.gif" border="0" width="6" /><a href="{$rp_url}&rp=rp_refresh#{$anchor}"><IMG src="{$IMAGEDIR}/reload.gif"
+		alt="{#refresh#}" border="0"></a><IMG SRC="{$IMAGEDIR}/transp.gif" border="0" width="6" />{if $rp_theend == false}<a href="{$rp_url}&rp=rp_next#{$anchor}">{/if}<IMG src="{$IMAGEDIR}/right.gif"
+		alt="{#next#}" border="0">{if $rp_theend == false}</a>{/if}<IMG SRC="{$IMAGEDIR}/transp.gif" border="0" width="6" />{if $rp_theend == false}<a href="{$rp_url}&rp=rp_last#{$anchor}">{/if}<IMG src="{$IMAGEDIR}/right2.gif"
 		alt="{#last#}" border="0">{if $rp_theend == false}</a>{/if}</TD>
 	</TR>
 </TABLE>

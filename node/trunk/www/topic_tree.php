@@ -99,6 +99,7 @@ if ($find != "")
 
 $smarty->assign("result", $result);
 $smarty->assign("prgid", sotf_Utils::getParameter('prgid'));
-$page->sendPopup();
-//$page->send("topic_tree.htm");
+$smarty->assign("add", $page->getlocalized('add'));
+//$page->sendPopup();
+$page->send("topic_tree.htm");
 ?>

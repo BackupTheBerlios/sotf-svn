@@ -61,10 +61,13 @@ TD.tab {
 }
 
 TABLE.title {
-  background: #8DE6EB; width: 100%;
+  
 }
-TD.title {
-  background-color: #EFF4FE;
+TD.title2 {
+  background-color: #F7DCC3;
+}
+TD.titlehead {
+  FONT-WEIGHT: bold; FONT-SIZE: larger; background: #F0B989;
 }
 
 .prevnext {
@@ -93,6 +96,10 @@ A {
 
 .subheader {
 
+}
+
+.abstract {
+  font-style: italic 
 }
 
 .meta {

@@ -6,10 +6,23 @@ require("init.inc.php");
 
 #$page->send();
 
+/*
 $repository->updateTopicCounts();
 
 $mainContent = false;
 echo ($mainContent ? 't' : 'f');
+*/
+
+if(is_array(NULL))
+     print "ARRAY IS NULL";
+
+$k = '';
+$k= 0;
+if(empty($k))
+     print("empty");
+     else
+     print("not");
+
 ?>
-<h2>updateTopicCounts() ready</h2>
+
 

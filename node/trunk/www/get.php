@@ -8,6 +8,7 @@ if($id) {
   $smarty->assign('ID', $id);
 
   $prg = & new sotf_Programme($id);
+  $prg->cacheIcon();
 
   $page->setTitle($prg->get('title'));
 
@@ -15,11 +16,14 @@ if($id) {
   $smarty->assign('PRG_DATA', $prg->getAll());
   // station data
   $station = $prg->getStation();
+  $station->cacheIcon();
   $smarty->assign('STATION_DATA', $station->getAll());
   // series data
   $series = $prg->getSeries();
-  if($series)
+  if($series) {
+    $series->cacheIcon();
     $smarty->assign('SERIES_DATA', $series->getAll());
+  }
 
   // roles and contacts
   $smarty->assign('ROLES', $prg->getRoles());
@@ -57,6 +61,19 @@ if($id) {
   // add this visit to statistics
   $prg->addStat('', "visits");
 
+  // rating
+  $rating = new sotf_Rating();
+  $smarty->assign('RATING', $rating->getInstantRating($id));
+
+  // my rating?
+  debug("r", $rating->getMyRating($id));
+  $smarty->assign('MY_RATING', $rating->getMyRating($id));
+
+  if ($page->loggedIn()) {
+    // is in my playlist?
+    $inplaylist = $db->getOne("SELECT count(*) FROM sotf_playlists WHERE user_id = ".$user->id." AND prog_id='".$id."'");
+    $smarty->assign('inplaylist', $inplaylist);
+  }
 }
 
 if(sotf_Utils::getParameter('popup')) {

@@ -14,7 +14,7 @@ class sotf_Object {
 	/** the name of the field where the id is stored */
 	var $idKey;
 	/** the unique ID of the object */
-	var $id;
+	var $id = NULL;
 	/** all the properties of the object */
 	var $data = array();
 	/** the repository to which this object belongs */
@@ -35,13 +35,15 @@ class sotf_Object {
 	 * @return (void)
 	 */
 	function sotf_Object($tablename, $id='', $data='') {
+		// be careful because ''==0 in PHP :-(, so use NULL instead..
 		global $repository;
 		//debug("constructor", 'sotf_Object');
 		$this->repository=$repository;
 		$this->db = $repository->db;
 		$this->tablename = $tablename;
 		$this->idKey = 'id';
-		$this->id = $id;
+		if($id)
+			$this->id = $id;
 		$this->changed = false;
 		if(is_array($data)) {
 			$this->data = $data;
@@ -51,11 +53,16 @@ class sotf_Object {
 		}
 	}						
 
+	/** tells if this record is from database or not */
+	function exists() {
+		return !empty($this->id);
+	}
+
 	function save() {
 	 if($this->id) {
 		//$res = $this->db->getOne("SELECT count(*) AS tot FROM " . $this->tablename . " WHERE " . $this->idKey . "='" . $this->id . "' ");
 		//if(is_numeric($res) && $res > 0) { //UPDATE!
-		if($this->changed){
+		if($this->exists()) {
 			$this->update();
 		}
 	 } else {
@@ -65,16 +72,17 @@ class sotf_Object {
 
 	/** updates fields in 'data' except binary fields */
 	function update() {
-	 while(list($key,$val)=each($this->data)){
-		if($key != $this->idKey && !in_array($key, $this->binaryFields)) {
-			if($val === NULL){
-			 $my_sql[] = $key . " = NULL";
-			}else{
-			 $my_sql[] = $key . " = '" . sotf_Utils::magicQuotes($val) . "'";
+		reset($this->data);
+		while(list($key,$val)=each($this->data)){
+			if($key != $this->idKey && !in_array($key, $this->binaryFields)) {
+				if($val === NULL){
+					$my_sql[] = $key . " = NULL";
+				}else{
+					$my_sql[] = $key . " = '" . sotf_Utils::magicQuotes($val) . "'";
+				}
 			}
 		}
-	 }
-	 $my_sql = implode(", ", $my_sql);
+		$my_sql = implode(", ", $my_sql);
 
 	 //execute the query
 	 $res = $this->db->query("UPDATE " . $this->tablename . " SET " . $my_sql . " WHERE " . $this->idKey . "='" . $this->id . "' ");
@@ -87,6 +95,7 @@ class sotf_Object {
 
 	/** creates db record with all fields from 'data' except binary fields */
 	function create() {
+		reset($this->data);
 		while(list($key,$val)=each($this->data)){
 			if(in_array($key, $this->binaryFields))
 				continue;
@@ -97,11 +106,11 @@ class sotf_Object {
 				$values[] = "'" . sotf_Utils::magicQuotes($val) . "'";
 			}
 		}
-    if(empty($this->id))
-      raiseError("no id given");
-		if(!$keys || !in_array($this->idKey, $keys)) {
-			$keys[] = $this->idKey;
-			$values[] = "'" . sotf_Utils::magicQuotes($this->id) . "'";
+		if($this->id) {		//	because ''==0 in PHP :-(
+			if(!$keys || !in_array($this->idKey, $keys)) {
+				$keys[] = $this->idKey;
+				$values[] = "'" . sotf_Utils::magicQuotes($this->id) . "'";
+			}
 		}
 		$keys = implode(",",$keys);
 		$values = implode(",",$values);
@@ -190,9 +199,9 @@ class sotf_Object {
 	 * @return (void)
 	 */
 	function setWithParam($prop_name, $param_name='', $id=false) {
-    if(!$param_name)
-      $param_name = $prop_name;
-    $this->set($prop_name, sotf_Utils::getParameter($param_name), $id);
+		if(!$param_name)
+			$param_name = $prop_name;
+		$this->set($prop_name, sotf_Utils::getParameter($param_name), $id);
 	}
 	
 	/**
@@ -203,13 +212,13 @@ class sotf_Object {
 	 * @return (void)
 	 */
 	function setBlob($prop_name, $prop_value){
-    if(empty($prop_value))
-      $v = 'NULL';
-    else
-      $v = "'" . sotf_Utils::magicQuotes($this->db->escape_bytea($prop_value)) . "'";
-    $res = $this->db->query("UPDATE " . $this->tablename . " SET $prop_name = $v WHERE " . $this->idKey . "='" . $this->id . "' ");
-    if(DB::isError($res))
-      raiseError("Error in setBlob: $res");
+		if(empty($prop_value))
+			$v = 'NULL';
+		else
+			$v = "'" . sotf_Utils::magicQuotes($this->db->escape_bytea($prop_value)) . "'";
+		$res = $this->db->query("UPDATE " . $this->tablename . " SET $prop_name = $v WHERE " . $this->idKey . "='" . $this->id . "' ");
+		if(DB::isError($res))
+			raiseError("Error in setBlob: $res");
 		$this->data[$prop_name] = $v;
 	}
 	
@@ -251,10 +260,12 @@ class sotf_Object {
 	 */
 	function setAll($to_set){
 		if(!is_array($to_set)){
-			return false;
+			raiseError("array is expected in setAll");
 		}
-		
 		$this->data = $to_set;
+		if($this->data[$this->idKey]) {
+			$this->id = $this->data[$this->idKey];
+		}
 		$this->changed = TRUE;
 		return true;
 	}

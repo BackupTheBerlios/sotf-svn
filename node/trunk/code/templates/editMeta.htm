@@ -42,19 +42,19 @@
             </tr>
             <tr valign="top">
               <td class="meta">{#title#}:</td>
-              <td><input name="title" value="{$PRG_DATA.title}" size="60" maxlength="255"></td>
+              <td><input name="title" value="{$PRG_DATA.title}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
             <tr valign="top">
               <td class="meta">{#alternative_title#}:</td>
-              <td><input name="alternative_title" value="{$PRG_DATA.alternative_title}" size="60" maxlength="255"></td>
+              <td><input name="alternative_title" value="{$PRG_DATA.alternative_title}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
             <tr valign="top">
               <td class="meta">{#episode_title#}:</td>
-              <td><input name="episode_title" value="{$PRG_DATA.episode_title}" size="60" maxlength="255"></td>
+              <td><input name="episode_title" value="{$PRG_DATA.episode_title}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
             <tr valign="top">
               <td class="meta">{#episode_sequence#}:</td>
-              <td><input name="episode_sequence" value="{if $PRG_DATA.episode_sequence}{$PRG_DATA.episode_sequence}{/if}" size="5" maxlength="5"></td>
+              <td><input name="episode_sequence" value="{if $PRG_DATA.episode_sequence}{$PRG_DATA.episode_sequence}{/if}" size="5" maxlength="5" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
             <tr valign="top">
               <td class="meta">{#language#}:</td>
@@ -66,11 +66,11 @@
             </tr>		
             <tr valign="top">
               <td class="meta">{#abstract#}:</td>
-              <td><textarea name="abstract" rows="6" cols="50">{$PRG_DATA.abstract}</textarea></td>
+              <td><textarea name="abstract" rows="6" cols="50" onChange="if(value != defaultValue) data_changed++;" >{$PRG_DATA.abstract}</textarea></td>
             </tr>
             <tr valign="top">
               <td class="meta">{#keywords#}:</td>
-              <td><textarea name="keywords" rows="3" cols="50">{$PRG_DATA.keywords}</textarea></td>
+              <td><textarea name="keywords" rows="3" cols="50" onChange="if(value != defaultValue) data_changed++;" >{$PRG_DATA.keywords}</textarea></td>
             </tr>
             <tr valign="top">
               <td class="meta">{#genre#}</td>
@@ -83,35 +83,12 @@
               </td>
             </tr>
             <tr valign="top">
-              <td class="meta">{#topics#}:</td>
-              <td>
-                <a name="topics"></a>
-                 {if $TOPICS}
-                <table>
-                  {foreach item=item from=$TOPICS}
-                  <tr valign="top">
-                    <td>
-                      {$item.name}
-                    </td>
-                    <td nowrap>
-                      <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form,'editMeta.php?id={$PRG_ID}&deltopic={$item.id}')" />
-                    </td>
-                  </tr>
-                  {/foreach}
-                </table>
-                {else}
-                <p>{#no_topics#}</p>
-                {/if}
-                <input class="action" type="button" name="b1" value="{#add_topic#}" onClick="popup('topic_tree.php?prgid={$PRG_ID}','{#topicpopup#}',400,200,true)" />
-              </td>
-            </tr>
-            <tr valign="top">
               <td class="meta">{#temporal_coverage#}:</td>
               <td>{html_select_date time=$PRG_DATA.temporal_coverage start_year="1900" prefix="temporal_coverage" month_format="%m" field_order="YMD" field_separator="-"}</td>
             </tr>
             <tr valign="top">
               <td class="meta">{#spatial_coverage#}:</td>
-              <td><input name="spatial_coverage" value="{$PRG_DATA.spatial_coverage}" size="60" maxlength="255"></td>
+              <td><input name="spatial_coverage" value="{$PRG_DATA.spatial_coverage}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
             <tr valign="top">
               <td class="meta">{#production_date#}:</td>
@@ -126,15 +103,50 @@
               <td>{html_select_date time=$PRG_DATA.expiry_date end_year="+5" prefix="expiry_date" month_format="%m" field_order="YMD" field_separator="-"}</td>
             </tr>
           </table>
-	<input type="submit" name="save" value="{#save#}">
+          <input type="submit" name="save" value="{#save#}">
 
-</td>
-</tr>
+        </td>
+      </tr>
+    </table>
+  </form>
+
+<p></p>
+
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#topics#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea">
+                  <a name="topics"></a>
+                  {if $TOPICS}
+                  <table>
+                    {foreach item=item from=$TOPICS}
+                    <tr valign="top">
+                      <td>
+                        {$item.name}
+                      </td>
+                      <td nowrap>
+                        <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form,'editMeta.php?id={$PRG_ID}&deltopic={$item.id}')" />
+                      </td>
+                    </tr>
+                    {/foreach}
+                  </table>
+                  {else}
+                  <p>{#no_topics#}</p>
+                  {/if}
+                  <input class="action" type="button" name="b1" value="{#add_topic#}" onClick="popup('topic_tree.php?prgid={$PRG_ID}','{#topicpopup#}',400,200,true)" />
+      </td>
+    </tr>
 </table>
 </form>
 
 <p></p>
 
+<form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#Roles#}</td>
@@ -157,9 +169,9 @@
               {$item.contact_data.name}
             </td>
             <td>
-              <a class="action" href="javascript:popup('editRole.php?roleid={$item.id}&objectid={$PRG_ID}','{#edit_role#}',350,400,false)">{#change#}</a>
-              <a class="action" href="javascript:popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)">{#edit_contact#}</a>
-              <a class="action" href="editMeta.php?delrole=1&roleid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$PRG_ID}','{#edit_role#}',350,400,false)" />
+                <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editMeta.php?delrole=1&roleid={$item.id}&id={$PRG_ID}')" />
             </td>
           </tr>
           {/foreach}
@@ -168,14 +180,16 @@
         <p>{#no_roles#}</p>
         {/if}
         <p>
-          <a class="action" href="javascript:popup('editRole.php?new=1&objectid={$PRG_ID}','{#edit_role#}',400,400,false)">{#add_new_role#}</a>
+            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$PRG_ID}','{#edit_role#}',400,400,false)" />
         </p>
       </td>
     </tr>
 </table>
+</form>
 
 <p></p>
 
+<form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#Rights#}</td>
@@ -205,8 +219,8 @@
               {$item.rights_text}
             </td>
             <td nowrap>
-              <a class="action" href="javascript:popup('editRight.php?rid={$item.id}&objectid={$PRG_ID}','{#edit_right#}',300,500,false)">{#change#}</a>
-              <a class="action" href="editMeta.php?delright=1&rid={$item.id}&id={$PRG_ID}">{#delete#}</a>
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRight.php?rid={$item.id}&objectid={$PRG_ID}','{#edit_right#}',300,500,false)" />
+                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editMeta.php?delright=1&rid={$item.id}&id={$PRG_ID}#rights')" />
             </td>
           </tr>
           {/foreach}
@@ -215,14 +229,16 @@
         <p>{#no_rights#}</p>
         {/if}
         <p>
-          <a class="action" href="javascript:popup('editRight.php?new=1&objectid={$PRG_ID}','{#edit_right#}',300,500,false)">{#add_new_right#}</a>
+            <input class="action" type="button" name="b1" value="{#add_new_right#}" onClick="popup('editRight.php?new=1&objectid={$PRG_ID}','{#edit_right#}',300,500,false)" />
         </p>
       </td>
     </tr>
 </table>
+</form>
 
 <p></p>
 
+<form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#access_permissions#}</td>
@@ -245,8 +261,8 @@
               {/section}
             </td>
             <td>
-              <a class="action" href="javascript:popup('editPermissions.php?context=station&objectid={$PRG_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)">{#change#}</a>
-              <a class="action" href="editMeta.php?delperm=1&username={$username|escape}&id={$PRG_ID}">{#delete#}</a>
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=station&objectid={$PRG_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)" />
+                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editMeta.php?delperm=1&username={$username|escape}&id={$PRG_ID}#perms')" />
             </td>
           </tr>
           {/foreach}
@@ -263,6 +279,7 @@
       </td>
     </tr>
 </table>
+</form>
 
 <p></p>
 

@@ -34,6 +34,12 @@
 		{elseif $SQLquery[i][4] == "length"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlength selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" MAXLENGTH=5> {#seconds#}</TD>
+		{elseif $SQLquery[i][4] == "rating"}
+			<TD><SELECT name="SQLeq[]">{html_options options=$EQnumber selected=$SQLquery[i][2]}</SELECT></TD>
+			<TD><SELECT name="SQLstring[]">{html_options options=$Ratings selected=$SQLquery[i][3]}</TD>
+		{elseif $SQLquery[i][4] == "number"}
+			<TD><SELECT name="SQLeq[]">{html_options options=$EQnumber selected=$SQLquery[i][2]}</SELECT></TD>
+			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" MAXLENGTH=5></TD>
 		{/if}
 		<TD ALIGN="right" valign="middle"><INPUT type="image" SRC="{$IMAGEDIR}/plusz.gif"  ALT="{#add#}" name="ADD{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGEDIR}/transp.gif" /><IMG SRC="{$IMAGEDIR}/transp.gif" /><INPUT type="image" ALT="{#delete#}" SRC="{$IMAGEDIR}/minusz.gif" name="DEL{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGEDIR}/transp.gif" /><IMG SRC="{$IMAGEDIR}/transp.gif" /></TD>
 		<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>

@@ -10,6 +10,7 @@ require_once($classdir . '/sotf_Station.class.php');
 require_once($classdir . '/sotf_Series.class.php');
 require_once($classdir . '/sotf_Programme.class.php');
 require_once($classdir . '/sotf_Contact.class.php');
+require_once($classdir . '/sotf_Rating.class.php');
 //require_once($classdir . '/sotf_PList.class.php');
 //require_once($classdir . '/sotf_Metadata.class.php');
 
@@ -118,6 +119,47 @@ class sotf_Repository {
 		return $list;
   }
 
+  function addToTopic($progId, $topicId) {
+    global $db;
+    // TODO: ha mar van, akkor ne adja hozza
+    $query="SELECT id  FROM sotf_prog_topics WHERE  prog_id = '".$progId."' AND topic_id  = '".$topicId."'";
+    $result = $db->getAll($query);
+    if (count($result) == 0)		//if not already in the DB
+    {
+	    $x = new sotf_NodeObject("sotf_prog_topics");
+	    $x->set('prog_id', $progId);
+	    $x->set('topic_id', $topicId);
+	    $x->create();
+	
+	    $query="UPDATE sotf_topics_counter SET number = number+1 WHERE topic_id = '".$topicId."'";
+	    $result = $db->query($query);
+	
+	    $query="SELECT supertopic FROM sotf_topic_tree_defs WHERE id = '".$topicId."'";
+	    $supertopic = $db->getOne($query);
+	    if (!$supertopic) $supertopic = $topicId;
+	    $query="UPDATE sotf_topics_counter SET total = total+1 WHERE topic_id = '".$supertopic."'";
+	    $result = $db->query($query);
+    }
+  }
+
+  function delFromTopic($id) {
+    global $db;
+    // TODO: ha mar van, akkor ne adja hozza
+    $obj = new sotf_NodeObject('sotf_prog_topics', $id);
+    $topicId = $obj->get('topic_id');
+    $progId = $obj->get('prog_id');
+    $obj->delete();
+
+    $query="UPDATE sotf_topics_counter SET number = number-1 WHERE topic_id = '".$topicId."'";
+    $result = $db->query($query);
+
+    $query="SELECT supertopic FROM sotf_topic_tree_defs WHERE id = '".$topicId."'";
+    $supertopic = $db->getOne($query);
+    if (!$supertopic) $supertopic = $topicId;
+    $query="UPDATE sotf_topics_counter SET total = total-1 WHERE topic_id = '".$supertopic."'";
+    $result = $db->query($query);
+  }
+
   function updateTopicCounts() {
     // calculate counts by topic
     $this->db->query("DROP TABLE sotf_topics_counter");
@@ -156,10 +198,12 @@ class sotf_Repository {
   }
 
   function getRoleName($id) {
+    reset($this->roles);
     while(list(,$r) = each($this->roles)) {
       if($r['id']==$id)
         return $r['name'];
     }
+    debug("unkwon role id", $id);
     return "UNKNOWN_ROLE";
   }
 

@@ -1,4 +1,4 @@
-<script language="javascript" src="{$IMAGEDIR}/tasktree.js"></script>
+<script language="javascript" src="{$IMAGEDIR}/playlist.js"></script>
 <div align="center">
 <form name="taskform" method="POST" action="playlistPopup.php?close=true">
 <table border="0">
@@ -7,6 +7,7 @@
 		<table border="0">
 			<tr>
 			<td>
+				<INPUT type="hidden" name="lista" value="-">
 				<select multiple="1" name="list" size="{$count}">
 				{html_options options=$programmes}
 				<option value="x">_________________________________________________</option>
@@ -34,7 +35,6 @@
 	</tr>
 </table>
 <input type="submit" name="save" value="{#save#}" onclick="selectAllItemsIn(document.taskform.list)"/>
-<input type="submit" name="save" value="{#save#}" />
 </form>
 </div>
 <script language="javascript">

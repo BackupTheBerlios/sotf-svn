@@ -25,9 +25,9 @@
 var isExpanded   = false;
 
 var imgOpened    = new Image(9,9);
-imgOpened.src    = 'images/minus.gif';
+imgOpened.src    = 'static/minus.gif';
 var imgClosed    = new Image(9,9);
-imgClosed.src    = 'images/plus.gif';
+imgClosed.src    = 'static/plus.gif';
 
 
 /**

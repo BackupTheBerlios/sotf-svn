@@ -9,23 +9,26 @@ function deleteConfirm(msg) {
 {/literal}
 
   <form>
-    <table class="title">
-      <tr>
-        <td>
-          <h3>{$STATION}</h3>
+    <table class="title" cellspacing="0" cellpadding="5" width="100%">
+      <tr valign="bottom">
+        <td class="titlehead" width="20%">
+          <font size="-1">{#station#}:</font>
+          <br>{$STATION}
         </td>
-        <td align="right">
+        <td class="title2">
+          <a href="#general">{#general#}</a>, <a href="#series">{#series#}</a>, <a href="#progs">{#programmes#}</a>
+        </td>
+        <td class="title2" width="10%" align="right" valign="bottom">
           {if hasPerm($STATION_ID,'change') }
           <input class="action" type="button" name="b1" value="{#edit_station#}" onClick="redir(this.form, 'editStation.php?stationid={$STATION_ID}')">
             {/if}
           {if hasPerm($STATION_ID, 'add_prog')}
-            <br/><input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, 'editor.php?&stationid={$STATION_ID}')" />
+            <input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, 'editor.php?&stationid={$STATION_ID}')" />
           {/if}
         </td>
       </tr>
       <tr>
-        <td colspan="2">
-          <a href="#general">{#general#}</a>, <a href="#series">{#series#}</a>, <a href="#progs">{#programmes#}</a>
+        <td colspan="3" class="titlehead" height="5">
         </td>
       </tr>
     </table>
@@ -33,7 +36,7 @@ function deleteConfirm(msg) {
 
 <p></p>
 
-<table class="tabarea">
+<table class="tabarea" width="100%">
 <tr> 
   <td class="tabarea"> 
         <table width="100%">
@@ -102,14 +105,19 @@ function deleteConfirm(msg) {
           {foreach item=item from=$SERIES}
           <tr valign="top">
             <td width="1%">{if $item.icon }<img src="{$CACHEDIR}/{$item.id}.png">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
-            <td width="98%"><a href="showSeries.php?seriesid={$item.id}">{$item.title}</a> ({$item.count})</td>
+            <td width="98%">
+              <a class="goto_object" href="showSeries.php?seriesid={$item.id}">{$item.title}</a> ({$item.count})
+              {if $item.description}
+              <div class="abstract">{$item.description|truncate:300}</div>
+              {/if}
+            </td>
             <td width="1%" valign="bottom">
-              {if hasPerm($item.id,'delete')}
-              <input class="action" type="button" name="b1" value="{#delete_series#}" onClick="if(deleteConfirm('{#delete_series_confirm#}'))redir(this.form, 'showStation.php?stationid={$STATION_ID}&delseries=1&seriesid={$item.id}')" />
-                {/if}
               {if hasPerm($item.id, 'change')}
               <br/><input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
                   {/if}
+              {if hasPerm($item.id,'delete')}
+              <input class="action" type="button" name="b1" value="{#delete_series#}" onClick="if(deleteConfirm('{#delete_series_confirm#}'))redir(this.form, 'showStation.php?stationid={$STATION_ID}&delseries=1&seriesid={$item.id}')" />
+                {/if}
             </td>
           </tr>
           {/foreach}
@@ -152,15 +160,20 @@ function deleteConfirm(msg) {
               {/if}
             </td>
             <td width="98%">
-              <a href="get.php?id={$item.id}">{$item.title}</a>
+              <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> ({$item.entry_date})
+              {if $item.alternative_title}<br>{$item.alternative_title}{/if}
+              {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
+              {if $item.abstract}
+                  <div class="abstract">{$item.abstract|truncate:300}</div>
+              {/if}
             </td>
             <td width="1%" valign="bottom">
+              {if hasPerm($item.id, 'change')}
+              <input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, 'editMeta.php?id={$item.id}')" />
+                  {/if}
               {if hasPerm($item.id,'delete')}
               <input class="action" type="button" name="b1" value="{#delete_prog#}" onClick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, 'showStation.php?stationid={$STATION_ID}&delprog=1&prgid={$item.id}')" />
                 {/if}
-              {if hasPerm($item.id, 'change')}
-              <br/><input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, 'editMeta.php?id={$item.id}')" />
-                  {/if}
             </td>
 
           </tr>

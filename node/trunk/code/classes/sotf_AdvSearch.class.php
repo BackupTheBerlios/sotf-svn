@@ -66,9 +66,9 @@ class sotf_AdvSearch
 	{
 		switch ($sign) {			//= < > != ...
 		    case "bigger":
-			return " > ".$value;
+			return " >= ".$value;
 		    case "smaller":
-			return " < ".$value;
+			return " <= ".$value;
 		    case "is":
 			return " = ".$value;
 		    case "is_equal":
@@ -91,9 +91,10 @@ class sotf_AdvSearch
 	{
 		global $lang;
 		$query="SELECT distinct programmes.* FROM (";
-		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription FROM sotf_programmes";
+		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription, sotf_prog_rating.rating_value as rating FROM sotf_programmes";
 		$query.=" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id";
 		$query.=" LEFT JOIN sotf_series ON sotf_programmes.series_id = sotf_series.id";
+		$query.=" LEFT JOIN sotf_prog_rating ON sotf_programmes.id = sotf_prog_rating.id";
 		$query.=") as programmes WHERE published = 't' AND";
 		$max = count($this->SQLquery);					//all rows of the advsearch
 		for($i = 0; $i < $max ;$i++)		//go through all terms
@@ -263,6 +264,9 @@ class sotf_AdvSearch
 		    case "temporal_coverage":
 			$new[4] = "date";
 		        break;
+		    case "rating":
+			$new[4] = "rating";
+		        break;
 		}
 
 		if ($where == -1)
@@ -348,6 +352,7 @@ class sotf_AdvSearch
 		$SQLfiels[seriestitle] = $page->getlocalized("seriestitle");
 		$SQLfiels[topic] = $page->getlocalized("topic");
 		$SQLfiels[length] = $page->getlocalized("length");
+		$SQLfiels[rating] = $page->getlocalized("rating");
 		$SQLfiels[series] = $page->getlocalized("series");
 		$SQLfiels[track] = $page->getlocalized("track");
 		$SQLfiels[owner] = $page->getlocalized("owner");
@@ -391,6 +396,13 @@ class sotf_AdvSearch
 		return $Genres;
 	}
 
+	function getRatings()		//returns all the genres
+	{
+		$rating = new sotf_Rating();
+		for($i=$rating->minValue; $i<=$rating->maxValue; $i+=0.5) $ratings["$i"] = "$i";
+		return $ratings;
+	}
+
 	function GetEQdate()		//returns EQ options for dates
 	{
 		global $page;
@@ -428,6 +440,16 @@ class sotf_AdvSearch
 		$EQlength[is] = $page->getlocalized("is");
 		$EQlength[is_not] = $page->getlocalized("is_not");
 		return $EQlength;
+	}
+
+	function GetEQnumber()		//returns EQ options for numbers
+	{
+		global $page;
+		$EQnumber[bigger] = $page->getlocalized("bigger");
+		$EQnumber[smaller] = $page->getlocalized("smaller");
+		$EQnumber[is] = $page->getlocalized("is");
+		$EQnumber[is_not] = $page->getlocalized("is_not");
+		return $EQnumber;
 	}
 
 	function simpleSearch($words, $language = false)		//searches the words in the most popular fields

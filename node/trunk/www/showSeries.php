@@ -1,16 +1,25 @@
 <?php
 require("init.inc.php");
 
-$hitsPerPage = $sotfVars->get("hitsPerPage", 30);
-
 $seriesid = sotf_Utils::getParameter('seriesid');
-$start = sotf_Utils::getParameter('start');
 
 if(!$seriesid)
      raiseError("No series selected!");
 
+// delete prog
+$delprog = sotf_Utils::getParameter('delprog');
+$prgid = sotf_Utils::getParameter('prgid');
+if($delprog) {
+  $prg = new sotf_Programme($prgid);
+  $prg->delete();
+  $page->redirect("showSeries.php?seriesid=$seriesid#progs");
+  exit;
+}
+
 $series = & new sotf_Series($seriesid);
+$series->cacheIcon();
 $station = $series->getStation();
+$station->cacheIcon();
 
 $page->errorURL = "showSeries.php?seriesid=$seriesid";
 $page->setTitle($series->get('title'));
@@ -21,36 +30,16 @@ $smarty->assign('STATION_DATA',$station->getAll());
 $smarty->assign('ROLES', $series->getRoles());
 
 $numProgs = $series->numProgrammes();
-$limit = $page->splitList($numProgs, $_SERVER["REQUEST_URI"]);
+$limit = $page->splitList($numProgs, $_SERVER["REQUEST_URI"], "progs");
 $progs = $series->listProgrammes($limit["from"] , $limit["maxresults"]);
 
 if($progs) {
   while(list(,$prog) = each($progs)) {
+    $prog->cacheIcon();
     $pd = $prog->getAll();
     $progList[] = $pd;
   }
   $smarty->assign('PROGS',$progList);
-/*
-  if (!$start)
-     $start = 0;
-
-  $prev = $start - $hitsPerPage;
-  if ($prev < 0) {
-    $prev = false;
-  }
-  $next = $start + $hitsPerPage;
-  if ($next >= $numProgs) {
-    $next = false;
-  }
-
-  $smarty->assign('PROG_SPLIT', array('count' => $numProgs,
-                                      'start' => $start + 1,
-                                      'max'   => $start + count($progs),
-                                      'displayed' => count($progs),
-                                      'next' => $next,
-                                      'prev' => $prev)
-                  );
-*/
 }
 
 $page->send();

@@ -27,10 +27,12 @@ if (!hasPerm($contact->id, "change")) {
   raiseError("You have no permission to change contact settings!");
 }
 
-// upload to my files
-$upload = sotf_Utils::getParameter('upload');
-if($upload) {
-  move_uploaded_file($_FILES['userfile']['tmp_name'], $user->getUserDir() . '/' . $_FILES['userfile']['name']);
+// upload icon
+$uploadicon = sotf_Utils::getParameter('uploadicon');
+if($uploadicon) {
+  $file =  sotf_Utils::getFileInDir($user->getUserDir(),$_FILES['userfile']['name']);
+  move_uploaded_file($_FILES['userfile']['tmp_name'], $file);
+  $contact->setIcon($file);
   $page->redirect("editContact.php?id=$contactId#icon");
   exit;
 }

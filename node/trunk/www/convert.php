@@ -67,7 +67,7 @@ for ($i=0;$i<256;$i++)
 echo "<p align='center'>Converting in progress<br>\n";
 echo "<p align='center'><nobr>";
 for ($i=0;$i<100;$i++)
-	echo "<img src='$localPrefix/static/back.png' border='0' width='3' height='30' id='img".$i."' />\n";
+	echo "<img src='$localPrefix/static/back.png' border='0' width='3' height='30' id='img".$i."' />";
 echo "</nobr></p>";
 $fp = popen("$lame --mp3input -b $bitrate -m $mode --resample $samplerate $source $target 2>&1", 'r');
 $line = "";

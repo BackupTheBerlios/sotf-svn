@@ -107,9 +107,11 @@
                     {/if}
                   </td>
                   <td>
-                    <a href="get.php?id={$item.id}"><b>{$item.title}</b></a>
+                    <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> ({$item.entry_date})
+                    {if $item.alternative_title}<br>{$item.alternative_title}{/if}
+                    {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
                     {if $item.abstract}
-                    <br />{$item.abstract|truncate:300}
+                        <div class="abstract">{$item.abstract|truncate:300}</div>
                     {/if}
                   </td>
                 </tr>

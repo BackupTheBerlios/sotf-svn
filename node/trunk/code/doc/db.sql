@@ -352,6 +352,7 @@ CREATE TABLE "sotf_deletions" (
 
 CREATE TABLE "sotf_playlists" (
 -- registered users may bookmark things
+-- user_id + order_id should be unique, but please don't put a constraint on this!
 	"id" serial PRIMARY KEY, -- just an id
 	"prog_id" varchar(12) NOT NULL,
 	"user_id" int, -- cannot reference to sadm.authenticate(auth_id)
@@ -384,10 +385,13 @@ CREATE TABLE "sotf_prog_rating" (
 -- calculated overall rating for a programme is stored here
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-	"prog_id" varchar(12) NOT NULL,											-- id of programme rated
-	"rating_value" float,											-- value of rating
-	"rating_count_reg" int,											-- number of registered raters	
-	"rating_count_anon" int,										-- number of anonymous raters
+	"prog_id" varchar(12) NOT NULL,						-- id of programme rated
+	"rating_value" float,									-- value of rating
+	"rating_count" int DEFAULT 0,							-- total number of raters	
+	"rating_count_reg" int DEFAULT 0,					-- number of registered raters	
+	"rating_count_anon" int DEFAULT 0,					-- number of anonymous raters
+	"rating_sum_reg" int DEFAULT 0,						-- sum of ratings by registered raters	
+	"rating_sum_anon" int DEFAULT 0,						-- sum of ratings by anonymous raters
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 

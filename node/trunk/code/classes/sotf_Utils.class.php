@@ -251,6 +251,7 @@ class sotf_Utils
 	    return NULL;
 		if (is_array($dirty))
 		{
+      reset($dirty);
 			while( list( $key, $val) = @each( $dirty ))
 			{
 				if ($allow_html)
@@ -277,7 +278,24 @@ class sotf_Utils
 		return $clean;
 	}
 	
-	
+  /**
+   * Returns a random string
+   *
+   * @param	integer	$pass_len	Length of the string
+   * @return	string	This string can contain upper-case, lower-case, and numeric characters
+   */
+	function randString($pass_len = 10) {
+    $allchars =
+      'abcdefghijklnmopqrstuvwxyzABCDEFGHIJKLNMOPQRSTUVWXYZ0123456789';
+    $string = '';
+    
+    mt_srand ((double) microtime() * 1000000);
+    
+    for ($i = 0; $i < $pass_len; $i++) {
+      $string .= $allchars{mt_rand (0,strlen($allchars))};
+    }
+    return $string;
+  } // end func randString
 	
 	///////////////////////////////  MAIL UTILS  ////////////////////////////////////////////////////////
 	

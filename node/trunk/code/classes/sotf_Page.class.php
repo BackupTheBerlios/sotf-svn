@@ -17,6 +17,10 @@ class sotf_Page
 	var $errorURL;
 	/** if this page appears in a popup */
 	var $popup = false;
+	/** cookie name used to store auth key (see getAuthKey()) */
+	var $authKeyName = 'sessKey';
+	/** auth key (see getAuthKey()) */
+	var $authKey;
 
 	function sotf_Page()
 	{
@@ -53,7 +57,40 @@ class sotf_Page
 		preg_match('/(\w+)\.php$/', $_SERVER['SCRIPT_NAME'], $m);
 		$this->action = $m[1];
 
-	}
+		// auth key generation
+		if(!$this->loggedIn()) {
+		  if(!$this->getAuthKey()) {
+			 $key = sotf_Utils::randString(30);
+			 //debug("KEY", $key);
+			 $c = base64_encode(getenv("REMOTE_ADDR") . ':' . $key);
+			 if(!setcookie($this->authKeyName, $c, time()+365*24*3600, '/'))
+				debug("could not set cookie for auth key");
+		  }
+		}
+	} // end func setAnonymous
+
+	/**
+	* Random key used in cookie to avoid duplicate actions such as rating twice
+	*
+	* @return	string	The authorization key
+	*/
+	function getAuthKey() {
+	  if($this->loggedIn()) {
+		 $this->errors[] = "logged in user needs no authKey";
+		 return false;
+	  }
+	  if($this->authKey)
+		 return $this->authKey;
+	  $c = base64_decode($_COOKIE[$this->authKeyName]);
+	  //debug("CCCCC", $c);
+	  if($c) {
+		 preg_match("/([^:]+):(.*)$/", $c, $m);
+		 if($m[1] != getenv("REMOTE_ADDR"))
+			debug("AuthKey", "host IP does not match: ". $m[1]);
+		 return $m[2];
+	  }
+	  return false;
+	} // end func getAuthKey
 
 	function forceLogin()
 	{
@@ -192,13 +229,29 @@ class sotf_Page
 	  $this->send('main_popup.htm');
 	}
 
+	function alertWithErrors() {
+	  if(!noErrors()) {
+		 debug("alertWithErrors()");
+		 print("<script type=\"text/javascript\" language=\"javascript1.1\">");
+		 foreach($this->errors as $err) {
+			print "alert('$err');";
+		 }
+		 print("</script>");
+	  }
+	}
+
 	function halt($msg='') {
 	  global $smarty, $localPrefix;
-	  debug("sending error page");
-	  $smarty->assign("ERRORS", $this->errors);
-	  $smarty->assign("ERROR_URL", $this->errorURL);
-	  $smarty->assign("REFERER", getenv('HTTP_REFERER'));
-	  $this->send('error.htm');
+	  debug("page halted");
+	  if($this->popup) {
+		 $this->alertWithErrors();
+	  } else {
+		 debug("sending error page");
+		 $smarty->assign("ERRORS", $this->errors);
+		 $smarty->assign("ERROR_URL", $this->errorURL);
+		 $smarty->assign("REFERER", getenv('HTTP_REFERER'));
+		 $this->send('error.htm');
+	  }
 	  exit;
 	  /*
 	  if($this->popup) {
@@ -226,9 +279,10 @@ class sotf_Page
 	/*
 	 * 1. param is the maximal number of results
 	 * 2. param is the url from the page
+	 * 3. anchor, where to go bach after reload
 	 * return value is an associative array with 4 fields: from, to, maxresults, limit (string to the end of a query to limit a pgsql query)
 	*/
-	function splitList($rp_count, $rp_url)
+	function splitList($rp_count, $rp_url, $anchor = "")
 	{
 		global $smarty, $sotfVars;
 		$rp_maxresults = $sotfVars->get("hitsPerPage", 30);		//display maximal so many results
@@ -252,11 +306,12 @@ class sotf_Page
 		
 		if (strpos($rp_url, "?") === false) $rp_url .= "?rp_from=$rp_from";
 		else $rp_url .= "&rp_from=$rp_from";
-	
+
 		$smarty->assign("rp_count", $rp_count);
 		$smarty->assign("rp_to", $rp_to);
 		$smarty->assign("rp_from", $rp_from);
 		$smarty->assign("rp_url", $rp_url);
+		$smarty->assign("anchor", $anchor);
 	
 		if ($rp_to == $rp_count) $smarty->assign("rp_theend", true);
 		if ($rp_from == 1) $smarty->assign("rp_thebeginning", true);

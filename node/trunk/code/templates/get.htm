@@ -13,37 +13,60 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
     {if $POPUP}
     <input type="hidden" name="popup" value="1">
     {/if}
-      <h4>Please enter the ID of the selected radio show!</h4>
+      <h4>{#please_enter#}</h4>
       <input type="text" name="id" size="60" value="{$ID}">
   </form>
 {else}
 
-  <table width="100%">
-    <tr valign="top">
-      <td width="70%" align="left">
-        {if $PRG_DATA.icon}
-          <img src="getIcon.php/icon.png?id={$ID}" align="left">
-        {/if}
-          	<h3>{$PRG_DATA.title}</h3>
-      </td>
-      <td width="15%">
+  <form>
+    <table class="title" cellspacing="0" cellpadding="5" width="100%">
+      <tr valign="bottom">
+        <td class="titlehead" width="2%">
+          {if $PRG_DATA.icon}
+          <img src="{$CACHEDIR}/{$ID}.png" align="left">
+          {/if}
+        </td>
+        <td class="titlehead" width="20%">
+          <font size="-1">{#prog#}:</font>
+          <br>{$PRG_DATA.title}
+        </td>
+        <td class="title2">
+          <a href="#general">{#Metadata#}</a>, <a href="#roles">{#Roles#}</a>, <a href="#rights">{#Rights#}</a>,
+          <a href="#mfiles">{#Content#}</a>, <a href="#links">{#Links#}</a>, <a href="#stats">{#Statistics#}</a>
+        </td>
+        <td class="title2" width="15%">
         {if $SERIES_DATA and $SERIES_DATA.icon}
-            {strip}
-            <a href="showSeries.php?seriesid={$SERIES_DATA.id}">
-                <img border="0" src="getIcon.php/icon.png?id={$SERIES_DATA.id}"  alt="{#series#}: {$SERIES_DATA.title}">
-            </a>
-            {/strip}
+          {strip}
+          <a href="showSeries.php?seriesid={$SERIES_DATA.id}">
+            <img height="50" border="0" src="{$CACHEDIR}/{$SERIES_DATA.id}.png"  alt="{#series#}: {$SERIES_DATA.title}">
+          </a>
+          {/strip}
         {/if}
-      </td>
-      <td width="15%">
+        </td>
+        <td class="title2" width="15%">
         {if $STATION_DATA.icon}
           {strip}
           <a href="showStation.php?stationid={$STATION_DATA.id}">
-            <img border="0" src="getIcon.php/icon.png?id={$STATION_DATA.id}" alt="{#station#}: {$STATION_DATA.name}">
+            <img height="50" border="0" src="{$CACHEDIR}/{$STATION_DATA.id}.png" alt="{#station#}: {$STATION_DATA.name}">
           </a>
           {/strip}
         {/if}
       </td>
+        <td class="title2" width="10%" align="right" valign="bottom">
+          {if hasPerm($ID,'change') }
+          <input class="action" type="button" name="b1" value="{#edit_meta#}" onClick="redir(this.form,'editMeta.php?id={$ID}')" />
+          <input class="action" type="button" name="b1" value="{#edit_files#}" onClick="redir(this.form,'editFiles.php?id={$ID}')" />
+          {/if}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6" class="titlehead" height="5">
+        </td>
+      </tr>
+    </table>
+  </form>
+
+
     </tr>
   </table>
 
@@ -55,6 +78,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
   <table class="tabarea" width="100%" >
     <tr> 
       <td class="tabarea"> 
+        <a name="general"></a>
         <table width="100%">
             <tr valign="top"><td class="meta" nowrap width="10%">{#station#}:</td><td><a href="showStation.php?stationid={$STATION_DATA.id}">{$STATION_DATA.name}</a></td></tr>
             {if $SERIES_DATA}
@@ -118,9 +142,6 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
             <tr valign="top"><td class="meta" nowrap>{#expiry_date#}:</td><td>{$PRG_DATA.expiry_date}</td></tr>
             {/if}
           </table>
-        {if hasPerm($ID, 'change') }
-        <div align="right"><input class="action" type="button" name="b1" value="{#edit_meta#}" onClick="redir(this.form,'editMeta.php?id={$ID}')" /></div>
-        {/if}
 		</td> 
 	</tr>
 </table>
@@ -139,22 +160,22 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         <a name="roles"></a>
         <table>
           {foreach item=item from=$ROLES}
-          <tr>
-            <td>
-              {if $item.contact_data.icon }{strip}
-              <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">
-                <img height="50" border="0" src="getIcon.php/icon.png?id={$item.contact_data.id}"  alt="{$SERIES_DATA.title}">
-              </a>{/strip}
-              {/if}
-            </td>
+          <tr valign="top">
             <td>
               {$item.role_name}
             </td>
             <td>
               <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">{$item.contact_data.name}</a>
-                    {if $item.contact_data.url}(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
-                    {elseif $item.contact_data.email}(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
-                    {/if}
+              {if $item.contact_data.url}<br>(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
+                {elseif $item.contact_data.email}<br>(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
+                  {/if}
+            </td>
+            <td>
+              {if $item.contact_data.icon }{strip}
+              <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">
+                <img height="50" border="0" src="{$CACHEDIR}/{$item.contact_data.id}.png">
+              </a>{/strip}
+              {/if}
             </td>
           </tr>
           {/foreach}
@@ -284,10 +305,6 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
    {if !$AUDIO_FILES and !$OTHER_FILES }
         <p>{#no_files#}</p>
    {/if}
-   {if hasPerm($ID, 'change') }
-          <div align="right"><input class="action" type="button" name="b1" value="{#edit_files#}" onClick="redir(this.form,'editFiles.php?id={$ID}')" /></div>
-   {/if}
- 
   </td>
 </tr>
 </table>
@@ -304,6 +321,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
   <table class="tabarea" width="100%" >
     <tr> 
       <td class="tabarea">
+        <a name="links"></a>
         <table>
           {foreach item=item from=$LINKS}
           <tr>
@@ -331,6 +349,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         <table width="100%">
           <tr>
             <td>
+              <a name="stats"></a>
               <table>
                 <tr>
                   <td>{#Visits#}:</td>
@@ -346,8 +365,9 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
                 </tr>
                 <tr>
                   <td>{#Rating#}:</td> 
-                  <td>{if $PRG_DATA.rating_value}{$PRG_DATA.rating_value}{else}0{/if}</td>
+                  <td>{if $RATING}{$RATING.rating_value} ({#by#} {$RATING.rating_count}){else}-{/if}</td>
                 </tr>
+                {if $REFERENCES}
                 <tr valign="top">
                   <td>{#References#}:</td>
                   <td>
@@ -356,25 +376,28 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
                     {/section}
                   </td>
                 </tr>
+                {/if}
               </table>
             </td>
             <td>
               <p>
                 <form method="post" action="get.php?id={$ID}">
-                <input type="button" name="put_into_playlist" value="{#put_into_playlist#}" onclick="javascript:setvalue('addplaylist', '{$ID}', 'add');return true;"/>
+                <input type="button" name="put_into_playlist" value="{#put_into_playlist#}" onclick="javascript:setvalue('addplaylist', '{$ID}', 'add');this.disabled='true';return true;" {if $inplaylist}disabled="true"{/if} />
                 </form>
               </p>
               <p>
                 <form>
                   <input type="hidden" name="id" value="{$ID}" />
                   <select name="rating">
-                    <option value="1">*</option>
-                    <option value="2">**</option>
-                    <option value="3">***</option>
-                    <option value="4">****</option>
-                    <option value="5">*****</option>
+                    <option value="1" {if $MY_RATING==1}SELECTED=1{/if} >*</option>
+                    <option value="2" {if $MY_RATING==2}SELECTED=1{/if} >**</option>
+                    <option value="3" {if $MY_RATING==3}SELECTED=1{/if} >***</option>
+                    <option value="4" {if $MY_RATING==4}SELECTED=1{/if} >****</option>
+                    <option value="5" {if $MY_RATING==5}SELECTED=1{/if} >*****</option>
                   </select>
-                  <input type="submit" name="rate" value="{#rate_it#}" />
+                  <input type="button" name="rate" value="{if $MY_RATING}{#change_rating#}{else}{#rate_it#}{/if}"   
+                         onclick="javascript:setvalue('rating', '{$ID}', this.form.rating.options[this.form.rating.selectedIndex].value);this.value='{#change_rating#}';return true;"
+                         />
                   
                 </form>
 

@@ -14,11 +14,10 @@ $page->forceLogin();
 
 $okURL = sotf_Utils::getParameter('okURL');
 
+// delete topic
 $delTopic = sotf_Utils::getParameter('deltopic');
 if($delTopic) {
-  $obj = new sotf_NodeObject('sotf_prog_topics', $delTopic);
-  $obj->delete();
-  $repository->updateTopicCounts();
+  $repository->delFromTopic($delTopic);
   $page->redirect("editMeta.php?id=$prgId#topics");
   exit;
 }

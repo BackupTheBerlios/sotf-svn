@@ -67,7 +67,7 @@ if(!empty($seriesList)) {
 }
 
 $numProgs = $st->numProgrammes();
-$limit = $page->splitList($numProgs, $_SERVER["REQUEST_URI"]);
+$limit = $page->splitList($numProgs, $_SERVER["REQUEST_URI"], "progs");
 $progs = $st->listProgrammes($limit["from"] , $limit["maxresults"]);
 
 if($progs) {

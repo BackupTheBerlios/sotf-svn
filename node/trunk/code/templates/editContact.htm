@@ -14,43 +14,43 @@
 	<form method="post">
             <input type="hidden" name="id" value="{$CONTACT_ID}">
 	<table>
-		<tr>
+		<tr valign="top">
 			<td>{#name#}:</td>
 			<td>{$CONTACT_DATA.name}</td>
 		</tr>
-		<tr>
+		<tr valign="top">
 			<td>{#alias#}:</td>
 			<td><input size="50" maxlength="100" name="alias" value="{$CONTACT_DATA.alias}"></td>
 		</tr>
-		<tr>
+		<tr valign="top">
 			<td>{#acronym#}:</td>
 			<td><input size="30" maxlength="30" name="acronym" value="{$CONTACT_DATA.acronym}"></td>
 		</tr>
-		<tr>
+		<tr valign="top">
 			<td>{#intro#}:</td>
 			<td><textarea cols="50" rows="10" name="intro">{$CONTACT_DATA.intro}</textarea></td>
 		</tr>
-		<tr>
+		<tr valign="top">
 			<td>{#email#}:</td>
 			<td><input size="50" maxlength="100" name="email" value="{$CONTACT_DATA.email}"></td>
 		</tr>
-		<tr>
+		<tr valign="top">
 			<td>{#address#}:</td>
 			<td><input size="50" maxlength="255" name="address" value="{$CONTACT_DATA.address}"></td>
 		</tr>
-		<tr>
+		<tr valign="top">
 			<td>{#phone#}:</td>
 			<td><input size="20" maxlength="20" name="phone" value="{$CONTACT_DATA.phone}"></td>
 		</tr>
-		<tr>
+		<tr valign="top">
 			<td>{#cellphone#}:</td>
 			<td><input size="20" maxlength="20" name="cellphone" value="{$CONTACT_DATA.cellphone}"></td>
 		</tr>
-		<tr>
+		<tr valign="top">
 			<td>{#fax#}:</td>
 			<td><input size="20" maxlength="20" name="fax" value="{$CONTACT_DATA.fax}"></td>
 		</tr>
-		<tr>
+		<tr valign="top">
 			<td>{#url#}:</td>
 			<td><input size="50" maxlength="255" name="url" value="{$CONTACT_DATA.url}"></td>
 		</tr>
@@ -102,7 +102,7 @@ function getSelected() {
           <form enctype="multipart/form-data" method="post">
             <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
             <input name="userfile" type="file" />
-            <input type="submit" name="upload" value="{#upload_file#}" />
+            <input type="submit" name="uploadicon" value="{#set_icon#}" />
             <br />{#upload_expl#}
           </form>
   </small>

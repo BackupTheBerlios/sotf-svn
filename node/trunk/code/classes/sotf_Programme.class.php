@@ -424,7 +424,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     global $permissions, $db, $user;
 		if(!isset($permissions->currentPermissions))
       return NULL;  // not logged in yet
-    $sql = "SELECT  s.name AS station, se.title AS series, stats.visits, stats.listens, stats.downloads, p.* FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id=se.id LEFT JOIN (SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads, prog_id FROM sotf_stats GROUP BY prog_id) AS stats ON stats.prog_id=p.id, sotf_user_permissions u WHERE u.user_id = '$user->id' AND u.object_id=p.id ORDER BY p.entry_date DESC";
+    $sql = "SELECT  s.name AS station, se.title AS series, stats.visits, stats.listens, stats.downloads, rating.*, p.* FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id=se.id LEFT JOIN sotf_prog_rating rating ON p.id=rating.prog_id LEFT JOIN (SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads, prog_id FROM sotf_stats GROUP BY prog_id) AS stats ON stats.prog_id=p.id, sotf_user_permissions u WHERE u.user_id = '$user->id' AND u.object_id=p.id ORDER BY p.entry_date DESC";
     $plist = $db->getAll($sql);
     /*
     foreach($plist as $item) {
