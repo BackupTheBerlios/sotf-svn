@@ -309,15 +309,17 @@ class sotf_NodeObject extends sotf_Object {
 			 $obj['data'] = $data;
 			 $objects[] = $obj;
 			 debug("sending modified object", $obj['id']);
-			 debug("", $obj);
+			 //debug("", $obj);
 			 //if(is_array($data)) foreach($data as $k => $v) {if(is_null($v)) debug($k, "is_null"); if($v === NULL) debug($k, "is null"); }
-			 if($tablename == 'sotf_blobs') 
-				$countBlobs++;
+			 if($tablename == 'sotf_blobs') {
+				$size = $size + strlen($obj['data']['data']);
+				debug("blobsize", $size);
+			 }
 		  }
 		  // delete from refresh table (will roll back if failed)
 		  sotf_NodeObject::removeFromRefreshTable($obj['id'], $remoteNode);
 		  // we cannot send too many blobs, it will result in memory allocation problems on the other side (but why??)
-		  if($countBlobs >= 5)
+		  if($size >= 90000)
 			 break;
 		}
 	 }
