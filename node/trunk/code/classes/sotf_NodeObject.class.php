@@ -80,7 +80,8 @@ class sotf_NodeObject extends sotf_Object {
 	 // delete administrative data about object
 	 $db->query("DELETE FROM sotf_node_objects WHERE id='" . $this->id . "'");
 	 // propagate deletion to other nodes
-	 $this->createDeletionRecord();
+	 if($this->isLocal())
+		$this->createDeletionRecord();
 	 // delete data itself: not really needed because of cascading delete
 	 parent::delete();  
 	 // delete user permissions
@@ -113,6 +114,11 @@ class sotf_NodeObject extends sotf_Object {
 	 if(count($this->internalData)==0)
 		$this->loadInternalData();
 	 return  $this->internalData['node_id'];
+  }
+
+  function isLocal() {
+	 global $config;
+	 return ($this->getNodeId()==$config['nodeId']);
   }
 
   /************************************************

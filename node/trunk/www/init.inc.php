@@ -197,6 +197,7 @@ $repository = new sotf_Repository($config['repositoryDir'], $db);
 // $smarty->assign("CONFIG", $config);
 // add basic variables to Smarty
 $smarty->assign("NODEID", $config['nodeId']);
+$smarty->assign("NODE_NAME", $config['nodeName']);
 //$smarty->assign("ROOT_URL", $config['rootUrl']);
 $smarty->assign("ROOT_URL", $config['localPrefix']);
 $smarty->assign("IMAGE_URL", $config['imageUrl']);

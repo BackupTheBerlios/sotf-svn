@@ -9,6 +9,9 @@
 
 require("init.inc.php");
 
+// may contain long jobs
+set_time_limit(300);
+
 $smarty->assign('PAGETITLE',$page->getlocalized('AdminPage'));
 
 $page->forceLogin();
