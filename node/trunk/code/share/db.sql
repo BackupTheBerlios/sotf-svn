@@ -29,7 +29,8 @@ CREATE TABLE "sotf_users" (
   "password" varchar(50) DEFAULT '' NOT NULL,
   "last_visit" timestamptz,
   "num_logins" int4 DEFAULT '0',
-  "getmail" char(1) DEFAULT 'N' NOT NULL
+  "getmail" char(1) DEFAULT 'N' NOT NULL,
+  "utoken" varchar(50)
 );
 
 CREATE VIEW "ftp_auth" AS SELECT 

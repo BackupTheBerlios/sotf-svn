@@ -1,3 +1,20 @@
+
+Suggested changes in XBMF:
+
+- currently the root container directory must be named XBMF.
+  Suggestion: the container dir name could contain a mnemonic: XBMF_mnemonic
+  For example: XBMF_literadio_2003_34
+
+- Administrative metadata should go into a separate <administrative><sotf> subtree.
+  For example: owner, program id, etc.
+
+- Normal metadata should get closer to DC and SOMA
+
+- Controlled vocabularies, such as roles, genres, etc. could be given 
+- in a default language + internal id
+- in all languages + internal id
+
+
 Suggestions:
 
 the thing has an id, which has a local part, let's call it track name.
