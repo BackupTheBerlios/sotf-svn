@@ -96,7 +96,7 @@ for($i =0; $i<$max; $i++)	//$selected will contain all the information about the
 //print("<BR />".count($result));
 
 $smarty->assign("SQLquery", $SQLquery);					//the query
-$smarty->assign("SQLquerySerial", "&SQLquerySerial=$SQLquerySerial");		//the serialized query
+$smarty->assign("SQLquerySerial", $SQLquerySerial);			//the serialized query
 //$smarty->assign("SQLqueryfields", $advsearch->GetSQLqueryfields());	//translated name for all fieldnames of the query
 //$smarty->assign("SQLqueryEQs", $advsearch->GetSQLqueryEQs());		//translated name for all EQs (<, >, = ...) of the query
 $smarty->assign("HumanReadable", $advsearch->GetHumanReadable());	//human readable format for the query fileds

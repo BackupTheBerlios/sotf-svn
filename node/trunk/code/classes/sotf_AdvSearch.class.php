@@ -219,7 +219,7 @@ class sotf_AdvSearch
 			if (($this->SQLquery[$i][0] == "OR") && ($this->SQLquery[$i+1][0] != "OR")) $query = $query." )";
 		}
 		$query = $query." ORDER BY ".$this->sort1.", ".$this->sort2;			//ISBN, TITLE 
-		print($query);
+		//print($query);
 		//die();
 		return $query;
 	}

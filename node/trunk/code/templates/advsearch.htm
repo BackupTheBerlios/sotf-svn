@@ -65,11 +65,11 @@
 	</TD>
 
 	<TD ALIGN="center" BGCOLOR="{#searchBgColor2#}">
-	<TABLE BORDER=0 CELLPADDING=3>
-		<TR><TD><B>{#box2#}</B></TD></TR>
-		<TR><TD ALIGN=center>{#sort1#} <SELECT name="sort1"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort1}</SELECT><INPUT type="checkbox" name="dir1"{if $dir1} checked{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}</TD></TR>
-		<TR><TD ALIGN=center>{#sort2#} <SELECT name="sort2"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort2}</SELECT><INPUT type="checkbox" name="dir2"{if $dir2} checked{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}</TD></TR>
-		<TR><TD ALIGN=center><INPUT type="submit" name="run" value="{#run#}"{if $SQLquery == ""} disabled="true"{/if}></TD></TR>
+	<TABLE CELLPADDING=3>
+		<TR><TD colspan='2'><B>{#box2#}</B></TD></TR>
+		<TR><TD colspan='2' ALIGN=center>{#sort1#} <SELECT name="sort1"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort1}</SELECT><INPUT type="checkbox" name="dir1"{if $dir1} checked{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}</TD></TR>
+		<TR><TD colspan='2' ALIGN=center>{#sort2#} <SELECT name="sort2"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort2}</SELECT><INPUT type="checkbox" name="dir2"{if $dir2} checked{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}</TD></TR>
+		<TR><TD ALIGN=center><INPUT type="submit" name="run" value="{#run#}"{if $SQLquery == ""} disabled="true"{/if}></TD><!--<TD ALIGN=center><INPUT type="submit" name="upload_query" value="{#upload_query#}"{if $SQLquery == ""} disabled="true"{/if} onclick="javascript:Q=prompt('{#portal_http#}: ','{$old_upload}');if (Q) {literal}{this.form.upload_http.value = Q; this.form.submit();} else return false;{/literal}"><input type="hidden" name="upload_http"></TD>--></TR>
 	</TABLE>
 	</TD>
 
@@ -86,3 +86,19 @@
 </TR>
 </TABLE>
 </FORM>
+{if $upload_query}
+	<script language="javascript">
+	<!--
+	function my_onload()
+	{literal}{{/literal}
+		{if $upload_query != "http://"}
+		//alert("OK");
+		window.open('{$upload_query}?type=query&data={$SQLquerySerial}','','scrollbars=yes,width=640,height=340,left=320,top=200');
+		{else}
+		alert("{#URL_missing#}");
+		{/if}
+	{literal}}{/literal}
+	document.body.onload = my_onload;
+	// -->
+	</script> 
+{/if}
