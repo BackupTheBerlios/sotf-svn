@@ -9,11 +9,12 @@ if($_REQUEST['select_station']) {
 
 define("MAX_ITEMS_IN_INDEX", 10);
 
-$data['numNodes'] = sotf_Node::numNodes();
-if($data['numNodes']==0)
+$data['numNodes'] = sotf_Node::countAll();
+if($data['numNodes']==0) {
      $data['numNodes']=1;
-$data['numStations'] = sotf_Station::numStations();
-$data['numProgs'] = sotf_Programme::numProgrammes();
+}
+$data['numStations'] = sotf_Station::countAll();
+$data['numProgs'] = sotf_Programme::countAll();
 $smarty->assign($data);
 
 $smarty->assign('STATIONS', sotf_Station::listStationNames());
@@ -31,12 +32,7 @@ $smarty->assign('langNames', $langNames);
 $now = getDate();
 $yesterday = mktime(0,0,0, $now['mon'], $now['mday']-2, $now['year']);
 $fromDay = date('Y-m-d', $yesterday);
-$smarty->assign(
-                  array(
-                        'LOCAL_NEWS' => sotf_Programme::getNewProgrammes(true, $fromDay, MAX_ITEMS_IN_INDEX),
-                        'OTHER_NEWS' => sotf_Programme::getNewProgrammes(false, $fromDay, MAX_ITEMS_IN_INDEX)
-                        )
-                  );
+$smarty->assign('NEWS', sotf_Programme::getNewProgrammes($fromDay, MAX_ITEMS_IN_INDEX));
 
 $page->send();
 

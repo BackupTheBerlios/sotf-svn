@@ -22,9 +22,9 @@ class sotf_Page
 		session_start();
 
 		// load user data
-		if($_SESSION['username'])
+		if($_SESSION['userid'])
 		{
-			$this->user = new sotf_User($_SESSION['username']);
+			$this->user = new sotf_User($_SESSION['userid']);
 		}
 		else
 		{
@@ -35,7 +35,7 @@ class sotf_Page
 		// determine language
 		if($this->user)
 		  $lang = $this->user->language;
-    if(!$lang && in_array($_SERVER['HTTP_ACCEPT_LANGUAGE'], $outputLanguages))
+		if(!$lang && in_array($_SERVER['HTTP_ACCEPT_LANGUAGE'], $outputLanguages))
 		  $lang = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 		if(!$lang)
 		  $lang = $defaultLanguage;
@@ -44,18 +44,18 @@ class sotf_Page
 		$this->loadLoc();
 		
 		debug("lang",$lang);
-		debug("username", $_SESSION['username']);
+		debug("userid", $_SESSION['userid']);
 
 		preg_match('/(\w+)\.php$/', $_SERVER['SCRIPT_NAME'], $m);
-    $this->action = $m[1];
-    debug("action:",  $this->action);
+		$this->action = $m[1];
+		debug("action:",  $this->action);
 
 		$smarty->assign("ACTION", $this->action);
 		$smarty->assign("LANG", $lang);
 		$smarty->assign("loggedIn", $this->loggedIn());
 		if($user->isEditor())
 		  $smarty->assign("IS_EDITOR", '1');
-		$smarty->assign("STATION_MANAGER", sotf_Permission::get("station_manager"));
+		////$smarty->assign("STATION_MANAGER", sotf_Permission::get("station_manager"));
 		if($debug) {
 		  $smarty->assign("VIEWLOG", $this->logURL());
 		}

@@ -1,14 +1,16 @@
-<?php //-*- tab-width: 3; indent-tabs-mode: 1; -*-
+<?php 
+//-*- tab-width: 3; indent-tabs-mode: 1; -*-
+// $Id$
 
-require($classdir . '/sotf_Base.class.php');
-require($classdir . '/sotf_RepBase.class.php');
-require($classdir . '/sotf_Node.class.php');
-require($classdir . '/sotf_Neighbour.class.php');
-require($classdir . '/sotf_Station.class.php');
-require($classdir . '/sotf_Series.class.php');
-require($classdir . '/sotf_Programme.class.php');
-require($classdir . '/sotf_PrgList.class.php');
-require($classdir . '/sotf_Metadata.class.php');
+require_once($classdir . '/sotf_NodeObject.class.php');
+require_once($classdir . '/sotf_NodeObjectWithPerm.class.php');
+require_once($classdir . '/sotf_Node.class.php');
+require_once($classdir . '/sotf_Neighbour.class.php');
+require_once($classdir . '/sotf_Station.class.php');
+require_once($classdir . '/sotf_Series.class.php');
+require_once($classdir . '/sotf_Programme.class.php');
+//require_once($classdir . '/sotf_PList.class.php');
+//require_once($classdir . '/sotf_Metadata.class.php');
 
 class sotf_Repository {
 
@@ -16,12 +18,10 @@ class sotf_Repository {
 									"sotf_nodes" => "no",
 									"sotf_contacts" => "co",
 									"sotf_stations" => "st",
-									"sotf_station_roles" => "sr",
+									"sotf_roles" => "sr",
 									"sotf_series" => "se",
-									"sotf_series_roles" => "rr",
 									"sotf_programmes" => "pr",
 									"sotf_rights" => "ri",
-									"sotf_prog_roles" => "pp",
 									"sotf_extradata" => "ed",
 									"sotf_other_files" => "of",
 									"sotf_media_files" => "mf",
@@ -36,7 +36,7 @@ class sotf_Repository {
 									"sotf_prog_rating" => "ra",
 									"sotf_refs" => "re",
 									"sotf_stats" => "sx"
-									)
+									);
 
   var $rootdir;
   var $db;
@@ -50,7 +50,7 @@ class sotf_Repository {
     $this->rootdir = $rootDir;
     $this->db = $db;
 	 // load roles
-	 $this->roles = $db->getAll("SELECT id, name FROM sotf_roles WHERE language='$lang'");
+	 $this->roles = $db->getAll("SELECT id, name FROM sotf_role_names WHERE language='$lang'");
 	 // load genres
 	 $this->genres = $db->getAll("SELECT id, name FROM sotf_genres WHERE language='$lang'");
   }
@@ -83,19 +83,6 @@ class sotf_Repository {
 	 return $this->genres[$id];
   }
 
-
-
-
-  /*
-
-  function getStation($id) {
-    return new sotf_Station($id);
-  }
-
-  function getSeries($id) {
-    return new sotf_Series($id);
-  }
-  */
 
   ////////////// SYNC support /////////////////////////////////////////////
 

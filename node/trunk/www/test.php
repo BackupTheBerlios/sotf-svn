@@ -1,8 +1,8 @@
 <?php
 require("init.inc.php");
 
-//$st = $repository->getStation('liza');
-//$st->debug();
+$st = new sotf_Station();
+$st->hasPermission('create');
 //$st->set('description', 'bla-bla');
 //$st->save();
 

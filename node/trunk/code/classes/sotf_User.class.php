@@ -217,14 +217,14 @@ class sotf_User
 		{
 			$user = new sotf_User($name);
 			$userdb->query("UPDATE user_preferences SET num_logins=num_logins+1, last_visit='" . db_Wrap::getSQLDate() . "' WHERE auth_id='" . $user->id . "' ");
-			$_SESSION['username'] = $user->name;
+			$_SESSION['userid'] = $user->id;
 		}
 	}
 	
   function logout() {
     global $user;
     $user = '';
-    $_SESSION['username'] = '';
+    $_SESSION['userid'] = '';
   }
 
 	function listUsers() {

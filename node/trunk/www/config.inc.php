@@ -29,7 +29,10 @@ $mailFromAddress = "micsik@dsd.sztaki.hu";
 //////////////////////////////////////////////////////////////////////////
 
 // id of this node in the node network
-$nodeId = "HU1";
+$nodeId = "1";
+
+// the short name of this node in the network
+$nodeName = "HU1";
 
 // the description of this node
 $nodeDesc = "This is the first Nigerian node.";

@@ -142,14 +142,15 @@ require($smartydir . '/Config_File.class.php');
 require($classdir . '/db_Wrap.class.php');
 require($classdir . '/error_Control.class.php');
 require($classdir . '/sotf_Utils.class.php');
-require($classdir . '/sotf_User.class.php');
-require($classdir . '/sotf_Page.class.php');
-require($classdir . '/sotf_Permission.class.php');
-require($classdir . '/sotf_Id.class.php');
-require($classdir . '/sotf_Vars.class.php');
-require($classdir . '/sotf_Repository.class.php');
 require($classdir . '/sotf_FileList.class.php');
 require($classdir . '/sotf_AudioCheck.class.php');
+require($classdir . '/sotf_User.class.php');
+require($classdir . '/sotf_Page.class.php');
+require($classdir . '/sotf_Object.class.php');
+//require($classdir . '/sotf_Permission.class.php');
+//require($classdir . '/sotf_Id.class.php');
+require($classdir . '/sotf_Vars.class.php');
+require($classdir . '/sotf_Repository.class.php');
 
 //PEAR::setErrorHandling(PEAR_ERROR_TRIGGER);
 //PEAR::setErrorHandling(PEAR_ERROR_DIE);
@@ -163,6 +164,8 @@ function addError($msg) {
 
 function raiseError($msg) {
   global $errorControl;
+  if(DB::isError($msg)) 
+    $msg = "SQL error: " . $msg->getMessage();
   debug("raised error", $msg);
   $errorControl->raise($msg);
 }

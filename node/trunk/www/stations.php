@@ -1,4 +1,6 @@
 <?php
+// -*- tab-width: 3; indent-tabs-mode: 1; -*-
+// $Id$
 
 require("init.inc.php");
 
@@ -11,7 +13,7 @@ $addstationmanager = sotf_Utils::getParameter('addstationmanager');
 $delstationmanager = sotf_Utils::getParameter('delstationmanager');
 $username = sotf_Utils::getParameter('username');
 
-if (sotf_Permission::get('station_manager'))
+if (sotf_Node::hasPermission('create'))
 {
 	if ($new)
 	{
@@ -67,7 +69,7 @@ if (sotf_Permission::get('station_manager'))
 		$smarty->assign('USERS',$users);
 	}
 }
-$stations = sotf_Station::listStations();
+$stations = sotf_Station::listAll();
 
 for($i=0; $i<count($stations); $i++)
 {

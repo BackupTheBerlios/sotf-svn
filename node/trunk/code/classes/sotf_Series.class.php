@@ -7,7 +7,7 @@
 *
 * @author Andras Micsik SZTAKI DSD micsik@sztaki.hu
 */
-class sotf_Series extends sotf_RepBase {		
+class sotf_Series extends sotf_NodeObject {		
 
   var $roles;
 

@@ -6,7 +6,7 @@
  * Author: Alexey Koulikov - alex@pvl.at, alex@koulikov.cc
  ************/
 
-class sotf_Programme extends sotf_RepBase {
+class sotf_Programme extends sotf_NodeObject {
   
   var $topics;
   var $listenTotal;
@@ -202,15 +202,12 @@ class sotf_Programme extends sotf_RepBase {
   }
 
   /** get news for index page */
-  function getNewProgrammes($local, $fromDay, $maxItems) {
+  function getNewProgrammes($fromDay, $maxItems) {
     global $nodeId, $db;
-    $comp = '!=';
-    if($local)
-      $comp = '=';
-    $sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE i.station=s.station AND s.node $comp '$nodeId' AND i.published='t' AND i.entry_date >= '$fromDay' ORDER BY i.last_change DESC";
+    $sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE i.station_id = s.id AND i.published='t' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC";
     $res =  $db->limitQuery($sql, 0, $maxItems);
     if(DB::isError($res))
-      raiseError($res->getMessage());
+      raiseError($res);
     $results = null;
     while (DB_OK === $res->fetchInto($row)) {
       $results[] = new sotf_Programme($row['id'], $row);
@@ -218,6 +215,8 @@ class sotf_Programme extends sotf_RepBase {
     return $results;
   }
 
+
+  // fix this!
   function myProgrammes($owner) {
     global $db;
     $sql = "SELECT * FROM sotf_programmes WHERE owner = '$owner' ORDER BY title, id";
@@ -443,7 +442,11 @@ class sotf_Programme extends sotf_RepBase {
   }
 */
 
-  function numProgrammes() {
+  /**
+   * @method static countAll
+   * @return count of available objects
+  */
+  function countAll() {
     global $db;
     return $db->getOne("SELECT count(*) FROM sotf_programmes WHERE published='t'");
   }
