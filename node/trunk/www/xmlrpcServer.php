@@ -125,7 +125,7 @@ function getQueryResults($params)
 	foreach($results as $key => $result)
 	{
 		$icon = sotf_Blob::cacheIcon($result['id']);
-		$results[$key]['icon'] = $config['cacheUrl']."/".$result['id'].".png";
+		if ($icon) $results[$key]['icon'] = $config['cacheUrl']."/".$result['id'].".png";
 		//TODO if no icon {$IMAGEDIR}/noicon.png $imageprefix????
 
 		$prg = & new sotf_Programme($result['id']);
@@ -173,7 +173,7 @@ function getProgrammes($params)
 	{
 //		debug("------------>".$result['id']."<------------------");
 		$icon = sotf_Blob::cacheIcon($result['id']);
-		$results[$key]['icon'] = $config['cacheUrl']."/".$result['id'].".png";
+		if ($icon) $results[$key]['icon'] = $config['cacheUrl']."/".$result['id'].".png";
 		//TODO if no icon {$IMAGEDIR}/noicon.png $imageprefix????
 
 		$prg = & new sotf_Programme($result['id']);
