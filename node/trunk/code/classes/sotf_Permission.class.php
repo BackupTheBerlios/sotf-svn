@@ -13,6 +13,7 @@
 class sotf_Permission
 {
 
+  var $debug = false;
   var $currentPermissions;
 
   function sotf_Permission() {
@@ -30,8 +31,8 @@ class sotf_Permission
     while(list(,$row) = each($permtable)) {
       $permissions[$row["object_id"]][] = $row["permission"];	// object permission
     }
-    if($debug) {
-      debug("current permissions");
+    if($this->debug) {
+      error_log("current permissions",0);
       if(count($permissions) > 0) {
         foreach($permissions as $key => $value) {
           error_log("PERMISSION: $key = " . join(' ',$value),0);

@@ -10,7 +10,7 @@ $smarty->assign('CONTACT_ID',$contactId);
 $smarty->assign('CONTACT_NAME',$contact->get('name'));
 $smarty->assign('CONTACT_DATA',$contact->getAllWithIcon());
 
-$limit = $page->splitList($contact->countProgrammes(), "$php_self");
+$limit = $page->splitList($contact->countProgrammes(), myGetenv('REQUEST_URI'));
 $progs = $contact->listProgrammes($limit["from"] , $limit["maxresults"]);
 
 for($i=0; $i<count($progs); $i++) {

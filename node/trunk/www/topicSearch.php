@@ -1,9 +1,12 @@
 <?php
 require("init.inc.php");
-$ID = sotf_Utils::getParameter('ID');
-$NAME = sotf_Utils::getParameter('NAME');
 
-$NAME = $repository->getTopicName($ID);
+$ID = sotf_Utils::getParameter('ID');
+//$NAME = sotf_Utils::getParameter('NAME');
+
+if($ID) {
+     $NAME = $repository->getTopicName($ID);
+}
 
 // TODO: garbage collect :-)
 
@@ -15,8 +18,7 @@ $query="SELECT * FROM (".
 	" (programmes.id = sotf_prog_topics.prog_id".
 	" and sotf_prog_topics.topic_id = '$ID')";
 
-$max = $db->getAll("SELECT count(*) FROM (".$query.") as count");	//get the number of results
-$max = $max[0]["count"];
+$max = $db->getOne("SELECT count(*) FROM (".$query.") as count");	//get the number of results
 
 $limit = $page->splitList($max, "$php_self?ID=$ID");
 //$result = $db->limitQuery($query, $limit["from"], $limit["maxresults"]);				//get results with limit
