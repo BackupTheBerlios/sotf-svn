@@ -19,7 +19,6 @@ Explanation:
   - 'ACTION.htm' template is included into 'main.htm' 
 
 - after init.inc.php is included, you have the following global objects:
-  - $errorControl: instance of error_Control class: for collecting errors during execution
   - $db: instance of db_Wrap class: to access the node database
   - $userdb: instance of db_Wrap class: to access the user database (SADM)
   - $page: instance of sotf_Page class: helps in handling HTTP request and sending result

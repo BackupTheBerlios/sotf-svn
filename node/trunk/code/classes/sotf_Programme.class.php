@@ -505,6 +505,17 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     return $plist;
   }
 
+  /** private: strips newlines, truncates, etc. metadata fields in XBMF */
+  function normalizeText($text, $length=0) {
+    $text = str_replace("\r","", $text);
+    $text = str_replace("\n"," ", $text);
+    if($length) {
+      if(strlen($text) > $length)
+        $text = substr($text, 0, $length-3) . '...';
+    }
+    return $text;
+  }
+
   /** static: import a programme from the given XBMF archive */
   function importXBMF($fileName, $publish=false) {
     global $db, $xbmfInDir, $permissions, $repository;
@@ -526,7 +537,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	  if(!$myPack->error){		//if the file has been found
       $metadata = $myPack->process();
     }
-		
 		
 		if(!$metadata or $myPack->error){ //errors during import - stop execution
 			sotf_Utils::delete($pathToFile . $folderName);
@@ -604,21 +614,25 @@ class sotf_Programme extends sotf_ComplexNodeObject {
      */
 
     // basic metadata
-    $newPrg->set('title', $metadata['title']['basetitle']);
-    $newPrg->set('alternative_title', $metadata['title']['alternative']);
-    $newPrg->set('episode_title', $metadata['title']['episodetitle']);
-    $newPrg->set('episode_sequence', $metadata['title']['episodesequence']);
-    $newPrg->set('abstract', $metadata['description']);
-    //$newPrg->set('???', $metadata['subject']);
+    $newPrg->set('title', sotf_Programme::normalizeText($metadata['title']['basetitle'],255));
+    $newPrg->set('alternative_title', sotf_Programme::normalizeText($metadata['title']['alternative'],255));
+    $newPrg->set('episode_title', sotf_Programme::normalizeText($metadata['title']['episodetitle'],255));
+    $newPrg->set('episode_sequence', sotf_Programme::normalizeText($metadata['title']['episodesequence']));
+    $newPrg->set('abstract', sotf_Programme::normalizeText($metadata['description']));
     
     $newPrg->set("production_date", date('Y-m-d', strtotime($metadata['created'])));
     $newPrg->set("broadcast_date", date('Y-m-d', strtotime($metadata['issued'])));
     $newPrg->set("modify_date", date('Y-m-d', strtotime($metadata['modified'])));
-		$newPrg->set("genre_id", $db->getOne("SELECT genre_id FROM sotf_genres WHERE name = '$metadata[subject]'"));
 
-    // type...
+    // subject ???
+    //$newPrg->set('???', $metadata['subject']);
+
     $newPrg->set('language', $metadata['language']);
-	
+    if($metadata['language']=='German')
+      $newPrg->set('language','de');
+    if($metadata['language']=='English')
+      $newPrg->set('language','en');
+
     $newPrg->update();
 		
 		// topic
@@ -671,35 +685,60 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }//end func
 
   /** static: create contact record from metadata */
-  function importContact($cdata, $roleSel, $prgId, $station) {
-    global $permissions;
+  function importContact($contactData, $contactRole, $prgId, $station) {
+    global $permissions, $repository;
 
-    // TODO: check if exists...
-    $contact = new sotf_Contact();
-    $name = $cdata['organizationname'];
-    if(!$name) $name = $cdata['lastname'];
-    $status = $contact->create($name);
-    if(!$status) {
-      //$page->addStatusMsg('contact_create_failed');
+    // find out what should go into the 'name' field
+    if($contactData['type']=='organisation') {
+      $name = $contactData['organizationname'];
+    } elseif($contactData['type']=='individual') {
+      $name = $contactData['firstname'] . ' ' . $contactData['lastname'];
+    } else {
+      logError("unknown type of contact: " . $contactData['type']);
       return null;
     }
-    // add permissions for all station admins (??)
-    $admins = $permissions->listUsersWithPermission($station->id, 'admin');
-    while(list(, $admin) = each($admins)) {
-      $permissions->addPermission($contact->id, $admin['id'], 'admin');
+
+    // if not exists, create new contact
+    $id = sotf_Contact::findByNameLocal($name);
+    if(!$id) {
+      $contact = new sotf_Contact();
+      $status = $contact->create($name);
+      if(!$status) {
+        //$page->addStatusMsg('contact_create_failed');
+        return null;
+      }
+      // add permissions for all station admins (??)
+      $admins = $permissions->listUsersWithPermission($station->id, 'admin');
+      while(list(, $admin) = each($admins)) {
+        $permissions->addPermission($contact->id, $admin['id'], 'admin');
+      }
+    } else {
+      $contact = new sotf_Contact($id);
     }
-    $contact->set('email', $cdata['email']);
-    $contact->set('url', $cdata['uri']);
-    $contact->set('address', $cdata['address']);
-    // TODO: more fields....
+
+    // set/update contact data
+    $contact->set('acronym', $contactData['organizationacronym']);
+    $contact->set('alias', $contactData['alias']);
+    $contact->set('url', $contactData['uri']);
+    $contact->set('email', $contactData['email']);
+    $contact->set('address', $contactData['address']);
+    $contact->set('url', $contactData['uri']);
+    // logo not handled yet as no need for TMW
     $contact->update();
 
+    // determine role
+    if($contactData['role']) {
+      $language = 'en'; // for now
+      $rid = $repository->getRoleId($contactData['role'], $language);
+      if($rid)
+        $contactRole = $rid;
+    }
     // create role
-    if(!sotf_ComplexNodeObject::findRole($prgId, $contact->id, $roleSel)) {
+    if(!sotf_ComplexNodeObject::findRole($prgId, $contact->id, $contactRole)) {
       $role = new sotf_NodeObject("sotf_object_roles");
       $role->set('object_id', $prgId);
       $role->set('contact_id', $contact->id);
-      $role->set('role_id', $roleSel);
+      $role->set('role_id', $contactRole);
       $role->create();
     }
 

@@ -1,6 +1,23 @@
 <?php
 require("init.inc.php");
 
+require_once($classdir . '/unpackXML.class.php');
+
+$myPack = new unpackXML("$basedir/metasample.txt");	
+
+if(!$myPack->error){		//if the file has been found
+  $metadata = $myPack->process();
+}
+		
+
+			echo "<pre>";
+			print_r($metadata);
+			echo "</pre>";
+	
+    //dump($metadata, "METADATA");
+
+exit;
+
 sotf_Programme::importXBMF("$xbmfInDir/test.xbmf");
 
 

@@ -301,7 +301,7 @@ class sotf_Page
 	function splitList($rp_count, $rp_url, $anchor = "")
 	{
 		global $smarty, $sotfVars;
-		$rp_maxresults = $sotfVars->get("hitsPerPage", 30);		//display maximal so many results
+		$rp_maxresults = $sotfVars->get("hitsPerPage", 10);		//display maximal so many results
 		//$rp_maxresults = 2;
 		$rp_from = sotf_Utils::getParameter('rp_from');
 		

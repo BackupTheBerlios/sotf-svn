@@ -13,7 +13,7 @@ class db_Wrap extends DB_pgsql {
   var $debug = false;
 
   /** When debug is on, logged query texts will be truncated to this length. */
-  var $traceLength = 350;
+  var $traceLength = 500;
 
   /*
 	function getDBConn($dsn, $persistent) {

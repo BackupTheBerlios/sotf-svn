@@ -260,6 +260,12 @@ class sotf_Repository {
     return "UNKNOWN_ROLE";
   }
 
+  function getRoleId($name, $language) {
+    $name = sotf_Utils::magicQuotes($name);
+    $language = sotf_Utils::magicQuotes($language);
+    return $this->db->getOne("SELECT role_id FROM sotf_role_names WHERE name='$name' AND language='$language'");
+  }
+
   function getRoles() {
 		return $this->roles;
   }

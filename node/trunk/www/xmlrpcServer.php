@@ -24,6 +24,7 @@ debug("--------------- XML-RPC SERVER STARTED ----------------------------------
 
 $map['sotf.sync'] = array('function' => 'syncResp');
 $map['portal.query'] = array('function' => 'getQueryResults');
+$map['portal.playlist'] = array('function' => 'getProgrammes');
 //$map['sotf.allIds'] = array('function' => 'allIds');
 //$map['sotf.getById'] = array('function' => 'getById');
 //$map['sotf.ref'] = array('function' => 'itemReference');
@@ -90,6 +91,32 @@ function getProgrammes($params)
 {
 	global $classdir, $db, $rootdir, $cacheprefix;
 	$prglist = xmlrpc_decode($params->getParam(0));
+
+	$query="SELECT programmes.* FROM (";
+	$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription, sotf_prog_rating.rating_value as rating FROM sotf_programmes";
+	$query.=" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id";
+	$query.=" LEFT JOIN sotf_series ON sotf_programmes.series_id = sotf_series.id";
+	$query.=" LEFT JOIN sotf_prog_rating ON sotf_programmes.id = sotf_prog_rating.id";
+	$query.=") as programmes WHERE published = 't'";
+
+	$results = array();
+
+	foreach($prglist as $prg)
+	{
+//		debug("------------>".$prg."<------------------");
+//		debug("------------>".$query." AND id = '$prg'<------------------");
+		$results[] = $db->getRow($query." AND id = '$prg'");
+	}
+
+	foreach($results as $key => $result)
+	{
+//		debug("------------>".$result['id']."<------------------");
+		$icon = sotf_Blob::cacheIcon($result['id']);
+		$results[$key]['icon'] = $cacheprefix."/".$result['id'].".png";
+		//TODO if no icon {$IMAGEDIR}/noicon.png $imageprefix????
+	}
+	$retval = xmlrpc_encode($results);
+	return new xmlrpcresp($retval);
 }
 
 stopTiming();
