@@ -123,7 +123,7 @@ class sotf_Node extends sotf_NodeObject {
 		 debug("number of sent objects", count($modifiedObjects));
 		 $objectsSent = $objectsSent + count($modifiedObjects);
 		 $objs = array($chunkInfo, $modifiedObjects);
-		 $response = $rpc->call($url . '/xmlrpcServer.php', 'sotf.forward', $objs);
+		 $response = $rpc->call($url . "/xmlrpcServer.php/forward/$thisChunk", 'sotf.forward', $objs);
 		 // error handling
 		 if(is_null($response)) {
 			$db->rollback();

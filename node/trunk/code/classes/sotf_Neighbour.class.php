@@ -147,7 +147,7 @@ class sotf_Neighbour extends sotf_Object {
 		debug("number of sent objects", count($modifiedObjects));
 		$objectsSent = $objectsSent + count($modifiedObjects);
 		$objs = array($chunkInfo, $modifiedObjects);
-		$response = $rpc->call($url . '/xmlrpcServer.php', 'sotf.sync', $objs);
+		$response = $rpc->call($url . "/xmlrpcServer.php/sync/$thisChunk", 'sotf.sync', $objs);
 		// error handling
 		if(is_null($response)) {
 		  $this->set('errors', $this->get('errors')+1);
