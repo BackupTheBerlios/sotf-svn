@@ -583,6 +583,8 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		{
 			require_once("../init.inc.php");
 
+			$db->begin();
+
 			// create roles
 			
 			$db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
@@ -695,7 +697,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 								  'shortname' => 'SOTF general',
 								  'description' => "An attempt to create a general subject tree for radios."
 								  );
-			$repository->importTopicTree($treedata, files($config['baseDir']."/code/doc/topictree_sotf.txt");
+			$repository->importTopicTree($treedata, file($config['basedir']."/code/doc/topictree_sotf.txt"));
 
 			$treedata= array('tree_id' => 2,
 								  'name' => 'SOMA Metadata version 1',
@@ -703,11 +705,13 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 								  'url', 'http://soma-dev.sourceforge.net/',
 								  'description' => "The Shared Online Media Archive initiative gave a topic tree for its metadata definition. It is provided as an alternative topic tree here."
 								  );
-			$repository->importTopicTree($treedata, files($config['baseDir']."/code/doc/topictree_soma.txt");
+			$repository->importTopicTree($treedata, file($config['basedir']."/code/doc/topictree_soma.txt"));
 
 			$result = $db->query("SELECT setval('sotf_topics_seq', ". $config['nodeId'] . "000, false)");
 			$result = $db->query("SELECT setval('sotf_topic_trees_seq', ". $config['nodeId'] . "000, false)");
 			$result = $db->query("SELECT setval('sotf_topic_tree_defs_seq', ". $config['nodeId'] . "000, false)");
+
+			$db->commit();
 
 		}
 		if (isset($install_delete_topic))

@@ -307,7 +307,7 @@ class sotf_Repository {
   }
 
   function getDefaultTreeId() {
-	 return 2;
+	 return 1;
   }
 
   function getTopicTreeRoot($treeId = '') {
@@ -375,6 +375,75 @@ class sotf_Repository {
 	 return $list;
   }
 
+  
+
+  function importTopicTree($treedata, $lines) {
+	 
+	 $treeId = $treedata['tree_id'];
+
+	 // create tree def
+	 $o1 = & new sotf_NodeObject("sotf_topic_trees");
+	 $o1->set('tree_id', $treeId);
+	 $o1->set('name', $treedata['shortname']);
+	 $o1->set('languages', 'en');
+	 $o1->create();
+
+	 // create root description
+	 $x = new sotf_NodeObject("sotf_topic_tree_defs");
+	 $x->set('supertopic', 0);
+	 $x->set('name', $treedata['name']);
+	 $x->set('tree_id', $treeId);
+	 $x->create();
+	 $rootId = $x->getID();
+	 // create root translation
+	 $y = new sotf_NodeObject("sotf_topics");
+	 $y->set('topic_id', $rootId);
+	 $y->set('language', 'en');
+	 $y->set('topic_name', $treedata['name']);
+	 $y->set('description', $treedata['description']);
+	 $y->create();
+	 
+	 $parentId = $rootId;
+	 $prevId = $rootId;
+	 $level = 0;
+	 
+	 reset($lines);
+	 while(list(,$line) = each($lines)) {
+		if(preg_match('/^\s*$/', $line) || preg_match('/^#/', $line))
+		  continue;
+		if(!preg_match('/^\s*(\d+)\s+(\d+)\s+(.*)/', $line, $items)) {
+		  logError("bad line syntax: $line");
+		  continue;
+		}
+		//$items = preg_split('/\s+/', $line, PREG_SPLIT_NO_EMPTY);
+		debug("tree items", $items);
+		$id = $items[1];
+		$l = $items[2];
+		$name = $items[3];
+		if($level < $l) {
+		  $roots[] = $parentId;
+		  $parentId = $prevId;
+		}
+		if($level > $l) {
+		  $parentId = array_pop($roots);
+		}
+		$level = $l;
+		debug("", "LEVEL: $level, PARENT: $parentId, ROOTS: " . join(",", $roots));
+		$x = new sotf_NodeObject("sotf_topic_tree_defs");
+		$x->set('supertopic', $parentId);
+		$x->set('name', $name);
+		$x->set('tree_id', $treeId);
+		$x->create();
+		$id = $x->getID();
+		$y = new sotf_NodeObject("sotf_topics");
+		$y->set('topic_id', $id);
+		$y->set('language', 'en');
+		$y->set('topic_name', $name);
+		$y->create();
+		$prevId = $id;
+	 }
+  }
+  
   /************************************************
    *      ROLES
    ************************************************/
