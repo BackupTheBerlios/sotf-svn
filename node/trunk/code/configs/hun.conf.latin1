@@ -1,0 +1,1023 @@
+# general translations
+ok = Rendben
+cancel = Mégsem
+Save = Elment
+Date = Dátum
+Station = Rádió
+Change = Megváltoztat
+close = Bezár
+Search = Keresés
+node = Csomópont
+Yes = Igen
+No = Nem
+Up = Fel
+Down = Le
+Preferences = Beállítások
+Username = Felhasználó neve
+Password = Jelszó
+More = Még...
+sec = s
+optional = opcionális
+Metadata = Metaadatok
+
+# stream info
+# name for stream mountpoint
+playlist_name = lista
+now_playing = Most szól
+reconnect = Újra csatlakozás
+stop = Stop
+jingle = szignál
+unknown_audio = ismeretlen audió
+
+# languages
+alb = albán
+eng = angol
+deu = német
+dut = holland
+hun = magyar
+ita = olasz
+esl = spanyol
+ces = cseh
+slo = szlovák
+pol = lengyel
+fra = francia
+rum = román
+rom = roma
+rus = orosz
+any_language = bármely nyelv
+no_lang = nincs megadva
+no_second_lang = Nincs 2. nyelv
+no_third_lang = Nincs 3. nyelv
+
+#navigation bar
+Home = Címlap
+Help = Súgó
+About = Névjegy
+Playlist = Kedvenceim
+Personal = Beállításaim
+Logout = Kilépés
+Login = Belépés
+Register = Regisztráció
+EditorPage = Szerkesztõknek
+AdminPage = Admin
+advSearch = Részletes keresés
+Stations = Rádiók
+Topics = Témák
+
+#permissions
+perm_admin = Tulaj
+perm_change = Változtatás
+perm_create = Létrehozás
+perm_delete = Törlés
+perm_authorize = Felhatalmazás
+
+#this is needed for the XML-RPC server
+comment_notification_subject = Megjegyzés érkezett a mûsorodhoz
+
+#error window
+or = vagy
+errors_occured = Hiba:
+error_exclaim = A hibát naplóztuk. További lehetõségeid:
+error_go_back = Vissza az elózó lapra.
+error_go_safe_page = Vissza egy biztonságos lapra.
+error_go_home = Vissza a címlapra.
+error_close = Ablak bezárása.
+
+#common errors
+invalid_url = Hibás URL.
+not_an_image = E választot fájlt nem sikerült képként értelmezni.
+not_a_number = Ez nem szám.
+select_file = Válasszon egy fájlt!
+format_already_present = Ez a formátum már létezik, kérjük törölje elõbb!
+no_such_file = Ilyen fájl nem létezik.
+cannot_rate_no_authkey = Értékelésed nem tudjuk elfogadni, mivel nem engedélyezted a cookie (süti) használatát.
+no_file_to_listen = Nincs olyan audió, amelynek hallgatása engedélyezve lenne.
+conversion_not_supported = Ez a fajta audió konverzió pillanatnyilag nincs támogatva.
+audio_length_no_match = Ennek a hanganyagnak a hossza különbözik az eddig tárolt hanganyagok hosszától.
+no_permission = Ehhez '%1' jogosultságra lenne szükséged!
+conversion_failed = Az auidó konverzió nem sikerült.
+operation_for_local_objects_only = Ez a mûvelet csak lokális objektumokon engedélyezett.
+no_such_object = Nincsen ilyen azonosítójú objektum az adatbázisban
+
+confirm_unsaved = Ezen az oldalon elmentetlen információk vannak. Ha igent válaszol, ezek elvesznek. Nyomja meg a nem és mentés gombokat mielõtt továbblépne.
+
+#list splitting
+of = összes:
+refresh = Frissít
+first = Eleje
+prev = Elõzõ
+next = Következõ
+last = Vége
+to = -
+no_results = Üres lista
+
+# translations for database field names
+station = Rádió neve
+production_date = Készítés dátuma
+language = Nyelv
+expiry_date = Lejárat
+series = Sorozat
+track = Track
+topic = Téma
+entry_date = Érkezett
+broadcast_date = Adás dátuma
+modify_date = Módosítás dátuma
+owner = Tulajdonos
+person = Személy
+title = Cím
+keywords = Kulcsszavak
+abstract = Kivonat
+length = Hossz
+rating = Értékelés
+contact_email = E-mail cím
+contact_phone = Telefon
+seriestitle = Sorozatcím
+seriesdescription = Sorozat leírás
+spatial_coverage = Társítható helyszín
+temporal_coverage = Társítható idópont
+genre_id = Mûfaj
+alternative_title = Alcím
+episode_title = Epizódcím
+
+# audio conversion messages
+conversion_started = Konvertálás:
+encoding_mp3 = Konvertálás MP3 formába...
+decoding_mp3 = MP3-ból PCM készítés...
+encoding_ogg = Konvertálás OGG formába...
+decoding_ogg = OGG-ból PCM készítés...
+convert_mono = Mono PCM-bõl sztereó készítése...
+
+[rss]
+Statistics = Statisztika
+Rights = Jogok
+for_whole_prg = Az egész mûsorra
+listen = Meghallgatás
+listen_as = Meghallgatás
+download_as = Letöltés
+no_rat = értékelés
+station = Rádió
+series = Sorozat
+title = Cím
+alternative_title = Alcím
+episode_title = Epizódcím
+episode_sequence = Epizód sorszám
+Links = Ugrópontok
+
+[search]
+Results = Találatok
+No_results = Nincs találat
+
+[topics]
+topics_title = Témák
+
+[index]
+intro = Üdvözöljük a StreamOnTheFly honlapján! Ez a nemzetközi hálózat közösségi rádiók mûsorait archiválja.
+Login_tab = Bejelentkezés
+logged_in_as = Az Ön felhasználó neve:
+Go = Kiválaszt
+my_playlist = Kedvenceim
+
+statistics = Statisztika
+nodes = csomópont
+stations = rádióadó
+progs = mûsor
+mb_of_audio = MB hanganyag
+hours_of_audio = órányi hanganyag
+listens_and_downloads = letöltés vagy meghallgatás
+users = regisztrált felhasználó
+
+contacts = Kapcsolat
+contacts_text = <a target="_blank" href="http://www.streamonthefly.com">StreamOnTheFly projekt</a><br><a target="_blank" href="http://dsd.sztaki.hu">MTA SZTAKI DSD</a>
+
+recent_uploads = Friss anyagok
+topics = Témák
+top_topics = A leggyakoribb témák
+New_shows = Friss anyagok
+No_news = Nincs új anyag a hálózatban
+Default_query = Alapértelmezett keresésének eredménye:
+No_results = Nincs találat
+total = összesen:
+
+[stations]
+admin_tasks = Adminisztrátori feladatok:
+create_station = Új rádió felvétele
+newest_first = Legfrissebb legelöl
+by_name = Név szerint rendezve
+change_mode = Rendezés/szûrés megváltoztatása
+logo = logo
+languages = Nyelv(ek):
+add_prg = Mûsorok hozzáadása
+delete = Rádió törlése
+delete_station_confirm = Biztosan törölni akarja ezt a rádiót?
+managed_by = Fõszerkesztõk:
+edit_node_rights = Felhasználói jogok beállítása
+stations = Rádiók
+icon = logo
+edit = Szerkesztés
+no_station = Még nincs egy rádió sem.
+create_ok = A rádió létrehozva.
+delete_ok = A rádió törölve.
+
+[createStation]
+create_station = Új rádió létrehozása
+station_name = Rádió neve
+description = Leírás
+station_manager = Fõszerkesztõ
+create = Hozd létre
+no_permission = Nincs joga új rádiót létrehozni
+userlist = Felhasználók listája
+select_manager = Kérjük írjon be egy létezõ felhasználó nevet fõszerkesztõnek.
+name_in_use = Már van ilyen nevû rádió.
+illegal_name = A rádió neve nem megengedett karaktereket tartalmazott. Ezeket kijavítottuk, kérjök ellenõrizze!
+station_created = Új rádió létrehozva.
+
+[editStation]
+edit_station = Rádió beállításainak megváltoztatása
+general_data = Általános adatok
+station_name = Rádió neve
+url = Weblap (ha van)
+languages = Adás nyelve(i)
+description = Leírás
+save = Mentés
+illegal_name = A rádió neve nem megengedett karaktereket tartalmazott.
+access_permissions = Szerkesztõk és jogosultságok
+Permissions = Jogosultságok
+icons_and_jingles = Ikon és szignál
+username = Felhasználó neve
+permissions = Jogosultságok
+actions = Tevékenységek
+delete = Töröld
+inherited_perms = A rendszer szintekrõl örökölt jogok
+no_perms = Senkinek sincs joga ehhez a rádióhoz (??)
+change_perm = Új jogosultságok hozzáadása
+change = Változtatás
+deleted_permissions_for = Összes jogosultság törölve: %1
+deleted_contact = Névjegy törölve: %1
+ok_icon = A küldött fájl ikonnak beállítva.
+error_icon = Ez a fájl nem lehet ikon.
+ok_jingle = A küldött fájl szignálnak beállítva.
+error_jingle = Ez a fájl nem lehet szignál.
+userfiles = Fájljaim
+userfiles_expl = Innen is választhat ikont vagy szignált.
+upload_file = Feltöltés a fájljaimhoz
+view = Megnéz
+set_jingle = Legyen szignál
+set_icon = Legyen ikon
+no_files = Nincsenek feltöltött fájlok.
+upload_expl = Ha az ikonként vagy szignálként használni kívánt fájl nincs még a fájljai között, itt feltöltheti.
+icon = Ikon
+no_icon = Nincs ikon.
+jingle_list = Szignál lista
+format = Formátum
+bitrate = Bit/s
+channels = Csatornák
+samplerate = Mintavétel
+no_jingle = Nincs szignál
+upload_jingle = Szignál feltöltése
+missing = hiányzik
+exists = rendben
+convert = Generáld a többibõl
+delete = Töröld
+
+# roles and contacts
+Roles = Névjegyek és szerepek
+Role = Szerep
+Contact = Névjegy
+no_roles = Nincs névjegy
+add_new_role = Új szerep hozzáadása
+edit_role = SzerepSzerkesztes
+edit_contact = Névjegy módosítása
+editcontact = NevjegySzerkesztes
+series = Sorozat
+series_title = Cím
+no_series = Nincsenek sorozatok
+add_series = Új sorozat hozzáadása
+
+[createSeries]
+create_series = Új sorozat létrehozása
+Create = Létrehozás
+
+[addToSeries]
+addtoseries = Mûsor sorozathoz rendelése
+Add = Hozzárendelés
+
+[editSeries]
+edit_series = Sorozat beállításainak megváltoztatása
+create_series = Sorozat létrehozása
+general_data = Általános adatok
+title = Cím
+url = Weblap (ha van)
+languages = Adás nyelve(i)
+description = Leírás
+save = Mentés
+illegal_name = A sorozat neve nem megengedett karaktereket tartalmazott.
+icons_and_jingles = Ikon
+
+#perms
+access_permissions = Szerkesztõk és jogosultságok
+Permissions = Jogosultságok
+username = Felhasználó neve
+permissions = Jogosultságok
+actions = Tevékenységek
+delete = Töröld
+inherited_perms = A rádió és rendszer szintekrõl örökölt jogok
+change_perm = Új jogosultságok hozzáadása
+change = Változtatás
+deleted_permissions_for = Összes jogosultság törölve: %1
+deleted_contact = Névjegy törölve: %1
+ok_icon = A küldött fájl ikonnak beállítva.
+error_icon = Ez a fájl nem lehet ikon.
+ok_jingle = A küldött fájl szignálnak beállítva.
+error_jingle = Ez a fájl nem lehet szignál.
+userfiles = Fájljaim
+userfiles_expl = Innen is választhat ikont vagy szignált.
+upload_file = Feltöltés a fájljaimhoz
+view = Megnéz
+set_jingle = Legyen szignál
+set_icon = Legyen ikon
+no_files = Nincsenek feltöltött fájlok.
+upload_expl = Ha az ikonként vagy szignálként használni kívánt fájl nincs még a fájljai között, itt feltöltheti.
+icon = Ikon
+no_icon = Nincs ikon.
+jingle_list = Szignál lista
+format = Formátum
+bitrate = Bit/s
+channels = Csatornák
+samplerate = Mintavétel
+no_jingle = Nincs szignál
+upload_jingle = Szignál feltöltése
+missing = hiányzik
+exists = rendben
+convert = Generáld a többibõl
+delete = Töröld
+
+# roles and contacts
+Roles = Névjegyek és szerepek
+Role = Szerep
+Contact = Névjegy
+no_roles = Nincs névjegy
+add_new_role = Új szerep hozzáadása
+edit_role = SzerepSzerkesztes
+edit_contact = Névjegy módosítása
+editcontact = NevjegySzerkesztes
+
+finish = Mentés és bezárás
+
+[editPermissions]
+change_permissions = Jogosultságok megváltoztatása
+target = Objektum
+user = Felhasználó
+admin = Tulajdonos
+admin_expl = Az összes alábbi jog, sõt...
+change = Módosítás
+change_expl = Módosíthatja az objektumot, pl. a leírást vagy az ikont.
+create = Létrehozás
+create_expl = Üj dolgokat adhat az objektumhoz, pl. üj mûsorokat.
+delete = Törlés
+delete_expl = Törölhet az objektumhoz tartozó dolgokat, pl. mûsorokat.
+authorize = Felhatalmazás
+authorize_expl = Felhasználói jogokat adhat ill. visszavonhat az objektumra vonatkozóan.
+save = Mentés
+self_perm_change_not_allowed = Saját jogaidat nem tudod megváltoztatni.
+
+too_many_matches = Túl sok felhasználót talált
+no_matches = Nem talált ilyen felhasználót
+find_user = Felhasználó keresése
+prefix_search = Szóeleji egyezés
+new_search = Új keresés indítása
+use_template = Jogosultság minta alkalmazása
+owner = tulajdonos
+manager = igazgató
+editor = szerkesztõ
+special_perms = speciális jogok
+
+[editRole]
+edit_role = Szerep beállításai
+change_role = Szerep megváltoztatása
+new_role = Új szerep
+Name = Név
+Role = Szerep
+give_contact_name = Kérjük töltse ki a név mezõt!
+Create_new = Létrehozás
+Change = Módosítás
+Add = Hozzáadás
+role_exists = Ez a névjegy ezzel a szereppel már szerepel az adatbázisban!
+
+how_to_select_contact = Névjegy kiválasztása
+select_scope = A legördülõ lista tartalmának beállítása
+my_scope = általam készített névjegyek
+series_scope = aktuális sorozathoz tartozó névjegyek
+station_scope = aktuális rádióhoz tartozó névjegyek
+local_scope = a csomópont összes névjegye (sok lehet!)
+all_scope = összes névjegy (nagyon sok lehet!)
+change_scope = Változtatás
+search_contact = Keresés a névjegyek között
+search = Keresés
+
+create_new_if_needed = Új névjegy készítése
+no_contacts_found = Nincs ilyen névjegy
+contact_search_for = Névjegy keresés:
+
+
+[createContact]
+create_contact = Új névjegy létrehozása
+contact_name_exists = Ilyen névvel már van névjegy!
+Create = Létrehozás
+Icon = Ikon
+
+[showContact]
+name = Név
+alias = Alias
+acronym = Rövidítés
+intro = Bemutatkozás
+email = E-mail
+address = Cím
+phone = Telefon
+cellphone = Mobil
+fax = Fax
+url = Weblap
+edit_contact = Névjegy módosítása
+has_programs = Közremûködött %1 mûsorban
+#in_station = %1 of station %2 (*)
+#in_series = %1 of series %2 (*)
+of_station = 
+of_series = 
+
+[showContactProgs]
+programs_by = Mûsorok %1 közremûködésével
+contributions = Közremûködött:
+show_contact = Nevjegy
+
+[editContact]
+delete_contact = Névjegy törlése
+delete_contact_confirm = Biztosan törölni akarja ezt a névjegyet? Az ehhez tartozó szerepeket is törölni fogom.
+edit_contact = Névjegy módosítása
+general_data = Általános adatok
+name = Név
+alias = Alias
+acronym = Rövidítés
+intro = Bemutatkozás
+email = E-mail
+address = Cím
+phone = Telefon
+cellphone = Mobil
+fax = Fax
+url = Weblap
+save = Mentés
+userfiles = Fájljaim
+userfiles_expl = Innen is választhat ikont.
+upload_file = Feltöltés a fájljaimhoz
+view = Megnéz
+set_icon = Legyen ikon
+no_files = Nincsenek feltöltött fájlok.
+upload_expl = Ha az ikonként használni kívánt fájl nincs még a fájljai között, itt feltöltheti.
+icon = Ikon
+no_icon = Nincs ikon.
+icon_ok = Az ikont módosítottam.
+icon_error = Nem tudtam lecserélni az ikont.
+finish = Mentés és bezárás.
+
+# perms
+access_permissions = Szerkesztõk és jogosultságok
+Permissions = Jogosultságok
+username = Felhasználó neve
+permissions = Jogosultságok
+actions = Tevékenységek
+delete = Törlés
+inherited_perms = A rádió és rendszer szintekrõl örökölt jogok
+change_perm = Új jogosultságok hozzáadása
+change = Változtatás
+deleted_permissions_for = Összes jogosultság törölve: %1
+
+[showStation]
+persons_involved = Közremûködõk:
+edit_station = Rádió módosítása
+show_contact = Nevjegy
+general = Általános adatok
+station = Rádió
+series = Sorozat
+add_series = Új sorozat
+programmes = Mûsorok
+edit_series = Sorozat módosítása
+delete_series = Sorozat törlése
+delete_series_confirm = Biztosan törölni akarja ezt a sorozatot?
+edit_prog = Módosítás
+delete_prog = Törlés
+delete_prog_confirm = Biztosan törölni akarja ezt a mûsort?
+add_prg = Mûsorok hozzáadása
+
+
+[showSeries]
+show_contact = Nevjegy
+series = Sorozat
+station = Rádió
+general = Általános adatok
+persons_involved = Közremûködõk:
+programmes = Mûsorok
+edit_series = Sorozat módosítása
+edit_prog = Módosítás
+delete_prog = Törlés
+delete_prog_confirm = Biztosan törölni akarja ezt a mûsort?
+add_prg = Mûsorok hozzáadása
+
+[editor]
+will_expire = %1 mûsor lejár (és törlésre kerül) %2 napon belül!
+manage_files = Fájlok kezelése
+managefiles = FajlKezelo
+add_programme = Új mûsorként hozzáad
+user_ftp_access = FTP hozzáférés fájljaimhoz
+upload_file = Feltöltés fájljaimhoz
+select_file = Kérjük válasszon fájlt!
+refresh = Fájllista frissítés
+pending_audio = Hangfájlok, melyekbõl még mûsor lehet
+create_new_prg = Új mûsor létrehozása
+manage_files = Fájlok kezelése
+my_progs = Mûsoraim
+Filter = Szûrés
+sortby = Rendezés
+Flag = Kapcsoló
+Flags = Kapcsolók
+Title_abs = Cím / kivonat
+Station_series = Rádió / sorozat
+Dates = Dátumok
+exp_d = Lejárat
+entry_d = Feltöltés
+Published = Nyilvános
+Stats = Statisztika
+visits = látogatás
+listens = meghallgatás
+downloads = letöltés
+rating = értékelés
+by = 
+Actions = Tevékenységek
+Edit_files = Kapcsolt fájlok
+Edit_meta = Metaadatok
+Delete = Törlés
+delete_prog_confirm = Biztosan törölni akarja ezt a mûsort?
+
+allseries = Összes sorozat
+title = Cím
+series = Sorozat
+station = Rádió
+entry_date = Feltöltés
+expiry_date = Lejárat
+all = Mind
+published = Nyilvános
+unpublished = Rejtett
+urgent = Sürgõs
+todo = ToDo
+cat1 = Egyéb1
+cat2 = Egyéb2
+cat3 = Egyéb3
+cat4 = Egyéb4
+cat5 = Egyéb5
+none = Nincs
+
+submit = Frissítés
+
+export = Exportálás választott formátumban
+get_xbmf = XBMF
+get_soma = SOMA metadata
+
+[test]
+
+[advsearch]
+Advanced_search = Részletes keresés
+after = után
+before = elõtt
+is = egyezik
+contains = tartalmaz
+begins_with = kezdõdik
+does_not_contain = nem tartalmaz
+is_not_equal = nem egyezik
+is_not = nem
+shorter = rövidebb
+longer = hosszabb
+
+your_query_is = A keresõkérdés
+empty = üres
+AND = ÉS
+OR = VAGY
+delete = Tag törlése
+seconds = másodperc
+delete = Tag törlése
+
+box1 = 1. Keresõkérdés összeállítása
+add = Tag hozzáadás
+new_search = Új keresés
+
+box2 = 2. Keresés végrehajtása
+sort1 = Eredmények rendezése
+sort2 = Második rendezési szempont
+run = Keresés
+upload_query = Keresõkérdés feltöltése portálra
+desc = Leírás
+portal_http = Portál cím (pl. http://sotf.dsd.sztaki.hu/portal/portal.php/portal_name)
+URL_missing = Az URL hiányzik!
+
+box3 = 3. Keresõkérdések kezelése
+load = Betöltés
+default = Legyen alapértelmezett
+deleteq = Törlés
+save = Mentsd el ezen a néven
+
+[advsearchresults]
+Results = A keresés eredménye
+by = by (*)
+on_date = on (*)
+No_results = Nincs eredmény
+
+is = =
+contains = tartalmaz
+begins_with = kezdõdik
+does_not_contain = nem tartalmaz
+is_not_equal = nem egyezik
+is_not = nem =
+bigger = > 
+smaller = < 
+
+your_query_is = A keresõkérdés: 
+AND = ÉS
+OR = VAGY
+back = A keresõkérdés módosítása
+
+upload_query = Keresõkérdés feltöltése portálra
+portal_http = Portál cím (pl. http://sotf.dsd.sztaki.hu/portal/portal.php/portal_name)
+
+[portal_upload]
+portal_http = Portál cím (pl. http://sotf.dsd.sztaki.hu/portal/www/portal.php/portal_name)
+URL_not_found = Az URL hiányzik!
+upload = Mûsor feltöltése
+upload_query = Keresõkérdés feltöltése
+upload_playlist = Mûsorok feltöltése
+please_wait = Kérem várjon...
+
+[login]
+missing_parameters = Hiányzó paraméterek
+invalid_login = Érvénytelen bejelentkezés
+
+[register]
+username_in_use = Ezt a nevet már más használja!
+invalid_username = Nem engedélyezett felhasználói név!
+Password_confirm = Jelszó még egyszer
+password_too_short = A jelszó túl rövid.
+password_mismatch = A jelszavak nem egyeznek.
+Realname = Teljes név
+Email = E-mail
+Language = Nyelv
+
+[get]
+not_published_yet = Ez a mûsor még nem nyilvános.
+unpublished_warning = Rejtett
+please_enter = Írja be a mûsor azonosítóját!
+Visits = látogatás (egyedi)
+Listens = meghallgatás (egyedi)
+Downloads = letöltés (egyedi)
+Rating = értékelés (hányan)
+References = Hivatkozó portálok
+Edit = Módosítás
+Content = Tartalom
+Statistics = Visszajelzések, statisztika
+no_references = Nincs hivatkozás
+Comments = Megjegyzések
+From = Mikortól
+Until = Meddig
+Nodes = Hálózat
+Portals = Portálok
+Visits_p = látogatás
+Listens_p = meghallgatás
+
+prog = Mûsor
+station = Rádió
+series = Sorozat
+title = Cím
+alternative_title = Alcím
+episode_title = Epizód cím
+episode_sequence = Epizód sorszám
+author = Szerzõ
+production_date = Készítés dátuma
+broadcast_date = Adás dátuma
+expiry_date = Lejárat dátuma
+modify_date = Utolsó módosítás
+entry_date = Feltöltés dátuma
+keywords = Kulcsszavak
+abstract = Kivonat
+language = Nyelv
+genre = Mûfaj
+temporal_coverage = Kapcsolódó idõpont
+spatial_coverage = Kapcsolódó helyszín
+topics = Témák
+
+Roles = Közremûködõk
+
+Rights = Szerzõi jogok
+no_rights = Nincsenek külön szerzõi jogok megadva ehhez a mûsorhoz
+for_whole_prg = az egész mûsorra
+
+stats_may_be_old = utolsó frissítés
+Download = Letöltés
+Listen = Meghallgatás
+edit_files = Kapcsolt fájlok kezelése
+edit_meta = Metaadatok módosítása
+audio_file_list = Hangfájlok:
+other_file_list = Egyéb fájlok:
+no_files = Nincsenek csatolt fájlok
+bytes = bájt
+View = Megtekintés/letöltés
+viewpopup = Nezegeto
+programme_audio = Mûsor hanganyaga
+
+Links = Ugrópontok
+put_into_playlist = Tedd a kedvenceimhez!
+upload_to_portal = Tedd fel a portálomra!
+rate_it = Értékeld a programot:
+change_rating = Értékelés megváltoztatása
+by = 
+
+[editMeta]
+New_prog_step1 = Új mûsor hozzáadása - 1. lépés
+goto_step1 = Vissza az 1. lépéshez
+editmeta = Metaadatok módosítása
+edit_files = Csatolmányok kezelése
+
+General_metadata = Általános metaadatok
+
+station = Rádió
+series = Sorozat
+not_in_series = nem tartozik sorozathoz
+change_series = Sorozathoz rendelés
+changeseries = Sorozat
+remove_from_series = Sorozatból kivesz
+title = Cím
+alternative_title = Alcím
+episode_title = Epizód cím
+episode_sequence = Epizód sorszám
+author = Szerzõ
+production_date = Készítés dátuma
+broadcast_date = Adás dátuma
+expiry_date = Lejárat dátuma
+modify_date = Utolsó módosítás
+entry_date = Feltöltés dátuma
+keywords = Kulcsszavak
+abstract = Kivonat
+language = Nyelv
+genre = Mûfaj
+temporal_coverage = Kapcsolódó idõpont
+spatial_coverage = Kapcsolódó helyszín
+
+topics = Témák
+no_topics = Téma nincs megadva
+topicpopup = TemaValaszto
+add_topic = Új témához rendelés
+
+finish_not_publish = Befejezés publikálás nélkül
+finish_publish = Befejezés és publikálás
+
+Rights = Jogok
+no_rights = Nincsenek külön jogok megadva
+start_time = Mikortól (s)
+stop_time = Meddig (s)
+rights_text = Jogok
+edit_right = Jogok
+add_new_right = Új jog felvétele
+for_whole_prg = Az egész mûsorra vonatkozóan
+
+general_data = Általános adatok ??
+station_name = Rádió ??
+description = Leírás ??
+save = Fenti adatok mentése
+access_permissions = Jogosultságok megváltoztatása
+Permissions = Jogosultságok
+
+icons_and_jingles = Ikon
+username = Felhasználó neve
+permissions = Jogosultságok
+actions = Tevékenységek
+delete = Töröld
+inherited_perms = A rendszer, rádió és sorozat szintekrõl örökölt jogok
+change_perm = Új jogosultságok hozzáadása
+change = Változtatás
+deleted_permissions_for = Összes jogosultság törölve: %1
+deleted_contact = Névjegy törölve: %1
+ok_icon = A küldött fájl ikonnak beállítva.
+error_icon = Ez a fájl nem lehet ikon.
+userfiles = Fájljaim
+userfiles_expl = Innen is választhat ikont vagy szignált.
+upload_file = Feltöltés a fájljaimhoz
+view = Megnéz
+set_icon = Legyen ikon
+no_files = Nincsenek feltöltött fájlok.
+upload_expl = Ha az ikonként használni kívánt fájl nincs még a fájljai között, itt feltöltheti.
+icon = Ikon
+no_icon = Nincs ikon.
+
+# roles and contacts
+Roles = Névjegyek és szerepek
+Role = Szerep
+Contact = Névjegy
+no_roles = Nincs névjegy
+add_new_role = Új szerep hozzáadása
+edit_role = SzerepSzerkesztes
+edit_contact = Névjegy módosítása
+editcontact = NevjegySzerkesztes
+not_available = Nincs megadva
+no_expiry = Nincs lejárat
+
+[editFiles]
+New_prog_step1 = Új program hozzáadása - 1. lépés
+goto_step2 = Tovább a második lépéshez
+Edit_files = A mûsorhoz kapcsolt fájlok és ugrópontok
+edit_meta = Metaadatok szerkesztése
+Links = Ugrópontok
+filename = Fájlnév
+caption = Leírás
+filesize = Méret
+last_modified = Utoljára módosítva
+play_length = Játékidõ
+stream_access = Streamelhetõ
+download_access = Letölthetõ
+public_access = Nyilvános
+format = Formátum
+mime_type = MIME típus
+url = URL
+actions = Utasítások
+public = Nyilvános
+add_link = Új ugrópont hozzáadása
+no_links = Nincsenek ugrópontok társítva
+change = Módosítás
+delete = Törlés
+change_caption = Leírás módosítása
+add_content = Mûsor hanganyagának feltöltése más formátumban
+add_files = Új fájl társítása
+missing = hiányzik
+convert = Generáld a többibõl
+convert_all = Generáld az összes kötelezõ formátumot
+
+main_audio_count_mismatch = Integritási probléma: eltérés a hangfájlok és az adatbázis között!
+missing_from_sql = A '%1' fájl adatai hiányoznak az adatbázisból.
+
+no_files = Nincsenek fájlok
+no_user_files = Nincsenek feltöltött fájlok
+Prg_files = A mûsor hanganyaga
+Files = Kapcsolt fájlok
+audio_file_list = Hangfájlok
+other_file_list = Egyéb fájlok
+Add_to_audio = &lt;&lt;&lt; Add to audio files &lt;&lt;&lt; (*) ??
+Add_to_other = &lt;&lt;&lt; Add to other files &lt;&lt;&lt; (*) ??
+Add_as_icon = &lt;&lt;&lt; Set as icon &lt;&lt;&lt; (*) ??
+Move_back_to_user = &gt;&gt;&gt; Move back to user files &gt;&gt;&gt; (*) ??
+copy = másolás
+move = mozgatás
+prgfiles = Files of programme (*)
+userfiles = User's files (*)
+select_all = Select all (*)
+deselect_all = Deselect all (*)
+delete_selected = Delete selected (*)
+upload_file = Upload file to user's directory (*) ??
+send_file = Send file (*) ??
+
+[editLink]
+edit_link = Ugrópont módosítása
+url = URL
+caption = Leírás
+public_access = Nyilvános
+save = Mentés
+
+[addFiles]
+add_files = Fájlok kapcsolása
+userfiles = Fájljaim
+userfiles_expl = 
+upload_file = Fájl feltöltés
+add_selected = Kapcsold a kiválasztott fájlokat a mûsorhoz.
+no_files = Nincsenek feltöltött fájlok.
+direct_upload = Közvetlen feltöltés
+upload_expl = Ha kapcsolni kívánt fájl nincs a feltöltött fájlok, itt közvetlenül megadhatja.
+copy_files = Maradjon egy másolat a fájljaim között
+move_files = Fájl mozgatása a mûsor alá
+user_dir_ftp_access = Ftp hozzáférés a fájljaimhoz
+
+[manageFiles]
+manage_files = Fájljaim kezelése
+add_files = Fájlok hozzáadása ??
+userfiles = Fájljaim ??
+userfiles_expl = 
+upload_file = Fájl feltöltése
+del_selected = Kiválaszott fájlok törlése
+no_files = Nincsenek feltöltött fájlok.
+upload_expl = Itt lehet új fájlt feltölteni.
+close = Bezárás
+
+[editRight]
+not_integer = A kezdõ és végzõ idõpontot egész számmal kell megadni!
+edit_right = Edit rights ??
+change_right = Jog módosítása
+new_right = Új jog felvétele
+start_time = Kezdete (sec)
+stop_time = Vége (sec)
+rights_text = Jog leírása
+Add = Hozzáadás
+Change = Módosítás
+for_whole_prg = A jog az egész mûsorra vonatkozik.
+
+[topicTree]
+add = Hozzárendel
+
+[topicSearch]
+topic_search = Témák böngészése
+subtopics = Altémák
+no_progs = Ehhez a témához nincs mûsor rendelve.
+topic_tree = Témafa
+selected_tree = Választott témafa
+change_tree = Váltás
+other_trees = Témafák
+
+[convert]
+encode = Kódolás ??
+decode = Dekódolás ??
+progress_bar = Hátralevõ idõ ??
+
+[listen]
+no_listen_access = Ezt a hangfájlt nem hallgathatja meg.
+
+[playlist]
+delete = Törlés
+change_order = Sorrend változtatás
+delete_selected = Kiválasztottak törlése
+play_selected = Kiválasztottak meghallgatása
+empty = A kedvencek lista üres.
+select_all = Összes kiválasztása
+invert_selection = Kiválasztás invertálása
+send_selected = Kiválasztottak portálra töltése
+
+[playlistPopup]
+top = Tetejére
+up = Fel
+down = Le
+buttom = Aljára
+save = Mentés
+
+[admin]
+admin = Node administrator's console (*)
+general_data = General data (*)
+save = Save (*)
+access_permissions = Administrators and permissions (*)
+Permissions = Permissions (*)
+username = User name (*)
+userlist = Userlist (*)
+permissions = Permissions (*)
+actions = Actions (*)
+delete = Delete (*)
+no_perms = Nobody has permissions for this node (??) (*)
+change_perm = Add/change permission for user (*)
+change = Change (*)
+deleted_permissions_for = Deleted all permissions for user %1 (*)
+debug_log = Debugging and logging (*)
+
+view_log = View log file (*)
+view_config = View configuration (*)
+debug_expl = Log debug info made by programmers (*)
+debug_smarty_expl = Show Smarty debugging console (*)
+debug_sql_expl = Log executed SQL statements (*)
+compile_check_expl = Check for changed Smarty templates and recompile them (*)
+recompile_templates = Recompile all Smarty templates (*)
+update_topic_counts = Update topic counts (*)
+update_from_cvs = Update from CVS (*)
+
+Node_network = Node network (*)
+node_id = Node id (*)
+node_name = Node name (*)
+node_desc = Description (*)
+
+standalone_node = This node is not in any node network. (*)
+add_neighbour = Add neighbour node (*)
+accept_incoming = Accept incoming sync request (*)
+use_for_outgoing = Use for outgoing sync (*)
+last_sync_out = Last outgoing sync (*)
+last_sync_in = Last incoming sync (*)
+sync = Sync (*)
+full_sync = Full sync (*)
+full_sync_expl = Send all data to remote node (can be slow) (*)
+pending = pending node (*)
+err_succ = Success/error<br />for outgoing (*)
+
+arrived_xbmf = Arrived XBMF (*)
+import = Import (*)
+
+[createNeighbour]
+create_neighbour = Create new neighbour (*)
+create_from_nodes = Use an existing node as neighbour (*)
+create_new_node = Create a new neighbour node (*)
+create = Create (*)
+id = Node id (*)
+name = Name (*)
+url = URL (*)
+node_id_occupied = This node id is already in use. (*)
+no_url_given = Please enter the URL of the node. (*)
+
+[editNeighbour]
+edit_neighbour = Change settings for neighbour node (*)
+neighbour = Neighbour (*)
+use_in = Accept incoming sync from this neighbour (*)
+use_out = Send sync to this neighbour (*)
+save = Save (*)
+
