@@ -28,7 +28,6 @@
 	$myCal->select($_GET['date']);								# selects the selected day (default: today)
 	$myDay = new dayView();												# create the new day representer
 	
-	//##############################################################################################
 	//mark full calendar days
 	//process limits
 	$myDate = explode("-",$_GET['date']);
@@ -41,7 +40,7 @@
 	//show calendar
 	$smarty->assign('calendar',$myCal->show('inside.php'));	
 	
-	//##############################################################################################
+	//#################################### TODAY'S SHOWS #####################################
 	//get today's programms ;)
 	//process limits
 	$start = $myDate[2] . "-" . $myDate[1] . "-" . $myDate[0] . " 00:00:00";
@@ -75,7 +74,7 @@
 	
 	//output to smarty
 	$smarty->assign('day',$myDay->show());
-	//################################################################################################
+	//#################################### END TODAY'S SHOWS ######################################
 	
 	//create help message
 	//$myHelp = new helpBox(1,'98%');							# this will fetch a help message from the database and output it
