@@ -141,6 +141,7 @@ require($classdir . '/sotf_Utils.class.php');
 require($classdir . '/sotf_FileList.class.php');
 require($classdir . '/sotf_AudioCheck.class.php');
 require($classdir . '/sotf_User.class.php');
+require($classdir . '/sotf_UserPrefs.class.php');
 require($classdir . '/sotf_Page.class.php');
 require($classdir . '/sotf_Object.class.php');
 require($classdir . '/sotf_Vars.class.php');
@@ -223,7 +224,6 @@ $sotfVars = new sotf_Vars($db, 'sotf_vars');
 $repository = new sotf_Repository($repositoryDir, $db);
 
 // now you have the following global objects: $db, $userdb, $smarty, $page, $repository, $user, $permission
-
 
 // add basic variables to Smarty
 $smarty->assign("NODEID", $nodeId);

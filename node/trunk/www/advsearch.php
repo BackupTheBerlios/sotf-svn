@@ -74,23 +74,52 @@ elseif (($run or ($run_image=="0")) and $SQLquery!=NULL)			////run query button 
 
 	$page->redirect("advsearchresults.php");
 }
-elseif ($new)									///new query button pressed
+elseif ($new)									////new query button pressed
 {
 	$SQLquery = $advsearch->DeleteQuery();
 	$advsearch->SetSortOrder("", "");		//set back default sort order for new queries
 }
+elseif ($load)									////load button pressed
+{
+	//print($loadfrom);					//dropdown box with the saved queries
+	//$serial="title|Bproduction_date|AAND|Bstation|Bis|BRadioSZTAKI|Bstation|AAND|Bproduction_date|Bbigger|B1035583200|Bdate|AOR|Bentry_date|Bbigger|B1035583200|Bdate|AAND|Btitle|Bdoes_not_contain|Bmusic|Bstring|AAND|Blanguage|Bis|Ben|Blang|AOR|Blanguage|Bis|Bde|Blang|AOR|Blanguage|Bis_not|Bhu|Blang";
+	$prefs = $user->getPreferences();
+	$serial=$prefs->savedQueries[$loadfrom]["query"];
+	$SQLquery = $advsearch->Deserialize($serial);
+}
+elseif ($default)									////Make deafult button pressed
+{
+	//$loadfrom;					//dropdown box with the saved queries
+	$prefs = $user->getPreferences();
+	$savedQueries = $prefs->savedQueries;
+	foreach($savedQueries as $key => $value) $prefs->savedQueries[$key]["default"] = 0;
+	$prefs->savedQueries[$loadfrom]["default"] = 1;
+	$prefs->save();
+}
+elseif ($deleteq)									////Delete query button pressed
+{
+	$prefs = $user->getPreferences();
+	print("<pre>");
+	var_dump($prefs->savedQueries);
+	print("</pre>");
+	//$loadfrom;					//dropdown box with the saved queries
+}
 elseif (($save) and $SQLquery!=NULL)						////save button pressed, save if any term
 {
-$serial = $advsearch->Serialize();
-print($serial);
-$SQLquery = $advsearch->Deserialize($serial);
+	$serial = $advsearch->Serialize();
+	if ($saveas != "" AND $serial != "")
+	{
+		$prefs = $user->getPreferences();
+		
+		//$prefs->savedQueries =  array();
+		$prefs->savedQueries[] = array("name" => $saveas,
+						"query" => $serial,
+						"default" => 0);
+		$prefs->save();
+		//print($saveas." = ".$serial);
+	}
 }
-elseif ($load)									///load button pressed
-{
-$serial="title|Bproduction_date|AAND|Bstation|Bis|BRadioSZTAKI|Bstation|AAND|Bproduction_date|Bbigger|B1035583200|Bdate|AOR|Bentry_date|Bbigger|B1035583200|Bdate|AAND|Btitle|Bdoes_not_contain|Bmusic|Bstring|AAND|Blanguage|Bis|Ben|Blang|AOR|Blanguage|Bis|Bde|Blang|AOR|Blanguage|Bis_not|Bhu|Blang";
-$SQLquery = $advsearch->Deserialize($serial);
-}
-else										////- or + button pressed?
+else								////- or + button pressed?
 {
 	$max = count($SQLquery);
 	$i = 0;
@@ -133,7 +162,11 @@ $smarty->assign("sort1", $advsearch->GetSort1());			//current sort1
 $smarty->assign("sort2", $advsearch->GetSort2());			//current sort2
 
 //box 3
-$smarty->assign("saved", $saved[example]="Example");			//saved fields
+if (!isset($prefs)) $prefs = $user->getPreferences();
+$savedQueries = $prefs->savedQueries;
+$saved = array();
+foreach($savedQueries as $key => $value) $saved[$key] = $value["name"];
+$smarty->assign("saved", $saved);				//saved fields
 
 $page->send();
 

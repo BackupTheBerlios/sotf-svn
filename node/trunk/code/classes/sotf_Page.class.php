@@ -231,7 +231,7 @@ class sotf_Page
 	{
 		global $smarty, $sotfVars;
 		$rp_maxresults = $sotfVars->get("hitsPerPage", 30);		//display maximal so many results
-		$rp_maxresults = 2;
+		//$rp_maxresults = 2;
 		$rp_from = sotf_Utils::getParameter('rp_from');
 		
 		$rp_button = sotf_Utils::getParameter('rp');
