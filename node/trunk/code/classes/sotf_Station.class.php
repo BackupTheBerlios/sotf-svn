@@ -28,6 +28,20 @@ class sotf_Station extends sotf_ComplexNodeObject {
     return $res;
   }
 
+	/** static: finds a station by its name
+	 */
+	function getByName($stationName) {
+		global $db;
+    $stationName = sotf_Utils::magicQuotes($stationName);
+		$id = $db->getOne("SELECT id FROM sotf_stations WHERE name = '$stationName'");
+		if(DB::isError($id))
+			raiseError($id);
+    if($id)
+      return new sotf_Station($id);
+    else
+      return NULL;
+	}
+
 	function create($stationName, $desc) {
 		global $nodeId;
 		$this->set('name', $stationName);

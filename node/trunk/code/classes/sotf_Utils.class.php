@@ -330,6 +330,31 @@ class sotf_Utils
 	    error_log("could not send mail to $to with subject $subject", 0);
 	}
 
+  /** static: recursively deletes all content from the directory and the dir itself. */
+  function delete($file) {
+    if (file_exists($file)) {
+      chmod($file,0777);
+      if (is_dir($file)) {
+        $handle = opendir($file); 
+        while($filename = readdir($handle)) {
+          if ($filename != "." && $filename != "..") {
+            sotf_Utils::delete($file."/".$filename);
+          }
+        }
+        closedir($handle);
+        if(!rmdir($file)) {
+          logError("Could not rmdir: $file");
+          return false;
+        }
+      } else {
+        if(!unlink($file)) {
+          logError("Could not unlink: $file");
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 
 
 }

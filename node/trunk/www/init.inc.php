@@ -187,7 +187,7 @@ if($debug) {
   $smarty->assign("VIEWLOG", $page->logURL());
 }
 
-debug("action:", $page->action);
+debug("action", $page->action);
 debug("lang", $lang);
 debug("userid", $user->id);
 

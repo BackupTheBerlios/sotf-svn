@@ -68,13 +68,15 @@ function syncResp($params) {
 
 function getQueryResults($params)
 {
-	global $classdir, $db;
+	global $classdir, $db, $wwwdir;
 	$query = xmlrpc_decode($params->getParam(0));
 	require("$classdir/sotf_AdvSearch.class.php");
 	$advsearch = new sotf_AdvSearch();	//create new search object object with this array
 	$SQLquery = $advsearch->Deserialize($query);		//deserialize the content of the hidden field
 	$query = $advsearch->GetSQLCommand();
 	$results = $db->getAll($query." LIMIT 30 OFFSET 0");
+	foreach($results as $key => $result)
+		$results[$key]['icon'] = $wwwdir.sotf_Blob::cacheIcon($result['id']);
 	$retval = xmlrpc_encode($results);
 	return new xmlrpcresp($retval);
 }

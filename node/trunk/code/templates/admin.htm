@@ -127,6 +127,37 @@
 </table>
 
 <p></p>
+
+<a name="xbmf"></a>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#arrived_xbmf#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $XBMF}
+        <form>
+        <table>
+          <!-- <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr> -->
+          {cycle name="perms" values="list1,list2" print=false advance=false}
+          {foreach item=xbmf from=$XBMF}
+          <tr class="{cycle name=perms}">
+            <td>{$xbmf}</td>
+            <td nowrap>
+                <input class="action" type="button" name="b1" value="{#import#}" onClick="popup('admin.php?import_xbmf={$xbmf|escape}','XBMF',350,400,true)" />
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        </form>
+        {/if}
+      </td>
+    </tr>
+</table>
+
+<p></p>
 												
   <table class="tab">
     <tr> 

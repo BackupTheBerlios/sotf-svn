@@ -12,6 +12,18 @@ if (!hasPerm('node', "change")) {
   raiseError("You have no permission to change node settings!");
 }
 
+// import XBMF
+$xbmfFile = sotf_Utils::getParameter('import_xbmf');
+if($xbmfFile) {
+	$id = sotf_Programme::importXBMF("$xbmfInDir/$xbmfFile");
+	if($id) {
+		echo "Import succesful: <a target=\"_blank\" href=\"editMeta.php?id=$id\">click here</a>";
+	} else {
+		echo "Import failed";
+	}
+  exit;
+}
+
 // update CVS
 if(sotf_Utils::getParameter('updatecvs')) {
   chdir($basedir);
@@ -131,6 +143,21 @@ $smarty->assign('NEIGHBOURS',$neighbourData);
 // user permissions: editors and managers
 $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized('node'));
 
+// arriving xbmf
+$dirPath = $xbmfInDir;
+$dir = dir($dirPath);
+while($entry = $dir->read()) {
+	if ($entry != "." && $entry != "..") {
+		$currentFile = $dirPath . "/" .$entry;
+		if (!is_dir($currentFile)) {
+			$XBMF[] = basename($currentFile);
+		}
+	}
+}
+$dir->close();
+$smarty->assign("XBMF", $XBMF); 
+
+// variables
 $smarty->assign("VARS", $sotfVars->getAll());
 
 $page->send();

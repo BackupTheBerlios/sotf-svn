@@ -1,10 +1,13 @@
 <?php
 require("init.inc.php");
 
-echo "<br>getenv:" . getenv('REMOTE_ADDR');
-echo "<br>_SERVER:" . $_SERVER['REMOTE_ADDR'];
+sotf_Programme::importXBMF("$xbmfInDir/test.xbmf");
 
 
+exit;
+
+//echo "<br>getenv:" . getenv('REMOTE_ADDR');
+//echo "<br>_SERVER:" . $_SERVER['REMOTE_ADDR'];
 
 //$res = $userdb->getOne("SELECT auth_id FROM authenticate WHERE username = 'akazcs'");
 //echo "'$res'";

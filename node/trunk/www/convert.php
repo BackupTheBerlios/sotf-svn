@@ -111,7 +111,8 @@ function decodeWithLame($cmd)
 	echo "<p>Decoding MP3 file to PCM data...<br />\n";
 	flush();
 	debug('execute',$cmd);
-	exec($cmd);
+	$result = exec($cmd);
+  debug('result',$result);
 	for ($i=0;$i<$progressBarLength;$i++)
 		echo $progressBarChar;
 	echo "</p>\n";

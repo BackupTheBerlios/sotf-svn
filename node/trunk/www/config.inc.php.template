@@ -38,20 +38,23 @@ $nodeName = "XXd";
 // FILE LOCATIONS  --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-// the directory where stations and radio shows will be archived
-$repositoryDir = 'C:/sotf/node/repository';
-
-// the directory where stations and radio shows will be archived
-$musicDir = 'C:/sotf/node/music';
-
-// the directory under which users have FTP or other access to send files to
-$userDirs = 'C:/sotf/node/users';
-
-// the FTP URL for user directories (defined above)
-$userFTP = 'ftp://sotf2.dsd.sztaki.hu:8989/';
-
 // $basedir -> Complete filesystem path
 $basedir = 'C:/sotf/node';
+
+// the directory where stations and radio shows will be archived
+$repositoryDir = "$basedir/repository";
+
+// the directory where stations and radio shows will be archived
+$musicDir = "$basedir/music";
+
+// the directory under which users have FTP or other access to send files to
+$userDirs = "$basedir/users";
+
+// the FTP URL for user directories (defined above)
+$userFTP = 'ftp://foo.foo.org:8989/';
+
+// the directory where incoming programmes (XBMF) are from stations
+$xbmfInDir = "$basedir/incoming";
 
 // where PEAR files are located
 $peardir = 'C:/Program Files/php422/pear';
@@ -100,9 +103,9 @@ $maxNumberOfStreams = 30;
 // DEBUGGING, LOGGING & ERROR HANDLING -----------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-$logFile = "$basedir/code/logs/log";
+$logFile = "$basedir/logs/log";
 
-// Temp. solution for debugging after install
+// Temp. solution for debugging right after install, later you may switch this off
 $debug = true;
 
 //////////////////////////////////////////////////////////////////////////

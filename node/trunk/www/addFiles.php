@@ -28,7 +28,7 @@ if($upload) {
     $prg->setAudio($file);
     $page->redirect("closeAndRefresh.php");
   } else {
-     $prg->setOtherFile($fname);
+     $prg->setOtherFile($file);
      $page->redirect("closeAndRefresh.php#anchor=mfiles");
   }
   exit;
@@ -42,12 +42,13 @@ if($add) {
   while(list($k,$fname) = each($_POST)) {
     debug("P", $k);
     if(substr($k, 0, 4) == 'sel_') {
+      $file =  sotf_Utils::getFileInDir($user->getUserDir(), $fname);
       if($main) {
         debug("setAudio", "'$fname', '$copy'");
-        $prg->setAudio($user->getUserDir() . '/' . $fname, $copy);
+        $prg->setAudio($file, $copy);
       } else {
         debug("setOtherFile", "'$fname', '$copy'");
-        $prg->setOtherFile($fname, $copy);
+        $prg->setOtherFile($file, $copy);
       }
     }
   }

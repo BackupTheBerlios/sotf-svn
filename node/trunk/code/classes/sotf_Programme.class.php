@@ -5,6 +5,9 @@
 define("GUID_DELIMITER", ':');
 define("TRACKNAME_LENGTH", 32);
 
+require_once($classdir . '/Tar.php');
+require_once($classdir . '/unpackXML.class.php');
+
 class sotf_Programme extends sotf_ComplexNodeObject {
   
   var $topics;
@@ -379,8 +382,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   function setOtherFile($filename, $copy=false) {
     global $user;
-    $source =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
-    $target = $this->getOtherFilesDir() . '/' . $filename;
+    $source =  $filename;
+    $target = $this->getOtherFilesDir() . '/' . basename($filename);
     while (file_exists($target)) {
       $target .= "_1";
     }
@@ -497,6 +500,181 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       $retval[] = new sotf_Programme($item['id'], $item);
     }*/
     return $plist;
+  }
+
+  /** static: import a programme from the given XBMF archive */
+  function importXBMF($fileName) {
+    global $db, $xbmfInDir, $permissions;
+    
+    //untarring
+    /*
+     * logic is as follows:
+     * 1. create temp folder with unique name
+     * 2. untar contents of file to folder
+     * 3. process contents
+     * 4. unlink folder
+     */
+    
+    $pathToFile = $xbmfInDir .'/';
+    
+    // create temp folder with unique name
+    $folderName = uniqid("xbmf");
+    mkdir($pathToFile . $folderName);
+	
+    // untar contents of file to folder
+    $tar = new Archive_Tar($fileName, true);	// create archive handler
+    $tar->setErrorHandling(PEAR_ERROR_PRINT);								// enable error reporting
+    $result = $tar->extract($pathToFile . $folderName);			// untar contents
+    debug("untar result", $result);
+	
+    //parse the xml file
+    $myPack = new unpackXML($pathToFile . $folderName . "/metadata.xml");	//note that the unpacker needs AN ABSOLUTE path to the file
+    if(!$myPack->error){		//if the file has been found
+      $metadata = $myPack->process();	//process it into an associative array
+    }
+	
+    //dump($metadata, "METADATA");
+
+    $stationName = 'DooBeeDoo';
+    $station = sotf_Station::getByName($stationName);
+    $track = $metadata['title']['basetitle'];
+    $newPrg = new sotf_Programme();
+    debug("create with track", $track);
+    $newPrg->create($station->id, $track);
+
+    // add permissions for all station admins (??)
+    $admins = $permissions->listUsersWithPermission($station->id, 'admin');
+    while(list(, $admin) = each($admins)) {
+      $permissions->addPermission($newPrg->id, $admin['id'], 'admin');
+    }
+
+    /*
+     * PART 2.1 - Move the audio data to the specified station folder
+     */
+    
+    // not done, needs integration with the node
+    // $metadata assoc array contains all the data from xml file
+    
+    /*
+     * PART 2.2 - Insert all the relevant data from the xml file into the database
+     */
+
+    // insert audio
+    $dirPath = $pathToFile . $folderName . "/audio";
+    $dir = dir($dirPath);
+    while($entry = $dir->read()) {
+      if ($entry != "." && $entry != "..") {
+        $currentFile = $dirPath . "/" .$entry;
+        if (!is_dir($currentFile)) {
+          $newPrg->setAudio($currentFile, true);
+        }
+      }
+    }
+    $dir->close();
+
+    // insert other files
+    $dirPath = $pathToFile . $folderName . "/audio";
+    $dir = dir($dirPath);
+    while($entry = $dir->read()) {
+      if ($entry != "." && $entry != "..") {
+        $currentFile = $dirPath . "/" .$entry;
+        if (!is_dir($currentFile)) {
+          $newPrg->setOtherFile($currentFile, true);
+        }
+      }
+    }
+    $dir->close();
+
+    // insert icon
+    $logoFile = $pathToFile . $folderName . "/icon.png";
+    if(is_readable($logoFile)) {
+      $newPrg->setIcon($logoFile);
+    }
+
+    //////////////////////
+    // insert metadata
+    //////////////////////
+
+    // basic metadata
+    $newPrg->set('title', $metadata['title']['basetitle']);
+    $newPrg->set('alternative_title', $metadata['title']['alternative']);
+    $newPrg->set('episode_title', $metadata['title']['episodetitle']);
+    $newPrg->set('episode_sequence', $metadata['title']['episodesequence']);
+    $newPrg->set('abstract', $metadata['description']);
+    //$newPrg->set('???', $metadata['subject']);
+    
+    $newPrg->set("production_date", date('Y-m-d', strtotime($metadata['created'])));
+    $newPrg->set("broadcast_date", date('Y-m-d', strtotime($metadata['issued'])));
+    $newPrg->set("modify_date", date('Y-m-d', strtotime($metadata['modified'])));
+
+    // type...
+    $newPrg->set('language', $metadata['language']);
+
+    $newPrg->update();
+
+    // rights
+    $rights = new sotf_NodeObject("sotf_rights");
+    $rights->set('rights_text', $metadata['rights']);
+    $rights->set('prog_id', $newPrg->id);
+    $rights->create();
+
+    // contacts
+    //creator, publisher, contributor
+    $role = 21; // TODO: this is just Other
+
+    foreach($metadata['publisher'] as $contact) {
+      $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
+    }
+    foreach($metadata['creator'] as $contact) {
+      $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
+    }
+    foreach($metadata['contributor'] as $contact) {
+      $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
+    }
+    
+    /*
+     * PART 2.3 - Remove (unlink) the xbmf file and the temp dir
+     */
+    
+    sotf_Utils::delete($pathToFile . $folderName);
+    //unlink($filename);
+    
+    return $newPrg->id;
+  }
+
+  /** static: create contact record from metadata */
+  function importContact($cdata, $roleSel, $prgId, $station) {
+    global $permissions;
+    // TODO: check if exists...
+    $contact = new sotf_Contact();
+    $name = $cdata['organizationname'];
+    if(!$name) $name = $cdata['lastname'];
+    $status = $contact->create($name);
+    if(!$status) {
+      //$page->addStatusMsg('contact_create_failed');
+      return null;
+    }
+    // add permissions for all station admins (??)
+    $admins = $permissions->listUsersWithPermission($station->id, 'admin');
+    while(list(, $admin) = each($admins)) {
+      $permissions->addPermission($contact->id, $admin['id'], 'admin');
+    }
+    $contact->set('email', $cdata['email']);
+    $contact->set('url', $cdata['uri']);
+    $contact->set('address', $cdata['address']);
+    // TODO: more fields....
+    $contact->update();
+
+    // create role
+    if(!sotf_ComplexNodeObject::findRole($prgId, $contact->id, $roleSel)) {
+      $role = new sotf_NodeObject("sotf_object_roles");
+      $role->set('object_id', $prgId);
+      $role->set('contact_id', $contact->id);
+      $role->set('role_id', $roleSel);
+      $role->create();
+    }
+
+    return $contact->id;
   }
 
 }
