@@ -30,9 +30,15 @@ class sotf_NodeObject extends sotf_Object {
 	function saveReplica() {
     if($this->id) {
       $changed = $this->db->getOne("SELECT last_change FROM sotf_node_objects WHERE id='$this->id' ");
+      //debug("changed", $changed);
+      //debug("lch", $this->lastChange);
       if($changed) {
         if($this->lastChange && (strtotime($this->lastChange) > strtotime($changed))) {
           $this->update();
+          reset($this->binaryFields);
+          while(list(,$field)=each($this->binaryFields)) {
+            sotf_Object::setBlob($field, $this->data[$field]);
+          }
           debug("updated ", $this->id);
           return true;
         } else {
@@ -126,19 +132,20 @@ class sotf_NodeObject extends sotf_Object {
       reset($objects);
       while(list(,$objData) = each($objects)) {
         debug("saving modified object", $objData['id']);
-        $tablename = $repository->getTable($objData['id']);
-        $obj = new sotf_NodeObject($tablename, $objData['id'], $objData['data']);
+        $obj = $repository->getObject($objData['id'], $objData['data']);
         $obj->lastChange = $objData['last_change'];
         $obj->nodeId = $objData['node_id'];
         reset($obj->data);
         // url decoding and else
+        /*
         while(list($k,$v) = each($obj->data)) {
           $obj->data[$k] = urldecode($v);
         }
+        */
         if($obj->saveReplica()) {
           $updatedObjects[] = $objData['id'];
           // handle deletions
-          if($tablename == 'sotf_deletions') {
+          if($obj->tablename == 'sotf_deletions') {
             $delId = $obj->get('del_id');
             debug("deleting object", $delId);
             $obj = $repository->getObject($delId);

@@ -151,11 +151,11 @@ CREATE TABLE "sotf_programmes" (
 	"alternative_title" varchar(255), 							-- may be known under a different title
 	"episode_title" varchar(255),									-- may be used if the show is part of a series
 	"episode_sequence" int4,										-- may be used if the show is in a series
-	"is_part_of" varchar(76),										-- pointer to embedding show using GUID
+	"is_part_of" varchar(12),										-- pointer to embedding show using GUID
 	"keywords" text, 													-- dc.subject (free keywords)
 	"abstract" text,													-- dc.description
 	"entry_date" date DEFAULT date('now'::text) NOT NULL,	-- dc.date.available
-	"production_date" date DEFAULT date('now'::text),		-- dc.date.created
+	"production_date" date,											-- dc.date.created
 	"broadcast_date" date,											-- dc.date.issued
 	"modify_date" date,												-- dc.date.modified
 	"expiry_date" date DEFAULT (timestamptz(date('now'::text)) + '56 days'::"interval"),	-- when programme will be made unavailable

@@ -1,4 +1,29 @@
+{literal}
+<script language="javascript">
+function disable(name, value) {
+	eval("document.metadata."+name+"Year.disabled="+value);
+	eval("document.metadata."+name+"Month.disabled="+value);
+	eval("document.metadata."+name+"Day.disabled="+value);
+	if (value == '0') {
+	eval("document.metadata."+name+"_radio0.checked = true");
+	eval("document.metadata."+name+"_radio1.checked = false");
+	}
+	else {
+	eval("document.metadata."+name+"_radio0.checked = false");
+	eval("document.metadata."+name+"_radio1.checked = true");
+	}
+}
 
+function myonload() {
+{/literal}
+disable("temporal_coverage", {if $PRG_DATA.temporal_coverage == ""}1{else}0{/if});
+disable("broadcast_date", {if $PRG_DATA.broadcast_date == ""}1{else}0{/if});
+disable("production_date", {if $PRG_DATA.production_date == ""}1{else}0{/if});
+{literal}
+}
+window.onload=myonload;
+</script>
+{/literal}
 <form name="metadata" method="post">
 {if $NEW}
     <table width="100%">
@@ -85,25 +110,39 @@
                 </select>
               </td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" valign="middle">
               <td class="meta">{#temporal_coverage#}:</td>
-              <td>{html_select_date time=$PRG_DATA.temporal_coverage start_year="1900" prefix="temporal_coverage" month_format="%m" field_order="YMD" field_separator="-"}</td>
+              <td>
+                  <input type="radio" name="temporal_coverage_radio0" value="selected" onclick="javascript:disable('temporal_coverage', 0)">
+                  {html_select_date time=$PRG_DATA.temporal_coverage start_year="1900" prefix="temporal_coverage" month_format="%m" field_order="YMD" field_separator="-"}
+                  <br><input type="radio" name="temporal_coverage_radio1" value="unselected" onclick="javascript:disable('temporal_coverage', 1)">{#not_available#}
+            </td>
             </tr>
             <tr valign="top">
               <td class="meta">{#spatial_coverage#}:</td>
               <td><input name="spatial_coverage" value="{$PRG_DATA.spatial_coverage}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
             <tr valign="top">
-              <td class="meta">{#production_date#}:</td>
-              <td>{html_select_date time=$PRG_DATA.production_date start_year="-5" prefix="production_date" month_format="%m" field_order="YMD" field_separator="-"}</td>
+              <td class="meta" valign="middle">{#production_date#}:</td>
+              <td>
+                  <input type="radio" name="production_date_radio0" value="selected" onclick="javascript:disable('production_date', 0)">
+                  {html_select_date time=$PRG_DATA.production_date start_year="-5" prefix="production_date" month_format="%m" field_order="YMD" field_separator="-"}
+                  <br><input type="radio" name="production_date_radio1" value="unselected" onclick="javascript:disable('production_date', 1)">{#not_available#}
+              </td>
             </tr>
             <tr valign="top">
-              <td class="meta">{#broadcast_date#}:</td>
-              <td>{html_select_date time=$PRG_DATA.broadcast_date start_year="-5" prefix="broadcast_date" month_format="%m" field_order="YMD" field_separator="-"}</td>
+              <td class="meta" valign="middle">{#broadcast_date#}:</td>
+              <td>
+                  <input type="radio" name="broadcast_date_radio0" value="selected" onclick="javascript:disable('broadcast_date', 0)">
+                  {html_select_date time=$PRG_DATA.broadcast_date start_year="-5" prefix="broadcast_date" month_format="%m" field_order="YMD" field_separator="-"}
+                  <br><input type="radio" name="broadcast_date_radio1" value="unselected" onclick="javascript:disable('broadcast_date', 1)">{#not_available#}
+            </td>
             </tr>
             <tr valign="top">
               <td class="meta">{#expiry_date#}:</td>
-              <td>{html_select_date time=$PRG_DATA.expiry_date end_year="+5" prefix="expiry_date" month_format="%m" field_order="YMD" field_separator="-"}</td>
+              <td>
+                  {html_select_date time=$PRG_DATA.expiry_date end_year="+5" prefix="expiry_date" month_format="%m" field_order="YMD" field_separator="-"}
+              </td>
             </tr>
           </table>
           <input type="submit" name="save" value="{#save#}">

@@ -77,14 +77,14 @@ class sotf_Repository {
     return array_search($tc, $this->tableCodes);
   }
 
-  function getObject($objectId) {
+  function getObject($objectId, $data='') {
     $tc = substr($objectId, 3,2);
     $class = $this->codeToClass[$tc];
     if($class) {
-      $obj = new $class($objectId);
+      $obj = new $class($objectId, $data);
     } else {
       $table = array_search($tc, $this->tableCodes);
-      $obj = new sotf_NodeObject($table, $objectId);
+      $obj = new sotf_NodeObject($table, $objectId, $data);
     }
     if( count($obj->getAll())==0 )
       return NULL;

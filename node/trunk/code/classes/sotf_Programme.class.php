@@ -95,7 +95,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   function update() {
 	 parent::update();
-	 $this->saveMetadataFile();
+   if($this->isLocal())
+     $this->saveMetadataFile();
   }
 
   function getStation() {
@@ -112,7 +113,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
 	function isLocal() {
-		return is_dir($this->getDir()); 
+    global $nodeId;
+    debug("s1", substr($this->id,0,3));
+    debug("s2", sprintf('%03d', $nodeId));
+    return substr($this->id,0,3) == sprintf('%03d', $nodeId);
+		//return is_dir($this->getDir()); 
 	}
 
   function getAssociatedObjects($tableName, $orderBy) {
