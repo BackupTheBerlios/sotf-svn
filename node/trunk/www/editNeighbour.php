@@ -35,7 +35,8 @@ if(sotf_Utils::getParameter('save')) {
 
 $node = sotf_Node::getNodeById($nid);
 
-$smarty->assign('NODE',$node->getAll());
+if($node)
+  $smarty->assign('NODE',$node->getAll());
 $smarty->assign('NEI', $nei->getAll());
 
 $page->sendPopup();
