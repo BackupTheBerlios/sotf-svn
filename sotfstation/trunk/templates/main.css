@@ -1,0 +1,80 @@
+.whitesmall {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: xx-small;
+	color: #FFFFFF;
+	vertical-align: middle;
+}
+.menu1 {
+	font-family: Tahoma, Verdana, Arial;
+	font-weight: bold;
+	color: #000000;
+	font-size: xx-small;
+	margin: 3px;
+	padding: 3px;
+
+}
+.menu2 {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: xx-small;
+	text-transform: lowercase;
+	color: #000000;
+	margin-top: 3px;
+	margin-right: 3px;
+	margin-bottom: 3px;
+	margin-left: 18px;
+	padding-top: 3px;
+	padding-right: 3px;
+	padding-bottom: 3px;
+	padding-left: 18px;
+}
+.menu2l {
+	font-family: Tahoma, Verdana, Arial;
+	font-size: xx-small;
+	text-transform: lowercase;
+}
+
+A.menu1:link { color:#660000; text-decoration:none}
+A.menu1:active { color:#990000; text-decoration:none}
+A.menu1:visited { color:#660000; text-decoration:none}
+A.menu1:hover { color:#cc0000; text-decoration:underline}
+
+A.menu2:link { color:#660000; text-decoration:none}
+A.menu2:active { color:#990000; text-decoration:none}
+A.menu2:visited { color:#660000; text-decoration:none}
+A.menu2:hover { color:#cc0000; text-decoration:underline}
+
+A.menu2l:link { color:#660000; text-decoration:none}
+A.menu2l:active { color:#990000; text-decoration:none}
+A.menu2l:visited { color:#660000; text-decoration:none}
+A.menu2l:hover { color:#cc0000; text-decoration:underline}
+
+.date {
+	FONT-WEIGHT: normal; FONT-SIZE: 8pt; COLOR: #ffffff; FONT-FAMILY: verdana; TEXT-DECORATION: none
+}
+.datee {
+	FONT-WEIGHT: normal; FONT-SIZE: 8pt; COLOR: #ffffff; FONT-FAMILY: verdana; TEXT-DECORATION: none
+}
+.datesm {
+	FONT-SIZE: 8pt; FONT-FAMILY: verdana
+}
+
+A.date1 {
+	FONT-WEIGHT: bold; FONT-SIZE: 8pt; COLOR: #ffffff; FONT-FAMILY: verdana; TEXT-DECORATION: none
+}
+A.date1:visited {
+	FONT-WEIGHT: bold; FONT-SIZE: 8pt; COLOR: #ffffff; FONT-FAMILY: verdana; TEXT-DECORATION: none
+}
+A.date2 {
+	FONT-WEIGHT: normal; FONT-SIZE: 8pt; COLOR: #000099; FONT-FAMILY: verdana; TEXT-DECORATION: none
+}
+A.date2:visited {
+	FONT-WEIGHT: normal; FONT-SIZE: 8pt; COLOR: #000099; FONT-FAMILY: verdana; TEXT-DECORATION: none
+}
+A.date {
+	FONT-WEIGHT: normal; FONT-SIZE: 8pt; COLOR: #ffffff; FONT-FAMILY: verdana, times; TEXT-DECORATION: none
+}
+A.date:visited {
+	FONT-WEIGHT: normal; FONT-SIZE: 8pt; COLOR: #ffffff; FONT-FAMILY: verdana, times; TEXT-DECORATION: none
+}
+A.date:hover { color:#FF0000;}
+
