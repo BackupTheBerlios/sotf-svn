@@ -1,26 +1,36 @@
 {config_load file="$LANG.conf" section="rss"}
-    <br /><i>{#title#}:</i> {$PRG_DATA.title}
+  <table>
+    <tr>
+      <td><i>{#title#}:</i></td><td>{$PRG_DATA.title}</td>
+    </tr><tr>
     {if $PRG_DATA.alternative_title}
-    <br /><i>{#alternative_title#}:</i> {$PRG_DATA.alternative_title}
+      <td><i>{#alternative_title#}:</i></td><td>{$PRG_DATA.alternative_title}</td>
+      </tr><tr>
     {/if}
     {if $PRG_DATA.episode_title}
-    <br /><i>{#episode_title#}:</i> {$PRG_DATA.episode_title}
+      <td><i>{#episode_title#}:</i></td><td>{$PRG_DATA.episode_title}</td>
+      </tr><tr>
     {/if}
     {if $PRG_DATA.episode_sequence}
-    <br /><i>{#episode_sequence#}:</i> {$PRG_DATA.episode_sequence}
+      <td><i>{#episode_sequence#}:</i></td><td> {$PRG_DATA.episode_sequence}</td>
+      </tr><tr>
     {/if}
-    <br /><i>{#language#}:</i> {$LANGUAGE}
+    <br /><i>{#language#}:</i></td><td> {$LANGUAGE}</td>
+    </tr><tr>
     {if $PRG_DATA.abstract}
-    <br /><i>{#abstract#}:</i> {$PRG_DATA.abstract}
+       <td><i>{#abstract#}:</i></td><td> {$PRG_DATA.abstract}</td>
+       </tr><tr>
     {/if}
     {if $PRG_DATA.genre_id}
-    <br /><i>{#genre#}:</i> {$GENRE.name}
+       <td><i>{#genre#}:</i></td><td> {$GENRE.name}</td>
+       </tr><tr>
     {/if}
     {if $PRG_DATA.broadcast_date}
-    <br /><i>{#broadcast_date#}:</i> {$PRG_DATA.broadcast_date}
+       <td><i>{#broadcast_date#}:</i></td><td> {$PRG_DATA.broadcast_date}</td>
+       </tr><tr>
     {/if}
     {if $RIGHTS}
-      <br /><i>{#Rights#}:</i>
+      <td><i>{#Rights#}:</i></td><td>
           {foreach item=item from=$RIGHTS}
               <br />&nbsp;&nbsp;<i>
               {if empty($item.start_time) and empty($item.stop_time) }
@@ -30,5 +40,9 @@
               {/if}
               :</i> {$item.rights_text}
           {/foreach}
+      </td>
+      </tr><tr>
     {/if}
+    </tr>
+</table>
 

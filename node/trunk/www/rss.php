@@ -78,7 +78,7 @@ if($prgId) {
 
   // add metadata as item
   $properties=array();
-  /*
+
   $smarty->assign('ID', $prgId);
   //  $smarty->assign('LANG', 'eng');
   // general data
@@ -101,10 +101,9 @@ if($prgId) {
   $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
   $text = $smarty->fetch('rssMeta.htm');
   $properties["description"] = $text;
-  */
+  //$properties["description"] = $prg->get('abstract');
 
   $properties["title"]= $page->getlocalized('abstract');
-  $properties["description"] = $prg->get('abstract');
   $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . '#general';
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
