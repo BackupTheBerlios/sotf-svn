@@ -45,15 +45,17 @@
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
-        <tr {if $action == 'inside.htm' or $action == 'programmenew.htm' or $action == 'presentbox.htm'}bgcolor=#E7EBF7{/if}>
-          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="{$server_root}inside.php" class=menu1>{#station#}</a></td>
+        <tr {if $action == 'inside.htm' or $action == 'weekview.htm' or $action == 'programmenew.htm' or $action == 'presentbox.htm'}bgcolor=#E7EBF7{/if}>
+          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="{$server_root}week.php" class=menu1>{#station#}</a></td>
         </tr>
-		{if $action == 'inside.htm' or $action == 'programmenew.htm' or $action == 'presentbox.htm'}
+		{if $action == 'inside.htm' or $action == 'weekview.htm' or $action == 'programmenew.htm' or $action == 'presentbox.htm'}
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
         <tr>
-          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}inside.php" class="menu2l">{#overview#}</a><br>
+          <td class="menu2">
+		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}week.php" class="menu2l">{#weekview#}</a><br>
+		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}inside.php" class="menu2l">{#overview#}</a><br>
 		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}programmenew.php" class="menu2l">{#new_prog#}</a>
 		  <!--{if $edit_presentbox == 2}
 		  <br>
