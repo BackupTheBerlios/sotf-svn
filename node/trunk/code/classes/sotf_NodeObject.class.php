@@ -143,7 +143,7 @@ class sotf_NodeObject extends sotf_Object {
   function getModifiedObjects($remoteNode, $syncStamp = 0, $from, $objectsPerPage, $updatedObjects = array()) {
     global $db, $nodeId, $repository;
     // an ordering in which objects should be retrieved because of foreign keys
-    $tableOrder = "no,co,st,se,pr,ri,ed,of,mf,li,td,tt,to,pt,ge,ro,rn,sr,de,ra,re,sx";
+    $tableOrder = $this->repository->tableOrder;
     // select objects to send to neighbour
     $result = $db->limitQuery("SELECT * FROM sotf_node_objects WHERE node_id != '$remoteNode' AND arrived_stamp >= '$syncStamp' ORDER BY strpos('$tableOrder', substring(id, 4, 2)), id", $from, $objectsPerPage);
     while (DB_OK === $result->fetchInto($row)) {
