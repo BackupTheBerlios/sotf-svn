@@ -123,7 +123,7 @@ class sotf_Neighbour extends sotf_Object {
 	 $objectsReceived = 0;
 	 $more = true;
 	 while($more) {
-		$db->begin();
+		$db->begin(true);
 		$modifiedObjects = sotf_NodeObject::getModifiedObjects($remoteId, 0, $this->objectsPerRPCRequest);
 		$chunkInfo = array('this_chunk' => $thisChunk,
 								 'node' => $localNodeData);
@@ -171,11 +171,11 @@ class sotf_Neighbour extends sotf_Object {
 	 $timestamp = $db->getTimestampTz();
 	 $remoteId = $this->get('node_id');
 	 // save modified objects
-	 $db->begin();
+	 $db->begin(true);
 	 $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects, $remoteId);
 	 // if db error: don't commit!
 	 $db->commit();
-	 debug("number of updatd objects", $updatedObjects);
+	 debug("number of updated objects", $updatedObjects);
 	 // save time of this sync
 	 $this->set('last_sync_in', $timestamp);
 	 // take out from pending nodes

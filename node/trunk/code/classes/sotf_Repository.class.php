@@ -46,7 +46,7 @@ class sotf_Repository {
 									"sotf_prog_rating" => "ra",
 									"sotf_refs" => "re",
 									"sotf_stats" => "sx",
-                  "sotf_blobs" => "bl"
+									"sotf_blobs" => "bl"
 									);
 
   /** Mapping of table codes into class names. */
@@ -103,7 +103,7 @@ class sotf_Repository {
       $table = array_search($tc, $this->tableCodes);
       $obj = new sotf_NodeObject($table, $objectId, $data);
     }
-    if( count($obj->getAll())==0 )
+    if(!$obj->exists())
       return NULL;
 	 return $obj;
   }

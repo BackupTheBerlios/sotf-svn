@@ -163,7 +163,6 @@ class sotf_NodeObject extends sotf_Object {
 	function saveReplica() {
 	  global $db;
 	  
-	  $db->begin();
 	  $oldData = $db->getRow("SELECT * FROM sotf_node_objects WHERE id='$this->id' ");
 	  //debug("changed", $changed);
 	  //debug("lch", $this->lastChange);
@@ -197,12 +196,12 @@ class sotf_NodeObject extends sotf_Object {
 		 $internalObj->create();
 		 $changed = sotf_Object::create();
 		 if(!$changed) {
-			$internalObj->delete();
+			//	$internalObj->delete();
+			logError("Could not create object: " . $this->id);
+		 } else {
+			debug("created ", $this->id);
 		 }
-		 debug("created ", $this->id);
 	  }
-	  if($changed)
-		 $db->commit();
 	  return $changed;
 	}
 
@@ -230,18 +229,24 @@ class sotf_NodeObject extends sotf_Object {
 			 $obj['data'] = $data;
 			 $objects[] = $obj;
 			 debug("sending modified object", $obj['id']);
+			 if($tablename == 'sotf_blobs') 
+				$countBlobs++;
 		  }
 		  // delete from refresh table (will roll back if failed)
 		  sotf_NodeObject::removeFromRefreshTable($obj['id'], $remoteNode);
+		  // we cannot send too many blobs, it will result in memory allocation problems on the other side (but why??)
+		  if($countBlobs >= 5)
+			 break;
 		}
 	 }
 	 //debug("OBJECTS__2", $objects);
+	 debug("sending ". count($objects) . " objects");
 	 return $objects;
   }
 
   /** Static: saves the objects received from a neighbour node. */
   function saveModifiedObjects($objects, $fromNode) {
-	 global $repository;
+	 global $repository, $config;
 
 	 $updatedObjects = 0;
 	 if(count($objects) > 0) {
@@ -258,11 +263,13 @@ class sotf_NodeObject extends sotf_Object {
 			 $obj->data[$k] = urldecode($v);
 		  }
 		  */
-		  if($obj->saveReplica()) {
+		  if($objData['node_id'] == $config['nodeId']) {
+			 logError("Received my own object back via replication: ". $objData['id']);
+		  } elseif($obj->saveReplica()) {
 			 $updatedObjects++;
 			 // handle refresh table
-			 $obj->removeFromRefreshTable($obj->id, $fromNode);
 			 $obj->addToRefreshTable($obj->id, $fromNode);
+			 $obj->removeFromRefreshTable($obj->id, $fromNode);
 			 // handle deletions
 			 if($obj->tablename == 'sotf_deletions') {
 				$delId = $obj->get('del_id');

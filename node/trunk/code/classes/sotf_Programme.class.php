@@ -40,9 +40,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	*/
   function sotf_Programme($id='', $data='') {
 	 $this->sotf_ComplexNodeObject('sotf_programmes', $id, $data);
-	 if($id) {
+	 if($this->exists()) {
 		$station = $this->getStation();
-		$this->stationName = $this->station->get('name');
+		if($station)
+		  $this->stationName = $station->get('name');
 		//debug("stationName", $this->stationName);
 	 }
   }
