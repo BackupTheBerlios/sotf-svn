@@ -43,8 +43,15 @@ if ($cell["resource"] == 'text')			//if text analyze html code
 	$html = new html();
 	$cell["value"] = $html->analyze_text($cell["value"]);
 }
-
-
+elseif ($cell["resource"] == 'query')
+{
+	$qs = $portal->getQueries();
+	if (!array_key_exists($cell["value"], $qs))
+	{
+		$qskey = array_keys($qs);
+		$cell["value"] = $qskey[0];
+	}
+}
 
 if (sotf_Utils::getParameter('insert_after'))		//insert after button pressed
 {

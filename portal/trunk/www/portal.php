@@ -48,7 +48,8 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 	$admin = sotf_Utils::getParameter('admin');		//admin page
 
 	////settings for the portal, table and others
-	if ($_SESSION["portal_name"] == $portal_name)$settings = $_SESSION["settings"];			//load current settings from session
+	if (($_SESSION["portal_name"] == $portal_name) OR !isset($_SESSION["portal_name"])) $settings = $_SESSION["settings"];			//load current settings from session
+
 	if ($settings["table"] == "")
 	{
 		$settings = $portal->loadSettings();	//if not found load saved portal
@@ -283,7 +284,8 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 			foreach($result['audioFiles'] as $audioFiles)
 			{
 				$afile['mime_type'] = $audioFiles['mime_type'];
-				$afile['link'] = "listen.php/audio.m3u?id=".$audioFiles['prog_id']."&fileid=".$audioFiles['id'];
+				//$afile['link'] = "listen.php/audio.m3u?id=".$audioFiles['prog_id']."&fileid=".$audioFiles['id'];
+				$afile['link'] = "listen.php/id__".$audioFiles['prog_id']."/fileid__".$audioFiles['id']."/audio.m3u";
 				$afile['filesize'] = $audioFiles['filesize'];
 				$afile['play_length'] = $audioFiles['play_length'];
 				$afile['kbps'] = $audioFiles['kbps'];
