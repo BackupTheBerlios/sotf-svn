@@ -37,7 +37,6 @@ $map['sotf.cv.get'] = array('function' => 'cvGet');
 new xmlrpc_server($map);
 
 function checkAccess($url, $nodeId) {
-  $url = $neighbour->getUrl();
   if(!$url)
     return "No url found for neighbour node";
   $parsed = parse_url($url);
