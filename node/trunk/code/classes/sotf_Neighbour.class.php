@@ -162,7 +162,7 @@ class sotf_Neighbour extends sotf_Object {
 	 $localNode->set('last_sync_out', $timestamp);
 	 // take out from pending nodes
 	 if($this->get('pending_url')) {
-		$remoteNode = $sotf_Node::getNodeById($remoteId);
+		$remoteNode = sotf_Node::getNodeById($remoteId);
 		// TODO: problem is that if this is first sync or one-way connection, then object fro remote node may not exist
 		if($remoteNode) {
 		  $this->set('pending_url','');
