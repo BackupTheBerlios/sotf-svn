@@ -9,7 +9,6 @@
 
 	/************************
 	* ProgrammeNew - create a new one-time programme
-	*----------------------------------------
 	************************/
 	include("init.inc.php");												# include the global framwork
 	$myNav->add($SECTION[INSIDE],'inside.php');			# add entry to Navigation Bar Stack
@@ -49,30 +48,73 @@
 			$myError->add($ERR[17]);
 		}
 		
+		//check SOTF META DATA
+		if(!$myError->checkLength($_POST['keywords'],2)){
+			$myError->add($ERR[21]);
+		}
+		
+		if(!$myError->checkLength($_POST['programme_desc'],2)){
+			$myError->add($ERR[22]);
+		}
+		
+		if(mktime(0,0,1,$_POST['dcrMonth'],$_POST['dcrDay'],$_POST['dcrYear']) > NOW){
+			$myError->add($ERR[24]);
+		}
+		
+		if(mktime(0,0,1,$_POST['disMonth'],$_POST['disDay'],$_POST['disYear']) > NOW){
+			$myError->add($ERR[25]);
+		}
+		
+		if(!$myError->checkLength($_POST['rights'])){
+			$myError->add($ERR[23]);
+		}
+		
 		########## end errors check ##########
 		
 		//no errorz?
 		if($myError->getLength()==0){
 			//add database entries
 			$db->query("INSERT INTO series(owner,title,description) VALUES('$_POST[series_owner]','$_POST[series_title]','$_POST[series_description]')");
-			$db->query("INSERT INTO programme(series_id,intime,outtime,title,special) VALUES(
+			
+			$db->query("INSERT INTO programme(series_id,intime,outtime,title,special,alt_title,keywords,description,contributors,created,issued,topic,genre,lang,rights) VALUES(
 																				(SELECT max(id) FROM series),
 																				'$_POST[sdYear]-$_POST[sdMonth]-$_POST[sdDay] $_POST[sdHour]:$_POST[sdMinute]:00',
 																				'$_POST[edYear]-$_POST[edMonth]-$_POST[edDay] $_POST[edHour]:$_POST[edMinute]:00',
-																				'$_POST[programme_title]','$_POST[special_needs]')");
+																				'$_POST[programme_title]',
+																				'$_POST[special_needs]',
+																				'$_POST[alt_title]',
+																				'$_POST[keywords]',
+																				'$_POST[programme_desc]',
+																				'$_POST[contrib]',
+																				'$_POST[dcrYear]-$_POST[dcrMonth]-$_POST[dcrDay]',
+																				'$_POST[disYear]-$_POST[disMonth]-$_POST[disDay]',
+																				'$_POST[sotf_topic]',
+																				'$_POST[sotf_genre]',
+																				'$_POST[sotf_lang]',
+																				'$_POST[rights]')");
 			
 			//redirect to confirm page
 			header("Location: confirm.php?action=2&next=inside");
 		}else{		# errorz :(
 			//assign smarty default data
 			$smarty->assign(array(
-														"submit_series_title"=>$_POST['series_title'],
-														"submit_series_description"=>$_POST['series_description'],
-														"submit_programme_title"=>$_POST['programme_title'],
-														"submit_special_needs"=>$_POST['special_needs'],
-														"submit_series_owner"=>$_POST['series_owner'],
-														"stime"=>mktime($_POST['sdHour'],$_POST['sdMinute'],1,$_POST['sdMonth'],$_POST['sdDay'],$_POST['sdYear']),
-														"time"=>mktime($_POST['edHour'],$_POST['edMinute'],1,$_POST['edMonth'],$_POST['edDay'],$_POST['edYear'])
+														"submit_series_title"				=>$_POST['series_title'],
+														"submit_series_description"	=>$_POST['series_description'],
+														"submit_programme_title"		=>$_POST['programme_title'],
+														"submit_special_needs"			=>$_POST['special_needs'],
+														"submit_series_owner"				=>$_POST['series_owner'],
+														"stime"											=>mktime($_POST['sdHour'],$_POST['sdMinute'],1,$_POST['sdMonth'],$_POST['sdDay'],$_POST['sdYear']),
+														"time"											=>mktime($_POST['edHour'],$_POST['edMinute'],1,$_POST['edMonth'],$_POST['edDay'],$_POST['edYear']),
+														"submit_alt_title"					=>$_POST['alt_title'],
+														"submit_keywords"						=>$_POST['keywords'],
+														"submit_programme_desc"			=>$_POST['programme_desc'],
+														"submit_contrib"						=>$_POST['contrib'],
+														"dcrtime"										=>mktime(0,0,1,$_POST['dcrMonth'],$_POST['dcrDay'],$_POST['dcrYear']),
+														"distime"										=>mktime(0,0,1,$_POST['disMonth'],$_POST['disDay'],$_POST['disYear']),
+														"submit_sotf_topic"					=>$_POST['sotf_topic'],
+														"submit_sotf_genre"					=>$_POST['sotf_genre'],
+														"submit_sotf_lang"					=>$_POST['sotf_lang'],
+														"submit_rights"							=>$_POST['rights']
 														));
 		}
 	}else{
@@ -85,39 +127,7 @@
 	}
 	
 	//############### GET DATA FROM FILES ##############################################
-	//get language array
-	$file = fopen('templates/langs.txt', "r");
-	$contents = fread($file, filesize('templates/langs.txt'));
-	fclose($file);
-	$contents = explode("\n",$contents);
-	$langs = array();
-	reset($contents);
-	while(list($key,$val) = each($contents)){
-		$val = explode(";",$val);
-		$myKey = trim($val[1]);
-		$langs[$myKey] = trim($val[0]);
-	}
-	
-	//get topics array
-	$file = fopen('templates/topics.txt', "r");
-	$topics = fread($file, filesize('templates/topics.txt'));
-	fclose($file);
-	$topics = explode("\n",$topics);
-	reset($topics);
-	while(list($key,$val) = each($topics)){
-		$mytopics[$val] = str_replace("\t","-- ",ucfirst($val));
-	}
-	
-	//get genres array
-	$file = fopen('templates/genres.txt', "r");
-	$genres = fread($file, filesize('templates/genres.txt'));
-	fclose($file);
-	$genres = explode("\n",$genres);
-	reset($genres);
-	while(list($key,$val) = each($genres)){
-		$mygenres[$val] = $val;
-	}
-	//##### END GET DATA ########
+	include('common/getdata.inc.php');
 	
 	//assign default data to drop down boxes
 	$smarty->assign(array(

@@ -81,8 +81,31 @@
 		########## end errors check ##########
 		if($myError->getLength()==0){
 			//run update queries
-			$db->query("UPDATE series SET owner = '$_POST[series_owner]', title = '$_POST[series_title]', description = '$_POST[series_description]', active = '$_POST[series_active]' WHERE id = '$_POST[series_id]'");
-			$db->query("UPDATE programme SET title = '$_POST[programme_title]', intime = '$_POST[sdYear]-$_POST[sdMonth]-$_POST[sdDay] $_POST[sdHour]:$_POST[sdMinute]:00', outtime = '$_POST[edYear]-$_POST[edMonth]-$_POST[edDay] $_POST[edHour]:$_POST[edMinute]:00', special = '$_POST[special_needs]', active = '$_POST[prog_active]' WHERE id = '$_GET[id]'");
+			$db->query("UPDATE series SET 
+																		owner = '$_POST[series_owner]', 
+																		title = '$_POST[series_title]', 
+																		description = '$_POST[series_description]', 
+																		active = '$_POST[series_active]' 
+																WHERE id = '$_POST[series_id]'");
+			
+			//update programme data
+			$db->query("UPDATE programme SET 
+																			title 				= '$_POST[programme_title]', 
+																			intime 				= '$_POST[sdYear]-$_POST[sdMonth]-$_POST[sdDay] $_POST[sdHour]:$_POST[sdMinute]:00', 
+																			outtime 			= '$_POST[edYear]-$_POST[edMonth]-$_POST[edDay] $_POST[edHour]:$_POST[edMinute]:00', 
+																			special 			= '$_POST[special_needs]', 
+																			active 				= '$_POST[prog_active]',
+																			alt_title 		= '$_POST[alt_title]',
+																			keywords 			= '$_POST[keywords]',
+																			description 	= '$_POST[programme_desc]',
+																			contributors 	= '$_POST[contrib]',
+																			created 			=	'$_POST[dcrYear]-$_POST[dcrMonth]-$_POST[dcrDay]',
+																			issued				= '$_POST[disYear]-$_POST[disMonth]-$_POST[disDay]',
+																			topic					= '$_POST[sotf_topic]',
+																			genre					= '$_POST[sotf_genre]',
+																			lang					= '$_POST[sotf_lang]',
+																			rights				= '$_POST[rights]' 
+																	WHERE id = '$_GET[id]'");
 			
 			//close window and redirect
 			//choose where to redirect
@@ -110,7 +133,18 @@
 															"submit_series_active"	=>	$_POST['series_active'],
 															"submit_prog_active"		=>	$_POST['prog_active'],
 															"get_stuff"							=>	$_POST['get_stuff'],
-															"programme_id" 					=>  $_GET['id']
+															"programme_id" 					=>  $_GET['id'],
+															
+															"submit_alt_title"					=>$_POST['alt_title'],
+															"submit_keywords"						=>$_POST['keywords'],
+															"submit_programme_desc"			=>$_POST['programme_desc'],
+															"submit_contrib"						=>$_POST['contrib'],
+															"dcrtime"										=>mktime(0,0,1,$_POST['dcrMonth'],$_POST['dcrDay'],$_POST['dcrYear']),
+															"distime"										=>mktime(0,0,1,$_POST['disMonth'],$_POST['disDay'],$_POST['disYear']),
+															"submit_sotf_topic"					=>$_POST['sotf_topic'],
+															"submit_sotf_genre"					=>$_POST['sotf_genre'],
+															"submit_sotf_lang"					=>$_POST['sotf_lang'],
+															"submit_rights"							=>$_POST['rights']
 													 )
 											);
 		}//end if error
@@ -127,6 +161,18 @@
 									programme.special AS prog_special,
 									programme.series_id AS series_id,
 									programme.active AS submit_prog_active,
+									programme.alt_title AS prog_alt_title,
+									programme.keywords AS prog_keywords,
+									programme.description AS prog_description,
+									programme.contributors AS prog_contrib,
+									EXTRACT(EPOCH FROM programme.created) AS prog_created,
+									EXTRACT(EPOCH FROM programme.issued) AS prog_issued,
+									to_char(programme.created,'DD-MM-YYYY') AS prog_created_date,
+									to_char(programme.issued,'DD-MM-YYYY') AS prog_issued_date,
+									programme.topic AS prog_topic,
+									programme.genre AS prog_genre,
+									programme.lang AS prog_lang,
+									programme.rights AS prog_rights,
 									series.title AS series_title,
 									series.active AS submit_series_active,
 									series.description AS series_desc,
@@ -191,6 +237,9 @@
 			$my_id = $_GET['id'];
 		}
 		
+		//get data from filez
+		include('common/getdata.inc.php');
+		
 		//assign default data to drop down boxes (if admin)
 		$smarty->assign(array(
 													"special_needs" 				=> array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
@@ -201,7 +250,24 @@
 													"submit_series_owner"		=> $programme_data['series_owner_id'],
 													"series_id" 						=> $programme_data['series_id'],
 													"programme_id" 					=> $my_id,
-													"get_stuff"							=> $get_stuff
+													"get_stuff"							=> $get_stuff,
+													
+													"submit_alt_title"			=> $programme_data['prog_alt_title'],
+													"submit_keywords"				=> $programme_data['prog_keywords'],
+													"submit_programme_desc"	=> $programme_data['prog_description'],
+													"submit_contrib"				=> $programme_data['prog_contrib'],
+													"dcrtime"								=> $programme_data['prog_created'],
+													"distime"								=> $programme_data['prog_issued'],
+													"dcrdate"								=> $programme_data['prog_created_date'],
+													"disdate"								=> $programme_date['prog_issued_date'],
+													"submit_sotf_topic"			=> $programme_data['prog_topic'],
+													"submit_sotf_genre"			=> $programme_data['prog_genre'],
+													"submit_sotf_lang"			=> $programme_data['prog_lang'],
+													"submit_rights"					=> $programme_data['prog_rights'],
+													
+													"sotf_lang"							=> $langs,
+													"sotf_genres"						=> $mygenres,
+													"sotf_topics"						=> $mytopics
 												));
 	}//end IF NO Submit
 	

@@ -58,53 +58,52 @@
                 </tr>
                 
 				<tr bgcolor="#dddddd"> 
-                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>SOTF 
-                      network meta data</strong></div></td>
+                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#sotf1#}</strong></div></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">Alternative Title:</div></td>
-                  <td nowrap><input name="programme_title2" type="text" class="myinput" id="programme_title2" maxlength="255" value="{$submit_programme_title}"></td>
+                  <td nowrap><div align="right">{#sotf2#}:</div></td>
+                  <td nowrap><input name="alt_title" type="text" class="myinput" id="alt_title" maxlength="255" value="{$submit_alt_title}"></td>
                 </tr>
 				
 				<tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*Keywords (comma separated):</div></td>
-                  <td nowrap><input name="programme_title2" type="text" class="myinput" id="programme_title2" maxlength="255" value="{$submit_programme_title}"></td>
+                  <td nowrap><div align="right">*{#sotf3#} ({#sotf4#}):</div></td>
+                  <td nowrap><input name="keywords" type="text" class="myinput" id="keywords" maxlength="255" value="{$submit_keywords}"></td>
                 </tr>
 				
 				<tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*Programme Description:</div></td>
-                  <td nowrap><textarea name="programme_title2" rows="4" class="myinput" id="programme_title2">{$submit_programme_title}</textarea></td>
+                  <td nowrap><div align="right">*{#sotf5#}:</div></td>
+                  <td nowrap><textarea name="programme_desc" rows="4" class="myinput" id="programme_desc">{$submit_programme_desc}</textarea></td>
                 </tr>
 				
 				<tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">Contributors (comma separated):</div></td>
-                  <td nowrap><input name="programme_title2" type="text" class="myinput" id="programme_title2" maxlength="255" value="{$submit_programme_title}"></td>
+                  <td nowrap><div align="right">{#sotf6#} ({#sotf4#}):</div></td>
+                  <td nowrap><input name="contrib" type="text" class="myinput" id="contrib" maxlength="255" value="{$submit_contrib}"></td>
                 </tr>
 				
 				<tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*Date Created:</div></td>
+                  <td nowrap><div align="right">*{#sotf7#}:</div></td>
                   <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=dcr 
-                    time=$stime}</td>
+                    time=$dcrtime}</td>
                 </tr>
 				
 				<tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*Date Issued:</div></td>
+                  <td nowrap><div align="right">*{#sotf8#}:</div></td>
                   <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=dis 
-                    time=$stime}</td>
+                    time=$distime}</td>
                 </tr>
 				
 				<tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*Type:</div></td>
+                  <td nowrap><div align="right">*{#sotf9#}:</div></td>
                   <td nowrap><table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr>
-                        <td width="1">Topic:</td>
+                        <td width="1">{#sotf10#}:</td>
                         <td width="1">
-<select name="select">
+<select name="sotf_topic" id="sotf_topic">
 {html_options options=$sotf_topics selected=$submit_sotf_topic}
                           </select>
                         </td>
-                        <td width="1">&nbsp;Genre:</td>
-                        <td><select name="select2">
+                        <td width="1">&nbsp;{#sotf11#}:</td>
+                        <td><select name="sotf_genre" id="sotf_genre">
 								{html_options options=$sotf_genres selected=$submit_sotf_genre}
                           </select></td>
                       </tr>
@@ -112,15 +111,15 @@
                 </tr>
 				
 				<tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*Language:</div></td>
-                  <td nowrap><select name="select3">
+                  <td nowrap><div align="right">*{#sotf12#}:</div></td>
+                  <td nowrap><select name="sotf_lang" id="sotf_lang">
 				  		{html_options options=$sotf_lang selected=$submit_sotf_lang_default}
                     </select></td>
                 </tr>
 				
 				<tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*Rights:</div></td>
-                  <td nowrap><input name="programme_title2" type="text" class="myinput" id="programme_title2" maxlength="255" value="{$submit_programme_title}"></td>
+                  <td nowrap><div align="right">*{#sotf13#}:</div></td>
+                  <td nowrap><input name="rights" type="text" class="myinput" id="rights" maxlength="255" value="{$submit_rights}"></td>
                 </tr>
 				
 				

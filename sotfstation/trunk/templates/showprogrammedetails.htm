@@ -36,10 +36,9 @@
                   <td nowrap><div align="right">{#spec_needs#}:</div></td>
                   <td nowrap>{$prog_special}</td>
                 </tr>
-{if $submit_series_active_flag == 't'}
+                {if $submit_series_active_flag == 't'} 
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap> 
-                    <div align="right">{#prog_active#}:</div></td>
+                  <td nowrap> <div align="right">{#prog_active#}:</div></td>
                   <td nowrap><table border="0" cellspacing="0" cellpadding="1">
                       <tr> 
                         <td>{if $submit_prog_active_flag == 't'} <img src="{$root}img/true.gif" width="24" height="16"> 
@@ -49,7 +48,59 @@
                       </tr>
                     </table></td>
                 </tr>
-{/if}
+                <tr bgcolor="#dddddd"> 
+                  <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#sotf1#}</strong></div></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">{#sotf2#}:</div></td>
+                  <td nowrap>{$submit_alt_title}</td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">*{#sotf3#} ({#sotf4#}):</div></td>
+                  <td nowrap>{$submit_keywords}</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*{#sotf5#}:</div></td>
+                  <td nowrap>{$submit_programme_desc}</td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">{#sotf6#} ({#sotf4#}):</div></td>
+                  <td nowrap>{$submit_contrib}</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*{#sotf7#}:</div></td>
+                  <td nowrap>{$dcrdate}</td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">*{#sotf8#}:</div></td>
+                  <td nowrap>{$disdate}</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*{#sotf9#}:</div></td>
+                  <td nowrap><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr> 
+                        <td width="1">{#sotf10#}:</td>
+                        <td width="1"> 
+{$submit_sotf_topic}
+                           </td>
+                        <td width="1">&nbsp;{#sotf11#}:</td>
+                        <td>
+								{$submit_sotf_genre}
+                   </td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">*{#sotf12#}:</div></td>
+                  <td nowrap>
+				  		{$submit_sotf_lang_default}
+                   </td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">*{#sotf13#}:</div></td>
+                  <td nowrap>{$submit_rights}</td>
+                </tr>
+                {/if} 
                 <tr bgcolor="#dddddd"> 
                   <td width="100%" colspan=2 class=whitesmall><strong>{#series_data#}</strong></td>
                 </tr>
@@ -71,9 +122,8 @@
                 </tr>
                 <tr bgcolor="#eeeeee"> 
                   <td nowrap> <div align="right">{#series_active#}:</div></td>
-                  <td nowrap>
-<table border="0" cellspacing="0" cellpadding="1">
-                      <tr>
+                  <td nowrap> <table border="0" cellspacing="0" cellpadding="1">
+                      <tr> 
                         <td>{if $submit_series_active_flag == 't'} <img src="{$root}img/true.gif" width="24" height="16"> 
                           {else} <img src="{$root}img/false.gif" width="24" height="16"> 
                           {/if} </td>
@@ -112,32 +162,44 @@
                   <td colspan="2" nowrap bgcolor="#dddddd" class=whitesmall> <div align="left"><strong>{#prog_data#}</strong></div></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td width="10%" nowrap> <div align="right">{#prog_title#}:</div></td>
+                  <td width="10%" nowrap> 
+                    <div align="right">{#prog_title#}:</div></td>
                   <td width="100%" nowrap> <input name="programme_title" type="text" class="myinput" id="programme_title" value="{$prog_title}" maxlength="255"></td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right"> *{#start_date#}:</div></td>
+                  <td nowrap> 
+                    <div align="right"> *{#start_date#}:</div></td>
                   <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=sd 
                     time=$prog_intimets}</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*{#start_time#}:</div></td>
+                  <td nowrap> 
+                    <div align="right">*{#start_time#}:</div></td>
                   <td nowrap>{html_select_time time=$prog_intimets display_seconds=false 
                     prefix=sd}</td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*{#end_time#}:</div></td>
-                  <td nowrap>{html_select_time display_seconds=false time=$prog_outtimets 
-                    prefix=ed} ({#end_time_comm#})</td>
+                  <td nowrap> 
+                    <div align="right">*{#end_time#}:</div></td>
+                  <td>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="100" nowrap>{html_select_time display_seconds=false 
+                          time=$prog_outtimets prefix=ed} </td>
+                        <td> ({#end_time_comm#})</td>
+                      </tr>
+                    </table></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*{#spec_needs#}:</div></td>
+                  <td nowrap> 
+                    <div align="right">*{#spec_needs#}:</div></td>
                   <td nowrap><select name="special_needs" id="special_needs">
                      {html_options options=$special_needs selected=$submit_special_needs}
                     </select> </td>
                   {if $submit_series_active == 't'} </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*{#prog_active#}:</div></td>
+                  <td nowrap> 
+                    <div align="right">*{#prog_active#}:</div></td>
                   <td nowrap><select name="prog_active" class="myselect">
 				  		{html_options options=$prog_active selected=$submit_prog_active}
                     </select></td>
@@ -145,56 +207,124 @@
                 {else} 
                 <input type=hidden name="prog_active" value={$submit_prog_active}>
                 {/if} 
-				 <tr bgcolor="#eeeeee"> 
+                <tr bgcolor="#eeeeee"> 
                   <td nowrap> 
                     <div align="right">*{#options#}</div></td>
-                  <td nowrap> 
-                    <table width="100" border="0" cellspacing="0" cellpadding="1">
-                      <tr>
+                  <td nowrap> <table width="100" border="0" cellspacing="0" cellpadding="1">
+                      <tr> 
                         <td><a href="showprogrammedetails.php?id={$programme_id}&action=delete&timestamp={$prog_intimets}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" width="24" height="16" border=0></a></td>
                         <td nowrap><a href="showprogrammedetails.php?id={$programme_id}&action=delete&timestamp={$prog_intimets}" OnClick="return confirmLink(this,'');">{#delete_programme#}</a></td>
                       </tr>
                     </table></td>
                 </tr>
                 <tr bgcolor="#dddddd"> 
+                  <td colspan="2" class=whitesmall> 
+                    <div align="left"><strong>{#sotf1#}</strong></div></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td> 
+                    <div align="right">{#sotf2#}:</div></td>
+                  <td nowrap><input name="alt_title" type="text" class="myinput" id="alt_title" maxlength="255" value="{$submit_alt_title}"></td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td> 
+                    <div align="right">*{#sotf3#} ({#sotf4#}):</div></td>
+                  <td nowrap><input name="keywords" type="text" class="myinput" id="keywords" maxlength="255" value="{$submit_keywords}"></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td> 
+                    <div align="right">*{#sotf5#}:</div></td>
+                  <td nowrap><textarea name="programme_desc" rows="4" class="myinput" id="programme_desc">{$submit_programme_desc}</textarea></td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td> 
+                    <div align="right">{#sotf6#} ({#sotf4#}):</div></td>
+                  <td nowrap><input name="contrib" type="text" class="myinput" id="contrib" maxlength="255" value="{$submit_contrib}"></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td> 
+                    <div align="right">*{#sotf7#}:</div></td>
+                  <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=dcr 
+                    time=$dcrtime}</td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td> 
+                    <div align="right">*{#sotf8#}:</div></td>
+                  <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=dis 
+                    time=$distime}</td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td> 
+                    <div align="right">*{#sotf9#}:</div></td>
+                  <td nowrap><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr> 
+                        <td width="1">{#sotf10#}:</td>
+                        <td width="1"> <select name="sotf_topic" id="sotf_topic">
+{html_options options=$sotf_topics selected=$submit_sotf_topic}
+                          </select> </td>
+                        <td width="1">&nbsp;{#sotf11#}:</td>
+                        <td><select name="sotf_genre" id="sotf_genre">
+								{html_options options=$sotf_genres selected=$submit_sotf_genre}
+                          </select></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr bgcolor="#f4f4f4"> 
+                  <td> 
+                    <div align="right">*{#sotf12#}:</div></td>
+                  <td nowrap><select name="sotf_lang" id="sotf_lang">
+				  		{html_options options=$sotf_lang selected=$submit_sotf_lang}
+                    </select></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td> 
+                    <div align="right">*{#sotf13#}:</div></td>
+                  <td nowrap><input name="rights" type="text" class="myinput" id="rights" maxlength="255" value="{$submit_rights}"></td>
+                </tr>
+                <tr bgcolor="#dddddd"> 
                   <td width="100%" colspan=2 class=whitesmall><strong>{#series_data#}</strong></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td width="10%" nowrap> <div align="right">*{#series_title#}:</div></td>
+                  <td width="10%" nowrap> 
+                    <div align="right">*{#series_title#}:</div></td>
                   <td nowrap><input name="series_title" type="text" class="myinput" id="series_title" value="{$series_title}" maxlength="255"></td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*{#series_desc#}:</div></td>
+                  <td nowrap> 
+                    <div align="right">*{#series_desc#}:</div></td>
                   <td><textarea name="series_description" rows="3" wrap="VIRTUAL" class="myinput" id="series_description">{$series_desc}</textarea></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">{#progs_in_ser#}:</div></td>
+                  <td nowrap> 
+                    <div align="right">{#progs_in_ser#}:</div></td>
                   <td nowrap>{$tot_progs} overall, {$progs_to_run} still to run</td>
                 </tr>
-{if $edit_station == 2}
+                {if $edit_station == 2} 
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*{#series_owner#}:</div></td>
+                  <td nowrap> 
+                    <div align="right">*{#series_owner#}:</div></td>
                   <td nowrap><select name="series_owner" class="myselect" id="series_owner">
 				  		{html_options options=$series_owner selected=$submit_series_owner}
                     </select></td>
                 </tr>
-{else}
-<input type="hidden" name="series_owner" value="{$submit_series_owner}">
-{/if}
+                {else} 
+                <input type="hidden" name="series_owner" value="{$submit_series_owner}">
+                {/if} 
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">{#series_active#}:</div></td>
+                  <td nowrap> 
+                    <div align="right">{#series_active#}:</div></td>
                   <td nowrap><select name="series_active" class="myselect">
 				  		{html_options options=$series_active selected=$submit_series_active}
                     </select></td>
                 </tr>
-				 <tr bgcolor="#eeeeee"> 
+                <tr bgcolor="#eeeeee"> 
                   <td nowrap> 
                     <div align="right">*{#options#}</div></td>
-                  <td nowrap> 
-                    <table width="100" border="0" cellspacing="0" cellpadding="1">
-                      <tr>
+                  <td nowrap> <table width="100" border="0" cellspacing="0" cellpadding="1">
+                      <tr> 
                         <td><a href="showprogrammedetails.php?id={$programme_id}&action=delete_series&series_id={$series_id}&timestamp={$prog_intimets}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" width="24" height="16" border=0></a></td>
-                        <td nowrap><a href="showprogrammedetails.php?id={$programme_id}&action=delete_series&series_id={$series_id}&timestamp={$prog_intimets}" OnClick="return confirmLink(this,'');">{#delete_series#}</a> ({#delete_series_help#})</td>
+                        <td nowrap><a href="showprogrammedetails.php?id={$programme_id}&action=delete_series&series_id={$series_id}&timestamp={$prog_intimets}" OnClick="return confirmLink(this,'');">{#delete_series#}</a> 
+                          ({#delete_series_help#})</td>
                       </tr>
                     </table></td>
                 </tr>
@@ -213,7 +343,7 @@
                       <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
                       <input name="Submit" type="hidden" id="Submit" value="do">
                       <input type="hidden" name="series_id" value="{$series_id}">
-					  <input type="hidden" name="get_stuff" value="{$get_stuff}">
+                      <input type="hidden" name="get_stuff" value="{$get_stuff}">
                     </div></td>
                 </tr>
               </table>

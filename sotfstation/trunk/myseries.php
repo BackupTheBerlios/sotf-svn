@@ -48,11 +48,11 @@
 		case 'intime':				{$sortstring = 'intime'; break;}
 		case 'outtime':				{$sortstring = 'outtime'; break;}
 		case 'special':				{$sortstring = 'title'; break;}
-		case 'options':				{$sortstring = 'active'; break;}
+		case 'options':				{$sortstring = 'published'; break;}
 		default:							{$sortstring = 'intime';}
 	}
 	
-	if(!isset($_GET['orderby'])){
+	if(!isset($_GET['orderby']) and isset($_GET['sortby'])){
 		$_GET['orderby'] = 'asc';
 	}
 	
@@ -78,8 +78,9 @@
 																	programme.title,
 																	to_char(programme.intime,'DD-MM-YYYY HH24:MI') AS prog_sd,
 																	to_char(programme.outtime,'DD-MM-YYYY HH24:MI') AS prog_ed,
-																	special,
-																	active
+																	programme.special,
+																	programme.active,
+																	programme.published
 																	FROM
 																	programme
 																	WHERE series_id = '$_GET[id]'

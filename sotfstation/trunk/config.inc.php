@@ -53,6 +53,15 @@
 	
 	define('SADM_GROUP',40);																	# This is the default member id, to which all the station users will belong to
 	
+	//SOTF META DATA CONFIG
+	define('SOTF_PUB','Radio Tienes');												# publisher of the resorces
+	define('SOTF_PUB_URI','http://www.pvl.at/');							# link to the homepage
+	define('SOTF_PUB_LOGO','http://www.pvl.at/logo.gif');			# link to logo
+	
+	define('SOTF_NODE','AA1');																# id of the node
+	define('SOTF_NODE_URI','http://www.hello.com');						# uri of the node
+	define('SOTF_STATION_ID','1121');													# id of THIS station on the node netwORK
+	
 	/*
 	* The critical settings are now configured, below you will find other data to play with that
 	* controls the way your station looks and behaves

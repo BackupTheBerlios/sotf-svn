@@ -1,0 +1,48 @@
+<br><br><br> 
+<table width="300" border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td><table width="300" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+          <tr bgcolor="#eeeeee"> 
+            
+          <td colspan="2" bgcolor="#ddddff" class="title"> 
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td width="20" nowrap><strong><img src="{$root}img/i-users.gif" width="27" height="21"></strong></td>
+                <td class=title><strong>Publish Programme</strong></td>
+              </tr>
+            </table>
+          </td>
+          </tr>
+          <tr bgcolor="#eeeeee"> 
+            
+          <td colspan="2" bgcolor="#eeeeee"> 
+            <div align="justify">Queing data for publishing to the node...</div></div> 
+          </td>
+          </tr>
+		  
+		  {section name=error_cell show=$error_out} 
+                <tr bgcolor="#FFCCCC"> 
+                  
+          <td><div align="center"><strong><font color="#FF0000">Failure</font></strong>{section 
+              name=errors loop=$error_list show=$error_out} </div>
+            <div align=center> 
+                      <li><b><font color="#FF0000">{$error_list[errors]}</font></b></div>
+                    {/section}</td>
+                </tr>
+		{sectionelse}
+		<tr bgcolor="#CCFFCC"> 
+                  <td>
+                    <div align=center> <b><font color="#00AA00">Done! [ <a href="#">close 
+              window</a> ]</font></b></div>
+                    </td>
+                </tr>
+                {/section} 
+
+        </table></td>
+    </tr>
+    <tr> 
+      <td><div align="right"><img src="{$root}img/shadow1.gif" height="9"></div></td>
+    </tr>
+  </table>
+
+<br><br><br>

@@ -35,6 +35,14 @@
 		'18'	=> 'Series end date must be greater than the series start date!',
 		'19'	=> 'Cannot create a one day series, please create a singe programme instead!',
 		'20'	=> 'Please select at least one day for the show to run in!',
+		'21'	=> 'Please enter a valid set of keywords',
+		'22'	=> 'Please enter a valid programme description!',
+		'23'	=> 'Please ebter all the relevant rights information to programme!',
+		'24'	=> 'Please enter an existing not future creation date!',
+		'25'	=> 'Please enter a valid not future issuing date!',
+		'26'	=> 'You do not have enough access rights to publish this programme!',
+		'27'	=> 'Please make sure you have specified all the neccesary meta data for this programme!',
+		'28'	=> 'Please activate the programme first',
 		'403'	=> 'You may not view this section of the Station Management Software! If you feel that this is a mistake, then please contact the Station Administrator',
 		'ACC'	=> 'You have Read Only privileges over this section.'
 	);
