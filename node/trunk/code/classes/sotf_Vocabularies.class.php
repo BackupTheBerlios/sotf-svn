@@ -437,9 +437,12 @@ class sotf_Vocabularies {
     return $this->db->getOne("SELECT role_id FROM sotf_role_names WHERE name='$name' AND language='$language'");
   }
 
-  function getRoles() {
-		$this->loadRoles();
-		return $this->roles;
+  function getRoles($language='') {
+		global $lang;
+		if(empty($language))
+			$language = $lang;
+		$this->loadRoles($language);
+		return $this->roles[$language];
   }
 
   /************************************************
@@ -484,9 +487,12 @@ class sotf_Vocabularies {
 		}
 	}
 
-  function getGenres() {
-		$this->loadGenres();
-		return $this->genres;
+  function getGenres($language='') {
+		global $lang;
+		if(empty($language))
+			$language = $lang;
+		$this->loadGenres($language);
+		return $this->genres[$language];
   }
 	
   function getGenreName($id, $language='') {

@@ -86,7 +86,7 @@ if($defQuery) {
 
     $hits = '';
     while (DB_OK === $res->fetchInto($row)) {
-      $row['icon'] = sotf_Blob::cacheIcon($row['id']);
+      $row['icon'] = sotf_Blob::cacheIcon2($row);
       $hits[] = $row;
     }
     $smarty->assign("NEWS", $hits);

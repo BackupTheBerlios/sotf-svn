@@ -89,6 +89,7 @@ if(!empty($XBMF)) {
 
 //******** Expire old programmes
 
+  /*
 $prgIds = sotf_Programme::getExpiredProgrammes();
 if(!empty($prgIds)) {
   debug("deleting expired", $prgIds);
@@ -99,6 +100,7 @@ if(!empty($prgIds)) {
   }
   $db->commit();
 }
+  */
 
 //******** Update topic counts
 

@@ -32,7 +32,9 @@ if($id) {
   $page->setTitle($prg->get('title'));
 
   // general data
-  $smarty->assign('PRG_DATA', $prg->getAllWithIcon());
+  $prgData = $prg->getAll();
+  $prgData['icon'] = sotf_Blob::cacheIcon($id);
+  $smarty->assign('PRG_DATA', $prgData);
   // station data
   $station = $prg->getStation();
   $smarty->assign('STATION_DATA', $station->getAllWithIcon());

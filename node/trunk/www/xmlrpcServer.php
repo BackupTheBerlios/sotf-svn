@@ -56,7 +56,7 @@ function cvListNames($params) {
   debug("incoming XML-RPC request: sotf.cv.listnames");
   // TODO: check access
   $retval = $vocabularies->getCVocabularyNames();
-  $retval = xmlrpc_encode($retval);
+  $retval = xmlrpc_encoder($retval);
   return new xmlrpcresp($retval);
 }
 
@@ -64,19 +64,19 @@ function cvGet($params) {
   global $vocabularies;
   debug("incoming XML-RPC request: sotf.cv.get");
   // TODO: check access
-  $type = xmlrpc_decode($params->getParam(0));
-  $name = xmlrpc_decode($params->getParam(1));
-  $lang = xmlrpc_decode($params->getParam(2));
+  $type = xmlrpc_decoder($params->getParam(0));
+  $name = xmlrpc_decoder($params->getParam(1));
+  $lang = xmlrpc_decoder($params->getParam(2));
   $retval = $vocabularies->getCVocabulary($type, $name, $lang);
-  $retval = xmlrpc_encode($retval);
+  $retval = xmlrpc_encoder($retval);
   return new xmlrpcresp($retval);
 }
 
 function syncResp($params) {
   debug("incoming SYNC request");
-  $chunkInfo = xmlrpc_decode($params->getParam(0));
+  $chunkInfo = xmlrpc_decoder($params->getParam(0));
   $nodeData = $chunkInfo['node'];
-  $objects = xmlrpc_decode($params->getParam(1));
+  $objects = xmlrpc_decoder($params->getParam(1));
   $neighbour = sotf_Neighbour::getById($nodeData['node_id']);
   if(!$neighbour) {
     logError("No access: you are not an allowed neighbour node!");
@@ -89,15 +89,15 @@ function syncResp($params) {
   }
   $retval = $neighbour->syncResponse($chunkInfo, $objects);
   // send response
-  $retval = xmlrpc_encode($retval);
+  $retval = xmlrpc_encoder($retval);
   return new xmlrpcresp($retval);
 }
 
 function forwardResp($params) {
   debug("incoming FORWARD request");
-  $chunkInfo = xmlrpc_decode($params->getParam(0));
+  $chunkInfo = xmlrpc_decoder($params->getParam(0));
   $fromNode = $chunkInfo['from_node'];
-  $objects = xmlrpc_decode($params->getParam(1));
+  $objects = xmlrpc_decoder($params->getParam(1));
   $node = sotf_Node::getNodeById($fromNode);
   if(!$node) {
     logError("No access: you are not in my node list!");
@@ -110,15 +110,15 @@ function forwardResp($params) {
   }
   $retval = $node->forwardResponse($chunkInfo, $objects);
   // send response
-  $retval = xmlrpc_encode($retval);
+  $retval = xmlrpc_encoder($retval);
   return new xmlrpcresp($retval);
 }
 
-
+/** For portal */
 function getQueryResults($params)
 {
 	global $config, $db;
-	$query = xmlrpc_decode($params->getParam(0));
+	$query = xmlrpc_decoder($params->getParam(0));
 
 	$advsearch = new sotf_AdvSearch();	//create new search object object with this array
 	$SQLquery = $advsearch->Deserialize($query);		//deserialize the content of the hidden field
@@ -126,8 +126,8 @@ function getQueryResults($params)
 	$results = $db->getAll($query." LIMIT 30 OFFSET 0");
 	foreach($results as $key => $result)
 	{
-		$icon = sotf_Blob::cacheIcon($result['id']);
-		if ($icon) $results[$key]['icon'] = $config['cacheUrl']."/".$result['id'].".png";
+		$icon = sotf_Blob::cacheIcon2($result);
+		if ($icon) $results[$key]['icon'] = $config['cacheUrl']."/".$icon;
 		//TODO if no icon {$IMAGEDIR}/noicon.png $imageprefix????
 
 		$prg = & new sotf_Programme($result['id']);
@@ -143,14 +143,15 @@ function getQueryResults($params)
 
 
 	}
-	$retval = xmlrpc_encode($results);
+	$retval = xmlrpc_encoder($results);
 	return new xmlrpcresp($retval);
 }
 
+/** For portal */
 function getProgrammes($params)
 {
 	global $config, $db;
-	$prglist = xmlrpc_decode($params->getParam(0));
+	$prglist = xmlrpc_decoder($params->getParam(0));
 
 	$query="SELECT programmes.* FROM (";
 	$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.name as seriestitle, sotf_series.description as seriesdescription, sotf_prog_rating.rating_value as rating FROM sotf_programmes";
@@ -174,8 +175,8 @@ function getProgrammes($params)
 	foreach($results as $key => $result)
 	{
 //		debug("------------>".$result['id']."<------------------");
-		$icon = sotf_Blob::cacheIcon($result['id']);
-		if ($icon) $results[$key]['icon'] = $config['cacheUrl']."/".$result['id'].".png";
+		$icon = sotf_Blob::cacheIcon2($result);
+		if ($icon) $results[$key]['icon'] = $config['cacheUrl']."/".$icon;
 		//TODO if no icon {$IMAGEDIR}/noicon.png $imageprefix????
 
 		$prg = & new sotf_Programme($result['id']);
@@ -198,13 +199,13 @@ function getProgrammes($params)
 
 	}
 
-	$retval = xmlrpc_encode($results);
+	$retval = xmlrpc_encoder($results);
 	return new xmlrpcresp($retval);
 }
 
 function putEvents($params) {
   global $config, $db, $repository;
-  $events = xmlrpc_decode($params->getParam(0));
+  $events = xmlrpc_decoder($params->getParam(0));
   foreach($events as $event) {
     debug("PORTAL EVENT", $event);
     $progId = $event['prog_id'];
@@ -212,7 +213,7 @@ function putEvents($params) {
       if($repository->looksLikeId($progId))
 	$prg = &$repository->getObject($progId);
       if(!$prg) {
-	logError("Invalid prog_id arrived in portal event: $progId");
+	debug("Invalid prog_id arrived in portal event", $progId);
 	continue;
       }
       $nodeId = $prg->getNodeId();
@@ -225,7 +226,7 @@ function putEvents($params) {
     } 
     $repository->processPortalEvent($event);
   }
-  $retval = xmlrpc_encode(count($events));
+  $retval = xmlrpc_encoder(count($events));
   return new xmlrpcresp($retval);
 }
 

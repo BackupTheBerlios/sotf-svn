@@ -63,7 +63,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	/** caches icon for object, and adds indicator flag for Smarty templates whether there is an icon */
 	function getAllWithIcon() {
 		$retval = $this->getAll();
-		$retval['icon'] = sotf_Blob::cacheIcon($this->id);
+		$retval['icon'] = sotf_Blob::cacheIcon($retval['id']);
 		return $retval;
 	}
 

@@ -43,7 +43,7 @@ $result = $playlist->load();
 $programmes = array();
 for($i=0; $i<count($result); $i++)
 {
-  $result[$i]['icon'] = sotf_Blob::cacheIcon($result[$i]['id']);
+  $result[$i]['icon'] = sotf_Blob::cacheIcon2($result[$i]);
 	$programmes["0:".$i] = $result[$i]["title"];
 }
 

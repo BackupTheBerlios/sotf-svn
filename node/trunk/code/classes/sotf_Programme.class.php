@@ -351,7 +351,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		raiseError($res);
 	 $results = null;
 	 while (DB_OK === $res->fetchInto($row)) {
-		$row['icon'] = sotf_Blob::cacheIcon($row['id']);
+		$row['icon'] = sotf_Blob::cacheIcon2($row);
 		$results[] = $row;
 	 }
 	 return $results;

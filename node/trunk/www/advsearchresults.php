@@ -92,7 +92,7 @@ for($i =0; $i<$max; $i++)	//$selected will contain all the information about the
 
 	$item['title'] = $result[$i][title];
 	$item['id'] = $result[$i][id];
-	$item['icon'] = sotf_Blob::cacheIcon($item['id']);
+	$item['icon'] = sotf_Blob::cacheIcon2($result[$i]);
 	$item['values'] = $values;
 	$selected[] = $item;
 	$item = "";

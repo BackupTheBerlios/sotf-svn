@@ -32,7 +32,7 @@ if($pattern) {
 
   // cache icons for results
   for($i=0; $i<count($result); $i++) {
-    $result[$i]['icon'] = sotf_Blob::cacheIcon($result[$i]['id']);
+    $result[$i]['icon'] = sotf_Blob::cacheIcon2($result[$i]);
   }
 
   $smarty->assign('RESULTS', $result);

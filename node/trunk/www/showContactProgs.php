@@ -22,7 +22,7 @@ $limit = $page->splitList($contact->countProgrammes(), "$scriptUrl/$contactId");
 $progs = $contact->listProgrammes($limit["from"] , $limit["maxresults"]);
 
 for($i=0; $i<count($progs); $i++) {
-  $progs[$i]['icon'] = sotf_Blob::cacheIcon($progs[$i]['id']);
+  $progs[$i]['icon'] = sotf_Blob::cacheIcon2($progs[$i]);
 }
 
 $smarty->assign('PROGS',$progs);

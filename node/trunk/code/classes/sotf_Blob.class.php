@@ -59,6 +59,23 @@ class sotf_Blob extends sotf_NodeObject {
     }
   }
 
+  function cacheIcon2($data) {
+    global $repository;
+    debug('cacheIcon2', $data);
+    $found = sotf_Blob::cacheIcon($data['id']);
+    if($found)
+      return $data['id'] . '.png';
+    if($data['series_id'])
+      $found = sotf_Blob::cacheIcon($data['series_id']);
+    if($found)
+      return $data['series_id'] . '.png';
+    if($data['station_id'])
+      $found = sotf_Blob::cacheIcon($data['station_id']);
+    if($found)
+      return $data['station_id'] . '.png';
+    return false;
+  }
+
   /** static, this places the icon into the www/tmp, so that you can refer to
       it with <img src=, returns true if there is an icon for this object */
   function cacheIcon($id) {
@@ -68,14 +85,18 @@ class sotf_Blob extends sotf_NodeObject {
       raiseError("missing id");
     $fname = $config['cacheDir'] . "/" . $id . '.png';
     if(is_readable($fname)) {
-      //$stat = stat($fname);
-      //if(time() - $stat['mtime'] <= $cacheTimeout)
+      $stat = stat($fname);
+      if(time() - $stat['mtime'] <= $cacheTimeout)
         return true;
+      else {
+	if(!unlink($fname))
+	  logError("Could not delete $fname");
+      }
     }
     $icon = sotf_Blob::findBlob($id, 'icon');
     if(!$icon)
       return false;
-    debug("cached icon for", $id);
+    debug("cached icon of $id for ", $forId);
     sotf_Utils::save($fname, $icon);
     return true;
   }
