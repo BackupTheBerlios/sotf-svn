@@ -102,7 +102,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   function getStation() {
-    return new sotf_Station($this->get('station_id'));
+    if(!$this->station)
+      $this->station = new sotf_Station($this->get('station_id'));
+    return $this->station;
   }
 
   function getSeries() {

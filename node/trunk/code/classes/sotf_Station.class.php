@@ -143,7 +143,7 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	* @return	mixed	Returns the path of the jingle if exist, else return boolean false
 	* @use	$audioFormats
 	*/
-	function getJingle($index)
+	function getJingle($index = 1)
 	{
 		global $audioFormats;
 

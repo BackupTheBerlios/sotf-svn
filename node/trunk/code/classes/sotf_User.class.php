@@ -77,7 +77,7 @@ class sotf_User
       
       // get some more data from sadm
 			$data = $userdb->getRow("SELECT * FROM user_preferences WHERE auth_id = '$id'");
-      debug("user_preferences", $data);
+      // debug("user_preferences", $data);
 			$this->realname = $data['RealName'];
 			$this->language = $data['language'];
 			$this->email = $data['email'];
