@@ -163,3 +163,11 @@ DROP TABLE "sotf_programmes_1063641060";
 
 -- drop a trigger: can't be automatized, please do the following:
 -- select the trigger which is for table sotf_prog_topics and references table sotf_topic_tree_defs and drop it
+
+-- 2003-10-13
+
+-- mapping between ids at stations and nodes was not perfect
+DROP INDEX "sotf_station__id_at_station_key";
+ALTER TABLE sotf_station_mappings ADD COLUMN "type" varchar(30);
+CREATE UNIQUE INDEX sotf_station_mappings_uniq ON sotf_station_mappings ("id_at_station", "type");
+

@@ -640,7 +640,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $db->begin();
 
 	 if($metadata['identifier']) {
-		$prgId = sotf_Programme::getMapping($metadata['identifier']);
+		$prgId = sotf_Programme::getMapping($metadata['identifier'], 'prg');
 	 }
 
 	 if($prgId) {
@@ -666,14 +666,14 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$track = $metadata['title'];
 		debug("create with track", $track);
 		$newPrg->create($station->id, $track);
-		sotf_Programme::addMapping($metadata['identifier'], $newPrg->id);
+		sotf_Programme::addMapping($metadata['identifier'], 'prg', $newPrg->id);
 	 }
 
 	 $newPrg->set('foreign_id', $metadata['identifier']);
 
 	 // series
 	 if($metadata['series'] && $metadata['series']['id']) {
-		$seriesId = sotf_Programme::getMapping($metadata['series']['id']);
+		$seriesId = sotf_Programme::getMapping($metadata['series']['id'], 'series');
 		if(!$seriesId) {
 		  $series1 = new sotf_Series();
 		  $series1->set('name', $metadata['series']['title']);
@@ -696,7 +696,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		  $series->update();
 		} else {
 		  $series->create();
-		  sotf_Programme::addMapping($metadata['series']['id'], $series->id);
+		  sotf_Programme::addMapping($metadata['series']['id'], 'series', $series->id);
 		}
 	 }
 
@@ -960,15 +960,15 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   /** private */
-  function getMapping($foreignId) {
+  function getMapping($foreignId, $type) {
 	 global $db;
-	 return $db->getOne("SELECT id_at_node FROM sotf_station_mappings WHERE id_at_station='$foreignId'");
+	 return $db->getOne("SELECT id_at_node FROM sotf_station_mappings WHERE id_at_station='$foreignId' AND type='$type'");
   }
 
   /** private */
-  function addMapping($foreignId, $localId) {
+  function addMapping($foreignId, $type, $localId) {
 	 global $db;
-	 return $db->query("INSERT INTO sotf_station_mappings (id_at_station,id_at_node) VALUES('$foreignId', '$localId')");
+	 return $db->query("INSERT INTO sotf_station_mappings (id_at_station,type,id_at_node) VALUES('$foreignId', '$type', '$localId')");
   }
 
 
