@@ -88,10 +88,22 @@ class sotf_Portal
 		else $this->portal_id = NULL;
 	}
 
+
 	function getId()
 	{
 		return $this->portal_id;	//return portal_id
 	}
+
+	function getTable()
+	{
+		return $this->settings['table'];
+	}
+
+	function getCell($row, $col)
+	{
+		return $this->settings['table'][$row][$col];
+	}
+
 
 	function loadSettings()	//load from fatabase
 	{
@@ -133,17 +145,6 @@ class sotf_Portal
 	{
 		return ($this->portal_admin == $id);	//true if $id is admin on this site
 	}
-
-	function getTable()
-	{
-		return $this->settings['table'];
-	}
-
-//	function getRowLength()
-//	{
-//		foreach($this->settings['table'] as $row) $rowlength[] = count($row);
-//		return $rowlength;
-//	}
 
 	function setCell($row, $col, $cell)
 	{
@@ -277,11 +278,6 @@ class sotf_Portal
 		}
 		
 		$this->settings['table'][$row][$col][html] = $html;
-	}
-
-	function getCell($row, $col)
-	{
-		return $this->settings['table'][$row][$col];
 	}
 
 	function insertCell($row, $col, $flag)
@@ -431,7 +427,7 @@ class sotf_Portal
 
 	function getQueries()
 	{
-		global $user, $db;
+		global $db;
 		$queries = array();
 
 		$sql="SELECT name, query FROM portal_queries WHERE portal_id = '$this->portal_id'";
@@ -441,12 +437,78 @@ class sotf_Portal
 		return $queries;
 	}
 
+	function runQuery($query)
+	{
+		global $sotfSite;
+		$rpc = new rpc_Utils;
+		$url = $sotfSite."xmlrpcServer.php";
+		$objs = array($query);
+		return $rpc->call($url, 'portal.query', $objs);
+	}
+
 	function getPlaylists()
 	{
-		$playlists = array("g" => "godd mrogrammes", "b" => "bad programmes", "l" => "list1", "todo" => "todo");
+		global $db, $page;
+		$playlists = array();
+
+		$sql="SELECT name, id FROM portal_prglist WHERE portal_id = '$this->portal_id'";
+		$result = $db->getAll($sql);
+		$playlists['unsorted'] = $page->getlocalized("unsorted");
+		foreach ($result as $query) $playlists[$query['id']] = $query['name'];
+
 		return $playlists;
-//		return array_merge(array("none" => "Choose..."), $playlists);
 	}
+
+	function runPlaylist($name)
+	{
+		global $sotfSite, $db;
+
+		if ($name == "unsorted")
+		{
+			$sql="SELECT progid FROM portal_programmes WHERE portal_id = '$this->portal_id' and prglist_id is NULL";
+			$list = $db->getCol($sql);
+		}
+		else
+		{
+			$sql="SELECT progid FROM portal_programmes WHERE portal_id = '$this->portal_id' and prglist_id = $name";
+			$list = $db->getCol($sql);
+		}
+
+		if ($list == NULL) return array();	//if no result
+
+		$rpc = new rpc_Utils;			//load xmlrpc
+		$url = $sotfSite."xmlrpcServer.php";
+		$objs = array($list);
+
+		return $rpc->call($url, 'portal.playlist', $objs);	//return the result
+	}
+
+	function createNewPlaylist($name)
+	{
+		global $db;
+		$playlists = array();
+		if (($name == "") or (strtolower($name) == "unsorted")) return false;		//if empty
+
+		$sql="SELECT name FROM portal_prglist WHERE portal_id = '$this->portal_id' and name = '$name'";
+		$result = $db->getOne($sql);
+		if ($result == NULL)	//if not exists
+		{
+			$sql="INSERT INTO portal_prglist(portal_id, name) values('$this->portal_id', '$name')";
+			$result = $db->query($sql);
+			return true;
+		}
+		return false;
+	}
+
+
+	function getPrgProperties($progid)
+	{
+		global $db;
+		$sql="SELECT teaser, text FROM programmes_description WHERE portal_id = '$this->portal_id' AND progid = '$progid'";
+		$result = $db->getRow($sql);
+		return $result;
+	}
+
 
 	function getFilters()
 	{
@@ -488,13 +550,47 @@ class sotf_Portal
 		return $color;
 	}
 
-	function runQuery($query)
+	function addProgrammeToList($prg_id, $name)
 	{
-		global $sotfSite;
-		$rpc = new rpc_Utils;
-		$url = $sotfSite."xmlrpcServer.php";
-		$objs = array($query);
-		return $rpc->call($url, 'portal.query', $objs);
+		global $db;
+		if ($name == "unsorted")
+		{
+			$sql="SELECT id FROM portal_programmes WHERE portal_id = '$this->portal_id' AND progid='$prg_id' AND prglist_id is NULL";
+			$result = $db->getOne($sql);
+			if ($result == NULL)		//if not exists
+			{
+				$sql="INSERT INTO portal_programmes(portal_id, progid, prglist_id) values('$this->portal_id', '$prg_id', NULL)";
+				$db->query($sql);
+			}
+			else return false;
+		}
+		else
+		{
+			$sql="SELECT id FROM portal_programmes WHERE portal_id = '$this->portal_id' AND progid='$prg_id' AND prglist_id = '$name'";
+			$result = $db->getOne($sql);
+			if ($result == NULL)		//if not exists
+			{
+				$sql="INSERT INTO portal_programmes(portal_id, progid, prglist_id) values('$this->portal_id', '$prg_id', '$name')";
+				$db->query($sql);
+			}
+			else return false;
+		}
+		return true;
+	}
+
+	function deleteProgrammeFromList($prg_id, $name)
+	{
+		global $db;
+		if ($name == "unsorted")
+		{
+			$sql="DELETE FROM portal_programmes WHERE portal_id = '$this->portal_id' AND progid='$prg_id' AND prglist_id is NULL";
+			$db->query($sql);
+		}
+		else
+		{
+			$sql="DELETE FROM portal_programmes WHERE portal_id = '$this->portal_id' AND progid='$prg_id' AND prglist_id = '$name'";
+			$db->query($sql);
+		}
 	}
 
 	function uploadData($type, $data, $portal_password)
@@ -503,13 +599,27 @@ class sotf_Portal
 		if ($this->portal_password != $portal_password) return false;	//if password not right
 		if ($type == "query")
 		{
-			$sql="INSERT INTO portal_queries(portal_id, query, name) values('$this->portal_id', '".$data['query']."', '".$data['name']."')";
-			$db->query($sql);
+			$sql="SELECT name FROM portal_queries WHERE portal_id = '$this->portal_id' AND name='".$data['name']."'";
+			$result = $db->getOne($sql);
+			if ($result == NULL)		//if not exists
+			{
+				if (($data['name'] == "") OR ($data['query'] == "")) return false;	//if something is missing
+				$sql="INSERT INTO portal_queries(portal_id, query, name) values('$this->portal_id', '".$data['query']."', '".$data['name']."')";
+				$db->query($sql);
+			}
+			else return false;
 		}
 		elseif ($type == "prg")
 		{
-			$sql="INSERT INTO portal_programmes(portal_id, progid, prglist_id) values('$this->portal_id', '$data', NULL)";
-			$db->query($sql);
+			$sql="SELECT id FROM portal_programmes WHERE portal_id = '$this->portal_id' AND progid='$data' AND prglist_id is NULL";
+			$result = $db->getOne($sql);
+			return $this->addProgrammeToList($data, "unsorted");
+			//if ($result == NULL)		//if not exists
+			//{
+			//	$sql="INSERT INTO portal_programmes(portal_id, progid, prglist_id) values('$this->portal_id', '$data', NULL)";
+			//	$db->query($sql);
+			//}
+			//else return false;
 		}
 		elseif ($type == "prglist")
 		{

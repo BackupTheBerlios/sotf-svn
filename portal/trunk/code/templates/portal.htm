@@ -16,7 +16,7 @@
 			<td width="17%"{if $edit} bgcolor="#{$portal.bg2}"{/if}>{if !$edit}<a href="{$php_self}?edit=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#edit_homepage#}{if $css}</span>{else}</font>{/if}</b>{if !$edit}</a>{/if}</td>
 			<td width="17%"{if $view} bgcolor="#{$portal.bg2}"{/if}>{if !$view}<a href="{$php_self}">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#view_result#}{if $css}</span>{else}</font>{/if}</b>{if !$view}</a>{/if}</td>
 			<td width="17%"{if $admin} bgcolor="#{$portal.bg2}"{/if}>{if !$admin}<a href="{$php_self}?admin=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#admin_page#}{if $css}</span>{else}</font>{/if}</b>{if !$admin}</a>{/if}</td>
-			<td width="17%"><a href="{$php_self}?save_changes=1"><b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#save#}{if $unsaved} ({#needed#}){/if}{if $css}</span>{else}</font>{/if}</b>{if !$admin}</a>{/if}</td>
+			<td width="17%"><a href="{$php_self}?{$subpage}=1&save_changes=1"><b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#save#}{if $unsaved} ({#needed#}){/if}{if $css}</span>{else}</font>{/if}</b>{if !$admin}</a>{/if}</td>
 		{else}
 			<td width="33%"{if $view} bgcolor="#{$portal.bg2}"{/if}>{if !$view}<a href="{$php_self}">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#home#}{if $css}</span>{else}</font>{/if}</b>{if !$view}</a>{/if}</td>
 			{if $is_logged_in}<td width="33%"><a href="{$php_self}?logout=1"><b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#Logout#} {$username}{if $css}</span>{else}</font>{/if}</b></a></td>
@@ -40,26 +40,34 @@
 		<td bgcolor="#{$portal.bg2}">
 			<table width="100%" border="0">
 			<tr align=center>
-				<td align="right">{#display#}:&nbsp;<select name="filter" onchange="javascript:this.form.submit()">{html_options options=$filters selected=$filter}</select></td>
-				<td align="left">&nbsp;{#from#}&nbsp;<select name="prglist" onchange="javascript:this.form.submit()">
-						{html_options options=$prglists selected=$prglist}
-						</select></td>
+				<td align="center">
+				{#display#}:&nbsp;<select name="filter" onchange="javascript:this.form.submit()">{html_options options=$filters selected=$filter}</select>
+				&nbsp;{#from#}&nbsp;<select name="prglist" onchange="javascript:this.form.submit()">{html_options options=$prglists selected=$prglist}</select>
+				</td>
 			</tr>
-
-<!--			<tr align=center>
-				<td>{#queries#}:&nbsp;<select name="query" onchange="javascript:this.form.submit()">{html_options options=$queries}</select></td>
-				<td><input type="button" value="{#show#}"> {#prg_on_portal#}<br></td>
-				<td>{#static_lists#}:&nbsp;<select name="programmes" onchange="javascript:this.form.submit()">{html_options options=$playlists}</select></td>
-			</tr>
--->
 			</table>
 			<br><br>
+
+			<table width="100%" border="0">
+			<tr>
+				<td align="left" valign="bottom"><img src="{$IMAGEDIR}/leftdown.gif"></td>
+				<td align="right"><input type="submit" value="{#copy#}" name="copy_selected">{if $prglist.0 != "q"}<br><input type="submit" name="move_selected" value="{#move#}">{/if}</td>
+				<td align="left" valign="middle">&nbsp;{#selected_to#}&nbsp;<select name="destination">{html_options options=$static_lists}</select></td>
+				{if $prglist.0 != "q"}<td align="center" valign="middle"><input type="submit" value="{#delete_selected#}" name="delete_selected"></td>{/if}
+
+				<td align="center" valign="middle"><input type="text" name="new_list_name"><input type="submit" name="create_new_list" value="{#create_new_list#}"></td>
+			</tr>
+			</table>
+
+			<br>
 			<input type="hidden" name="playlist" value="1">
-			<!--{include file="splitList.htm"}-->
 			<table width="100%" border="0">
 			{foreach name=outer item=item from=$result}
 				<tr>
+					<td align="center"><input type="checkbox" name="selected[]" value="{$item.id}"></td>
+
 					<td align="center"><img src="{$item.icon}"></td>
+
 					<td><b><a href="{$php_self}?id={$item.id}">{$item.title}</a></b><BR>
 					{foreach key=key item=cell from=$item.values}
 						{if $cell != ""}
@@ -67,14 +75,23 @@
 						{/if}
 					{/foreach}
 					</td>
-					<td align="center">
-					{#upload_file#}:<input type="file"><input type="button" value="{#upload#}"><br><br>
-					<input type="button" value="{#edit_teaser#}"><br><br>
-					<input type="button" value="{#edit_text#}"><br>
+
+					<td align="center" width=50%>
+						<table border="0">
+						<tr>
+							<td align="center">{#upload_file#}:<input type="file"></td><td><input type="button" value="{#upload#}"></td>
+						<tr>
+						</tr>
+							<td align="center">{$item.teaser}</td><td><input type="button" value="{#edit_teaser#}"></td>
+						<tr>
+						</tr>
+							<td align="center">{$item.text}</td><td><input type="button" value="{#edit_text#}"></td>
+						</tr>
+						</table>
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3" align="center"><hr width="70%" noshade></td>
+					<td colspan="4" align="center"><hr width="70%" noshade></td>
 				</tr>
 			{/foreach}
 			</table>

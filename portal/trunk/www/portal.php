@@ -1,5 +1,8 @@
 <?php
 
+//$anhour = gmdate('D, d M Y H:i:s T', gmmktime(gmdate("H"),gmdate("i")+60,0,gmdate("m"),(gmdate("d")),gmdate("Y")));
+//header("Expires: $anhour");
+
 require("portal_login.php");
 
 if (sotf_Utils::getParameter('logout'))			//if logout link pressed
@@ -7,6 +10,15 @@ if (sotf_Utils::getParameter('logout'))			//if logout link pressed
 	$user->logout();				//logout user
 	$page->redirect($_SERVER["PHP_SELF"]);		//redirect page
 }
+
+
+//prevent browsers from reload/reprocess the page, save the variables to the session that are needed after reload
+if (count($_POST) > 0)
+{
+	$_SESSION['filter'] = sotf_Utils::getParameter('filter');		//filter dropdown box on programmes editor page
+	$_SESSION['prglist'] = sotf_Utils::getParameter('prglist');		//pgogrammes list dropdown box on programmes editor page
+}
+
 
 ////get parameter which mode is active
 $login = sotf_Utils::getParameter('login');		//login page
@@ -80,21 +92,50 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 	
 		if ($portal->saveSettings($settings) == 1) $_SESSION['old_settings'] = $settings;	//if saved delete from session
 	}
-	elseif (sotf_Utils::getParameter('insert_row_x'))		//insert row button pressed
+	elseif (sotf_Utils::getParameter('insert_row_x'))		//insert row button pressed on edit page
 	{
 		//var_dump((substr(sotf_Utils::getParameter('edit'),1)));
 		$portal->insertRow((substr(sotf_Utils::getParameter('edit'),1)));
 	}
-	elseif (sotf_Utils::getParameter('delete_row_x'))		//insert row button pressed
+	elseif (sotf_Utils::getParameter('delete_row_x'))		//insert row button pressed on edit page
 	{
 		//var_dump((substr(sotf_Utils::getParameter('edit'),1)));
 		$portal->deleteRow((substr(sotf_Utils::getParameter('edit'),1)));
 	}
+	elseif (sotf_Utils::getParameter('create_new_list'))		//create new page button pressed on programmes editor page
+	{
+		$portal->createNewPlaylist(sotf_Utils::getParameter('new_list_name'));
+	}
+	elseif (sotf_Utils::getParameter('copy_selected'))		//copy button pressed on programmes editor page
+	{
+		if (count(sotf_Utils::getParameter('selected')) > 0)
+		foreach (sotf_Utils::getParameter('selected') as $prg_id)
+		{
+			$portal->addProgrammeToList($prg_id, sotf_Utils::getParameter('destination'));
+		}
+	}
+	elseif (sotf_Utils::getParameter('move_selected'))		//move button pressed on programmes editor page
+	{
+		if (count(sotf_Utils::getParameter('selected')) > 0)
+		foreach (sotf_Utils::getParameter('selected') as $prg_id)
+		{
+			$portal->addProgrammeToList($prg_id, sotf_Utils::getParameter('destination'));
+			$portal->deleteProgrammeFromList($prg_id, substr($_SESSION['prglist'], 1));		//first char is p for programme list
+		}
+	}
+	elseif (sotf_Utils::getParameter('delete_selected'))		//delete selected button pressed on programmes editor page
+	{
+		if (count(sotf_Utils::getParameter('selected')) > 0)
+		foreach (sotf_Utils::getParameter('selected') as $prg_id)
+		{
+			$portal->deleteProgrammeFromList($prg_id, substr($_SESSION['prglist'], 1));		//first char is p for programme list
+		}
+	}
 
 	if ($playlist)						//on programmes editor page
 	{
-		$filter = sotf_Utils::getParameter('filter');		//filter dropdown box
-		$prglist = sotf_Utils::getParameter('prglist');		//pgogrammes list dropdown box
+		$filter = $_SESSION['filter'];			//filter dropdown box
+		$prglist = $_SESSION['prglist'];		//pgogrammes list dropdown box
 	
 		if ($prglist == "queries" OR $prglist == "playlists") $prglist = "current";
 	
@@ -106,7 +147,7 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		}
 		elseif ($type == "p")
 		{
-			$results=array();
+			$results = $portal->runPlaylist($value);
 		}
 		else	//current programmes
 		{
@@ -122,17 +163,29 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		$fields[language] = $page->getlocalized("language");
 		$fields[length] = $page->getlocalized("length");
 		$selected_result = array();
-	
+		$item = array();
+
 		foreach($results as $result)
 		{
+			$prgprop = $portal->getPrgProperties($result[id]);
+			//filter can be: all teaser text something
+			if (($filter == "teaser") AND ($prgprop['teaser'] != "")) continue;	//if only the ones without teaser are needed
+			if (($filter == "text") AND ($prgprop['text'] != "")) continue;		//if only the ones without text are needed
+			if (($filter == "something") AND ($prgprop['teaser'] != "") AND ($prgprop['text'] != "")) continue;	//if only the ones without somting are needed
+			
+			if ($prgprop['teaser'] != "") {$item['teaser'] = substr($prgprop['teaser'], 0, 80);if (strlen($item['teaser']) == 80) $item['teaser'].="...";}
+				else $item['teaser'] = $page->getlocalized("none");
+			if ($prgprop['text'] != "") {$item['text'] = substr($prgprop['text'], 0, 80);if (strlen($item['text']) == 80) $item['text'].="...";}
+				else $item['text'] = $page->getlocalized("none");
+
 			foreach($result as $key => $value)
 				if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
 					if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
 					else $values[$fields[$key]] = $value;
-			$item[title] = $result['title'];
-			$item[id] = $result[id];
+			$item['title'] = $result['title'];
+			$item['id'] = $result['id'];
 			$item['icon'] = $result['icon'];
-			$item[values] = $values;
+			$item['values'] = $values;
 			$selected_result[] = $item;
 			$item = "";
 			$values = "";
@@ -155,81 +208,77 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		$smarty->assign("prglists", $prglists);
 		$smarty->assign("prglist", $prglist);
 	
-	//	<option value="current">Programmes on the portal</option>
-	//	<option value="none">--{#queries#}--</option>
-	//	{html_options options=$queries}
-	//	<option value="none">--{#static_lists#}--</option>
-	//	{html_options options=$playlists}
-	//	$smarty->assign("queries", $portal->getQueries());
-	//	$smarty->assign("playlists", $portal->getPlaylists());
-	
 		$smarty->assign("filters", $portal->getFilters());
 		$smarty->assign("filter", $filter);
+
+		$smarty->assign("static_lists", $portal->getPlaylists());
 	}
 	elseif ($id)	//if programmes view
 	{
-	  $smarty->assign('ID', $id);
-	
-	  $prg = & new sotf_Programme($id);
-	
-	  $page->setTitle($prg->get('title'));
-	
-	  // general data
-	  $smarty->assign('PRG_DATA', $prg->getAllWithIcon());
-	  // station data
-	  $station = $prg->getStation();
-	  $smarty->assign('STATION_DATA', $station->getAllWithIcon());
-	  // series data
-	  $series = $prg->getSeries();
-	  if($series) {
-	    $smarty->assign('SERIES_DATA', $series->getAllWithIcon());
-	  }
-	
-	  // roles and contacts
-	  $smarty->assign('ROLES', $prg->getRoles());
-	  // genre
-	
-	  // topics
-	  $smarty->assign('TOPICS', $prg->getTopics());
-	
-	  $smarty->assign('GENRE', $repository->getGenreName($prg->get('genre_id')));
-	  // language
-	  $smarty->assign('LANGUAGE', $page->getlocalized($prg->get('language')));
-	  // rights sections
-	  $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
-	
-	  // audio files 
-	  $audioFiles = $prg->getAssociatedObjects('sotf_media_files', 'main_content DESC, filename');
-	  for($i=0; $i<count($audioFiles); $i++) {
-	    $audioFiles[$i] =  array_merge($audioFiles[$i], sotf_AudioFile::decodeFormatFilename($audioFiles[$i]['format']));
-	  }
-	  $smarty->assign('AUDIO_FILES', $audioFiles);
-	
-	  // other files
-	  $otherFiles = $prg->getAssociatedObjects('sotf_other_files', 'filename');
-	  $smarty->assign('OTHER_FILES', $otherFiles);
-	  
-	  // links
-	  $smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));
-	
-	  // referencing portals
-	  $smarty->assign('REFS', $prg->getRefs());
-	
-	  // statistics
-	  $smarty->assign('STATS', $prg->getStats());
-	
-	  // add this visit to statistics
-	  $prg->addStat('', "visits");
-	
-	  // rating
-	  $rating = new sotf_Rating();
-	  $smarty->assign('RATING', $rating->getInstantRating($id));
+		/*
+		$smarty->assign('ID', $id);
+		
+		$prg = & new sotf_Programme($id);
+		
+		$page->setTitle($prg->get('title'));
+		
+		// general data
+		$smarty->assign('PRG_DATA', $prg->getAllWithIcon());
+		// station data
+		$station = $prg->getStation();
+		$smarty->assign('STATION_DATA', $station->getAllWithIcon());
+		// series data
+		$series = $prg->getSeries();
+		if($series) {
+		$smarty->assign('SERIES_DATA', $series->getAllWithIcon());
+		}
+		
+		// roles and contacts
+		$smarty->assign('ROLES', $prg->getRoles());
+		// genre
+		
+		// topics
+		$smarty->assign('TOPICS', $prg->getTopics());
+		
+		$smarty->assign('GENRE', $repository->getGenreName($prg->get('genre_id')));
+		// language
+		$smarty->assign('LANGUAGE', $page->getlocalized($prg->get('language')));
+		// rights sections
+		$smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
+		
+		// audio files 
+		$audioFiles = $prg->getAssociatedObjects('sotf_media_files', 'main_content DESC, filename');
+		for($i=0; $i<count($audioFiles); $i++) {
+		$audioFiles[$i] =  array_merge($audioFiles[$i], sotf_AudioFile::decodeFormatFilename($audioFiles[$i]['format']));
+		}
+		$smarty->assign('AUDIO_FILES', $audioFiles);
+		
+		// other files
+		$otherFiles = $prg->getAssociatedObjects('sotf_other_files', 'filename');
+		$smarty->assign('OTHER_FILES', $otherFiles);
+		
+		// links
+		$smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));
+		
+		// referencing portals
+		$smarty->assign('REFS', $prg->getRefs());
+		
+		// statistics
+		$smarty->assign('STATS', $prg->getStats());
+		
+		// add this visit to statistics
+		$prg->addStat('', "visits");
+		
+		// rating
+		$rating = new sotf_Rating();
+		$smarty->assign('RATING', $rating->getInstantRating($id));
+		*/
 	}
 
+	$settings["table"] = $portal->getTable();		//save current table
 	if ($_SESSION['old_settings'] != $settings)		//if there is unsaved information save to session
 	{
 		////save cuttent portal table to the session
-		$settings["table"] = $portal->getTable();		//save current table
 		$_SESSION["settings"] = $settings;			//save current settings
 		$smarty->assign("unsaved", true);			//set in smary as well
 	}
@@ -242,11 +291,16 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 }	//end of admin section
 
 
-////SMARTY variables
-$smarty->assign("table", $portal->getTable());		//current layout table
+//select subpage
+if ($login) $subpage="login";
+elseif ($playlist) $subpage="playlist";
+elseif ($style) $subpage="style";
+elseif ($edit) $subpage="edit";
+elseif ($id) $subpage="id";
+elseif ($admin) $subpage="admin";
+else {$subpage="view";$view = true;}	//set default to view mode
+$smarty->assign("subpage", $subpage);
 
-//menu clicked
-if (!$login AND !$playlist AND !$style AND !$edit AND !$id AND !$admin) $view = true;		//set default to view mode
 $smarty->assign("login", $login);	//login page
 $smarty->assign("playlist", $playlist);	//in editstyle mode
 $smarty->assign("style", $style);	//in editstyle mode
@@ -254,6 +308,18 @@ $smarty->assign("edit", $edit);		//in edit mode
 $smarty->assign("view", $view);		//in view result mode
 $smarty->assign("id", $id);		//in view programme mode
 $smarty->assign("admin", $admin);	//admin page
+
+
+//prevent browsers from reload/reprocess the page
+if (count($_POST) > 0)
+{
+	$page->redirect($_SERVER["PHP_SELF"]."?".$subpage."=1");		//redirect page
+}
+
+
+////SMARTY variables
+$smarty->assign("table", $portal->getTable());		//current layout table
+
 
 //user rights and options
 $smarty->assign("is_admin", $portal->isAdmin($user->getId()));		//true if admin
