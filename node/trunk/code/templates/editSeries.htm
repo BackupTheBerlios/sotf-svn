@@ -102,8 +102,10 @@
               {/section}
             </td>
             <td nowrap>
+                {if $USERNAME ne $username}
                 <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES}&username={$username|escape}','Permissions',350,400,false)" />
                   <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editSeries.php?delperm=1&username={$username|escape}&seriesid={$SERIES_ID}')" />
+                {/if}
             </td>
           </tr>
           {/foreach}

@@ -114,11 +114,12 @@ function GetPerm($filename, $option)		//tries to write or read files and directo
 	else return "ERROR ".$option." unknown in GetPerm";	////bad option parameter
 }
 
-function addParent($name, $topic_name = "", $lang = "en")
+function addParent($name, $topic_name = "", $lang = "en", $treeId=2, $description='')
 {
 	$x = new sotf_NodeObject("sotf_topic_tree_defs");
 	$x->set('supertopic', 0);
 	$x->set('name', $name);
+	$x->set('tree_id', $treeId);
 	$x->create();
 	$id = $x->getID();
 	if ($topic_name != "")
@@ -127,17 +128,19 @@ function addParent($name, $topic_name = "", $lang = "en")
 		$y->set('topic_id', $id);
 		$y->set('language', $lang);
 		$y->set('topic_name', $topic_name);
+		$y->set('description', $description);
 		$y->create();
 		//print($id);
 	}
 	return $id;
 }
 
-function addChild($parent, $name, $topic_name = "", $lang = "en")
+function addChild($parent, $name, $topic_name = "", $lang = "en", $treeId=2)
 {
 	$x = new sotf_NodeObject("sotf_topic_tree_defs");
 	$x->set('supertopic', $parent);
 	$x->set('name', $name);
+	$x->set('tree_id', $treeId);
 	$x->create();
 	$id = $x->getID();
 	if ($topic_name != "")
@@ -302,29 +305,29 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		else
 		{
 			include("../config.inc.php");
-			if ($nodeDbHost != NULL)		//in iclude successfull
+			if ($config['nodeDbHost'] != NULL)		//in iclude successfull
 			{
 					//set default parameter if first time successfull or reload button pressed
 				if (($install_color[$id] != $install_green) or ($install_reload != NULL))
 				{
-					$install_user = $userDbUser;			//username for DB
-					$install_pass = $userDbPasswd;			//password for DB
-					$install_host = $userDbHost;			//host for DB
-					$install_port = $userDbPort;			//port for DB
+					$install_user = $config['userDbUser'];			//username for DB
+					$install_pass = $config['userDbPasswd'];			//password for DB
+					$install_host = $config['userDbHost'];			//host for DB
+					$install_port = $config['userDbPort'];			//port for DB
 					
 					
-					$install_sadm_user = $userDbUser;		//username for DB
-					$install_sadm_pass = $userDbPasswd;		//password for DB
-					$install_sadm_host = $userDbHost;		//host for DB
-					$install_sadm_port = $userDbPort;		//port for DB
-					$install_sadm_db_name = $userDbName;		//DB name
+					$install_sadm_user = $config['userDbUser'];		//username for DB
+					$install_sadm_pass = $config['userDbPasswd'];		//password for DB
+					$install_sadm_host = $config['userDbHost'];		//host for DB
+					$install_sadm_port = $config['userDbPort'];		//port for DB
+					$install_sadm_db_name = $config['userDbName'];		//DB name
 					
 					
-					$install_node_user = $nodeDbUser;		//username for DB
-					$install_node_pass = $nodeDbPasswd;		//password for DB
-					$install_node_host = $nodeDbHost;		//host for DB
-					$install_node_port = $nodeDbPort;		//port for DB
-					$install_node_db_name = $nodeDbName;		//DB name
+					$install_node_user = $config['nodeDbUser'];		//username for DB
+					$install_node_pass = $config['nodeDbPasswd'];		//password for DB
+					$install_node_host = $config['nodeDbHost'];		//host for DB
+					$install_node_port = $config['nodeDbPort'];		//port for DB
+					$install_node_db_name = $config['nodeDbName'];		//DB name
 				}
 				$install_color[$id] = $install_green;
 				$install_test_result[$id] .= "OK";
@@ -347,39 +350,39 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		$install_test_result[$id] = "";
 
 		//log file
-		$install_test_result[$id] .= "logFile ($logFile) ".GetPerm($logFile, "append")."<BR />";
+		$install_test_result[$id] .= "logFile (".$config['logFile'].") ".GetPerm($config['logFile'], "append")."<BR />";
 
 		//directories with write permission
-		$install_test_result[$id] .= "repositoryDir ($repositoryDir) ".GetPerm($repositoryDir."/pmppmp.pmp", "write")."<BR />";
-		$install_test_result[$id] .= "userDirs ($userDirs) ".GetPerm($userDirs."/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "repositoryDir (".$config['repositoryDir'].") ".GetPerm($config['repositoryDir']."/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "userDirs (".$config['userDirs'].") ".GetPerm($config['userDirs']."/pmppmp.pmp", "write")."<BR />";
 
-		$install_test_result[$id] .= "logs ($basedir/logs) ".GetPerm($basedir."/logs/pmppmp.pmp", "write")."<BR />";
-		$install_test_result[$id] .= "templates_c ($basedir/code/templates_c) ".GetPerm($basedir."/code/templates_c/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "logs (".$config['basedir']."/logs) ".GetPerm($config['basedir']."/logs/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "templates_c (".$config['basedir']."/code/templates_c) ".GetPerm($config['basedir']."/code/templates_c/pmppmp.pmp", "write")."<BR />";
 		$install_test_result[$id] .= "tmp (../tmp) ".GetPerm("../tmp/pmppmp.pmp", "write")."<BR />";
-//		$install_test_result[$id] .= " ($basedir) ".GetPerm($basedir."/pmppmp.pmp", "write")."<BR />";
+//		$install_test_result[$id] .= " (".$config['basedir'].") ".GetPerm($config['basedir']."/pmppmp.pmp", "write")."<BR />";
 
 		//other directories
-		$install_test_result[$id] .= "basedir ($basedir) ".GetPerm($basedir, "dir")."<BR />";
-		$install_test_result[$id] .= "getid3dir ($getid3dir) ".GetPerm($getid3dir, "dir")."<BR />";
-		$install_test_result[$id] .= "musicDir ($musicDir) ".GetPerm($musicDir, "dir")."<BR />";
+		$install_test_result[$id] .= "basedir (".$config['basedir'].") ".GetPerm($config['basedir'], "dir")."<BR />";
+		$install_test_result[$id] .= "getid3dir (".$config['getid3dir'].") ".GetPerm($config['getid3dir'], "dir")."<BR />";
+		$install_test_result[$id] .= "musicDir (".$config['musicDir'].") ".GetPerm($config['musicDir'], "dir")."<BR />";
 
-		$install_test_result[$id] .= "classes ($basedir/code) ".GetPerm($basedir."/code", "dir")."<BR />";
-		$install_test_result[$id] .= "classes ($basedir/code/classes) ".GetPerm($basedir."/code/classes", "dir")."<BR />";
+		$install_test_result[$id] .= "classes (".$config['basedir']."/code) ".GetPerm($config['basedir']."/code", "dir")."<BR />";
+		$install_test_result[$id] .= "classes (".$config['basedir']."/code/classes) ".GetPerm($config['basedir']."/code/classes", "dir")."<BR />";
 
 		//files that are required by init.inc.php
-		$install_test_result[$id] .= "peardir ($peardir/DB.php) ".GetPerm($peardir."/DB.php", "read")."<BR />";					//require($peardir . '/DB.php');
-		$install_test_result[$id] .= "smartydir ($smartydir/Smarty.class.php) ".GetPerm($smartydir."/Smarty.class.php", "read")."<BR />";		//require($smartydir . '/Smarty.class.php');
-		$install_test_result[$id] .= "smartydir ($smartydir/Config_File.class.php) ".GetPerm($smartydir."/Config_File.class.php", "read")."<BR />";	//require($smartydir . '/Config_File.class.php');
+		$install_test_result[$id] .= "peardir (".$config['peardir']."/DB.php) ".GetPerm($config['peardir']."/DB.php", "read")."<BR />";					//require($peardir . '/DB.php');
+		$install_test_result[$id] .= "smartydir (".$config['smartydir']."/Smarty.class.php) ".GetPerm($config['smartydir']."/Smarty.class.php", "read")."<BR />";		//require($smartydir . '/Smarty.class.php');
+		$install_test_result[$id] .= "smartydir (".$config['smartydir']."/Config_File.class.php) ".GetPerm($config['smartydir']."/Config_File.class.php", "read")."<BR />";	//require($smartydir . '/Config_File.class.php');
 
-		$install_test_result[$id] .= "classdir ($classdir/db_Wrap.class.php) ".GetPerm($classdir."/db_Wrap.class.php", "read")."<BR />";		//require($classdir . '/db_Wrap.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Utils.class.php) ".GetPerm($classdir."/sotf_Utils.class.php", "read")."<BR />";		//require($classdir . '/sotf_Utils.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_User.class.php) ".GetPerm($classdir."/sotf_User.class.php", "read")."<BR />";		//require($classdir . '/sotf_User.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Page.class.php) ".GetPerm($classdir."/sotf_Page.class.php", "read")."<BR />";		//require($classdir . '/sotf_Page.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Permission.class.php) ".GetPerm($classdir."/sotf_Permission.class.php", "read")."<BR />";	//require($classdir . '/sotf_Permission.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Vars.class.php) ".GetPerm($classdir."/sotf_Vars.class.php", "read")."<BR />";		//require($classdir . '/sotf_Vars.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_Repository.class.php) ".GetPerm($classdir."/sotf_Repository.class.php", "read")."<BR />";	//require($classdir . '/sotf_Repository.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_FileList.class.php) ".GetPerm($classdir."/sotf_FileList.class.php", "read")."<BR />";	//require($classdir . '/sotf_FileList.class.php');
-		$install_test_result[$id] .= "classdir ($classdir/sotf_AudioCheck.class.php) ".GetPerm($classdir."/sotf_AudioCheck.class.php", "read")."<BR />";	//require($classdir . '/sotf_AudioCheck.class.php'); 
+		$install_test_result[$id] .= "classdir (".$config['classdir']."/db_Wrap.class.php) ".GetPerm($config['classdir']."/db_Wrap.class.php", "read")."<BR />";		//require($config['classdir'] . '/db_Wrap.class.php');
+		$install_test_result[$id] .= "classdir (".$config['classdir']."/sotf_Utils.class.php) ".GetPerm($config['classdir']."/sotf_Utils.class.php", "read")."<BR />";		//require($config['classdir'] . '/sotf_Utils.class.php');
+		$install_test_result[$id] .= "classdir (".$config['classdir']."/sotf_User.class.php) ".GetPerm($config['classdir']."/sotf_User.class.php", "read")."<BR />";		//require($config['classdir'] . '/sotf_User.class.php');
+		$install_test_result[$id] .= "classdir (".$config['classdir']."/sotf_Page.class.php) ".GetPerm($config['classdir']."/sotf_Page.class.php", "read")."<BR />";		//require($config['classdir'] . '/sotf_Page.class.php');
+		$install_test_result[$id] .= "classdir (".$config['classdir']."/sotf_Permission.class.php) ".GetPerm($config['classdir']."/sotf_Permission.class.php", "read")."<BR />";	//require($config['classdir'] . '/sotf_Permission.class.php');
+		$install_test_result[$id] .= "classdir (".$config['classdir']."/sotf_Vars.class.php) ".GetPerm($config['classdir']."/sotf_Vars.class.php", "read")."<BR />";		//require($config['classdir'] . '/sotf_Vars.class.php');
+		$install_test_result[$id] .= "classdir (".$config['classdir']."/sotf_Repository.class.php) ".GetPerm($config['classdir']."/sotf_Repository.class.php", "read")."<BR />";	//require($config['classdir'] . '/sotf_Repository.class.php');
+		$install_test_result[$id] .= "classdir (".$config['classdir']."/sotf_FileList.class.php) ".GetPerm($config['classdir']."/sotf_FileList.class.php", "read")."<BR />";	//require($config['classdir'] . '/sotf_FileList.class.php');
+		$install_test_result[$id] .= "classdir (".$config['classdir']."/sotf_AudioCheck.class.php) ".GetPerm($config['classdir']."/sotf_AudioCheck.class.php", "read")."<BR />";	//require($config['classdir'] . '/sotf_AudioCheck.class.php'); 
 
 //		$install_test_result[$id] .= "rosszdir (C:/temp/temp) ".GetPerm("C:/temp/temp/pmppmp.pmp", "read")."<BR />";
 //		$install_test_result[$id] .= " () ".GetPerm(."/pmppmp.pmp")."<BR />";
@@ -682,9 +685,36 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$result = pg_exec($conn, $sql);
 			*/
 
-			// create topic tree
+			// create default topic trees
 
-			$oid = addParent("development", "Development");
+			$o1 = & new sotf_NodeObject("sotf_topic_trees");
+			$o1->set('tree_id', 1);
+			$o1->set('name', 'SOTF general');
+			$o1->create();
+			$oid = $o1->getID();
+
+			$rootId = addParent("SOTF", "StreamOnTheFly general", 'en', 1, "A temporary attempt to create a general subject tree based on Dewey.");
+			$oid = addChild($rootId, "generalities", "Generalities");
+			$oid = addChild($rootId, "philosophy and psychology", "Philosophy and psychology");
+			$oid = addChild($rootId, "religion", "Religion");
+			$oid = addChild($rootId, "Social sciences", "Social sciences");
+			$oid = addChild($rootId, "Language", "Language");
+			$oid = addChild($rootId, "Natural sciences and mathematics", "Natural sciences and mathematics");
+			$oid = addChild($rootId, "Technology", "Technology");
+			$oid = addChild($rootId, "Arts", "Arts");
+			$oid = addChild($rootId, "Literature and rhetoric", "Literature and rhetoric");
+			$oid = addChild($rootId, "Geography and history", "Geography and history");
+
+
+			$o1 = & new sotf_NodeObject("sotf_topic_trees");
+			$o1->set('tree_id', 2);
+			$o1->set('name', 'SOMA Metadata version 1');
+			$o1->set('url', 'http://soma-dev.sourceforge.net/');
+			$o1->create();
+			$oid = $o1->getID();
+
+			$rootId = addParent("SOMA", "SOMA topics", 'en', 2, "StreamOnTheFly project worked with SOMA in the preparation of their metadata set, but this topic tree is too specific for our use, and will be offered as an alternative for a more general one.");
+			$oid = addChild($rootId, "development", "Development");
 			addChild($oid, "agriculture", "Agriculture");
 			addChild($oid, "aid", "Aid");
 			addChild($oid, "capacity building", "Capacity Building");
@@ -713,7 +743,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			addChild($oid, "youth", "Youth");
 			addChild($oid, "old age / retirement", "Old Age / Retirement");
 
-			$oid = addParent("economy", "Economy");
+			$oid = addChild($rootId, "economy", "Economy");
 			addChild($oid, "business", "Business");
 			addChild($oid, "consumption/consumerism", "Consumption/Consumerism");
 			addChild($oid, "corporations", "Corporations");
@@ -724,7 +754,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			addChild($oid, "social enterprise", "Social Enterprise");
 			addChild($oid, "trade", "Trade");
 
-			$oid = addParent("environment", "Environment");
+			$oid = addChild($rootId, "environment", "Environment");
 			addChild($oid, "animals", "Animals");
 			addChild($oid, "atmosphere", "Atmosphere");
 			addChild($oid, "biodiversity", "Biodiversity");
@@ -741,7 +771,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			addChild($oid, "soils", "Soils");
 			addChild($oid, "rural life", "Rural Life");
 
-			$oid = addParent("health", "Health");
+			$oid = addChild($rootId, "health", "Health");
 			addChild($oid, "aids", "Aids");
 			addChild($oid, "disease/treatment", "Disease/Treatment");
 			addChild($oid, "infant mortality", "Infant Mortality");
@@ -749,7 +779,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			addChild($oid, "narcotics", "Narcotics");
 			addChild($oid, "nutrition/malnutrition", "Nutrition/Malnutrition");
 
-			$oid = addParent("human rights", "Human Rights");
+			$oid = addChild($rootId, "human rights", "Human Rights");
 			addChild($oid, "civil rights/civil liberties", "Civil Rights/Civil Liberties");
 			addChild($oid, "disability", "Disability");
 			addChild($oid, "indigenous rights", "Indigenous Rights");
@@ -758,7 +788,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			addChild($oid, "sexuality", "Sexuality");
 			addChild($oid, "social exclusion", "Social Exclusion");
 
-			$oid = addParent("information & media", "Information & Media");
+			$oid = addChild($rootId, "information & media", "Information & Media");
 			addChild($oid, "communications", "Communications");
 			addChild($oid, "culture", "Culture");
 			addChild($oid, "freedom of expression", "Freedom Of Expression");
@@ -769,7 +799,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			addChild($oid, "art", "Art");
 			addChild($oid, "sport", "Sport");
 
-			$oid = addParent("politics", "Politics");
+			$oid = addChild($rootId, "politics", "Politics");
 			addChild($oid, "activism", "Activism");
 			addChild($oid, "civil society", "Civil Society");
 			addChild($oid, "codes of conduct", "Codes Of Conduct");
@@ -784,7 +814,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			addChild($oid, "United Nations", "United Nations");
 			addChild($oid, "class issues", "Class Issues");
 
-			$oid = addParent("war & peace", "War & Peace");
+			$oid = addChild($rootId, "war & peace", "War & Peace");
 			addChild($oid, "arms/military", "Arms/Military");
 			addChild($oid, "conflict", "Conflict");
 			addChild($oid, "conflict resolution", "Conflict Resolution");
@@ -928,12 +958,12 @@ print('<br /><br /><DIV ALIGN="center">
 	}
 	if ($install_erroronpage) {
     print('<DIV ALIGN="center"><BR /><BIG>Please run again the \'red marked\' tests!</BIG><BR /></DIV>');	//if no error write 'ALL OK'
-	} elseif ( ($install_node_user != $nodeDbUser) OR ($install_node_pass != $nodeDbPasswd)
-	     OR ($install_node_host != $nodeDbHost) OR ($install_node_port != $nodeDbPort)
-	     OR ($install_node_db_name != $nodeDbName) OR ($install_sadm_user != $userDbUser)
-	     OR ($install_sadm_pass != $userDbPasswd) OR ($install_sadm_host != $userDbHost)
-	     OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) {
-		print('<DIV ALIGN="center"><BR /><BIG>The database settings here do not match with the setting in config.inc.php, please update it.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
+	} elseif ( ($install_node_user != $config['nodeDbUser']) OR ($install_node_pass != $config['nodeDbPasswd'])
+             OR ($install_node_host != $config['nodeDbHost']) OR ($install_node_port != $config['nodeDbPort'])
+             OR ($install_node_db_name != $config['nodeDbName']) OR ($install_sadm_user != $config['userDbUser'])
+             OR ($install_sadm_pass != $config['userDbPasswd']) OR ($install_sadm_host != $config['userDbHost'])
+             OR ($install_sadm_port != $config['userDbPort']) OR ($install_sadm_db_name != $config['userDbName']) 
+          ) {print('<DIV ALIGN="center"><BR /><BIG>The database settings here do not match with the setting in config.inc.php, please update it.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
 	} else {
 	  print('<DIV ALIGN="center"><BR /><BIG>ALL OK, you are now ready to use the <A HREF="../index.php">system</A>. Log in using the admin login.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
   }

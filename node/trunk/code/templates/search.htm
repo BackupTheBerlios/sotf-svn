@@ -42,7 +42,11 @@
           <tr bgcolor="#FFFFFF" height="1"><td colspan="2"></td></tr>
           <tr valign="top">
             <td width="5%">
-              {if $item.icon}<img src="{$CACHE_URL}/{$item.id}.png">{else}<img src="{$IMAGE_URL}/noicon.png">{/if}
+              {if $item.icon }
+                 <a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$CACHE_URL}/{$item.id}.png"></a>
+              {else}
+                 <a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$IMAGE_URL}/noicon.png"></a>
+              {/if}
             </td>
             <td>
               <a href="get.php?id={$item.id}"><b>{$item.title}</b></a>

@@ -278,11 +278,54 @@ class sotf_Repository {
     return $topics[$index]['total'];
   }
 
+  /** collects immediate subtopics for the given topic */
+  function getSubTopics($topicId, $language) {
+	 $subtopics = $this->db->getAll("SELECT sotf_topics.topic_id AS id, sotf_topics.topic_name AS name, number, total FROM sotf_topic_tree_defs LEFT JOIN sotf_topics ON sotf_topics.topic_id = sotf_topic_tree_defs.id LEFT JOIN sotf_topics_counter ON sotf_topics_counter.topic_id = sotf_topic_tree_defs.id WHERE sotf_topics.language='$language' AND sotf_topic_tree_defs.supertopic='$topicId' ORDER BY sotf_topics.topic_name");
+	 return $subtopics;
+  }
+
+  function getSuperTopic($topicId, $language) {
+	 $r = $this->db->getRow("SELECT supertopic, tree_id FROM sotf_topic_tree_defs WHERE id='$topicId'");
+	 debug("R", $r);
+	 if(!$r['supertopic']) {
+		debug("return null");
+		return NULL;
+	 } else {
+		$sup = $r['supertopic'];
+		return $this->db->getRow("SELECT sotf_topics.topic_id AS id, sotf_topics.topic_name AS name FROM sotf_topic_tree_defs LEFT JOIN sotf_topics ON sotf_topics.topic_id = sotf_topic_tree_defs.id WHERE sotf_topics.language='$language' AND sotf_topic_tree_defs.id='$sup'");
+	 }
+  }
+
+  function getDefaultTreeId() {
+	 return 2;
+  }
+
+  function getTopicTreeRoot($treeId = '') {
+	 if(!$treeId)
+		$treeId = $this->getDefaultTreeId();
+	 return $this->db->getOne("SELECT id FROM sotf_topic_tree_defs WHERE tree_id='$treeId' AND supertopic=0");
+  }
+
+  function getTopicInfo($topicId, $language) {
+		return $this->db->getRow("SELECT td.*, tn.topic_name AS name FROM sotf_topic_tree_defs td LEFT JOIN sotf_topics tn ON tn.topic_id = td.id WHERE tn.language='$language' AND td.id='$topicId'");
+  }
+
+  function getTopicTreeInfo($treeId, $language) {
+		return $this->db->getRow("SELECT sotf_topics.*, tt.* FROM sotf_topic_tree_defs LEFT JOIN sotf_topics ON sotf_topics.topic_id = sotf_topic_tree_defs.id LEFT JOIN sotf_topic_trees tt ON sotf_topic_tree_defs.tree_id=tt.tree_id WHERE sotf_topics.language='$language' AND sotf_topic_tree_defs.tree_id='$treeId' AND sotf_topic_tree_defs.supertopic=0");
+  }
+
+  function listTopicTrees($language) {
+	 return $this->db->getAll("SELECT sotf_topics.*, tt.* FROM sotf_topic_tree_defs LEFT JOIN sotf_topics ON sotf_topics.topic_id = sotf_topic_tree_defs.id LEFT JOIN sotf_topic_trees tt ON sotf_topic_tree_defs.tree_id=tt.tree_id WHERE sotf_topics.language='$language' AND sotf_topic_tree_defs.supertopic=0");
+  }
+
   /** return a topic tree */
   function getTree($treeId, $language, $withCounts = false) {
     $supertopics = $this->db->getCol("SELECT DISTINCT supertopic FROM sotf_topic_tree_defs WHERE tree_id='$treeId'");
     debug('supertopics', $supertopics);
-    return $this->dumpTree(0, 0, $treeId, $language, $supertopics, $withCounts);
+	 $rootId = $this->db->getOne("SELECT id FROM sotf_topic_tree_defs WHERE tree_id='$treeId' AND supertopic=0");
+	 if(!$rootId || DB::isError($rootId))
+		raiseError("no such topic tree: $treeId");
+    return $this->dumpTree($rootId, 0, $treeId, $language, $supertopics, $withCounts);
   }
 
   /** private recursive function for dumping trees */
@@ -300,6 +343,22 @@ class sotf_Repository {
       }
     }
     return $list;
+  }
+
+  function countProgsForTopic($topicId) {
+	 return $this->db->getOne("SELECT count(*) FROM sotf_programmes p, sotf_prog_topics t WHERE p.published = 't' AND p.id = t.prog_id AND t.topic_id = '$topicId'");
+  }
+
+  function getProgsForTopic($topicId, $start, $hitsPerPage) {
+	 $sql = "SELECT p.*, s.name as station, se.title as serietitle FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id = se.id, sotf_prog_topics t WHERE p.published = 't' AND p.id = t.prog_id AND t.topic_id = '$topicId'";
+	 if(!$start) $start = 0;
+	 $res = $this->db->limitQuery($sql, $start, $hitsPerPage);
+	 if(DB::isError($res))
+		raiseError($res);
+    while (DB_OK === $res->fetchInto($item)) {
+		$list[] = $item;
+	 }
+	 return $list;
   }
 
   /************************************************

@@ -166,13 +166,20 @@ $smarty->show_info_include = $sotfVars->get('debug_smarty', 0);
 // this object contains various utilities
 $utils = new sotf_Utils;
 
-// we need trick for making pages indexed by Google
-// therefore we pass some parameters in pathinfo
-// after this call getParameter can be used to get these parameters as well
-sotf_Utils::collectPathinfoParams();
+// for easier access
+$scriptUrl = mygetenv('SCRIPT_NAME');
+debug('scripturl', $scriptUrl);
 
 // page object is for request handling and page generation
 $page = new sotf_Page;
+
+// we need trick for making pages indexed by Google
+// therefore we pass some parameters in pathinfo
+// after this call getParameter can be used to get these parameters as well
+$pathinfoParamExceptions = array('getFile','getIcon','getJingle','getUserFile');
+if(!in_array($page->action, $pathinfoParamExceptions)) {
+	sotf_Utils::collectPathinfoParams();
+}
 
 // permissions object is for managing and asking for permissions
 $permissions = new sotf_Permission;
@@ -212,9 +219,5 @@ if($config['debug']) {
 debug("action", $page->action);
 debug("lang", $lang);
 debug("userid", $user->id);
-
-// for easier access
-$scriptUrl = mygetenv('SCRIPT_NAME');
-debug('scripturl', $scriptUrl);
 
 ?>

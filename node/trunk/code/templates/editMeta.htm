@@ -187,7 +187,7 @@ window.onload=myonload;
                   {else}
                   <p>{#no_topics#}</p>
                   {/if}
-                  <input class="action" type="button" name="b1" value="{#add_topic#}" onClick="popup('topic_tree.php?prgid={$PRG_ID}','{#topicpopup#}',400,250,true)" />
+                  <input class="action" type="button" name="b1" value="{#add_topic#}" onClick="popup('topicTree.php?prgid={$PRG_ID}','{#topicpopup#}',400,250,true)" />
       </td>
     </tr>
 </table>
@@ -312,8 +312,10 @@ window.onload=myonload;
               {/section}
             </td>
             <td>
+                {if $USERNAME ne $username}
                 <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=station&objectid={$PRG_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)" />
                   <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editMeta.php?delperm=1&username={$username|escape}&id={$PRG_ID}#perms')" />
+                {/if}
             </td>
           </tr>
           {/foreach}

@@ -302,7 +302,7 @@ class sotf_Page
 	{
 		global $smarty, $sotfVars;
 		$rp_maxresults = $sotfVars->get("hitsPerPage", 10);		//display maximal so many results
-		$rp_maxresults = 2;
+		//$rp_maxresults = 2;
 
 		$rp_from = sotf_Utils::getParameter('from');
 		if (!isset($rp_from)) $rp_from = 1;			//if first time on page

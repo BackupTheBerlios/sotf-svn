@@ -6,6 +6,7 @@
 <title>{$PAGETITLE} (StreamOnTheFly:{$NODEID})</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="{$IMAGE_URL}/main.css" rel="stylesheet" type="text/css">
+<link rel="shortcut icon" href="{$ROOT_URL}/favicon.ico" />
 {literal}
 <script>
       var data_changed=0;
@@ -73,17 +74,17 @@
                       <a class="menu" href="{$ROOT_URL}/">{#Home#}</a> 
                       | <a class="menu" href="{$ROOT_URL}/advsearch.php">{#Search#}</a> 
                       | <a class="menu" href="{$ROOT_URL}/stations.php">{#Stations#}</a> 
+                      | <a class="menu" href="{$ROOT_URL}/topics.php">{#Topics#}</a> 
+                      | <a target="_top" class="menu" href="{$ROOT_URL}/playlist.php">{#Playlist#}</a>
                       {if $IS_EDITOR} | <a class="menu" href="{$ROOT_URL}/editor.php">{#EditorPage#}</a> {/if} 
                       {if hasPerm('node', 'change', 'authorize') } | <a class="menu" href="{$ROOT_URL}/admin.php">{#AdminPage#}</a> {/if}
                       {if $loggedIn}
-                      | <a target="_top" class="menu" href="{$ROOT_URL}/playlist.php">{#Playlist#}</a>
                       | <a class="menu" href="{$ROOT_URL}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$USERNAME})</a>
                       | <a class="menu" href="{$ROOT_URL}/logout.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Logout#}</a>
                       {else}
                       | <a class="menu" href="{$ROOT_URL}/login.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Login#}</a>
                       {/if}
                       | <a class="menu" href="{$ROOT_URL}/help.php">{#Help#}</a> 
-                      | <a class="menu" href="{$ROOT_URL}/about.php">{#About#}</a> 
                       {if $DEBUG}
                       <!--
                       | <a class="menu" href="{$VIEWLOG}">View log</a>

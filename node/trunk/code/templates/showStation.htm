@@ -51,14 +51,14 @@
                     {$item.role_name}
                   </td>
                   <td>
-                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400)">{$item.contact_data.name}</a>
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">{$item.contact_data.name}</a>
                     {if $item.contact_data.url}<br>(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
                     {elseif $item.contact_data.email}<br>(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
                     {/if}
                   </td>
                   <td>
                     {if $item.contact_data.icon }{strip}
-                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400)">
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">
                       <img height="50" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
                     </a>{/strip}
                     {/if}
@@ -99,7 +99,13 @@
         <table width="100%">
           {foreach item=item from=$SERIES}
           <tr valign="top">
-            <td width="1%">{if $item.icon }<img src="{$CACHE_URL}/{$item.id}.png">{else}<img src="{$IMAGE_URL}/noicon.png">{/if}</td>
+            <td width="1%">
+              {if $item.icon }
+              <a href="{$ROOT_URL}/showSeries.php/{$item.id}"><img border="0" src="{$CACHE_URL}/{$item.id}.png"></a>
+              {else}
+              <a href="{$ROOT_URL}/showSeries.php/{$item.id}"><img border="0" src="{$IMAGE_URL}/noicon.png"></a>
+              {/if}
+            </td>
             <td width="98%">
               <a class="goto_object" href="{$ROOT_URL}/showSeries.php/{$item.id}">{$item.title}</a> ({$item.count})
               {if $item.description}
