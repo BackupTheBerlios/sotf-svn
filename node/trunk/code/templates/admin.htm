@@ -1,0 +1,135 @@
+
+<h3>{#admin#}</h3>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#general_data#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        <table width="100%">
+          <tr><td>
+              <form method="post">
+                <table>
+                  <tr>
+                    <td>{#station_name#}:</td>
+                    <td><b><a href="showStation.php?stationid={$STATION_ID}">{$STATION}</a></b></td>
+                  </tr>
+                  <tr>
+                    <td>{#description#}:</td>
+                    <td><textarea onChange="if(value != defaultValue) data_changed++;" cols="50" rows="10" name="desc">{$STATION_DATA.description}</textarea></td>
+                  </tr>
+                </table>
+                <input type="submit" name="save" value="{#save#}">
+              </form>
+            </td></tr>
+        </table>
+  </td>
+</tr>
+</table>
+
+<p></p>
+
+<a name="network"></a>
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Node_network#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $NEIGHBOURS}
+        <table>
+            <tr class="listhead">
+              <th>{#node#}</th>
+              <th>{#accept_incoming#}</th>
+              <th>{#last_incoming#}</th>
+              <th>{#use_for_outgoing#}</th>
+              <th>{#last_outgoing#}</th>
+            </tr>
+            {cycle name="roles" values="list1,list2" print=false advance=false}
+            {foreach item=item from=$NEIGHBOURS}
+            <tr class="{cycle name=roles}">
+              <td>
+              <a href="{$item.node.url}">{$item.node.name}</a>
+            </td>
+            <td>
+              {if $item.accept_incoming}{#Yes#}{else}{#No#}{/if}
+            </td>
+            <td>
+              {$item.last_incoming}
+            </td>
+            <td>
+              {if $item.use_for_outgoing}{#Yes#}{else}{#No#}{/if}
+            </td>
+            <td>
+              {$item.last_outgoing}
+            </td>
+            <td nowrap>
+              <input class="action" type="button" name="b1" value="{#sync#}" onClick="redir(this.form, 'admin.php?sync=1&nodeid={$item.node_id}')" />
+              <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editNeighbour.php?nodeid={$item.node_id}','{#editNeighbour#}',350,400,false)" />
+              <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'admin.php?delneighbour=1&nodeid={$item.node_id}')" />
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#standalone_node#}</p>
+        {/if}
+        <p>
+            <input class="action" type="button" name="b1" value="{#add_neighbour#}" onClick="popup('createNeighbour.php','{#createNeighbour#}',400,400,false)" />
+        </p>
+      </td>
+    </tr>
+</table>
+</form>
+
+<p></p>
+
+<a name="perms"></a>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#access_permissions#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $PERMISSIONS}
+        <form>
+        <table>
+          <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
+          {cycle name="perms" values="list1,list2" print=false advance=false}
+          {foreach item=user key=username from=$PERMISSIONS}
+          <tr class="{cycle name=perms}">
+            <td>{$username}</td>
+            <td>
+              {section name=i loop=$user}
+              {$user[i]}{if ! $smarty.section.i.last}, {/if}
+              {/section}
+            </td>
+            <td nowrap>
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=node&objectid=node&objectname={#node#}&username={$username|escape}','Permissions',350,400,false)" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'admin.php?delperm=1&username={$username|escape}')" />              
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        </form>
+        {else}
+        <p>{#no_users#}</p>
+        {/if}
+        <form method="post" name="form1">
+          <input type="hidden" name="stationid" value="{$STATION_ID}">
+            {#username#}: <input name="username"> 
+              <input type="button" name="addperm" value="{#change_perm#}" onClick="if(checkIfEmpty(this.form.username,'{#select_user#}')) popup('editPermissions.php?context=node&objectid=node&objectname={#node#}&username='+escape(this.form['username'].value),'{#Permissions#}',350,400, false)">
+                <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
+        </form>
+      </td>
+    </tr>
+</table>
+

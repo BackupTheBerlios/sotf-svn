@@ -22,6 +22,14 @@ class sotf_Neighbour extends sotf_Object {
 		return new sotf_Node($data['id'], $data);
 	}
 
+	/** 
+	 * @method static isNeighbour
+	 */
+	function isNeighbour($nodeId) {
+		global $db;
+		return $db->getOne("SELECT count(*) FROM sotf_neighbours WHERE node_id = '$nodeId'");
+	}
+
   /** returns a list of all such objects: can be slow!!
    * @method static listAll
    */

@@ -85,9 +85,13 @@ class sotf_AudioFile extends sotf_File
 			$this->samplerate = $audioinfo["frequency"];
 			if (!$this->samplerate && $this->format == 'mp3')
 				$this->samplerate = $audioinfo["mpeg"]["audio"]["frequency"];
+			if (!$this->samplerate && $this->format == 'ogg')
+				$this->samplerate = $audioinfo["ogg"]["samplerate"];
 			$this->channels = $audioinfo["channels"];
 			if (!$this->channels && $this->format == 'mp3')
 				$this->channels = $audioinfo["mpeg"]["audio"]["channels"];
+			if (!$this->channels && $this->format == 'ogg')
+				$this->channels = $audioinfo["ogg"]["numberofchannels"];
 			$this->duration = $audioinfo["playtime_seconds"];
 			$this->mimetype = $this->determineMimeType($this->format);
 		}
@@ -100,7 +104,13 @@ class sotf_AudioFile extends sotf_File
 	*/
 	function getFormatFilename()
 	{
-		return $this->bitrate . 'kbps_' . $this->channels . 'chn_' . $this->samplerate . 'Hz.' . $this->format;
+		global $audioFormats;
+
+		$bitrate = $this->bitrate;
+		for ($i=0;$i<count($audioFormats);$i++)
+			if (abs($audioFormats[$i]['bitrate'] - $this->bitrate) < 10)
+				$bitrate = $audioFormats[$i]['bitrate'];
+		return $bitrate . 'kbps_' . $this->channels . 'chn_' . $this->samplerate . 'Hz.' . $this->format;
 	} // end func getFormatFilename
 
   /** static method converts format encoded into filename back to array of format characteristics. */

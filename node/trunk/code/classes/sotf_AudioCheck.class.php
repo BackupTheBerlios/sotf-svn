@@ -57,8 +57,15 @@ class sotf_AudioCheck
 					continue;							// This is not an audio, get another one
 				if ($audioFormats[$i]['format'] != $this->list->list[$j]->format)
 					continue;							// This is not the one we need, get another one
-				if ($audioFormats[$i]['bitrate'] != $this->list->list[$j]->bitrate)
+				//if ($audioFormats[$i]['bitrate'] != $this->list->list[$j]->bitrate)
+				//	continue;							// This is not the one we need, get another one
+				if (abs($this->list->list[$j]->avarange_bitrate - $audioFormats[$i]['bitrate']) > 10)
 					continue;							// This is not the one we need, get another one
+				else
+				{
+					$this->list->list[$j]->bitrate = $audioFormats[$i]['bitrate'];
+					$this->list->list[$j]->avarange_bitrate = $audioFormats[$i]['bitrate'];
+				}
 				if ($audioFormats[$i]['channels'] != $this->list->list[$j]->channels)
 					continue;							// This is not the one we need, get another one
 				if ($audioFormats[$i]['samplerate'] != $this->list->list[$j]->samplerate)
@@ -83,7 +90,9 @@ class sotf_AudioCheck
 				if ($audioFormats[$i]['samplerate'] > $this->list->list[$j]->samplerate)
 					continue;							// This is not the one we need, get another one
 				$found = $j;							// Found a better one
-				break;									// don't need to search for another, leave the loop
+				// easier to encode an mp3 from an mp3
+				if (($audioFormats[$i]['format'] != 'mp3') || (($audioFormats[$i]['format'] == 'mp3') && ($this->list->list[$j]->format == 'mp3')))
+					break;								// don't need to search for another, leave the loop
 			}
 			if ($found !== false)
 			{
@@ -111,8 +120,10 @@ class sotf_AudioCheck
 				continue;								// This is not an audio, get another one
 			if ($audioFormats[$i]['format'] != $audiofile->format)
 				continue;								// This is not the one we need, get another one
-			if ($audioFormats[$i]['bitrate'] != $audiofile->bitrate)
-				continue;								// This is not the one we need, get another one
+			//if ($audioFormats[$i]['bitrate'] != $audiofile->bitrate)
+			//	continue;								// This is not the one we need, get another one
+			if (abs($audiofile->avarange_bitrate - $audioFormats[$i]['bitrate']) > 10)
+				continue;							// This is not the one we need, get another one
 			if ($audioFormats[$i]['channels'] != $audiofile->channels)
 				continue;								// This is not the one we need, get another one
 			if ($audioFormats[$i]['samplerate'] != $audiofile->samplerate)
@@ -138,7 +149,7 @@ class sotf_AudioCheck
 					$bitrate = $this->list->list[$i]->avarange_bitrate;
 					$index = $i;
 				}
-		return $i;
+		return $index;
 	}
 
 	/**
@@ -158,7 +169,7 @@ class sotf_AudioCheck
 						$bitrate = $this->list->list[$i]->avarange_bitrate;
 						$index = $i;
 					}
-		return $i;
+		return $index;
 	}
 
 	/**

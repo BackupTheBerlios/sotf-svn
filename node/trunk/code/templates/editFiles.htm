@@ -94,7 +94,7 @@ else  window.location.href = this.location.href
             </td>
             <td nowrap>
               {if empty($item.filename) }
-              <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=80')" />
+              <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=180')" />
               {else}
                 <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
               {/if}
