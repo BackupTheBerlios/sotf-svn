@@ -515,7 +515,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     mkdir($pathToFile . $folderName);
 	
     // untar contents of file to folder
-    $tar = new Archive_Tar($fileName, true);	// create archive handler
+    $tar = new Archive_Tar($fileName, true);								// create archive handler
     $tar->setErrorHandling(PEAR_ERROR_PRINT);								// enable error reporting
     $result = $tar->extract($pathToFile . $folderName);			// untar contents
     debug("untar result", $result);
@@ -530,7 +530,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		
 		if(!$metadata or $myPack->error){ //errors during import - stop execution
 			sotf_Utils::delete($pathToFile . $folderName);
-			trigger_error("The import did not succeed!");
+			echo "<font color=#FF0000><b>The import of $fileName did not succeed!</b></font>";
 			return false;	//did not succeed
 		}else{
 			echo "Came In: " . $myPack->encoding . "<br>";
