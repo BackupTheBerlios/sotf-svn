@@ -26,6 +26,7 @@ $map['sotf.sync'] = array('function' => 'syncResp');
 $map['sotf.forward'] = array('function' => 'forwardResp');
 $map['portal.query'] = array('function' => 'getQueryResults');
 $map['portal.playlist'] = array('function' => 'getProgrammes');
+$map['portal.events'] = array('function' => 'putEvents');
 $map['sotf.cv.listnames'] = array('function' => 'cvListNames');
 $map['sotf.cv.get'] = array('function' => 'cvGet');
 //$map['sotf.allIds'] = array('function' => 'allIds');
@@ -131,8 +132,14 @@ function getQueryResults($params)
 		// audio files for programme
 		$audioFiles = $prg->listAudioFiles('true');
 		$results[$key]['audioFiles'] = array();
+		$results[$key]['downloadFiles'] = array();
 		foreach($audioFiles as $fileList)
+		{
 			if ($fileList['stream_access'] == "t") $results[$key]['audioFiles'][] = $fileList;
+			if ($fileList['download_access'] == "t") $results[$key]['downloadFiles'][] = $fileList;
+		}
+
+
 	}
 	$retval = xmlrpc_encode($results);
 	return new xmlrpcresp($retval);
@@ -170,7 +177,7 @@ function getProgrammes($params)
 		// audio files for programme
 		$audioFiles = $prg->listAudioFiles('true');
 		$results[$key]['audioFiles'] = array();
-			$results[$key]['downloadFiles'] = array();
+		$results[$key]['downloadFiles'] = array();
 		foreach($audioFiles as $fileList)
 		{
 			if ($fileList['stream_access'] == "t") $results[$key]['audioFiles'][] = $fileList;
@@ -186,6 +193,15 @@ function getProgrammes($params)
 
 	}
 	$retval = xmlrpc_encode($results);
+	return new xmlrpcresp($retval);
+}
+
+function putEvents($params)
+{
+	global $config, $db;
+	$events = xmlrpc_decode($params->getParam(0));
+	debug("events", $events);
+	$retval = xmlrpc_encode("OK");
 	return new xmlrpcresp($retval);
 }
 

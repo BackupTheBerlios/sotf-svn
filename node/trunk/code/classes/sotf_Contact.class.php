@@ -22,28 +22,57 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 		$this->sotf_ComplexNodeObject('sotf_contacts', $id, $data);
 	}
 
+	function create($name) {
+	  global $config;
+	  $id = $this->findByNameLocal($name);
+	  if($id) {
+		 debug("Create contact", "Failed, name in use");
+		 return false;
+	  }
+	  $this->data['name'] = $name;
+	  return parent::create();
+	}
+	
 	/** static */
 	function isNameInUse($name) {
 		global $db, $config;
 		// TODO!!
 	}
 
-	function create($name) {
-		$id = $this->findByNameLocal($name);
-		if($id) {
-			debug("Create contact", "Failed, name in use");
-			return false;
-		}
-		$this->data['name'] = $name;
-		return parent::create();
-	}
+  /** private
+	  Checks and creates subdirs if necessary.
+	*/
+  function checkDirs() {
+	global $repository;
 
-	function isLocal() {
-		global $db, $config;
-		$n = $db->getOne("SELECT node_id FROM sotf_node_objects WHERE id = '$this->id'");
-		return ($n == $config['nodeId']);
+	$dir = $repository->rootdir . '/__contacts';
+	if(!is_dir($dir)) {
+	  debug("created contacts dir", $dir);
+	  mkdir($dir, 0770);
 	}
+	$dir = $dir . '/' . $this->id;
+	//$dir = $this->getDir();
+	if(!is_dir($dir)) {
+	  debug("created contact dir", $dir);
+	  mkdir($dir, 0770);
+	}
+	return $dir;
+  }
 
+  function getDir() {
+	 global $repository;
+	 // temporary workaround
+	 return $this->checkDirs();
+	 
+	 $dir = $repository->rootdir . '/__contacts/' . $this->id;
+	 return $dir;
+  }
+  
+  /** returns the directory where metadata/jingles/icons are stored */
+  function getMetaDir() {
+	 return $this->getDir();
+  }
+  
 	/** static */
 	function findByNameLocal($name) {
 		global $db, $config;

@@ -35,7 +35,7 @@ class sotf_NodeObject extends sotf_Object {
 
 	 if(empty($this->id)) {
 		$this->id = $repository->generateID($this);
-		$this->adminObject->id = $this->id;
+		//$this->internalData['id'] = $this->id;
 	 }
 	 if($repository->isVocabularyTable($this->tablename))
 		$this->internalData['node_id'] = '0';

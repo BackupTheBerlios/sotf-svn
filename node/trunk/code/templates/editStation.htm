@@ -248,7 +248,7 @@
                   <td>
                       {if empty($item.filename) }
                         {if $HAS_JINGLE}
-                        <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=80')" />
+                        <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?jingle=1&id={$STATION_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=80')" />
                         {/if}
                       {else}
                         <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?deljingle=1&filename={$item.filename}&index={$item.index}&stationid={$STATION_ID}')" />

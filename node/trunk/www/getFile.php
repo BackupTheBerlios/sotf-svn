@@ -45,4 +45,6 @@ if ($file->type != "none")
 else
 	raiseError("download_problem");
 
+$page->logRequest();
+
 ?>

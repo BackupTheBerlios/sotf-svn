@@ -14,7 +14,7 @@ $file = sotf_Utils::getParameter('file');
 
 $obj = $repository->getObject($id);
 
-$jingleFile = sotf_Utils::getFileInDir($obj->getJingleDir(), $file);
+$jingleFile = sotf_Utils::getFileInDir($obj->getMetaDir(), $file);
 debug("jingleFile", $jingleFile);
 
 if($jingleFile)
@@ -29,5 +29,7 @@ if($jingleFile)
 }
 else
 	raiseError($page->getlocalized("download_problem"));
+
+$page->logRequest();
 
 ?>

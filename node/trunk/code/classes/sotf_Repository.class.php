@@ -253,6 +253,7 @@ class sotf_Repository {
 
   function updateTopicCounts() {
     // calculate counts by topic
+	 $this->db->begin();
     $this->db->query("DROP TABLE sotf_topics_counter");
     $this->db->query("SELECT setval('sotf_topics_counter_id_seq', 1, false)");
     $this->db->query("SELECT nextval('sotf_topics_counter_id_seq') AS id, t.id AS topic_id, count(p.id) AS number, NULL::int AS total INTO sotf_topics_counter FROM sotf_topic_tree_defs t LEFT JOIN sotf_prog_topics p ON t.id = p.topic_id GROUP BY t.id");
@@ -266,6 +267,7 @@ class sotf_Repository {
         $this->db->query("UPDATE sotf_topics_counter SET total='" . $topics[$i]['total'] . "' WHERE topic_id='" . $topics[$i]['id'] . "'");
     }
     $this->db->query("UPDATE sotf_topics_counter SET total=0 WHERE total IS NULL");
+	 $this->db->commit();
   }
 
   /** private recursive function to calculate topic totals including subtopics */
@@ -364,7 +366,7 @@ class sotf_Repository {
   }
 
   function getProgsForTopic($topicId, $start, $hitsPerPage) {
-	 $sql = "SELECT p.*, s.name as station, se.title as serietitle FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id = se.id, sotf_prog_topics t WHERE p.published = 't' AND p.id = t.prog_id AND t.topic_id = '$topicId'";
+	 $sql = "SELECT p.*, s.name as station, se.name as serietitle FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id = se.id, sotf_prog_topics t WHERE p.published = 't' AND p.id = t.prog_id AND t.topic_id = '$topicId'";
 	 if(!$start) $start = 0;
 	 $res = $this->db->limitQuery($sql, $start, $hitsPerPage);
 	 if(DB::isError($res))

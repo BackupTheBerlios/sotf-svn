@@ -64,11 +64,13 @@ if($save || $finish1 || $finish2) {
     $contact->set('cellphone', sotf_Utils::getParameter('cellphone'));
     $contact->set('fax', sotf_Utils::getParameter('fax'));
 	 $url = sotf_Utils::getParameter('url');
-	 if(sotf_Utils::is_valid_URL($url))
-		$contact->set('url', $url);
-	 else {
-		$error = 1;
-		$page->addStatusMsg("invalid-url");
+	 if($url != 'http://') {
+		if(sotf_Utils::is_valid_URL($url))
+		  $contact->set('url', $url);
+		else {
+		  $error = 1;
+		  $page->addStatusMsg("invalid-url");
+		}
 	 }
     $contact->update();
   }

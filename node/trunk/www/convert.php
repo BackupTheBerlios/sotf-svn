@@ -174,13 +174,20 @@ function rmFile($file) {
 
 $id = sotf_Utils::getParameter('id'); 
 $index = sotf_Utils::getParameter('index'); 
+$jingle = sotf_Utils::getParameter('jingle'); 
 
-$prg = & new sotf_Programme($id);
+$obj = $repository->getObject($id);
+if(!$obj)
+	  raiseError("object does not exist!");
 
-checkPerm($prg->id, 'change');
+checkPerm($obj->id, 'change');
 
 $audioFiles = & new sotf_FileList();
-$audioFiles->getAudioFromDir($prg->getAudioDir());
+if($jingle) {
+  $audioFiles->getAudioFromDir($obj->getMetaDir());
+} else {
+  $audioFiles->getAudioFromDir($obj->getAudioDir());
+}
 $checker = & new sotf_AudioCheck($audioFiles);
 
 if ($checker->reqs[$index][0] === true)
@@ -201,7 +208,7 @@ if ($sourceindex === false)
 	exitPage();
 
 $source = $audioFiles->list[$sourceindex]->getPath();
-$target = $config['tmpDir'] . '/' . $prg->get('track') . '_' . $checker->getFormatFilename($index);
+$target = $config['tmpDir'] . '/' . $obj->id . '_' . time() . '_' . $checker->getFormatFilename($index);
 
 $bitrate = $config['audioFormats'][$index]["bitrate"];
 $samplerate = $config['audioFormats'][$index]["samplerate"];
@@ -302,7 +309,12 @@ elseif (($config['audioFormats'][$index]['format'] == 'ogg') && ($audioFiles->li
 		rmFile($tempname1);
 	}
 }
-$prg->setAudio($target);
+
+if($jingle) {
+  $obj->setJingle($target);
+} else {
+  $obj->setAudio($target);
+}
 endPage();
 
 ?>

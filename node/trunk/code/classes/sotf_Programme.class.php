@@ -84,36 +84,28 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function create($stationId, $track='') {
 	 global $db;
 
+	 $db->begin();
+	 // TODO may need some locking to get unique track id
 	 $this->set('station_id', $stationId);
 	 $stationName = $db->getOne("SELECT name FROM sotf_stations WHERE id='" . $this->get('station_id') . "'");
 	 if(DB::isError($stationName))
 		raiseError($stationName);
 	 if(empty($stationName))
 		raiseError("station with id '$stationId' does not exist");
-	if(empty($track))
-	  $track = 'prg';
+	 if(empty($track))
+		$track = 'prg';
 	 $this->stationName = $stationName;
-	$this->set('entry_date', date('Y-m-d'));
-	$this->set('track', sotf_Utils::makeValidName($track, 32));
+	 $this->set('entry_date', date('Y-m-d'));
+	 $this->set('track', sotf_Utils::makeValidName($track, 32));
 	 $this->getNextAvailableTrackId();
-	 $count = 0;
-	 while($count < 20) {
-		if(parent::create()) { // this will also create the required directories via setMetadataFile !!
-		  debug("created new programme", $this->get['guid']);
-		  $this->checkDirs();
-		  $this->saveMetadataFile();
-		  return true;
-		}
-		$this->getNextAvailableTrackId();
-		$count++;
-	 }
-	 raiseError("Could not create new programme");
-  }
-
-  function update() {
-	 parent::update();
-	 if($this->isLocal())
+	 if(parent::create()) { // this will also create the required directories via setMetadataFile !!
+		debug("created new programme", $this->get['guid']);
 		$this->saveMetadataFile();
+		$db->commit();
+		return true;
+	 }
+	 $db->rollback();
+	 raiseError("Could not create new programme");
   }
 
   function getStation() {
@@ -131,20 +123,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		return NULL;
   }
 
-	function isLocal() {
-	 global $config;
-	 debug("s1", substr($this->id,0,3));
-	 debug("s2", sprintf('%03d', $config['nodeId']));
-	 return substr($this->id,0,3) == sprintf('%03d', $config['nodeId']);
-		//return is_dir($this->getDir()); 
-	}
-
-	/*
-  function isLocal() {
-	 return is_dir($this->getDir()); 
-  }
-	*/
-
   function getAssociatedObjects($tableName, $orderBy) {
 	 global $db;
 
@@ -152,18 +130,15 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 return $objects;
   }
 
-  /** deletes the program, and all its data and files
-	*/
-  function delete(){
-	 sotf_Utils::erase($this->getDir());
-	return parent::delete();
-  }
-
   /** returns the directory where programme files are stored */
   function getDir() {
 	global $repository;
-
 	 return $repository->rootdir . '/' . $this->stationName . '/' . $this->data['entry_date'] . '/' . $this->data['track'];
+  }
+
+  /** returns the directory where metadata/jingles/icons are stored */
+  function getMetaDir() {
+	 return $this->getDir();
   }
 
   /** returns directory where audio files are stored for the programme */
@@ -176,6 +151,31 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 return $this->getDir() . '/files';
   }
 
+  /** private
+	  Checks and creates subdirs if necessary.
+	*/
+  function checkDirs() {
+	global $repository;
+
+	 $station = $this->stationName;
+	 $dir = $repository->rootdir . '/' . $station;
+	 if(!is_dir($dir))
+		raiseError("Station $station does not exist!");
+	 $dir = $dir . '/' . $this->get('entry_date');
+	 if(!is_dir($dir))
+		mkdir($dir, 0770);
+	 $dir = $dir . '/' . $this->get('track');
+	 if(!is_dir($dir)) {
+		mkdir($dir, 0770);
+	 }
+	 if(!is_dir($dir . '/audio')) {
+		mkdir($dir . '/audio', 0770);
+	 }
+	 if(!is_dir($dir . '/files')) {
+		mkdir($dir . '/files', 0770);
+	 }
+  }
+
   function getFilePath($file) {
 	 if(!$this->isLocal())
 		raiseError('no_such_file');
@@ -185,12 +185,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		return $this->getOtherFilesDir() . '/' . $file->get('filename');
 	 }
   }
-
-  /*
-  function exists() {
-	 return isset($this->data['id']);
-  }
-  */
 
   /** makes a new item available, announces to other nodes */
   function publish() {
@@ -203,17 +197,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $this->data['published'] = 'f';
 	 $this->update();
   }
-
-  /** sets icon for programme */
-	function setIcon($file)
-	{
-	 if(parent::setIcon($file)) {
-		$iconFile = $this->getDir() . '/icon.png';
-		sotf_Utils::save($iconFile, $this->getIcon());
-		return true;
-		} else
-		return false;
-	} // end func setIcon
 
 	/************************************************
 	 *      STATISTICS AND FEEDBACK
@@ -262,31 +245,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$results[] = $row;
 	 }
 	 return $results;
-  }
-
-  /** private
-	  Checks and creates subdirs if necessary.
-	*/
-  function checkDirs() {
-	global $repository;
-
-	 $station = $this->stationName;
-	 $dir = $repository->rootdir . '/' . $station;
-	 if(!is_dir($dir))
-		raiseError("Station $station does not exist!");
-	 $dir = $dir . '/' . $this->get('entry_date');
-	 if(!is_dir($dir))
-		mkdir($dir, 0770);
-	 $dir = $dir . '/' . $this->get('track');
-	 if(!is_dir($dir)) {
-		mkdir($dir, 0770);
-	 }
-	 if(!is_dir($dir . '/audio')) {
-		mkdir($dir . '/audio', 0770);
-	 }
-	 if(!is_dir($dir . '/files')) {
-		mkdir($dir . '/files', 0770);
-	 }
   }
 
   function deleteFile($fid) {
@@ -436,16 +394,30 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   function saveMetadataFile() {
-	 $xml = "<xml>\n";
-	 foreach($this->data as $key => $value) {
-		$xml = $xml . "  <$key>" . htmlspecialchars($value) . "</$key>\n";
-	 }
-	 $xml = $xml . "</xml>\n";
+	 global $permissions;
+
+	 $name = get_class($this);
+	 $name = str_replace("sotf_", "", $name);
+	 $xml = "<$name>";
+	 $xml .= sotf_Utils::writeXML('data', $this->data, 1);
+	 $roles = $this->getRoles();
+	 $xml .= sotf_Utils::writeXML('role', $roles, 1);
+	 $perms = $permissions->listUsersAndPermissions($this->id);
+	 $xml .= sotf_Utils::writeXML('permission', $perms, 1);
+	 $links = $this->getAssociatedObjects('sotf_links', 'caption');
+	 $xml .= sotf_Utils::writeXML('link', $links, 1);
+	 $rights = $this->getAssociatedObjects('sotf_rights', 'start_time');
+	 $xml .= sotf_Utils::writeXML('right', $rights, 1);
+	 $topics = $this->getTopics();
+	 $xml .= sotf_Utils::writeXML('topic', $topics, 1);
+	 $xml = $xml . "\n</$name>\n";
+	 // TODO: save more data from other tables as well !!!!!
+
 	 $file = $this->getDir() . '/metadump.xml';
+	 debug("dumping metadata xml in", $file);
 	 $fp = fopen("$file", "w");
 	 fwrite($fp, $xml);
 	 fclose($fp);
-	 // TODO: save more data from other tables as well
 	 return true;
   }
 

@@ -91,6 +91,8 @@ if(!empty($XBMF)) {
 
 //******** Update topic counts
 
+//$repository->updateTopicCounts();
+
 //******** Clean caches adn tmp dirs
 
 // remove m3us and pngs from tmpdir

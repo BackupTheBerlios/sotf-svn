@@ -68,7 +68,7 @@ class sotf_Object {
 
   /** updates fields in 'data' except binary fields */
   function update() {
-	 global $db;
+	 global $db, $repository;
 
 	 reset($this->data);
 	 while(list($key,$val)=each($this->data)){
@@ -96,11 +96,18 @@ class sotf_Object {
 	 if(DB::isError($res)){
 		raiseError($res);
 	 }
+	 
+	 // mark if this change requires a refresh in the metadata.xml file
+	 $mainObj = $this->getMainObjectId();
+	 debug("MainObjectId", $mainObj);
+	 if($mainObj)
+		 $this->addToUpdate('updateMeta', $mainObj);
+
   }
 
   /** creates db record with all fields from 'data' */
   function create() {
-	 global $db;
+	 global $db, $repository;
 
 	 reset($this->data);
 	 while(list($key,$val)=each($this->data)){
@@ -132,6 +139,13 @@ class sotf_Object {
 		addError($res);
 		return false;
 	 }
+
+	 // mark if this change requires a refresh in the metadata.xml file
+	 $mainObj = $this->getMainObjectId();
+	 debug("MainObjectId", $mainObj);
+	 if($mainObj)
+		 $this->addToUpdate('updateMeta', $mainObj);
+
 	 return true;
   }
 
@@ -330,7 +344,29 @@ class sotf_Object {
   function getKeys(){
 	 return array_keys($this->data);
   }
-	
+
+	function getMainObjectId() {
+		//debug("class", get_class($this));
+		switch($this->tablename) {
+		case "sotf_user_permissions":
+		case "sotf_object_roles":
+			return $this->get("object_id");
+		case 'sotf_rights':
+		case 'sotf_extradata':
+		case 'sotf_links':
+		case 'sotf_prog_topics':
+			// case 'sotf_other_files':
+			// case 'sotf_media_files':
+			// case 'sotf_prog_refs':
+			// case 'sotf_prog_ratings':
+			// case 'sotf_prog_stats':
+			return $this->get('prog_id');
+		default:
+			return NULL;
+		}
+  }
+
+
 	/** static */
 	function addToUpdate($table, $id) {
 		global $db;
@@ -341,7 +377,7 @@ class sotf_Object {
 
 	/** static */
 	function doUpdates() {
-		global $db;
+		global $db, $repository;
 		$db->begin(true);
 		$list = $db->getAll("SELECT * FROM sotf_to_update");
 		while(list(,$item) = each($list)) {
@@ -356,6 +392,10 @@ class sotf_Object {
 			case 'sotf_stats':
 				$obj = new sotf_Statistics($rowId);
 				$obj->updateStats();
+				break;
+			case 'updateMeta':
+				$obj = $repository->getObject($rowId);
+				$obj->saveMetadataFile();
 				break;
 			default:
 				logError("Unknown to_update type: " . $tablename);

@@ -31,19 +31,38 @@ class sotf_Series extends sotf_ComplexNodeObject {
     }
   }
 
-  function getDir() {
-	 global $repository;
-	 $station = $this->getObject($this->get('station_id'));
-	 $name = $this->get("id");
-	 if(empty($name))
-		raiseError("this station has no name!");
-	 return $station->getDir() . '/series_' . $this->get('id');
+  /** private: Checks and creates subdirs if necessary. */
+  function checkDirs() {
+	global $repository;
+
+	$station = $this->getObject($this->get('station_id'));
+	$stationName = $station->get('name');
+	$dir = $repository->rootdir . '/' . $stationName;
+	if(!is_dir($dir))
+	  raiseError("Station $station does not exist!");
+	$dir = $station->getDir() . '/series_' . $this->id;
+	//$dir = $this->getDir();
+	if(!is_dir($dir)) {
+	  debug("created series dir", $dir);
+	  mkdir($dir, 0770);
+	}
+	return $dir;
   }
 
-	function getJingleDir() {
-		return $this->getDir() . '/station';
-	}
+  function getDir() {
+	 global $repository;
+	 // temporary workaround
+	 return $this->checkDirs();
 
+	 $station = $this->getObject($this->get('station_id'));
+	 $dir = $station->getDir() . '/series_' . $this->id;
+	 return $dir;
+  }
+
+  /** returns the directory where metadata/jingles/icons are stored */
+  function getMetaDir() {
+	 return $this->getDir();
+  }
 
   function getStation() {
     return new sotf_Station($this->get('station_id'));

@@ -20,9 +20,11 @@ checkPerm('node', 'change', 'authorize');
 // import XBMF
 $xbmfFile = sotf_Utils::getParameter('import_xbmf');
 if($xbmfFile) {
-	$id = sotf_Programme::importXBMF($config['xbmfInDir'] . "/$xbmfFile",$config['publishXbmf']);
+  $file = $config['xbmfInDir'] . "/$xbmfFile";
+  $id = sotf_Programme::importXBMF($file, $config['publishXbmf']);
 	if($id) {
 		echo "Import succesful: <a target=\"_opener\" href=\"editMeta.php?id=$id\">click here</a>";
+		unlink($file);
 	} else {
 		echo "Import failed";
 	}

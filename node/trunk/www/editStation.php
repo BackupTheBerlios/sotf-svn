@@ -161,7 +161,7 @@ if ($st->getIcon()) {
 }
 
 $jinglelist = & new sotf_FileList();
-$jinglelist->getAudioFromDir($st->getJingleDir(), 'jingle_');
+$jinglelist->getAudioFromDir($st->getMetaDir(), 'jingle_');
 
 // now $jinglelist contains the jingles
 $checker = & new sotf_AudioCheck($jinglelist);		// check $jinglelist

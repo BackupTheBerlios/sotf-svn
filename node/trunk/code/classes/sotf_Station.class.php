@@ -54,74 +54,35 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	}
 
 	function create($stationName, $desc) {
-		global $config;
-
 		$this->set('name', $stationName);
 		$this->set('description', $desc);
 		parent::create();
-		$dir = $this->getDir();
-		if(!is_dir($dir)) {
-			mkdir($dir, 0775);
-			mkdir("$dir/station", 0775);
-		}
-		#return $this->id;
-	}
-	
-	function delete(){
-		if(!$this->isLocal())
-			raiseError("Can delete only local stations");
-		// delete files from the repository
-		debug("deleting: ", $this->getDir());
-		sotf_Utils::erase($this->getDir());
-		// delete from sql db
-		return parent::delete();
+		//return $this->id;
 	}
 
+	/** private: Checks and creates subdirs if necessary. */
+	function checkDirs() {
+	  global $repository;
+	  $dir = $this->getDir();
+	  if(!is_dir($dir)) {
+		 mkdir($dir, 0775);
+		 mkdir("$dir/station", 0775);
+	  }
+	}
+
+	/** the directory where contents are stored. */
 	function getDir() {
-	global $repository;
-
-		$name = $this->get("name");
-		if(empty($name))
-			raiseError("this station has no name!");
-		return $repository->rootdir . '/' . $name;
+	  global $repository;
+	  $name = $this->get("name");
+	  if(empty($name))
+		 raiseError("this station has no name!");
+	  return $repository->rootdir . '/' . $name;
 	}
 
-	function getJingleDir() {
-		return $this->getDir() . '/station';
+	/** returns the directory where metadata/jingles/icons are stored */
+	function getMetaDir() {
+	  return $this->getDir() . '/station';
 	}
-
-	function isLocal() {
-		return is_dir($this->getDir()); 
-	}
-
- 	/** removes logo of the station */
-	function deleteIcon() {
-		$iconFile = $this->getJingleDir() . '/icon.png';
-		if(is_readable($iconFile)) {
-			parent::deleteIcon();
-			if(!unlink($iconFile))
-				addError("Could not delete icon file!");
-		}
-	}
-
-	/**
-	* Sets logo of the station
-	*
-	* @param	object	$file	sotf_File object represents the logo
-	* @return	boolean	True if the function succeeded, else false
-	* @use	$db
-	* @use	$config['iconWidth']
-	* @use	$config['iconHeight']
-	*/
-	function setIcon($file) {
-
-		if(parent::setIcon($file)) {
-			$iconFile = $this->getJingleDir() . '/icon.png';
-			sotf_Utils::save($iconFile, $this->getIcon());
-			return true;
-		} else
-			return false;
-	} // end func setIcon
 
 	/** get number of published programmes */
 	function numProgrammes($onlyPublished = true) {

@@ -92,6 +92,13 @@ class db_Wrap extends DB_pgsql {
 	    return date('Y-m-d H:i:s');
 	}
 
+  function diffTimestamp($t1, $t2) {
+    $tt1 = strtotime($t1);
+    $tt2 = strtotime($t2);
+    $diff = $tt1 - $tt2;
+    return $diff;
+  }
+
 	function epoch() {
 	  return "epoch";
 	}

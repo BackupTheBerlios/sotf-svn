@@ -330,6 +330,56 @@ class sotf_Utils
     return $string;
   } // end func randString
 
+	///////////////////////////////  XML UTILS  ////////////////////////////////////////////////////////
+
+    function isAssocArray($array) {
+      if(!is_array($array))
+        return false;
+      $keys = array_keys($array);
+      $tries = count($keys);
+      if($tries > 4) $tries = 4;
+      for($i=0; $i<$tries; $i++) {
+        if(!is_int($keys[$i]))
+          return true;
+      }
+      return false;
+    }
+
+    function writeXML($name, $array, $level=0) {
+      if(empty($array)) {
+        //return "\n" . str_repeat('  ',$level) . "<$name />";
+        return "";
+      }
+      if(sotf_Utils::isAssocArray($array)) {
+        $retval = "\n" .  str_repeat('  ',$level) . "<$name>";
+        reset($array);
+        while(list($key,$value) = each($array)) {
+          $type = gettype($value);
+          switch($type) {
+          case 'array':
+            $retval .= sotf_Utils::writeXML($key, $value, $level+1);
+            break;
+          default:
+            $retval .=  "\n" . str_repeat('  ',$level+1) . "<$key>" . htmlspecialchars($value) . "</$key>";
+          }
+        }
+        $retval .= "\n" .  str_repeat('  ',$level) . "</$name>";
+      } else {
+        reset($array);
+        while(list($key,$value) = each($array)) {
+          $type = gettype($value);
+          switch($type) {
+          case 'array':
+            $retval .= sotf_Utils::writeXML($name, $value, $level);
+            break;
+          default:
+            $retval .= "\n" .  str_repeat('  ',$level) . "<$name>" . htmlspecialchars($value) . "</$name>";
+          }
+        }
+      }
+      return $retval;
+    }
+
 	///////////////////////////////  URL UTILS  ////////////////////////////////////////////////////////
 
     /** Quick check for valid URL syntax.  */

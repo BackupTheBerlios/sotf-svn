@@ -4,7 +4,10 @@ require("init.inc.php");
 
 require_once($config['classdir'] . "/rpc_Utils.class.php");
 
-echo strtotime('2003-05-29 09:50:06+2:00');
+$obj = new sotf_Station;
+echo get_class($obj);
+
+//echo strtotime('2003-05-29 09:50:06+2:00');
 
 /*
 $rpc = new rpc_Utils;

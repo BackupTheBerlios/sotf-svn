@@ -28,4 +28,6 @@ if($image)
 else
 	raiseError($page->getlocalized("dowload_problem"));
 
+$page->logRequest();
+
 ?>

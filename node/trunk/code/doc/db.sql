@@ -195,6 +195,7 @@ CREATE TABLE "sotf_programmes" (
 	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE,
 	FOREIGN KEY("series_id") REFERENCES sotf_series("id") ON DELETE CASCADE --??
 );
+-- TODO UNIQUE station_id+entry_date+track
 
 CREATE INDEX prg_lang_idx ON sotf_programmes (language);  -- 
 -- TODO more indexes
@@ -552,8 +553,9 @@ CREATE TABLE "sotf_streams" (
 	"prog_id" varchar(12),			-- id of programme
 	"file_id" varchar(12),			-- id of file being played (null if playlist)
 	"playlist" varchar(40),			-- name of playlist file
-	"started" timestamptz,			-- 
+	"started" timestamp,				-- XXX
 	"length" int,						-- estimated length of playlist in seconds
+	"will_end_at" timestamp,			-- XXX
 	"host" varchar(50),				-- host receiving the stream
 	"flags" varchar(20)				-- various flags
 );

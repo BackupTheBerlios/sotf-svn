@@ -15,12 +15,81 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 		$this->sotf_NodeObject($tablename, $id, $data);
 	}						
 
+	/************************************************
+	 *      GENERAL
+	 ************************************************/
+
+	/** Abstract methods, which should be implemented in all subclasses:*/
+	//function getDir()
+	//function getMetaDir()
+	//function checkDirs
+
+	function isLocal() {
+		return is_dir($this->getDir()); 
+		// alternative:
+		// global $config;
+		//return ($this->getNodeId()==$config['nodeId']);
+	}
+
+	function create() {
+	  $succ = parent::create();
+	  if($succ) {
+		 $this->checkDirs();
+		 $this->saveMetadataFile();
+	  }
+	  return $succ;
+	}
+	
+	function delete() {
+	  if(!$this->isLocal())
+		 raiseError("operation_for_local_objects_only");
+	  // delete files from the repository
+	  debug("deleting: ", $this->getDir());
+	  sotf_Utils::erase($this->getDir());
+	  // delete from sql db
+	  return parent::delete();
+	}
+
+	function update() {
+	  parent::update();
+	  if($this->isLocal())
+		 $this->saveMetadataFile();
+	}
+
 	/** caches icon for object, and adds indicator flag for Smarty templates whether there is an icon */
 	function getAllWithIcon() {
 		$retval = $this->getAll();
 		$retval['icon'] = sotf_Blob::cacheIcon($this->id);
 		return $retval;
 	}
+
+	/************************************************
+	 *      METADATA
+	 ************************************************/
+	
+	function saveMetadataFile() {
+	  global $permissions;
+
+	  $name = get_class($this);
+	  $name = str_replace("sotf_", "", $name);
+	  $xml = "<$name>";
+	  $xml .= sotf_Utils::writeXML('data', $this->data, 1);
+	  $roles = $this->getRoles();
+	  $xml .= sotf_Utils::writeXML('role', $roles, 1);
+	  $perms = $permissions->listUsersAndPermissions($this->id);
+	  $xml .= sotf_Utils::writeXML('permission', $perms, 1);
+	  $xml = $xml . "\n</$name>\n";
+	  $file = $this->getMetaDir() . '/metadump.xml';
+	  debug("dumping metadata xml in", $file);
+	  $fp = fopen("$file", "w");
+	  fwrite($fp, $xml);
+	  fclose($fp);
+	  return true;
+	}
+
+	/************************************************
+	 *      LANGUAGE HACK
+	 ************************************************/
 
 	/** can be static */
 	function getLanguagesLocalized($languages = '') {
@@ -62,6 +131,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	  $smarty->assign('PRG_LANG2', $langs[1]);
 	  $smarty->assign('PRG_LANG3', $langs[2]);
 	}
+
 
 	/************************* ROLE MANAGEMENT **************************************/
 	
@@ -108,53 +178,53 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
 	//********************** ICON management ***********************************
 
-	/**
-	* Gets icon of the thing
-	*
-	* @return	string	Binary data contains the logo
-	* @use	$db
-	*/
+	/** Gets icon of the thing. Returns binary string containing the logo. */
 	function getIcon()
 	{
 		return sotf_Blob::findBlob($this->id, 'icon');
-	} // end func getIcon
+	}
 
-	/**
-	* Deletes icon of the thing
-	*/
-	function deleteIcon()
-	{
-		sotf_Blob::saveBlob($this->id, 'icon','');
+	/** Deletes icon of the thing */
+	function deleteIcon() {
+	  if(!$this->isLocal())
+		 raiseError("operation_for_local_objects_only");
+	  sotf_Blob::saveBlob($this->id, 'icon','');
+	  $iconFile = $this->getMetaDir() . '/icon.png';
+	  if(is_readable($iconFile)) {
+		 if(!unlink($iconFile))
+			addError("Could not delete icon file!");
+	  }
 	}
 
 	/**
-	* Sets icon for object
+	* Sets icon for object.
 	*
 	* @param	object	$file	pathname of file
 	* @return	boolean	True if the function succeeded, else false
-	* @use	$db
-	* @use	$config['iconWidth']
-	* @use	$config['iconHeight']
 	*/
 	function setIcon($file)
 	{
 		global $config;
 		$tmpfile = $config['tmpDir'].'/'.time().".png";
-		if (!$this->prepareIcon($file, $tmpfile, $config['iconWidth'], $config['iconHeight'])) {
+		$succ = $this->prepareIcon($file, $tmpfile, $config['iconWidth'], $config['iconHeight']);
+		if (!$succ) {
 			raiseError("Could not resize image");
 			//return false;
 		} else {
-			if ($fp = fopen($tmpfile,'rb')) {
-				$data = fread($fp,filesize($tmpfile));
-				fclose($fp);
-				// save into DB
-				sotf_Blob::saveBlob($this->id, "icon", $data);
-			} else
-				raiseError("could not open icon file!");
+		  if ($fp = fopen($tmpfile,'rb')) {
+			 $data = fread($fp,filesize($tmpfile));
+			 fclose($fp);
+			 // save into DB
+			 sotf_Blob::saveBlob($this->id, "icon", $data);
+			 // save into file system
+			 $iconFile = $this->getMetaDir() . '/icon.png';
+			 sotf_Utils::save($iconFile, $data);
+		  } else
+			 raiseError("could not open icon file!");
 		}
 		if(is_file($tmpfile)) {
-			debug("tmpfile", $tmpfile);
-			//unlink($tmpfile);
+		  debug("remove tmpfile", $tmpfile);
+		  unlink($tmpfile);
 		}
 		return true;
 	} // end func setIcon
@@ -222,9 +292,6 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
 	//********************** JINGLE management ***********************************
 
-	  /** THis could be an abstract method, implemented in sotf_Station and sotf_Series */
-	  //function getJingleDir() {
-	  //function getDir()
 
 	/**
 	* Sets jingle of the station.
@@ -237,7 +304,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 		if(!is_file($source))
 			raiseError("no such file: $source");
 		$srcFile = new sotf_AudioFile($source);
-		$target = $this->getJingleDir() .	'/jingle_' . $srcFile->getFormatFilename();
+		$target = $this->getMetaDir() .	'/jingle_' . $srcFile->getFormatFilename();
 		debug("jingle file", $target);
 		if($srcFile->type != 'audio')
 			raiseError("this is not an audio file");
@@ -265,7 +332,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	{
 		global $config;
 
-		$file = $this->getJingleDir() . '/jingle_' . sotf_AudioCheck::getFormatFilename($index);
+		$file = $this->getMetaDir() . '/jingle_' . sotf_AudioCheck::getFormatFilename($index);
 		debug("searching for", $file);
 
 		if (is_file($file) && !is_file($file.'.lock'))
@@ -284,7 +351,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
 		if(!preg_match("/^jingle/", $file))
 			raiseError("Invalid filename");
-		$file = sotf_Utils::getFileInDir($this->getJingleDir(), $file);
+		$file = sotf_Utils::getFileInDir($this->getMetaDir(), $file);
 		debug("delete file", $file);
 		if(!unlink($file)) {
 			addError("Could not delete jingle $index!");
