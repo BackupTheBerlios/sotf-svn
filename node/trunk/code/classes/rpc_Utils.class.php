@@ -115,10 +115,12 @@ Content-Type: text/xml
 		  raiseError('Streaming error: Write error');
    }
    fflush($fp);
+   debug("FLUSH", 1);
 	 if (!fputs($fp, $rawMessage, strlen($rawMessage))) {
 		  raiseError('Streaming error: Write error');
    }
    //fflush($fp);
+   debug("SENT ALL", 1);
    while (!feof($fp)) {
      $rep = fread ($fp, 1024);
      if($rep === FALSE)
