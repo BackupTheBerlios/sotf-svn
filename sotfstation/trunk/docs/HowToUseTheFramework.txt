@@ -1,0 +1,232 @@
+*********************************************************
+ StreamOnTheFly Station Management Framework Usage Guide
+*********************************************************
+
+/************************************************************************************/
+1) Purpose
+
+The SOTF Station Management Framework has been developed to modularize
+the software and to ease the addition of new functional components to
+the package. 
+
+/************************************************************************************/
+2) Description
+
+It is basically a set of predefined tools and functions, which, if used
+correctly will do all the routine work in the background, leaving the
+programmer to think about the NEW TAKS ONLY. Moreover it is a collection
+of common routines and tasks, which _should_ be used exensively to create
+a smooth and easy to use interface.
+
+/************************************************************************************/
+3) Basic Usage
+
+Evere module will usually consist of two files. One file's primary purpose
+will be to represent an overview of data, and to manage simple actions such
+as addition of new data, and deletion of old data. The second file will 
+usually be a popup window that will allow the editing of already existing
+data.
+
+To give you an easy start, a template file has been created, that absolutely
+every file of the application began with. Now, lets take a closer look 
+at this file. Open 'templatepage.php'.
+
+Basically, this file already works, only with 2 lines of code, it will build
+a whole page from scratch taking the 'noaccess.htm' template as the _end page_
+and fitting it into the page design. It will build a connection to the data-
+base and initialize all the session data. Besides an error collector will
+be cretaed that can be used for creating useful interfaces ;)
+
+Okay, lets take a closer look.
+
+Line 15, simply includes the init.inc.php file, which will prepare all the
+background data for later usage and retreival. This data includes the
+initialization of database connection of the template parser, the loading
+of language files and the creation of useful object instances (will look
+at these later).
+
+Line 16, makes use of the Navigation Bar Builder. If you take a look at the
+SOTF Station Management interface, you will see a typical navigation bar 
+right under the SOTF logo, that shows you the path back to the root of the page.
+This navigation bar is automatically constructed from whatever data we put into
+the $myNav object. The only public function that you should use, is
+
+$myNav->add(string,string);
+
+Every call to this function will add a navigation bar entry to the top of
+the stack, and later smarty will construct an HTML navigation bar from this data.
+The first parameter should be a string that constains the name of the section. 
+The second parameter should be a link, to which this entry leads. In this case
+we make use of the global array $SECTION that contains all the section names
+(this array is set in the file '/configs/error.en.php').
+
+Line 17, makes a call to the authorization procedure. In case the page that
+you are working on, is protected from some types of users, then you should
+uncomment this line. The three possible access schemes are:  edit_series,
+edit_station, edit_users. All the pages must fall into ONE of the three 
+categories or none at all.
+
+Line 20, you see a commented out line that creates an instance of helpBox(int)
+object. If you decide, that the page you are working on needs a help message 
+box, all you have to do, is enter the desired text into the database into the table
+'help_texts' and then create and instance of this object passing the ID of the
+help message to the constructor. Note: the created instance HAS TO BE called
+$myHelp, since it will be worked upon by the software framework.
+
+The template page has to help box, by default, but, for example, the login page
+does - 'index.php'. There you will find the same line of code, but not commented
+out.
+
+Line 24, tells the framework, that all the data preparation has been finished and
+therefrom Smarty will take all the initiative and process this data into the
+template specified as the only function parameter.
+
+Note: In case you wish for the page to load on a template framework designed 
+especially for popups, you have to call pageFinishPopop(string[,bool[,bool]]) instead
+of pageFinish(string[,bool[,bool]]).
+
+/************************************************************************************/
+4) Advanced Usage
+
+Once you have managed to initialize a basic page and played around with help boxes,
+then you will probably want to process various data, so here is a brief how-to.
+
+a) Error Collection and Reporting.
+
+By default, there exist a global object, that should be used as an error collector.
+The object will then be automatically processed and a cure HTML error report will
+be created by smarty.
+
+The basic usage is as follows:
+
+$myError->add(string);
+
+This will add an error to the stack. To allow full language independence, I have
+created an array in the file '/configs/error.en.php' - $ERR, that holds all the
+possible error messages. Feel free to add new ones as needed. So, a typical stack
+fill will look like this.
+
+if(condition){
+  $myError->add($ERR[index]);
+}
+
+Lets investigate more into error reporting. The main functions that use may make use
+of in the class are:
+
+$myError->checkLength(string[,int]);
+
+This function will return TRUE or FALSE whether the passed string is long enough ie
+containts enough charachters. By default the length in 4, but can be overridden with
+the second optional charachter.
+
+$myError->checkMail(string);
+
+This function will return TRUE or FALSE based on whether the given string is a valid
+e-mail address ir not.
+
+$myError->checkUser(string[,int]);
+
+This function will return TRUE or FALSE based on whether the given string is a UNIXlike
+user name of a given length (default 4 charachters, or whatever is defined by the
+optional parameter)
+
+$myError->checkInt(int);
+
+This function will either return TRUE or FALSE based on whether the passed variable is
+an integer value.
+
+$myError->checkFloat(float);
+
+Same as above, but checks for a float.
+
+$myError->getLength();
+
+This function will return the number of errors in the error stack.
+
+Now, once you have made yourseld familiar with the error handler, you can take a look 
+at it in action. The best way to use it, is of course to process form inputs. As a good
+example, open the file 'programmenew.php'. Input processing starts from line 20.
+In line 21, I use the globally available function clean(array); that cleans ALL the post
+data from any unwanted inputs.
+
+Actual error checking will begin on line 37, there you see a typical construct that
+takes the form of
+
+if(!$myError->checkLength($_POST['series_title'],2)){
+  $myError->add($ERR[15]);
+}
+
+the above condition checks whether the form field 'series_title' has a minimum of 2 
+charachters. (note: space chatachters are NOT counted).
+
+Once all the error checking is complete, on line 55 there is a check to see, whether
+there have been any errors in the inputs.
+
+If($myError->getLength()==0){...}
+
+This makes sure that no error have occured before actually processing the data. In all the
+other cases, smarty will take care of the error object and output these to the end user.
+
+b) Confirmation Messages
+
+When you are adding new data, or doing important manipulations upon the data, the end user
+may want to see a confirmation message. This is good UI practice and is part of the 
+programming framework. A typical construct to lead to a confirmation message will look like
+this
+
+if($myError->getLength()==0){
+  //do stuff
+  header('Location: confirm.php?action=2&next=inside');
+}
+
+The above URL which is passed to the header will take the user to a confirmation page, that
+will display the confirmation text found in the array $CONFIRM (file /configs/errors.en.php)
+with the index 2. After the message has been on the screen for 5 seconds, it will 
+automatically redirect the user to the page 'inside.php'. Yes, it is that simple ;)
+
+Note: I am also a heave JavaScript user to make things look right. Every time a user
+wishes to delete data, a JavaScript confirmation message will popup and ask for
+confirmation. This is pure HTML and JS and its usage can be found in the users.htm template.
+
+c) Woking with PopUp windows
+
+Popup windows and basically no different from normal pages, except that  they are loaded
+inside a special template, that has some special JS instructions which can be called from
+PHP to manipulate the window. These are:
+
+$smarty->assign("window_destroy",true); // will close THIS window
+$smarty->assign("destination","users.php"); // after THIS window is closed, then the
+opener of this window will be taken to 'users.php'
+
+Warning: The above two commands have _always_ to be passed to smarty as a pair.
+
+Besides the above, every page that is to be loaded in a popup will finish with a call to
+pageFinishPopup(string[,bool[,bool]]) instead of the usual pageFinish();
+
+d) Globally Accessible Objects
+
+$myError - error collector, has been look on above.
+
+$db - database access object - PEAR
+
+$sdb - in case SADM is found in a local database, then this object will lead to the SADM DB.
+
+$_SESSION['USER'] - an object that holds all the user data. Once the user has logged
+in, then this object will hold the user data (name, id), his/her settings and his/her
+access permissions. These can be manipulated upon as $_SESSION['USER']->set(string,string);
+and $_SESSION['USER']->get(string); The available get() request by default are: name, 
+auth_id, primary_accound, group_name, group_id, per_page, edit_series, edit_station, 
+edit_users.
+
+$myNav - navigation bar builder, looked at in the beginning.
+
+$myLog - will log user actions in the database. has only one function $myLog->add(int,int);
+The first parameter is the ID of the user who has taken this action (this is by default
+$_SESSION['USER']->get("auth_id"); ) the second parameter is an action ID, the actual
+action texts are defined in the file /configs/errors.en.php in the array $ACTION
+
+$smarty - template engine (www.phpinsider.com for docs)
+
+e) Working With Templates
+
+//still to write

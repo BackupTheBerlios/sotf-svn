@@ -19,8 +19,8 @@
 	
 	//is the user already logged in?
 	if(is_object($_SESSION['USER'])){
-		header("Location: inside.php");
-		exit;
+		header("Location: inside.php");								# redirect to the inside of the application
+		exit;																					# end script processing
 	}
 	
 	//process login call
@@ -56,6 +56,7 @@
 				$_SESSION['USER']->set("name",$_POST['user']);
 				$_SESSION['USER']->set("auth_id",$res['auth_id']);
 			
+				//is this user a SADM primary user?	mark only if true
 				if($res['primary_account']=='t'){
 					$_SESSION['USER']->set("primary_account",$res['primary_account']);
 				}
@@ -75,13 +76,12 @@
 				$myLog->add($res['auth_id'],0);
 				
 				//redirect
-				header("Location: inside.php");
-				exit;
+				header("Location: inside.php");	# to the inside of the application
+				exit;														# exit the processing of the code
 			}else{														# user and password don't match
 				$myError->add($ERR[1]);					# add error to error stack
 			}
-			
-			
+						
 		}else{															# SADM is found on remote server
 			//create XMLRPC connection
 			include("xmlrpc/xmlrpc.inc");			# include libraries
@@ -95,7 +95,7 @@
 			
 			//filter response
 			if(!$response){										# probably no connection to server
-				$myError->add($ERR[2]);	
+				$myError->add($ERR[2]);					# add an error to the error stack
 			}else{														# we have a hit...
 				//does the response have a value?														
 				if($response->value()){					# user exists and is valid

@@ -41,7 +41,7 @@
 												));
 	
 	//process GET array
-	//the purpose is to keep the order of things on the parent page after tha changes
+	//the purpose is to keep the order of things on the parent page after the changes
 	//have been made
 	$myGet = array();
 	reset($_GET);
