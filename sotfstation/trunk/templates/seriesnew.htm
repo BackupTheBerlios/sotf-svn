@@ -8,7 +8,7 @@
                   <td colspan="2" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr> 
                         <td width="20" nowrap><strong><img src="{$root}img/i16-newprogramme.gif" width="27" height="21"></strong></td>
-                        <td class=title><strong>Create New Series</strong></td>
+                        <td class=title><strong>{#create_new_ser#}</strong></td>
                       </tr>
                     </table></td>
                 </tr>
@@ -24,7 +24,7 @@
                   <td nowrap><textarea name="series_description" rows="5" wrap="VIRTUAL" class="myinput" id="series_description">{$submit_series_description}</textarea></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap> <div align="right">*Start Date:</div></td>
+                  <td nowrap> <div align="right">*{#sd#}:</div></td>
                   <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=sd 
                     time=$stime}</td>
                 </tr>
@@ -39,21 +39,21 @@
                     prefix=ed} ({#end_time_comm#})</td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap> <div align="right">*End Date:</div></td>
+                  <td nowrap> <div align="right">*{#ed#}:</div></td>
                   <td nowrap>{html_select_date end_year=2010 field_order=DMY prefix=ed 
                     time=$time}</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*Weekday(s):</div></td>
+                  <td nowrap><div align="right">*{#weekdays#}:</div></td>
                   <td nowrap><table width="100" border="0" cellpadding="2" cellspacing="1" bgcolor="#CCCCCC">
                       <tr bgcolor="#eeeeee"> 
-                        <td align=center>Mo</td>
-                        <td align=center>Tu</td>
-                        <td align=center>We</td>
-                        <td align=center>Th</td>
-                        <td align=center>Fr</td>
-                        <td align=center>Sa</td>
-                        <td align=center>Su</td>
+                        <td align=center>{#mo#}</td>
+                        <td align=center>{#tu#}</td>
+                        <td align=center>{#we#}</td>
+                        <td align=center>{#th#}</td>
+                        <td align=center>{#fr#}</td>
+                        <td align=center>{#sa#}</td>
+                        <td align=center>{#su#}</td>
                       </tr>
                       <tr bgcolor="#eeeeee"> 
                         <td> <input name="mon" type="checkbox" value="1" {if $mon==1}checked{/if}></td>
@@ -67,17 +67,18 @@
                     </table></td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*Period:</div></td>
+                  <td nowrap><div align="right">*{#period#}:</div></td>
                   <td nowrap><select name="series_period" class="myselect">
 				  		{html_options options=$series_period selected=$submit_series_period}
                     </select></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*Active?:</div></td>
+                  <td nowrap><div align="right">*{#series_active#}:</div></td>
                   <td nowrap><select name="series_active" class="myselect">
 				  		{html_options options=$series_active selected=$submit_series_active}
                     </select></td>
                 </tr>
+              
                 <tr bgcolor="#dddddd"> 
                   <td colspan="2" nowrap class=whitesmall> <div align="left"><strong>{#owner_data#}</strong></div></td>
                 </tr>

@@ -24,7 +24,7 @@
 	
 	####################################################################################################################
 	//PROCESS SUBMIT (if admin)
-	if($_SESSION['USER']->get("edit_station")==2 and $_POST['Submit']){
+	if($mod_flag and $_POST['Submit']){
 		//clean POST
 		$_POST = clean($_POST);
 		
@@ -60,8 +60,8 @@
 		########## end errors check ##########
 		if($myError->getLength()==0){
 			//run update queries
-			$db->query("UPDATE series SET owner = '$_POST[series_owner]', title = '$_POST[series_title]', description = '$_POST[series_description]' WHERE id = '$_POST[series_id]'");
-			$db->query("UPDATE programme SET title = '$_POST[programme_title]', intime = '$_POST[sdYear]-$_POST[sdMonth]-$_POST[sdDay] $_POST[sdHour]:$_POST[sdMinute]:00', outtime = '$_POST[edYear]-$_POST[edMonth]-$_POST[edDay] $_POST[edHour]:$_POST[edMinute]:00', special = '$_POST[special_needs]' WHERE id = '$_GET[id]'");
+			$db->query("UPDATE series SET owner = '$_POST[series_owner]', title = '$_POST[series_title]', description = '$_POST[series_description]', active = '$_POST[series_active]' WHERE id = '$_POST[series_id]'");
+			$db->query("UPDATE programme SET title = '$_POST[programme_title]', intime = '$_POST[sdYear]-$_POST[sdMonth]-$_POST[sdDay] $_POST[sdHour]:$_POST[sdMinute]:00', outtime = '$_POST[edYear]-$_POST[edMonth]-$_POST[edDay] $_POST[edHour]:$_POST[edMinute]:00', special = '$_POST[special_needs]', active = '$_POST[prog_active]' WHERE id = '$_GET[id]'");
 			
 			//close window
 			$smarty->assign(array("window_destroy"=>true,"destination"=>"inside.php","get_data"=>"date=$_POST[sdDay]-$_POST[sdMonth]-$_POST[sdYear]"));
@@ -79,6 +79,10 @@
 															"series_id"							=> 	$_POST['series_id'],
 															"special_needs" 				=> 	array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
 															"series_owner" 					=> 	$db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name"),
+															"series_active" 				=> 	array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
+															"prog_active" 					=> 	array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
+															"submit_series_active"	=>	$_POST['series_active'],
+															"submit_prog_active"		=>	$_POST['prog_active']
 													 )
 											);
 		}//end if error
@@ -94,7 +98,9 @@
 									programme.title AS prog_title,
 									programme.special AS prog_special,
 									programme.series_id AS series_id,
+									programme.active AS submit_prog_active,
 									series.title AS series_title,
+									series.active AS submit_series_active,
 									series.description AS series_desc,
 									user_map.name AS series_owner,
 									user_map.auth_id AS series_owner_id
@@ -109,11 +115,34 @@
 			case 'pp'	:{$programme_data['prog_special'] = $STRING['PP']; break;}
 			default		:{$programme_data['prog_special'] = $STRING['NONE'];}
 		}
-	
+		
+		//fix values for non-mods
 		if(empty($programme_data['prog_title']) and !$mod_flag){
 			$programme_data['prog_title'] = $STRING['NONE'];
 		}
-	
+		
+		//if this is not a mod, then drop-down data has to be transformed to be textual data
+		if(!$mod_flag){
+			//user id is not needed any more
+			$programme_data['series_owner_id'] = $programme_data['series_owner'];
+			
+			//nor are the TRUE and FALSE boolean values
+			if($programme_data['submit_series_active']=='t'){
+				$programme_data['submit_series_active'] = $STRING['ACTIVE'];
+				$programme_data['submit_series_active_flag'] = 't';							# flag for smarty template
+			}else{
+				$programme_data['submit_series_active'] = $STRING['NOTACTIVE'];
+			}
+			
+			if($programme_data['submit_prog_active']=='t'){
+				$programme_data['submit_prog_active'] = $STRING['ACTIVE'];
+				$programme_data['submit_prog_active_flag'] = 't';	
+			}else{
+				$programme_data['submit_prog_active'] = $STRING['NOTACTIVE'];
+			}
+		}
+		
+		//get series dimensions
 		$programme_data['tot_progs'] = $db->getOne("SELECT count(*) FROM programme WHERE series_id = '$programme_data[series_id]'");
 		$programme_data['progs_to_run'] = $db->getOne("SELECT count(*) FROM programme WHERE series_id = '$programme_data[series_id]' AND intime > '" . date("Y-m-d H:i:s") . "'");
 	
@@ -121,12 +150,14 @@
 	
 		//assign default data to drop down boxes (if admin)
 		$smarty->assign(array(
-													"special_needs" => array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
-													"series_owner" => $db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name"),
-													"submit_special_needs" => $prog_special,
-													"submit_series_owner"	=> $programme_data['series_owner_id'],
-													"series_id" => $programme_data[series_id],
-													"programme_id" => $_GET[id]
+													"special_needs" 				=> array(""=>$STRING['NONE'],"na"=>$STRING['NA'],"pp"=>$STRING['PP']),
+													"series_owner" 					=> $db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name"),
+													"series_active" 				=> array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
+													"prog_active" 					=> array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
+													"submit_special_needs" 	=> $prog_special,
+													"submit_series_owner"		=> $programme_data['series_owner_id'],
+													"series_id" 						=> $programme_data[series_id],
+													"programme_id" 					=> $_GET[id]
 												));
 	}//end IF NO Submit
 	

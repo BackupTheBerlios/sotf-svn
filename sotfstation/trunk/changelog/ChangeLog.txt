@@ -1,6 +1,31 @@
 Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
 
 ************************************************************************************************
+ 05.12.2002
+************************************************************************************************
+
+Series and programme management interface extended. Now programmes and series can be activated
+and diactivated. If a series is deactivated, then all the programmes belonging to that series
+are deactivated as well. Nice graphical represenatation of active state developed.
+
+
+************************************************************************************************
+ 04.12.2002
+************************************************************************************************
+
+User settings panel cretaed. Now every user can take care of his/her own data and even
+personalize the site a bit ;)
+
+
+************************************************************************************************
+ 02.12.2002 - 03.12.2002
+************************************************************************************************
+
+Advanced series management options development. Series data and programme data can now be
+easily edited by the station admin or the station manager.
+
+
+************************************************************************************************
  29.11.2002
 ************************************************************************************************
 

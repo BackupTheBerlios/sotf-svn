@@ -80,7 +80,7 @@
 		//no errorz?
 		if($myError->getLength()==0){
 			//add database entries
-			$db->query("INSERT INTO series(owner,title,description) VALUES('$_POST[series_owner]','$_POST[series_title]','$_POST[series_description]')");
+			$db->query("INSERT INTO series(owner,title,description,active) VALUES('$_POST[series_owner]','$_POST[series_title]','$_POST[series_description]','$_POST[series_active]')");
 			$seriesID = $db->getOne("SELECT max(id) FROM series");
 			
 			###########################################################################
@@ -194,7 +194,7 @@
 	//assign default data to drop down boxes
 	$smarty->assign(array(
 													"series_period" => array(1=>"Every 1st Week",2=>"Every 2nd Week",3=>"Every 3rd Week",4=>"Every 4th Week",5=>"Every Last Week",6=>"Every Week",7=>"Every Even Week",8=>"Every Odd Week"),
-													"series_active" => array(1=>$STRING['ACTIVE'],0=>$STRING['NOTACTIVE']),
+													"series_active" => array('t'=>$STRING['ACTIVE'],'f'=>$STRING['NOTACTIVE']),
 													"series_owner" => $db->getAssoc("SELECT auth_id, name FROM user_map WHERE access_id < 4 ORDER BY name")
 												));
 												

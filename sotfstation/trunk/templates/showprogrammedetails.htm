@@ -21,30 +21,44 @@
                   <td width="100%" nowrap>{$prog_title}</td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right"> *{#start_date#}:</div></td>
+                  <td nowrap><div align="right"> {#start_date#}:</div></td>
                   <td nowrap>{$prog_date}</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*{#start_time#}:</div></td>
+                  <td nowrap><div align="right">{#start_time#}:</div></td>
                   <td nowrap>{$prog_intime}</td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*{#end_time#}:</div></td>
+                  <td nowrap><div align="right">{#end_time#}:</div></td>
                   <td nowrap>{$prog_outtime}</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td nowrap><div align="right">*{#spec_needs#}:</div></td>
+                  <td nowrap><div align="right">{#spec_needs#}:</div></td>
                   <td nowrap>{$prog_special}</td>
                 </tr>
+{if $submit_series_active_flag == 't'}
+                <tr bgcolor="#f4f4f4"> 
+                  <td nowrap> 
+                    <div align="right">{#prog_active#}:</div></td>
+                  <td nowrap><table border="0" cellspacing="0" cellpadding="1">
+                      <tr> 
+                        <td>{if $submit_prog_active_flag == 't'} <img src="{$root}img/true.gif" width="24" height="16"> 
+                          {else} <img src="{$root}img/false.gif" width="24" height="16"> 
+                          {/if} </td>
+                        <td>{$submit_prog_active}</td>
+                      </tr>
+                    </table></td>
+                </tr>
+{/if}
                 <tr bgcolor="#dddddd"> 
                   <td width="100%" colspan=2 class=whitesmall><strong>{#series_data#}</strong></td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
-                  <td width="10%" nowrap> <div align="right">*{#series_title#}:</div></td>
+                  <td width="10%" nowrap> <div align="right">{#series_title#}:</div></td>
                   <td nowrap>{$series_title}</td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*{#series_desc#}:</div></td>
+                  <td nowrap><div align="right">{#series_desc#}:</div></td>
                   <td>{$series_desc}</td>
                 </tr>
                 <tr bgcolor="#eeeeee"> 
@@ -52,16 +66,27 @@
                   <td nowrap>{$tot_progs} overall, {$progs_to_run} still to run</td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
-                  <td nowrap><div align="right">*{#series_owner#}:</div></td>
-                  <td nowrap>{$series_owner}</td>
+                  <td nowrap><div align="right">{#series_owner#}:</div></td>
+                  <td nowrap>{$submit_series_owner}</td>
                 </tr>
-                
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap> <div align="right">{#series_active#}:</div></td>
+                  <td nowrap>
+<table border="0" cellspacing="0" cellpadding="1">
+                      <tr>
+                        <td>{if $submit_series_active_flag == 't'} <img src="{$root}img/true.gif" width="24" height="16"> 
+                          {else} <img src="{$root}img/false.gif" width="24" height="16"> 
+                          {/if} </td>
+                        <td>{$submit_series_active}</td>
+                      </tr>
+                    </table></td>
+                </tr>
                 <tr bgcolor="#eeeeee"> 
                   <td colspan="2" nowrap><div align="center"> 
                       <input name="imageField2" type="image" src="{$root}img/b_back.gif" width="90" height="16" border="0" onClick="window.close();">
                     </div></td>
                 </tr>
-                </table></td>
+              </table></td>
           </tr>
           <tr> 
             <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
@@ -88,8 +113,7 @@
                 </tr>
                 <tr bgcolor="#eeeeee"> 
                   <td width="10%" nowrap> <div align="right">{#prog_title#}:</div></td>
-                  <td width="100%" nowrap> 
-                    <input name="programme_title" type="text" class="myinput" id="programme_title" value="{$prog_title}" maxlength="255"></td>
+                  <td width="100%" nowrap> <input name="programme_title" type="text" class="myinput" id="programme_title" value="{$prog_title}" maxlength="255"></td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right"> *{#start_date#}:</div></td>
@@ -110,9 +134,18 @@
                   <td nowrap><div align="right">*{#spec_needs#}:</div></td>
                   <td nowrap><select name="special_needs" id="special_needs">
                      {html_options options=$special_needs selected=$submit_special_needs}
-                    </select>
-                  </td>
+                    </select> </td>
+{if $submit_series_active == 't'}
                 </tr>
+				  <tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">*{#prog_active#}:</div></td>
+                  <td nowrap><select name="prog_active" class="myselect">
+				  		{html_options options=$prog_active selected=$submit_prog_active}
+                    </select></td>
+                </tr>
+{else}
+<input type=hidden name="prog_active" value={$submit_prog_active}>
+{/if}
                 <tr bgcolor="#dddddd"> 
                   <td width="100%" colspan=2 class=whitesmall><strong>{#series_data#}</strong></td>
                 </tr>
@@ -134,7 +167,13 @@
 				  		{html_options options=$series_owner selected=$submit_series_owner}
                     </select></td>
                 </tr>
-				{section name=error_cell show=$error_out} 
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">{#series_active#}:</div></td>
+                  <td nowrap><select name="series_active" class="myselect">
+				  		{html_options options=$series_active selected=$submit_series_active}
+                    </select></td>
+                </tr>
+                {section name=error_cell show=$error_out} 
                 <tr bgcolor="#FFCCCC"> 
                   <td colspan="2">{section name=errors loop=$error_list show=$error_out} 
                     <div align=center> 
