@@ -15,11 +15,11 @@
                 <table>
                   <tr>
                     <td>{#title#}:</td>
-                    <td><input name="title" value="{$SERIES_DATA.title}" size="60" maxlength="255"/></td>
+                    <td><input name="title" value="{$SERIES_DATA.title}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" /></td>
                   </tr>
                   <tr>
                     <td>{#description#}:</td>
-                    <td><textarea cols="50" rows="10" name="description">{$SERIES_DATA.description}</textarea></td>
+                    <td><textarea cols="50" rows="10" name="description" onChange="if(value != defaultValue) data_changed++;" >{$SERIES_DATA.description}</textarea></td>
                   </tr>
                 </table>
                 <input type="submit" name="save" value="{#save#}"> <input type="submit" name="finish" value="{#finish#}">
@@ -149,7 +149,7 @@ function getSelected() {
           <input type="hidden" name="seriesid" value="{$SERIES_ID}">
           <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
           <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
-          <input type="submit" name="seticon" value="{#set_icon#}">
+          <input type="submit" name="seticon" value="{#set_icon#}" onClick="return confirmUnsaved()">
           <br \><small>{#userfiles_expl#}</small>
         </form>
         {else}
@@ -160,7 +160,7 @@ function getSelected() {
             <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
             <input type="hidden" name="seriesid" value="{$SERIES_ID}" />
             <input name="userfile" type="file" />
-            <input type="submit" name="uploadicon" value="{#set_icon#}">
+            <input type="submit" name="uploadicon" value="{#set_icon#}" onClick="return confirmUnsaved()">
             <br />{#upload_expl#}
           </form>
         </small>

@@ -1,3 +1,5 @@
+<SCRIPT>var data_changed=0; 
+</SCRIPT>
 
 <h3>{#edit_station#}</h3>
 
@@ -19,7 +21,7 @@
                   </tr>
                   <tr>
                     <td>{#description#}:</td>
-                    <td><textarea cols="50" rows="10" name="desc">{$STATION_DATA.description}</textarea></td>
+                    <td><textarea onChange="if(value != defaultValue) data_changed++;" cols="50" rows="10" name="desc">{$STATION_DATA.description}</textarea></td>
                   </tr>
                 </table>
                 <input type="submit" name="save" value="{#save#}">
@@ -164,7 +166,7 @@
 <table class="tabarea">
 <tr> 
    <td class="tabarea"> 
-
+        <form>
      <table>
           <tr>
             <th>{#icon#}</th><th>{#jingle_list#}</th>
@@ -177,19 +179,45 @@
                 {#no_icon#}
               {/if}
            </td><td>   
-              <table cellspacing="0" cellpadding="2" border="1">
-                <tr><th>&nbsp;</th><th>{#format#}</th><th>{#bitrate#}</th><th>{#channels#}</th><th>{#samplerate#}</th></tr>
-                {cycle values="#EEEEEE,#FFFFFF" print=false advance=true}
-                {section name=i loop=$JINGLE}
-                <tr bgcolor="{cycle}">
-                  {section name=j loop=$JINGLE[i]}
-                  <td>{$JINGLE[i][j]}</td>
-                  {/section}
+              <table>
+                <tr class="listhead"><th>&nbsp;</th><th>{#format#}</th><th>{#bitrate#}</th><th>{#channels#}</th><th>{#samplerate#}</th><th></th></tr>
+                {cycle values="list1,list2" print=false advance=false}
+                {foreach item=item from=$JINGLE}
+                <tr class="{cycle}">
+                  <td>
+                    {if $item.filename}
+                    <a href="getJingle.php/{$item.filename}?id={$STATION_ID}&index={$item.index}">{#exists#}</a>
+                    {else}
+                    <font color="red">{#missing#}</font>
+                    {/if}
+                  </td>
+                  <td>
+                    {$item.format}
+                  </td>
+                  <td>
+                    {$item.bitrate}
+                  </td>
+                  <td>
+                    {$item.channels}
+                  </td>
+                  <td>
+                    {$item.samplerate}
+                  </td>
+                  <td>
+                      {if empty($item.filename) }
+                        {if $HAS_JINGLE}
+                        <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=80')" />
+                        {/if}
+                      {else}
+                        <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?deljingle=1&filename={$item.filename}&index={$item.index}&stationid={$STATION_ID}')" />
+                      {/if}
+                  </td>
                 </tr>
-                {/section}
+                {/foreach}
               </table>
             </td></tr>
         </table>
+                       </form>
         <a name="icon"></a>
 
         {if $USERFILES}
@@ -206,8 +234,8 @@ function getSelected() {
           <input type="hidden" name="stationid" value="{$STATION_ID}">
           <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
           <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
-          <input type="submit" name="setjingle" value="{#set_jingle#}">
           <input type="submit" name="seticon" value="{#set_icon#}">
+          <input type="submit" name="setjingle" value="{#set_jingle#}">
           <br \><small>{#userfiles_expl#}</small>
         </form>
         {else}
@@ -218,7 +246,8 @@ function getSelected() {
             <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
             <input type="hidden" name="stationid" value="{$STATION_ID}" />
             <input name="userfile" type="file" />
-            <input type="submit" name="upload" value="{#upload_file#}" />
+            <input type="submit" name="uploadicon" value="{#set_icon#}" />
+            <input type="submit" name="uploadjingle" value="{#set_jingle#}" />
             <br />{#upload_expl#}
           </form>
         </small>

@@ -19,7 +19,7 @@ class sotf_UserPrefs
 	/**
 	* Saved queries of the user (array of array).
 	*/
-	var $savedQueries;
+	var $savedQueries = array();
 
   /** this will clear default query or queries, so the user will have normal home page with list of new programmes */
   function clearDefaultQuery() {

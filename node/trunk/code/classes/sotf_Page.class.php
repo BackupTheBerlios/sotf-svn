@@ -169,7 +169,8 @@ class sotf_Page
 		global $smarty, $totalTime;
 
 		if($this->popup) {
-		  $template = 'main_popup.htm';
+		  if($template=='main.htm')
+			 $template = 'main_popup.htm';
 		  $smarty->assign('POPUP', 1);
 		}
 

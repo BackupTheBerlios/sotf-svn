@@ -53,6 +53,16 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
       return NULL;
 	} // end func getIcon
 
+	/**
+	* Deletes icon of the thing
+	*/
+	function deleteIcon()
+	{
+    if(!in_array('icon', $this->binaryFields))
+      raiseError("this object cannot have an icon!");
+    $this->setBlob('icon','');
+	}
+
   /** this places the icon into the www/tmp, so that you can refer to it with <img src= */
   function cacheIcon($id = '', $icon = '') {
     global $cachedir, $cacheprefix;
@@ -62,7 +72,8 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
     }
     $fname = "$cachedir/" . $id . '.png';
     // TODO: cache cleanup!
-    if(is_readable($fname)) {
+    debug("cache: ". filesize($fname) ."==" . strlen($icon));
+    if(is_readable($fname) && filesize($fname)==strlen($icon)) {
       return;
     }
     sotf_Utils::save($fname, $icon);

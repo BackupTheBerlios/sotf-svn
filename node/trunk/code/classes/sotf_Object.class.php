@@ -203,8 +203,11 @@ class sotf_Object {
 	 * @return (void)
 	 */
 	function setBlob($prop_name, $prop_value){
-    $v = $this->db->escape_bytea($prop_value);
-    $res = $this->db->query("UPDATE " . $this->tablename . " SET $prop_name = '" . sotf_Utils::magicQuotes($v) . "' WHERE " . $this->idKey . "='" . $this->id . "' ");
+    if(empty($prop_value))
+      $v = 'NULL';
+    else
+      $v = "'" . sotf_Utils::magicQuotes($this->db->escape_bytea($prop_value)) . "'";
+    $res = $this->db->query("UPDATE " . $this->tablename . " SET $prop_name = $v WHERE " . $this->idKey . "='" . $this->id . "' ");
     if(DB::isError($res))
       raiseError("Error in setBlob: $res");
 		$this->data[$prop_name] = $v;

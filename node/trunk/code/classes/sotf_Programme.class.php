@@ -302,7 +302,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   function setAudio($filename, $copy=false) {
-    global $user, $page;
+    global $page;
     $source = $filename;
     if(!is_file($source))
       raiseError("no such file: $source");

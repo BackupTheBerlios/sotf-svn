@@ -111,7 +111,7 @@ class sotf_FileList
 	* @param	string	$path	Path of the directory
 	* @return	boolean	If the list was successfully created return true, else false
 	*/
-	function getDir($path)
+	function getDir($path, $prefix='')
 	{
 		$path = realpath(trim($path));
 		$list = array();
@@ -119,11 +119,13 @@ class sotf_FileList
 		if (is_dir($path))
 			if ($handle = opendir($path))
 			{
-    			while (false !== ($filename = readdir($handle)))
-           			$this->add($path . '/' . $filename);
-			    closedir($handle); 
+        while (false !== ($filename = readdir($handle))) {
+          if(!$prefix || preg_match("/^$prefix/", $filename))
+            $this->add($path . '/' . $filename);
+        }
+        closedir($handle); 
 				$retval = true;
-           	}
+      }
 		return $retval;
 	} // end func getDir
 
@@ -133,9 +135,9 @@ class sotf_FileList
 	* @param	string	$path	Path of the directory
 	* @return	boolean	If the list was successfully created return true, else false
 	*/
-	function getAudioFromDir($path)
+	function getAudioFromDir($path, $prefix='')
 	{
-		$retval = $this->getDir($path);
+		$retval = $this->getDir($path, $prefix);
 		$this->removeNonAudio();
 
 		return $retval;

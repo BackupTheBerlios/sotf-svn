@@ -355,6 +355,7 @@ CREATE TABLE "sotf_playlists" (
 	"id" serial PRIMARY KEY, -- just an id
 	"prog_id" varchar(12) NOT NULL,
 	"user_id" int, -- cannot reference to sadm.authenticate(auth_id)
+	"order_id" int,
 	"type" VARCHAR(10), -- use unclear yet
 	CONSTRAINT "sotf_playlists_u" UNIQUE ("prog_id", "user_id"),
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE

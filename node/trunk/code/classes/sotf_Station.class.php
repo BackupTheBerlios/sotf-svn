@@ -69,25 +69,13 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	}
 
 	/** removes logo of the station */
-	function deleteLogo() {
-	$dir = $this->getDir();
-	$handle = opendir($dir);
-	$found = false;
-	while (($file = readdir($handle)) !== false) {
-		if (preg_match('/^logo\./',$file)) {
-		$found = true;
-		break;
-		}
-	}
-	closedir($handle);
-	if ($found) {
-		$success = unlink($dir . '/' . $file);
-		if(!$success)
-			error("Could not delete logo of station");	
-		return $success;
-	} else {
-		return false;
-	}
+	function deleteIcon() {
+    $iconFile = $this->getStationDir() . '/icon.png';
+    if(is_readable($iconFile)) {
+      parent::deleteIcon();
+      if(!unlink($iconFile))
+        addError("Could not delete icon file!");
+    }
 	}
 
 	/**
@@ -111,33 +99,30 @@ class sotf_Station extends sotf_ComplexNodeObject {
 
 	/**
 	* Sets jingle of the station.
-	*
-	* @param	object	$audiofile	sotf_AudioFile object represents the jingle
-	* @return	boolean	True if the function succeeded, else false
-	* @todo	Look for the old existing jingle. If the old one doesn't follow the current naming procedure, it will remain in the directory, and makes troubles
 	* @use	$audioFormats
 	*/
-	function setJingle($audiofile)
-	{
-		global $audioFormats;
-
-		$index = sotf_AudioCheck::getRequestIndex($audiofile);
-		if (false === $index)
-			return false;
-    // save into file system
-		$dir = $this->getStationDir();
-		$targetFile = $dir . '/' . 'jingle_' . $audiofile->getFormatFilename();
-		$retval = copy($audiofile->getPath(), $targetFile);
-		if(!$retval)
-			raiseError("could not copy jingle file!");
-    // save into DB
-    if ($fp = fopen($audiofile->getPath(),'rb'))
-      {
-        $data = fread($fp,filesize($audiofile->getPath()));
-        fclose($fp);
-        $this->setBlob("jingle",$data);
-      } else
-        raiseError("could not open logo file!");
+	function setJingle($filename, $copy=false) {
+		global $audioFormats, $page;
+    $source = $filename;
+    if(!is_file($source))
+      raiseError("no such file: $source");
+    $srcFile = new sotf_AudioFile($source);
+    $target = $this->getStationDir() .  '/jingle_' . $srcFile->getFormatFilename();
+    debug("jingle file", $target);
+    if($srcFile->type != 'audio')
+      raiseError("this is not an audio file");
+    if(is_file($target)) {
+      raiseError($page->getlocalized('format_already_present'));
+    }
+    if($copy)
+      $success = copy($source,$target);
+    else
+      $success = rename($source,$target);
+    if(!$success)
+      raiseError("could not copy/move $source");
+    return true;
+    //TODO? save into database
+    //$this->setBlob('icon', file_get_contents($target));
 	}
 
 	/**
@@ -162,6 +147,18 @@ class sotf_Station extends sotf_ComplexNodeObject {
 			//return new PEAR_Error($stationId . " has no jingle!");
 		}
 	}
+
+  /** Deletes a jingle */
+  function deleteJingle($file, $index='') {
+    if(!preg_match("/^jingle/", $file))
+      raiseError("Invalid filename");
+    $file = sotf_Utils::getFileInDir($this->getStationDir(), $file);
+    debug("delete file", $file);
+    if(!unlink($file)) {
+      addError("Could not delete jingle $index!");
+    }
+    // TODO: delete from SQL???
+  }
 
 	/** get number of published programmes */
 	function numProgrammes($onlyPublished = true) {

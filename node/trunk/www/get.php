@@ -5,6 +5,24 @@ require("init.inc.php");
 $id = sotf_Utils::getParameter('id');
 if($id) {
 
+	if (sotf_Utils::getParameter('put_into_playlist') != NULL)
+	{
+		$query="SELECT prog_id, order_id FROM sotf_playlists WHERE user_id=".$user->id." AND prog_id='".$id."'";
+		$result = $db->getAll($query);
+		//var_dump($result);
+		if (count($result) == 0)
+		{
+			$query="SELECT prog_id, order_id FROM sotf_playlists WHERE user_id=".$user->id." ORDER BY order_id DESC";
+			$result = $db->getAll($query);
+			//var_dump($result);
+			if (count($result) > 0) $next = $result[0]["order_id"] + 1;
+			else $next = 0;
+			$query="INSERT INTO sotf_playlists (prog_id, user_id, order_id) VALUES ('".$id."', ".$user->id.", ".$next.")";
+			print($query);
+			$result = $db->query($query);
+		}
+	}
+
   $smarty->assign('ID', $id);
 
   $prg = & new sotf_Programme($id);

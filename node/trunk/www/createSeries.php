@@ -25,7 +25,7 @@ if($seriesTitle) {
     $page->addStatusMsg('series_create_failed');
   } else {
     $permissions->addPermission($series->id, $user->id, 'admin');
-    $page->redirect("editSeries.php?id=" . $series->id);
+    $page->redirect("editSeries.php?seriesid=" . $series->id);
     exit;
   }
 }

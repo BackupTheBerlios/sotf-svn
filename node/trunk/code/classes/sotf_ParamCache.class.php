@@ -22,19 +22,19 @@ class sotf_ParamCache
 			$max = count($all);			//count keys
 			for ($i = 0; $i < $max; $i++)		//go throug all
 				if (strpos($all[$i], "PCID") === 0) $count++;	//count PCID keys
-
-if ($count > $this->MAXCACHE)	//TODO: debug only
-{
-$fp = fopen("tmp/paramCache.log", 'a');			//create file
-fwrite($fp, "-------------------------\n");		//write string
-fwrite($fp, "PHP_SELF=".$_SERVER['PHP_SELF']."\n");	//write string
-fwrite($fp, "REMOTE_ADDR=".$_SERVER['REMOTE_ADDR']."\n");	//write string
-fwrite($fp, "HTTP_REFERER=".getenv(HTTP_REFERER)."\n");	//write string
-fwrite($fp, "MAXCACHE=".$this->MAXCACHE."\n");		//write string
-fwrite($fp, "current=".$count."\n");			//write string
-fclose($fp);					//clode file
-}
-
+			/*
+			if ($count > $this->MAXCACHE)	//TODO: debug only
+			{
+			$fp = fopen("tmp/paramCache.log", 'a');			//create file
+			fwrite($fp, "-------------------------\n");		//write string
+			fwrite($fp, "PHP_SELF=".$_SERVER['PHP_SELF']."\n");	//write string
+			fwrite($fp, "REMOTE_ADDR=".$_SERVER['REMOTE_ADDR']."\n");	//write string
+			fwrite($fp, "HTTP_REFERER=".getenv(HTTP_REFERER)."\n");	//write string
+			fwrite($fp, "MAXCACHE=".$this->MAXCACHE."\n");		//write string
+			fwrite($fp, "current=".$count."\n");			//write string
+			fclose($fp);					//clode file
+			}
+			*/
 			if ($count > $this->MAXCACHE)		//if too mutch data in session
 				for ($i = 0; $count > $this->MAXCACHE; $i++)
 				if (strpos($all[$i], "PCID") === 0)

@@ -1,6 +1,7 @@
 
 function popup(url, name, height, width, scroll) {
-  //alert(url);
+  if(!confirmUnsaved())
+    return;
 	var features = "screenX=350,screenY=300,width=" + width + ",height=" + height +
 		",menubar=no,resizable=yes,status=no,locationbar=no";
 	if (scroll) {
@@ -18,6 +19,8 @@ function redir2(f, url) {
 */
 
 function redir(f, url) {
+  if(!confirmUnsaved())
+    return;
   window.location.href = url;
 }
 

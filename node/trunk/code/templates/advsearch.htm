@@ -64,14 +64,16 @@
 	</TABLE>
 	</TD>
 
+	{if $notLoggedIn == false}
 	<TD ALIGN="center" BGCOLOR="{#searchBgColor3#}">
 	<TABLE BORDER=0 CELLPADDING=3>
 		<TR><TD COLSPAN=2><B>{#box3#}</B></TD></TR>
-		<TR><TD COLSPAN=2 ALIGN=center><SELECT name="loadfrom">{html_options options=$saved}</SELECT> <INPUT type="submit" name="load" value="{#load#}"></TD></TR>
-		<TR><TD ALIGN=center><INPUT type="submit" name="default" value="{#default#}"></TD><TD ALIGN=center><INPUT type="submit" name="deleteq" value="{#deleteq#}"></TD></TR>
+		<TR><TD COLSPAN=2 ALIGN=center><SELECT name="loadfrom" {if $saved == ""}disabled="true"{/if}>{html_options options=$saved}</SELECT> <INPUT type="submit" name="load" value="{#load#}" {if $saved == ""}disabled="true"{/if}></TD></TR>
+		<TR><TD ALIGN=center><INPUT type="submit" name="default" value="{#default#}" {if $saved == ""}disabled="true"{/if}></TD><TD ALIGN=center><INPUT type="submit" name="deleteq" value="{#deleteq#}" {if $saved == ""}disabled="true"{/if}></TD></TR>
 		<TR><TD COLSPAN=2 ALIGN=center><INPUT type="submit" name="save" value="{#save#}"{if $SQLquery == ""} disabled="true"{/if}> <INPUT type="text" name="saveas" value="" MAXLENGTH=15{if $SQLquery == ""} disabled="true"{/if}></TD></TR>
 	</TABLE>
 	</TD>
+	{/if}
 </TR>
 </TABLE>
 </FORM>

@@ -33,9 +33,8 @@ class sotf_NodeObject extends sotf_Object {
   }
 
   function update() {
-	 $this->db->query("UPDATE sotf_node_objects SET last_change='" . $this->db->getTimestampTz() . "' WHERE id='" . $this->id . "'");
-	 //$this->set('last_change', $this->db->getTimestampTz());
 	 parent::update();
+	 $this->db->query("UPDATE sotf_node_objects SET last_change='" . $this->db->getTimestampTz() . "' WHERE id='" . $this->id . "'");
   }
 
   function delete() {
@@ -43,6 +42,11 @@ class sotf_NodeObject extends sotf_Object {
 	 //$this->db->query("DELETE FROM sotf_user_groups WHERE object_id='" . $this->id . "'");
 	 $this->db->query("DELETE FROM sotf_node_objects WHERE id='" . $this->id . "'");
 	 //parent::delete();  // not needed because of cascading delete
+  }
+
+	function setBlob($prop_name, $prop_value) {
+    parent::setBlob($prop_name, $prop_value);
+    $this->db->query("UPDATE sotf_node_objects SET last_change='" . $this->db->getTimestampTz() . "' WHERE id='" . $this->id . "'");
   }
 
   function createDeletionRecord() {

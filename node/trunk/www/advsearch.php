@@ -1,31 +1,43 @@
 <?php
 require("init.inc.php");
 require("$classdir/sotf_AdvSearch.class.php");
+require("$classdir/sotf_ParamCache.class.php");				//paramcache
+
+$paramcache = & new sotf_ParamCache();					//paramcache
+$paramcache->setMaxCache(10);						//paramcache
+//sotf_Utils::getParameter						//paramcache
+//$paramcache->getRegistered						//paramcache
+
+if ($paramcache->getProcessed())					//paramcache, if already adde, deleted, do not do it again
+{
+	$paramcache->setParameter("save", false);
+	$paramcache->setParameter("deleteq", false);
+}
 
 //1. Add terms to the query
-$SQLlink = sotf_Utils::getParameter('SQLlink');			//linker (OR or AND)
-$SQLfield = sotf_Utils::getParameter('SQLfield');		//name ot the term to add
-$add = sotf_Utils::getParameter('add');				//add term button
-$new = sotf_Utils::getParameter('new');				//new query button
+$SQLlink = $paramcache->getRegistered('SQLlink');			//linker (OR or AND)
+$SQLfield = $paramcache->getRegistered('SQLfield');		//name ot the term to add
+$add = $paramcache->getRegistered('add');				//add term button
+$new = $paramcache->getRegistered('new');				//new query button
 
 //2. Run query
-$sort1 = sotf_Utils::getParameter('sort1');			//sort order 1
-$sort2 = sotf_Utils::getParameter('sort2');			//sort order 2
-$run = sotf_Utils::getParameter('run');				//run query button
-$run_image = sotf_Utils::getParameter('image_x');		//TRANSPARENT_run query button (default by enter)
+$sort1 = $paramcache->getRegistered('sort1');			//sort order 1
+$sort2 = $paramcache->getRegistered('sort2');			//sort order 2
+$run = $paramcache->getRegistered('run');				//run query button
+$run_image = $paramcache->getRegistered('image_x');		//TRANSPARENT_run query button (default by enter)
 
 //3. Manage your queries
-$loadfrom = sotf_Utils::getParameter('loadfrom');		//dropdown box with the saved queries
-$load = sotf_Utils::getParameter('load');			//load button
-$default = sotf_Utils::getParameter('default');			//make my default button
-$deleteq = sotf_Utils::getParameter('deleteq');			//delete query button
-$save = sotf_Utils::getParameter('save');			//save button
-$saveas = sotf_Utils::getParameter('saveas');			//text field
+$loadfrom = $paramcache->getRegistered('loadfrom');		//dropdown box with the saved queries
+$load = $paramcache->getRegistered('load');			//load button
+$default = $paramcache->getRegistered('default');			//make my default button
+$deleteq = $paramcache->getRegistered('deleteq');			//delete query button
+$save = $paramcache->getRegistered('save');			//save button
+$saveas = $paramcache->getRegistered('saveas');			//text field
 
 //Current query
-$SQLeq = sotf_Utils::getParameter('SQLeq');			//= < > ... values array
-$SQLstring = sotf_Utils::getParameter('SQLstring');		//last parameter value array
-$SQLquerySerial = sotf_Utils::getParameter('SQLquerySerial');	//the serialized query
+$SQLeq = $paramcache->getRegistered('SQLeq');			//= < > ... values array
+$SQLstring = $paramcache->getRegistered('SQLstring');		//last parameter value array
+$SQLquerySerial = $paramcache->getRegistered('SQLquerySerial');	//the serialized query
 
 if ($SQLquerySerial == "")			//get old search query from session if none in hidden field	
 {
@@ -99,10 +111,11 @@ elseif ($default)									////Make deafult button pressed
 elseif ($deleteq)									////Delete query button pressed
 {
 	$prefs = $user->getPreferences();
-	print("<pre>");
-	var_dump($prefs->savedQueries);
-	print("</pre>");
-	//$loadfrom;					//dropdown box with the saved queries
+	$prefs->savedQueries = array_merge(array_slice($prefs->savedQueries, 0, $loadfrom), array_slice($prefs->savedQueries, $loadfrom+1));
+	$prefs->save();
+	//print("<pre>");
+	//var_dump($prefs->savedQueries);
+	//print("</pre>");
 }
 elseif (($save) and $SQLquery!=NULL)						////save button pressed, save if any term
 {
@@ -126,10 +139,10 @@ else								////- or + button pressed?
 	for(; $i < $max ;$i++)
 	{
 		//go through - buttons
-		if (sotf_Utils::getParameter("DEL".$i."_x") != NULL)
+		if ($paramcache->getRegistered("DEL".$i."_x") != NULL)
 			$SQLquery = $advsearch->DelRow($i);
 		//go through + buttons
-		if (sotf_Utils::getParameter("ADD".$i."_x") != NULL)
+		if ($paramcache->getRegistered("ADD".$i."_x") != NULL)
 			$SQLquery = $advsearch->AddRow($SQLlink, $SQLfield, $i);
 	}
 }
@@ -162,11 +175,18 @@ $smarty->assign("sort1", $advsearch->GetSort1());			//current sort1
 $smarty->assign("sort2", $advsearch->GetSort2());			//current sort2
 
 //box 3
-if (!isset($prefs)) $prefs = $user->getPreferences();
-$savedQueries = $prefs->savedQueries;
-$saved = array();
-foreach($savedQueries as $key => $value) $saved[$key] = $value["name"];
-$smarty->assign("saved", $saved);				//saved fields
+if ($user != "")	//only if logged in
+{
+	if (!isset($prefs)) $prefs = $user->getPreferences();
+	$savedQueries = $prefs->savedQueries;
+	$saved = array();
+	foreach($savedQueries as $key => $value) $saved[$key] = $value["name"];
+	if (count($saved) == 0) $saved = "";
+	$smarty->assign("saved", $saved);					//saved fields
+}
+else $smarty->assign("notLoggedIn", true);
+
+$paramcache->setProcessed();						//paramcache, against reload
 
 $page->send();
 

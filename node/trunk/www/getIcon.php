@@ -18,6 +18,6 @@ if($image)
 	echo($image);
 }
 else
-	exit($page->getlocalized("dowload_problem"));
+	raiseError($page->getlocalized("dowload_problem"));
 
 ?>

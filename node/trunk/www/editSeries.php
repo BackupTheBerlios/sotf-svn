@@ -8,6 +8,10 @@ $page->setTitle('edit_series');
 $page->popup = true;
 $page->forceLogin();
 
+if(!$seriesid) {
+  raiseError("Id is missing");
+}
+
 if (!hasPerm($seriesid, "change")) {
   raiseError("You have no permission to change series settings!");
 }
@@ -89,7 +93,7 @@ if($seticon) {
 
 // general data
 $smarty->assign('SERIES_ID',$seriesid);
-$smarty->assign('SERIES_DATA',$series->data);
+$smarty->assign('SERIES_DATA',$series->getAll());
 $smarty->assign('SERIES_MANAGER',true);
 $smarty->assign('ROLES', $series->getRoles());
 
