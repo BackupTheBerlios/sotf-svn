@@ -1,0 +1,305 @@
+tree_id=1
+name=SOTF topic tree
+shortname=SOTF
+description=Ein versuch der allgemeinen Verzeichnis für Radios
+url=
+
+# End of tree definition
+      
+101 1 Kunst, Kultur, Medien, Unterhaltung
+       
+102 2  Nachrichten
+103 2  Neue Medien (Internet, CD, DVD, Mini Disk, etc.) 
+104 2  Zeitungen, Zeitschriften 
+105 2  Radio 
+106 2  Fernsehen
+107 2  Werbung und Öffentlichkeitsarbeit 
+108 2  Nachrichten Ausland (should remain) 
+109 2  Kino (Dokumentation, Spielfilm) 
+110 2  Darstellende Kunst (Theater, Tanz, Zirkus, etc.) 
+111 2  Musik (All genres - including Opera, Classical Concert, etc.) 
+112 2  Bildendene Kunst (Malerein, Bildhauerei, Fotografie, Comics, etc.) 
+113 2  Architektur und Stadtplanung 
+114 2  Literatur (Dichtung, Roman, Essay, etc.) 
+115 2  Krimis 
+116 2  Science Fiction 
+117 2  Cartoons
+118 2  Erholung 
+119 2  Reisen und Tourismus 
+120 2  Spiel
+      
+121 1 Gesellschaft
+      
+122 2  Frauen
+123 2  Männer
+124 2  Jugendliche 
+125 2  Ältere / Senioren 
+126 2  Familie
+127 2  Menschen mit Behinderung 
+      
+128 2  Body practices (?)
+129 2  Sexualität
+130 2  Drogen
+131 2  Armut
+132 2  Migration 
+      
+133 2  Multikulturalität 
+134 2  Feminismus 
+135 2  Queer 
+      
+136 2  soziales Zusammenleben (Housing, Transportation, Area planning, Urban communities, Rural communities) 
+137 2  Folklore 
+138 2  Religion, Metaphysik 
+139 2  Rassimus 
+140 2  Sexissmusm 
+      
+      
+141 1 Medizin
+      
+142 2  körperliche Gebrechen 
+143 2  Geisteskrankheiten 
+144 2  Pharamazie 
+145 2  AIDS 
+146 2  Hygene
+147 2  Volksgesundheit 
+148 2  Arzneimittel 
+149 2  Drogen 
+150 2  traditionelle Medizin 
+151 2  medizinische Versuche 
+152 2  altenative Medizin
+153 2  Erste Hilfe 
+154 2  Seuchen
+155 2  Medizinische Forschung 
+156 2  Biotechnologie  
+      
+      
+157 1 Lernen, Lehre und Studium
+      
+158 2  Universität
+159 2  Schule
+160 2  Lebenslanges Lernen 
+161 2  Kurse 
+162 2  Fernlehre 
+163 2  Lehrer, Lehrerin
+164 2  Lehrmethoden 
+165 2  besondere Lehrmethoden 
+166 2  e-learning 
+      
+167 2  Erziehung
+168 2  Pedagogik
+169 2  Literacy (?)
+170 2  Biographik
+171 2  Lehreinheiten
+172 2  Vorlesung
+      
+      
+173 1 Forschung und Technologie 
+      
+174 2  Naturwissenschaften (Ethologie, Ecologie, Botanik, etc.) 
+175 2  Geowissenschaften (Astronomy, Geography, Oceanography, Climatology, Geology,etc.) 
+176 2  Naturwissenschaften (Physics, Chemistry, etc.) 
+177 2  Humanwissenschaften (Biologie, Genetik, Anatomy, etc.) 
+178 2  Sozialwissenschaften (Sociology, Anthropology, etc.) 
+179 2  Psychologie
+180 2  Archeologie und Palentologie 
+181 2  Geschichte
+182 2  Kommunikation, Telekommunikation und Internet 
+183 2  Energie, Niklearenergie und Eneuerbare Energiequellen 
+184 2  Informatik 
+      
+      
+185 1 Umweltthemen, Landwirtschaft
+      
+186 2  Landwirtschaft & landwirtschaftliche Technologien 
+187 2  Biologische Produkte 
+188 2  Lebensmitteltechnik 
+189 2  Biological resources (?) 
+190 2  Jagd und Fischerei 
+191 2  Bedrohte Arten 
+192 2  Klima
+193 2  Bevölkerung
+194 2  Wasserversorgung 
+195 2  biologischer Kreislauf
+196 2  Viehzucht
+197 2  Umweltverschmutzung 
+198 2  Hungersnot
+199 2  Artenvielfalt 
+200 2  genmanipuliertes Leben 
+201 2  Verschmutzung
+      
+      
+202 1 Recht- und Regierungssystem
+      
+203 2  Internationale Zusammenarbeit 
+204 2  Weltpolitik 
+205 2  Innenpolitik 
+206 2  Entwicklungspolitik 
+207 2  Sozialpolitik 
+208 2  NRO
+209 2  Gewerkschaften
+210 2  Staats- und Regierungsysteme 
+211 2  Humanitäre Hilfe 
+212 2  Arbeit
+213 2  Verteidigung
+      
+214 2  Politische Verfolgung
+215 2  Menschenrechte 
+216 2  Polizei 
+217 2  Strafvollzug
+218 2  Kriminalität  
+219 2  Terrorismus 
+220 2  Lizensen und Rechte 
+      
+      
+221 1 Politiken und Krieg
+       
+222 2  Anarchismus 
+223 2  Kapitalismus 
+224 2  Kommunismus 
+225 2  Grüne  
+226 2  Wahlen 
+227 2  Faschismus and Nazionalsozialismus 
+228 2  Liberale
+229 2  Politische Parteien 
+230 2  Pazifismus
+231 2  Sozialismus / Sozialdemokraten
+232 2  Nationalismus 
+233 2  democratische Systeme 
+234 2  authoritäre Systeme 
+235 2  revolutionäre Gruppen (activism) 
+236 2  Globalisierung 
+      
+237 2  Aufstände
+238 2  Krieg
+239 2  Bürgerkrieg und Revolution 
+240 2  Waffen
+      
+      
+241 1 Sport
+      
+242 2  Hindernislauf
+243 2  Airsoft (?)
+244 2  Tierwettkämpfe 
+245 2  Bogenschießen
+246 2  Badminton 
+247 2  Baseball 
+248 2  Basketball 
+249 2  Billiard 
+250 2  Boccia
+251 2  Boomerang 
+252 2  Bowling 
+253 2  Boxen
+254 2  Schlachtenbummler
+255 2  Cricket 
+256 2  Croquet 
+257 2  Radfahren
+258 2  Darts 
+259 2  Dressurreiten
+260 2  Extremsportarten
+261 2  Fechten 
+262 2  Fischen
+263 2  Dikuswurf 
+264 2  Fußball 
+265 2  Gaelic (?)
+266 2  Goalball (?)
+267 2  Golf 
+268 2  Greyhound Racing (?)
+269 2  Turnen 
+270 2  Handball 
+271 2  Hockey 
+272 2  Reiten 
+273 2  Jagd
+274 2  Informal Sports (?)
+275 2  Jai Alai (?)
+276 2  Kabbadi (?)
+277 2  Korfball 
+278 2  Lacrosse (?)
+279 2  Holzhacken
+280 2  Motorsport 
+281 2  Multi-Sports (?)
+282 2  Korbball
+283 2  Orientierungslauf 
+284 2  Paddleball (?)
+285 2  Paintball (?)
+286 2  Petanque (?)
+287 2  Racquetball 
+288 2  Rodeo 
+289 2  Hüpfseilspringen
+290 2  Rounders (?)
+291 2  Laufen 
+292 2  Sepak Takraw (?)
+293 2  Schießen 
+294 2  Skateboard 
+295 2  Eislauf
+296 2  Fußball
+297 2  Softball 
+298 2  Squash 
+299 2  Kraftsport 
+300 2  Tischtennis 
+301 2  Tchoukball (?)
+302 2  Handball 
+303 2  Tennis 
+304 2  Leichtathletik 
+305 2  Volleyball 
+306 2  Walking 
+307 2  Wassersport 
+308 2  Wintersports 
+309 2  Wrestling
+      
+      
+310 1 Wirtschaft
+      
+311 2  Buchhaltung
+312 2  Genossenschaften, Gesellschaften
+313 2  Kundendienst 
+314 2  E-Commerce 
+315 2  Aus- und Weiterbildung 
+316 2  Beschäftigung
+317 2  Arbeiter und Angestellte 
+318 2  internationaler Handel 
+319 2  Investionen
+320 2  Großfirmen 
+321 2  Management 
+322 2  Verkauf und Werbung 
+323 2  Kleinfirmen 
+324 2  Firmendienstleistungen
+325 2  Finanzdienstleistungen 
+326 2  Großhandel 
+      
+      
+327 1 Verkauf und Verbrauchsgüter
+      
+328 2  Antiquitäten  
+329 2  Schönheitsprodukte
+330 2  Bücher
+331 2  Spielsachen
+332 2  Kleidung
+333 2  Computer  
+334 2  Unterhaltungselectronics  
+335 2  Kunsthandwerk 
+336 2  Bestattung  
+337 2  Unterhaltung
+338 2  traditionelle und regionale Produkte 
+339 2  Blumen
+340 2  Nahrungsmittel
+341 2  Möbel
+342 2  allgemeine Handelsware  
+343 2  Geschenkartikel
+344 2  Gesundheitsartikel
+345 2  Urlaub
+346 2  Heim und Garten  
+347 2  Schmuck
+348 2  Musik
+349 2  Büroartikel  
+350 2  Haustiere
+351 2  Photographie
+352 2  Magazine
+353 2  Erholung
+354 2  Rauchwaren
+355 2  Werkzeug
+356 2  Kinderspielzeug  
+357 2  Reisen
+358 2  Fahrzeuge
+359 2  Heiratsanzeigen
+360 2  Großhandel
+

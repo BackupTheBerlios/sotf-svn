@@ -1,0 +1,24 @@
+1 Künstler
+2 Autor
+3 Kommentator
+4 Komponist
+5 Inhaber eines Urheberrechts
+6 Korrespondent
+7 Gestalter/in
+8 Direktor
+9 Redakteur/in
+10 Finanzier
+11 Interviewgast
+12 Interviewer
+13 Erzähler
+14 Komparse
+15 Darsteller
+16 Produzent
+17 Produktionspersonal
+18 Sprecher/in
+19 Transkribient/in
+20 Übersetzer/in
+21 Andere
+22 Verfasser oder Urheber
+23 Verleger bzw. Herausgeber
+24 Weitere beteiligten Personen und Körperschaften
