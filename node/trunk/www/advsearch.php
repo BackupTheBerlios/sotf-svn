@@ -23,6 +23,8 @@ $new = $paramcache->getRegistered('new');				//new query button
 //2. Run query
 $sort1 = $paramcache->getRegistered('sort1');			//sort order 1
 $sort2 = $paramcache->getRegistered('sort2');			//sort order 2
+$dir1 = $paramcache->getRegistered('dir1');			//sort order direction 1
+$dir2 = $paramcache->getRegistered('dir2');			//sort order direction 2
 $run = $paramcache->getRegistered('run');				//run query button
 $run_image = $paramcache->getRegistered('image_x');		//TRANSPARENT_run query button (default by enter)
 
@@ -37,22 +39,29 @@ $saveas = $paramcache->getRegistered('saveas');			//text field
 //Current query
 $SQLeq = $paramcache->getRegistered('SQLeq');			//= < > ... values array
 $SQLstring = $paramcache->getRegistered('SQLstring');		//last parameter value array
-$SQLquerySerial = $paramcache->getRegistered('SQLquerySerial');	//the serialized query
 
-if ($SQLquerySerial == "") $SQLquerySerial = $_SESSION["SQLquerySerial"];
+$SQLquerySerial = $paramcache->getRegistered('SQLquerySerial');		//the serialized query come from ADVSEARCH.PHP (hidden field)
+if ($SQLquerySerial == "") $SQLquerySerial = $_SESSION["SQLquerySerial"];	//  from ADVSEARCHRESULTS.PHP or somewhere else (session)
 
-if ($SQLquerySerial == "")			//get old search query from session if none in hidden field	
+if ($SQLquerySerial == "")			//make a new query if first time here
 {
 	$SQLquery = $_SESSION["SQLquery"];		//get array from session
 	$advsearch = new sotf_AdvSearch($SQLquery);	//create search object object with this array
 }
-else 						//else get it from hidden field
+else 						//else careate query from loaded
 {
 	$advsearch = new sotf_AdvSearch();		//create new search object object
 	$SQLquery = $advsearch->Deserialize($SQLquerySerial);	//deserialize the content of the hidden field
 }
-if ($SQLquery == NULL) $advsearch->SetSortOrder();	//set default sort order for new queries
-else if(isset($sort1) AND isset($sort2)) $advsearch->SetSortOrder($sort1, $sort2);			//set sort order
+
+if ($SQLquery == NULL) $advsearch->SetSortOrder();	//set DEFAULT sort order for new queries
+
+if (isset($sort1) AND isset($sort2))
+	{
+		$advsearch->SetSortOrder($sort1, $sort2);	//set sort order
+		$advsearch->setDir($dir1, $dir2);		//set sort order direction
+	}
+
 
 $max = count($SQLeq);
 $k = 0;
@@ -148,8 +157,7 @@ else								////- or + button pressed?
 	}
 }
 
-
-$_SESSION["SQLquery"] = $SQLquery;				//save the new quey to the session
+$_SESSION["SQLquerySerial"] = $advsearch->Serialize();	//save the new query to the session
 
 ////SMARTY
 //terms
@@ -175,8 +183,10 @@ $smarty->assign("SQLfieldDefault", key($advsearch->GetSQLfields()));	//set defau
 
 //box 2
 $smarty->assign("OrderFields", $advsearch->getOrderFields());		//name of all possibble columns
-$smarty->assign("sort1", $advsearch->GetSort1());			//current sort1
-$smarty->assign("sort2", $advsearch->GetSort2());			//current sort2
+$smarty->assign("sort1", $advsearch->GetSort1());			//current sort 1
+$smarty->assign("sort2", $advsearch->GetSort2());			//current sort 2
+$smarty->assign("dir1", $advsearch->getDir1());			//current sort dir 1
+$smarty->assign("dir2", $advsearch->getDir2());			//current sort dir 2
 
 //box 3
 if ($user != "")	//only if logged in
@@ -191,6 +201,7 @@ if ($user != "")	//only if logged in
 else $smarty->assign("notLoggedIn", true);
 
 $paramcache->setProcessed();						//paramcache, against reload
+//$paramcache->addResult("SQLquerySerial", $advsearch-Serialize());	//save serialized query
 
 $page->send();
 

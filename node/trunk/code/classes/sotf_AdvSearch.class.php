@@ -19,18 +19,32 @@ class sotf_AdvSearch
 		return $this->SQLquery;
 	}
 
-	function GetSort1()					//gives back the current query
+	function GetSort1()					//gives back the current sort order 1
 	{
 		$pos = strpos($this->sort1, " DESC");
 		if (!$pos) return $this->sort1;
 		return substr($this->sort1, 0, $pos);
 	}
 
-	function GetSort2()					//gives back the current query
+	function GetSort2()					//gives back the current sort order 2
 	{
 		$pos = strpos($this->sort2, " DESC");
 		if (!$pos) return $this->sort2;
 		return substr($this->sort2, 0, $pos);
+	}
+
+	function getDir1()					//gives back if the current sort order direction 1 is DESC or not
+	{
+		$pos = strpos($this->sort1, " DESC");
+		if (!$pos) return false;
+		return "DESC";
+	}
+
+	function getDir2()					//gives back if the current sort order direction 2 is DESC or not
+	{
+		$pos = strpos($this->sort2, " DESC");
+		if (!$pos) return false;
+		return "DESC";
 	}
 
 	function DeleteQuery()					//start a new query
@@ -56,8 +70,17 @@ class sotf_AdvSearch
 		$terms = explode("|A", $serial);
 		$max = count($terms);
 		$term = explode("|B", $terms[0]);		//sort order is the first array
-		if (array_key_exists($term[1], $this->getOrderFields()) AND array_key_exists($term[1], $this->getOrderFields())) $this->SetSortOrder($term[0], $term[1]);	//SetSortOrder
-		else $this->SetSortOrder();
+		
+		$pos1 = strpos($term[0], " DESC");			//SORT 1
+		$pos2 = strpos($term[1], " DESC");			//SORT 2
+		if ($pos1) $term[0] = substr($term[0], 0, $pos);		//remove DESC
+		if ($pos2) $term[1] = substr($term[1], 0, $pos);		//remove DESC
+		
+		if (array_key_exists($term[0], $this->getOrderFields()) AND array_key_exists($term[1], $this->getOrderFields())) $this->SetSortOrder($term[0], $term[1]);	//SetSortOrder
+		else $this->SetSortOrder();		//set default
+
+		$this->setDir($pos1, $pos2);		//set direction after field is set
+
 		for($i=1; $i < $max; $i++)
 		{			//TODO: | char as a sepecial char so replace it
 			$term = explode("|B", $terms[$i]);
@@ -119,11 +142,12 @@ class sotf_AdvSearch
 			}
 			elseif ($this->SQLquery[$i][1] == "topic")
 			{
-				$query .= " (sotf_programmes.id = sotf_prog_topics.prog_id".
+				$query .= " (programmes.id = sotf_prog_topics.prog_id".
 					" and sotf_prog_topics.topic_id = sotf_topics.topic_id".
 					" and sotf_topics.language = '$lang'".
 					" and sotf_topics.topic_name";
-				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."')");
+				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'");
+				$query .= ")";
 			}
 			elseif ($this->SQLquery[$i][1] == "title")
 			{
@@ -187,6 +211,14 @@ class sotf_AdvSearch
 	{
 		global $db, $lang;
 		$query="SELECT sotf_contacts.name, sotf_contacts.alias, sotf_contacts.acronym, sotf_role_names.name as role FROM sotf_contacts, sotf_role_names WHERE sotf_contacts.id = sotf_object_roles.contact_id AND sotf_object_roles.object_id = '$program_id' AND sotf_object_roles.role_id = sotf_role_names.role_id AND sotf_role_names.language='$lang'";
+		return $db->getAll($query);
+	}
+
+
+	function getTopics($program_id)			//gives back the topics for the program
+	{
+		global $db, $lang;
+		$query="SELECT sotf_topics.topic_name as name FROM sotf_topics WHERE sotf_topics.language = '$lang' AND sotf_prog_topics.topic_id = sotf_topics.topic_id AND sotf_prog_topics.prog_id = '$program_id'";
 		return $db->getAll($query);
 	}
 
@@ -299,12 +331,28 @@ class sotf_AdvSearch
 		return $this->SQLquery;
 	}
 
-	function SetSortOrder($sort1 = "production_date", $sort2 = "station")		//set the sort order
+	function SetSortOrder($sort1 = "production_date DESC", $sort2 = "station")		//set the sort order
 	{
-		$this->sort1 = $sort1;
-		$this->sort2 = $sort2;
+		$pos = strpos($this->sort1, " DESC");			//SORT 1
+		if ($pos) $this->sort1 = $sort1." DESC";
+		else  $this->sort1 = $sort1;
+
+		$pos = strpos($this->sort2, " DESC");			//SORT 2
+		if ($pos) $this->sort2 = $sort2." DESC";
+		else  $this->sort2 = $sort2;
 	}
 	
+	function setDir($dir1 = false, $dir2 = false)					//gives back if the current sort order direction 1 is DESC or not
+	{
+		$pos = strpos($this->sort1, " DESC");			//SORT 1
+		if (!$pos AND $dir1) $this->sort1 .= " DESC";		//add DESC
+		elseif ($pos AND !$dir1) $this->sort1 = substr($this->sort1, 0, $pos);		//remove DESC
+
+		$pos = strpos($this->sort2, " DESC");			//SORT 2
+		if (!$pos AND $dir2) $this->sort2 .= " DESC";		//add DESC
+		elseif ($pos AND !$dir2) $this->sort2 = substr($this->sort2, 0, $pos);		//remove DESC
+	}
+
 	function GetHumanReadable()			//translates fieldnames for all rows of the query
 	{
 		global $page;
@@ -356,9 +404,7 @@ class sotf_AdvSearch
 		$SQLfiels[topic] = $page->getlocalized("topic");
 		$SQLfiels[length] = $page->getlocalized("length");
 		$SQLfiels[rating] = $page->getlocalized("rating");
-		$SQLfiels[series] = $page->getlocalized("series");
-		$SQLfiels[track] = $page->getlocalized("track");
-		$SQLfiels[owner] = $page->getlocalized("owner");
+		//$SQLfiels[track] = $page->getlocalized("track");
 		$SQLfiels[genre_id] = $page->getlocalized("genre_id");
 		$SQLfiels[keywords] = $page->getlocalized("keywords");
 		$SQLfiels[abstract] = $page->getlocalized("abstract");
@@ -369,15 +415,14 @@ class sotf_AdvSearch
 		$SQLfiels[broadcast_date] = $page->getlocalized("broadcast_date");
 		$SQLfiels[spatial_coverage] = $page->getlocalized("spatial_coverage");
 		$SQLfiels[temporal_coverage] = $page->getlocalized("temporal_coverage");
-		$SQLfiels[contact_email] = $page->getlocalized("contact_email");
-		$SQLfiels[contact_phone] = $page->getlocalized("contact_phone");
+		asort($SQLfiels);
 		return $SQLfiels;
 	}
 
 	function getOrderFields()		//translates fieldnames for dropdown box
 	{
 		$SQLfiels = $this->GetSQLfields();
-		foreach($SQLfiels as $key => $value) if ($key != "person") $OrderFields[$key] = $value;
+		foreach($SQLfiels as $key => $value) if ($key != "person" AND $key != "topic") $OrderFields[$key] = $value;
 		return $OrderFields;
 	}
 

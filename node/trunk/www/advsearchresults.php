@@ -31,10 +31,13 @@ $max = count($SQLquery);				//$fields will contain all the USED field names
 for($i =0; $i<$max; $i++)
 	$fields[$SQLquery[$i][1]] = $allfields[$SQLquery[$i][1]];
 
+$fields[$advsearch->GetSort1()] = $allfields[$advsearch->GetSort1()];
+$fields[$advsearch->GetSort2()] = $allfields[$advsearch->GetSort2()];
+
 if (array_key_exists("title", $fields))
 {
 	$fields[alternative_title] = $page->getlocalized("alternative_title");		//if title presented this two
-	$fields[episode_title] = $page->getlocalized("episode_title");				//fields are needed as well
+	$fields[episode_title] = $page->getlocalized("episode_title");			  //fields are needed as well
 }
 else $fields[title] = $page->getlocalized("title");		//the title field always need to be present
 
@@ -44,16 +47,12 @@ $max = count($result);
 for($i =0; $i<$max; $i++)	//$selected will contain all the information about the programmes that where present in the query
 {
 	foreach($result[$i] as $key => $value)
-		if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent lavel
+		if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
 		if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
 		else $values[$fields[$key]] = $value;
-	if (array_key_exists("person", $fields))
+	if (array_key_exists("person", $fields))		//person is a special filed
 	{
-		//var_dump($result[$i]["id"]);
 		$persons = $advsearch->getPersons($result[$i]["id"]);
-		//print("<pre>");
-		//var_dump($persons);
-		//print("</pre>");
 		foreach($persons as $person)
 		if ($person["name"] != "")
 		{
@@ -63,8 +62,16 @@ for($i =0; $i<$max; $i++)	//$selected will contain all the information about the
 			$allnames = str_replace("()", "", $allnames);
 			if ( $values[$person["role"]] != "") $values[$person["role"]] .= "; ".$allnames;
 			else $values[$person["role"]] = $allnames;
-			//print($allnames."aaaa");
 		}
+	}
+	if (array_key_exists("topic", $fields))		//topic is a special filed
+	{
+		$topicname = $page->getlocalized("topic");
+		$topics = $advsearch->getTopics($result[$i]["id"]);
+		foreach($topics as $topic)
+		if ($topic["name"] != "")
+			if ($values[$topicname] == "") $values[$topicname] = $topic["name"];
+			else $values[$topicname] .= "; ".$topic["name"];
 	}
 
 	$item[title] = $result[$i][title];

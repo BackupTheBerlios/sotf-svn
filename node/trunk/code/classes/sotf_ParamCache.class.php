@@ -44,6 +44,7 @@ class sotf_ParamCache
 				}
 		}
 
+		$PHP_SELF = $_SERVER['PHP_SELF'];		//url
 		$this->TIMEID = $_GET["PCID"];			//get the ID variable
 		if ( isset($this->TIMEID) AND !isset($_SESSION[$this->TIMEID]) ) unset($this->TIMEID);	//user opened a second window, need a new ID
 		if ( (count($_POST) == 0) AND isset($this->TIMEID) ) return $this->TIMEID;	//return ID (reload can be pressed no problem)
@@ -65,7 +66,7 @@ class sotf_ParamCache
 		$_SESSION[$this->TIMEID]["PROCESSED"] = false;	//set processed to false (can be used by the user)
 
 		if (!$redir) return($this->TIMEID);			//if radir false return ID
-		if (substr($PHP_SELF, "?")) $PCID = "&PCID=";
+		if (strpos($PHP_SELF, "?")) $PCID = "&PCID=";
 		else  $PCID = "?PCID=";
 		header ("Location: ".$PHP_SELF.$PCID.$this->TIMEID."\r\n");	//else redirect page to the same with ID set
 		die(0);							//exit

@@ -13,7 +13,7 @@
 		{if $smarty.section.i.index != 0}{$HumanReadable[i][0]}{/if}
 		{if $SQLquery[i.index_next][0] == "OR"}{if $SQLquery[i][0] == "AND"}({elseif $smarty.section.i.index == 0}({/if}{/if}
 
-		<B>{$HumanReadable[i][1]} {$HumanReadable[i][2]} {$HumanReadable[i][3]}</B>
+		<b>{$HumanReadable[i][1]} {$HumanReadable[i][2]} <i>{$HumanReadable[i][3]}</i></b>
 		{if $SQLquery[i][0] == "OR"}{if $SQLquery[i.index_next][0] != "OR"}){/if}{/if}
 
 		{/section}
@@ -54,14 +54,4 @@
 	</tr>
 {/foreach}
 </table>
-<br><br><br><br><br>
-<!--
-{foreach name=outer item=row from=$result}
-	{foreach key=key item=cell from=$row}
-		{if $cell != ""}{$key}: {$cell}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/if}
-	{/foreach}
-	<BR />___________________________________________________________<BR />
-{/foreach}
--->
-
 </FORM>

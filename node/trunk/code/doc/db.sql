@@ -430,6 +430,17 @@ CREATE TABLE "sotf_stats" (
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
+CREATE TABLE "sotf_user_progs" (
+-- stores editor-specific private settings for programmes
+-- REPLICATED
+	"id" serial PRIMARY KEY, 		-- just an id
+	"user_id"  int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE, 				-- cannot reference to sadm.authenticate(auth_id)
+	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
+	"comments" text,					-- editor's private comments
+	"flags" varchar(20)				-- various flags (e.g. important, to-do)
+);
+
+
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'admin');
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('2', 'change');

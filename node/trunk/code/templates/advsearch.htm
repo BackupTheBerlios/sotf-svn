@@ -3,7 +3,7 @@
 <div align="center">
 <TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="80%" BGCOLOR="{#searchBgColor2#}">
 	<TR BGCOLOR="{#searchBgColor1#}">
-		<TD COLSPAN=6>{#your_query_is#}{if $SQLquery != ""}:{else} {#empty#}{/if}
+		<TD COLSPAN=6>{#your_query_is#}{if count($SQLquery) > 0}:{else} {#empty#}{/if}
 		<INPUT type="hidden" name="SQLquerySerial" value="{$SQLquerySerial}">
 		<INPUT type="image" SRC="{$IMAGEDIR}/transp.gif" name="image">
 		</TD>
@@ -24,19 +24,19 @@
 			<TD>{html_select_date prefix="SQLstring[]" time=$SQLquery[i][3] start_year="2000" end_year="+0" display_days=true}</TD>
 		{elseif $SQLquery[i][4] == "lang"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
-			<TD><SELECT name="SQLstring[]">{html_options options=$Languages selected=$SQLquery[i][3]}</TD>
+			<TD><SELECT name="SQLstring[]">{html_options options=$Languages selected=$SQLquery[i][3]}</SELECT></TD>
 		{elseif $SQLquery[i][4] == "station"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
-			<TD><SELECT name="SQLstring[]">{html_options options=$Stations selected=$SQLquery[i][3]}</TD>
+			<TD><SELECT name="SQLstring[]">{html_options options=$Stations selected=$SQLquery[i][3]}</SELECT></TD>
 		{elseif $SQLquery[i][4] == "genre"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
-			<TD><SELECT name="SQLstring[]">{html_options options=$Genres selected=$SQLquery[i][3]}</TD>
+			<TD><SELECT name="SQLstring[]">{html_options options=$Genres selected=$SQLquery[i][3]}</SELECT></TD>
 		{elseif $SQLquery[i][4] == "length"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlength selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" MAXLENGTH=5> {#seconds#}</TD>
 		{elseif $SQLquery[i][4] == "rating"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQnumber selected=$SQLquery[i][2]}</SELECT></TD>
-			<TD><SELECT name="SQLstring[]">{html_options options=$Ratings selected=$SQLquery[i][3]}</TD>
+			<TD><SELECT name="SQLstring[]">{html_options options=$Ratings selected=$SQLquery[i][3]}</SELECT></TD>
 		{elseif $SQLquery[i][4] == "number"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQnumber selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" MAXLENGTH=5></TD>
@@ -64,8 +64,8 @@
 	<TD ALIGN="center" BGCOLOR="{#searchBgColor2#}">
 	<TABLE BORDER=0 CELLPADDING=3>
 		<TR><TD><B>{#box2#}</B></TD></TR>
-		<TR><TD ALIGN=center>{#sort1#} <SELECT name="sort1"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort1}</SELECT></TD></TR>
-		<TR><TD ALIGN=center>{#sort2#} <SELECT name="sort2"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort2}</SELECT></TD></TR>
+		<TR><TD ALIGN=center>{#sort1#} <SELECT name="sort1"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort1}</SELECT><INPUT type="checkbox" name="dir1"{if $dir1} checked{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}</TD></TR>
+		<TR><TD ALIGN=center>{#sort2#} <SELECT name="sort2"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort2}</SELECT><INPUT type="checkbox" name="dir2"{if $dir2} checked{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}</TD></TR>
 		<TR><TD ALIGN=center><INPUT type="submit" name="run" value="{#run#}"{if $SQLquery == ""} disabled="true"{/if}></TD></TR>
 	</TABLE>
 	</TD>
