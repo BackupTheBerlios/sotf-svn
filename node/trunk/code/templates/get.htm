@@ -56,6 +56,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         {/if}
       </td>
         <td class="title2" width="10%" align="right" valign="bottom">
+          <a href="{$ROOT_URL}/rss.php?id={$ID}">RSS</a><br />
           {if hasPerm($ID,'change') }
           <input class="action" type="button" name="b1" value="{#edit_meta#}" onClick="redir(this.form,'{$ROOT_URL}/editMeta.php?id={$ID}')" />
           <input class="action" type="button" name="b1" value="{#edit_files#}" onClick="redir(this.form,'{$ROOT_URL}/editFiles.php?id={$ID}')" />

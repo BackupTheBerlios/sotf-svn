@@ -50,18 +50,20 @@ class sotf_Page
 		$user = $this->user;
 
 		// determine language
-		$lang = $_COOKIE['uiLang'];
-		if(!$lang && $this->user) {
+		$lang = sotf_Utils::getParameter('uiLang');
+		if(!$lang)
+			$lang = $_COOKIE['uiLang'];
+		if(!$lang && $this->user)
 			$lang = $this->user->language;
-			if(!in_array($lang, $config['outputLanguages']))
+		if(!in_array($lang, $config['outputLanguages']))
 				$lang = ''; // user's language is not allowed yet
-		}
 		/*
 			if(!$lang && in_array($_SERVER['HTTP_ACCEPT_LANGUAGE'], $config['outputLanguages']))
 		  $lang = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 		*/
 		if(!$lang)
 		  $lang = $config['defaultLanguage'];
+		debug("LANG in Page", $lang);
 
 		// load localization constants for language
 		$this->loadLoc();

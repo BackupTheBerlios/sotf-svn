@@ -42,9 +42,15 @@ $rss_writer_object->rssnamespaces["dc"]="http://purl.org/dc/elements/1.1/";
 // do the job, fill in RSS
 if($prgId) {
   // send RSS for programme
+
+  $db->begin();
   $prg = & $repository->getObject($prgId);
   if(!$prg)
 	 raiseError("no such object");
+  if(!$prg->getBool('published')) {
+	 raiseError("not_published_yet");
+	 exit;
+  }
 
   // define channel
   $properties=array();
@@ -69,15 +75,42 @@ if($prgId) {
 
   // add metadata as item
   $properties=array();
+  /*
+  $smarty->assign('ID', $id);
+  //  $smarty->assign('LANG', 'eng');
+  // general data
+  $smarty->assign('PRG_DATA', $prgData);
+  // station data
+  $station = $prg->getStation();
+  $smarty->assign('STATION_DATA', $station->getAllWithIcon());
+  // series data
+  $series = $prg->getSeries();
+  if($series) {
+    $smarty->assign('SERIES_DATA', $series->getAllWithIcon());
+  }
+  // roles and contacts
+  $smarty->assign('ROLES', $prg->getRoles());
+  // topics
+  $smarty->assign('TOPICS', $prg->getTopics());
+  // genre
+  $smarty->assign('GENRE', $repository->getGenreName($prg->get('genre_id')));
+  // language
+  $smarty->assign('LANGUAGE', $prg->getLanguagesLocalized());
+  // rights sections
+  $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
+  $text = $smarty->fetch('rssMeta.htm');
+  */
   $text = "<p>Abstract: " . $prgData['abstract']
 	 . "<br />Keywords: " . $prgData['keywords']
 	 . "<br />Production date: " . $prgData['production_date']
 	 . "</p>";
   $properties["description"] = $text;
   $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
-  $properties["title"]= $page->getlocalized('metadata');
+  debug("LANG in rss", $lang);
+  $properties["title"]= $page->getlocalized('Metadata');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
+
   /*
   // add contributors as item
   $properties=array();
@@ -90,32 +123,31 @@ if($prgId) {
   $properties["title"]= $page->getlocalized('metadata');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
+  */
 
   // add content links as item
   $properties=array();
-  $text = "<p>Abstract: " . $prgData['abstract']
-	 . "<br />Keywords: " . $prgData['keywords']
-	 . "<br />Production date: " . $prgData['production_date']
-	 . "</p>";
-  $properties["description"] = $text;
-  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
-  $properties["title"]= $page->getlocalized('metadata');
+  $properties["link"]= $config['rootUrl'] . '/listen.php/audio.m3u?id=' . $prgId;
+  $properties["title"]= $page->getlocalized('Listen');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
 
   // add statistics as item
   $properties=array();
-  $text = "<p>Abstract: " . $prgData['abstract']
-	 . "<br />Keywords: " . $prgData['keywords']
-	 . "<br />Production date: " . $prgData['production_date']
-	 . "</p>";
+  $rating = new sotf_Rating();
+  $rate = $rating->getInstantRating($id);
+  $stats = $prg->getStats();
+  if($rate['rating_count'] > 0)
+	 $text = $rate['rating_value'] . " by " . $rate['rating_count'];
+  else
+	 $text = "No rating";
   $properties["description"] = $text;
-  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
-  $properties["title"]= $page->getlocalized('metadata');
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . "#stats";
+  $properties["title"]= $page->getlocalized('Statistics');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
-  */
 
+  $db->commit();
 } elseif($stationName) {
   // send list of new progs in station
   $station = sotf_Station::getByName($stationName);
