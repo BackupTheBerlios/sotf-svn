@@ -71,8 +71,7 @@ if($id) {
 
   if ($page->loggedIn()) {
     // is in my playlist?
-    $inplaylist = $db->getOne("SELECT count(*) FROM sotf_playlists WHERE user_id = ".$user->id." AND prog_id='".$id."'");
-    $smarty->assign('inplaylist', $inplaylist);
+    $smarty->assign('inplaylist', sotf_Playlist::contains($id));
   }
 }
 

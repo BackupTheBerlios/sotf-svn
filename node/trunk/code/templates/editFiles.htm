@@ -17,6 +17,7 @@ else  window.location.href = this.location.href
 </SCRIPT>
 {/literal}
 
+<form>
 {if $NEW}
   <table width="100%">
     <tr valign="top">
@@ -25,15 +26,17 @@ else  window.location.href = this.location.href
         <h3>{#Edit_files#}</h3>
       </td>
       <td align="right">
-        <a class="action" href="editMeta.php?new=1&id={$PRG_ID}">{#goto_step2#}</a>
+        <input class="action" type="button" name="b1" value="{#goto_step2#}" onClick="redir(this.form, 'editMeta.php?new=1&id={$PRG_ID}')" />
       </td>
     </tr>
   </table>
 {else}
-<H3>{#Edit_files#}: <a href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
-<div align="right"><a class="action" href="editMeta.php?id={$PRG_ID}">{#edit_meta#}</a></div>
+<H3>{#Edit_files#}: <a class="goto_object" href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
+    <div align="right">
+      <input class="action" type="button" name="b1" value="{#edit_meta#}" onClick="redir(this.form, 'editMeta.php?id={$PRG_ID}')" />
+    </div>
 {/if}
-
+</form>
 
 <form>
 <table class="tab">
@@ -41,7 +44,7 @@ else  window.location.href = this.location.href
     <td nowrap class="tab">{#Prg_files#}</td>
   </tr>
 </table>
-<table class="tabarea">
+<table class="tabarea" width="100%">
 <tr> 
   <td class="tabarea"> 
 
@@ -109,18 +112,18 @@ else  window.location.href = this.location.href
 
 <p></p>
 
+	<a name="mfiles"></a>
 <form>
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#Files#}</td>
   </tr>
 </table>
-<table class="tabarea">
+<table class="tabarea" width="100%">
 <tr> 
   <td class="tabarea"> 
    {if $AUDIO_FILES }
         <div class="subheader">{#audio_file_list#}</div>
-	<a name="mfiles"></a>
     <table>
        <tr class="listhead">
           <th>{#filename#}</th>
@@ -167,9 +170,9 @@ else  window.location.href = this.location.href
           {/foreach}    
     </table>
    {/if}
+	<a name="ofiles"></a>
    {if $OTHER_FILES }
         <div class="subheader">{#other_file_list#}</div>
-	<a name="ofiles"></a>
         <table>
        <tr class="listhead">
           <th>{#filename#}</th>
@@ -219,6 +222,7 @@ else  window.location.href = this.location.href
 </form>
 
 <p></p>
+	<a name="links"></a>
 
 <form>
 <table class="tab">
@@ -226,7 +230,7 @@ else  window.location.href = this.location.href
     <td nowrap class="tab">{#Links#}</td>
   </tr>
 </table>
-<table class="tabarea">
+<table class="tabarea"  width="100%">
 <tr> 
   <td class="tabarea">
    {if $LINKS } 
@@ -268,5 +272,7 @@ else  window.location.href = this.location.href
 </form>
 
 {if $NEW}
-  <div align="right"><a class="action" href="editMeta.php?new=1&id={$PRG_ID}">{#goto_step2#}</a></div>
+  <div align="right">
+    <input class="action" type="button" name="b1" value="{#goto_step2#}" onClick="redir(this.form, 'editMeta.php?new=1&id={$PRG_ID}')" />
+  </div>
 {/if}

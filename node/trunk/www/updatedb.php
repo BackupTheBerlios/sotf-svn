@@ -102,20 +102,8 @@ elseif ($name == "editorpub")		//editor bublished checkboxes
 }
 elseif ($name == "addplaylist")		//get.htm add a programm to the playlist
 {
-	$query="SELECT prog_id, order_id FROM sotf_playlists WHERE user_id=".$user->id." AND prog_id='".$id."'";
-	$result = $db->getAll($query);		//test if already in the playlist
-	//var_dump($result);
-	if (count($result) == 0)
-	{
-		$query="SELECT prog_id, order_id FROM sotf_playlists WHERE user_id=".$user->id." ORDER BY order_id DESC";
-		$result = $db->getAll($query);		//get biggest id
-		//var_dump($result);
-		if (count($result) > 0) $next = $result[0]["order_id"] + 1;	//set id to biggest+1
-		else $next = 0;
-		$query="INSERT INTO sotf_playlists (prog_id, user_id, order_id) VALUES ('".$id."', ".$user->id.", ".$next.")";
-		//rint($query);
-		$result = $db->query($query);
-	}
+  $playlist = new sotf_Playlist;
+  $playlist->add($id);
 	print("kesz");
 } else print("<script type=\"text/javascript\" language=\"javascript1.1\">error();</script>");
 

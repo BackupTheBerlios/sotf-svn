@@ -15,8 +15,11 @@
       </tr>
     </table>
 {else}
-    <h3>{#editmeta#}: <a href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
-    <div align="right"><a class="action" href="editFiles.php?id={$PRG_ID}">{#edit_files#}</a></div>
+    <h3>{#editmeta#}: <a class="goto_object" href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
+    <div align="right">
+      <input class="action" type="button" name="b1" value="{#edit_files#}" onClick="redir(this.form, 'editFiles.php?id={$PRG_ID}')" />
+      <!-- <a class="action" href="editFiles.php?id={$PRG_ID}">{#edit_files#}</a> -->
+    </div>
 {/if}
 
   <table class="tab">
@@ -24,17 +27,17 @@
       <td nowrap class="tab">{#general_data#}</td>
     </tr>
   </table>
-  <table class="tabarea">
+  <table class="tabarea" width="100%">
     <tr> 
       <td class="tabarea"> 
           <table width="100%">
             <tr valign="top">
               <td class="meta">{#station#}:</td>
-              <td><a href="showStation.php?stationid={$STATION_DATA.id}">{$STATION_DATA.name}</a></td>
+              <td><a class="goto_object" href="showStation.php?stationid={$STATION_DATA.id}">{$STATION_DATA.name}</a></td>
             </tr>
             <tr valign="top">
               <td class="meta">{#series#}:</td>
-              <td>{if $SERIES_DATA}<a href="showSeries.php?seriesid={$SERIES_DATA.id}">{$SERIES_DATA.title}</a>{else}{#not_in_series#}{/if}
+              <td>{if $SERIES_DATA}<a class="goto_object" href="showSeries.php?seriesid={$SERIES_DATA.id}">{$SERIES_DATA.title}</a>{else}{#not_in_series#}{/if}
                 {if !empty($MY_SERIES)}
                    <input class="action" type="button" name="b1" value="{#change_series#}" onClick="popup('addToSeries.php?prgid={$PRG_ID}','{#changeseries#}',350,400,false); return false;" />
                 {/if}
@@ -119,7 +122,7 @@
     <td nowrap class="tab">{#topics#}</td>
   </tr>
 </table>
-<table class="tabarea">
+<table class="tabarea" width="100%">
 <tr> 
   <td class="tabarea">
                   {if $TOPICS}
@@ -153,7 +156,7 @@
     <td nowrap class="tab">{#Roles#}</td>
   </tr>
 </table>
-<table class="tabarea">
+<table class="tabarea" width="100%">
 <tr> 
   <td class="tabarea">
         {if $ROLES}
@@ -196,7 +199,7 @@
     <td nowrap class="tab">{#Rights#}</td>
   </tr>
 </table>
-<table class="tabarea">
+<table class="tabarea" width="100%">
 <tr> 
   <td class="tabarea">
         {if $RIGHTS}
@@ -244,7 +247,7 @@
     <td nowrap class="tab">{#access_permissions#}</td>
   </tr>
 </table>
-<table class="tabarea">
+<table class="tabarea" width="100%">
 <tr> 
   <td class="tabarea"> 
         {if $PERMISSIONS}
@@ -289,7 +292,7 @@
     <td nowrap class="tab">{#icon#}</td>
   </tr>
 </table>
-<table class="tabarea">
+<table class="tabarea" width="100%">
 <tr> 
    <td class="tabarea"> 
 

@@ -38,7 +38,7 @@ if($save) {
       $link->update();
     else
       $link->create();
-    $page->redirect("closeAndRefresh.php");
+    $page->redirect("closeAndRefresh.php?anchor=links");
     exit;
 }
 

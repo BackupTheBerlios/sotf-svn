@@ -4,11 +4,19 @@ require("init.inc.php");
 $id = sotf_Utils::getParameter('id');
 $fileid = sotf_Utils::getParameter('fileid');
 
-if(empty($id) || empty($fileid)) {
+if(empty($id)) {
   raiseError("Missing parameters!");
 }
 
 $prg = new sotf_Programme($id);
+
+if(empty($fileid)) {
+  // find a file to listen
+  $fileid = $prg->selectFileToListen();
+  if(!$fileid)
+    raiseError("no_file_to_listen");
+}
+
 $file = new sotf_NodeObject("sotf_media_files", $fileid);
 
 if(!$prg->isLocal()) {
@@ -21,7 +29,8 @@ if($prg->get('published') != 't' || $file->get('stream_access') != 't') {
 
 $filepath = $prg->getFilePath($file);
 $tmpfile = $tmpdir . "/$id_$fileid.m3u";
-$name = "$id_$fileid";
+//$name = "$id_$fileid";
+$name = "$id_" . time();
 $url = 'http://' . $iceServer . ':' . $icePort . '/' . $name . "\n";
 debug("file", $filepath);
 

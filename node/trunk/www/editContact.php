@@ -56,7 +56,7 @@ if($save || $finish1 || $finish2) {
   if($save) {
     $page->redirect("editContact.php?id=$contactId");
   } else {
-    $page->redirect("closeAndRefresh.php");
+    $page->redirect("closeAndRefresh.php?anchor=roles");
   }
   exit;
 }

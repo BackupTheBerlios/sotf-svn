@@ -86,6 +86,10 @@ A.goto_object {
   FONT-WEIGHT: bold; FONT-SIZE: larger; 
 }
 
+A.playlist {
+  FONT-SIZE: smaller;
+}
+
 INPUT.action {
   
 }

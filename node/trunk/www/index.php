@@ -16,6 +16,19 @@ if($data['numNodes']==0) {
 }
 $data['numStations'] = sotf_Station::countAll();
 $data['numProgs'] = sotf_Programme::countAll();
+$data['numProgs'] = sotf_Programme::countAll();
+
+$allStats = sotf_Programme::getAllStats();
+$allStats['l_and_d'] = $allStats['listens'] + $allStats['downloads'];
+$data['access'] = $allStats;
+
+$fileStats = sotf_Programme::getFileStats();
+$fileStats['size_mb'] = sprintf('%d', $fileStats['filesize'] / 1024 /1024);
+$fileStats['length_hour'] = sprintf('%d', $fileStats['play_length'] / 60 / 60);
+$data['files'] = $fileStats;
+
+$data['numUsers'] = sotf_User::countUsers();
+
 $smarty->assign($data);
 
 $smarty->assign('STATIONS', sotf_Station::listStationNames());
@@ -35,17 +48,20 @@ $dayInThePast = mktime(0,0,0, $now['mon'], $now['mday']-10, $now['year']);
 $fromDay = date('Y-m-d', $dayInThePast);
 
 
-// check if user has default query
 if ($page->loggedIn()) {
-  $advsearch = new sotf_AdvSearch();
 
-  //$loadfrom ahol a default = 1
+  // get playlist
+  $playlist = new sotf_Playlist();
+  $smarty->assign('PLAYLIST', $playlist->load());
+
+  // check if user has default query
+  $advsearch = new sotf_AdvSearch();
   $prefs = $user->getPreferences();
   $defQuery = $prefs->getDefaultQuery();
 }
 
+// show default query instead of new programmes
 if($defQuery) {
-  // show default query instead of new programmes
   $smarty->assign("DEF_QUERY", 1);
     debug("default query", $defQuery);
 
@@ -69,12 +85,11 @@ if($defQuery) {
     $smarty->assign("NEWS", $hits);
 
 } else {
+  // get new programmes
   $smarty->assign('NEWS', sotf_Programme::getNewProgrammes($fromDay, MAX_ITEMS_IN_INDEX));
 }
 
-
-
-
+// get topics with most content
 $smarty->assign('TOPICS', $repository->getTopTopics(5));
 
 $page->send();

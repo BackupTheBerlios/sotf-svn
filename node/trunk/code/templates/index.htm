@@ -58,7 +58,20 @@
       </table>
       <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
         <tr> 
-          <td bgcolor="#FFFFFF">Text goes here</td>
+          <td bgcolor="#FFFFFF">
+                  <table>
+                    {foreach name=outer item=item from=$PLAYLIST}
+                    <tr valign="top">
+                      <td>
+                        <a href="listen.php/audio.m3u?id={$item.id}"><img src="{$IMAGEDIR}/listen.gif" border="0" alt="{#Listen#}"></a>
+                      </td>
+                      <td>
+                        <a class="playlist" href="get.php?id={$item.id}">{$item.title}</a>
+                      </td>
+                    </tr>
+                    {/foreach}
+                  </table>
+          </td>
         </tr>
       </table>
       <br>
@@ -69,7 +82,15 @@
       </table>
       <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
         <tr> 
-          <td bgcolor="#FFFFFF">{$numProgs} radio programmes of {$numStations} stations</td>
+          <td bgcolor="#FFFFFF">
+                    {if $numNodes gt 1}{$numNodes} {#nodes#}<br>{/if}
+                      {$numStations} {#stations#}
+                      <br>{$numProgs} {#progs#}
+                      <br>{$files.size_mb} {#mb_of_audio#}
+                      <br>{$files.length_hour} {#hours_of_audio#}
+                      <br>{$access.l_and_d} {#listens_and_downloads#}
+                      <br>{$numUsers} {#users#}
+                  </td>
         </tr>
       </table>
       <br>
@@ -80,7 +101,9 @@
       </table>
       <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
         <tr> 
-          <td bgcolor="#FFFFFF">Text goes here</td>
+          <td bgcolor="#FFFFFF">
+                      {#contacts_text#}
+          </td>
         </tr>
       </table>
     </td>

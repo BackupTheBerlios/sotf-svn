@@ -208,6 +208,11 @@ class sotf_User
 		return $userdb->getCol("SELECT username FROM authenticate ORDER BY username");
 	}
 
+	function countUsers() {
+		global $userdb;
+		return $userdb->getOne("SELECT count(*) FROM authenticate");
+	}
+
 	function getUsername($user_id) {
 		global $userdb;
 		if (is_numeric($user_id))

@@ -22,6 +22,8 @@ function progressMp3ToMp3($source,$target,$index)
 {
 }
 
+$page->popup = true;
+
 $id = sotf_Utils::getParameter('id'); 
 $index = sotf_Utils::getParameter('index'); 
 
@@ -38,7 +40,12 @@ if ($checker->reqs[$index][1] !== false)
 {
 	$source = $audioFiles->list[$checker->reqs[$index][1]]->getPath();
 	$target = $tmpdir . '/' . $prg->get('track') . '_' . $checker->getFormatFilename($index);
+} else {
+  $msg = $page->getlocalized("conversion_not_supported");
+  echo "<h4>$msg</h4>";
+  exit;
 }
+
 $bitrate = $audioFormats[$index]["bitrate"];
 $samplerate = $audioFormats[$index]["samplerate"];
 if ($audioFormats[$index]["channels"] == 1)

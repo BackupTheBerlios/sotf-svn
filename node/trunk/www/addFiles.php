@@ -17,11 +17,20 @@ if (!hasPerm($prgId, "change")) {
   raiseError("You have no permission to add files here!");
 }
 
-// upload to my files
+// upload file
 $upload = sotf_Utils::getParameter('upload');
 if($upload) {
-  move_uploaded_file($_FILES['userfile']['tmp_name'], $user->getUserDir() . '/' . $_FILES['userfile']['name']);
-  $page->redirect("addFiles.php?prgid=$prgId&main=$main");
+  $fname = $_FILES['userfile']['name'];
+  $file =  sotf_Utils::getFileInDir($user->getUserDir(), $fname);
+  move_uploaded_file($_FILES['userfile']['tmp_name'], $file);
+  $prg = new sotf_Programme($prgId);
+  if($main) {
+    $prg->setAudio($file);
+    $page->redirect("closeAndRefresh.php");
+  } else {
+     $prg->setOtherFile($fname);
+     $page->redirect("closeAndRefresh.php#anchor=mfiles");
+  }
   exit;
 }
 
@@ -42,7 +51,10 @@ if($add) {
       }
     }
   }
-  $page->redirect("closeAndRefresh.php");
+  if($main)
+    $page->redirect("closeAndRefresh.php");
+  else 
+    $page->redirect("closeAndRefresh.php#anchor=mfiles");
   exit;
 }
 
