@@ -31,7 +31,7 @@ CREATE TABLE "portal_users" (
    "password" varchar NOT NULL,
    "email" varchar,
    "activate" int4,
-   "timestamp" datetime DEFAULT date('now'::datetime) NOT NULL
+   "timestamp" timestamp DEFAULT date('now'::timestamp) NOT NULL
 );
 
 CREATE TABLE "portal_prglist" (
@@ -72,7 +72,7 @@ CREATE TABLE programmes_comments (
 "user_id" int4 REFERENCES portal_users(id) NOT NULL,
 "reply_to" int4 REFERENCES programmes_comments(id),
 "path" varchar,
-"timestamp" datetime DEFAULT date('now'::datetime) NOT NULL,
+"timestamp" timestamp DEFAULT date('now'::timestamp) NOT NULL,
 "title" varchar,
 "comment" varchar,
 "level" int2);
@@ -113,8 +113,8 @@ CREATE TABLE "portal_statistics" (					--statistics on portals, programmes
 	"id" SERIAL PRIMARY KEY,
 	"name" varchar NOT NULL,					--name of the data (page_impression, events_sent, last_connection, last_connection_try, query, programme)
 	"value" varchar,						--value if needed (by query the query string and by programme tge ID)
-	"timestamp" datetime DEFAULT date('now'::datetime) NOT NULL,	--timestamp
-	"timestamp2" datetime,						--timestamp2 (stop time (last used) for query and programme)
+	"timestamp" timestamp DEFAULT date('now'::timestamp) NOT NULL,	--timestamp
+	"timestamp2" timestamp,						--timestamp2 (stop time (last used) for query and programme)
 	"portal_id" int4 REFERENCES portal_settings(id),		--portal_id for page_impression, query and programme
 	"number" int4							--counter for page_impression
 );
@@ -129,7 +129,7 @@ CREATE TABLE "portal_events" (						--events that must be sent to the node
 	"id" SERIAL PRIMARY KEY,
 	"name" varchar NOT NULL,					--name of the event (portal_created, portal_updated, portal_deleted, users, rating, comment, visit)
 	"portal_name" varchar,						--portal_name
-	"timestamp" datetime DEFAULT date('now'::datetime) NOT NULL,	--timestamp
+	"timestamp" timestamp DEFAULT date('now'::timestamp) NOT NULL,	--timestamp
 	"value" varchar							--value of the event
 );
 
@@ -138,7 +138,7 @@ CREATE TABLE "portal_cache" (						--cache for queries and programmes (reduces X
 	"type" int4 NOT NULL,						--type of the cache element (1=query, 2=programme)
 	"name" varchar NOT NULL,					--the query or the id of the programme
 	"value" varchar NOT NULL,					--value of the cached element
-	"timestamp" datetime DEFAULT date('now'::datetime) NOT NULL	--timestamp last updated
+	"timestamp" timestamp DEFAULT date('now'::timestamp) NOT NULL	--timestamp last updated
 );
 
 INSERT INTO "portal_vars" ("id", "name", "value") VALUES(1, 'smarty_compile_check', '1');
