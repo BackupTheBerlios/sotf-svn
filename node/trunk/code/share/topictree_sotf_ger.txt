@@ -6,300 +6,300 @@ url=
 
 # End of tree definition
       
-101 1 Kunst, Kultur, Medien, Unterhaltung
+  1 1 Kunst, Kultur, Medien, Unterhaltung
        
-102 2  Nachrichten
-103 2  Neue Medien (Internet, CD, DVD, Mini Disk, etc.) 
-104 2  Zeitungen, Zeitschriften 
-105 2  Radio 
-106 2  Fernsehen
-107 2  Werbung und Öffentlichkeitsarbeit 
-108 2  Nachrichten Ausland (should remain) 
-109 2  Kino (Dokumentation, Spielfilm) 
-110 2  Darstellende Kunst (Theater, Tanz, Zirkus, etc.) 
-111 2  Musik (All genres - including Opera, Classical Concert, etc.) 
-112 2  Bildendene Kunst (Malerein, Bildhauerei, Fotografie, Comics, etc.) 
-113 2  Architektur und Stadtplanung 
-114 2  Literatur (Dichtung, Roman, Essay, etc.) 
-115 2  Krimis 
-116 2  Science Fiction 
-117 2  Cartoons
-118 2  Erholung 
-119 2  Reisen und Tourismus 
-120 2  Spiel
+  2 2  Nachrichten
+  3 2  Neue Medien (Internet, CD, DVD, Mini Disk, etc.) 
+  4 2  Zeitungen, Zeitschriften 
+  5 2  Radio 
+  6 2  Fernsehen
+  7 2  Werbung und Öffentlichkeitsarbeit 
+  8 2  Nachrichten Ausland (should remain) 
+  9 2  Kino (Dokumentation, Spielfilm) 
+ 10 2  Darstellende Kunst (Theater, Tanz, Zirkus, etc.) 
+ 11 2  Musik (All genres - including Opera, Classical Concert, etc.) 
+ 12 2  Bildendene Kunst (Malerein, Bildhauerei, Fotografie, Comics, etc.) 
+ 13 2  Architektur und Stadtplanung 
+ 14 2  Literatur (Dichtung, Roman, Essay, etc.) 
+ 15 2  Krimis 
+ 16 2  Science Fiction 
+ 17 2  Cartoons
+ 18 2  Erholung 
+ 19 2  Reisen und Tourismus 
+ 20 2  Spiel
       
-121 1 Gesellschaft
+ 21 1 Gesellschaft
       
-122 2  Frauen
-123 2  Männer
-124 2  Jugendliche 
-125 2  Ältere / Senioren 
-126 2  Familie
-127 2  Menschen mit Behinderung 
+ 22 2  Frauen
+ 23 2  Männer
+ 24 2  Jugendliche 
+ 25 2  Ältere / Senioren 
+ 26 2  Familie
+ 27 2  Menschen mit Behinderung 
       
-128 2  Body practices (?)
-129 2  Sexualität
-130 2  Drogen
-131 2  Armut
-132 2  Migration 
+ 28 2  Body practices (?)
+ 29 2  Sexualität
+ 30 2  Drogen
+ 31 2  Armut
+ 32 2  Migration 
       
-133 2  Multikulturalität 
-134 2  Feminismus 
-135 2  Queer 
+ 33 2  Multikulturalität 
+ 34 2  Feminismus 
+ 35 2  Queer 
       
-136 2  soziales Zusammenleben (Housing, Transportation, Area planning, Urban communities, Rural communities) 
-137 2  Folklore 
-138 2  Religion, Metaphysik 
-139 2  Rassimus 
-140 2  Sexissmusm 
-      
-      
-141 1 Medizin
-      
-142 2  körperliche Gebrechen 
-143 2  Geisteskrankheiten 
-144 2  Pharamazie 
-145 2  AIDS 
-146 2  Hygene
-147 2  Volksgesundheit 
-148 2  Arzneimittel 
-149 2  Drogen 
-150 2  traditionelle Medizin 
-151 2  medizinische Versuche 
-152 2  altenative Medizin
-153 2  Erste Hilfe 
-154 2  Seuchen
-155 2  Medizinische Forschung 
-156 2  Biotechnologie  
+ 36 2  soziales Zusammenleben (Housing, Transportation, Area planning, Urban communities, Rural communities) 
+ 37 2  Folklore 
+ 38 2  Religion, Metaphysik 
+ 39 2  Rassimus 
+ 40 2  Sexissmusm 
       
       
-157 1 Lernen, Lehre und Studium
+ 41 1 Medizin
       
-158 2  Universität
-159 2  Schule
-160 2  Lebenslanges Lernen 
-161 2  Kurse 
-162 2  Fernlehre 
-163 2  Lehrer, Lehrerin
-164 2  Lehrmethoden 
-165 2  besondere Lehrmethoden 
-166 2  e-learning 
-      
-167 2  Erziehung
-168 2  Pedagogik
-169 2  Literacy (?)
-170 2  Biographik
-171 2  Lehreinheiten
-172 2  Vorlesung
-      
-      
-173 1 Forschung und Technologie 
-      
-174 2  Naturwissenschaften (Ethologie, Ecologie, Botanik, etc.) 
-175 2  Geowissenschaften (Astronomy, Geography, Oceanography, Climatology, Geology,etc.) 
-176 2  Naturwissenschaften (Physics, Chemistry, etc.) 
-177 2  Humanwissenschaften (Biologie, Genetik, Anatomy, etc.) 
-178 2  Sozialwissenschaften (Sociology, Anthropology, etc.) 
-179 2  Psychologie
-180 2  Archeologie und Palentologie 
-181 2  Geschichte
-182 2  Kommunikation, Telekommunikation und Internet 
-183 2  Energie, Niklearenergie und Eneuerbare Energiequellen 
-184 2  Informatik 
+ 42 2  körperliche Gebrechen 
+ 43 2  Geisteskrankheiten 
+ 44 2  Pharamazie 
+ 45 2  AIDS 
+ 46 2  Hygene
+ 47 2  Volksgesundheit 
+ 48 2  Arzneimittel 
+ 49 2  Drogen 
+ 50 2  traditionelle Medizin 
+ 51 2  medizinische Versuche 
+ 52 2  altenative Medizin
+ 53 2  Erste Hilfe 
+ 54 2  Seuchen
+ 55 2  Medizinische Forschung 
+ 56 2  Biotechnologie  
       
       
-185 1 Umweltthemen, Landwirtschaft
+ 57 1 Lernen, Lehre und Studium
       
-186 2  Landwirtschaft & landwirtschaftliche Technologien 
-187 2  Biologische Produkte 
-188 2  Lebensmitteltechnik 
-189 2  Biological resources (?) 
-190 2  Jagd und Fischerei 
-191 2  Bedrohte Arten 
-192 2  Klima
-193 2  Bevölkerung
-194 2  Wasserversorgung 
-195 2  biologischer Kreislauf
-196 2  Viehzucht
-197 2  Umweltverschmutzung 
-198 2  Hungersnot
-199 2  Artenvielfalt 
-200 2  genmanipuliertes Leben 
-201 2  Verschmutzung
+ 58 2  Universität
+ 59 2  Schule
+ 60 2  Lebenslanges Lernen 
+ 61 2  Kurse 
+ 62 2  Fernlehre 
+ 63 2  Lehrer, Lehrerin
+ 64 2  Lehrmethoden 
+ 65 2  besondere Lehrmethoden 
+ 66 2  e-learning 
       
-      
-202 1 Recht- und Regierungssystem
-      
-203 2  Internationale Zusammenarbeit 
-204 2  Weltpolitik 
-205 2  Innenpolitik 
-206 2  Entwicklungspolitik 
-207 2  Sozialpolitik 
-208 2  NRO
-209 2  Gewerkschaften
-210 2  Staats- und Regierungsysteme 
-211 2  Humanitäre Hilfe 
-212 2  Arbeit
-213 2  Verteidigung
-      
-214 2  Politische Verfolgung
-215 2  Menschenrechte 
-216 2  Polizei 
-217 2  Strafvollzug
-218 2  Kriminalität  
-219 2  Terrorismus 
-220 2  Lizensen und Rechte 
+ 67 2  Erziehung
+ 68 2  Pedagogik
+ 69 2  Literacy (?)
+ 70 2  Biographik
+ 71 2  Lehreinheiten
+ 72 2  Vorlesung
       
       
-221 1 Politiken und Krieg
+ 73 1 Forschung und Technologie 
+      
+ 74 2  Naturwissenschaften (Ethologie, Ecologie, Botanik, etc.) 
+ 75 2  Geowissenschaften (Astronomy, Geography, Oceanography, Climatology, Geology,etc.) 
+ 76 2  Naturwissenschaften (Physics, Chemistry, etc.) 
+ 77 2  Humanwissenschaften (Biologie, Genetik, Anatomy, etc.) 
+ 78 2  Sozialwissenschaften (Sociology, Anthropology, etc.) 
+ 79 2  Psychologie
+ 80 2  Archeologie und Palentologie 
+ 81 2  Geschichte
+ 82 2  Kommunikation, Telekommunikation und Internet 
+ 83 2  Energie, Niklearenergie und Eneuerbare Energiequellen 
+ 84 2  Informatik 
+      
+      
+ 85 1 Umweltthemen, Landwirtschaft
+      
+ 86 2  Landwirtschaft & landwirtschaftliche Technologien 
+ 87 2  Biologische Produkte 
+ 88 2  Lebensmitteltechnik 
+ 89 2  Biological resources (?) 
+ 90 2  Jagd und Fischerei 
+ 91 2  Bedrohte Arten 
+ 92 2  Klima
+ 93 2  Bevölkerung
+ 94 2  Wasserversorgung 
+ 95 2  biologischer Kreislauf
+ 96 2  Viehzucht
+ 97 2  Umweltverschmutzung 
+ 98 2  Hungersnot
+ 99 2  Artenvielfalt 
+100 2  genmanipuliertes Leben 
+101 2  Verschmutzung
+      
+      
+102 1 Recht- und Regierungssystem
+      
+103 2  Internationale Zusammenarbeit 
+104 2  Weltpolitik 
+105 2  Innenpolitik 
+106 2  Entwicklungspolitik 
+107 2  Sozialpolitik 
+108 2  NRO
+109 2  Gewerkschaften
+110 2  Staats- und Regierungsysteme 
+111 2  Humanitäre Hilfe 
+112 2  Arbeit
+113 2  Verteidigung
+      
+114 2  Politische Verfolgung
+115 2  Menschenrechte 
+116 2  Polizei 
+117 2  Strafvollzug
+118 2  Kriminalität  
+119 2  Terrorismus 
+120 2  Lizensen und Rechte 
+      
+      
+121 1 Politiken und Krieg
        
-222 2  Anarchismus 
-223 2  Kapitalismus 
-224 2  Kommunismus 
-225 2  Grüne  
-226 2  Wahlen 
-227 2  Faschismus and Nazionalsozialismus 
-228 2  Liberale
-229 2  Politische Parteien 
-230 2  Pazifismus
-231 2  Sozialismus / Sozialdemokraten
-232 2  Nationalismus 
-233 2  democratische Systeme 
-234 2  authoritäre Systeme 
-235 2  revolutionäre Gruppen (activism) 
-236 2  Globalisierung 
+122 2  Anarchismus 
+123 2  Kapitalismus 
+124 2  Kommunismus 
+125 2  Grüne  
+126 2  Wahlen 
+127 2  Faschismus and Nazionalsozialismus 
+128 2  Liberale
+129 2  Politische Parteien 
+130 2  Pazifismus
+131 2  Sozialismus / Sozialdemokraten
+132 2  Nationalismus 
+133 2  democratische Systeme 
+134 2  authoritäre Systeme 
+135 2  revolutionäre Gruppen (activism) 
+136 2  Globalisierung 
       
-237 2  Aufstände
-238 2  Krieg
-239 2  Bürgerkrieg und Revolution 
-240 2  Waffen
-      
-      
-241 1 Sport
-      
-242 2  Hindernislauf
-243 2  Airsoft (?)
-244 2  Tierwettkämpfe 
-245 2  Bogenschießen
-246 2  Badminton 
-247 2  Baseball 
-248 2  Basketball 
-249 2  Billiard 
-250 2  Boccia
-251 2  Boomerang 
-252 2  Bowling 
-253 2  Boxen
-254 2  Schlachtenbummler
-255 2  Cricket 
-256 2  Croquet 
-257 2  Radfahren
-258 2  Darts 
-259 2  Dressurreiten
-260 2  Extremsportarten
-261 2  Fechten 
-262 2  Fischen
-263 2  Dikuswurf 
-264 2  Fußball 
-265 2  Gaelic (?)
-266 2  Goalball (?)
-267 2  Golf 
-268 2  Greyhound Racing (?)
-269 2  Turnen 
-270 2  Handball 
-271 2  Hockey 
-272 2  Reiten 
-273 2  Jagd
-274 2  Informal Sports (?)
-275 2  Jai Alai (?)
-276 2  Kabbadi (?)
-277 2  Korfball 
-278 2  Lacrosse (?)
-279 2  Holzhacken
-280 2  Motorsport 
-281 2  Multi-Sports (?)
-282 2  Korbball
-283 2  Orientierungslauf 
-284 2  Paddleball (?)
-285 2  Paintball (?)
-286 2  Petanque (?)
-287 2  Racquetball 
-288 2  Rodeo 
-289 2  Hüpfseilspringen
-290 2  Rounders (?)
-291 2  Laufen 
-292 2  Sepak Takraw (?)
-293 2  Schießen 
-294 2  Skateboard 
-295 2  Eislauf
-296 2  Fußball
-297 2  Softball 
-298 2  Squash 
-299 2  Kraftsport 
-300 2  Tischtennis 
-301 2  Tchoukball (?)
-302 2  Handball 
-303 2  Tennis 
-304 2  Leichtathletik 
-305 2  Volleyball 
-306 2  Walking 
-307 2  Wassersport 
-308 2  Wintersports 
-309 2  Wrestling
+137 2  Aufstände
+138 2  Krieg
+139 2  Bürgerkrieg und Revolution 
+140 2  Waffen
       
       
-310 1 Wirtschaft
+141 1 Sport
       
-311 2  Buchhaltung
-312 2  Genossenschaften, Gesellschaften
-313 2  Kundendienst 
-314 2  E-Commerce 
-315 2  Aus- und Weiterbildung 
-316 2  Beschäftigung
-317 2  Arbeiter und Angestellte 
-318 2  internationaler Handel 
-319 2  Investionen
-320 2  Großfirmen 
-321 2  Management 
-322 2  Verkauf und Werbung 
-323 2  Kleinfirmen 
-324 2  Firmendienstleistungen
-325 2  Finanzdienstleistungen 
-326 2  Großhandel 
+142 2  Hindernislauf
+143 2  Airsoft (?)
+144 2  Tierwettkämpfe 
+145 2  Bogenschießen
+146 2  Badminton 
+147 2  Baseball 
+148 2  Basketball 
+149 2  Billiard 
+150 2  Boccia
+151 2  Boomerang 
+152 2  Bowling 
+153 2  Boxen
+154 2  Schlachtenbummler
+155 2  Cricket 
+156 2  Croquet 
+157 2  Radfahren
+158 2  Darts 
+159 2  Dressurreiten
+160 2  Extremsportarten
+161 2  Fechten 
+162 2  Fischen
+163 2  Dikuswurf 
+164 2  Fußball 
+165 2  Gaelic (?)
+166 2  Goalball (?)
+167 2  Golf 
+168 2  Greyhound Racing (?)
+169 2  Turnen 
+170 2  Handball 
+171 2  Hockey 
+172 2  Reiten 
+173 2  Jagd
+174 2  Informal Sports (?)
+175 2  Jai Alai (?)
+176 2  Kabbadi (?)
+177 2  Korfball 
+178 2  Lacrosse (?)
+179 2  Holzhacken
+180 2  Motorsport 
+181 2  Multi-Sports (?)
+182 2  Korbball
+183 2  Orientierungslauf 
+184 2  Paddleball (?)
+185 2  Paintball (?)
+186 2  Petanque (?)
+187 2  Racquetball 
+188 2  Rodeo 
+189 2  Hüpfseilspringen
+190 2  Rounders (?)
+191 2  Laufen 
+192 2  Sepak Takraw (?)
+193 2  Schießen 
+194 2  Skateboard 
+195 2  Eislauf
+196 2  Fußball
+197 2  Softball 
+198 2  Squash 
+199 2  Kraftsport 
+200 2  Tischtennis 
+201 2  Tchoukball (?)
+202 2  Handball 
+203 2  Tennis 
+204 2  Leichtathletik 
+205 2  Volleyball 
+206 2  Walking 
+207 2  Wassersport 
+208 2  Wintersports 
+209 2  Wrestling
       
       
-327 1 Verkauf und Verbrauchsgüter
+210 1 Wirtschaft
       
-328 2  Antiquitäten  
-329 2  Schönheitsprodukte
-330 2  Bücher
-331 2  Spielsachen
-332 2  Kleidung
-333 2  Computer  
-334 2  Unterhaltungselectronics  
-335 2  Kunsthandwerk 
-336 2  Bestattung  
-337 2  Unterhaltung
-338 2  traditionelle und regionale Produkte 
-339 2  Blumen
-340 2  Nahrungsmittel
-341 2  Möbel
-342 2  allgemeine Handelsware  
-343 2  Geschenkartikel
-344 2  Gesundheitsartikel
-345 2  Urlaub
-346 2  Heim und Garten  
-347 2  Schmuck
-348 2  Musik
-349 2  Büroartikel  
-350 2  Haustiere
-351 2  Photographie
-352 2  Magazine
-353 2  Erholung
-354 2  Rauchwaren
-355 2  Werkzeug
-356 2  Kinderspielzeug  
-357 2  Reisen
-358 2  Fahrzeuge
-359 2  Heiratsanzeigen
-360 2  Großhandel
+211 2  Buchhaltung
+212 2  Genossenschaften, Gesellschaften
+213 2  Kundendienst 
+214 2  E-Commerce 
+215 2  Aus- und Weiterbildung 
+216 2  Beschäftigung
+217 2  Arbeiter und Angestellte 
+218 2  internationaler Handel 
+219 2  Investionen
+220 2  Großfirmen 
+221 2  Management 
+222 2  Verkauf und Werbung 
+223 2  Kleinfirmen 
+224 2  Firmendienstleistungen
+225 2  Finanzdienstleistungen 
+226 2  Großhandel 
+      
+      
+227 1 Verkauf und Verbrauchsgüter
+      
+228 2  Antiquitäten  
+229 2  Schönheitsprodukte
+230 2  Bücher
+231 2  Spielsachen
+232 2  Kleidung
+233 2  Computer  
+234 2  Unterhaltungselectronics  
+235 2  Kunsthandwerk 
+236 2  Bestattung  
+237 2  Unterhaltung
+238 2  traditionelle und regionale Produkte 
+239 2  Blumen
+240 2  Nahrungsmittel
+241 2  Möbel
+242 2  allgemeine Handelsware  
+243 2  Geschenkartikel
+244 2  Gesundheitsartikel
+245 2  Urlaub
+246 2  Heim und Garten  
+247 2  Schmuck
+248 2  Musik
+249 2  Büroartikel  
+250 2  Haustiere
+251 2  Photographie
+252 2  Magazine
+253 2  Erholung
+254 2  Rauchwaren
+255 2  Werkzeug
+256 2  Kinderspielzeug  
+257 2  Reisen
+258 2  Fahrzeuge
+259 2  Heiratsanzeigen
+260 2  Großhandel
 
