@@ -74,7 +74,7 @@ CREATE TABLE "sotf_neighbours" (
 	"use_for_outgoing" bool DEFAULT 't'::bool,
 	"last_sync" timestamptz,
 	"last_sync_out" timestamptz,
-	"sync_stamp" int,
+	"sync_stamp" int DEFAULT 0,
 	"errors" int,
 	"success" int,
 	"pending_url" varchar(200),

@@ -1,4 +1,13 @@
 <?php
+
+/*  -*- tab-width: 3; indent-tabs-mode: 1; -*-
+ * $Id$
+ *
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
+
 require_once("$classdir/rpc_Utils.class.php");
 
 class sotf_Neighbour extends sotf_Object {
@@ -66,6 +75,7 @@ class sotf_Neighbour extends sotf_Object {
   }
 
   function sync($console = false) {
+    global $sotfVars;
     // tunable things
     $objectsPerRPCRequest = 200;
     
@@ -74,9 +84,11 @@ class sotf_Neighbour extends sotf_Object {
       debug("node $this->id is not used for outgoing sync");
       return;
     }
-    debug("SYNCing with ", $neighbour->get("node_id"));
+    debug("SYNCing with ", $this->get("node_id"));
 
     $rpc = new rpc_Utils;
+    if($debug)
+      $rpc->debug = true;
     $timestamp = $this->db->getTimestampTz();
     $remoteId = $this->get('node_id');
     $url = $this->getUrl();
@@ -100,6 +112,7 @@ class sotf_Neighbour extends sotf_Object {
                        "current_stamp" => $currentStamp,
                        "num_chunks" => $numChunks,
                        'this_chunk' => $thisChunk);
+    debug("1st chunk info", $chunkInfo);
     // do XML-RPC conversation
     $objectsSent = 0;
     $objectsReceived = 0;
@@ -145,6 +158,8 @@ class sotf_Neighbour extends sotf_Object {
   }
 
   function syncResponse($chunkInfo, $nodeData, $objects) {
+    global $sotfVars;
+
     $timestamp = $this->db->getTimestampTz();
     // save modified objects
     $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects);

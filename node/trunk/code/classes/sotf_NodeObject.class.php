@@ -135,6 +135,7 @@ class sotf_NodeObject extends sotf_Object {
 
   /** Static: count the objects to be sent to the neighbour node. */
   function countModifiedObjects($remoteNode, $syncStamp = 0) {
+    global $db;
     return $db->getOne("SELECT count(*) FROM sotf_node_objects WHERE node_id != '$remoteNode' AND arrived_stamp >= '$syncStamp'");
   }
 
@@ -145,7 +146,7 @@ class sotf_NodeObject extends sotf_Object {
     $tableOrder = "no,co,st,se,pr,ri,ed,of,mf,li,td,tt,to,pt,ge,ro,rn,sr,de,ra,re,sx";
     // select objects to send to neighbour
     $result = $db->limitQuery("SELECT * FROM sotf_node_objects WHERE node_id != '$remoteNode' AND arrived_stamp >= '$syncStamp' ORDER BY strpos('$tableOrder', substring(id, 4, 2)), id", $from, $objectsPerPage);
-    while (DB_OK === $res->fetchInto($row)) {
+    while (DB_OK === $result->fetchInto($row)) {
       $objects1[] = $row;
     }
     //debug("OBJECTS1", $objects1);

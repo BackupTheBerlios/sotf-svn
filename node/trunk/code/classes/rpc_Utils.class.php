@@ -5,7 +5,7 @@ require_once("$xmlrpcdir/xmlrpcs.inc");
 
 class rpc_Utils {
 
-var $xmlrpcDebug = 0;
+var $debug = false;
 
 function call($url, $method, $params) {
   // xmlrpc encode parameters
@@ -16,18 +16,18 @@ function call($url, $method, $params) {
   }
   // send request
   $message = new xmlrpcmsg($method, $params);
-  if($this->xmlrpcDebug) {
+  if($this->debug) {
     //  $this->display_xml($message->serialize());
      print("<PRE>".htmlentities($message->serialize())."</PRE>\n");
   //("XML-RPC message:\n $message->serialize()",0);
   }
   $addr = parse_url($url);
   $client = new xmlrpc_client($url, $addr['host'], $addr['port']);
-  if($this->xmlrpcDebug)
+  if($this->debug)
     $client->setDebug(1);
   debug("XML-RPC", "call to " . $url);
   $response = $client->send($message);
-  if($this->xmlrpcDebug)
+  if($this->debug)
     print("<PRE>".htmlentities($response->serialize())."</PRE>\n");
   // process response
   //debug("XML-RPC Response", $response->serialize());

@@ -45,8 +45,14 @@ $sync = sotf_Utils::getParameter('sync');
 if($sync) {
   // this can be long duty!
   set_time_limit(18000);
+  // get sync stamp and increment it
+  $syncStamp = $sotfVars->get('sync_stamp', 0);
+  $syncStamp++;
+  $sotfVars->set('sync_stamp', $syncStamp);
+  // get neighbour object
   $nid = sotf_Utils::getParameter('nodeid');
   $neighbour = sotf_Neighbour::getById($nid);
+  // sync
   $neighbour->sync(true);
   $page->redirect("admin.php#network");
 }

@@ -196,8 +196,10 @@ $db->debug = $sotfVars->get('debug_sql', 0);
 if($debug)
 {
 	//error_log("\n---------------------------------------------------------------------------------\n" .  getenv("REQUEST_URI") . "\n",3, $logFile);
+  error_log("------------------------------------------", 0);
   error_log("REQUEST_URI: " . getenv("REQUEST_URI"), 0);
-	error_log(getenv('REMOTE_HOST') . ": " . getenv('HTTP_USER_AGENT') ,0);
+	error_log("REMOTE_HOST: " . getenv('REMOTE_HOST') ,0);
+  error_log("USER_AGENT: " . getenv('HTTP_USER_AGENT') ,0);
   error_log("REFERER: " . getenv('HTTP_REFERER'),0);
   foreach($_GET as $key => $value) {
     error_log("GET: $key = $value",0);
