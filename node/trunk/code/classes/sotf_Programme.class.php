@@ -527,8 +527,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	
     //dump($metadata, "METADATA");
 
-    $stationName = 'DooBeeDoo';
-    $station = sotf_Station::getByName($stationName);
+    // TODO: by default I put the programme into the first station
+    $stId = $db->getOne("SELECT id FROM sotf_stations ORDER BY id");
+
+    $station = new sotf_Station($stId);
     $track = $metadata['title']['basetitle'];
     $newPrg = new sotf_Programme();
     debug("create with track", $track);
