@@ -4,6 +4,7 @@ header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 //header ("Expires: Mon, 26 Jul 2010 05:00:00 GMT");
 //TODO:debug infok kikapcsolasa!!!
 // TODO: cache dir letrehozasa!!
+// TODO chekc imagemagick installed
 
 function PrintTitle($number)		//'header' af all tests
 {
