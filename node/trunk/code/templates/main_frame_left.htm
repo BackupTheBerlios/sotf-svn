@@ -88,7 +88,7 @@
                         | <a target="_top" class="menu" href="{$ROOT_URL}/playlist.php">{#Playlist#}</a>
                       {/if}
                       {if $IS_EDITOR} | <a target="_top" class="menu" href="{$ROOT_URL}/editor.php">{#EditorPage#}</a> {/if} 
-                      {if hasPerm('node', 'change', 'authorize') } | <a class="menu" href="{$ROOT_URL}/admin.php">{#AdminPage#}</a> {/if}
+                      {if hasPerm('node', 'change', 'authorize') } | <a target="_top" class="menu" href="{$ROOT_URL}/admin.php">{#AdminPage#}</a> {/if}
                       {if $loggedIn}
                       | <a target="_top" class="menu" href="{$ROOT_URL}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$USERNAME})</a>
                       | <a target="_top" class="menu" href="{$ROOT_URL}/logout.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Logout#}</a>
