@@ -19,7 +19,7 @@
 	
 	//may i do this?
 	//can I edit this? (this is my authorize!)
-	if(($_SESSION['USER']->get("edit_station")==2) or ($_SESSION['USER']->get("auth_id") == $db->getOne("SELECT series.owner FROM programme LEFT JOIN series ON (programme.series_id = series.id) WHERE programme.id = '$_GET[id]'"))){
+	if(($_SESSION['USER']->get("edit_station")==2) or ($_SESSION['USER']->get("auth_id") == $db->getOne("SELECT series.owner FROM programme LEFT JOIN series ON (programme.series_id = series.id) WHERE programme.id = '$_GET[pid]'"))){
 		$mod_flag = TRUE;
 	}else{
 		$myError->add($ERR[26]);
@@ -146,8 +146,9 @@
 			$myPack->toFile(PROG_DIR . $_GET['pid'] . "/XBMF/Metadata.xml");
 			
 			//echo "tar.sh " . PROG_DIR . $_GET['pid'] . " ../" . $_GET['pid'] . ".tgz";
-			exec("tar -cvvf " . SYNC_DIR . SOTF_STATION_ID . "_" . $_GET['pid'] . ".tgz -C " . PROG_DIR . $_GET['pid'] . " ./"); 
+			exec("tar -cvvf " . SYNC_DIR . SOTF_STATION_ID . "_" . $_GET['pid'] . ".xbmf -C " . PROG_DIR . $_GET['pid'] . " ./"); 
 			chmod(SYNC_DIR . SOTF_STATION_ID . "_" . $_GET['pid'] . ".tgz",0777);
+			
 			
 			//mark programme as published
 			$db->query("UPDATE programme SET published = '" . date("Y-m-d H:i:s") . "' WHERE id = '$_GET[pid]'");

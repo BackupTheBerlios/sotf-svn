@@ -98,7 +98,7 @@
 		//get published statuses
 		while(list($key,$val) = each($db_result)){
 			if(!empty($val[6])){	//programme has been queued for sunc with the node
-				if(file_exists(SYNC_DIR . SOTF_STATION_ID . "_" . $val[0] . ".tgz")){
+				if(file_exists(SYNC_DIR . SOTF_STATION_ID . "_" . $val[0] . ".xbmf")){
 					$db_result[$key]['status'] = 2;	# processing
 				}else{
 					$db_result[$key]['status'] = 9; # published
