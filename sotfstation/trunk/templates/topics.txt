@@ -1,110 +1,260 @@
-Undefined Topic
-development
-	agriculture
-	aid
-	capacity building
-	children
-	cities
-	community / local groups
-	education
-	emergency relief
-	energy
-	fisheries
-	food
-	gender
-	intermediate technology
-	international cooperation
-	labour / work
-	land
-	men
-	migration
-	old age / retirement
-	population
-	poverty
-	refugees
-	shelter/housing
-	social exclusion
-	tourism
-	transport
-	volunteering
-	water/sanitation
-	women
-	youth
-economy
-	business
-	consumption / consumerism
-	corporations
-	credit / investment
-	debt
-	finance
-	microcredit
-	social enterprise
-	trade
-environment
-	animals
-	atmosphere
-	biodiversity
-	climate change
-	conservation
-	environmental activism
-	forests
-	genetics
-	nuclear issues
-	oceans
-	pollution
-	renewable energy
-	rivers
-	rural life
-	soils
-health
-	aids
-	disease / treatment
-	infant mortality
-	malaria
-	narcotics
-	nutrition / malnutrition
-human rights
-	civil rights / civil liberties
-	disability
-	indigenous rights
-	race politics
-	religion
-	sexuality
-	social exclusion
-information & media
-	art
-	communications
-	culture
-	film
-	freedom of expression
-	internet
-	knowledge
-	media
-	radio
-	science
-	sport
-	television
-politics
-	activism / protest
-	civil society
-	class issues
-	codes of conduct
-	democracy
-	ethics / value systems
-	geopolitics
-	globalisation
-	governance
-	justice / crime
-	law
-	transparency / corruption
-	unionism / trade unions
-	United Nations
-war & peace
-	arms/military
-	conflict
-	conflict resolution
-	landmines
-	nuclear issues
-	peace
-	security
-	terrorism
+000td2;Arts, Medias, Entertainment and Leisure;0
+000td8;Advertising and Public Relations ;1
+000td14;Architecture and Urbanism ;1
+000td18;Cartoons, caricatures & comics ;1
+000td16;Detective stories ;1
+000td9;Foreign news (should remain) ;1
+000td21;Games ;1
+000td20;Journey and Tourism ;1
+000td15;Literature (Poetry, Fiction, Essays, etc.) ;1
+000td10;Motion Pictures (Documentary, Fiction) ;1
+000td12;Music (All genres - including Opera, Classical C;1
+000td4;New Media (Internet, CD, DVD, Mini Disk, etc.) ;1
+000td3;News ;1
+000td11;Performing Arts (Theater, Dance, Circus, etc.) ;1
+000td13;Plastic Arts (Painting, Sculpture, Photography, ;1
+000td5;Press ;1
+000td6;Radio ;1
+000td19;Recreational Activities ;1
+000td17;Science Fiction and Fantasy ;1
+000td7;Television ;1
+000td211;Business;0
+000td212;Accounting ;1
+000td225;Business Services ;1
+000td213;Cooperatives ;1
+000td214;Customer Service ;1
+000td215;E-Commerce ;1
+000td216;Education and Training ;1
+000td217;Employment ;1
+000td226;Financial Services ;1
+000td218;Human Resources ;1
+000td219;International Business and Trade ;1
+000td220;Investing ;1
+000td221;Major Companies ;1
+000td222;Management ;1
+000td223;Marketing and Advertising ;1
+000td224;Small Business ;1
+000td227;Wholesale Trade ;1
+000td86;Environmental Issues, Agriculture and related te;0
+000td87;Agriculture & related technologies ;1
+000td100;Bio diversity ;1
+000td90;Biological resources ;1
+000td93;Climate ;1
+000td96;Ecological systems ;1
+000td92;Endagered Species ;1
+000td98;Environmental problems ;1
+000td99;Famine ;1
+000td89;Food technology ;1
+000td101;GMO-Genetically modified organism ;1
+000td91;Hunting & fishing ;1
+000td88;Organic farming ;1
+000td102;Pollution ;1
+000td94;Population ;1
+000td97;Stockbreeding ;1
+000td95;Water supply ;1
+000td42;Healing and Medicine;0
+000td46;AIDS ;1
+000td53;Altenative Medicine ;1
+000td57;Bio technology (genetic engineering) ;1
+000td52;Clinical Test ;1
+000td55;Epidemic ;1
+000td54;First Aid ;1
+000td45;Healing Substance ;1
+000td47;Hygiene ;1
+000td50;Illegal drugs ;1
+000td49;Legal drugs ;1
+000td56;Medical Research ;1
+000td44;Mental health/diseases ;1
+000td43;Physical diseases ;1
+000td48;Public health ;1
+000td51;Traditional healings ;1
+000td22;Human Practices and Social Issues;0
+000td29;Body practices ;1
+000td37;Community Issues (Housing, Transportation, Area ;1
+000td31;Drugs ;1
+000td26;Elderly people ;1
+000td27;Family ;1
+000td35;Feminism ;1
+000td38;Folklore ;1
+000td28;Handicapped persons ;1
+000td24;Men ;1
+000td33;Migration ;1
+000td34;Multiculturalism ;1
+000td32;Poverty ;1
+000td36;Queer ;1
+000td40;Racism ;1
+000td39;Religion, Metaphysics ;1
+000td41;Sexism ;1
+000td30;Sexuality ;1
+000td23;Women ;1
+000td25;Young people ;1
+000td103;Justice and Governmental;0
+000td119;Crime & delinquency ;1
+000td114;Defense ;1
+000td107;Development policies ;1
+000td106;Domestic policy ;1
+000td105;Geopolitics ;1
+000td112;Humanitarian aid ;1
+000td116;Human rights (Right of asylum, Freedom of speech;1
+000td104;International cooperation ;1
+000td113;Labor ;1
+000td110;Labor unions (Trade unions) ;1
+000td121;Licences and copyright/copyleft ;1
+000td109;NGO ;1
+000td117;Police services ;1
+000td115;Political persecution (prisoners, refugees, ...);1
+000td118;Prison ;1
+000td108;Social policy (Employment policies, Welfare) ;1
+000td111;Systems of governments and states ;1
+000td120;Terrorism ;1
+000td122;Politic, politic systems and Wars;0
+000td123;Anarchism ;1
+000td135;Authoritarian systems ;1
+000td124;Capitalism ;1
+000td140;Civil war and revolution ;1
+000td125;Communism ;1
+000td134;Democratic systems ;1
+000td127;Elections ;1
+000td128;Fascim and Nazism (including parties) ;1
+000td137;Globalization ;1
+000td126;Green parties ;1
+000td129;Liberalism ;1
+000td133;Nationalism ;1
+000td131;Pacifism ;1
+000td130;Political parties ;1
+000td138;Rebellion ;1
+000td136;Revolutionary and subversive groups (activism) ;1
+000td132;Socialism ;1
+000td139;War ;1
+000td141;Weapons ;1
+000td74;Sciences and Technologies ;0
+000td81;Archeology and Palentology ;1
+000td83;Communications, telecommuncation and Internet ;1
+000td85;Computer science ;1
+000td76;Earth Sciences (Astronomy, Geography, Oceanograp;1
+000td84;Energy, Nuclear energy and sustanaible energy pr;1
+000td82;History ;1
+000td78;Live Sciences (Biology, Genetic, Anatomy, etc.) ;1
+000td77;Material Sciences (Physics, Chemistry, etc.) ;1
+000td75;Natural Sciences (Ethology, Ecology, Botanique, ;1
+000td80;Psychology and psychiatry ;1
+000td79;Social Sciences (Sociology, Anthropology, etc.) ;1
+000td228;Shopping and consumer products;0
+000td229;Antiques and Collectibles ;1
+000td230;Beauty Products;1
+000td231;Books ;1
+000td232;Children ;1
+000td233;Clothing  ;1
+000td234;Computers  ;1
+000td235;Consumer Electronics  ;1
+000td236;Crafts ;1
+000td237;Death Care  ;1
+000td238;Entertainment;1
+000td239;Ethnic and Regional  ;1
+000td240;Flowers ;1
+000td241;Food  ;1
+000td242;Furniture ;1
+000td243;General Merchandise  ;1
+000td244;Gifts  ;1
+000td245;Health  ;1
+000td246;Holidays  ;1
+000td247;Home and Garden  ;1
+000td248;Jewelry  ;1
+000td249;Music ;1
+000td250;Office Products  ;1
+000td251;Pets  ;1
+000td252;Photography  ;1
+000td253;Publications ;1
+000td254;Recreation  ;1
+000td255;Tobacco  ;1
+000td256;Tools  ;1
+000td257;Toys and Games  ;1
+000td258;Travel ;1
+000td259;Vehicles  ;1
+000td260;Weddings  ;1
+000td261;Wholesale  ;1
+000td142;Sport;0
+000td143;Adventure Racing ;1
+000td144;Airsoft ;1
+000td145;Animal Fighting ;1
+000td146;Archery ;1
+000td147;Badminton ;1
+000td148;Baseball ;1
+000td149;Basketball ;1
+000td150;Billiards ;1
+000td151;Bocce ;1
+000td152;Boomerang ;1
+000td153;Bowling ;1
+000td154;Boxing ;1
+000td155;Cheerleading ;1
+000td156;Cricket ;1
+000td157;Croquet ;1
+000td158;Cycling ;1
+000td159;Darts ;1
+000td160;Equestrian ;1
+000td161;Extreme Sports ;1
+000td162;Fencing ;1
+000td163;Fishing ;1
+000td164;Flying Discs ;1
+000td165;Football ;1
+000td166;Gaelic ;1
+000td167;Goalball ;1
+000td168;Golf ;1
+000td169;Greyhound Racing ;1
+000td170;Gymnastics ;1
+000td171;Handball ;1
+000td172;Hockey ;1
+000td173;Horse Racing ;1
+000td174;Hunting ;1
+000td175;Informal Sports ;1
+000td176;Jai Alai ;1
+000td177;Kabbadi ;1
+000td178;Korfball ;1
+000td179;Lacrosse ;1
+000td180;Lumberjack ;1
+000td181;Motorsports ;1
+000td182;Multi-Sports ;1
+000td183;Netball ;1
+000td184;Orienteering ;1
+000td185;Paddleball ;1
+000td186;Paintball ;1
+000td187;Petanque ;1
+000td188;Racquetball ;1
+000td189;Rodeo ;1
+000td190;Rope Skipping ;1
+000td191;Rounders ;1
+000td192;Running ;1
+000td193;Sepak Takraw ;1
+000td194;Shooting ;1
+000td195;Skateboarding ;1
+000td196;Skating ;1
+000td197;Soccer ;1
+000td198;Softball ;1
+000td199;Squash ;1
+000td200;Strength Sports ;1
+000td201;Table Tennis ;1
+000td202;Tchoukball ;1
+000td203;Team Handball ;1
+000td204;Tennis ;1
+000td205;Track and Field ;1
+000td206;Volleyball ;1
+000td207;Walking ;1
+000td208;Water Sports ;1
+000td209;Winter Sports ;1
+000td210;Wrestling;1
+000td58;Teaching, Learning and Studying;0
+000td71;Biography ;1
+000td62;Cources and Training ;1
+000td72;Curricula ;1
+000td63;Distance Learning ;1
+000td68;Education ;1
+000td64;Educators ;1
+000td67;e-learning ;1
+000td73;Lecture;1
+000td61;Life long learning ;1
+000td70;Literacy ;1
+000td69;Pedagogie ;1
+000td60;Schools ;1
+000td66;Special Education ;1
+000td65;Teaching Methods ;1
+000td59;Universities ;1

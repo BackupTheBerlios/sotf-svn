@@ -4,7 +4,15 @@
 	fclose($file);
 	$roles = explode("\n",$roles);
 	reset($roles);
-	while(list($key,$val) = each($roles)){
-		$myroles[$val] = $val;
+	
+	$myroles = array();
+	foreach($roles as $role){
+		$role = explode(";",$role);
+		$key = $role[0];
+		$name = $role[1];
+		
+		if(!empty($key)){
+			$myroles[$name] = $name;
+		}
 	}
 ?>

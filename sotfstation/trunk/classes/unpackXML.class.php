@@ -1,17 +1,21 @@
-<?
+<?php
+
 	/*
 	* class - unpackXML
 	* 				will create an associative array from an XML file.
 	* 
-	* @author Kulikov Alexey <alex@pvl.at, alex@ita-studio.com>
-	* @date		01.02.03
-	* @version 1.0
+	* @author 	Kulikov Alexey <alex@pvl.at, alex@ita-studio.com>
+	* @date			01.04.03
+	* @version 	1.1
 	* @requires DOMXML extension enabled in PHP
 	****/
 	class unpackXML{
 		var $xml;
 		var $root;
+		var $error = false;
 		var $data = array();
+		var $encoding;
+		var $outencoding = "iso-8859-1";
 	
 		/**
 		 * unpackXML::unpackXML() - constructor
@@ -21,8 +25,22 @@
 		 */
 		function unpackXML($file){
 			if(!$this->xml = domxml_open_file($file)){
+				$this->error = true;
 				return array('error'=>'File ' . $file . ' not found at specified location. DOMXML needs an absolute path to this file starting from htdocs root or a URI!');
 			}else{
+				//get encoding - doesn't
+				$myfile = fopen($file, "r");
+				$contents = fread($myfile, 64);
+				fclose($myfile);
+				eregi("encoding=\"(.*)\"\?>", $contents, $encoding);
+				
+				if(!empty($encoding[1]) and $encoding[1] != 'iso-8859-1'){
+					$this->encoding = $encoding[1];
+				}else{	
+					$this->encoding = "UTF-8";
+				}
+				
+				//set root
 				$this->root = $this->xml->root();
 			}
 		}
@@ -37,7 +55,10 @@
 		 */
 		function process(){
 			$this->parse($this->root, $this->data);
-			return $this->data;
+			if(!empty($this->data)){
+				return $this->data;
+			}
+			return false;
 		}
 		
 		
@@ -53,20 +74,66 @@
 		 * @param $data (array)
 		 * @return recursive call 
 		 */
-		function parse($reference, &$data){
+		function parse($reference, &$data,$counter=0){
 			$children = $reference->children();
-			if(count($children)>1){
+			
+			//make sure that singe nests are also parsed 
+			//added 05.06.2003 # alex
+			if(is_object($children[0])){
+				if($meChild = $children[0]->children()){
+					$getIn = true;
+				}
+			}
+			
+			if(count($children)>1 or $getIn){
 				foreach($children as $child){
-					if($child->get_attribute("id") != ''){
-						$name = $child->get_attribute("id");
-					}else{
-						$name = $child->node_name();
+					//not interested in DOMTEXT elements
+					if($child->type == 3){
+						continue;
+					}
+					
+					//entity cast | //patch for type handling in users
+					if($child->node_name() == 'entity'){
+						$name = $counter;
+						$counter++;
+						$type = $child->get_attribute("type");
+					}else{ //end patch
+					
+						//type cast
+						if($child->get_attribute("type") != ''){
+							$name = $child->get_attribute("type");
+						}else{
+							//id cast
+							if($child->get_attribute("id") != ''){
+								$name = $child->get_attribute("id");
+							}else{
+								$name = $child->node_name();
+							} 
+						}
 					}
 					$data[$name] = array();
-					$this->parse($child,$data[$name]);
+					
+					//patch for type handling in users
+					if(!empty($type)){
+						$data[$name]['type'] = $type;
+					}
+					//end patch
+					$this->parse($child,$data[$name],$counter);
 				}
 			}else{
-				$data = $reference->get_content();
+				//charset converter
+				if($this->encoding == $this->outencoding){	//don't convert
+					$data = $reference->get_content();
+				}else{
+					if(!$data = iconv($this->encoding,$this->outencoding,$reference->get_content())){
+						$data = $reference->get_content();
+					}	//convert
+				}
+				$data = str_replace("%%rgt%%",">",$data);
+				$data = str_replace("%%lgt%%","<",$data);
+				$data = ereg_replace("[\r\n]{2,}","<br />",$data);
+				$data = trim($data);
+				//$data = nl2br($data);
 			}
 		}
 	}

@@ -258,11 +258,14 @@
                     <div align="right">*{#sotf9#}:</div></td>
                   <td nowrap><table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr> 
-                        <td width="1">{#sotf10#}:</td>
-                        <td width="1"> <select name="sotf_topic" id="sotf_topic">
+                        <td width="1" align=right>{#sotf10#}:</td>
+                        <td width="100%"> 
+                          <select name="sotf_topic" id="sotf_topic">
 {html_options options=$sotf_topics selected=$submit_sotf_topic}
-                          </select> </td>
-                        <td width="1">&nbsp;{#sotf11#}:</td>
+                          </select>
+                        </td>
+                      </tr><tr>
+                        <td width="1">{#sotf11#}:</td>
                         <td><select name="sotf_genre" id="sotf_genre">
 								{html_options options=$sotf_genres selected=$submit_sotf_genre}
                           </select></td>

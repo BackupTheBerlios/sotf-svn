@@ -16,12 +16,30 @@
 	$file = fopen('templates/topics.txt', "r");
 	$topics = fread($file, filesize('templates/topics.txt'));
 	fclose($file);
+	
 	$topics = explode("\n",$topics);
+	
 	reset($topics);
-	while(list($key,$val) = each($topics)){
-		$val2 = trim($val);
-		$mytopics[$val2] = str_replace("\t","-- ",ucfirst($val));
+	$mytopics = array();
+	foreach($topics as $topic){
+		$topic = explode(";",$topic);
+		
+		$key = $topic[0];
+		$name = $topic[1];
+		$offset = $topic[2];
+		
+		$add = '';
+		if($offset > 0){
+			for($i=0;$i<$offset;$i++){
+				$add .= "--" . $add;
+			}
+		}
+		
+		if(!empty($key)){
+			$mytopics[$key] = $add . $name;
+		}
 	}
+	$mytopics['zzzzzzzzzzzzz'] = "Unknown / Undefined";
 	
 	//get genres array
 	$file = fopen('templates/genres.txt', "r");
@@ -29,8 +47,16 @@
 	fclose($file);
 	$genres = explode("\n",$genres);
 	reset($genres);
-	while(list($key,$val) = each($genres)){
-		$mygenres[$val] = $val;
+	$mygenres = array();
+	foreach($genres as $genre){
+		$genre = explode(";",$genre);
+		$key = $genre[0];
+		$name = $genre[1];
+		
+		if(!empty($key)){
+			$mygenres[$key] = $name;
+		}
 	}
+	$mygenres['zzzzzzzzzzzzz'] = "Unknown / Undefined";
 	//##### END GET DATA ########
 ?>

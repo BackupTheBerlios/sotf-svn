@@ -86,6 +86,30 @@
 										auth_id AS owner_user_authid 
 									FROM user_map WHERE auth_id = '$mySeries[owner]'",DB_FETCHMODE_ASSOC));
 			
+			//process role file
+			$file = fopen('templates/roles.txt', "r");
+			$roles = fread($file, filesize('templates/roles.txt'));
+			fclose($file);
+			$roles = explode("\n",$roles);
+		
+			reset($roles);
+			foreach($roles as $role){
+				$role = explode(";",$role);
+				$key = $role[0];
+				$name = $role[1];
+		
+				if($name = $myUser['owner_user_role']){
+					$myUser['owner_user_role'] = $key;
+					$changed = true;
+					break;
+				}
+			}
+			
+			if(!$changed){
+				$myUser['owner_user_role'] = '';
+			}else{
+				$changed = false;
+			}
 			
 			//data publisher
 			$pubUser = $sdb->getRow("SELECT
@@ -95,6 +119,25 @@
 										role AS pub_user_role,
 										auth_id AS pub_user_authid
 									FROM user_map WHERE auth_id = '" . $_SESSION['USER']->get("auth_id") . "'",DB_FETCHMODE_ASSOC));
+			
+			reset($roles);
+			foreach($roles as $role){
+				$role = explode(";",$role);
+				$key = $role[0];
+				$name = $role[1];
+		
+				if($name = $pubUser['pub_user_role']){
+					$pubUser['pub_user_role'] = $key;
+					$changed = true;
+					break;
+				}
+			}
+			
+			if(!$changed){
+				$pubUser['pub_user_role'] = '';
+			}else{
+				$changed = false;
+			}
 			
 			
 			//pack XML data
