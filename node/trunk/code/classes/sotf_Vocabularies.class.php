@@ -30,13 +30,13 @@ class sotf_Vocabularies {
       $db = $this->db;
       $name = $db->getOne("SELECT topic_name FROM sotf_topics WHERE topic_id='$topicId' AND language='$lang'");
       $tid = $db->getOne("SELECT supertopic FROM sotf_topic_tree_defs WHERE id='$topicId'");
-      debug("tid", "X${tid}X");
+      //debug("tid", "X${tid}X");
       while($tid != '0') {
         $n1 = $db->getOne("SELECT topic_name FROM sotf_topics WHERE topic_id='$tid' AND language='$lang'");
         $tid = $db->getOne("SELECT supertopic FROM sotf_topic_tree_defs WHERE id='$tid'");
 		  if($tid)
 			 $name = $n1 . ' / ' . $name;
-        debug("tid", "X${tid}X");
+			//debug("tid", "X${tid}X");
       }
     } else {
       $name = '???';
@@ -150,7 +150,7 @@ class sotf_Vocabularies {
 
   function getSuperTopic($topicId, $language) {
 	 $r = $this->db->getRow("SELECT supertopic, tree_id FROM sotf_topic_tree_defs WHERE id='$topicId'");
-	 debug("R", $r);
+	 //debug("R", $r);
 	 if(!$r['supertopic']) {
 		debug("return null");
 		return NULL;
@@ -189,7 +189,7 @@ class sotf_Vocabularies {
   /** return a topic tree */
   function getTree($treeId, $language, $withCounts = false) {
     $supertopics = $this->db->getCol("SELECT DISTINCT supertopic FROM sotf_topic_tree_defs WHERE tree_id='$treeId'");
-    debug('supertopics', $supertopics);
+    //debug('supertopics', $supertopics);
 	 $rootId = $this->db->getOne("SELECT id FROM sotf_topic_tree_defs WHERE tree_id='$treeId' AND supertopic=0");
 	 if(!$rootId || DB::isError($rootId))
 		raiseError("no such topic tree: $treeId");
@@ -450,7 +450,7 @@ class sotf_Vocabularies {
 		if(empty($this->genres)) {
 			global $lang, $db;
 			$this->genres = $db->getAll("SELECT genre_id AS id, name FROM sotf_genres WHERE language='$lang'");
-			debug("genres", $this->genres);
+			//debug("genres", $this->genres);
 		}
 	}
 
@@ -463,7 +463,7 @@ class sotf_Vocabularies {
 		$this->loadGenres();
     while(list(,$r) = each($this->genres)) {
       if($r['id']==$id) {
-				debug("XXX", $r);
+				//debug("genre", $r);
         return $r['name'];
 			}
     }
