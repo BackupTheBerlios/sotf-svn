@@ -349,7 +349,7 @@ class sotf_AdvSearch
 		return $this->SQLquery;
 	}
 
-	function SetSortOrder($sort1 = "production_date DESC", $sort2 = "station")		//set the sort order
+	function SetSortOrder($sort1 = "entry_date DESC", $sort2 = "station")		//set the sort order
 	{
 		$pos = strpos($this->sort1, " DESC");			//SORT 1
 		if ($pos) $this->sort1 = $sort1." DESC";

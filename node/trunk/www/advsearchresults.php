@@ -58,8 +58,8 @@ $selected = array();
 $max = count($result);
 for($i =0; $i<$max; $i++)	//$selected will contain all the information about the programmes that where present in the query
 {
-	foreach($result[$i] as $key => $value)
-		if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
+  foreach($result[$i] as $key => $value) {
+	 if (array_key_exists($key, $fields) AND $key != 'title') {		//title is presented on a diferent level
 		if ($key == 'language' AND $value != "")			//language need to be translated
 		{
 			$languages = explode(',', $value);
@@ -69,9 +69,13 @@ for($i =0; $i<$max; $i++)	//$selected will contain all the information about the
 				else $values[$fields[$key]] .= ", ".$page->getlocalized($language);
 			}
 		}
-		else $values[$fields[$key]] = $value;
-	if (array_key_exists("person", $fields))		//person is a special filed
-	{
+		else {
+		  $values[$fields[$key]] = $value;
+		}
+	 }
+  }
+  if (array_key_exists("person", $fields))		//person is a special filed
+	 {
 		$persons = $advsearch->getPersons($result[$i]["id"]);
 		foreach($persons as $person)
 		if ($person["name"] != "")
