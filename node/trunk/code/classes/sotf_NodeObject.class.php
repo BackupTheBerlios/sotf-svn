@@ -96,6 +96,12 @@ class sotf_NodeObject extends sotf_Object {
 	 $dr->create();
   }
 
+  /** static: tells if we have objects from the given node */
+  function hasObjects($nodeId) {
+	 global $db;
+	 return $db->getOne("SELECT count(*) FROM sotf_node_objects WHERE node_id = '$nodeId'");
+  }
+
   /************************************************
 	*		 REPLICATION STATUS MANAGEMENT
 	************************************************/
@@ -112,6 +118,17 @@ class sotf_NodeObject extends sotf_Object {
 			 $db->query("INSERT INTO sotf_object_status (id, node_id) VALUES('$id', $nei)");
 		  }
 	 }
+  }
+
+  /** can be static */
+  function newNodeInNetwork($newId) {
+	 global $db;
+	 $db->begin();
+	 $count = $db->getOne("SELECT count(*) FROM sotf_object_status WHERE node_id = '$newId'");
+	 if($count > 0)
+		raiseError("THis new node is not new at all: $newId");
+	 $db->query("INSERT INTO sotf_object_status SELECT id, '$newId' AS node_id FROM sotf_node_objects WHERE node_id != '$newId'");
+	 $db->commit();
   }
   
   /** can be static */

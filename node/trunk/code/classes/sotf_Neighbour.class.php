@@ -18,6 +18,14 @@ class sotf_Neighbour extends sotf_Object {
 	 $this->sotf_Object('sotf_neighbours', $id, $data);
   }
 
+  function delete() {
+	 global $db;
+	 $db->begin();
+	 sotf_NodeObject::removeFromRefreshTable($this->get('node_id'));
+	 parent::delete();
+	 $db->commit();
+  }
+
 	/** 
 	 * @method static getById
 	 */
@@ -161,13 +169,13 @@ class sotf_Neighbour extends sotf_Object {
 	 global $db;
 
 	 $timestamp = $db->getTimestampTz();
+	 $remoteId = $this->get('node_id');
 	 // save modified objects
 	 $db->begin();
-	 $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects);
+	 $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects, $remoteId);
 	 // if db error: don't commit!
 	 $db->commit();
 	 debug("number of updatd objects", $updatedObjects);
-	 //$remoteId = $this->get('node_id');
 	 // save time of this sync
 	 $this->set('last_sync_in', $timestamp);
 	 // take out from pending nodes
