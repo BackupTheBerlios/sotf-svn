@@ -37,12 +37,15 @@ foreach($eng as $line) {
     $val = trim($m[2]);
     //print("$section: $key = $val\n");
     if($langConf && $key) {
-      $transl = utf8_encode($langConf->get("$lang.conf", $section, $key));
+      //$transl = utf8_encode($langConf->get("$lang.conf", $section, $key));
       //print_r($transl);
+      $transl = $langConf->get("$lang.conf", $section, $key);
     } else
       $transl = NULL;
     if(!empty($transl) && !is_array($transl)) 
       $newLine = "$key = $transl\n";
+    elseif(empty($val)) 
+      $newLine = "$key = \n";
     else {
       $newLine = "$key = $val (*)\n";
       print("Missing translation: [$section] $key\n");

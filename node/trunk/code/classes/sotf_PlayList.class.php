@@ -15,12 +15,25 @@ class sotf_Playlist {
   var $name;
 
   function add($item) {
+	 global $config;
 	 $mp3info = GetAllFileInfo($item['path']);
 	 //debug('mp3info', $mp3info);
 	 $bitrate = (string) $mp3info['audio']['bitrate'];
 	 if(!$bitrate)
 		raiseError("Could not determine bitrate, maybe this is not an audio file: " . $item['path']);
 	 $item['bitrate'] = $bitrate;
+
+	 if($config['httpStreaming']) {
+		$tmpFileName = 'au_' . $item['id'] . '_' . basename($item['path']);
+		$tmpFile = $config['tmpDir'] . "/$tmpFileName";
+		if(!@readlink($tmpFile)) {
+		  if(!symlink($item['path'], $tmpFile)) {
+			 raiseError("symlink failed in tmp dir");
+		  }
+		}
+		$item['url'] = $config['tmpUrl'] . "/$tmpFileName";
+	 }
+
 	 $this->audioFiles[] = $item;
 	 $this->totalLength += $mp3info["playtime_seconds"];
   }
@@ -137,9 +150,14 @@ class sotf_Playlist {
 	 if(!$fp)
 		raiseError("Could not write to playlist file: $tmpfile");
 
+	 debug('AUDIO_FILES', $this->audioFiles);
     reset($this->audioFiles);
     while(list(,$audioFile) = each($this->audioFiles)) {
-		fwrite($fp, $audioFile['path'] . "\n");
+		if($config['httpStreaming']) {
+		  fwrite($fp, $audioFile['url'] . "\n");
+		} else {
+		  fwrite($fp, $audioFile['path'] . "\n");
+		}
 	 }
 	 fclose($fp);
 
@@ -149,6 +167,12 @@ class sotf_Playlist {
 
   function startStreaming() {
 	 global $config, $page, $db;
+
+	 if($config['httpStreaming']) {
+		$this->makeLocalPlaylist();
+		$this->url = $config['tmpUrl'] . '/pl_' . $this->getTmpId() . '.m3u';
+		return;
+	 }
 	 
 	 // check if the stream has started already (Win+IE+Media player)
 	 $urls = $db->getCol("SELECT url FROM sotf_streams WHERE host='" . getHostName() . "' AND started < CURRENT_TIMESTAMP AND started > CURRENT_TIMESTAMP - interval '15 seconds'");

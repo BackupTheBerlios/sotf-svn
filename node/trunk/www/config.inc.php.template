@@ -103,6 +103,10 @@ $config['localPrefix'] = '/node/www';
 // STREAMING --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
+// In StreamOnTheFly node network finally we agreed to use HTTP streaming, so please set this to true 
+// Other configs in this section thus are meaningless.
+$config['httpStreaming'] = true;
+
 // If you have tamburine installed, the URL for its XML-RPC front-end is needed
 // If you don't have tamburine, you can set up streaming with the
 // remaining set of parameters in this section.

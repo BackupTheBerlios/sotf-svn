@@ -48,6 +48,7 @@ $config['rootUrl'] = 'http://' . $_SERVER['HTTP_HOST'] . $config['localPrefix'];
 $config['imageUrl'] = $config['rootUrl'] . '/static';
 
 $config['tmpDir'] = $config['wwwdir'] . '/tmp';
+$config['tmpUrl'] = $config['rootUrl'] . '/tmp';
 $config['cacheDir'] = $config['wwwdir'] . '/tmp/cache';
 $config['cacheUrl'] =  $config['rootUrl'] . '/tmp/cache';
 

@@ -115,10 +115,9 @@ if($prgId) {
   $text = $smarty->fetch('rssContributors.htm');
   $properties["description"] = $text;
   */
-  $text = '';
+  $text = '<br clear="all" />';
   foreach($prg->getRoles() as $role) {
-	 if($text) $text .= ', ';
-	 $text = $text . $role['contact_data']['name'] . ' (' . $role['role_name'] . ')';
+	 $text = $text . '<br />' . $role['contact_data']['name'] . ' (' . $role['role_name'] . ')';
   }
   $properties["title"]= $page->getlocalized('Roles');
   $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . '#roles';
@@ -162,10 +161,10 @@ if($prgId) {
   
   $properties=array();
   $links = $prg->getAssociatedObjects('sotf_links', 'caption');
-  $text = '';
+  $text = '<br clear="all" />';
   foreach($links as $link) {
-	 if($text) $text .= ' <br /> ';
-	 $text = $text . "<a target=\"_blank\" href=\"" . $link['url'] . '">' . $link['caption'] . '</a>';
+	 //if($text) $text .= ' <br /> ';
+	 $text = $text . "<br /><a target=\"_blank\" href=\"" . $link['url'] . '">' . $link['caption'] . '</a>';
   }
   $properties["title"]= $page->getlocalized('Links');
   $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . '#links';
