@@ -1,4 +1,13 @@
-<?php
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
+
+/*
+ * $Id$
+ *
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
+
 ini_set("max_execution_time", "90");
 header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 //header ("Expires: Mon, 26 Jul 2010 05:00:00 GMT");
@@ -144,9 +153,9 @@ function addChild($parent, $name, $topic_name = "", $lang = "en")
 Initial parameters
 */
 $install_maxtests = 6;					//number of tests
-$install_red  =  "FF5555";				//red for ERROR
+$install_red  =	 "FF5555";				//red for ERROR
 $install_green = "00FF00";				//green for OK
-$install_blue =  "0000FF";				//blue for not tested
+$install_blue =	 "0000FF";				//blue for not tested
 $install_test_name = "";				//array for the name of the tests
 
 
@@ -176,6 +185,10 @@ $install_writeback_node = $HTTP_POST_VARS["writeback_node"];	//write node connec
 
 $install_delete_topic = $HTTP_POST_VARS["delete_topic"];	//delete topic tree
 $install_create_topic = $HTTP_POST_VARS["create_topic"];	//create topic tree
+
+// test 8: node admin
+$admin_name = $HTTP_POST_VARS["admin_name"];
+$admin_pass = $HTTP_POST_VARS["admin_pass"];
 
 
 $install_color = $HTTP_POST_VARS["color"];		//color values for the cells
@@ -450,8 +463,11 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		OR ($install_sadm_host != $userDbHost) OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) )
 			print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="writeback_sadm" value="Write new values to config.inc.php" disabled=true></DIV>');
 	PrintButton($id);
-	
-	$id = 6;	//////////////////////////Test 6
+
+
+//////////////////////////Test 6
+
+	$id = 6;	
 	if (RunTest($id, "DB connection to 'node'", 5))		//////////////////////////Test 5 should be OK to run this test
 	{
 		$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
@@ -510,7 +526,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 							$line = fgets($fd, 1024);	//read a line with max lengts 1024 byte
 							$pos = strpos($line, "--");	//find comment position
 							if ($pos === false) $buffer .= $line;	//if no in line add it to the buffer
-							else $buffer .= substr($line, 0, $pos); 	//if any comment remove it first
+							else $buffer .= substr($line, 0, $pos);		//if any comment remove it first
 						}
 						fclose ($fd);
 
@@ -549,286 +565,324 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	if ($install_color[$id] == $install_red) print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="createdb" value="Create NODE db"></DIV>');
 	PrintButton($id);
 
-
-	$id = 7;	//////////////////////////Test 7
-	if (RunTest($id, "TopicTree", 6) OR isset($install_create_topic) OR isset($install_delete_topic))
+////////////////////////// Test 7
+	$id = 7;
+	if (RunTest($id, "Vocabularies", 6) OR isset($install_create_topic) OR isset($install_delete_topic))
 	{
 		if (isset($install_create_topic))
 		{
 			require_once("../init.inc.php");
 
-      // create roles
+			// create roles
+			
+			$db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
+			$db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
+			$db->query("DELETE FROM sotf_roles");
+			$db->query("DELETE FROM sotf_role_names");
+			$db->query("SELECT setval('sotf_roles_seq', 1, false)");
+			$db->query("SELECT setval('sotf_role_names_seq', 1, false)");
+			
+			function createRole($id, $english, $creator = 'f') {
+			  $o1 = new sotf_NodeObject("sotf_roles");
+			  $o1->set('role_id', $id);
+			  $o1->set('creator', $creator);
+			  $o1->create();
+			  $o2 = new sotf_NodeObject("sotf_role_names");
+			  $o2->set('role_id', $id);
+			  $o2->set('language', 'en');
+			  $o2->set('name', $english);
+			  $o2->create();
+			}
+			
+			createRole( 1, 'Artist');
+			createRole( 2, 'Author');
+			createRole( 3, 'Commentator');
+			createRole( 4, 'Composer');
+			createRole( 5, 'Copyright holder');
+			createRole( 6, 'Correspondent');
+			createRole( 7, 'Designer');
+			createRole( 8, 'Director');
+			createRole( 9, 'Editor');
+			createRole( 10, 'Funder / Sponsor');
+			createRole( 11, 'Interviewee');
+			createRole( 12, 'Interviewer');
+			createRole( 13, 'Narrator');
+			createRole( 14, 'Participant');
+			createRole( 15, 'Performer');
+			createRole( 16, 'Producer');
+			createRole( 17, 'Production Personnel');
+			createRole( 18, 'Speaker');
+			createRole( 19, 'Transcriber');
+			createRole( 20, 'Translator');
+			createRole( 21, 'Other');
+			
+			// create genres
+			
+			$db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
+			$db->query("DELETE FROM sotf_genres");
+			$db->query("SELECT setval('sotf_genres_seq', 1, false)");
+			
+			function createGenre($id, $english) {
+			  $o1 = new sotf_NodeObject("sotf_genres");
+			  $o1->set('genre_id', $id);
+			  $o1->set('language', 'en');
+			  $o1->set('name', $english);
+			  $o1->create();
+			}
+			
+			createGenre( 1, 'Actuality');
+			createGenre( 2, 'Advert / jingle / spot');
+			createGenre( 3, 'Announcement');
+			createGenre( 4, 'Call-in show');
+			createGenre( 5, 'Children / youth');
+			createGenre( 6, 'Comedy');
+			createGenre( 7, 'Dance');
+			createGenre( 8, 'Documentary');
+			createGenre( 9, 'Drama');
+			createGenre( 10, 'Education');
+			createGenre( 11, 'Feature');
+			createGenre( 12, 'Game show');
+			createGenre( 13, 'Interview');
+			//createGenre( 14, 'Jingle');
+			createGenre( 15, 'Magazine');
+			//createGenre( 16, 'Mocroprogramme');
+			createGenre( 17, 'Music');
+			createGenre( 18, 'News');
+			createGenre( 19, 'Oral history / storytelling');
+			createGenre( 20, 'Talk show / discussion');
+			createGenre( 21, 'Training');
+			createGenre( 22, 'Community media');
 
-      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
-      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
-      $db->query("DELETE FROM sotf_roles");
-      $db->query("DELETE FROM sotf_role_names");
-      $db->query("SELECT setval('sotf_roles_seq', 1, false)");
-      $db->query("SELECT setval('sotf_role_names_seq', 1, false)");
-      
-      function createRole($id, $english, $creator = 'f') {
-        $o1 = new sotf_NodeObject("sotf_roles");
-        $o1->set('role_id', $id);
-        $o1->set('creator', $creator);
-        $o1->create();
-        $o2 = new sotf_NodeObject("sotf_role_names");
-        $o2->set('role_id', $id);
-        $o2->set('language', 'en');
-        $o2->set('name', $english);
-        $o2->create();
-      }
-      
-      createRole( 1, 'Artist');
-      createRole( 2, 'Author');
-      createRole( 3, 'Commentator');
-      createRole( 4, 'Composer');
-      createRole( 5, 'Copyright holder');
-      createRole( 6, 'Correspondent');
-      createRole( 7, 'Designer');
-      createRole( 8, 'Director');
-      createRole( 9, 'Editor');
-      createRole( 10, 'Funder / Sponsor');
-      createRole( 11, 'Interviewee');
-      createRole( 12, 'Interviewer');
-      createRole( 13, 'Narrator');
-      createRole( 14, 'Participant');
-      createRole( 15, 'Performer');
-      createRole( 16, 'Producer');
-      createRole( 17, 'Production Personnel');
-      createRole( 18, 'Speaker');
-      createRole( 19, 'Transcriber');
-      createRole( 20, 'Translator');
-      createRole( 21, 'Other');
 
-      // create genres
+			// delete topics 
 
-      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
-      $db->query("DELETE FROM sotf_genres");
-      $db->query("SELECT setval('sotf_genres_seq', 1, false)");
-      
-      function createGenre($id, $english) {
-        $o1 = new sotf_NodeObject("sotf_genres");
-        $o1->set('genre_id', $id);
-        $o1->set('language', 'en');
-        $o1->set('name', $english);
-        $o1->create();
-      }
-      
-      createGenre( 1, 'Actuality');
-      createGenre( 2, 'Advert / jingle / spot');
-      createGenre( 3, 'Announcement');
-      createGenre( 4, 'Call-in show');
-      createGenre( 5, 'Children / youth');
-      createGenre( 6, 'Comedy');
-      createGenre( 7, 'Dance');
-      createGenre( 8, 'Documentary');
-      createGenre( 9, 'Drama');
-      createGenre( 10, 'Education');
-      createGenre( 11, 'Feature');
-      createGenre( 12, 'Game show');
-      createGenre( 13, 'Interview');
-      //createGenre( 14, 'Jingle');
-      createGenre( 15, 'Magazine');
-      //createGenre( 16, 'Mocroprogramme');
-      createGenre( 17, 'Music');
-      createGenre( 18, 'News');
-      createGenre( 19, 'Oral history / storytelling');
-      createGenre( 20, 'Talk show / discussion');
-      createGenre( 21, 'Training');
-      createGenre( 22, 'Community media');
+			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
+			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
+			$result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
+			$result = $db->query("SELECT setval('sotf_topics_seq', 1, false)");
+			$result = $db->query("SELECT setval('sotf_topic_trees_seq', 1, false)");
+			$result = $db->query("SELECT setval('sotf_topic_tree_defs_seq', 1, false)");
 
-
-      // delete topics 
-
-      $result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
-      $result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
-      $result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
-      $result = $db->query("SELECT setval('sotf_topics_seq', 1, false)");
-      $result = $db->query("SELECT setval('sotf_topic_trees_seq', 1, false)");
-      $result = $db->query("SELECT setval('sotf_topic_tree_defs_seq', 1, false)");
-
-      /*
+			/*
 			$sql = "DELETE FROM sotf_topic_tree_defs";
 			$result = @pg_query($conn, $sql);
 			$sql = "DELETE FROM sotf_topic_trees";
 			$result = @pg_query($conn, $sql);
 			$sql = "DELETE FROM sotf_topics";
 			$result = @pg_query($conn, $sql);
-      */
+			*/
 
-      // create topic tree
+			// create topic tree
 
-			$id = addParent("development", "Development");
-			addChild($id, "agriculture", "Agriculture");
-			addChild($id, "aid", "Aid");
-			addChild($id, "capacity building", "Capacity Building");
-			addChild($id, "children", "Children");
-			addChild($id, "cities", "Cities");
-			addChild($id, "education", "Education");
-			addChild($id, "emergency relief", "Emergency Relief");
-			addChild($id, "energy", "Energy");
-			addChild($id, "fisheries", "Fisheries");
-			addChild($id, "food", "Food");
-			addChild($id, "gender", "Gender");
-			addChild($id, "intermediate technology", "Intermediate Technology");
-			addChild($id, "international cooperation", "International Cooperation");
-			addChild($id, "labour/work", "Labour/Work");
-			addChild($id, "land", "Land");
-			addChild($id, "migration", "Migration");
-			addChild($id, "population", "Population");
-			addChild($id, "poverty", "Poverty");
-			addChild($id, "refugees", "Refugees");
-			addChild($id, "shelter/housing", "Shelter/Housing");
-			addChild($id, "social exclusion", "Social Exclusion");
-			addChild($id, "tourism", "Tourism");
-			addChild($id, "transport", "Transport");
-			addChild($id, "volunteering", "Volunteering");
-			addChild($id, "water/sanitation", "Water/Sanitation");
-			addChild($id, "youth", "Youth");
-			addChild($id, "old age / retirement", "Old Age / Retirement");
+			$oid = addParent("development", "Development");
+			addChild($oid, "agriculture", "Agriculture");
+			addChild($oid, "aid", "Aid");
+			addChild($oid, "capacity building", "Capacity Building");
+			addChild($oid, "children", "Children");
+			addChild($oid, "cities", "Cities");
+			addChild($oid, "education", "Education");
+			addChild($oid, "emergency relief", "Emergency Relief");
+			addChild($oid, "energy", "Energy");
+			addChild($oid, "fisheries", "Fisheries");
+			addChild($oid, "food", "Food");
+			addChild($oid, "gender", "Gender");
+			addChild($oid, "intermediate technology", "Intermediate Technology");
+			addChild($oid, "international cooperation", "International Cooperation");
+			addChild($oid, "labour/work", "Labour/Work");
+			addChild($oid, "land", "Land");
+			addChild($oid, "migration", "Migration");
+			addChild($oid, "population", "Population");
+			addChild($oid, "poverty", "Poverty");
+			addChild($oid, "refugees", "Refugees");
+			addChild($oid, "shelter/housing", "Shelter/Housing");
+			addChild($oid, "social exclusion", "Social Exclusion");
+			addChild($oid, "tourism", "Tourism");
+			addChild($oid, "transport", "Transport");
+			addChild($oid, "volunteering", "Volunteering");
+			addChild($oid, "water/sanitation", "Water/Sanitation");
+			addChild($oid, "youth", "Youth");
+			addChild($oid, "old age / retirement", "Old Age / Retirement");
 
-			$id = addParent("economy", "Economy");
-			addChild($id, "business", "Business");
-			addChild($id, "consumption/consumerism", "Consumption/Consumerism");
-			addChild($id, "corporations", "Corporations");
-			addChild($id, "credit/investment", "Credit/Investment");
-			addChild($id, "debt", "Debt");
-			addChild($id, "finance", "Finance");
-			addChild($id, "microcredit", "Microcredit");
-			addChild($id, "social enterprise", "Social Enterprise");
-			addChild($id, "trade", "Trade");
+			$oid = addParent("economy", "Economy");
+			addChild($oid, "business", "Business");
+			addChild($oid, "consumption/consumerism", "Consumption/Consumerism");
+			addChild($oid, "corporations", "Corporations");
+			addChild($oid, "credit/investment", "Credit/Investment");
+			addChild($oid, "debt", "Debt");
+			addChild($oid, "finance", "Finance");
+			addChild($oid, "microcredit", "Microcredit");
+			addChild($oid, "social enterprise", "Social Enterprise");
+			addChild($oid, "trade", "Trade");
 
-			$id = addParent("environment", "Environment");
-			addChild($id, "animals", "Animals");
-			addChild($id, "atmosphere", "Atmosphere");
-			addChild($id, "biodiversity", "Biodiversity");
-			addChild($id, "climate change", "Climate Change");
-			addChild($id, "conservation", "Conservation");
-			addChild($id, "environmental activism", "Environmental Activism");
-			addChild($id, "forests", "Forests");
-			addChild($id, "genetics", "Genetics");
-			addChild($id, "nuclear issues", "Nuclear Issues");
-			addChild($id, "oceans", "Oceans");
-			addChild($id, "pollution", "Pollution");
-			addChild($id, "renewable energy", "Renewable Energy");
-			addChild($id, "rivers", "Rivers");
-			addChild($id, "soils", "Soils");
-			addChild($id, "rural life", "Rural Life");
+			$oid = addParent("environment", "Environment");
+			addChild($oid, "animals", "Animals");
+			addChild($oid, "atmosphere", "Atmosphere");
+			addChild($oid, "biodiversity", "Biodiversity");
+			addChild($oid, "climate change", "Climate Change");
+			addChild($oid, "conservation", "Conservation");
+			addChild($oid, "environmental activism", "Environmental Activism");
+			addChild($oid, "forests", "Forests");
+			addChild($oid, "genetics", "Genetics");
+			addChild($oid, "nuclear issues", "Nuclear Issues");
+			addChild($oid, "oceans", "Oceans");
+			addChild($oid, "pollution", "Pollution");
+			addChild($oid, "renewable energy", "Renewable Energy");
+			addChild($oid, "rivers", "Rivers");
+			addChild($oid, "soils", "Soils");
+			addChild($oid, "rural life", "Rural Life");
 
-			$id = addParent("health", "Health");
-			addChild($id, "aids", "Aids");
-			addChild($id, "disease/treatment", "Disease/Treatment");
-			addChild($id, "infant mortality", "Infant Mortality");
-			addChild($id, "malaria", "Malaria");
-			addChild($id, "narcotics", "Narcotics");
-			addChild($id, "nutrition/malnutrition", "Nutrition/Malnutrition");
+			$oid = addParent("health", "Health");
+			addChild($oid, "aids", "Aids");
+			addChild($oid, "disease/treatment", "Disease/Treatment");
+			addChild($oid, "infant mortality", "Infant Mortality");
+			addChild($oid, "malaria", "Malaria");
+			addChild($oid, "narcotics", "Narcotics");
+			addChild($oid, "nutrition/malnutrition", "Nutrition/Malnutrition");
 
-			$id = addParent("human rights", "Human Rights");
-			addChild($id, "civil rights/civil liberties", "Civil Rights/Civil Liberties");
-			addChild($id, "disability", "Disability");
-			addChild($id, "indigenous rights", "Indigenous Rights");
-			addChild($id, "race politics", "Race Politics");
-			addChild($id, "religion", "Religion");
-			addChild($id, "sexuality", "Sexuality");
-			addChild($id, "social exclusion", "Social Exclusion");
+			$oid = addParent("human rights", "Human Rights");
+			addChild($oid, "civil rights/civil liberties", "Civil Rights/Civil Liberties");
+			addChild($oid, "disability", "Disability");
+			addChild($oid, "indigenous rights", "Indigenous Rights");
+			addChild($oid, "race politics", "Race Politics");
+			addChild($oid, "religion", "Religion");
+			addChild($oid, "sexuality", "Sexuality");
+			addChild($oid, "social exclusion", "Social Exclusion");
 
-			$id = addParent("information & media", "Information & Media");
-			addChild($id, "communications", "Communications");
-			addChild($id, "culture", "Culture");
-			addChild($id, "freedom of expression", "Freedom Of Expression");
-			addChild($id, "internet", "Internet");
-			addChild($id, "knowledge", "Knowledge");
-			addChild($id, "media", "Media");
-			addChild($id, "science", "Science");
-			addChild($id, "art", "Art");
-			addChild($id, "sport", "Sport");
+			$oid = addParent("information & media", "Information & Media");
+			addChild($oid, "communications", "Communications");
+			addChild($oid, "culture", "Culture");
+			addChild($oid, "freedom of expression", "Freedom Of Expression");
+			addChild($oid, "internet", "Internet");
+			addChild($oid, "knowledge", "Knowledge");
+			addChild($oid, "media", "Media");
+			addChild($oid, "science", "Science");
+			addChild($oid, "art", "Art");
+			addChild($oid, "sport", "Sport");
 
-			$id = addParent("politics", "Politics");
-			addChild($id, "activism", "Activism");
-			addChild($id, "civil society", "Civil Society");
-			addChild($id, "codes of conduct", "Codes Of Conduct");
-			addChild($id, "democracy", "Democracy");
-			addChild($id, "ethics/value systems", "Ethics/Value Systems");
-			addChild($id, "geopolitics", "Geopolitics");
-			addChild($id, "globalisation", "Globalisation");
-			addChild($id, "governance", "Governance");
-			addChild($id, "justice/crime", "Justice/Crime");
-			addChild($id, "law", "Law");
-			addChild($id, "transparency/corruption", "Transparency/Corruption");
-			addChild($id, "United Nations", "United Nations");
-			addChild($id, "class issues", "Class Issues");
+			$oid = addParent("politics", "Politics");
+			addChild($oid, "activism", "Activism");
+			addChild($oid, "civil society", "Civil Society");
+			addChild($oid, "codes of conduct", "Codes Of Conduct");
+			addChild($oid, "democracy", "Democracy");
+			addChild($oid, "ethics/value systems", "Ethics/Value Systems");
+			addChild($oid, "geopolitics", "Geopolitics");
+			addChild($oid, "globalisation", "Globalisation");
+			addChild($oid, "governance", "Governance");
+			addChild($oid, "justice/crime", "Justice/Crime");
+			addChild($oid, "law", "Law");
+			addChild($oid, "transparency/corruption", "Transparency/Corruption");
+			addChild($oid, "United Nations", "United Nations");
+			addChild($oid, "class issues", "Class Issues");
 
-			$id = addParent("war & peace", "War & Peace");
-			addChild($id, "arms/military", "Arms/Military");
-			addChild($id, "conflict", "Conflict");
-			addChild($id, "conflict resolution", "Conflict Resolution");
-			addChild($id, "landmines", "Landmines");
-			addChild($id, "nuclear issues", "Nuclear Issues");
-			addChild($id, "peace", "Peace");
-			addChild($id, "security", "Security");
-			addChild($id, "terrorism", "Terrorism");
+			$oid = addParent("war & peace", "War & Peace");
+			addChild($oid, "arms/military", "Arms/Military");
+			addChild($oid, "conflict", "Conflict");
+			addChild($oid, "conflict resolution", "Conflict Resolution");
+			addChild($oid, "landmines", "Landmines");
+			addChild($oid, "nuclear issues", "Nuclear Issues");
+			addChild($oid, "peace", "Peace");
+			addChild($oid, "security", "Security");
+			addChild($oid, "terrorism", "Terrorism");
 
 		}
 		if (isset($install_delete_topic))
-		{
+		  {
       
-      // delete topics 
+			 // delete topics 
 
-			$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
-      $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
-      $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
-      $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
-      $result = @pg_query($conn, "SELECT setval('sotf_topics_seq', 1, false)");
-      $result = @pg_query($conn, "SELECT setval('sotf_topic_trees_seq', 1, false)");
-      $result = @pg_query($conn, "SELECT setval('sotf_topic_tree_defs_seq', 1, false)");
-      /*
+			 $conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
+			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
+			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
+			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
+			 $result = @pg_query($conn, "SELECT setval('sotf_topics_seq', 1, false)");
+			 $result = @pg_query($conn, "SELECT setval('sotf_topic_trees_seq', 1, false)");
+			 $result = @pg_query($conn, "SELECT setval('sotf_topic_tree_defs_seq', 1, false)");
+			 /*
 			$sql = "DELETE FROM sotf_topic_tree_defs";
 			$result = @pg_query($conn, $sql);
 			$sql = "DELETE FROM sotf_topic_trees";
 			$result = @pg_query($conn, $sql);
 			$sql = "DELETE FROM sotf_topics";
 			$result = @pg_query($conn, $sql);
-      */
-			@pg_close($conn);		//close old connection
+			 */
+			 @pg_close($conn);		//close old connection
 
-      // delete roles
+			 // delete roles
 
-      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
-      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
-      $db->query("DELETE FROM sotf_roles");
-      $db->query("DELETE FROM sotf_role_names");
-      $db->query("SELECT setval('sotf_roles_seq', 1, false)");
-      $db->query("SELECT setval('sotf_role_names_seq', 1, false)");
+			 $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
+			 $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
+			 $db->query("DELETE FROM sotf_roles");
+			 $db->query("DELETE FROM sotf_role_names");
+			 $db->query("SELECT setval('sotf_roles_seq', 1, false)");
+			 $db->query("SELECT setval('sotf_role_names_seq', 1, false)");
 
-      // delete genres
+			 // delete genres
       
-      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
-      $db->query("DELETE FROM sotf_genres");
-      $db->query("SELECT setval('sotf_genres_seq', 1, false)");
+			 $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
+			 $db->query("DELETE FROM sotf_genres");
+			 $db->query("SELECT setval('sotf_genres_seq', 1, false)");
 
 
-		}
+		  }
 		$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
 		$sql = "SELECT COUNT(*) as rows FROM sotf_topic_tree_defs";
 		$result = @pg_query($conn, $sql);
 		$count = pg_fetch_array ($result);
 		@pg_close($conn);		//close old connection
 		if ($count["rows"] == 0)
-		{
-			$install_test_result[$id] = "Topic tree is empty";
-			$install_color[$id] = $install_red;
-		}
+		  {
+			 $install_test_result[$id] = "Topic tree is empty";
+			 $install_color[$id] = $install_red;
+		  }
 		else
-		{
-			$install_test_result[$id] = "OK";
-			$install_color[$id] = $install_green;
-		}
+		  {
+			 $install_test_result[$id] = "OK";
+			 $install_color[$id] = $install_green;
+		  }
 	}
-	PrintTitle($id);
-	print('<DIV ALIGN="center"><BR />
+PrintTitle($id);
+print('<DIV ALIGN="center"><BR />
 	<INPUT type="submit" name="delete_topic" value="Delete vocabularies">
 	<INPUT type="submit" name="create_topic" value="Create vocabularies (topic tree, genres, roles)">
 	</DIV>');
+PrintButton($id);
+
+////////////////////////// Test 8 
+
+$id = 8;	
+if (RunTest($id, "Node administrator", 7)) // OR isset($install_node_admin))
+{
+  require_once("../init.inc.php");
+
+  if($admin_name && $admin_pass) {
+	 $aid = $userdb->getOne("SELECT auth_id FROM authenticate WHERE username='$admin_name' AND passwd='$admin_pass'");
+	 $db->query("INSERT INTO sotf_user_prefs (id,username) VALUES($aid, '$admin_name')");
+	 $db->query("INSERT INTO sotf_user_permissions (object_id, user_id, permission_id) VALUES('node',$aid,1)");
+  }
+
+  // check for correct node admin
+  $adminId = $db->getOne("SELECT user_id FROM sotf_user_permissions WHERE object_id='node' AND permission_id='1'");
+  if($adminId)
+	 $adminName = $userdb->getOne("SELECT username FROM authenticate WHERE auth_id='$adminId'");
+
+  if (!$adminName) {
+	 $install_test_result[$id] = "Please select node administrator";
+	 $install_color[$id] = $install_red;
+  } else {
+	 $install_test_result[$id] = "OK";
+	 $install_color[$id] = $install_green;
+	 if(!$admin_name) $admin_name = $adminName;
+  }
+}
+
+PrintTitle($id);
+print('<div align="center">Please type in the username and password of an existing user in SelfAdmin, who will be the node administrator.</div');
+//print("<p>Node administrator is: $adminName</p>");
+print('<br /><br /><DIV ALIGN="center">
+	Username: <INPUT type="text" name="admin_name" value="' . $admin_name .'"><BR />
+	Password: <INPUT type="password" name="admin_pass" value="' .'"><BR /><BR />
+	</DIV>');
+
 	PrintButton($id);
 
 /*
@@ -865,10 +919,10 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	if ($install_erroronpage) {
     print('<DIV ALIGN="center"><BR /><BIG>Please run again the \'red marked\' tests!</BIG><BR /></DIV>');	//if no error write 'ALL OK'
 	} elseif ( ($install_node_user != $nodeDbUser) OR ($install_node_pass != $nodeDbPasswd)
-             OR ($install_node_host != $nodeDbHost) OR ($install_node_port != $nodeDbPort)
-             OR ($install_node_db_name != $nodeDbName) OR ($install_sadm_user != $userDbUser)
-             OR ($install_sadm_pass != $userDbPasswd) OR ($install_sadm_host != $userDbHost)
-             OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) {
+	     OR ($install_node_host != $nodeDbHost) OR ($install_node_port != $nodeDbPort)
+	     OR ($install_node_db_name != $nodeDbName) OR ($install_sadm_user != $userDbUser)
+	     OR ($install_sadm_pass != $userDbPasswd) OR ($install_sadm_host != $userDbHost)
+	     OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) {
 		print('<DIV ALIGN="center"><BR /><BIG>The database settings here do not match with the setting in config.inc.php, please update it.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
 	} else {
     print('<DIV ALIGN="center"><BR /><BIG>ALL OK, you are now ready to use the <A HREF="../index.php">system</A>. Log in using the admin login.</BIG><BR /></DIV>');	//if no error write 'ALL OK'

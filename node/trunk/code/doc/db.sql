@@ -1,5 +1,10 @@
 -- -*- tab-width: 3; indent-tabs-mode: 1; -*-
--- todo: define foreign keys, references, checks
+ 
+--  $Id$
+--
+-- Created for the StreamOnTheFly project (IST-2001-32226)
+-- Authors: András Micsik, Máté Pataki, Tamás Déri 
+--          at MTA SZTAKI DSD, http://dsd.sztaki.hu
 
 CREATE TABLE "sotf_vars" (
 -- global persistent server variables
@@ -38,7 +43,9 @@ CREATE TABLE "sotf_node_objects" (
    "change_stamp" int2 DEFAULT 0,
 	"arrived" timestamptz DEFAULT CURRENT_TIMESTAMP,
 	"arrived_stamp" int DEFAULT 0,
-	"node_id" int2 --- REFERENCES sotf_nodes(node_id)
+	"node_id" int2, --- REFERENCES sotf_nodes(node_id)
+	"st_id" varchar(40), -- id used at the station management side
+	"comments" varchar(10)
 );
 
 CREATE SEQUENCE "sotf_blobs_seq";
@@ -464,7 +471,4 @@ SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('6', 'authorize');
 SELECT nextval('sotf_permissions_id_seq');
 
-INSERT INTO "sotf_user_prefs" ("id", "username") VALUES(1, 'admin');
-
-INSERT INTO "sotf_user_permissions" ("object_id", "user_id", "permission_id") VALUES('node',1,1);
 

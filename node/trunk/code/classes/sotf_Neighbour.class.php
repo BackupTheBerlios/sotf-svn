@@ -1,6 +1,6 @@
-<?php
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/*  -*- tab-width: 3; indent-tabs-mode: 1; -*-
+/* 
  * $Id$
  *
  * Created for the StreamOnTheFly project (IST-2001-32226)

@@ -1,6 +1,11 @@
 
 StreamOnTheFly node software
 
+PREREQUISITES:
+
+- icecast: http://www.icecast.org/
+- tamburine: 
+
 INSTALLATION
 
 Check that the PHP scripts in node/www directory can be run by your

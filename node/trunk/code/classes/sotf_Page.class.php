@@ -1,6 +1,6 @@
-<?php 
+<?php // -*- tab-width: 2; indent-tabs-mode: 1; -*- 
 
-/*  -*- tab-width: 3; indent-tabs-mode: 1; -*-
+/*  
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
  * Authors: András Micsik, Máté Pataki, Tamás Déri 
@@ -35,12 +35,13 @@ class sotf_Page
 		global $nodeId, $basedir, $lang, $rootdir, $imagedir, $smartyDebug, $debug;
 
 		// start session
-		session_start();
+		if(!headers_sent())
+			session_start();
 
 		// load user data
 		if($_SESSION['userid'])
 		{
-      debug("userid", $_SESSION['userid']);
+      //debug("userid", $_SESSION['userid']);
 			$this->user = new sotf_User($_SESSION['userid']);
 		}
 		// Currently it is not needed
@@ -69,7 +70,7 @@ class sotf_Page
 		$this->action = $m[1];
 
 		// auth key generation
-		if(!$this->loggedIn()) {
+		if(!headers_sent() && !$this->loggedIn()) {
 		  if(!$this->getAuthKey()) {
 			 $key = sotf_Utils::randString(30);
 			 //debug("KEY", $key);

@@ -1,4 +1,4 @@
-<?php
+<?php // -*- tab-width: 2; indent-tabs-mode: 1; -*- 
 
 require("init.inc.php");
 
