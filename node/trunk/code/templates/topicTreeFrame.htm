@@ -21,7 +21,7 @@
     var isServer   = true;
     //-->
 </SCRIPT>
-<SCRIPT language=javascript1.2 src="{/literal}{$IMAGEDIR}/tree.js{literal}" type=text/javascript></SCRIPT>
+<SCRIPT language=javascript1.2 src="{/literal}{$IMAGE_URL}/tree.js{literal}" type=text/javascript></SCRIPT>
 <noscript>
 <style type="text/css">
 <!--
@@ -47,7 +47,7 @@
 {if $row.supertopic eq '0'}
 		{if $row.id != $result.0.id}</div>{/if}
 		<div ID="el{$row.id}Parent" CLASS="parent">
-			<nobr><a class="item" onClick="expandBase('el{$row.id}',true); return false;" href="topicTreeFrame.php?a=b"><img NAME="imEx" SRC="{$IMAGEDIR}/plus.gif" BORDER="0" ALT="+" width="9" height="9" ID="el{$row.id}Img"></a>&nbsp;
+			<nobr><a class="item" onClick="expandBase('el{$row.id}',true); return false;" href="topicTreeFrame.php?a=b"><img NAME="imEx" SRC="{$IMAGE_URL}/plus.gif" BORDER="0" ALT="+" width="9" height="9" ID="el{$row.id}Img"></a>&nbsp;
 			<font color="black" class="heada"><a class="item" target="search" href="topicSearch.php?ID={$row.id}&NAME={if $row.topic_name != ""}{$row.topic_name}{else}{$row.name}{/if}">{if $row.topic_name != ""}{$row.topic_name}{else}{$row.name}{/if}{if $row.numberall != ""} ({$row.numberall}){else} (0){/if}</a></font></nobr>
 		</div>
 		<div ID="el{$row.id}Child" CLASS="child">

@@ -24,11 +24,11 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 
   /** static */
   function isNameInUse($name) {
-    global $db, $nodeId;
+    global $db, $config;
   }
 
   function create($name) {
-    global $nodeId;
+    global $config;
     $id = $this->findByNameLocal($name);
     if($id) {
       debug("Create contact", "Failed, name in use");
@@ -39,22 +39,22 @@ class sotf_Contact extends sotf_ComplexNodeObject {
   }
 
   function isLocal() {
-    global $nodeId;
+    global $config;
     $n = $this->db->getOne("SELECT node_id FROM sotf_node_objects WHERE id = '$this->id'");
-    return ($n == $nodeId);
+    return ($n == $config['nodeId']);
   }
 
   /** static */
   function findByNameLocal($name) {
-    global $db, $nodeId;
+    global $db, $config;
     $name = sotf_Utils::magicQuotes($name);
-    $id = $db->getOne("SELECT c.id FROM sotf_contacts c, sotf_node_objects n WHERE c.id = n.id AND n.node_id='$nodeId' AND c.name = '$name'");
+    $id = $db->getOne("SELECT c.id FROM sotf_contacts c, sotf_node_objects n WHERE c.id = n.id AND n.node_id='" . $config['nodeId'] . "' AND c.name = '$name'");
     return $id;
   }
 
   /** static */
   function findByName($name) {
-    global $db, $nodeId;
+    global $db, $config;
     $name = sotf_Utils::magicQuotes($name);
     // first find the local contact, then any other...
     //$id = sotf_Contact::findByNameLocal($name);
@@ -66,8 +66,8 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 
   /** static */
   function listLocalContactNames() {
-    global $db, $nodeId;
-		$res = $db->getAll("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_node_objects n WHERE c.id = n.id AND n.node_id='$nodeId' ORDER BY name");
+    global $db, $config;
+		$res = $db->getAll("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_node_objects n WHERE c.id = n.id AND n.node_id='" . $config['nodeId']."' ORDER BY name");
 		if(DB::isError($res))
       raiseError($res);
     return $res;

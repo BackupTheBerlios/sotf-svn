@@ -8,8 +8,8 @@
  */
 
 require("init.inc.php");
-require("$classdir/sotf_AdvSearch.class.php");
-require("$classdir/sotf_ParamCache.class.php");				//paramcache
+require($config['classdir'] . "/sotf_AdvSearch.class.php");
+require($config['classdir'] . "/sotf_ParamCache.class.php");				//paramcache
 
 $paramcache = & new sotf_ParamCache();					//paramcache
 $paramcache->setMaxCache(10);						//paramcache

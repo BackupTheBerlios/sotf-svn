@@ -31,8 +31,8 @@ class sotf_Page
 
 	function sotf_Page()
 	{
-		global $lang, $user, $outputLanguages, $smarty, $defaultLanguage;
-		global $nodeId, $basedir, $lang, $rootdir, $imagedir, $smartyDebug, $debug;
+		global $lang, $user, $config, $smarty;
+		global $config, $lang, $smartyDebug;
 
 		// load user data
 		if($_SESSION['currentUserId'])
@@ -50,13 +50,13 @@ class sotf_Page
 		// determine language
 		if($this->user) {
 		  $lang = $this->user->language;
-      if(!in_array($lang, $outputLanguages))
+      if(!in_array($lang, $config['outputLanguages']))
         $lang = ''; // user's language is not allowed yet
     }
-		if(!$lang && in_array($_SERVER['HTTP_ACCEPT_LANGUAGE'], $outputLanguages))
+		if(!$lang && in_array($_SERVER['HTTP_ACCEPT_LANGUAGE'], $config['outputLanguages']))
 		  $lang = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 		if(!$lang)
-		  $lang = $defaultLanguage;
+		  $lang = $config['defaultLanguage'];
 
 		// load localization constants for language
 		$this->loadLoc();
@@ -176,11 +176,11 @@ class sotf_Page
 	}
 
 	function logURL($urlprefix='', $txt='') {
-	  global $nodeId;
+	  global $config;
 	  $rnd = rand();
 	  if(!empty($urlprefix) && substr($urlprefix, -1) != '/')
 	    $urlprefix .= '/';
-	  return "javascript:w=window.open('$urlprefix" . "log.php?$rnd#end','log$nodeId');w.focus();";
+	  return "javascript:w=window.open('$urlprefix" . "log.php?$rnd#end','log" . $config['nodeId'] . "');w.focus();";
 	}
 
 	function redirect($url)
@@ -203,10 +203,10 @@ class sotf_Page
 
 	function logRequest()
 	{
-		global $debug, $startTime, $totalTime, $PHP_SELF;
+		global $config, $startTime, $totalTime, $PHP_SELF;
 		$host = getHostName();
 		error_log("$host: $totalTime ms, " . myGetenv("REQUEST_URI"),0);
-		if($debug)
+		if($config['debug'])
 		  error_log("--------------------------------------------------------------------\n",0);
 	}
 
@@ -257,7 +257,7 @@ class sotf_Page
 	}
 
 	function halt($msg='') {
-	  global $smarty, $localPrefix;
+	  global $smarty, $config;
 	  debug("page halted");
 	  if($this->popup) {
 		 $this->alertWithErrors();
@@ -278,7 +278,7 @@ class sotf_Page
 	  }
 	  $url = myGetenv('HTTP_REFERER');
 	  debug("referer", $url);
-	  if(!$url || !strstr($url, $localPrefix))
+	  if(!$url || !strstr($url, $config['localPrefix']))
 		 $url = $this->errorURL;
 	  if($_SESSION['halted'] || !$url ) {
 		 debug("sending error page");

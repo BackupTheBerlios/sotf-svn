@@ -1,6 +1,6 @@
 <?php  //-*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-require_once("$classdir/rpc_Utils.class.php");
+require_once($config['classdir'] . "/rpc_Utils.class.php");
 
 class sotf_Playlist {
 
@@ -73,7 +73,7 @@ class sotf_Playlist {
 
   /** Saves the local playlist */
   function makeLocalPlaylist() {
-	 global $tmpdir, $user;
+	 global $config, $user;
 
 	 if(count($this->audioFiles) == 0)
 		raiseError("playlist_empty");
@@ -82,16 +82,16 @@ class sotf_Playlist {
 	 $userid = $user->id;
 	 if(!$userid)
 		$userid = 'guest';
-	 $dir = dir($tmpdir);
+	 $dir = dir($config['tmpDir']);
     while($entry = $dir->read()) {
       if (preg_match("/^pl_$userid/", $entry)) {
-        if(!unlink($tmpdir . "/" . $entry))
+        if(!unlink($config['tmpDir'] . "/" . $entry))
 			 logError("Could not delete playlist: $entry");
 		}
     }
 
 	 // write new playlist
-	 $tmpfile = $tmpdir . '/pl_' . $this->getTmpId() . '.m3u';
+	 $tmpfile = $config['tmpDir'] . '/pl_' . $this->getTmpId() . '.m3u';
 	 $fp = fopen($tmpfile,'wb');
 	 if(!$fp)
 		raiseError("Could not write to playlist file: $tmpfile");
@@ -107,12 +107,12 @@ class sotf_Playlist {
   }
 
   function startStreaming() {
-	 global $tamburineURL, $iceServer, $icePort, $tamburine, $streamCmd;
+	 global $config, $tamburine;
 
 	 if(!$this->localPlaylist) 
 		$this->makeLocalPlaylist();
 
-	 if($tamburineURL) {
+	 if($config['tamburineURL']) {
 		// tamburine-based streaming
 
 		if($_SESSION['playlist_id']) {
@@ -121,7 +121,7 @@ class sotf_Playlist {
 		
 		$rpc = new rpc_Utils;
 		//$rpc->debug = true;
-      $response = $rpc->call($tamburineURL, 'setpls', $this->localPlaylist);
+      $response = $rpc->call($config['tamburineURL'], 'setpls', $this->localPlaylist);
 		if(is_null($response)) {
 		  debug("no reply from tamburine server");
 		} else {
@@ -133,7 +133,7 @@ class sotf_Playlist {
 	 } else {
 		// command-line streaming
 		
-		$this->url = 'http://' . $iceServer . ':' . $icePort . '/' . $this->getTmpId() . "\n";
+		$this->url = 'http://' . $config['iceServer'] . ':' . $config['icePort'] . '/' . $this->getTmpId() . "\n";
 		//$url = preg_replace('/^.*\/repository/', 'http://sotf2.dsd.sztaki.hu/node/repository', $filepath);
 		
 		// TODO: calculate bitrate from all files...
@@ -160,9 +160,9 @@ class sotf_Playlist {
   }
 
   function cmdStart($playlist, $name, $bitrate) {
-	 global $localPrefix;
+	 global $config;
 
-	 $url = "$localPrefix/startStream.php?pl=$playlist&n=$name&br=$bitrate";
+	 $url = $config['localPrefix'] . "/startStream.php?pl=$playlist&n=$name&br=$bitrate";
 
 	 $server='localhost';
 	 $port= myGetenv('SERVER_PORT');
@@ -191,9 +191,9 @@ User-Agent: PHP
 
   /** old alternative, does not work under Windows and some Unices */
   function cmdStart2($bitrate) {
-	 global $streamCmd;
+	 global $config;
 
-	 $mystreamCmd = str_replace('__PLAYLIST__', $this->localPlaylist , $streamCmd);
+	 $mystreamCmd = str_replace('__PLAYLIST__', $this->localPlaylist , $config['streamCmd']);
 	 $mystreamCmd = str_replace('__NAME__', $this->getTmpId(), $mystreamCmd);
 	 $mystreamCmd = str_replace('__BITRATE__', $bitrate, $mystreamCmd);
 		

@@ -48,21 +48,20 @@ function exitPage()
 
 function getTempWavName()
 {
-	global $tmpdir;
+	global $config;
 
-	$tempname = tempnam($tmpdir,"__");
+	$tempname = tempnam($config['tmpDir'],"__");
 	unlink($tempname);
 	return $tempname. ".wav";
 }
 
 function progressBar($cmd,$regexp)
 {
-	global $progressBarChar;
-	global $progressBarLength;
+	global $config;
 
 	$line = "";
 	$out = 0;
-	$left = $progressBarLength;
+	$left = $config['progressBarLength'];
 
 	debug('execute',$cmd);
 	$fp = popen($cmd . ' 2>&1', 'r');
@@ -73,10 +72,10 @@ function progressBar($cmd,$regexp)
 		{
 			if (preg_match($regexp,$line,$match))
 			{
-				$curr = (integer) (((integer) $match[1]) * $progressBarLength / 100);
+				$curr = (integer) (((integer) $match[1]) * $config['progressBarLength'] / 100);
 				for ($i=$out;$i<$curr;$i++)
 				{
-					echo $progressBarChar;
+					echo $config['progressBarChar'];
 					$out++;
 					$left--;
 				}
@@ -90,7 +89,7 @@ function progressBar($cmd,$regexp)
 	pclose($fp);
 	while($left)
 	{
-		echo $progressBarChar;
+		echo $config['progressBarChar'];
 		$left--;
 		$out++;
 	}
@@ -99,73 +98,66 @@ function progressBar($cmd,$regexp)
 
 function encodeWithLame($cmd)
 {
-	global $progressBarLength;
-	global $progressBarChar;
-	global $lameencRegexp;
+	global $config;
 
 	echo "<p>Encoding MP3 file...<br />\n";
 	flush();
 
-	progressBar($cmd,$lameencRegexp);
+	progressBar($cmd,$config['lameencRegexp']);
 	echo "</p>\n";
 	flush();
 }
 
 function decodeWithLame($cmd)
 {
-	global $progressBarLength;
-	global $progressBarChar;
+	global $config;
 
 	echo "<p>Decoding MP3 file to PCM data...<br />\n";
 	flush();
 	debug('execute',$cmd);
 	$result = exec($cmd);
   debug('result',$result);
-	for ($i=0;$i<$progressBarLength;$i++)
-		echo $progressBarChar;
+	for ($i=0;$i<$config['progressBarLength'];$i++)
+		echo $config['progressBarChar'];
 	echo "</p>\n";
 	flush();
 }
 
 function encodeWithOgg($cmd)
 {
-	global $progressBarLength;
-	global $progressBarChar;
-	global $oggencRegexp;
+	global $config;
 
 	echo "<p>Encoding OGG file...<br />\n";
 	flush();
-	progressBar($cmd,$oggencRegexp);
+	progressBar($cmd,$config['oggencRegexp']);
 	echo "</p>\n";
 	flush();
 }
 
 function decodeWithOgg($cmd)
 {
-	global $progressBarLength;
-	global $progressBarChar;
+	global $config;
 
 	echo "<p>Decoding OGG file to PCM data...<br />\n";
 	flush();
 	debug('execute',$cmd);
 	exec($cmd);
-	for ($i=0;$i<$progressBarLength;$i++)
-		echo $progressBarChar;
+	for ($i=0;$i<$config['progressBarLength'];$i++)
+		echo $config['progressBarChar'];
 	echo "</p>\n";
 	flush();
 }
 
 function convertWithSox($cmd)
 {
-	global $progressBarLength;
-	global $progressBarChar;
+	global $config;
 
 	echo "<p>Convert mono PCM data to stereo...<br />\n";
 	flush();
 	debug('execute',$cmd);
 	exec($cmd);
-	for ($i=0;$i<$progressBarLength;$i++)
-		echo $progressBarChar;
+	for ($i=0;$i<$config['progressBarLength'];$i++)
+		echo $config['progressBarChar'];
 	echo "</p>\n";
 	flush();
 }
@@ -209,103 +201,103 @@ if ($sourceindex === false)
 	exitPage();
 
 $source = $audioFiles->list[$sourceindex]->getPath();
-$target = $tmpdir . '/' . $prg->get('track') . '_' . $checker->getFormatFilename($index);
+$target = $config['tmpDir'] . '/' . $prg->get('track') . '_' . $checker->getFormatFilename($index);
 
-$bitrate = $audioFormats[$index]["bitrate"];
-$samplerate = $audioFormats[$index]["samplerate"];
-if ($audioFormats[$index]["channels"] == 1)
+$bitrate = $config['audioFormats'][$index]["bitrate"];
+$samplerate = $config['audioFormats'][$index]["samplerate"];
+if ($config['audioFormats'][$index]["channels"] == 1)
 	$mode = "mono";
 else
 	$mode = "joint";
 	
 
 startPage();
-if (($audioFormats[$index]['format'] == 'mp3') && ($audioFiles->list[$sourceindex]->format == 'mp3'))
+if (($config['audioFormats'][$index]['format'] == 'mp3') && ($audioFiles->list[$sourceindex]->format == 'mp3'))
 {
-	if (($audioFormats[$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
+	if (($config['audioFormats'][$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
 	{
 		$tempname1 = getTempWavName();
-		decodeWithLame("$lame --decode \"$source\" \"$tempname1\"");
+		decodeWithLame($config['lame'] . " --decode \"$source\" \"$tempname1\"");
 		checkFile($tempname1);
 		$tempname2 = getTempWavName();
-		convertWithSox("$sox \"$tempname1\" -c2 \"$tempname2\"");
+		convertWithSox($config['sox'] . " \"$tempname1\" -c2 \"$tempname2\"");
 		checkFile($tempname2);
 		rmFile($tempname1);
-		encodeWithLame("$lame --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname2\" \"$target\"");
+		encodeWithLame($config['lame'] . " --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname2\" \"$target\"");
 		checkFile($target);
 		rmFile($tempname2);
 	}
 	else
 	{
-		encodeWithLame("$lame --disptime 1 --cbr --mp3input -b $bitrate -m $mode --resample $samplerate \"$source\" \"$target\"");
+		encodeWithLame($config['lame'] . " --disptime 1 --cbr --mp3input -b $bitrate -m $mode --resample $samplerate \"$source\" \"$target\"");
 	}
 }
-elseif (($audioFormats[$index]['format'] == 'ogg') && ($audioFiles->list[$sourceindex]->format == 'mp3'))
+elseif (($config['audioFormats'][$index]['format'] == 'ogg') && ($audioFiles->list[$sourceindex]->format == 'mp3'))
 {
 	$tempname1 = getTempWavName();
-	decodeWithLame("$lame --decode \"$source\" \"$tempname1\"");
+	decodeWithLame($config['lame'] . " --decode \"$source\" \"$tempname1\"");
 	checkFile($tempname1);
-	if (($audioFormats[$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
+	if (($config['audioFormats'][$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
 	{
 		$tempname2 = getTempWavName();
-		convertWithSox("$sox \"$tempname1\" -c2 \"$tempname2\"");
+		convertWithSox($config['sox'] . " \"$tempname1\" -c2 \"$tempname2\"");
 		checkFile($tempname2);
 		rmFile($tempname1);
-		encodeWithOgg("$oggenc -b $bitrate -m $bitrate -M $bitrate --resample $samplerate -o \"$target\" \"$tempname2\"");
+		encodeWithOgg($config['oggenc'] . " -b $bitrate -m $bitrate -M $bitrate --resample $samplerate -o \"$target\" \"$tempname2\"");
 		checkFile($target);
 		rmFile($tempname2);
 	}
 	else
 	{
-		if (($audioFormats[$index]['channels'] == 1) && ($audioFiles->list[$sourceindex]->channels == 2))
+		if (($config['audioFormats'][$index]['channels'] == 1) && ($audioFiles->list[$sourceindex]->channels == 2))
 			$addparam = "--downmix";
-		encodeWithOgg("$oggenc -b $bitrate -m $bitrate -M $bitrate --resample $samplerate $addparam -o \"$target\" \"$tempname1\"");
+		encodeWithOgg($config['oggenc'] . " -b $bitrate -m $bitrate -M $bitrate --resample $samplerate $addparam -o \"$target\" \"$tempname1\"");
 		checkFile($target);
 		rmFile($tempname1);
 	}
 }
-elseif (($audioFormats[$index]['format'] == 'mp3') && ($audioFiles->list[$sourceindex]->format == 'ogg'))
+elseif (($config['audioFormats'][$index]['format'] == 'mp3') && ($audioFiles->list[$sourceindex]->format == 'ogg'))
 {
 	$tempname1 = getTempWavName();
-	decodeWithOgg("$oggdec -o \"$tempname1\" \"$source\"");
+	decodeWithOgg($config['oggdec'] . " -o \"$tempname1\" \"$source\"");
 	checkFile($tempname1);
-	if (($audioFormats[$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
+	if (($config['audioFormats'][$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
 	{
 		$tempname2 = getTempWavName();
-		convertWithSox("$sox \"$tempname1\" -c2 \"$tempname2\"");
+		convertWithSox($config['sox'] . " \"$tempname1\" -c2 \"$tempname2\"");
 		checkFile($tempname2);
 		rmFile($tempname1);
-		encodeWithLame("$lame --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname2\" \"$target\"");
+		encodeWithLame($config['lame'] . " --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname2\" \"$target\"");
 		checkFile($target);
 		rmFile($tempname2);
 	}
 	else
 	{
-		encodeWithLame("$lame --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname1\" \"$target\"");
+		encodeWithLame($config['lame'] . " --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname1\" \"$target\"");
 		checkFile($target);
 		rmFile($tempname1);
 	}
 }
-elseif (($audioFormats[$index]['format'] == 'ogg') && ($audioFiles->list[$sourceindex]->format == 'ogg'))
+elseif (($config['audioFormats'][$index]['format'] == 'ogg') && ($audioFiles->list[$sourceindex]->format == 'ogg'))
 {
 	$tempname1 = getTempWavName();
-	decodeWithOgg("$oggdec -o \"$tempname1\" \"$source\"");
+	decodeWithOgg($config['oggdec'] . " -o \"$tempname1\" \"$source\"");
 	checkFile($tempname1);
-	if (($audioFormats[$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
+	if (($config['audioFormats'][$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
 	{
 		$tempname2 = getTempWavName();
-		convertWithSox("$sox \"$tempname1\" -c2 \"$tempname2\"");
+		convertWithSox($config['sox'] . " \"$tempname1\" -c2 \"$tempname2\"");
 		checkFile($tempname2);
 		rmFile($tempname1);
-		encodeWithOgg("$oggenc -b $bitrate -m $bitrate -M $bitrate --resample $samplerate -o \"$target\" \"$tempname2\"");
+		encodeWithOgg($config['oggenc'] . " -b $bitrate -m $bitrate -M $bitrate --resample $samplerate -o \"$target\" \"$tempname2\"");
 		checkFile($target);
 		rmFile($tempname2);
 	}
 	else
 	{
-		if (($audioFormats[$index]['channels'] == 1) && ($audioFiles->list[$sourceindex]->channels == 2))
+		if (($config['audioFormats'][$index]['channels'] == 1) && ($audioFiles->list[$sourceindex]->channels == 2))
 			$addparam = "--downmix";
-		encodeWithOgg("$oggenc -b $bitrate -m $bitrate -M $bitrate --resample $samplerate $addparam -o \"$target\" \"$tempname1\"");
+		encodeWithOgg($config['oggenc'] . " -b $bitrate -m $bitrate -M $bitrate --resample $samplerate $addparam -o \"$target\" \"$tempname1\"");
 		checkFile($target);
 		rmFile($tempname1);
 	}

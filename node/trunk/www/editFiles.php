@@ -122,7 +122,7 @@ if($missing) {
 $checker = & new sotf_AudioCheck($prgAudiolist);
 
 $PRG_AUDIO = array();
-for ($i=0;$i<count($audioFormats);$i++)
+for ($i=0;$i<count($config['audioFormats']);$i++)
 {
   $PRG_AUDIO[$i] = array("format" => $checker->getFormatFileName($i),
                          "index" => $i);

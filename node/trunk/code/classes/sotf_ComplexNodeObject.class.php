@@ -88,14 +88,14 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	* @param	object	$file	pathname of file
 	* @return	boolean	True if the function succeeded, else false
 	* @use	$db
-	* @use	$iconWidth
-	* @use	$iconHeight
+	* @use	$config['iconWidth']
+	* @use	$config['iconHeight']
 	*/
 	function setIcon($file)
 	{
-		global $iconWidth,$iconHeight, $tmpdir;
-    $tmpfile = $tmpdir.'/'.time().".png";
-    if (!$this->prepareIcon($file, $tmpfile, $iconWidth, $iconHeight)) {
+		global $config;
+    $tmpfile = $config['tmpDir'].'/'.time().".png";
+    if (!$this->prepareIcon($file, $tmpfile, $config['iconWidth'], $config['iconHeight'])) {
       raiseError("Could not resize image");
       //return false;
     } else {
@@ -117,7 +117,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
   /** Resizes the given image 'imgfile', converts it into PNG and puts it into 'newfile'. */
 	function prepareIcon($imgfile, $newfile, $iconWidth = 100, $iconHeight = 100) {
-		global $magickDir;
+		global $config;
 		if ($imgfile == "") { 
       raiseError("No image file specified");
       return false;
@@ -158,7 +158,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
     debug("resizing image", $newsize);
 
-		$cmd = "\"$magickDir/convert\" $imgfile -resize $newsize $newfile 2>&1";     
+		$cmd = '"' . $config['magickDir'] . "/convert\" $imgfile -resize $newsize $newfile 2>&1";     
 
     debug("resize command", $cmd);
 

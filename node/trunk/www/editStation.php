@@ -161,7 +161,7 @@ $jinglelist->getAudioFromDir($st->getStationDir(), 'jingle_');
 $checker = & new sotf_AudioCheck($jinglelist);		// check $jinglelist
 
 $JINGLE = array();
-for ($i=0;$i<count($audioFormats);$i++)
+for ($i=0;$i<count($config['audioFormats']);$i++)
 {
   if ($checker->reqs[$i][0]) {
     $resmgs = $jinglelist->list[$checker->reqs[$i][1]]->name;
@@ -171,10 +171,10 @@ for ($i=0;$i<count($audioFormats);$i++)
     $resmgs = '';
   $JINGLE[] = array('index' => $i, 
                     'filename' => $resmgs,
-                    'format' => $audioFormats[$i]['format'],
-                    'bitrate' => $audioFormats[$i]['bitrate'],
-                    'channels' => $audioFormats[$i]['channels'],
-                    'samplerate' => $audioFormats[$i]['samplerate']);
+                    'format' => $config['audioFormats'][$i]['format'],
+                    'bitrate' => $config['audioFormats'][$i]['bitrate'],
+                    'channels' => $config['audioFormats'][$i]['channels'],
+                    'samplerate' => $config['audioFormats'][$i]['samplerate']);
 }
 $jfiles = $jinglelist->getFiles();
 for($i=0;$i<count($jfiles);$i++) {

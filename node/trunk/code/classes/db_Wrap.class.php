@@ -18,8 +18,8 @@ class db_Wrap extends DB_pgsql {
   /*
 	function getDBConn($dsn, $persistent) {
 	  @$obj = & new db_Wrap;
-    global $debug;
-    $obj->debug = $debug;
+    global $config;
+    $obj->debug = $config['debug'];
 	  debug("DB","connecting to: $dsn");
 	  $dsninfo = DB::parseDSN($dsn);
 	  $obj->connect($dsninfo, $persistent);

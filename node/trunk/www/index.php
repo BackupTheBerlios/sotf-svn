@@ -8,7 +8,7 @@
  */
 
 require("init.inc.php");
-require("$classdir/sotf_AdvSearch.class.php");
+require($config['classdir'] . "/sotf_AdvSearch.class.php");
 
 if($_REQUEST['select_station']) {
   $page->redirect("showStation.php?stationid=" . $_POST['station']);
@@ -38,7 +38,7 @@ $smarty->assign($data);
 
 $smarty->assign('STATIONS', sotf_Station::listStationNames());
 
-$searchLangs = $languages;
+$searchLangs = $config['languages'];
 array_unshift($searchLangs, "any_language");
 
 for($i=0; $i<count($searchLangs); $i++) {

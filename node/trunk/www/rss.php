@@ -10,9 +10,9 @@
 define('ITEMS_IN_RSS', 10);
 
 require("init.inc.php");
-require_once("$classdir/xmlwriterclass.php");
-require_once("$classdir/rss_writer_class.php");
-require_once("$classdir/sotf_AdvSearch.class.php");
+require_once($config['classdir'] . "/xmlwriterclass.php");
+require_once($config['classdir'] . "/rss_writer_class.php");
+require_once($config['classdir'] . "/sotf_AdvSearch.class.php");
 
 $stationName = sotf_Utils::getParameter('station');
 $userName = sotf_Utils::getParameter('user');
@@ -31,9 +31,9 @@ $fromDay = date('Y-m-d', $dayInThePast);
 // prepare RSS writer
 $rss_writer_object=new rss_writer_class;
 $rss_writer_object->specification="1.0";
-$rss_writer_object->about="$rootdir/rss.php";
+$rss_writer_object->about=$config['rootUrl'] . "/rss.php";
 // Specify the URL of an optional XSL stylesheet. This lets the document be rendered automatically in XML capable browsers.
-$rss_writer_object->stylesheet="$rootdir/static/rss2html.xsl";
+$rss_writer_object->stylesheet=$config['rootUrl'] . "/static/rss2html.xsl";
 // When generating RSS version 1.0, you may declare additional namespaces that enable the use of 
 // more property tags defined by extension modules of the RSS specification.
 $rss_writer_object->rssnamespaces["dc"]="http://purl.org/dc/elements/1.1/";
@@ -48,7 +48,7 @@ if($stationName) {
   // define channel
   $properties=array();
   $properties["description"]="New programmes at $stationName";
-  $properties["link"]="$rootdir/showStation.php?stationid=" . $station->id;
+  $properties["link"]=$config['rootUrl'] . "/showStation.php?stationid=" . $station->id;
   $properties["title"]="$stationName";
   //$properties["language"]="en";
   $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
@@ -59,8 +59,8 @@ if($stationName) {
   if($stationData['icon']) {
 	 // define icon for station
 	 $properties=array();
-	 $properties["url"]="$cacheprefix/$station->id.png";
-	 $properties["link"]="$rootdir/showStation.php?stationid=" . $station->id;
+	 $properties["url"]=$config['cacheUrl'] . "/$station->id.png";
+	 $properties["link"]=$config['rootUrl'] . "/showStation.php?stationid=" . $station->id;
 	 $properties["title"]="$stationName logo";
 	 //$properties["description"]="";
 	 $rss_writer_object->addimage($properties);
@@ -72,7 +72,7 @@ if($stationName) {
   foreach($newProgs as $prog) {
 	 $properties=array();
 	 $properties["description"]= $prog->get('abstract');
-	 $properties["link"]= "$rootdir/get.php?id=".$prog->id;
+	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
 	 $properties["title"]= $prog->get('title');
 	 $properties["dc:date"]= $prog->get('production_date');
 	 $rss_writer_object->additem($properties);
@@ -82,7 +82,7 @@ if($stationName) {
   $properties=array();
   // The name of the text input form field
   $properties["name"]="pattern";
-  $properties["link"]="$rootdir/search.php?language=any_language&station=$stationName";
+  $properties["link"]=$config['rootUrl'] . "/search.php?language=any_language&station=$stationName";
   $properties["title"]="Search for:";
   $properties["description"]="Search in $stationName";
   $rss_writer_object->addtextinput($properties);
@@ -103,7 +103,7 @@ if($stationName) {
   // Define the properties of the channel.
   $properties=array();
   $properties["description"]="Results of the StreamOnTheFly query $userName/$queryName";
-  $properties["link"]="$rootdir";
+  $properties["link"]=$config['rootUrl'] . "";
   $properties["title"]="StreamOnTheFly query results";
   //$properties["language"]="en";
   $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
@@ -111,8 +111,8 @@ if($stationName) {
 	
   //  If your channel has a logo, before adding any channel items, specify the logo details this way.
   $properties=array();
-  $properties["url"]="$rootdir/static/sotflogosmall.gif";
-  $properties["link"]="$rootdir";
+  $properties["url"]=$config['rootUrl'] . "/static/sotflogosmall.gif";
+  $properties["link"]=$config['rootUrl'] . "";
   $properties["title"]="StreamOnTheFly logo";
   $properties["description"]="World wide network of radio archives";
   $rss_writer_object->addimage($properties);
@@ -130,7 +130,7 @@ if($stationName) {
   foreach($hits as $prog) {
 	 $properties=array();
 	 $properties["description"]= $prog['abstract'];
-	 $properties["link"]= "$rootdir/get.php?id=".$prog['id'];
+	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
 	 $properties["title"]= $prog['title'];
 	 $properties["dc:date"]= $prog['production_date'];
 	 $rss_writer_object->additem($properties);
@@ -142,7 +142,7 @@ if($stationName) {
   // Define the properties of the channel.
   $properties=array();
   $properties["description"]="Results of StreamOnTheFly query";
-  $properties["link"]="$rootdir";
+  $properties["link"]=$config['rootUrl'] . "";
   $properties["title"]="StreamOnTheFly query results";
   //$properties["language"]="en";
   $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
@@ -150,8 +150,8 @@ if($stationName) {
 	
   //  If your channel has a logo, before adding any channel items, specify the logo details this way.
   $properties=array();
-  $properties["url"]="$rootdir/static/sotflogosmall.gif";
-  $properties["link"]="$rootdir";
+  $properties["url"]=$config['rootUrl'] . "/static/sotflogosmall.gif";
+  $properties["link"]=$config['rootUrl'] . "";
   $properties["title"]="StreamOnTheFly logo";
   $properties["description"]="World wide network of radio archives";
   $rss_writer_object->addimage($properties);
@@ -169,7 +169,7 @@ if($stationName) {
   foreach($hits as $prog) {
 	 $properties=array();
 	 $properties["description"]= $prog['abstract'];
-	 $properties["link"]= "$rootdir/get.php?id=".$prog['id'];
+	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
 	 $properties["title"]= $prog['title'];
 	 $properties["dc:date"]= $prog['production_date'];
 	 $rss_writer_object->additem($properties);
@@ -180,7 +180,7 @@ if($stationName) {
   // Define the properties of the channel.
   $properties=array();
   $properties["description"]="New programmes at StreamOnTheFly";
-  $properties["link"]="$rootdir";
+  $properties["link"]=$config['rootUrl'] . "";
   $properties["title"]="StreamOnTheFly";
   //$properties["language"]="en";
   $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
@@ -188,8 +188,8 @@ if($stationName) {
 	
   //  If your channel has a logo, before adding any channel items, specify the logo details this way.
   $properties=array();
-  $properties["url"]="$rootdir/static/sotflogosmall.gif";
-  $properties["link"]="$rootdir";
+  $properties["url"]=$config['rootUrl'] . "/static/sotflogosmall.gif";
+  $properties["link"]=$config['rootUrl'] . "";
   $properties["title"]="StreamOnTheFly logo";
   $properties["description"]="World wide network of radio archives";
   $rss_writer_object->addimage($properties);
@@ -199,7 +199,7 @@ if($stationName) {
   foreach($newProgs as $prog) {
 	 $properties=array();
 	 $properties["description"]= $prog['abstract'];
-	 $properties["link"]= "$rootdir/get.php?id=".$prog['id'];
+	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
 	 $properties["title"]= $prog['title'];
 	 $properties["dc:date"]= $prog['production_date'];
 	 $rss_writer_object->additem($properties);
@@ -209,7 +209,7 @@ if($stationName) {
 	$properties=array();
 	// The name property if the name of the text input form field
 	$properties["name"]="pattern";
-	$properties["link"]="$rootdir/search.php?language=any_language";
+	$properties["link"]=$config['rootUrl'] . "/search.php?language=any_language";
 	$properties["title"]="Search for:";
 	$properties["description"]="Search in StreamOnTheFly";
 	$rss_writer_object->addtextinput($properties);

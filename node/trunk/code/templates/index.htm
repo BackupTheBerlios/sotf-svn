@@ -64,7 +64,7 @@
                     {foreach name=outer item=item from=$PLAYLIST}
                     <tr valign="top">
                       <td>
-                        <a href="listen.php/audio.m3u?id={$item.id}"><img src="{$IMAGEDIR}/listen.gif" border="0" alt="{#Listen#}"></a>
+                        <a href="listen.php/audio.m3u?id={$item.id}"><img src="{$IMAGE_URL}/listen.gif" border="0" alt="{#Listen#}"></a>
                       </td>
                       <td>
                         <a class="playlist" href="get.php?id={$item.id}">{$item.title}</a>
@@ -131,7 +131,7 @@
                 <tr valign="top">
                   <td width="5%">
                     {if $item.icon }
-                    <img src="{$CACHEDIR}/{$item.id}.png">
+                    <img src="{$CACHE_URL}/{$item.id}.png">
                     {else}
                     {/if}
                   </td>

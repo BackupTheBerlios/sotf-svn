@@ -50,7 +50,7 @@
     var isServer   = true;
     //-->
 </SCRIPT>
-<SCRIPT language=javascript1.2 src="{/literal}{$IMAGEDIR}/tree.js{literal}" type=text/javascript></SCRIPT>
+<SCRIPT language=javascript1.2 src="{/literal}{$IMAGE_URL}/tree.js{literal}" type=text/javascript></SCRIPT>
 <noscript>
 <style type="text/css">
 <!--
@@ -86,7 +86,7 @@ winpops=window.open(popurl,"","width=200,height=150,left=320,top=200")
 {php}$counter++;{/php}
 		{if $row.id != $result.0.id}</div>{/if}
 		<div ID="el{php}print($counter);{/php}Parent" CLASS="parent">
-			<nobr><a class="item" onClick="expandBase('el{php}print($counter);{/php}',true); return false;" href="topicTreeFrame.php?a=b"><img NAME="imEx" SRC="{$IMAGEDIR}/plus.gif" BORDER="0" ALT="+" width="9" height="9" ID="el{php}print($counter);{/php}Img"></a>&nbsp;
+			<nobr><a class="item" onClick="expandBase('el{php}print($counter);{/php}',true); return false;" href="topicTreeFrame.php?a=b"><img NAME="imEx" SRC="{$IMAGE_URL}/plus.gif" BORDER="0" ALT="+" width="9" height="9" ID="el{php}print($counter);{/php}Img"></a>&nbsp;
 			<font color="black" class="heada">{if $row.topic_name != ""}{$row.topic_name}{else}{$row.name}{/if}&nbsp;<a class="treeaction" href="#" onclick="javascript:setvalue('addtree', '{$prgid}', '{$row.id}');return true;">{$add}</a></font></nobr>
 		</div>
 		<div ID="el{php}print($counter);{/php}Child" CLASS="child">

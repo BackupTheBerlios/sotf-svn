@@ -8,7 +8,7 @@
  */
 
 require("config.inc.php");
-require($classdir . '/sotf_Utils.class.php');
+require($config['classdir'] . '/sotf_Utils.class.php');
 
 // where phpdocgen files are located
 $phpdocgendir = 'C:/sotf/helpers/phpdocgen';
@@ -17,7 +17,7 @@ $phpdocgendir = 'C:/sotf/helpers/phpdocgen';
 $perl = 'C:/perl/bin/perl.exe';
 
 // where to put documentation
-$docdir = realpath("$basedir/code/doc/php");
+$docdir = realpath($config['basedir'] . "/code/doc/php");
 
 $phpDirFiles = array();
 $phpClassFiles = array();
@@ -29,11 +29,11 @@ if ($dir = opendir("."))
     }
 	closedir($dir);
 }
-if ($dir = opendir($classdir))
+if ($dir = opendir($config['classdir']))
 {
 	while (($file = readdir($dir)) !== false)
 		if (preg_match("/\.class\.php$/",$file)) {
-      $phpClassFiles[] = $classdir . "/$file";
+      $phpClassFiles[] = $config['classdir'] . "/$file";
     }
 	closedir($dir);
 }

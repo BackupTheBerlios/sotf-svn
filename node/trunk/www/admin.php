@@ -20,7 +20,7 @@ checkPerm('node', 'change', 'authorize');
 // import XBMF
 $xbmfFile = sotf_Utils::getParameter('import_xbmf');
 if($xbmfFile) {
-	$id = sotf_Programme::importXBMF("$xbmfInDir/$xbmfFile",$publishxbmf);
+	$id = sotf_Programme::importXBMF($config['xbmfInDir'] . "/$xbmfFile",$config['publishXbmf']);
 	if($id) {
 		echo "Import succesful: <a target=\"_opener\" href=\"editMeta.php?id=$id\">click here</a>";
 	} else {
@@ -33,7 +33,7 @@ if($xbmfFile) {
 if(sotf_Utils::getParameter('updatecvs')) {
 	checkPerm('node', 'change');
 
-  chdir($basedir);
+  chdir($config['basedir']);
   header("Content-type: text/plain\n");
   system('cvs update');
   //$page->redirect("admin.php");
@@ -126,15 +126,15 @@ $localNode = sotf_Node::getLocalNode();
 if(!$localNode) {
 	// clear old entry
 	$localNode = new sotf_Node();
-	$localNode->set('name', $nodeName);
+	$localNode->set('name', $config['nodeName']);
 	$localNode->find();
 	if($localNode->exists())
 		$localNode->delete();
 	// create local node entry if does not exist
   $localNode = new sotf_Node();
-  $localNode->set('node_id', $nodeId);
-  $localNode->set('name', $nodeName);
-  $localNode->set('url', $rootdir);
+  $localNode->set('node_id', $config['nodeId']);
+  $localNode->set('name', $config['nodeName']);
+  $localNode->set('url', $config['rootUrl']);
   $localNode->create();
 }
 
@@ -159,7 +159,7 @@ $smarty->assign('NEIGHBOURS',$neighbourData);
 $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized('node'));
 
 // arriving xbmf
-$dirPath = $xbmfInDir;
+$dirPath = $config['xbmfInDir'];
 $dir = dir($dirPath);
 while($entry = $dir->read()) {
 	if ($entry != "." && $entry != "..") {

@@ -75,7 +75,7 @@ class sotf_File
 	*/
 	function determineMimeType($type)
 	{
-		$mimetypes = array(
+		$config['mimetypes'] = array(
 			'doc'	=> 'application/msword',
 			'gif'	=> 'image/gif',
 			'htm'	=> 'text/html',
@@ -89,8 +89,8 @@ class sotf_File
 			'ps'	=> 'application/postscript',
 			'txt'	=> 'text/plain',
 			'xls'	=> 'application/vnd.ms-excel');
-		if ($mimetypes[$type])
-			return $mimetypes[$type];
+		if ($config['mimetypes'][$type])
+			return $config['mimetypes'][$type];
 		else
 			return DEFAULT_MIME_TYPE;
 	} // end func determineMimeType

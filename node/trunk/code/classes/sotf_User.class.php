@@ -197,10 +197,10 @@ class sotf_User
   
   /** Returns the URL for the FTP access to the users personal upload directory. */
   function getUrlForUserFTP() {
-    global $userFTP;
-    if(substr($userFTP, -1) != '/')
-      $userFTP = $userFTP . '/';
-    $userFtpUrl = str_replace('ftp://', "ftp://".$this->name."@" , $userFTP . $this->name);
+    global $config;
+    if(substr($config['userFTP'], -1) != '/')
+      $config['userFTP'] = $config['userFTP'] . '/';
+    $userFtpUrl = str_replace('ftp://', "ftp://".$this->name."@" , $config['userFTP'] . $this->name);
     return $userFtpUrl;
   }
 
@@ -220,8 +220,8 @@ class sotf_User
    *****************************************************************/
 	
 	function getUserDir() {
-		global $userDirs;
-		$dir = "$userDirs/" . $this->name;
+		global $config;
+		$dir = $config['userDirs'] . "/" . $this->name;
 		if(!is_dir($dir)) {
 			if(!mkdir($dir, 0775))
         raiseError("Could not create directory for user");

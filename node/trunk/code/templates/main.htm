@@ -5,7 +5,7 @@
 <head>
 <title>{$PAGETITLE} (StreamOnTheFly:{$NODEID})</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="{$IMAGEDIR}/main.css" rel="stylesheet" type="text/css">
+<link href="{$IMAGE_URL}/main.css" rel="stylesheet" type="text/css">
 {literal}
 <script>
       var data_changed=0;
@@ -17,20 +17,20 @@
       }
 </script>
 {/literal}
-<script src="{$IMAGEDIR}/base.js"></script>
+<script src="{$IMAGE_URL}/base.js"></script>
 </head>
-<body background="{$IMAGEDIR}/bg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<body background="{$IMAGE_URL}/bg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 <div align="center"> 
   <table width="{#pageW#}" height="100%" border="0" cellpadding="0" cellspacing="0">
     <tr> 
-      <td background="{$IMAGEDIR}/bg_main_LEFT.gif"> 
-        <div align="center"><img src="{$IMAGEDIR}/bg_main_LEFT.gif" width="7" height="6"></div>
+      <td background="{$IMAGE_URL}/bg_main_LEFT.gif"> 
+        <div align="center"><img src="{$IMAGE_URL}/bg_main_LEFT.gif" width="7" height="6"></div>
       </td>
       <td width="{#pageW#}" valign="top" bgcolor="#FFFFFF"> 
         <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
           <!-- fwtable fwsrc="stream1.png" fwbase="top.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="1" -->
           <tr> 
-            <td bgcolor="#000000"><img name="top_r1_c1" src="{$IMAGEDIR}/top_r1_c1.gif" width="700" height="17" border="0" alt=""></td>
+            <td bgcolor="#000000"><img name="top_r1_c1" src="{$IMAGE_URL}/top_r1_c1.gif" width="700" height="17" border="0" alt=""></td>
           </tr>
           <tr> 
             <td>
@@ -40,11 +40,11 @@
                     <div align="right"> 
                       <table width="100%" border="0" cellspacing="0" cellpadding="0">
                         <tr> 
-                          <td background="{$IMAGEDIR}/top_r2_c1.gif" class=tablebg> 
+                          <td background="{$IMAGE_URL}/top_r2_c1.gif" class=tablebg> 
                             <table cellSpacing=0 cellPadding=6 width="100%" border=0>
                               <tr> 
                                 <td>
-                                  <script language="Javascript1.2" src="{$IMAGEDIR}/cal.js"></script>
+                                  <script language="Javascript1.2" src="{$IMAGE_URL}/cal.js"></script>
                                   <script language="Javascript1.2">
                                   <!--
                                   //setInterval("upclock()",1000);
@@ -54,7 +54,7 @@
                               </tr>
                             </table>
                           </td>
-                          <td width="264"><img name="top_r2_c3" src="{$IMAGEDIR}/top_r2_c3.jpg" width="264" height="60" border="0" alt=""></td>
+                          <td width="264"><img name="top_r2_c3" src="{$IMAGE_URL}/top_r2_c3.jpg" width="264" height="60" border="0" alt=""></td>
                         </tr>
                       </table>
                     </div>
@@ -70,20 +70,20 @@
                   <td class="menu">
                     <p><strong>
                       <!-- begin navbar -->
-                      <a class="menu" href="{$ROOTDIR}/">{#Home#}</a> 
-                      | <a class="menu" href="{$ROOTDIR}/advsearch.php">{#Search#}</a> 
-                      | <a class="menu" href="{$ROOTDIR}/stations.php">{#Stations#}</a> 
-                      {if $IS_EDITOR} | <a class="menu" href="{$ROOTDIR}/editor.php">{#EditorPage#}</a> {/if} 
-                      {if hasPerm('node', 'change', 'authorize') } | <a class="menu" href="{$ROOTDIR}/admin.php">{#AdminPage#}</a> {/if}
+                      <a class="menu" href="{$ROOT_URL}/">{#Home#}</a> 
+                      | <a class="menu" href="{$ROOT_URL}/advsearch.php">{#Search#}</a> 
+                      | <a class="menu" href="{$ROOT_URL}/stations.php">{#Stations#}</a> 
+                      {if $IS_EDITOR} | <a class="menu" href="{$ROOT_URL}/editor.php">{#EditorPage#}</a> {/if} 
+                      {if hasPerm('node', 'change', 'authorize') } | <a class="menu" href="{$ROOT_URL}/admin.php">{#AdminPage#}</a> {/if}
                       {if $loggedIn}
-                      | <a target="_top" class="menu" href="{$ROOTDIR}/playlist.php">{#Playlist#}</a>
-                      | <a class="menu" href="{$ROOTDIR}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$USERNAME})</a>
-                      | <a class="menu" href="{$ROOTDIR}/logout.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Logout#}</a>
+                      | <a target="_top" class="menu" href="{$ROOT_URL}/playlist.php">{#Playlist#}</a>
+                      | <a class="menu" href="{$ROOT_URL}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$USERNAME})</a>
+                      | <a class="menu" href="{$ROOT_URL}/logout.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Logout#}</a>
                       {else}
-                      | <a class="menu" href="{$ROOTDIR}/login.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Login#}</a>
+                      | <a class="menu" href="{$ROOT_URL}/login.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Login#}</a>
                       {/if}
-                      | <a class="menu" href="{$ROOTDIR}/help.php">{#Help#}</a> 
-                      | <a class="menu" href="{$ROOTDIR}/about.php">{#About#}</a> 
+                      | <a class="menu" href="{$ROOT_URL}/help.php">{#Help#}</a> 
+                      | <a class="menu" href="{$ROOT_URL}/about.php">{#About#}</a> 
                       {if $DEBUG}
                       <!--
                       | <a class="menu" href="{$VIEWLOG}">View log</a>
@@ -97,10 +97,10 @@
             </td>
           </tr>
           <tr> 
-            <td background="{$IMAGEDIR}/top_r4_c2.gif">
+            <td background="{$IMAGE_URL}/top_r4_c2.gif">
               <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
                 <tr> 
-                  <td><img name="top_r4_c1" src="{$IMAGEDIR}/top_r4_c1.gif" width="2" height="6" border="0" alt=""></td>
+                  <td><img name="top_r4_c1" src="{$IMAGE_URL}/top_r4_c1.gif" width="2" height="6" border="0" alt=""></td>
                 </tr>
               </table>
             </td>
@@ -132,7 +132,7 @@
           </tr>
         </table>
       </td>
-      <td width="7" background="{$IMAGEDIR}/bg_main.gif"><img src="{$IMAGEDIR}/bg_main.gif" width="7" height="6"></td>
+      <td width="7" background="{$IMAGE_URL}/bg_main.gif"><img src="{$IMAGE_URL}/bg_main.gif" width="7" height="6"></td>
     </tr>
   </table>
 </div>

@@ -5,7 +5,7 @@
 	<TR BGCOLOR="{#searchBgColor1#}">
 		<TD COLSPAN=6>{#your_query_is#}{if count($SQLquery) > 0}:{else} {#empty#}{/if}
 		<INPUT type="hidden" name="SQLquerySerial" value="{$SQLquerySerial}">
-		<INPUT type="image" SRC="{$IMAGEDIR}/transp.gif" name="image">
+		<INPUT type="image" SRC="{$IMAGE_URL}/transp.gif" name="image">
 		</TD>
 	</TR>
 
@@ -44,7 +44,7 @@
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQtopic selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30"></TD>
 		{/if}
-		<TD ALIGN="right" valign="middle"><INPUT type="image" SRC="{$IMAGEDIR}/plusz.gif"  ALT="{#add#}" name="ADD{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGEDIR}/transp.gif" /><IMG SRC="{$IMAGEDIR}/transp.gif" /><INPUT type="image" ALT="{#delete#}" SRC="{$IMAGEDIR}/minusz.gif" name="DEL{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGEDIR}/transp.gif" /><IMG SRC="{$IMAGEDIR}/transp.gif" /></TD>
+		<TD ALIGN="right" valign="middle"><INPUT type="image" SRC="{$IMAGE_URL}/plusz.gif"  ALT="{#add#}" name="ADD{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGE_URL}/transp.gif" /><IMG SRC="{$IMAGE_URL}/transp.gif" /><INPUT type="image" ALT="{#delete#}" SRC="{$IMAGE_URL}/minusz.gif" name="DEL{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGE_URL}/transp.gif" /><IMG SRC="{$IMAGE_URL}/transp.gif" /></TD>
 		<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
 	</TR>
 	{/section}

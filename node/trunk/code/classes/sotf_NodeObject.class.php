@@ -20,12 +20,20 @@ class sotf_NodeObject extends sotf_Object {
    * @return (void)
    */
   function sotf_NodeObject($tablename, $id='', $data='') {
+    global $repository;
+    if($id && !is_array($data)) {
+      $object = & $repository->getFromCache($id);
+      if(is_object($object))
+        return $object;
+    }
     $this->sotf_Object($tablename, $id, $data);
+    if($this->id)
+      $repository->putInCache($this);
   }
 
   /** Creates a new persistent replicated object */
   function create() {
-	 global $nodeId, $sotfVars;
+	 global $config, $sotfVars;
    if(empty($this->id)) {
      $this->id = $this->repository->generateID($this);
      $this->adminObject->id = $this->id;
@@ -33,7 +41,7 @@ class sotf_NodeObject extends sotf_Object {
    if($this->repository->isVocabularyTable($this->tablename))
      $this->internalData['node_id'] = 0;
    else
-     $this->internalData['node_id'] = $nodeId;
+     $this->internalData['node_id'] = $config['nodeId'];
    $this->internalData['arrived_stamp'] = $sotfVars->get('sync_stamp', 0);
    $this->internalData['arrived'] = $this->db->getTimestampTz();
    $this->internalData['last_change'] = $this->db->getTimestampTz();
@@ -50,10 +58,10 @@ class sotf_NodeObject extends sotf_Object {
 
   /** Updates the fields of the object. */
   function update() {
-    global $sotfVars, $nodeId;
+    global $sotfVars, $config;
     parent::update();
     $this->internalData = $this->db->getRow("SELECT * FROM sotf_node_objects WHERE id='$this->id' ");
-    if($this->internalData['node_id'] != $nodeId && $this->internalData['node_id'] != 0 )
+    if($this->internalData['node_id'] != $config['nodeId'] && $this->internalData['node_id'] != 0 )
       logError("Updating a remote object: " . $this->id);
     $this->internalData['arrived_stamp'] = $sotfVars->get('sync_stamp', 0);
     $this->internalData['arrived'] = $this->db->getTimestampTz();
@@ -140,7 +148,7 @@ class sotf_NodeObject extends sotf_Object {
 
   /** Static: collects the objects to send to the neighbour node. */
   function getModifiedObjects($remoteNode, $syncStamp = 0, $from, $objectsPerPage, $updatedObjects = array()) {
-    global $db, $nodeId, $repository;
+    global $db, $config, $repository;
     // an ordering in which objects should be retrieved because of foreign keys
     $tableOrder = $this->repository->tableOrder;
     // select objects to send to neighbour

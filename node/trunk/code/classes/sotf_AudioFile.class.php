@@ -1,6 +1,6 @@
 <?php
 
-require_once($getid3dir . "/getid3.php");
+require_once($config['getid3dir'] . "/getid3.php");
 require_once("sotf_File.class.php");
 
 /**
@@ -88,17 +88,17 @@ class sotf_AudioFile extends sotf_File
 	* Encode format to a filename.
 	*
 	* @return	string	Encoded format. Example: 24kbps_1chn_22050Hz.mp3
-	* @use	$audioFormats, $bitrateTolerance
+	* @use	$config['audioFormats'], $config['bitrateTolerance']
 	*/
 	function getFormatFilename()
 	{
-		global $audioFormats;
-		global $bitrateTolerance;
+		global $config;
+		global $config;
 
 		$bitrate = $this->bitrate;
-		for ($i=0;$i<count($audioFormats);$i++)
-			if (abs($audioFormats[$i]['bitrate'] - $this->bitrate) < $bitrateTolerance)
-				$bitrate = $audioFormats[$i]['bitrate'];
+		for ($i=0;$i<count($config['audioFormats']);$i++)
+			if (abs($config['audioFormats'][$i]['bitrate'] - $this->bitrate) < $config['bitrateTolerance'])
+				$bitrate = $config['audioFormats'][$i]['bitrate'];
 		return round($bitrate) . 'kbps_' . $this->channels . 'chn_' . $this->samplerate . 'Hz.' . $this->format;
 	} // end func getFormatFilename
 

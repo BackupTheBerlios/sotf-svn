@@ -1,6 +1,6 @@
 <?php
-require_once("$xmlrpcdir/xmlrpc.inc");  
-require_once("$xmlrpcdir/xmlrpcs.inc");  
+require_once($config['xmlrpcdir'] . "/xmlrpc.inc");  
+require_once($config['xmlrpcdir'] . "/xmlrpcs.inc");  
 //require_once('C:/sotf/helpers/ezxml/ezxml.php');
 
 class rpc_Utils {

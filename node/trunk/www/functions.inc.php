@@ -39,19 +39,20 @@ function logError($msg) {
   error_log(getHostName() . ": ERROR: $msg", 0);
 }
 
-/** this creates a log entry if $debug is true*/
+/** this creates a log entry if $config['debug'] is true*/
 function debug($name, $msg='', $type='default') {
-  global $debug, $debug_type;
-  // the $debug_type is set in config.inc.php
-  if ($debug) {
+  global $config;
+  // the $config['debug_type'] is set in config.inc.php
+  if ($config['debug']) {
     logger($name, $msg, $type);
   }
 }
 
 /** this creates a log entry */
 function logger($name, $msg='', $type='default') {
+	global $config;
   if ($type == 'default') {
-    $type = $debug_type;
+    $type = $config['debug_type'];
   }
   if(is_array($msg)) {
     ob_start();

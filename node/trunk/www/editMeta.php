@@ -204,10 +204,10 @@ array_unshift($genres, array('id'=>0, 'name'=> $page->getlocalized("no_genre")))
 $smarty->assign('GENRES_LIST', $genres);
 
 // languages
-for($i=0; $i<count($languages); $i++) {
-  $langNames[$i] = $page->getlocalized($languages[$i]);
+for($i=0; $i<count($config['languages']); $i++) {
+  $langNames[$i] = $page->getlocalized($config['languages'][$i]);
 }
-$smarty->assign('LANG_CODES', $languages);
+$smarty->assign('LANG_CODES', $config['languages']);
 $smarty->assign('LANG_NAMES', $langNames);
 
 // rights sections

@@ -11,7 +11,7 @@ require("init.inc.php");
 
 $okURL = sotf_Utils::getParameter('okURL');
 if(!$okURL) {
-     $okURL = $localPrefix.'/';
+     $okURL = $config['localPrefix'].'/';
 }
 
 sotf_User::logout();

@@ -24,24 +24,13 @@
 	</TR>
 	<TR>
 		<TD>&nbsp;</TD>
-		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="33%">
-		<a href="advsearchresults.php?back=true&SQLquerySerial={$SQLquerySerial}" class="menu"><big>[ {#back#} ]</big></a>
-<!--		<INPUT type="submit" name="back" value="{#back#}"> -->
+		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="50%">
+		<!-- <a href="advsearchresults.php?back=true&SQLquerySerial={$SQLquerySerial}" class="menu"><big>[ {#back#} ]</big></a> -->
+              <INPUT class="action" type="submit" name="back" value="{#back#}"> &nbsp;&nbsp;
+              <INPUT class="action" type="button" name="upload_query" value="{#upload_query#}" onclick="javascript:window.open('portal_upload.php?type=query&data={$SQLquerySerial}','','scrollbars=yes,width=640,height=340,left=320,top=200');">
 		</TD>
-		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="66%">
+		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="50%">
 		{include file="splitList.htm"}
-		</TD>
-		<TD>&nbsp;</TD>
-	</TR>
-	<TR>
-		<TD COLSPAN=4>&nbsp;</TD>
-	</TR>
-	<TR>
-		<TD>&nbsp;</TD>
-		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="50%">
-		<INPUT type="button" name="upload_query" value="{#upload_query#}" onclick="javascript:window.open('portal_upload.php?type=query&data={$SQLquerySerial}','','scrollbars=yes,width=640,height=340,left=320,top=200');">
-		</TD>
-		<TD ALIGN="center" BGCOLOR="#FFFFFF" width="50%">
 		</TD>
 		<TD>&nbsp;</TD>
 	</TR>
@@ -55,7 +44,7 @@
 <table>
 {foreach name=outer item=item from=$result}
 	<tr>
-		<td>{if $item.icon}<img src="{$CACHEDIR}/{$item.id}.png">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
+		<td>{if $item.icon}<img src="{$CACHE_URL}/{$item.id}.png">{else}<img src="{$IMAGE_URL}/noicon.png">{/if}</td>
 		<td><b><a href="get.php?id={$item.id}">{$item.title}</a></b><BR>
 		{foreach key=key item=cell from=$item.values}
 			{if $cell != ""}

@@ -1,6 +1,6 @@
 <?php
 
-require_once($getid3dir . "/getid3.php");
+require_once($config['getid3dir'] . "/getid3.php");
 require_once("sotf_File.class.php");
 require_once("sotf_AudioFile.class.php");
 

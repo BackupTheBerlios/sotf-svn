@@ -446,9 +446,9 @@ class sotf_AdvSearch
 
 	function GetLanguages()		//returns all the languages
 	{
-		global $page, $languages;
-		$max = count($languages);
-		for($i=0; $i<$max;$i++) $Languages[$languages[$i]] = $page->getlocalized($languages[$i]);
+		global $page, $config;
+		$max = count($config['languages']);
+		for($i=0; $i<$max;$i++) $Languages[$config['languages'][$i]] = $page->getlocalized($config['languages'][$i]);
 		return $Languages;
 	}
 

@@ -2,11 +2,11 @@
 
 require("init.inc.php");
 
-require_once("$classdir/rpc_Utils.class.php");
+require_once($config['classdir'] . "/rpc_Utils.class.php");
 
 $rpc = new rpc_Utils;
 $rpc->debug = true;
-$response = $rpc->call("$rootdir/xmlrpcServer.php", 'sotf.cv.get', array('topics',1,1));
+$response = $rpc->call($config['rootUrl'] . "/xmlrpcServer.php", 'sotf.cv.get', array('topics',1,1));
 print "<pre>";
 print_r($response);
 print "</pre>";
@@ -23,18 +23,18 @@ exit;
 */
 
 /*
-require_once("$classdir/rpc_Utils.class.php");
+require_once($config['classdir'] . "/rpc_Utils.class.php");
 
 $rpc = new rpc_Utils;
 $rpc->debug = true;
-$response = $rpc->call($tamburineURL, 'version', '');
+$response = $rpc->call($config['tamburineURL'], 'version', '');
 */
 
 
 /*
-require_once($classdir . '/unpackXML.class.php');
+require_once($config['classdir'] . '/unpackXML.class.php');
 
-$myPack = new unpackXML("$basedir/metasample.txt");	
+$myPack = new unpackXML($config['basedir'] . "/metasample.txt");	
 
 if(!$myPack->error){		//if the file has been found
   $metadata = $myPack->process();
@@ -49,7 +49,7 @@ if(!$myPack->error){		//if the file has been found
 
 exit;
 
-sotf_Programme::importXBMF("$xbmfInDir/test.xbmf");
+sotf_Programme::importXBMF($config['xbmfInDir'] . "/test.xbmf");
 
 
 exit;

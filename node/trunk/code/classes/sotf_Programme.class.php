@@ -4,8 +4,8 @@
 define("GUID_DELIMITER", ':');
 define("TRACKNAME_LENGTH", 32);
 
-require_once($classdir . '/Tar.php');
-require_once($classdir . '/unpackXML.class.php');
+require_once($config['classdir'] . '/Tar.php');
+require_once($config['classdir'] . '/unpackXML.class.php');
 
 class sotf_Programme extends sotf_ComplexNodeObject {
   
@@ -34,7 +34,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function sotf_Programme($id='', $data='') {
 	 $this->sotf_ComplexNodeObject('sotf_programmes', $id, $data);
 	 if($id) {
-		$this->stationName = $this->db->getOne("SELECT name FROM sotf_stations WHERE id='" . $this->get('station_id') . "'");
+		$this->getStation();
+		$this->stationName = $this->station->get('name');
 	 }
   }
   
@@ -116,10 +117,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
 	function isLocal() {
-    global $nodeId;
+    global $config;
     debug("s1", substr($this->id,0,3));
-    debug("s2", sprintf('%03d', $nodeId));
-    return substr($this->id,0,3) == sprintf('%03d', $nodeId);
+    debug("s2", sprintf('%03d', $config['nodeId']));
+    return substr($this->id,0,3) == sprintf('%03d', $config['nodeId']);
 		//return is_dir($this->getDir()); 
 	}
 
@@ -268,7 +269,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   /** get news for index page */
   function getNewProgrammes($fromDay, $maxItems) {
-    global $nodeId, $db;
+    global $config, $db;
     $sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE i.station_id = s.id AND i.published='t' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC";
     $res =  $db->limitQuery($sql, 0, $maxItems);
     if(DB::isError($res))
@@ -517,9 +518,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   /** static: import a programme from the given XBMF archive */
   function importXBMF($fileName, $publish=false) {
-    global $db, $xbmfInDir, $permissions, $repository;
+    global $db, $config, $permissions, $repository;
     
-    $pathToFile = $xbmfInDir . '/';
+    $pathToFile = $config['xbmfInDir'] . '/';
     // create temp folder with unique name
     $folderName = uniqid("xbmf");
     mkdir($pathToFile . $folderName);

@@ -49,13 +49,13 @@ function selectAll(formObj, isInverse)
                         <td width="5%" align="center" valign="middle"><input type="checkbox" value="{$item.id}" name="checkbox[]" /> </td>
                         <td width="1%">
                           {if $item.icon }
-                          <img src="{$CACHEDIR}/{$item.id}.png">
+                          <img src="{$CACHE_URL}/{$item.id}.png">
                             {else}
-                            <img src="{$IMAGEDIR}/noicon.png">
+                            <img src="{$IMAGE_URL}/noicon.png">
                               {/if}
                         </td>
                         <td width="98%">
-                          <a href="listen.php/audio.m3u?id={$item.id}"><img align="right" src="{$IMAGEDIR}/listen.gif" border="0" alt="{#Listen#}"></a>
+                          <a href="listen.php/audio.m3u?id={$item.id}"><img align="right" src="{$IMAGE_URL}/listen.gif" border="0" alt="{#Listen#}"></a>
                           <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> ({$item.entry_date})
 
                           {if $item.alternative_title}<br>{$item.alternative_title}{/if}

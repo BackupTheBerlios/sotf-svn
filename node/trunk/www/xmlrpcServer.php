@@ -8,8 +8,8 @@
  */
 
 require("init.inc.php");
-require_once("$classdir/rpc_Utils.class.php");
-require_once("$classdir/sotf_AdvSearch.class.php");
+require_once($config['classdir'] . "/rpc_Utils.class.php");
+require_once($config['classdir'] . "/sotf_AdvSearch.class.php");
 
 /** This page is the service point for XML-RPC calls arriving to the node */
 
@@ -93,7 +93,7 @@ function syncResp($params) {
 
 function getQueryResults($params)
 {
-	global $classdir, $db, $rootdir, $cacheprefix;
+	global $config, $db;
 	$query = xmlrpc_decode($params->getParam(0));
 
 	$advsearch = new sotf_AdvSearch();	//create new search object object with this array
@@ -103,7 +103,7 @@ function getQueryResults($params)
 	foreach($results as $key => $result)
 	{
 		$icon = sotf_Blob::cacheIcon($result['id']);
-		$results[$key]['icon'] = $cacheprefix."/".$result['id'].".png";
+		$results[$key]['icon'] = $config['cacheUrl']."/".$result['id'].".png";
 		//TODO if no icon {$IMAGEDIR}/noicon.png $imageprefix????
 	}
 	$retval = xmlrpc_encode($results);
@@ -112,7 +112,7 @@ function getQueryResults($params)
 
 function getProgrammes($params)
 {
-	global $classdir, $db, $rootdir, $cacheprefix;
+	global $config, $db;
 	$prglist = xmlrpc_decode($params->getParam(0));
 
 	$query="SELECT programmes.* FROM (";
@@ -135,7 +135,7 @@ function getProgrammes($params)
 	{
 //		debug("------------>".$result['id']."<------------------");
 		$icon = sotf_Blob::cacheIcon($result['id']);
-		$results[$key]['icon'] = $cacheprefix."/".$result['id'].".png";
+		$results[$key]['icon'] = $config['cacheUrl']."/".$result['id'].".png";
 		//TODO if no icon {$IMAGEDIR}/noicon.png $imageprefix????
 	}
 	$retval = xmlrpc_encode($results);

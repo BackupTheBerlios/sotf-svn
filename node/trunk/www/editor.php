@@ -47,7 +47,7 @@ $stationId = sotf_Utils::getParameter('stationid');
 if($stationId)
 	  $smarty->assign('SELECTED_STATION', $stationId);
 
-$userFtpUrl = str_replace('ftp://', "ftp://$user->name@", $userFTP);
+$userFtpUrl = str_replace('ftp://', "ftp://$user->name@", $config['userFTP']);
 	$smarty->assign("USERFTPURL", $userFtpUrl); 
 
 $stations = $permissions->listStationsForEditor();

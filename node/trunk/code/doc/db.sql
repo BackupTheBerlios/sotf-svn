@@ -226,7 +226,7 @@ CREATE TABLE "sotf_other_files" (
 	"mime_type" varchar(50),
 	"filesize" int,
 	"last_modified" timestamptz,
-	"public_access" bool DEFAULT 'f'::bool,
+	"public_access" bool DEFAULT 't'::bool,
 	CONSTRAINT "sotf_other_files_u" UNIQUE ("prog_id", "filename"),
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
@@ -264,7 +264,7 @@ CREATE TABLE "sotf_links" (
 	"prog_id" varchar(12) NOT NULL,
 	"url" varchar(255) NOT NULL,
 	"caption" varchar(255),
-	"public_access" bool DEFAULT 'f'::bool,
+	"public_access" bool DEFAULT 't'::bool,
 	CONSTRAINT "sotf_links_u" UNIQUE ("prog_id", "url"),
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );

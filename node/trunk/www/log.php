@@ -8,11 +8,11 @@
  */
 
 require("config.inc.php");
-require($classdir . '/sotf_Utils.class.php');
+require($config['classdir'] . '/sotf_Utils.class.php');
 ?>
 
 <html>
-<head><title><?php echo $nodeId?> log</title></head>
+<head><title><?php echo $config['nodeId']?> log</title></head>
 <body onChange="window.focus()">
 
 <?php
@@ -24,13 +24,13 @@ if(!$lines || !is_numeric($lines))
      $lines = 700;
 if($full) {
   echo "<pre>";
-  readfile($logFile);
+  readfile($config['logFile']);
   echo "</pre>";
 } else {
   echo "<pre>";
-  //echo implode("\n", sotf_Utils::tail($logFile, $lines));
-  sotf_Utils::tail($logFile, $lines * 80);
-  //system("tail -$lines $logFile");
+  //echo implode("\n", sotf_Utils::tail($config['logFile'], $lines));
+  sotf_Utils::tail($config['logFile'], $lines * 80);
+  //system("tail -$lines $config['logFile']");
   echo "</pre>";
 }
 

@@ -34,7 +34,7 @@
           <tr valign="top">
             <td width="5">
               {if $SERIES_DATA.icon}
-              <img src="{$CACHEDIR}/{$SERIES_ID}.png">
+              <img src="{$CACHE_URL}/{$SERIES_ID}.png">
                 {/if}
             </td>
             <td>
@@ -61,7 +61,7 @@
                   <td>
                     {if $item.contact_data.icon }{strip}
                     <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">
-                      <img height="50" border="0" src="{$CACHEDIR}/{$item.contact_data.id}.png">
+                      <img height="50" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
                     </a>{/strip}
                     {/if}
                   </td>
@@ -73,7 +73,7 @@
             </td>
             <td width="5">
               {if $STATION_DATA.icon}
-              <img src="{$CACHEDIR}/{$STATION_DATA.id}.png"><br />
+              <img src="{$CACHE_URL}/{$STATION_DATA.id}.png"><br />
                 {/if}
               <a href="showStation.php?stationid={$STATION_DATA.id}">{$STATION_DATA.name}</a>
             </td>
@@ -109,9 +109,9 @@
           <tr valign="top" class="{cycle name="progs"}">
             <td width="1%">
               {if $item.icon }
-                 <img src="{$CACHEDIR}/{$item.id}.png">
+                 <img src="{$CACHE_URL}/{$item.id}.png">
               {else}
-                 <img src="{$IMAGEDIR}/noicon.png">
+                 <img src="{$IMAGE_URL}/noicon.png">
               {/if}
             </td>
             <td width="98%">

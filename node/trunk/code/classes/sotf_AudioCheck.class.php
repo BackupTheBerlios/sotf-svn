@@ -13,7 +13,7 @@ class sotf_AudioCheck
 	* Array of the arrays describes which requestments can be satisfied.
 	*
 	* The description of the requestment can be found at the same index where the requestment was
-	* found in the $audioFormats array. The first element of these arrays is a boolean indicates
+	* found in the $config['audioFormats'] array. The first element of these arrays is a boolean indicates
 	* whether the conditions are matched. If it is true the second elements of these arrays show
 	* where is the matching file in the $list member variable. If the first element is false, the
 	* second element can be an index shows from which file can be generated the requested file,
@@ -23,7 +23,7 @@ class sotf_AudioCheck
 	* from the 128 kbps file that has the index 0. If we needed a 192 kbps mp3, we got (false,false),
 	* so we haven't so file, and we cannot generate it from 128, because 128 is less than 192.
 	* @attribute 	array	$reqs
-	* @see	{@link $audioFormats}
+	* @see	{@link $config['audioFormats']}
 	*/
 	var $reqs = array();
 
@@ -40,15 +40,15 @@ class sotf_AudioCheck
 	*
 	* @constructor sotf_AudioCheck
 	* @param	object	$list	FileList object contains list of files to be checked
-	* @use	$audioFormats, $bitrateTolerance
+	* @use	$config['audioFormats'], $config['bitrateTolerance']
 	*/
 	function sotf_AudioCheck($list)
 	{
-		global $audioFormats;
-		global $bitrateTolerance;
+		global $config;
+		global $config;
 
 		$this->list = & $list;
-		for($i=0;$i<count($audioFormats);$i++)			// walk thru the requested formats
+		for($i=0;$i<count($config['audioFormats']);$i++)			// walk thru the requested formats
 		{
 			$found = false;								// indicates whether the current audio format has been found
 			for($j=0;$j<count($this->list->list);$j++)	// walk thru the the files we have
@@ -56,20 +56,20 @@ class sotf_AudioCheck
 				// $this->list->list[$j] means the current AudioFile object
 				if ($this->list->list[$j]->type != "audio")
 					continue;							// This is not an audio, get another one
-				if ($audioFormats[$i]['format'] != $this->list->list[$j]->format)
+				if ($config['audioFormats'][$i]['format'] != $this->list->list[$j]->format)
 					continue;							// This is not the one we need, get another one
-				//if ($audioFormats[$i]['bitrate'] != $this->list->list[$j]->bitrate)
+				//if ($config['audioFormats'][$i]['bitrate'] != $this->list->list[$j]->bitrate)
 				//	continue;							// This is not the one we need, get another one
-				if (abs($this->list->list[$j]->average_bitrate - $audioFormats[$i]['bitrate']) > $bitrateTolerance)
+				if (abs($this->list->list[$j]->average_bitrate - $config['audioFormats'][$i]['bitrate']) > $config['bitrateTolerance'])
 					continue;							// This is not the one we need, get another one
 				else
 				{
-					$this->list->list[$j]->bitrate = $audioFormats[$i]['bitrate'];
-					$this->list->list[$j]->average_bitrate = $audioFormats[$i]['bitrate'];
+					$this->list->list[$j]->bitrate = $config['audioFormats'][$i]['bitrate'];
+					$this->list->list[$j]->average_bitrate = $config['audioFormats'][$i]['bitrate'];
 				}
-				if ($audioFormats[$i]['channels'] != $this->list->list[$j]->channels)
+				if ($config['audioFormats'][$i]['channels'] != $this->list->list[$j]->channels)
 					continue;							// This is not the one we need, get another one
-				if ($audioFormats[$i]['samplerate'] != $this->list->list[$j]->samplerate)
+				if ($config['audioFormats'][$i]['samplerate'] != $this->list->list[$j]->samplerate)
 					continue;							// This is not the one we need, get another one
 				$found = $j;							// All conditions matched, that's what we need, store its position
 				break;									// don't need to search for another, leave the loop
@@ -84,15 +84,15 @@ class sotf_AudioCheck
 			{
 				if ($this->list->list[$j]->type != "audio")
 					continue;							// This is not an audio, get another one
-				if ($audioFormats[$i]['bitrate'] > $this->list->list[$j]->average_bitrate)
+				if ($config['audioFormats'][$i]['bitrate'] > $this->list->list[$j]->average_bitrate)
 					continue;							// This is not the one we need, get another one
-				if ($audioFormats[$i]['channels'] > $this->list->list[$j]->channels)
+				if ($config['audioFormats'][$i]['channels'] > $this->list->list[$j]->channels)
 					continue;							// This is not the one we need, get another one
-				if ($audioFormats[$i]['samplerate'] > $this->list->list[$j]->samplerate)
+				if ($config['audioFormats'][$i]['samplerate'] > $this->list->list[$j]->samplerate)
 					continue;							// This is not the one we need, get another one
 				$found = $j;							// Found a better one
 				// easier to encode an mp3 from an mp3
-				if (($audioFormats[$i]['format'] != 'mp3') || (($audioFormats[$i]['format'] == 'mp3') && ($this->list->list[$j]->format == 'mp3')))
+				if (($config['audioFormats'][$i]['format'] != 'mp3') || (($config['audioFormats'][$i]['format'] == 'mp3') && ($this->list->list[$j]->format == 'mp3')))
 					break;								// don't need to search for another, leave the loop
 			}
 			if ($found !== false)
@@ -108,26 +108,26 @@ class sotf_AudioCheck
 	* Gets the request index for a sotf_AudioFile
 	*
 	* @param	object	$audiofile	sotf_AudioFile object to be checked
-	* @return	mixed	If the audio file satisfies any requestment returns an integer which is an index of the $audioFormats global variable. If the file satisfy any requestment returns boolean false
-	* @use	$audioFormats, $bitrateTolerance
+	* @return	mixed	If the audio file satisfies any requestment returns an integer which is an index of the $config['audioFormats'] global variable. If the file satisfy any requestment returns boolean false
+	* @use	$config['audioFormats'], $config['bitrateTolerance']
 	*/
 	function getRequestIndex($audiofile)
 	{
-		global $audioFormats;
-		global $bitrateTolerance;
-		for($i=0;$i<count($audioFormats);$i++)			// walk thru the requested formats
+		global $config;
+		global $config;
+		for($i=0;$i<count($config['audioFormats']);$i++)			// walk thru the requested formats
 		{
 			if ($audiofile->type != "audio")
 				continue;								// This is not an audio, get another one
-			if ($audioFormats[$i]['format'] != $audiofile->format)
+			if ($config['audioFormats'][$i]['format'] != $audiofile->format)
 				continue;								// This is not the one we need, get another one
-			//if ($audioFormats[$i]['bitrate'] != $audiofile->bitrate)
+			//if ($config['audioFormats'][$i]['bitrate'] != $audiofile->bitrate)
 			//	continue;								// This is not the one we need, get another one
-			if (abs($audiofile->average_bitrate - $audioFormats[$i]['bitrate']) > $bitrateTolerance)
+			if (abs($audiofile->average_bitrate - $config['audioFormats'][$i]['bitrate']) > $config['bitrateTolerance'])
 				continue;							// This is not the one we need, get another one
-			if ($audioFormats[$i]['channels'] != $audiofile->channels)
+			if ($config['audioFormats'][$i]['channels'] != $audiofile->channels)
 				continue;								// This is not the one we need, get another one
-			if ($audioFormats[$i]['samplerate'] != $audiofile->samplerate)
+			if ($config['audioFormats'][$i]['samplerate'] != $audiofile->samplerate)
 				continue;								// This is not the one we need, get another one
 			return $j;									// All conditions matched, that's what we need, return the index
 		}
@@ -176,15 +176,15 @@ class sotf_AudioCheck
 	/**
 	* Encode format to a filename.
 	*
-	* @param	integer	$index	Format index of the jingle in the $audioFormats global variable
+	* @param	integer	$index	Format index of the jingle in the $config['audioFormats'] global variable
 	* @return	string	Encoded format. Example: 24kbps_1chn_22050Hz.mp3
-	* @use	$audioFormats
+	* @use	$config['audioFormats']
 	*/
 	function getFormatFilename($index)
 	{
-		global $audioFormats;
+		global $config;
 
-		return $audioFormats[$index]['bitrate'] . 'kbps_' . $audioFormats[$index]['channels'] . 'chn_' . $audioFormats[$index]['samplerate'] . 'Hz.' . $audioFormats[$index]['format'];
+		return $config['audioFormats'][$index]['bitrate'] . 'kbps_' . $config['audioFormats'][$index]['channels'] . 'chn_' . $config['audioFormats'][$index]['samplerate'] . 'Hz.' . $config['audioFormats'][$index]['format'];
 	} // end func getFormatFilename
 
 } // end class sotf_AudioCheck

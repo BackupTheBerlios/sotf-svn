@@ -43,7 +43,7 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	}
 
 	function create($stationName, $desc) {
-		global $nodeId;
+		global $config;
 		$this->set('name', $stationName);
 		$this->set('description', $desc);
     parent::create();
@@ -96,8 +96,8 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	* @param	object	$file	sotf_File object represents the logo
 	* @return	boolean	True if the function succeeded, else false
 	* @use	$db
-	* @use	$iconWidth
-	* @use	$iconHeight
+	* @use	$config['iconWidth']
+	* @use	$config['iconHeight']
 	*/
 	function setIcon($file)
 	{
@@ -111,10 +111,10 @@ class sotf_Station extends sotf_ComplexNodeObject {
 
 	/**
 	* Sets jingle of the station.
-	* @use	$audioFormats
+	* @use	$config['audioFormats']
 	*/
 	function setJingle($filename, $copy=false) {
-		global $audioFormats, $page;
+		global $config, $page;
     $source = $filename;
     if(!is_file($source))
       raiseError("no such file: $source");
@@ -139,13 +139,13 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	/**
 	* Gets a jingle of the station.
 	*
-	* @param	integer	$index	Format index of the jingle in the $audioFormats global variable
+	* @param	integer	$index	Format index of the jingle in the $config['audioFormats'] global variable
 	* @return	mixed	Returns the path of the jingle if exist, else return boolean false
-	* @use	$audioFormats
+	* @use	$config['audioFormats']
 	*/
 	function getJingle($index = 1)
 	{
-		global $audioFormats;
+		global $config;
 
 		$file = $this->getStationDir() . '/jingle_' . sotf_AudioCheck::getFormatFilename($index);
 		if (is_file($file) && !is_file($file.'.lock'))
@@ -261,7 +261,7 @@ class sotf_Station extends sotf_ComplexNodeObject {
 		global $db;
 		$sql = "SELECT id, name FROM sotf_stations";
 		//if($localOnly)
-		//	$sql .= " WHERE node_id='$nodeId' ";
+		//	$sql .= " WHERE node_id='$config['nodeId']' ";
 		$sql .= " ORDER BY name";
 		return $db->getAll($sql);
 	}

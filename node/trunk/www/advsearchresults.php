@@ -8,7 +8,7 @@
  */
 
 require("init.inc.php");
-require("$classdir/sotf_AdvSearch.class.php");
+require($config['classdir'] . "/sotf_AdvSearch.class.php");
 
 $SQLquerySerial = sotf_Utils::getParameter('SQLquerySerial');			//the serialized query in the hidden field
 $advsearch = new sotf_AdvSearch();						//create new search object object with this array

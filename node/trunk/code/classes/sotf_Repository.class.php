@@ -7,18 +7,18 @@
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
-require_once($classdir . '/sotf_NodeObject.class.php');
-require_once($classdir . '/sotf_ComplexNodeObject.class.php');
-require_once($classdir . '/sotf_Node.class.php');
-require_once($classdir . '/sotf_Neighbour.class.php');
-require_once($classdir . '/sotf_Station.class.php');
-require_once($classdir . '/sotf_Series.class.php');
-require_once($classdir . '/sotf_Programme.class.php');
-require_once($classdir . '/sotf_Contact.class.php');
-require_once($classdir . '/sotf_Rating.class.php');
-require_once($classdir . '/sotf_PlayList.class.php');
-require_once($classdir . '/sotf_UserPlaylist.class.php');
-require_once($classdir . '/sotf_Blob.class.php');
+require_once($config['classdir'] . '/sotf_NodeObject.class.php');
+require_once($config['classdir'] . '/sotf_ComplexNodeObject.class.php');
+require_once($config['classdir'] . '/sotf_Node.class.php');
+require_once($config['classdir'] . '/sotf_Neighbour.class.php');
+require_once($config['classdir'] . '/sotf_Station.class.php');
+require_once($config['classdir'] . '/sotf_Series.class.php');
+require_once($config['classdir'] . '/sotf_Programme.class.php');
+require_once($config['classdir'] . '/sotf_Contact.class.php');
+require_once($config['classdir'] . '/sotf_Rating.class.php');
+require_once($config['classdir'] . '/sotf_PlayList.class.php');
+require_once($config['classdir'] . '/sotf_UserPlaylist.class.php');
+require_once($config['classdir'] . '/sotf_Blob.class.php');
 
 class sotf_Repository {
 
@@ -63,6 +63,9 @@ class sotf_Repository {
 
   var $rootdir;
   var $db;
+
+  /** An internal cache for speeding up object retreival. */
+  var $objectCache = array();
 
   var $roles;
 
@@ -119,18 +122,40 @@ class sotf_Repository {
 
   /** Generates the ID for a new persistent object. */
   function generateID($object) {
-    global $nodeId;
-    if($nodeId == 0)
-      raiseError('Please set $nodeId to a positive integer in config.inc.php');
+    global $config;
+    if($config['nodeId'] == 0)
+      raiseError('Please set config[nodeId] to a positive integer in config.inc.php');
     $tableCode = $this->getTableCode($object->tablename);
     if($this->isVocabularyTable($object->tablename)) 
       $nid = 0;
     else
-      $nid = $nodeId;
+      $nid = $config['nodeId'];
     $localId = $this->db->nextId($object->tablename);
     $id = sprintf("%03d%2s%d", $nid, $tableCode, $localId);
     debug("generated ID", $id);
     return $id;
+  }
+
+  /************************************************
+   *      OBJECT CACHING
+   ************************************************/
+
+  function &getFromCache($id) {
+	 if(is_object($this->objectCache[$id])) {
+		debug("CACHE HIT for: $id");
+		return $this->objectCache[$id];
+	 }
+  }
+
+  function putInCache(&$object) {
+	 $id = $object->getID();
+	 if(!$id) {
+		//debug("BAD object", $object);
+		$object->debug();
+		raiseError("Can't cache objects without id");
+	 }
+	 //debug("CACHED: $id");
+	 $this->objectCache[$id] = &$object;
   }
 
   /************************************************
@@ -213,7 +238,7 @@ class sotf_Repository {
 
   function updateTopicCounts() {
     // calculate counts by topic
-    $this->db->query("DELETE FROM TABLE sotf_topics_counter");
+    $this->db->query("DROP TABLE sotf_topics_counter");
     $this->db->query("SELECT setval('sotf_topics_counter_id_seq', 1, false)");
     $this->db->query("SELECT nextval('sotf_topics_counter_id_seq') AS id, t.id AS topic_id, count(p.id) AS number, NULL::int AS total INTO sotf_topics_counter FROM sotf_topic_tree_defs t LEFT JOIN sotf_prog_topics p ON t.id = p.topic_id GROUP BY t.id");
     // calculate totals including subtopic counts

@@ -48,7 +48,7 @@ if($createNew) {
 $nodes = sotf_Node::listAll();
 $nodeData = array();
 while(list(,$node)= each($nodes)) {
-  if(!sotf_Neighbour::isNeighbour($node->get('node_id')) && $nodeId != $node->get('node_id')) {
+  if(!sotf_Neighbour::isNeighbour($node->get('node_id')) && $config['nodeId'] != $node->get('node_id')) {
     $nodeData[] = $node->getAll();
   }
 }

@@ -91,7 +91,7 @@ elseif(isset($user))
 }
 
 
-$smarty->assign('LANGUAGES',$outputLanguages);
+$smarty->assign('LANGUAGES',$config['outputLanguages']);
 
 $smarty->assign(array(
 					"USERID"     => $username,

@@ -1,8 +1,8 @@
 <?php
 
 require("init.inc.php");
-require("$classdir/sotf_AdvSearch.class.php");
-require("$classdir/sotf_ParamCache.class.php");				//paramcache
+require($config['classdir'] . "/sotf_AdvSearch.class.php");
+require($config['classdir'] . "/sotf_ParamCache.class.php");				//paramcache
 
 $type = sotf_Utils::getParameter('type');
 $data = sotf_Utils::getParameter('data');

@@ -28,8 +28,8 @@ class sotf_Node extends sotf_NodeObject {
 	 * @method static getLocalNode
 	 */
 	function getLocalNode() {
-		global $db, $nodeId;
-		return sotf_Node::getNodeById($nodeId);
+		global $db, $config;
+		return sotf_Node::getNodeById($config['nodeId']);
 	}
 
 	/** returns a list of all such objects: can be slow!!

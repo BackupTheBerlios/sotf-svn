@@ -15,25 +15,28 @@
 //////////////////////////////////////////////////////////////////////////
 
 // the sql connection parameters for the node database
-$nodeDbUser = 'user';
-$nodeDbHost = 'host';
-$nodeDbPort = '5432';
-$nodeDbPasswd = '';
-$nodeDbName = 'node';
+$config['nodeDbUser'] = 'user';
+$config['nodeDbHost'] = 'host';
+$config['nodeDbPort'] = '5432';
+$config['nodeDbPasswd'] = '';
+$config['nodeDbName'] = 'node';
 
 // the sql connection parameters for the SelfAdmin database
-$userDbUser = 'user';
-$userDbHost = 'host';
-$userDbPort = '5432';
-$userDbPasswd = '';
-$userDbName = 'sadm';
+$config['userDbUser'] = 'user';
+$config['userDbHost'] = 'host';
+$config['userDbPort'] = '5432';
+$config['userDbPasswd'] = '';
+$config['userDbName'] = 'sadm';
 
 //////////////////////////////////////////////////////////////////////////
 // MAIL --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
 // e-mails sent by the code will have this address as From:
-$mailFromAddress = "nobody@nowhere.com";
+$config['mailFromAddress'] = "nobody@nowhere.com";
+
+// e-mail for node administrator
+$config['adminEmail'] = "nobody@nowhere.com";
 
 //////////////////////////////////////////////////////////////////////////
 // NODE SETUP --------------------------------------------
@@ -41,63 +44,60 @@ $mailFromAddress = "nobody@nowhere.com";
 
 // id (positive integer) of this node in the node network: you should negotiate this with others in the network
 // otherwise choose a random number (later connecting to node network is impossible if this id is in use there)
-$nodeId = "";
+$config['nodeId'] = "";
 
 // the short name of this node in the network, example: HU5, AT3
-$nodeName = "XYZ";
+$config['nodeName'] = "XYZ";
 
 // whether imported files are published by default
-$publishxbmf = false;
+$config['publishXbmf'] = false;
 
 //////////////////////////////////////////////////////////////////////////
 // FILE LOCATIONS  --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-// $basedir -> Complete filesystem path
-$basedir = 'C:/sotf/node';
+// complete filesystem path for this software package
+$config['basedir'] = 'C:/sotf/node';
 
 // the directory where stations and radio shows will be archived
-$repositoryDir = "$basedir/repository";
+$config['repositoryDir'] = "$config['basedir']/repository";
 
 // the directory where stations and radio shows will be archived
-$musicDir = "$basedir/music";
+$config['musicDir'] = "$config['basedir']/music";
 
 // the directory under which users have FTP or other access to send files to
-$userDirs = "$basedir/users";
+$config['userDirs'] = "$config['basedir']/users";
 
 // the FTP URL for user directories (defined above), with a trailing slash
-$userFTP = 'ftp://foo.foo.org:8989/';
+$config['userFTP'] = 'ftp://foo.foo.org:8989/';
 
 // the directory where incoming programmes (XBMF) arrive from stations
-$xbmfInDir = "$basedir/incoming";
+$config['xbmfInDir'] = "$config['basedir']/incoming";
 
 // where PEAR files are located
-$peardir = 'C:/Program Files/php422/pear';
+$config['peardir'] = 'C:/Program Files/php422/pear';
 
 // where Smarty files are located
-$smartydir = 'C:/sotf/helpers/smarty2.3';
+$config['smartydir'] = 'C:/sotf/helpers/smarty2.3';
 
 // where getid3 files are located
-$getid3dir = 'C:/sotf/helpers/getid3';
+$config['getid3dir'] = 'C:/sotf/helpers/getid3';
 
 // where ImageMagick is installed
-$magickDir = 'C:/Program Files/ImageMagick';
-
-// where eZ xml files are located
-//$ezxmldir = '/ezxml';
+$config['magickDir'] = 'C:/Program Files/ImageMagick';
 
 // Path to the class files
-$classdir = $basedir . '/code/classes';
+$config['classdir'] = $config['basedir'] . '/code/classes';
 
 // Path to XML-RPC libraries
-$xmlrpcdir = $basedir . '/code/xmlrpc';
+$config['xmlrpcdir'] = $config['basedir'] . '/code/xmlrpc';
 
 // path to PHP scripts and images
-$wwwdir = $basedir . '/www';
+$config['wwwdir'] = $config['basedir'] . '/www';
 
 // The URL prefix for code/www subdir 
-// i.e. http://<your-host>/$localPrefix will open the starting/home page of the node
-$localPrefix = '/node/www';
+// i.e. http://<your-host>/$config['localPrefix'] will open the home page of the node
+$config['localPrefix'] = '/node/www';
 
 //////////////////////////////////////////////////////////////////////////
 // STREAMING --------------------------------------------
@@ -107,119 +107,121 @@ $localPrefix = '/node/www';
 // If you don't have tamburine, you can set up streaming with the
 // remaining set of parameters in this section.
 // Example: http://your.host.name:8080/RPC2
-$tamburineURL = '';
+$config['tamburineURL'] = '';
 
 // Parameters for connection to icecast streaming server
-$iceServer = "your.host.name";
-$icePort = "8000";
-$encoderPassword = "hackme";
+$config['iceServer'] = "your.host.name";
+$config['icePort'] = "8000";
+$config['encoderPassword'] = "hackme";
 
-// The command to start streaming __XX__ style tokens are replaced with the actual value
-$streamCmd = "/usr/bin/perl $basedir/code/contrib/iceplay -b __BITRATE__ -s $iceServer -P $icePort -p $encoderPassword -l __PLAYLIST__ -n __NAME__ >>$basedir/logs/play.log 2>&1 &";
+// The command to start streaming: __XX__ style tokens are replaced with the actual value
+$config['streamCmd'] = "/usr/bin/perl " . $config['basedir'] . "/code/contrib/iceplay -b __BITRATE__ -s " . $config['iceServer'] . "-P " . $config['icePort'] . " -p " . $config['encoderPassword'] . "-l __PLAYLIST__ -n __NAME__ -v >>" . $config['basedir'] . "/logs/play.log 2>&1 &";
 
 // The server will not start more streams than this
-$maxNumberOfStreams = 30;
+$config['maxNumberOfStreams'] = 30;
 
 //////////////////////////////////////////////////////////////////////////
 // DEBUGGING, LOGGING & ERROR HANDLING -----------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-$logFile = "$basedir/logs/log";
+// Everything will be logged here. You can configure logging on the admin screen,
+$config['logFile'] = "$config['basedir']/logs/log";
 
 // Temp. solution for debugging right after install, later you may switch this off
-$debug = true;
+$config['debug'] = true;
 
 //////////////////////////////////////////////////////////////////////////
 // LANGUAGE SETUP  --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
 // selectable languages for user interface
-$outputLanguages = array("en");
+$config['outputLanguages'] = array("en");
 
-$defaultLanguage = "en";
+// default language if user's language cannot be determined
+$config['defaultLanguage'] = "en";
 
 // languages appearing in language select boxes
-$languages = array("en", "de", "hu", "it", "es", "cz", "fr", "ro", "ru");
+$config['languages'] = array("en", "de", "hu", "it", "es", "cz", "fr", "ro", "ru");
 
 //////////////////////////////////////////////////////////////////////////
 // AUDIO OPTIONS ------------------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
 /**
-* Specifies a directory where convert stuffs can be found.
+* Specifies a directory where converters can be found.
 *
 * @package	StreamOnTheFly
-* @variable	string	$helperdir
+* @variable	string	$config['helperdir']
 */
-$helperdir = "C:\sotf\helpers";
+$config['helperdir'] = "C:\sotf\helpers";
 
 /**
 * Path of LAME.
 *
 * LAME can encode and decode MP3 files.
 * @package	StreamOnTheFly
-* @variable	string	$lame
+* @variable	string	$config['lame']
 */
-$lame = $helperdir."/lame";
+$config['lame'] = $config['helperdir']."/lame";
 
 /**
 * Path of SoX.
 *
 * SoX is able to generate a stereo PCM data array from a mono one.
 * @package	StreamOnTheFly
-* @variable	string	$sox
+* @variable	string	$config['sox']
 */
-$sox = $helperdir."/sox";
+$config['sox'] = $config['helperdir']."/sox";
 
 /**
 * Path of oggenc.
 *
 * oggenc can encode Ogg Vorbis audio streams.
 * @package	StreamOnTheFly
-* @variable	string	$oggenc
+* @variable	string	$config['oggenc']
 */
-$oggenc = $helperdir."/oggenc";
+$config['oggenc'] = $config['helperdir']."/oggenc";
 
 /**
 * Path of oggdec.
 *
 * oggdec can decode Ogg Vorbis audio streams.
 * @package	StreamOnTheFly
-* @variable	string	$oggdec
+* @variable	string	$config['oggdec']
 */
-$oggdec = $helperdir."/oggdec";
+$config['oggdec'] = $config['helperdir']."/oggdec";
 
 /**
 * Progress bar character.
 *
 * @package	StreamOnTheFly
-* @variable	string	$progressBarChar
+* @variable	string	$config['progressBarChar']
 */
-$progressBarChar = '|';
+$config['progressBarChar'] = '|';
 
 /**
 * Length of progress bar.
 *
 * @package	StreamOnTheFly
-* @variable	string	$progressBarLength
+* @variable	string	$config['progressBarLength']
 */
-$progressBarLength = 100;
+$config['progressBarLength'] = 100;
 
 /**
 * Perl regexp for parse oggenc output.
 *
 * @package	StreamOnTheFly
-* @variable	string	$oggencRegexp
+* @variable	string	$config['oggencRegexp']
 */
-$oggencRegexp = "/^\t\[(...)\..%\].*$/";
+$config['oggencRegexp'] = "/^\t\[(...)\..%\].*$/";
 
 /**
 * Perl regexp for parse lame output during encode.
 *
 * @package	StreamOnTheFly
-* @variable	string	$lameencRegexp
+* @variable	string	$config['lameencRegexp']
 */
-$lameencRegexp = "/^.{6}?\/.{7}?\((..)%\)\|.*$/";
+$config['lameencRegexp'] = "/^.{6}?\/.{7}?\((..)%\)\|.*$/";
 
 /**
 * Bitrate tolerance.
@@ -227,9 +229,9 @@ $lameencRegexp = "/^.{6}?\/.{7}?\((..)%\)\|.*$/";
 * Specifies how much can differ the current avarage bitrate
 * from one of the predefined values for variable bitrate streams.
 * @package	StreamOnTheFly
-* @variable	float	$bitrateTolerance
+* @variable	float	$config['bitrateTolerance']
 */
-$bitrateTolerance = 10;
+$config['bitrateTolerance'] = 10;
 
 
 /**
@@ -237,9 +239,9 @@ $bitrateTolerance = 10;
 *
 * Array of associative arrays contains information about the audio format.
 * @package	StreamOnTheFly
-* @variable	array	$audioFormats
+* @variable	array	$config['audioFormats']
 */
-$audioFormats = array(
+$config['audioFormats'] = array(
 					array(
 						'format' => 'mp3',
 						'bitrate' => '24',
@@ -258,18 +260,18 @@ $audioFormats = array(
 				);
 
 // index of the preferred streaming format from the list above
-$preferredStreamingFormat = 1;
+$config['preferredStreamingFormat'] = 1;
 
 //////////////////////////////////////////////////////////////////////////
 // MISC OPTIONS ------------------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
 // width and height of programme/station/series/contact icons
-$iconWidth = 100;
-$iconHeight = 100;
+$config['iconWidth'] = 100;
+$config['iconHeight'] = 100;
 
 // MIME types to determine type of uploaded documents
-$mimetypes = array(
+$config['mimetypes'] = array(
 				'doc'=>'application/msword',
 				'gif'=>'image/gif',
 				'htm'=>'text/html',

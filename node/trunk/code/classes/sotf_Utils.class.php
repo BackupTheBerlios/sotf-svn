@@ -337,8 +337,8 @@ class sotf_Utils
 	}
 	
 	function sendmail($to, $subject, $body) {
-	  global $mailFromAddress;
-	  $success = mail($to, $subject, $body, "From: $mailFromAddress");
+	  global $config;
+	  $success = mail($to, $subject, $body, "From: " . $config['mailFromAddress']);
 	  if(!$success)
 	    error_log("could not send mail to $to with subject $subject", 0);
 	}
