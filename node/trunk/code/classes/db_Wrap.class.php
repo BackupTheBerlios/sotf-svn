@@ -37,8 +37,8 @@ class db_Wrap extends DB_pgsql {
 
 	function errorNative() {
 	  $err = parent::errorNative();
-	  error_log("PGSQL error: $err",0);
-	  error_log("in query: " . substr($this->last_query,0,254) ,0);
+	  //error_log("PGSQL error: $err",0);
+	  //error_log("in query: " . substr($this->last_query,0,254) ,0);
     if($this->debug)
       raiseError("SQL error: $err in \n " . $this->last_query);
     else

@@ -129,10 +129,17 @@ class sotf_Neighbour extends sotf_Object {
 	 while($more) {
 		$db->begin(true);
 		$modifiedObjects = sotf_NodeObject::getModifiedObjects($remoteId, $this->objectsPerRPCRequest);
-		$more = sotf_NodeObject::countModifiedObjects($remoteId);
+		$remaining = sotf_NodeObject::countModifiedObjects($remoteId);
+		if(count($modifiedObjects)==0 && $remaining > 0) {
+		  logError("DATA integrity problem", "$remaining objects remained in sotf_object_status after sync");
+		}
+		if($remaining==0 || count($modifiedObjects)==0)
+		  $more = false;
+		else
+		  $more = true;
 		$chunkInfo = array('this_chunk' => $thisChunk,
 								 'node' => $localNodeData,
-								 'objects_remaining' => $more
+								 'objects_remaining' => $remaining
 								 );
 		debug("chunk info", $chunkInfo);
 		debug("number of sent objects", count($modifiedObjects));
