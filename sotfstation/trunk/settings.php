@@ -35,9 +35,9 @@
 				$_POST['autologin'] = 'f';
 				
 				//clean cookies
-				setcookie("auto_login_id",'','',"/","");
-				setcookie("auto_login_key",'','',"/","");
-				setcookie("auto_login_name",'','',"/","");
+				setcookie("auto_login_id");
+				setcookie("auto_login_key");
+				setcookie("auto_login_name");
 			}else{
 				//create autologin keys
 				$new_key = md5(uniqid(microtime(),1));
@@ -50,9 +50,9 @@
 				}
 				
 				//set cookies
-				setcookie("auto_login_id",$_SESSION['USER']->get("auth_id"),time()+7776000,"/","");
-				setcookie("auto_login_key",$new_key,time()+7776000,"/","");
-				setcookie("auto_login_name",$_SESSION['USER']->get("name"),time()+7776000,"/","");
+				setcookie("auto_login_id",$_SESSION['USER']->get("auth_id"),time()+7776000);
+				setcookie("auto_login_key",$new_key,time()+7776000);
+				setcookie("auto_login_name",$_SESSION['USER']->get("name"),time()+7776000);
 			}
 			
 			//update database

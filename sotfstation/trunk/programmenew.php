@@ -77,8 +77,9 @@
 		}
 	}else{
 		//assign default timestamps
-		$smarty->assign("stime",time());
-		$smarty->assign("time",time() + 60*60);
+		$start_time = ceil(time() / 900) * 900;		# round time up to the closest quarter of an hour
+		$smarty->assign("stime",$start_time);
+		$smarty->assign("time",$start_time + 60*60);
 		$smarty->assign("submit_series_owner",$_SESSION['USER']->get("auth_id"));
 	}
 	

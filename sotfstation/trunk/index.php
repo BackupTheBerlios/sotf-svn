@@ -23,6 +23,7 @@
 		exit;																					# end script processing.
 	}
 	
+	################################ AUTOLOGIN ########################################################
 	//check for autologin 
 	if(!empty($_COOKIE['auto_login_id'])){	# there exists a mark
 		//lets give it a try then...
@@ -37,21 +38,22 @@
 			$_POST['user'] = $_COOKIE['auto_login_name'];
 			
 			//set cookies
-			setcookie("auto_login_id",$_COOKIE['auto_login_id'],time()+7776000,"/","");
-			setcookie("auto_login_key",$new_key,time()+7776000,"/","");
-			setcookie("auto_login_name",$_COOKIE['auto_login_name'],time()+7776000,"/","");
+			setcookie("auto_login_id",$_COOKIE['auto_login_id'],time()+7776000);
+			setcookie("auto_login_key",$new_key,time()+7776000);
+			setcookie("auto_login_name",$_COOKIE['auto_login_name'],time()+7776000);
 			
 			//process session init
 			include("common/loginmod.inc.php");
 		}else{	# the mark is invalid
 			//clean the mark
-			setcookie("auto_login_id",'','',"/","");
-			setcookie("auto_login_key",'','',"/","");
-			setcookie("auto_login_name",'','',"/","");
+			setcookie("auto_login_id");
+			setcookie("auto_login_key");
+			setcookie("auto_login_name");
 		}
 	}
-
+	############################## END AUTOLOGIN ######################################################
 	
+	############################# PROCESS SUBMIT CALL #################################################
 	//process login call
 	if($_POST['login']){
 		//clean inputs
@@ -120,6 +122,7 @@
 		//assign posts
 		$smarty->assign('user',$_POST['user']);
 	}
+	########################################### END PROCESS SUBMIT #################################
 	
 	//create help message
 	$myHelp = new helpBox(1);

@@ -15,9 +15,9 @@
 	include('config.inc.php');											# guess what this is ;)
 	
 	//clean cookies
-	setcookie("auto_login_id",'','',"/","");
-	setcookie("auto_login_key",'','',"/","");
-	setcookie("auto_login_name",'','',"/","");
+	setcookie("auto_login_id");
+	setcookie("auto_login_key");
+	setcookie("auto_login_name");
 	
 	//destroy session data			
 	session_start();																# start the session handler
