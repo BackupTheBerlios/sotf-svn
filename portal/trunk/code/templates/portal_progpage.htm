@@ -4,7 +4,7 @@
 		<td width="100" align="left" valign="top"><img src="{$programme.icon}" width="100" height="100"></td>
 		<td width="15">&nbsp;</td>
 		<td align="left" valign="top">
-			<strong><font color="#FFCC33">&deg;&deg;&deg;&nbsp{$programme.title}</font></strong>
+			<strong><font color="#FFCC33">&deg;&deg;&deg;&nbsp;{$programme.title}</font></strong>
 			{if $is_admin}&nbsp;&nbsp;&nbsp;<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$rootdir}/portal.php/{$portal_name}?playlist=1{if !$back}&filter=all&prglist=current{/if}#{$programme.id}">{#edit_it#}</a>]</font>{/if}
 			<br><br><font size="2" face="Arial, Helvetica, sans-serif">
 			{foreach key=key item=cell from=$programme.values}
