@@ -16,27 +16,43 @@ class sotf_Playlist {
 
   function add($item) {
 	 global $config;
-	 $mp3info = GetAllFileInfo($item['path']);
-	 //debug('mp3info', $mp3info);
-	 $bitrate = (string) $mp3info['audio']['bitrate'];
-	 if(!$bitrate)
-		raiseError("Could not determine bitrate, maybe this is not an audio file: " . $item['path']);
-	 $item['bitrate'] = $bitrate;
 
-	 if($config['httpStreaming']) {
-		//$tmpFileName = 'au_' . $item['id'] . '_' . ($item['name'] ? $item['name'] : basename($item['path']));
-		$tmpFileName = 'au_' . $item['id'] . '_' . basename($item['path']);
-		$tmpFile = $config['tmpDir'] . "/$tmpFileName";
-		if(!@readlink($tmpFile)) {
-		  if(!symlink($item['path'], $tmpFile)) {
-			 raiseError("symlink failed in tmp dir");
+	 if($item['url']) {
+		// this is a remote file
+		if($config['httpStreaming']) {
+		  $lines = file($item['url']);
+		  foreach($lines as $line) {
+			 if(!empty($line))
+				$this->audioFiles[] = array('url' => $line);
 		  }
+		} else {
+		  // nothing to do
+		  // not tested for Tamburine
 		}
-		$item['url'] = $config['tmpUrl'] . "/$tmpFileName";
-	 }
+	 } else {
+		// this is a local file
 
-	 $this->audioFiles[] = $item;
-	 $this->totalLength += $mp3info["playtime_seconds"];
+		$mp3info = GetAllFileInfo($item['path']);
+		//debug('mp3info', $mp3info);
+		$bitrate = (string) $mp3info['audio']['bitrate'];
+		if(!$bitrate)
+		  raiseError("Could not determine bitrate, maybe this is not an audio file: " . $item['path']);
+		$item['bitrate'] = $bitrate;
+		
+		if($config['httpStreaming']) {
+		  //$tmpFileName = 'au_' . $item['id'] . '_' . ($item['name'] ? $item['name'] : basename($item['path']));
+		  $tmpFileName = 'au_' . $item['id'] . '_' . basename($item['path']);
+		  $tmpFile = $config['tmpDir'] . "/$tmpFileName";
+		  if(!@readlink($tmpFile)) {
+			 if(!symlink($item['path'], $tmpFile)) {
+				raiseError("symlink failed in tmp dir");
+			 }
+		  }
+		  $item['url'] = $config['tmpUrl'] . "/$tmpFileName";
+		}
+		$this->totalLength += $mp3info["playtime_seconds"];
+		$this->audioFiles[] = $item;
+	 }
   }
 
   function addJingle($obj) {
@@ -60,7 +76,7 @@ class sotf_Playlist {
 	 if(!$prg->isLocal()) {
 		$node = sotf_Node::getNodeById($file->getNodeId());
 		$path = $node->get('url') . "/listen.php?id=" . $prg->id . "&fileid=" . $file->id;
-		$this->add(array('path' => $path));
+		$this->add(array('path' => $path, 'url'=> $path));
 		return;
 	 }
 	 
