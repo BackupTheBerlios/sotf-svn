@@ -13,6 +13,8 @@ require("init.inc.php");
 $id = sotf_Utils::getParameter('id');
 if($id) {
 
+  $db->begin();
+
   $smarty->assign('ID', $id);
 
   $prg = &$repository->getObject($id);
@@ -86,6 +88,8 @@ if($id) {
     $smarty->assign('inplaylist', sotf_UserPlaylist::contains($id));
   }
 }
+
+$db->commit();
 
 if(sotf_Utils::getParameter('popup')) {
   $smarty->assign('POPUP', 1);

@@ -11,6 +11,15 @@ require("init.inc.php");
 
 $page->popup = true;
 
+//TODO: test
+//$name = sotf_Utils::magicQuotes($_GET["name"]);
+//$id = sotf_Utils::magicQuotes($_GET["id"]);
+//$value = sotf_Utils::magicQuotes($_GET["value"]);
+
+$name = $_GET["name"];
+$id = $_GET["id"];
+$value = $_GET["value"];
+
 ?>
 
 <html>
@@ -34,27 +43,19 @@ function windowclose()
 <?php
 //<body>
 
-//TODO: test
-//$name = sotf_Utils::magicQuotes($_GET["name"]);
-//$id = sotf_Utils::magicQuotes($_GET["id"]);
-//$value = sotf_Utils::magicQuotes($_GET["value"]);
-
-$name = $_GET["name"];
-$id = $_GET["id"];
-$value = $_GET["value"];
-
 if ($name == 'rating') {
+  $rating = new sotf_Rating();
   $obj = $repository->getObject($id);
-  if(!$obj->isLocal()) {
-	 sotf_Node::redirectToHomeNode($obj);
+  if($obj->isLocal()) {
+	 $rating->setRating($id, $value);
+	 $page->alertWithErrors();
+	 print("</body></html>");
+	 exit;
+  } else {
+	 // rating for remote object
+	 $rating->sendRemoteRating($obj, $value);
 	 exit;
   }
-
-  $rating = new sotf_Rating();
-  $rating->setRating($id, $value);
-  $page->alertWithErrors();
-  print("</body></html>");
-  exit;
 }
 
 $page->forceLogin();

@@ -329,6 +329,27 @@ class sotf_Object {
 	 return array_keys($this->data);
   }
 	
+	/** static */
+	function addToUpdate($table, $id) {
+		global $db;
+		$exists = $db->getOne("SELECT count(*) FROM sotf_to_update WHERE tablename='$table' AND row_id='$id'");
+		if(!$exists)
+			$db->query("INSERT INTO sotf_to_update (tablename, row_id) VALUES('$table','$id')");
+	}
+
+	/** static */
+	function deleteToUpdate($table, $id) {
+		global $db;
+		$db->query("DELETE FROM sotf_to_update WHERE tablename='$table' AND row_id='$id'");
+	}
+
+	/** static */
+	function getToUpdate($table, $id) {
+		global $db;
+		return $db->getAll("SELECT * FROM sotf_to_update");
+	}
+	
+
   /**
 	* sotf::debug()
 	* 

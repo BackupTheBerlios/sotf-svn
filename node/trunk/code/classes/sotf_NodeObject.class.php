@@ -158,12 +158,6 @@ class sotf_NodeObject extends sotf_Object {
 	 }
   }
 
-  /** Static: count the objects to be sent to the neighbour node. */
-  function countModifiedObjects($remoteNode) {
-	 global $db;
-	 return $db->getOne("SELECT count(*) FROM sotf_object_status WHERE node_id = '$remoteNode'");
-  }
-
   /**************************************************
 	*
 	*					  SYNC SUPPORT
@@ -229,14 +223,20 @@ class sotf_NodeObject extends sotf_Object {
 	  return $changed;
 	}
 
+  /** Static: count the objects to be sent to the neighbour node. */
+  function countModifiedObjects($remoteNode) {
+	 global $db;
+	 return $db->getOne("SELECT count(*) FROM sotf_object_status WHERE node_id = '$remoteNode'");
+  }
+
   /** Static: collects the objects to send to the neighbour node. */
-  function getModifiedObjects($remoteNode, $from, $objectsPerPage) {
+  function getModifiedObjects($remoteNode, $objectsPerPage) {
 	 global $db, $config, $repository;
 
 	 // an ordering in which objects should be retrieved because of foreign keys
 	 $tableOrder = $repository->tableOrder;
 	 // select objects to send to neighbour
-	 $result = $db->limitQuery("SELECT no.* FROM sotf_node_objects no, sotf_object_status os WHERE no.id = os.id AND no.node_id != '$remoteNode' AND os.node_id = '$remoteNode' ORDER BY strpos('$tableOrder', substring(no.id, 4, 2)), no.id", $from, $objectsPerPage);
+	 $result = $db->limitQuery("SELECT no.* FROM sotf_node_objects no, sotf_object_status os WHERE no.id = os.id AND no.node_id != '$remoteNode' AND os.node_id = '$remoteNode' ORDER BY strpos('$tableOrder', substring(no.id, 4, 2)), no.id", 0, $objectsPerPage);
 	 while (DB_OK === $result->fetchInto($row)) {
 		$objects1[] = $row;
 	 }
@@ -308,6 +308,85 @@ class sotf_NodeObject extends sotf_Object {
 	 }
 	 debug("number of objects updated", $updatedObjects);
 	 return $updatedObjects;
+  }
+
+  /**************************************************
+	*
+	*					  MESSAGE FORWARD SUPPORT
+	*
+	**************************************************/
+
+	/** When you have to send forward stats data to the home node */
+  function createForwardObject($type, $data) {
+	 global $db;
+	 $obj = new sotf_Object("sotf_to_forward");
+	 $obj->setAll(array('prog_id' => $this->id,
+							  'node_id' => $this->getNodeId(),
+							  'type' => $type,
+							  'data' => serialize($data),
+							  'when' => $db->getTimestampTz()
+					  ));
+	 $obj->create();
+  }
+
+  /** Static: count the objects to be sent to the node. */
+  function countForwardObjects($remoteNode) {
+	 global $db;
+	 return $db->getOne("SELECT count(*) FROM sotf_to_forward WHERE node_id = '$remoteNode'");
+  }
+
+  /** Static: collects the objects to forward to node. */
+  function getForwardObjects($remoteNode, $objectsPerPage) {
+	 global $db, $config, $repository;
+
+	 // select objects to send to neighbour
+	 $result = $db->limitQuery("SELECT * FROM sotf_to_forward WHERE node_id = '$remoteNode' ORDER BY when", 0, $objectsPerPage);
+	 while (DB_OK === $result->fetchInto($row)) {
+		$objects[] = $row;
+	 }
+	 if(count($objects) > 0) {
+		reset($objects);
+		while(list(,$obj) = each($objects)) {
+		  // unserialize data object
+		  $obj['data'] = unserialize($obj['data']);
+		  // delete from forward table (will roll back if failed)
+		  $db->query("DELETE FROM sotf_to_forward WHERE id='". $obj['id'] . "'");
+		}
+	 }
+	 //debug("OBJECTS", $objects);
+	 debug("forwarding ". count($objects) . " objects");
+	 return $objects;
+  }
+
+  function saveForwardObjects($objects) {
+	 if(count($objects) > 0) {
+		reset($objects);
+		while(list(,$obj) = each($objects)) {
+		  debug("type", $obj['type']);
+		  $data = $obj['data'];
+		  switch($obj['type']) {
+		  case 'stat':
+			 $statObjs[] = sotf_Statistics::addRemoteStat($data);
+			 $count++;
+			 break;
+		  case 'rating':
+			 $rating = new sotf_Rating();
+			 $rating->setRemoteRating($data);
+			 $count++;
+			 break;
+		  default:
+			 logError("Unknown forward object type: " . $obj['type']);
+		  }
+		}
+	 }
+	 // updating global statistics
+	 if(count($statObjs) > 0) {
+		reset($statObjs);
+		while(list(,$obj) = each($statObjs)) {
+		  $obj->updateStats();
+		}
+	 }
+	 return $count;
   }
 
 }

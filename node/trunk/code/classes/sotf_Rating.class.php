@@ -45,59 +45,85 @@ class sotf_Rating	 extends sotf_Object {
 			return new sotf_NodeObject('sotf_prog_rating');
 	}
 
-	function setRating($objId, $rating, $remoteData=array()) {
-		global $db, $page, $user;
-		
-		// checks
-		if(!is_numeric($rating) || $rating < $this->minValue || $rating > $this->maxValue) {
-			addError("invalid or empty rating");
-			return;
-		}
+	function recordRating($data) {		
 
-		if(!empty($remoteData)) {
-			// this rating comes from another node...
-			// TODO
-		} elseif($page->loggedIn()) {
-			// local rating from registered user
-			$this->find($objId, $user->id);
-			$this->set('rate', $rating);
-			$this->set('host', getHostName());
-			$this->set('entered', $db->getTimestampTz());
+	  // checks
+	  $rating = $data['rate'];
+	  if(!is_numeric($rating) || $rating < $this->minValue || $rating > $this->maxValue) {
+		 raiseError("invalid or empty rating");
+		 return;
+	  }
+	  
+	  if($data['user_id']) {
+		 // local rating from registered user
+		 $this->find($data['prog_id'], $data['user_id'], $data['user_node_id']);
+		 if($this->exists()) {
+			// change existing rating
+			$id = $this->id;
+			$this->setAll($data);
+			$this->setId($id);
+			$this->update();
+		 } else {
+			// new rating
+			$this->setAll($data);
+			$this->create();
+		 }				 
+	  } else {
+		 // anonymous rating
+		 // TODO: if there was a rating request from the same host within x minutes, then reject
+		 $key = $data['auth_key'];
+		 if($key) {
+			$this->findAnon($data['prog_id'], $key);
 			if($this->exists()) {
-				// change existing rating
-				$this->update();
+			  // change existing rating
+			  $id = $this->id;
+			  $this->setAll($data);
+			  $this->setId($id);
+			  $this->update();
 			} else {
-				// new rating
-				$this->set('prog_id', $objId);
-				$this->set('user_id', $user->id);
-				$this->set('user_node_id', 0);
-				$this->create();
-			}				 
-		} else {
-			// anonymous rating
-			// TODO: if there was a rating request from the same host within x minutes, then reject
-			$key = $page->getAuthKey();
-			if($key) {
-				$this->findAnon($objId, $key);
-				$this->set('rate', $rating);
-				$this->set('host', getHostName());
-				$this->set('entered', $db->getTimestampTz());
-				if($this->exists()) {
-					// change existing rating
-					$this->update();
-				} else {
-					// new rating
-					$this->set('prog_id', $objId);
-					$this->set('auth_key', $key);
-					$this->create();
-				}
-			} else {
-				addError($page->getlocalized("cannot_rate_no_authkey"));
-				// or $this->set('problem', 'no_auth_key');
-				return;
+			  // new rating
+			  $this->setAll($data);
+			  $this->create();
 			}
-		}
-		$this->updateInstant($objId);
+		 } else {
+			raiseError($page->getlocalized("cannot_rate_no_authkey"));
+			// or $this->set('problem', 'no_auth_key');
+			return;
+		 }
+	  }
+	}
+
+	function sendRemoteRating($obj, $value) {
+	  $data = $this->createLocalRatingInfo($obj->id, $value);
+	  $this->recordRating($data);
+	  $obj->createForwardObject('rating', $data);
+	}
+
+	function createLocalRatingInfo($objId, $value) {
+	  global $db, $user, $config, $page;
+
+	  $data = array('prog_id' => $objId,
+						 'id' => $id,
+						 'user_node_id' => $config['nodeId'],
+						 'user_id' => $user->id,
+						 'rate' => $value,
+						 'host' => getHostName(),
+						 'entered' => $db->getTimestampTz(),
+						 'auth_key' => $page->getAuthKey());
+	  return $data;
+	}
+
+	function setRating($objId, $rating) {
+	  $data = $this->createLocalRatingInfo($objId, $rating);
+	  $this->recordRating($data);
+	  sotf_Object::addToUpdate('updateInstant', $data['prog_id']);
+	  //$this->updateInstant($objId);
+	}
+
+	function setRemoteRating($data) {
+		$this->recordRating($data);
+		sotf_Object::addToUpdate('updateInstant', $data['prog_id']);
+		//$this->updateInstant($data['prog_id']);
 	}
 
 	/** calculate overall rating value for object */

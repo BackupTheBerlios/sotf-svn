@@ -43,8 +43,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $this->sotf_ComplexNodeObject('sotf_programmes', $id, $data);
 	 if($this->exists()) {
 		$station = $this->getStation();
-		if($station)
+		if($station) {
 		  $this->stationName = $station->get('name');
+		}
 		//debug("stationName", $this->stationName);
 	 }
   }
@@ -218,33 +219,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 *      STATISTICS AND FEEDBACK
 	 ************************************************/
 
-	/** When you have to send forward stats data to the home node */
-  function createForwardObject($type, $data) {
-	 $obj = new sotf_Object("sotf_to_forward");
-	 $obj->setAll(array('prog_id' => $this->id,
-							  'node_id' => $this->getNodeId(),
-							  'type' => $type,
-							  'data' => serialize($data)));
-	 $obj->create();
-  }
-
   function addStat($fileId, $type) {
-	 global $db;
-
-	 if($type != 'listens' && $type != 'downloads' && $type != 'visits')
-		raiseError("addStat: type should be 'listens' or 'downloads' or 'visits'");
-
-	 if($this->isLocal()) {
-		sotf_Statistics::addStat($this->id, $fileId, $type);
-	 } else {
-		// if remote program, send this by XML-RPC!!
-		$data = array('prog_id' => $this->id,
-						  'date' => getdate(),
-						  'ip' => getHostName(),
-						  'type' => $type,
-						  'file' => $filename);
-		$this->createForwardObject('stat', $data);
-	 }
+		sotf_Statistics::addStat($this, $fileId, $type);
   }
 
   function getStats() {

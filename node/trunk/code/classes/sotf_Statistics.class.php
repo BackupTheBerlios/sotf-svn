@@ -24,13 +24,13 @@ class sotf_Statistics extends sotf_Object {
   function getGlobalStats($prgId) {
     global $db;
     $result = $db->getRow("SELECT * FROM sotf_prog_stats WHERE prog_id='$prgId'");
-    if(DB::isError($result))
-      return array('visits'=>0, 'listens'=> 0, 'downloads' => 0, 	
-                   "unique_listens" => 0, "unique_downloads" => 0, "unique_visits" => 0, "detail" => '');
-    else {
-      debug("STATS", $result);
-      return $result;
-    }
+    if(DB::isError($result)) {
+      $result = array('visits'=>0, 'listens'=> 0, 'downloads' => 0, 	
+							 "unique_listens" => 0, "unique_downloads" => 0, "unique_visits" => 0, "detail" => '');
+	 }
+	 $result['last_change'] = $db->getOne("SELECT last_change FROM sotf_node_objects WHERE id='" . $result['id'] . "'");
+	 debug("STATS", $result);
+	 return $result;
   }
 
   /** static */
@@ -41,30 +41,51 @@ class sotf_Statistics extends sotf_Object {
   }
 
   /** static */
-  function addStat($prgId, $fileId, $type) {
-    global $db, $repository;
+  function addStat($obj, $fileId, $type) {
+
+	 $data = sotf_Statistics::createLocalStatInfo($obj, $fileId, $type);
+	 if($obj->isLocal()) {
+		sotf_Statistics::recordStat($data);
+	 } else {
+		// if remote program, send this by XML-RPC!!
+		$obj->createForwardObject('stat', $data);
+	 }
+  }
+
+  /** static */
+  function addRemoteStat($data) {
+	 return sotf_Statistics::recordStat($data);
+  }
+
+  function recordStat($data, $update = false) {
+    global $db, $repository, $sotfVars;
     
+	 $type = $data['type'];
     if($type != 'listens' && $type != 'downloads' && $type != 'visits')
       raiseError("addStat: type should be 'listens' or 'downloads' or 'visits'");
 
     // update periodic stat
-    $now = getdate();
+
+	 $date = strtotime($data['date']);
+    $now = getdate($date);
     $year = $now['year'];
     $month = $now['mon'];
     $day = $now['mday'];
-    $week = date('W');
-    $where = " WHERE prog_id='$this->id' AND year='$year' AND month='$month' AND day='$day' AND week='$week'";
-		$id = $db->getOne("SELECT id FROM sotf_stats $where");
-		if($id) {
-		  $obj = new sotf_Statistics($id);
-		  $obj->set($type, $obj->get($type)+1);
-		} else {
-		  $obj = new sotf_Statistics();
+    $week = date('W', $date);
+	 $prgId = $data['prog_id'];
+	 $fileId = $data['file'];
+    $where = " WHERE prog_id='$prgId' AND year='$year' AND month='$month' AND day='$day' AND week='$week'";
+	 $id = $db->getOne("SELECT id FROM sotf_stats $where");
+	 if($id) {
+		$obj = new sotf_Statistics($id);
+		$obj->set($type, $obj->get($type)+1);
+	 } else {
+		$obj = new sotf_Statistics();
       $prg = $repository->getObject($prgId);
       if(!$prg)
         raiseError("addStat: no such programme: $prgId");
-		  $obj->setAll(array('prog_id' => $prg->id,
-                         'station_id' => $prg->get('station_id'),
+		$obj->setAll(array('prog_id' => $prgId,
+                         'station_id' => $data['station_id'],
                          'year' => $year,
                          'month' => $month,
                          'week' => $week,
@@ -73,14 +94,33 @@ class sotf_Statistics extends sotf_Object {
 		}
 
     // update uniqueness memory
-    sotf_Statistics::addUniqueAccess(getHostName(), $prgId, $fileId, $type);
+    sotf_Statistics::addUniqueAccess($data['ip'], $prgId, $fileId, $type);
 
     // would be too often: 
-    $obj->updateUniqueStats();
-    $obj->updatePrgStats();
+	 if($update) {
+		$obj->updateStats(false);
+	 } else {
+		sotf_Object::addToUpdate('sotf_stats', $obj->id);
+	 }
     $obj->save();
+	 return $obj;
   }
 
+  function createLocalStatInfo($obj, $fileId, $type) {
+	 global $db;
+	 
+	 if($type != 'listens' && $type != 'downloads' && $type != 'visits')
+		raiseError("addStat: type should be 'listens' or 'downloads' or 'visits'");
+	 
+	 $data = array('prog_id' => $obj->id,
+						'station_id' => $obj->get('station_id'),
+						'date' => $db->getTimestampTz(),
+						'ip' => getHostName(),
+						'type' => $type,
+						'file' => $fileId);
+	 return $data;
+  }
+  
   /** static */
   function addUniqueAccess($ip, $prgId, $fileId, $type) {
     global $db;
@@ -93,6 +133,13 @@ class sotf_Statistics extends sotf_Object {
       $subIdValue = empty($fileId) ? 'NULL' : "'$fileId'" ;
       $db->query("INSERT INTO sotf_unique_access (prog_id, sub_id, ip, action) VALUES('$prgId', $subIdValue, '$ip', B'$convert[$type]')");
     }
+  }
+
+  function updateStats($save = true) {
+	 $this->updateUniqueStats();
+	 if($save)
+		$this->save();
+	 $this->updatePrgStats();
   }
 
   function updateUniqueStats() {

@@ -128,7 +128,7 @@ class sotf_Neighbour extends sotf_Object {
 		debug("No new objects to send");
 	 while($more) {
 		$db->begin(true);
-		$modifiedObjects = sotf_NodeObject::getModifiedObjects($remoteId, 0, $this->objectsPerRPCRequest);
+		$modifiedObjects = sotf_NodeObject::getModifiedObjects($remoteId, $this->objectsPerRPCRequest);
 		$more = sotf_NodeObject::countModifiedObjects($remoteId);
 		$chunkInfo = array('this_chunk' => $thisChunk,
 								 'node' => $localNodeData,

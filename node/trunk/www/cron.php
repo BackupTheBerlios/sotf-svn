@@ -31,7 +31,7 @@ set_time_limit(18000);
 // don't garble reply message with warnings in HTML
 //ini_set("display_errors", 0);
 
-//******** Synchronize with network: send new local data and recievie new global data
+//******** Synchronize with network: send new local data and forward new remote data
 
 // sync with all neighbours
 $rpc = new rpc_Utils;
@@ -39,6 +39,17 @@ $neighbours = sotf_Neighbour::getAll();
 if(count($neighbours) > 0) {
   while(list(,$neighbour) = each($neighbours)) {
       $neighbour->sync();
+  }
+}
+
+//******** Forward messages to remote nodes 
+
+// for all nodes
+$nodes = sotf_Node::listAll();
+if(count($nodes) > 0) {
+  while(list(,$node) = each($nodes)) {
+    if($node->getID() != $config['nodeId'])
+      $node->forwardObjects();
   }
 }
 

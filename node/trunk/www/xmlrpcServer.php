@@ -23,6 +23,7 @@ ini_set("display_errors", 0);
 debug("--------------- XML-RPC SERVER STARTED -----------------------------------");
 
 $map['sotf.sync'] = array('function' => 'syncResp');
+$map['sotf.forward'] = array('function' => 'forwardResp');
 $map['portal.query'] = array('function' => 'getQueryResults');
 $map['portal.playlist'] = array('function' => 'getProgrammes');
 $map['sotf.cv.listnames'] = array('function' => 'cvListNames');
@@ -35,7 +36,7 @@ $map['sotf.cv.get'] = array('function' => 'cvGet');
 
 new xmlrpc_server($map);
 
-function checkAccess($neighbour) {
+function checkAccess($url, $nodeId) {
   $url = $neighbour->getUrl();
   if(!$url)
     return "No url found for neighbour node";
@@ -44,7 +45,7 @@ function checkAccess($neighbour) {
   $ip = getenv("REMOTE_ADDR");
   if(!in_array($ip, $allowedIPs)) {
     logError(getenv('REMOTE_HOST') . " XML-RPC access denied");
-    return "this IP is not from neighbour " . $neighbour->get('node_id');
+    return "this IP is not from neighbour " . $nodeId;
   }
 }
 
@@ -79,12 +80,33 @@ function syncResp($params) {
     logError("No access: you are not an allowed neighbour node!");
     return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: you are not an allowed neighbour node!");
   }
-  $msg = checkAccess($neighbour);
+  $msg = checkAccess($neighbour->getUrl(), $neighbour->get('node_id'));
   if($msg) {
     logError($msg);
     return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: $msg!");
   }
   $retval = $neighbour->syncResponse($chunkInfo, $objects);
+  // send response
+  $retval = xmlrpc_encode($retval);
+  return new xmlrpcresp($retval);
+}
+
+function forwardResp($params) {
+  debug("incoming FORWARD request");
+  $chunkInfo = xmlrpc_decode($params->getParam(0));
+  $fromNode = $chunkInfo['from_node'];
+  $objects = xmlrpc_decode($params->getParam(1));
+  $node = sotf_Node::getByNodeId($fromNode);
+  if(!$node) {
+    logError("No access: you are not in my node list!");
+    return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: you are not in my node list!");
+  }
+  $msg = checkAccess($node->get('url'), $fromNode);
+  if($msg) {
+    logError($msg);
+    return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: $msg!");
+  }
+  $retval = $node->forwardResponse($chunkInfo, $objects);
   // send response
   $retval = xmlrpc_encode($retval);
   return new xmlrpcresp($retval);

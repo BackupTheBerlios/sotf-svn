@@ -20,7 +20,7 @@ $prg = new sotf_Programme($id);
 
 if(!$prg->isLocal()) {
   // have to send user to home node of this programme
-  sotf_Node::redirectToHomeNode($prg);
+  sotf_Node::redirectToHomeNode($prg, 'listen.php');
   exit;
 }
 
