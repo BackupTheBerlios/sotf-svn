@@ -34,7 +34,7 @@
 		{else}
 			<td width="20%"{if $view} bgcolor="#{$portal.bg2}"{/if}>{if !$view}<a href="{$php_self}">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#home#}{if $css}</span>{else}</font>{/if}</b>{if !$view}</a>{/if}</td>
 			{if $is_logged_in}<td width="20%"><a href="{$php_self}?logout=1"><b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#Logout#} {$username}{if $css}</span>{else}</font>{/if}</b></a></td>
-			{*		<td width="20%"{if $preferences} bgcolor="#{$portal.bg2}"{/if}>{if !$preferences}<a href="{$php_self}?preferences=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#user_preferences#}{if $css}</span>{else}</font>{/if}</b>{if !$preferences}</a>{/if}</td> *}
+					<td width="20%"{if $preferences} bgcolor="#{$portal.bg2}"{/if}>{if !$preferences}<a href="{$php_self}?preferences=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#user_preferences#}{if $css}</span>{else}</font>{/if}</b>{if !$preferences}</a>{/if}</td>
 			{else}<td width="20%"{if $login} bgcolor="#{$portal.bg2}"{/if}>{if !$login}<a href="{$php_self}?login=1">{/if}<b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#Login#}{if $css}</span>{else}</font>{/if}</b>{if !$login}</a>{/if}</td>{/if}
 			<td width="20%"><a href="{$rootdir}/index.php"><b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#portals_site#}{if $css}</span>{else}</font>{/if}</b></a></td>
 			<td width="20%"><a href="{$sotfSite}index.php"><b>{if $css}<span class="menu_text">{else}<font color="#{$portal.font}">{/if}{#sotf_portal#}{if $css}</span>{else}</font>{/if}</b></a></td>
@@ -426,7 +426,16 @@
 		{elseif $id}
 		<td align="center">{include file="portal_progpage.htm"}</td>
 		{elseif $preferences}
-		<td align="center">user prefs! coming soon! :-)</td>
+		<td align="center">
+			<table border="0" cellpadding="5" cellspacing="0" align="center" withh="100%">
+				<tr><td align="center" colspan="2">{#change_user_password#}</td></tr>
+				<tr><td align="right">{#old_password#}:</td><td align="left"><input type="password" name="password_old"></td></tr>
+				<tr><td align="right">{#new_password#}:</td><td align="left"><input type="password" name="password_new1"></td></tr>
+				<tr><td align="right">{#new_password_again#}:</td><td align="left"><input type="password" name="password_new2"></td></tr>
+				<tr><td align="center" colspan="2"><input type="submit" name="change_user_password" value="{#change_user_password_button#}"></td></tr>
+				<input type="hidden" name="preferences" value="1">
+			</table>
+		</td>
 		{else}
 		<td align="center">{include file="portal_htm.htm"}</td>
 		{/if}

@@ -1177,9 +1177,9 @@ class portal_user
 
 	function addNewUser($portal_id, $username, $user_password, $email)
 	{
-		global $db, $page;
+		global $db;
 		$this->deleteOldUsers($portal_id);	//delete not activated users from portal
-		if (($username =="") OR ($user_password =="") OR ($email == ""));
+		if (($username =="") OR ($user_password =="") OR ($email == "")) return false;
 		$sql = "SELECT id FROM portal_users WHERE portal_id=$portal_id AND name='$username'";
 		if ($db->getOne($sql) == NULL)		//if not exsist
 		{
@@ -1194,6 +1194,23 @@ class portal_user
 		}
 		else return false;
 	}
+
+	function changeUserPassword($portal_id, $username, $old_password, $new_password)
+	{
+		global $db;
+		if (($username == "") OR ($new_password == "")) return true;
+		$sql = "SELECT id FROM portal_users WHERE portal_id=$portal_id AND name='$username'";
+		if ($db->getOne($sql) == NULL) return true;		//if not exsist
+		else
+		{
+			$sql = "UPDATE portal_users SET password='$new_password' WHERE portal_id=$portal_id AND name='$username' AND password='$old_password'";
+			$db->query($sql);
+			$_SESSION['password'] = $new_password;		//save password to the session so he wont be logged out
+		}
+		return false;
+
+	}
+
 
 	function deleteOldUsers($portal_id)
 	{

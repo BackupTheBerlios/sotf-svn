@@ -320,6 +320,21 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 
 $activate = sotf_Utils::getParameter('activate');
 
+if ($user->loggedIn())			//if logged in
+{
+	if (sotf_Utils::getParameter('change_user_password'))	//change_user_password button pressed
+	{
+		$password_old = sotf_Utils::getParameter('password_old');
+		$password_new1 = sotf_Utils::getParameter('password_new1');
+		$password_new2 = sotf_Utils::getParameter('password_new2');
+		if ($password_new1 == "") $error .= $page->getlocalized("password_empty");
+		elseif ($password_new1 != $password_new2) $error .= $page->getlocalized("password_different");
+		elseif ($user->changeUserPassword($portal_id, $user->getName(), $password_old, $password_new1)) $error .= $page->getlocalized("user_password_incorrect");
+		else $error .= $page->getlocalized("user_password_changed");
+//		$preferences = 1;
+	}
+}
+
 if ($id)	//if programmes view
 {
 	$comments = $portal->getComments($id);
