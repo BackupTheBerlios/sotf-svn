@@ -145,6 +145,11 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
               <input class="action" type="button" name="b1" value="{#Edit_files#}" onClick="redir(this.form, 'editFiles.php?id={$item.id|escape}&okURL={$OKURL|escape}')" />
               <input class="action" type="button" name="b2" value="{#Edit_meta#}" onClick="redir(this.form, 'editMeta.php?id={$item.id}')" />
               <input class="action" type="button" name="b3" value="{#Delete#}" onClick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, 'editor.php?delprog=1&prgid={$item.id}')" />
+                      <select name="export" onchange="javascript:alert('not implemented yet')">
+                        <option selected>{#export#}</option>
+                        <option>{#get_xbmf#}</option>
+                        <option>{#get_soma#}</option>
+                      </select>
       </td>
     </tr>
 		{/foreach}

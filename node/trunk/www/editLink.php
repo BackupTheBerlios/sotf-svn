@@ -49,7 +49,7 @@ if($save) {
     $page->redirect("closeAndRefresh.php?anchor=links");
     exit;
   } else {
-	 $page->addStatusMsg("invalid-url");
+	 $page->addStatusMsg("invalid_url");
   }
 }
 

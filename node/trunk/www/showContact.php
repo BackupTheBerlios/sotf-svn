@@ -29,6 +29,10 @@ while(list(,$row)=each($refs)) {
   $role = $row['role_id'];
   if($repository->getTable($id) != 'sotf_programmes') {
     $obj = $repository->getObject($id);
+	 if(!$obj) {
+		logError("DB integrity error: role $role for $id which does not exist");
+		continue;
+	 }
     $class = get_class($obj);
     $data = array();
     $data['role'] = $repository->getRoleName($role);

@@ -32,7 +32,7 @@ if($save) {
   checkPerm($st->id, "change");
   $desc = sotf_Utils::getParameter('desc');
   $st->set('description', $desc);
-  $st->setWithParam('url');
+  $st->setWithUrlParam('url');
   // language hack
   $st->setLanguageWithParams();
   $st->update();

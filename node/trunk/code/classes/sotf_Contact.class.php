@@ -61,9 +61,6 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 
   function getDir() {
 	 global $repository;
-	 // temporary workaround
-	 return $this->checkDirs();
-	 
 	 $dir = $repository->rootdir . '/__contacts/' . $this->id;
 	 return $dir;
   }

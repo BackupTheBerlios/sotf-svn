@@ -19,6 +19,27 @@
                     <td><input name="name" value="{$SERIES_DATA.name}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" /></td>
                   </tr>
                   <tr>
+                    <td>{#languages#}:</td>
+                    <td>                
+                      <select name="language1">
+                        <option value="0">{#no_lang#}</option>
+                        {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG1}
+                      </select>
+                      <select name="language2">
+                        <option value="0">{#no_second_lang#}</option>
+                        {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG2}
+                      </select>
+                      <select name="language3">
+                        <option value="0">{#no_third_lang#}</option>
+                        {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG3}
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{#url#}:</td>
+                    <td><input name="url" onChange="if(value != defaultValue) data_changed++;" value="{$SERIES_DATA.url|default:"http://"}" size="50" /></td>
+                  </tr>
+                  <tr>
                     <td>{#description#}:</td>
                     <td><textarea cols="50" rows="10" name="description" onChange="if(value != defaultValue) data_changed++;" >{$SERIES_DATA.description}</textarea></td>
                   </tr>
@@ -232,5 +253,8 @@ function getSelected() {
 {/if}
 
 <p></p>
-<form method="post"><input type="submit" name="finish2" value="{#finish#}"></form>
+<form method="post">
+  <input type="submit" name="finish2" value="{#finish#}">
+  <input type="button" onClick="self.close()" name="finish3" value="{#close#}">
+</form>
 

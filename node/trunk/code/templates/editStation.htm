@@ -22,6 +22,7 @@
                     <td>{#languages#}:</td>
                     <td>                
                       <select name="language1">
+                        <option value="0">{#no_lang#}</option>
                         {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG1}
                       </select>
                       <select name="language2">
@@ -36,7 +37,7 @@
                   </tr>
                   <tr>
                     <td>{#url#}:</td>
-                    <td><input name="url" onChange="if(value != defaultValue) data_changed++;" value="{$STATION_DATA.url}" size="50" /></td>
+                    <td><input name="url" onChange="if(value != defaultValue) data_changed++;" value="{$STATION_DATA.url|default:"http://"}" size="50" /></td>
                   </tr>
                   <tr>
                     <td>{#description#}:</td>

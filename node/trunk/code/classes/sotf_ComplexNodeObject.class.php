@@ -52,8 +52,10 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
 	function update() {
 	  parent::update();
-	  if($this->isLocal())
+	  if(parent::isLocal()) {
+		 $this->checkDirs();
 		 $this->saveMetadataFile();
+	  }
 	}
 
 	/** caches icon for object, and adds indicator flag for Smarty templates whether there is an icon */

@@ -32,13 +32,16 @@ if($save || $finish) {
   checkPerm($series->id, "change");
   $series->setWithParam('name');
   $series->setWithParam('description');
+  $succ = $series->setWithUrlParam('url');
+  // language hack
+  $series->setLanguageWithParams();
   $series->update();
+  if($save || !$succ) {
+	 $page->redirect("editSeries.php?seriesid=$seriesid");
+  }
 }
 if($finish || $finish2) {
   $page->redirect("closeAndRefresh.php?anchor=series");
-}
-if($save) {
-  $page->redirect("editSeries.php?seriesid=$seriesid");
 }
 
 // manage roles
@@ -142,6 +145,9 @@ $smarty->assign('SERIES',$series->get('name'));
 $smarty->assign('SERIES_DATA',$series->getAll());
 $smarty->assign('SERIES_MANAGER',true);
 $smarty->assign('ROLES', $series->getRoles());
+
+// languages
+$series->getLanguageSelectBoxes();
 
 // user permissions: editors and managers
 $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized($series->id));

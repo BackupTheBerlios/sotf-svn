@@ -22,6 +22,7 @@ class sotf_Series extends sotf_ComplexNodeObject {
      * @param string node node id
      * @param string id id within node
    */
+
   function sotf_Series($id='', $data='') {
 	global $db;
 
@@ -51,9 +52,6 @@ class sotf_Series extends sotf_ComplexNodeObject {
 
   function getDir() {
 	 global $repository;
-	 // temporary workaround
-	 return $this->checkDirs();
-
 	 $station = $this->getObject($this->get('station_id'));
 	 $dir = $station->getDir() . '/series_' . $this->id;
 	 return $dir;
