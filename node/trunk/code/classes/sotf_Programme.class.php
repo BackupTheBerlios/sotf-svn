@@ -109,6 +109,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$track = 'prg';
 	 $this->stationName = $stationName;
 	 $this->set('entry_date', date('Y-m-d'));
+	 $this->set('modify_date', date('Y-m-d'));
 	 $this->set('track', sotf_Utils::makeValidName($track, 32));
 	 $this->getNextAvailableTrackId();
 	 if(parent::create()) { // this will also create the required directories via setMetadataFile !!
@@ -121,6 +122,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   function update() {
+	 $this->set('modify_date', date('Y-m-d'));
 	 sotf_NodeObject::update();
 	 if($this->isLocal()) {
 		$this->checkDirs();
@@ -131,9 +133,36 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   function getStation() {
-	 if(!$this->station)
+	 if(!$this->station) {
 		$this->station = $this->getObject($this->get('station_id'));
+		$this->stationName = $this->station->get('name');
+	 }
 	 return $this->station;
+  }
+
+  function changeStation($newStationId) {
+	 if($this->get('station_id') != $newStationId) {
+		$oldDir = $this->getDir();
+		// change station in SQL
+		$this->set("station_id", $newStationId);
+		$this->set("series_id", NULL);
+		// we don't change entry_date!
+		$this->update();
+		// reinitialize station part in memory
+		$this->station = NULL;
+		$station = $this->getStation();
+		// moving files to other station in file system
+		$newDir = $this->getDir();
+		debug("MOVING FROM", $oldDir);
+		debug("MOVING PRG TO", $newDir);
+		if(is_dir($newDir))
+		  raiseError("Cannot move: a prg with same track exists!");
+		//sotf_Utils::erase($newDir);  ?????
+		$dateDir = $station->getDir() . '/' . $this->get('entry_date');
+		if(!is_dir($dateDir))
+		  mkdir($dateDir);
+		rename($oldDir, $newDir);
+	 }
   }
 
   function getSeries() {
@@ -154,8 +183,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   /** returns the directory where programme files are stored */
   function getDir() {
-	global $repository;
-	 return $repository->rootdir . '/' . $this->stationName . '/' . $this->data['entry_date'] . '/' . $this->data['track'];
+	 $station = $this->getStation();
+	 return $station->getDir() . '/' . $this->data['entry_date'] . '/' . $this->data['track'];
   }
 
   /** returns the directory where metadata/jingles/icons are stored */
@@ -177,12 +206,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	  Checks and creates subdirs if necessary.
 	*/
   function checkDirs() {
-	global $repository;
-
-	 $station = $this->stationName;
-	 $dir = $repository->rootdir . '/' . $station;
+	 $station = $this->getStation();
+	 $dir = $station->getDir();
 	 if(!is_dir($dir))
-		raiseError("Station $station does not exist!");
+		raiseError("Station " . $station->id ." does not exist!");
 	 $dir = $dir . '/' . $this->get('entry_date');
 	 if(!is_dir($dir))
 		mkdir($dir, 0770);
@@ -201,10 +228,20 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function getFilePath($file) {
 	 if(!$this->isLocal())
 		raiseError('no_such_file');
-	 if($file->tablename == 'sotf_media_files' && $file->get('main_content')=='t') {
-		return $this->getAudioDir() . '/' . $file->get('filename');
+	 if(is_object($file)) {
+		if($file->tablename == 'sotf_media_files' && $file->get('main_content')=='t') {
+		  return $this->getAudioDir() . '/' . $file->get('filename');
+		} else {
+		  return $this->getOtherFilesDir() . '/' . $file->get('filename');
+		}
+	 } elseif(is_array($file)) {
+		if($file['main_content']=='t') {
+		  return $this->getAudioDir() . '/' . $file['filename'];
+		} else {
+		  return $this->getOtherFilesDir() . '/' . $file['filename'];
+		}
 	 } else {
-		return $this->getOtherFilesDir() . '/' . $file->get('filename');
+		raiseError("bad use of getFilePath method");
 	 }
   }
 
@@ -253,13 +290,23 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $file = $this->getMetaDir() . '/metadump.xml';
 	 debug("dumping metadata xml in", $file);
 	 $fp = fopen("$file", "w");
-	 fwrite($fp, $xml);
-	 fclose($fp);
+	 if(!$fp) {
+		logError("Could not dump metadata into $file");
+		// TODO: in this case the prg has been deleted in the meantime??
+	 } else {
+		fwrite($fp, $xml);
+		fclose($fp);
+	 }
+	 
+	 // save XBMF
+	 if(is_writable($this->getMetaDir())) {
+		$xbmf = $this->getXBMFMetadata();
+		$file = $this->getMetaDir() . '/metadata.xml';
+		sotf_Utils::save($file, $xbmf);
+	 }
 
-	 $xbmf = $this->getXBMFMetadata();
-	 $file = $this->getMetaDir() . '/metadata.xml';
-	 sotf_Utils::save($file, $xbmf);
-
+	 // to change modify_date
+	 $this->update(); 
 	 return true;
   }
 

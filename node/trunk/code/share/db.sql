@@ -338,6 +338,8 @@ CREATE TABLE "sotf_topic_trees" (
 "languages" varchar(255) -- comma separated list of language codes in which tree is available
 );
 
+CREATE INDEX "supertopic_sotf_topic_tree_defs_key" ON "sotf_topic_tree_defs"("supertopic");
+
 CREATE SEQUENCE "sotf_topics_seq";
 
 CREATE TABLE "sotf_topics" (
@@ -353,6 +355,8 @@ CONSTRAINT "sotf_topics_u" UNIQUE ("topic_id", "language"),
 FOREIGN KEY("topic_id") REFERENCES sotf_topic_tree_defs("id") ON DELETE CASCADE
 );
 
+CREATE INDEX "topic_id_sotf_topics_key" ON "sotf_topics"("topic_id");
+
 CREATE TABLE "sotf_topics_counter" (
 -- defines the number of programmes in the topic
 "id" serial PRIMARY KEY,
@@ -360,6 +364,9 @@ CREATE TABLE "sotf_topics_counter" (
 "number" int2,
 "total" int2
 );
+
+CREATE UNIQUE INDEX "topic_id_sotf_topics_counter_ukey" ON "sotf_topics_counter"("topic_id");
+
 
 CREATE SEQUENCE "sotf_prog_topics_seq";
 
@@ -373,6 +380,9 @@ CONSTRAINT "sotf_prog_topics_u" UNIQUE ("topic_id", "prog_id"),
 -- this might cause loss of valuable data: FOREIGN KEY("topic_id") REFERENCES sotf_topic_tree_defs("id") ON DELETE CASCADE,
 FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
+
+CREATE INDEX "topic_id_sotf_prog_topics_key" ON "sotf_prog_topics"("topic_id");
+CREATE INDEX "prog_id_sotf_prog_topics_key" ON "sotf_prog_topics"("prog_id");
 
 CREATE SEQUENCE "sotf_genres_seq";
 

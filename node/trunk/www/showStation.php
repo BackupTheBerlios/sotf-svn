@@ -20,7 +20,7 @@ if(!$stationid)
 
 $st = & $repository->getObject($stationid);
 if(!$st)
-	  raiseError("no_such_object");
+  raiseError("no_such_object", $stationid);
 
 $page->errorURL = $scriptUrl . '/' . $stationid;
 $page->setTitle($st->get('name'));

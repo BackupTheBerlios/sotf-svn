@@ -7,8 +7,8 @@ class rpc_Utils {
   
   var $debug = false;
 
-  // timeout in seconds
-  var $timeout = 5;
+  // timeout in seconds for establishing connection
+  var $timeout = 20;
   
   function call($url, $method, $params) {
     // xmlrpc encode parameters
@@ -29,7 +29,7 @@ class rpc_Utils {
     if($this->debug)
       $client->setDebug(1);
     debug("XML-RPC", "call to " . $url);
-    $response = $client->send($message);
+    $response = $client->send($message, $this->timeout);
     if($this->debug)
       print("<PRE>".htmlentities($response->serialize())."</PRE>\n");
     // process response

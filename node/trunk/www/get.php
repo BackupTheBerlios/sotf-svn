@@ -19,11 +19,11 @@ if($id) {
 
   $prg = &$repository->getObject($id);
   if(!$prg)
-	 raiseError("no_such_object");
+	 raiseError("no_such_object", $id);
 
   if(!$prg->getBool('published')) {
 	 if(!hasPerm($prg->id, 'change')) {
-		raiseError("not_published_yet");
+		raiseError("not_published_yet", $id);
 		exit;
 	 }
 	 $smarty->assign("UNPUBLISHED", 1);
@@ -58,7 +58,17 @@ if($id) {
 
   // audio files 
   $audioFiles = $prg->getAssociatedObjects('sotf_media_files', 'main_content DESC, filename');
-  for($i=0; $i<count($audioFiles); $i++) {
+  $to = count($audioFiles);
+  for($i=0; $i<$to; $i++) {
+	 if($prg->isLocal()) {
+		// if local, we check if file disappeared in the meantime
+		$path = $prg->getFilePath($audioFiles[$i]);
+		if(!is_readable($path)) {
+		  debug("DISAPPEARED FILE", $path);
+		  unset($audioFiles[$i]);
+		  continue;
+		}
+	 }
     $audioFiles[$i] =  array_merge($audioFiles[$i], sotf_AudioFile::decodeFormatFilename($audioFiles[$i]['format']));
 	 $audioFiles[$i]['playtime_string'] = strftime('%M:%S', $audioFiles[$i]['play_length']);
   }

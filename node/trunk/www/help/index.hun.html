@@ -2,18 +2,107 @@
 <html>
   <head>
     <title>Súgó a StreamOnTheFly rendszerhez</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-2">
+    <link href="help.css" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="../favicon.ico" />
   </head>
-
+  
   <body>
-    <h1>Súgó a StreamOnTheFly rendszerhez</h1>
 
+<p>A 2003-as Networkshop konferencián <a target="_blank"
+    href="http://nws.iif.hu/ncd2003/docs/0nj/nj140.htm">elhangzott
+    előadás</a> áttekintést nyújt a projektről, a koncepcióról és a
+    megvalósult rendszerről.</p>
 
-<p>Ígérjük, hogy meg fogjuk írni, de addig is itt van az <a href="index.eng.html">angol változat</a>.
+<p>Az <a target="_blank" href="http://index.hu/tech/net/radio0219/">Index cikke</a> a szolgáltatásról.</p>
+
+<p><a href="#csatlak">Hogyan lehet csatlakozni a hálózathoz?</a></p>
+
+    <h2>A StreamOnTheFly rendszer alapfogalmai</h2>
+    
+<h3>Csomópont</h3>
+
+<p>A csomópontok adják az elosztott rádióháló
+alap-infrastruktúráját. Egy csomópont adott rádiók műsorait tárolja és
+szolgáltatja. A műsorok metaadatai automatikusan lemásolódnak a
+hálózat összes többi csomópontjára. A felhasználók így bármely
+csomóponton a hálózat teljes anyagát elérik egy egységes felületen
+keresztül. Lehet böngészni rádióadók vagy témakörök szerint, és
+keresni a teljes archívumban. Lehetőség van több feltételből
+összeállított kereséseket futtatni, az ilyen összetett
+keresőkérdéseket elmenteni és később újra lefuttatni. A felhasználók
+kedvenclistába gyűjthetnek kiválasztott rádióműsorokat, így azokat
+máskor is gyorsan megtalálják. A kedvenclistából tetszés szerint
+kiválasztott és sorbarendezett műsorokat egyszerre meg lehet
+hallgatni, ez a személyre szabott rádiózás. Az egyes műsorokat
+értékelni is lehet (jelenleg 1-5 skálán). Az értékeléseket és a
+hallgatási statisztikákat a rendszer a csomópontok között összesítve
+jeleníti meg.
 </p>
 
-<!-- Created: Wed Jun 25 16:25:20 CEST 2003 -->
-<!-- hhmts start -->
-Last modified: Wed Jun 25 16:25:55 CEST 2003
-<!-- hhmts end -->
+<p>A szerkesztők a csomóponton nyomon követhetik műsoraik sorsát egy
+kényelmes kezelőfelületen, amely mutatja az összes általuk feltöltött
+műsort és az azokhoz tartozó felhasználási adatokat. Itt is lehet
+feltölteni új musorokat vagy levenni régieket (a feltöltés másik
+módját lásd a Rádió című fejezetben). A csomóponton objektum-szinten
+definiálhatók a jogosultságok, tehát ki lehet alakítani bonyolultabb
+munka- és felelősségmegosztást a tartalom kezelésére.</p>
+
+<h3>Rádió</h3>
+
+<p>
+Egy rádiót egy kiválasztott csomópont archivál (célszerűen a legközelebbi), viszont a teljes hálózatból kereshetők, böngészhetők az anyagok. A rádiónak vannak tulajdonosai és szerkesztői. A tulajdonosok változtathatják meg a logot vagy a szignált, és felügyelik a szerkesztők munkáját. A szerkesztők töltik fel a műsorokat, és látják el azokat kísérő információkkal, metaadatokkal.
+</p>
+
+<p>A projekt egy olyan szoftvereszközt is kifejlesztett, amely hozzákapcsolja az adót (a stúdiót) a rádióháló egy csomópontjához, és segíti a rádióadó mindennapos üzemeltetését is. A műsorok időbeosztása és előkészítese, az adás ütemezése történhet ezzel a szoftverrel is. A műsorok szerkesztői már adás előtt előkészíthetik a műsorok metaadatait, az adás után ezeket véglegesítve, gyakorlatilag 'egy gombnyomással' fel tudják tölteni a műsort a csomópontra. Az olyan esetekben, amikor nincsenek meg a leadott műsorok digitális formátumban, egy automatikus rögzítő használható. Ez előfordulhat élő adásoknál, vagy ha a rádiónál nincs meg a megfelelő technikai háttér.</p>
+
+<a name="csatlak"></a>
+<p><b>Egy új rádió következőképpen csatlakozhat a hálózathoz:</b> a rádió leendő gazdája (tulajdonosa) regisztráljon a kiválasztott csomóponton. Ezután küldjön e-mailt a csomópont üzemeltetőnek (a címlap alján található), amelyben leírja a rádió főbb adatait, és a nevet amellyel regisztrált. Végül az üzemeltető létrehozza a rádiót a csomóponton a kért tulajdonosi jogokkal.
+</p>
+
+<h3>Sorozat</h3>
+
+<p>A rádiókon belül sorozatok is megkülönböztethetők. Ezek összefogva jelennek meg, lehet saját szignáljuk, logójuk, és megbízott szerkesztők, akik a műsorokat gondozzák.
+</p>
+
+<h3>Műsor</h3>
+
+<p>Egy rádióműsor egy rádióhoz és esetlegesen egy sorozathoz tartozik. A műsorokhoz linkek és fájlok is társíthatók (pl. fényképek, szöveges átirat). A hanganyag több formátumban is jelen lehet (pl. ogg vagy mp3, különböző minőségben), és ezekre külön lehet engedélyezni a letöltést/meghallgatást. Nagyon fontos a műsorról szóló metaadatok minél bővebb és pontosabb kitöltése, mivel ez segíti a felhasználókat a keresés során.
+</p>
+
+<h3>Metaadatok</h3>
+
+<p>A műsor metaadatai egy könyvtári katalóguscédulához hasonlóan
+leírják a műsor általános jellemzőit; tartalmát, készítőit, hogy mikor
+és hol készült, stb.  A hálózat egy Dublin Core kompatibilis
+metaadatsémát használ, valamint egy egyszerűen használható adatcsere
+formátumot, mely tartalmazhatja a hanganyagot többféle formátumban, a
+metaadatokat XML formátumban, és a további kapcsolt fájlokat is. A
+rádiók e csomagformátum segítségével küldik el a műsorokat a csomópontoknak,
+tehát ez a formátum nem csak az archiválásnál jelent segítséget, hanem
+a műsorok továbbításánál, cseréjénél is.
+</p>
+
+<h3>Portálok</h3>
+
+<p>
+A portálok alkotják a hálózat utolsó elemét. A portálok a szerkesztők
+által kiválasztott rádióműsorokat ajánlják a látogatóiknak. Az egyes
+műsorokhoz kommentárokat fűzhetnek, és még több háttéranyaggal,
+fényképpel gazdagíthatják a megjelenést. A portál grafikailag is
+teljesen átszabható. A felhasználók egyenként is meghallgathatják az
+ajánlott műsorokat, vagy pedig a portál rádióját hallgathatják, amely
+folyamatosan játssza a portálon szereplő műsorokat egymás után. A
+műsorokat itt is lehet értékelni, és megjegyzésekre, vitára is van
+mód. A megjegyzéseket, értékeléseket a portál továbbküldi a
+csomópontnak, a csomópont pedig a megjegyzéseket e-mailben eljuttatja
+a műsor készítőinek. A portálok tipikusan kisebbségeket, földrajzi
+régiókat vagy érdeklődési köröket szolgálhatnak ki.
+</p>
+
+
+    <p>Hamarosan folytatjuk...
+    </p>
+    
   </body>
 </html>

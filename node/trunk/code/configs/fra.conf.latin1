@@ -200,7 +200,7 @@ users = utilisateurs enregistrés
 
 contacts = contacts
 node_admin = opérateur de noeud
-contacts_text = <a target="_blank" href="http://www.streamonthefly.com">StreamOnTheFly project</a><br><a target="_blank" href="http://dsd.sztaki.hu">MTA SZTAKI DSD</a>
+contacts_text = <a target="_blank" href="http://www.streamonthefly.com">StreamOnTheFly project</a><br><a target="_blank" href="http://dsd.sztaki.hu">MTA SZTAKI DSD</a><br><a target="_blank" href="http://dict.sztaki.hu/franco-hongrois">SZTAKI Dictionnaire</a>
 
 recent_uploads = téléchargements récents
 topics = matières

@@ -28,7 +28,7 @@ $fileid = sotf_Utils::getParameter('fileid');
 $jingle = sotf_Utils::getParameter('jingle');
 
 if(empty($id)) {
-  raiseError("Missing parameters!");
+  raiseError("Missing parameters!", 'id');
 }
 
 $playlist = new sotf_Playlist();
@@ -36,7 +36,7 @@ $playlist = new sotf_Playlist();
 if($jingle) {
   $obj = $repository->getObject($id);
   if(!$obj)
-	 raiseError("no_such_object");
+	 raiseError("no_such_object", $id);
   if(!$obj->isLocal()) {
 	 // have to send user to home node of this programme
 	 sotf_Node::redirectToHomeNode($obj, 'listen.php');

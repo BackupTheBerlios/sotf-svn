@@ -93,7 +93,10 @@ class sotf_Repository {
       $obj = new $class($objectId, $data);
     } else {
       $table = array_search($tc, $this->tableCodes);
-      $obj = new sotf_NodeObject($table, $objectId, $data);
+			if($table)
+				$obj = new sotf_NodeObject($table, $objectId, $data);
+			else
+				raiseError('Invalid id, stop this', $objectId);
     }
     if(!$obj->exists()) {
 		debug("Object does not exist",$objectId);

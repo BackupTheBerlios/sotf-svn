@@ -23,11 +23,7 @@ checkPerm($prgId, 'change');
 $save = sotf_Utils::getParameter('save');
 if($save) {
   $newStationId = sotf_Utils::getParameter('station_id');
-  if($prg->get('station_id') != $newStationId) {
-	 $prg->set("station_id", $newStationId);
-	 $prg->set("series_id", NULL);
-	 $prg->update();
-  }
+  $prg->changeStation($newStationId);
   $page->redirect("closeAndRefresh.php");
 }
 

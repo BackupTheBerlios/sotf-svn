@@ -17,6 +17,10 @@ $station = sotf_Utils::getSQLSafeParameter('station');
 
 if($pattern) {
   //  debug("language", $language);
+  //  if(strpos($pattern, '?') || strpos($pattern, '*') || strpos($pattern, '+')) {
+  //	 $invalidPattern = 1;
+  //}
+  $pattern = str_replace(array('?','*','+'), array(), $pattern);
 
   if ($language == "any_language") $language = false;
 

@@ -34,14 +34,11 @@ class sotf_Series extends sotf_ComplexNodeObject {
 
   /** private: Checks and creates subdirs if necessary. */
   function checkDirs() {
-	global $repository;
-
 	$station = $this->getObject($this->get('station_id'));
-	$stationName = $station->get('name');
-	$dir = $repository->rootdir . '/' . $stationName;
+	$dir = $station->getDir();
 	if(!is_dir($dir))
-	  raiseError("Station $station does not exist!");
-	$dir = $station->getDir() . '/series_' . $this->id;
+	  raiseError("Station does not exist!", $dir);
+	$dir = $dir . '/series_' . $this->id;
 	//$dir = $this->getDir();
 	if(!is_dir($dir)) {
 	  debug("created series dir", $dir);
@@ -51,7 +48,6 @@ class sotf_Series extends sotf_ComplexNodeObject {
   }
 
   function getDir() {
-	 global $repository;
 	 $station = $this->getObject($this->get('station_id'));
 	 $dir = $station->getDir() . '/series_' . $this->id;
 	 return $dir;

@@ -35,8 +35,13 @@ function dump($what, $name='')
 }
 
 /** this creates a log entry */
-function logError($msg) {
-  error_log(getHostName() . ": ERROR: $msg", 0);
+function logError($msg, $private='') {
+	global $config;
+	$email = $config['adminEmail'];
+	$host = getHostName();
+  error_log("$host: ERROR: $msg. $private", 0);
+	if($email)
+		mail($email, "SOTF error - $host", "$host: $msg\n$private");
 }
 
 /** this creates a log entry if $config['debug'] is true*/
@@ -81,21 +86,25 @@ function myGetenv($name) {
 	return $foo;
 }
 
-function addError($msg) {
+function addError($msg, $private='') {
   global $page;
-  if(DB::isError($msg)) 
-    $msg = "SQL error: " . $msg->getMessage();
-  logError($msg);
+  if(DB::isError($msg)) {
+    $msg = "SQL error"; 
+		$private .= ' - ' . $msg->getMessage();
+	}
+  logError($msg, $private);
 	if(!strstr($msg, ' '))
 		 $msg = $page->getlocalized($msg);
   $page->errors[] = $msg;
 }
 
-function raiseError($msg) {
+function raiseError($msg, $private='') {
   global $page;
-  if(DB::isError($msg)) 
-    $msg = "SQL error: " . $msg->getMessage();
-  logError($msg);
+  if(DB::isError($msg)) {
+    $msg = "SQL error"; 
+		$private .= ' - ' . $msg->getMessage();
+	}
+  logError($msg, $private);
 	if(!strstr($msg, ' '))
 		 $msg = $page->getlocalized($msg);
   $page->errors[] = $msg;

@@ -14,10 +14,10 @@ $type = sotf_Utils::getParameter('type');
 $prg = & new sotf_Programme($id);
 
 if(!$prg)
-	  raiseError("no_such_object");
+  raiseError("no_such_object", $id);
 
 if(!$prg->isLocal()) {
-  raiseError("works only for local objects!");
+  raiseError("works only for local objects!", $id);
   exit;
 }
 

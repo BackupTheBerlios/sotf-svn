@@ -172,3 +172,11 @@ ALTER TABLE sotf_station_mappings ADD COLUMN "type" varchar(30);
 ALTER TABLE sotf_station_mappings ADD COLUMN "station" varchar(12);
 CREATE UNIQUE INDEX sotf_station_mappings_uniq ON sotf_station_mappings ("id_at_station", "station", "type");
 
+-- 2004-02-23
+
+-- Some acceleration for topic browsing
+CREATE INDEX "supertopic_sotf_topic_tree_defs_key" ON "sotf_topic_tree_defs"("supertopic");
+CREATE INDEX "topic_id_sotf_topics_key" ON "sotf_topics"("topic_id");
+CREATE UNIQUE INDEX "topic_id_sotf_topics_counter_ukey" ON "sotf_topics_counter"("topic_id");
+CREATE INDEX "topic_id_sotf_prog_topics_key" ON "sotf_prog_topics"("topic_id");
+CREATE INDEX "prog_id_sotf_prog_topics_key" ON "sotf_prog_topics"("prog_id");

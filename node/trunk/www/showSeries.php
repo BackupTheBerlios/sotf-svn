@@ -26,7 +26,7 @@ if($delprog) {
 
 $series = & $repository->getObject($seriesid);
 if(!$series)
-	  raiseError("no_such_object");
+  raiseError("no_such_object", $seriesid);
 
 $station = $series->getStation();
 

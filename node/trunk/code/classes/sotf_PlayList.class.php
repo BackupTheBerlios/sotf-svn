@@ -36,14 +36,22 @@ class sotf_Playlist {
 		//debug('mp3info', $mp3info);
 		$bitrate = (string) $mp3info['audio']['bitrate'];
 		if(!$bitrate)
-		  raiseError("Could not determine bitrate, maybe this is not an audio file: " . $item['path']);
+		  raiseError("Could not determine bitrate, maybe this audio is temporarily unavailable");
 		$item['bitrate'] = $bitrate;
 		
 		if($config['httpStreaming']) {
 		  //$tmpFileName = 'au_' . $item['id'] . '_' . ($item['name'] ? $item['name'] : basename($item['path']));
 		  $tmpFileName = 'au_' . $item['id'] . '_' . basename($item['path']);
 		  $tmpFile = $config['tmpDir'] . "/$tmpFileName";
-		  if(!@readlink($tmpFile)) {
+		  $file = @readlink($tmpFile);
+		  if($file) {
+			 if(!is_readable($file)) {
+				logError("Bad symlink: $tmpFile to $file");
+				unlink($tmpFile);
+				$file = false;
+			 }
+		  }
+		  if(!$file) {
 			 if(!symlink($item['path'], $tmpFile)) {
 				raiseError("symlink failed in tmp dir");
 			 }

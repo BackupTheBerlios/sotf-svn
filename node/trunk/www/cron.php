@@ -45,7 +45,7 @@ $neighbours = sotf_Neighbour::listAll();
 //debug("neighbours", $neighbours);
 if(count($neighbours) > 0) {
   while(list(,$neighbour) = each($neighbours)) {
-      $neighbour->sync();
+    $neighbour->sync();
   }
 }
 

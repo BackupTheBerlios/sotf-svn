@@ -35,10 +35,7 @@ class db_Wrap extends DB_pgsql {
     //error_log("PGSQL error: $err",0);
     //error_log("in query: " . substr($this->last_query,0,254) ,0);
     if(!$this->silent) {
-      if($this->debug)
-		  raiseError("SQL error: $err in \n " . $this->last_query);
-      else
-		  raiseError("SQL error!");
+		raiseError("SQL error!", "$err in \n " . $this->last_query);
     }
     return $err;
   }
