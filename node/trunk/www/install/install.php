@@ -522,10 +522,10 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 				else
 				{
 					//Read SQL commands from db.sql and execute them
-					$fd = fopen ($basedir."/code/doc/db.sql", "r");
+					$fd = fopen ($config['basedir'] ."/code/doc/db.sql", "r");
 					if (!$fd)
 					{
-						$install_test_result[$id] = "Sql file ($basedir/code/doc/db.sql) not found.";
+						$install_test_result[$id] = "Sql file (". $config['basedir'] ."/code/doc/db.sql) not found.";
 						$install_color[$id] = $install_red;
 					}
 					else
