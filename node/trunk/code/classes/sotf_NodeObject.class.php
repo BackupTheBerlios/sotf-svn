@@ -119,7 +119,6 @@ class sotf_NodeObject extends sotf_Object {
         return false;
       }
     } else {
-      $this->internalData['node_id'] = $nodeId;
       $this->internalData['arrived_stamp'] = $sotfVars->get('sync_stamp', 0);
       $this->internalData['arrived'] = $this->db->getTimestampTz();
       $internalObj = new sotf_Object('sotf_node_objects', $this->id, $this->internalData);
