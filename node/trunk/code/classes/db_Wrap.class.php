@@ -115,7 +115,7 @@ class db_Wrap extends DB_pgsql {
 	function query($query) {
 	  global $sqlDebug;
 	  if($sqlDebug) {
-      $q = substr($query, 0, 250);
+      $q = $query; //substr($query, 0, 250);
 	    debug("DB","Query: $q");
     }
 	  return parent::query($query);
