@@ -18,7 +18,7 @@ $map['sotf.sync'] = array('function' => 'syncResp');
 new xmlrpc_server($map);
 
 function checkAccess($neighbour) {
-  $url = $this->getUrl();
+  $url = $neighbour->getUrl();
   if(!$url)
     return "No url found for neighbour node";
   $parsed = parse_url($url);
@@ -40,7 +40,7 @@ function syncResp($params) {
     logError("No access: you are not an allowed neighbour node!");
     return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: you are not an allowed neighbour node!");
   }
-  $msg = checkAccess($enighbour);
+  $msg = checkAccess($neighbour);
   if($msg) {
     logError($msg);
     return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: $msg!");

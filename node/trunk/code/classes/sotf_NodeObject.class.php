@@ -29,7 +29,7 @@ class sotf_NodeObject extends sotf_Object {
 
 	function saveReplica() {
     if($this->id) {
-      $changed = $this->db->getOne("SELECT last_change FROM sotf_node_object WHERE id='$this->id' ");
+      $changed = $this->db->getOne("SELECT last_change FROM sotf_node_objects WHERE id='$this->id' ");
       if($changed) {
         if($this->lastChange && (strtotime($this->lastChange) > strtotime($changed))) {
           $this->update();
@@ -88,12 +88,15 @@ class sotf_NodeObject extends sotf_Object {
 
   // **** sync support
 
+
   /** static */
   function getModifiedObjects($remoteNode, $date='', $updatedObjects = array()) {
     global $db, $nodeId, $repository;
+    // an ordering in which objects should be retrieved because of foreign keys
+    $tableOrder = "no,co,sr,st,se,pr,ri,ed,of,mf,li,td,tt,to,pt,ge,ro,rn,de,ra,re,sx";
     if($date)
       $whereClause .= "AND arrived >= '$date'";
-    $objects1 = $db->getAll("SELECT * FROM sotf_node_objects WHERE node_id != '$remoteNode' $dateClause ORDER BY substring(id, 4, 2), id");
+    $objects1 = $db->getAll("SELECT * FROM sotf_node_objects WHERE node_id != '$remoteNode' $dateClause ORDER BY strpos('$tableOrder', substring(id, 4, 2)), id");
     //debug("OBJECTS__1", $objects);
     $objects = array();
     while(list(,$obj) = each($objects1)) {
@@ -129,7 +132,8 @@ class sotf_NodeObject extends sotf_Object {
           $delId = $obj->get('del_id');
           debug("deleting object", $delId);
           $obj = $repository->getObject($delId);
-          $obj->delete();
+          if($obj)
+            $obj->delete();
         }
       }
     }

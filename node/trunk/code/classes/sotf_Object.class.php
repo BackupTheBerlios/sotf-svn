@@ -151,9 +151,12 @@ class sotf_Object {
 		if(DB::isError($res)){
 			raiseError($res);
 		}
-		if (count($res)==0)
-			raiseError("No such id: '$this->id' in '$this->tablename'");
-		$this->setAll($res);
+		if (count($res) > 0) {
+      $this->setAll($res);
+    } else {
+			logError("No such id: '$this->id' in '$this->tablename'");
+      $this->data = array();
+    }
 	}
 
   function find() {

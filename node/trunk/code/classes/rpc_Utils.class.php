@@ -13,11 +13,11 @@ function call($url, $method, $params) {
   }
   // send request
   $message = new xmlrpcmsg($method, $params);
-  debug("XML-RPC message", $message->serialize());
+  //debug("XML-RPC message", $message->serialize());
   $addr = parse_url($url);
   $client = new xmlrpc_client($url, $addr['host'], $addr['port']);
-  if($debug)
-    $client->setDebug(1);
+  //if($debug)
+  //  $client->setDebug(1);
   debug("XML-RPC", "call to " . $url);
   $response = $client->send($message);
   

@@ -81,11 +81,15 @@ class sotf_Repository {
     $tc = substr($objectId, 3,2);
     $class = $this->codeToClass[$tc];
     if($class) {
-      return new $class($objectId);
+      $obj = new $class($objectId);
     } else {
       $table = array_search($tc, $this->tableCodes);
-      return new sotf_NodeObject($table, $objectId);
+      $obj = new sotf_NodeObject($table, $objectId);
     }
+    if( count($obj->getAll())==0 )
+      return NULL;
+    else
+      return $obj;
   }
 
   //TODO

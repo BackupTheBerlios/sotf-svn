@@ -69,6 +69,7 @@
             <th>{#use_for_outgoing#}</th>
             <th>{#last_sync#}</th>
             <th>{#last_sync_out#}</th>
+            <th>{#err_succ#}</th>
           </tr>
           {cycle name="roles" values="list1,list2" print=false advance=false}
           {foreach item=item from=$NEIGHBOURS}
@@ -91,6 +92,9 @@
             </td>
             <td>
               {$item.last_sync_out}
+            </td>
+            <td>
+              {$item.success}/{$item.errors}
             </td>
             <td nowrap>
               <input class="action" type="button" name="b1" value="{#sync#}" onClick="redir(this.form, 'admin.php?sync=1&nodeid={$item.node_id}')" />
