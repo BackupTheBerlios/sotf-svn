@@ -55,6 +55,8 @@ $config['userFTP'] = 'ftp://my.node.host/';
 
 Each user will be jailed into his own dir, which is created on demand.
 
+5. Try it out: first start ' proftpd -d 2 ' from console, and try to login as admin.
+Or if you start proftpd normally, you will see messages in syslog.
 
 
 ---------------------------------------------------------------------
