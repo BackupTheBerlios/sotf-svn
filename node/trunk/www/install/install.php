@@ -39,10 +39,11 @@ function RunTest($number, $testname, $required = -1)		//returns if or not to run
 	global $install_run_test, $install_test_result, $install_test_name, $install_green, $install_color;
 	$install_test_name[$number] = $testname;
 	if ($required == -1)		//if no test is required for this one
-		return (($install_run_test == "Run test ".$number) OR ($install_test_result[$number] == NULL));		//if button pressed or no results (not run yet)
+		$retval = (($install_run_test == "Run test ".$number) OR ($install_test_result[$number] == NULL));		//if button pressed or no results (not run yet)
 	else				//if a pervious test needs to be OK
-		return ( ($install_run_test == "Run test ".$number) OR (($install_test_result[$number] == NULL) AND ($install_color[$required] == $install_green)) );	//same but the other test must be OK
-
+		$retval = ( ($install_run_test == "Run test ".$number) OR (($install_test_result[$number] == NULL) AND ($install_color[$required] == $install_green)) );	//same but the other test must be OK
+	debug("RunTest $number", $retval);
+	return $retval;
 }
 
 function GetPerm($filename, $option)		//tries to write or read files and directories
@@ -417,7 +418,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 
 	$id = 5;	//////////////////////////Test 5
-	if (RunTest($id, "DB connection to 'sadm'", 4))		//////////////////////////Test 4 should be OK to run this test
+	if (RunTest($id, "DB connection to SelfAdmin", 4))		//////////////////////////Test 4 should be OK to run this test
 	{
 		$conn = @pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
 		if (!$conn)
