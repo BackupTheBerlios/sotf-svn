@@ -25,7 +25,41 @@
       <tr> 
         <td valign="top"> <table width="100%" border="0" cellspacing="1" cellpadding="3">
             <tr> 
-              <td valign="top"> <div align="center">{include file=$action} {if 
+              <td valign="top"> <div align="center">
+{if $show_warning}
+<table width="100%" border="0" cellspacing="0" cellpadding="2">
+  <tr> 
+    <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+              <tr bgcolor="#ddddff"> 
+                                    <td width="100%" bgcolor="#ddeedd" class="title"> 
+                                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr> 
+                      <td width="20" nowrap><strong><img src="{$root}img/info.gif" width="27" height="21"></strong></td>
+                                          <td class=title><strong>{#info#}</strong></td>
+                    </tr>
+                  </table></td>
+              </tr>
+              {if $submit_series_active_flag == 't'} {/if} 
+              <tr bgcolor="#eeeeee"> 
+                <td nowrap> <div align="center"><strong><font color="#990000">{#note1#}</font> 
+                                        <font color="#990000"><font color="#FF0000">{#note2#}</font> 
+                                        {#note3#}</font></strong></div></td>
+              </tr>
+            </table></td>
+        </tr>
+        <tr> 
+          <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
+        </tr>
+      </table></td>
+  </tr>
+</table>
+<br>
+{/if}
+			  
+			  
+			  {include file=$action} {if 
                   $show_help} <br>
                   {include file=helpbox.htm} {/if} </div></td>
             </tr>

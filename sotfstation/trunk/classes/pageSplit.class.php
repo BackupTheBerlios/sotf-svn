@@ -1,4 +1,5 @@
 <?
+
 	//default error corrector...
 	if(!isset($_GET['block'])){
 		$_GET['block'] = 1;

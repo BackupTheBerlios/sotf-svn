@@ -52,7 +52,7 @@
 		include("configs/errors.en.php");
 	}
 	
-	$smarty->assign("build_id","189");												# assigning a 'build id'
+	$smarty->assign("build_id","201");												# assigning a 'build id'
 	
 	//build database connections
 	$db = DB::connect(array(																	# Start a connection to the database
@@ -77,21 +77,27 @@
 	 * check to see whether this user may work with this section of the web site
 	 * 
 	 * @param $section (string)
+	 * @param $report (bool)
 	 * @return (bool||redirect)
 	 */
-	function authorize($section){
-		global $ERR, $myError;
+	function authorize($section,$report=TRUE){
+		global $ERR, $myError, $smarty;
 		if($_SESSION['USER']->get($section)==2){					# user has full access to this section
 			//nothing
 			return true;
 		}else if($_SESSION['USER']->get($section)==1){		# user has read only access to this section
-			if((count($_POST) > 0) or (isset($_GET['action']))){		# there has been a POST call or an action
+			if((count($_POST) > 0) or ($_GET['action']=='delete')){		# there has been a POST call or an action
 				//unset the action calls
 				$_POST = array();
 				unset($_GET['action']);
 				
 				//add error to 'error bin'
 				$myError->add($ERR['ACC']);
+			}
+			
+			//create a warning window
+			if($report){
+				$smarty->assign("show_warning",TRUE);
 			}
 			
 			//notify client of problem ;)

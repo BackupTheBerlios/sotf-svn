@@ -7,14 +7,16 @@
 	* Please bear in mind, that this software was written for _fun_ =) 
 	*************************/
 
-	/************************
-	* Show Programme Details
-	*----------------------------------------
-	* This is a popup that will show all the details of the desired programme
-	************************/
+	/*************************
+	* Show Programme Details *
+	*------------------------**********************************************************
+	* This is a popup that will show all the details of the desired programme					*
+	* Programme owner or the station manager will be able to edit all the available		*
+	* information. Other users will only be able to view it.													*
+	**********************************************************************************/
 	include("init.inc.php");	# include the global framework
 	
-	//can I edit this?
+	//can I edit this? (this is my authorize!)
 	if(($_SESSION['USER']->get("edit_station")==2) or ($_SESSION['USER']->get("auth_id") == $db->getOne("SELECT series.owner FROM programme LEFT JOIN series ON (programme.series_id = series.id) WHERE programme.id = '$_GET[id]'"))){
 		$mod_flag = TRUE;
 		
