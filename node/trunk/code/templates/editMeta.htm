@@ -56,11 +56,11 @@ window.onload=myonload;
     <tr> 
       <td class="tabarea"> 
           <table width="100%">
-            <tr valign="top">
+            <tr valign="top" class="list1">
               <td class="meta">{#station#}:</td>
               <td><a class="goto_object" href="showStation.php?stationid={$STATION_DATA.id}">{$STATION_DATA.name}</a></td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="list2">
               <td class="meta">{#series#}:</td>
               <td>{if $SERIES_DATA}<a class="goto_object" href="showSeries.php?seriesid={$SERIES_DATA.id}">{$SERIES_DATA.title}</a>{else}{#not_in_series#}{/if}
                 {if !empty($MY_SERIES)}
@@ -68,23 +68,23 @@ window.onload=myonload;
                 {/if}
               </td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="list1">
               <td class="meta">{#title#}:</td>
               <td><input name="title" value="{$PRG_DATA.title}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="list2">
               <td class="meta">{#alternative_title#}:</td>
               <td><input name="alternative_title" value="{$PRG_DATA.alternative_title}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="list1">
               <td class="meta">{#episode_title#}:</td>
               <td><input name="episode_title" value="{$PRG_DATA.episode_title}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="list2">
               <td class="meta">{#episode_sequence#}:</td>
               <td><input name="episode_sequence" value="{if $PRG_DATA.episode_sequence}{$PRG_DATA.episode_sequence}{/if}" size="5" maxlength="5" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="list1">
               <td class="meta">{#language#}:</td>
               <td>
                 <select name="language">
@@ -92,15 +92,15 @@ window.onload=myonload;
                 </select>
               </td>
             </tr>		
-            <tr valign="top">
+            <tr valign="top" class="list2">
               <td class="meta">{#abstract#}:</td>
               <td><textarea name="abstract" rows="6" cols="50" onChange="if(value != defaultValue) data_changed++;" >{$PRG_DATA.abstract}</textarea></td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="list1">
               <td class="meta">{#keywords#}:</td>
               <td><textarea name="keywords" rows="3" cols="50" onChange="if(value != defaultValue) data_changed++;" >{$PRG_DATA.keywords}</textarea></td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="list2">
               <td class="meta">{#genre#}</td>
               <td>
                 <select name="genre_id">
@@ -110,7 +110,7 @@ window.onload=myonload;
                 </select>
               </td>
             </tr>
-            <tr valign="top" valign="middle">
+            <tr valign="top" class="list1">
               <td class="meta">{#temporal_coverage#}:</td>
               <td>
                   <input type="radio" name="temporal_coverage_radio0" value="selected" onclick="javascript:disable('temporal_coverage', 0)">
@@ -118,27 +118,27 @@ window.onload=myonload;
                   <br><input type="radio" name="temporal_coverage_radio1" value="unselected" onclick="javascript:disable('temporal_coverage', 1)">{#not_available#}
             </td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="list2">
               <td class="meta">{#spatial_coverage#}:</td>
               <td><input name="spatial_coverage" value="{$PRG_DATA.spatial_coverage}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
-            <tr valign="top">
-              <td class="meta" valign="middle">{#production_date#}:</td>
+            <tr valign="top" class="list1">
+              <td class="meta">{#production_date#}:</td>
               <td>
                   <input type="radio" name="production_date_radio0" value="selected" onclick="javascript:disable('production_date', 0)">
                   {html_select_date time=$PRG_DATA.production_date start_year="-5" prefix="production_date" month_format="%m" field_order="YMD" field_separator="-"}
                   <br><input type="radio" name="production_date_radio1" value="unselected" onclick="javascript:disable('production_date', 1)">{#not_available#}
               </td>
             </tr>
-            <tr valign="top">
-              <td class="meta" valign="middle">{#broadcast_date#}:</td>
+            <tr valign="top" class="list2">
+              <td class="meta">{#broadcast_date#}:</td>
               <td>
                   <input type="radio" name="broadcast_date_radio0" value="selected" onclick="javascript:disable('broadcast_date', 0)">
                   {html_select_date time=$PRG_DATA.broadcast_date start_year="-5" prefix="broadcast_date" month_format="%m" field_order="YMD" field_separator="-"}
                   <br><input type="radio" name="broadcast_date_radio1" value="unselected" onclick="javascript:disable('broadcast_date', 1)">{#not_available#}
             </td>
             </tr>
-            <tr valign="top">
+            <tr valign="top" class="list1">
               <td class="meta">{#expiry_date#}:</td>
               <td>
                   {html_select_date time=$PRG_DATA.expiry_date end_year="+5" prefix="expiry_date" month_format="%m" field_order="YMD" field_separator="-"}

@@ -34,7 +34,7 @@ class sotf_NodeObject extends sotf_Object {
       //debug("lch", $this->lastChange);
       if($changed) {
         if($this->lastChange && (strtotime($this->lastChange) > strtotime($changed))) {
-          $this->update();
+          sotf_NodeObject::update();
           reset($this->binaryFields);
           while(list(,$field)=each($this->binaryFields)) {
             sotf_Object::setBlob($field, $this->db->unescape_bytea($this->data[$field]));
@@ -47,7 +47,7 @@ class sotf_NodeObject extends sotf_Object {
         }
       }
     }
-		$success = $this->create();
+		$success = sotf_NodeObject::create();
     debug("created ", $this->id);
     return $success;
 	}
