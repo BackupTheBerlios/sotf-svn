@@ -48,6 +48,8 @@ $fromDay = date('Y-m-d', $dayInThePast);
 // prepare RSS writer
 $rss_writer_object=new rss_writer_class;
 $rss_writer_object->specification="1.0";
+$rss_writer_object->inputencoding="utf-8";
+$rss_writer_object->outputencoding="utf-8";
 $rss_writer_object->about=$config['rootUrl'] . "/rss.php";
 // Specify the URL of an optional XSL stylesheet. This lets the document be rendered automatically in XML capable browsers.
 $rss_writer_object->stylesheet=$config['rootUrl'] . "/static/rss2html.xsl";

@@ -80,7 +80,7 @@ class xml_writer_class
 	
 	Function encodedata($data,&$encodeddata)
 	{
-		if(!strcmp($this->inputencoding,$this->outputencoding))
+		if(!strcmp($this->inputencoding,$this->outputencoding)) 
 			$encodeddata=$this->escapedata($data);
 		else
 		{
