@@ -403,15 +403,17 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	  }
 	  
 	  $file = '';
-	  $this->getMetaDir() . '/jingle_';
-	  $d = dir($this->getMetaDir());
-	  while($entry = $d->read()) {
-		 if (substr($entry, 0, 6) == 'jingle_') {
-			$file = $this->getMetaDir() . '/' . $entry;
-			break;
-		 }
-	  }
-	  $d->close();
+	  $jdir = $this->getMetaDir();
+	  if(is_dir($jdir)) {
+		  $d = dir($jdir);
+		  while($entry = $d->read()) {
+			 if (substr($entry, 0, 6) == 'jingle_') {
+				$file = $jdir . '/' . $entry;
+				break;
+			 }
+		  }
+		  $d->close();
+	}
 	  
 	  debug("2nd round", $file);
 

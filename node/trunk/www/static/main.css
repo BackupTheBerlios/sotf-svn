@@ -1,10 +1,10 @@
 
 .status {
-	background-color: #FFAAAA; FONT-WEIGHT: bold; FONT-SIZE: small; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
+	background-color: #FFAAAA; FONT-WEIGHT: bold; FONT-SIZE: 13px; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
 }
 
 .menu {
-	FONT-WEIGHT: bold; FONT-SIZE: small; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
+	FONT-WEIGHT: bold; FONT-SIZE: 13px; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
 }
 
 A.menu:link {
@@ -20,22 +20,19 @@ A.menu:hover {
 	COLOR: #ff0000; TEXT-DECORATION: underline
 }
 .date {
-	FONT-WEIGHT: bold; FONT-SIZE: x-large; COLOR: #666666; FONT-FAMILY: Tahoma, Verdana, Arial
+	FONT-WEIGHT: bold; FONT-SIZE: 17px; COLOR: #666666; FONT-FAMILY: Tahoma, Verdana, Arial
 }
 .date2 {
-	FONT-WEIGHT: bold; FONT-SIZE: small; COLOR: #666666; FONT-FAMILY: Arial, Helvetica, sans-serif
+	FONT-WEIGHT: bold; FONT-SIZE: 13px; COLOR: #666666; FONT-FAMILY: Arial, Helvetica, sans-serif
 }
 TD {
-	FONT-SIZE: small; FONT-FAMILY: Tahoma, Verdana, Arial
+	FONT-SIZE: 13px; FONT-FAMILY: Tahoma, Verdana, Arial
 }
 TH {
-	FONT-SIZE: small; FONT-FAMILY: Tahoma, Verdana, Arial
+	FONT-SIZE: 13px; FONT-FAMILY: Tahoma, Verdana, Arial
 }
-.tablebg {
-	background-image: url(top_r2_c1.gif);
-	background-position: right;
-}
-
+.tablebg     { background-image: url(top_r2_c1.gif);
+               background-position: right }
 TR.listhead {
   background-color: #D3ECF5;
 }
@@ -68,11 +65,11 @@ TD.title2 {
   background-color: #F7DCC3;
 }
 TD.titlehead {
-  FONT-WEIGHT: bold; FONT-SIZE: larger; background: #F0B989;
+  FONT-WEIGHT: bold; FONT-SIZE: 16px; background: #F0B989;
 }
 
 TD.topic_title2 {
-  FONT-WEIGHT: bold; FONT-SIZE: larger; background-color: #F7DCC3;
+  FONT-WEIGHT: bold; FONT-SIZE: 16px; background-color: #F7DCC3;
 }
 TD.topic_titlehead {
   FONT-WEIGHT: bold; background: #F0B989;
@@ -93,11 +90,11 @@ A.action {
 }
 
 A.goto_object {
-  FONT-WEIGHT: bold; FONT-SIZE: larger; 
+  FONT-WEIGHT: bold; FONT-SIZE: 16px; 
 }
 
 A.playlist {
-  FONT-SIZE: smaller;
+  FONT-SIZE: 12px;
 }
 
 INPUT.action {
@@ -105,7 +102,7 @@ INPUT.action {
 }
 
 INPUT {
-  FONT-SIZE: small; FONT-FAMILY: Tahoma, Verdana, Arial;
+  FONT-SIZE: 13px; FONT-FAMILY: Tahoma, Verdana, Arial;
 }
 
 A {
