@@ -185,6 +185,10 @@ class sotf_Neighbour extends sotf_Object {
   function syncResponse($chunkInfo, $objects) {
 	 global $db;
 
+	 if($this->get('accept_incoming') != 't') {
+		debug("node $remoteId is not allowed for incoming sync!");
+		return NULL;
+	 }
 	 $timestamp = $db->getTimestampTz();
 	 $remoteId = $this->get('node_id');
 	 // save modified objects
