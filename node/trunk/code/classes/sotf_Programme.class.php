@@ -618,18 +618,17 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
     // type...
     $newPrg->set('language', $metadata['language']);
+	
+    $newPrg->update();
 		
 		// topic
 		$topicz = explode(",",$metadata['type']);
 		foreach($topicz as $topic){
 			$topic_id = $db->getOne("SELECT topic_id FROM sotf_topics WHERE topic_name = '" . trim($topic) . "'");
 			if(!empty($topic_id)){
-				$db->query("INSERT INTO sotf_prog_topics(prog_id, topic_id) VALUES('" . $newPrg->id . "','$topic_id')");
+				$db->query("INSERT INTO sotf_prog_topics(id, prog_id, topic_id) VALUES('" . $this->getID() . "','" . $newPrg->id . "','$topic_id')");
 			}
 		}
-		
-		
-    $newPrg->update();
 
     // rights
     $rights = new sotf_NodeObject("sotf_rights");
