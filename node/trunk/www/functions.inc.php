@@ -56,8 +56,8 @@ function logger($name, $msg='', $type='default') {
   }
   if(is_array($msg)) {
     ob_start();
-    //var_dump($msg);
-    print_r($msg);
+    var_dump($msg);
+    //print_r($msg);
     $msg = "\n" . ob_get_contents();
     ob_end_clean();
   }

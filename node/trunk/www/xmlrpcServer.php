@@ -149,6 +149,7 @@ function getProgrammes($params)
 		// audio files for programme
 		$audioFiles = $prg->listAudioFiles('true');
 		$results[$key]['audioFiles'] = array();
+			$results[$key]['downloadFiles'] = array();
 		foreach($audioFiles as $fileList)
 		{
 			if ($fileList['stream_access'] == "t") $results[$key]['audioFiles'][] = $fileList;

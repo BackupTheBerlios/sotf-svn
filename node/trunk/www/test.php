@@ -2,12 +2,34 @@
 
 require("init.inc.php");
 
-require_once($config['classdir'] . "/rpc_Utils.class.php");
+#require_once($config['classdir'] . "/rpc_Utils.class.php");
 
-#$db->begin();
-#$db->query("INSERT INTO TEST VALUES(9,9)");
+print "<pre>";
+$a = NULL;
+if(is_null($a)) print "\nNULL IS_NULL";
+if($a === NULL) print "\nNULL === NULL";
+if($a == NULL) print "\nNULL == NULL";
 
-$db->commit();
+$a = 0;
+if(is_null($a)) print "\n0 IS_NULL";
+if($a === NULL) print "\n0 === NULL";
+if($a == NULL) print "\n0 == NULL";
+
+print "</pre>";
+
+/*
+$ConnId = pg_connect ("host=localhost port=5432 dbname=node user=micsik password=");
+$ResId = pg_query("SELECT * FROM sotf_nodes");
+$res = pg_fetch_row ($ResId);
+pg_close ($ConnId);
+
+print "<pre>";
+print_r($res);
+
+if($res[3]===NULL)
+     print "\nNULL!!!";
+print "</pre>";
+*/
 
 /*
 $rpc = new rpc_Utils;

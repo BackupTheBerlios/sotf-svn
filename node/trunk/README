@@ -74,3 +74,7 @@ accessible. Therefore you may create a symbolic link from htdocs for
 the www subdir, thus making accessible only a controlled part of the
 directory structure through the web.
 
+If you are updating the source code from CVS, please be sure that the
+setting 'Check for changed Smarty templates and recompile them' is set
+on the bottom of the admin page.  You can also tune some
+logging/debugging options of the server at the same place.

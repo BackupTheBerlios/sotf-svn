@@ -159,7 +159,7 @@ $smarty = new Smarty;
 $smarty->template_dir = $config['basedir'] . "/code/templates";
 $smarty->compile_dir = $config['basedir'] . "/code/templates_c";
 $smarty->config_dir = $config['basedir'] . "/code/configs";
-$smarty->compile_check = $sotfVars->get('smarty_compile_check', 0);
+$smarty->compile_check = $sotfVars->get('smarty_compile_check', 1);
 $smarty->debugging = $sotfVars->get('debug_smarty', 0);
 $smarty->show_info_include = $sotfVars->get('debug_smarty', 0);
 
