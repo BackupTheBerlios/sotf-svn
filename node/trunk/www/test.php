@@ -1,26 +1,48 @@
+<html>
+<head>
+<title>test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
 <?php
 
 require("init.inc.php");
 
-$clearTime = time() - 60*60;
-$dir = dir($config['cacheDir']);
-while($entry = $dir->read()) {
-  if ($entry == "." || $entry == "..")
-    continue;
-  $file = $config['cacheDir'] . "/$entry";
-  if(is_dir($file))
-    continue;
-  if(filemtime($file) < $clearTime) {
-    if(!unlink($file))
-      logError("could not delete: $file");
-  }
-}
-$dir->close();
+echo "<h1>" , htmlspecialchars("árvízt&#369;r&#337; tükörfúrógép", ENT_QUOTES), "</h1>";
 
+$v2 = str_replace(array('ee','ve'), array('ff','vv'), array('k'=>'bee', 'v'=>'vee'));
+
+dump($v2, V2);
+
+$text = sotf_Utils::getParameter("text");
+
+if($text) {
+  $db->query("UPDATE test SET tt='$text' WHERE id=1");
+}
+
+$text = $db->getOne("SELECT tt FROM test WHERE id=1");
+
+?>
+
+<p>Árvíztûrõ tükörfúrógép AND árvízt&#369;r&#337; tükörfúrógép</p>
+
+<form>
+Previous value: <?php echo $text ?>
+<br>
+<input name="text" value="<?php echo $text ?>">
+</form>
+
+<?php
+//echo urlencode(utf8_encode('Árvíztûrõ tükörfúrógép AND árvízt&#369;r&#337; tükörfúrógép'));
+exit;
+
+
+/*
 $v = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_programmes s, sotf_object_roles r WHERE c.id = r.contact_id AND r.object_id=s.id AND s.station_id = '005st1' ORDER BY name");
 
 dump($v, "V");
 exit;
+*/
 
 /*
 require_once($config['classdir'] . '/unpackXML.class.php');

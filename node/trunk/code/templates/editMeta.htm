@@ -75,15 +75,15 @@ window.onload=myonload;
             </tr>
             <tr valign="top" class="list1">
               <td class="meta">{#title#}:</td>
-              <td><input name="title" value="{$PRG_DATA.title|escape}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
+              <td><input name="title" value="{$PRG_DATA.title|strip}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
             <tr valign="top" class="list2">
               <td class="meta">{#alternative_title#}:</td>
-              <td><input name="alternative_title" value="{$PRG_DATA.alternative_title|escape}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
+              <td><input name="alternative_title" value="{$PRG_DATA.alternative_title|strip}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
             <tr valign="top" class="list1">
               <td class="meta">{#episode_title#}:</td>
-              <td><input name="episode_title" value="{$PRG_DATA.episode_title|escape}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
+              <td><input name="episode_title" value="{$PRG_DATA.episode_title|strip}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
             <tr valign="top" class="list2">
               <td class="meta">{#episode_sequence#}:</td>
@@ -109,11 +109,11 @@ window.onload=myonload;
             </tr>		
             <tr valign="top" class="list2">
               <td class="meta">{#abstract#}:</td>
-              <td><textarea name="abstract" rows="6" cols="50" onChange="if(value != defaultValue) data_changed++;" >{$PRG_DATA.abstract|escape}</textarea></td>
+              <td><textarea name="abstract" rows="6" cols="50" onChange="if(value != defaultValue) data_changed++;" >{$PRG_DATA.abstract}</textarea></td>
             </tr>
             <tr valign="top" class="list1">
               <td class="meta">{#keywords#}:</td>
-              <td><textarea name="keywords" rows="3" cols="50" onChange="if(value != defaultValue) data_changed++;" >{$PRG_DATA.keywords|escape}</textarea></td>
+              <td><textarea name="keywords" rows="3" cols="50" onChange="if(value != defaultValue) data_changed++;" >{$PRG_DATA.keywords}</textarea></td>
             </tr>
             <tr valign="top" class="list2">
               <td class="meta">{#genre#}</td>
@@ -135,7 +135,7 @@ window.onload=myonload;
             </tr>
             <tr valign="top" class="list2">
               <td class="meta">{#spatial_coverage#}:</td>
-              <td><input name="spatial_coverage" value="{$PRG_DATA.spatial_coverage|escape}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
+              <td><input name="spatial_coverage" value="{$PRG_DATA.spatial_coverage}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
             </tr>
             <tr valign="top" class="list1">
               <td class="meta">{#production_date#}:</td>

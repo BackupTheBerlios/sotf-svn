@@ -38,6 +38,13 @@ class sotf_Station extends sotf_ComplexNodeObject {
 		return $res;
 	}
 
+	function delete() {
+	  global $db;
+	  // has to move contacts to another station if they are used elsewhere!
+	  sotf_Contact::moveContactsFromStation($this);
+	  parent::delete();
+	}
+
 	/** static: finds a station by its name
 	 */
 	function getByName($stationName) {

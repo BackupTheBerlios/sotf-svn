@@ -352,6 +352,20 @@ class sotf_Object {
 	 }
 	 return $retval;
   }
+
+	function getAllForHTML() {
+		global $db;
+		$retval = $this->data;
+		if(count($this->binaryFields) > 0 ) {
+			// translate binary fields
+			reset($this->binaryFields);
+			while(list(,$bf) = each($this->binaryFields)) {
+				$retval[$bf] = $db->unescape_bytea($retval[$bf]);
+			}
+		}
+		$retval = sotf_Utils::toHTML($retval);
+		return $retval;
+	}
 	
   /**
 	* 

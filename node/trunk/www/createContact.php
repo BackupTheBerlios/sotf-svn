@@ -12,7 +12,7 @@ require("init.inc.php");
 $page->popup = true;
 $page->forceLogin();
 
-//$contactId = sotf_Utils::getParameter('contactid');
+$stationId = sotf_Utils::getParameter('stationid');
 $contactName = sotf_Utils::getParameter('name');
 
 if($contactName) {
@@ -26,7 +26,7 @@ if($contactName) {
 
   // create a new contact
   $contact = new sotf_Contact();
-  $status = $contact->create($contactName);
+  $status = $contact->create($contactName, $stationId);
   if(!$status) {
     $page->addStatusMsg('contact_create_failed');
   } else {
@@ -38,6 +38,7 @@ if($contactName) {
 
 // general data
 $smarty->assign("NAME", $contactName);
+$smarty->assign("STATION_ID", $stationId);
 
 $page->sendPopup();
 

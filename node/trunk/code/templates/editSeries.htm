@@ -77,7 +77,7 @@
               {$item.contact_data.name}
             </td>
             <td nowrap>
-                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$SERIES_ID}','{#edit_role#}',400,400,false)" />
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$SERIES_ID}','{#edit_role#}',300,550,false)" />
              {if $item.change_contact }
                   <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)" />
              {/if}
@@ -90,7 +90,7 @@
         <p>{#no_roles#}</p>
         {/if}
         <p>
-            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$SERIES_ID}','{#edit_role#}',400,400,false)" />
+            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$SERIES_ID}','{#edit_role#}',300,550,false)" />
         </p>
       </td>
     </tr>

@@ -1,43 +1,52 @@
 There are the following general permissions:
 
-- ADMIN
+- OWNER
 - CHANGE
 - CREATE
 - DELETE
 - AUTHORIZE
-- ADD_PROG
 
-ADMIN means all the permissions (including those that are introduced later)
+OWNER means all the permissions (including those that are introduced later)
 
 These rights has the following meaning in different contexts:
 
 on programme level:
 -------------------
 
-- change (including publish/unpublish and streaming rights) (CHANGE)
+- change metadata, icon, files, publish/unpublish, set streaming rights (CHANGE)
 - authorize persons (AUTHORIZE)
 - delete (DELETE)
+
+Inherited rights:
+- CHANGE, DELETE, AUTHORIZE, OWNER from station level
+- CHANGE, DELETE, AUTHORIZE, OWNER from series level
 
 on contact records:
 -------------------
 
-- change (CHANGE)
+- change metadata and icon (CHANGE)
 - authorize persons (AUTHORIZE)
 - delete (DELETE)
+
+Inherited rights:
+- CHANGE, DELETE, AUTHORIZE, OWNER from station level
 
 on series level:
 ----------------
 
-- add programmes (ADD_PROG)
+- add programmes (CREATE)
 - change series general data (CHANGE)
 - authorize persons (AUTHORIZE)
 - delete programmes (DELETE)
 
+Inherited rights:
+- CREATE, CHANGE, DELETE, AUTHORIZE, OWNER from station level
+
 on station level:
 -----------------
 
-- add programmes (ADD_PROG)
-- create series (CREATE)
+- add programmes (CREATE)
+- create series (CHANGE)
 - change station general data (CHANGE)
 - delete programmes (DELETE)
 - delete series (DELETE)
@@ -49,8 +58,8 @@ on node level:
 general read & browse access
 
 normally everyone can read anything published.
-Unpublished materials can only be seen/read by those who are working on
-that programme (and station managers also???)
+Unpublished materials can only be seen/read by those who have CHANGE permission on
+that programme
 
 node manager
 

@@ -104,24 +104,6 @@ CREATE TABLE "sotf_user_permissions" (
 	CONSTRAINT "sotf_user_permissions_uniq" UNIQUE ("user_id", "object_id", "permission_id")
 );
 
-CREATE SEQUENCE "sotf_contacts_seq";
-
-CREATE TABLE "sotf_contacts" (
--- this is a person or organization record
--- REPLICATED
-	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-	"name" varchar(100) NOT NULL,
-	"alias" varchar(100),
-	"acronym" varchar(30),
-	"intro" text,
-	"email" varchar(100),
-	"address" varchar(255),
-	"phone" varchar(50),
-	"cellphone" varchar(50),
-	"fax" varchar(50),
-	"url" varchar(255)
-);
-
 CREATE SEQUENCE "sotf_object_roles_seq";
 
 CREATE TABLE "sotf_object_roles" (
@@ -160,6 +142,25 @@ CREATE TABLE "sotf_series" (
 	"language" varchar(40),											-- 2-letter codes separeted by comma
 	"entry_date" date DEFAULT CURRENT_DATE,
 	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE
+);
+
+CREATE SEQUENCE "sotf_contacts_seq";
+
+CREATE TABLE "sotf_contacts" (
+-- this is a person or organization record
+-- REPLICATED
+	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
+	"station_id" varchar(12) REFERENCES sotf_stations(id) ON DELETE CASCADE,  -- responsible station
+	"name" varchar(100) NOT NULL,
+	"alias" varchar(100),
+	"acronym" varchar(30),
+	"intro" text,
+	"email" varchar(100),
+	"address" varchar(255),
+	"phone" varchar(50),
+	"cellphone" varchar(50),
+	"fax" varchar(50),
+	"url" varchar(255)
 );
 
 CREATE SEQUENCE "sotf_programmes_seq";

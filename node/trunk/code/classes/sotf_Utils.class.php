@@ -206,9 +206,26 @@ class sotf_Utils
 		$val = $_POST[$name];
 		if(!isset($val))
 			$val = $_GET[$name];
+    // if(isset($val))
+    //$val = sotf_Utils::decodeHTML($val);
+    // TODO: strip_tags ???
+    //debug("getParam: $name", $val);
 		return $val;
 	}
-	
+
+  /** does not work for some characters (e.g. in Hungarian, Czech and Greek). */
+  function decodeHTML($string) {
+    $string = strtr($string, array_flip(get_html_translation_table(HTML_ENTITIES, ENT_COMPAT)));
+    $string = preg_replace("/&#([0-9]+);/me", "chr('\\1')", $string);
+    return $string;
+  }
+
+  /** changes strings for HTML display (before passing it to Smarty
+      templates, htmlspecialchars is not usable here because of chars like &#999; */ 
+	function toHTML($strOrArray) {
+		return str_replace(array('"','<', '>'), array('&quot;','&lt;', '&gt;'), $strOrArray);
+  }
+
   /** this is used before saving a string into SQL database */
 	function magicQuotes($str) {
     return addslashes(stripslashes($str));

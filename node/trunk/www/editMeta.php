@@ -68,16 +68,19 @@ if($save || $finish || $finishpublish) {
       $value = strip_tags($value);
     } elseif($type=='number') {
       if(empty($value))
-        $value = '';
+        $value = 0;
       elseif(!is_numeric($value)) {
         addError($page->getlocalized('not_a_number') . ": $value");
         continue;
       }
     } elseif($type=='date') {
-      if (sotf_Utils::getParameter($param . '_radio1') != "unselected")
+      if (sotf_Utils::getParameter($param . '_radio1') != "unselected") {
 	      $value = sotf_Utils::getParameter($param . 'Year') . '-'
 	        . sotf_Utils::getParameter($param . 'Month') . '-'
 	        . sotf_Utils::getParameter($param . 'Day');
+		} else {
+		  $value = NULL;
+		}
     }
     $prg->set($param, $value);
   }
@@ -179,16 +182,16 @@ if($seticon) {
 // general data
 if($new)
      $smarty->assign("NEW",1);
-$smarty->assign('PRG_DATA', $prg->getAll());
+$smarty->assign('PRG_DATA', $prg->getAllForHTML());
 
 // station data
 $station = $prg->getStation();
-$smarty->assign('STATION_DATA', $station->getAll());
+$smarty->assign('STATION_DATA', $station->getAllForHTML());
 
 // series data
 $series = $prg->getSeries();
 if($series)
-     $smarty->assign('SERIES_DATA', $series->getAll());
+     $smarty->assign('SERIES_DATA', $series->getAllForHTML());
 $smarty->assign('MY_SERIES', $permissions->mySeriesData($prg->get('station_id')));
      
 // roles and contacts

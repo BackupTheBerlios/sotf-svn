@@ -543,14 +543,13 @@ class sotf_AdvSearch
 	{
 		global $db;
 		$this->allid = array();
-		$words = htmlspecialchars($words);		//remove special chars
+		$words = sotf_Utils::magicQuotes(strip_tags($words));		//remove special chars
 		$word = split(" ", $words);			//split into separate words
 		$max = count($word);				//count words
 		for ($i=0; $i<$max; $i++)			//go through all words
 		{
 			$word[$i] = trim($word[$i]);			//trim word
 			if ($word[$i] == "") continue;			//in empty get next
-
 			//find word at the most common places
 			$serial = str_replace("XXX", $word[$i], "production_date|Bstation|AAND|Bperson|Bcontains|BXXX|Bstring|AOR|Btitle|Bcontains|BXXX|Bstring|AOR|Bkeywords|Bcontains|BXXX|Bstring|AOR|Babstract|Bcontains|BXXX|Bstring|AOR|Bspatial_coverage|Bcontains|BXXX|Bstring");
 			if ($language) $serial .= "|AAND|Blanguage|Bis|B".$language."|Blang";		//if language given add to search options

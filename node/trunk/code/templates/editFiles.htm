@@ -57,6 +57,7 @@ else  window.location.href = this.location.href
           <th>{#play_length#}</th>
           <th>{#stream_access#}</th>
           <th>{#download_access#}</th>
+          <th></th>
        </tr>
        {cycle name="prg" values="list1,list2" print=false advance=false}
        {foreach item=item from=$PRG_AUDIO}
@@ -94,15 +95,24 @@ else  window.location.href = this.location.href
             </td>
             <td nowrap>
               {if empty($item.filename) }
-              <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=180')" />
+              <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=180')" />
               {else}
                 <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
               {/if}
             </td>
           </tr>
           {/foreach}    
+          <tr>
+              <td colspan="4" align="left">
+                 <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?main=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)" />
+              </td>
+              <td colspan="8" align="right">
+                {if $MAIN_AUDIO_COUNT gt 0 and $MISSING}
+                   <input class="action" type="button" name="b2" value="{#convert_all#}" onClick="window.open('convert.php?id={$PRG_ID}&all=1','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=400')" />
+                {/if}
+              </td>
+          </tr>  
     </table>
-          <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?main=1&prgid={$PRG_ID}','{#addfiles#}',500,500,true)" />
  
  </td>
 </tr>

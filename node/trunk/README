@@ -14,8 +14,9 @@ PREREQUISITES:
     with extension: pgsql, domxml
 - PEAR (bundled with PHP)
 - PostgreSQL DBMS version >= 7.2: http://www.postgresql.org/
+   (multibyte-encoding support is suggested)
 - SelfAdmin tool from PublicVoiceLab (for user authentication)
-- Smarty template engine version >= 2.3: http://smarty.php.net/
+- Smarty template engine version >= 2.5: http://smarty.php.net/
 - icecast streaming server: http://www.icecast.org/
 - tamburine streamer: http://tamburine.dyne.org/
   - w3c-libwww - http://www.w3c.org/Library (5.4.0)

@@ -395,7 +395,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$diff = abs($this->get('length') - $length);
 		if($diff > 15) { 
 		  // allow for 15 sec of difference in program length
-		  raiseError("audio_length_no_match");
+		  $page->addStatusMsg("audio_length_no_match");
+		  //raiseError("audio_length_no_match");
+		  $this->set('length', $length);
+		  $this->update();
 		}
 	 }
 	 if($copy)
@@ -526,7 +529,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   /** static: import a programme from the given XBMF archive */
-  function importXBMF($fileName, $publish=false) {
+  function importXBMF($fileName, $publish=false, $console=false) {
 	 global $db, $config, $permissions, $repository;
 
 	 $pathToFile = $config['xbmfInDir'] . '/';
@@ -658,14 +661,12 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		if ($entry != "." && $entry != "..") {
 		  $currentFile = $dirPath . "/" . $entry;
 		  if (!is_dir($currentFile)) {
-			 if(is_file($targetFile))
+			 if(is_file($currentFile))
 				 $newPrg->setAudio($currentFile, true);
-			 //break;
 		  }
 		}
 	 }
 	 $dir->close();
-	 // TODO: convert missing formats!
 
 	 // insert other files
 	 $dirPath = $pathToFile . $folderName . "/XBMF/files";
@@ -675,11 +676,13 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		  $currentFile = $dirPath . "/" .$entry;
 		  if (!is_dir($currentFile)) {
 			 $id = $newPrg->setOtherFile($currentFile, true);
+			 /* by default, no need for this
 			 if($id) {
 				$fileInfo = &$repository->getObject($id);
 				$fileInfo->set('public_access', 't');
 				$fileInfo->update();
 			 }
+			 */
 		  }
 		}
 	 }
@@ -689,6 +692,18 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $logoFile = $pathToFile . $folderName . "/icon.png";
 	 if(is_readable($logoFile)) {
 		$newPrg->setIcon($logoFile);
+	 }
+
+	 // convert missing formats!
+	 $audioFiles = & new sotf_FileList();
+	 $audioFiles->getAudioFromDir($newPrg->getAudioDir());
+	 $checker = & new sotf_AudioCheck($audioFiles);
+	 $checker->console = $console; // if we don't want progress bars
+	 $targets = $checker->convertAll($newPrg->id);
+	 if(is_array($targets)) {
+		foreach($targets as $target) {
+		  $newPrg->setAudio($target);
+		}
 	 }
 
 	 /*

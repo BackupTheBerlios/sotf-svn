@@ -133,13 +133,20 @@ for ($i=0;$i<count($config['audioFormats']);$i++)
     unset($mainAudio[$fname]);
   } else {
     $PRG_AUDIO[$i]['missing'] = 1;
+	 $missing = 1;
   }
 }
 
 debug("mainAudio", $mainAudio);
-while(list($fn,$finfo) = each($mainAudio)) {
-  $PRG_AUDIO[] = $finfo;
+if(is_array($mainAudio)) {
+  while(list($fn,$finfo) = each($mainAudio)) {
+	 $PRG_AUDIO[] = $finfo;
+  }
 }
+
+$smarty->assign('MISSING',$missing);
+
+$smarty->assign('MAIN_AUDIO_COUNT', $prgAudiolist->count());
 
 $smarty->assign('PRG_AUDIO',$PRG_AUDIO);
 

@@ -80,7 +80,10 @@ if($save) {
 }
 
 // general data
+$obj = & $repository->getObject($objectId);
+
 $smarty->assign("OBJECT_ID", $objectId);
+$smarty->assign("STATION_ID", $obj->getStationId());
 $smarty->assign("ROLE_ID", $roleId);
 $smarty->assign('ROLE_LIST', $repository->getRoles());
 
@@ -95,7 +98,7 @@ switch($scope) {
 	$contacts = array();
 	break;
  case 3:
-	$contacts = sotf_Contact::listObjectContactNames($repository->getObject($objectId));
+	$contacts = sotf_Contact::listObjectContactNames($obj);
 	break;
  case 4:
 	$contacts = sotf_Contact::listLocalContactNames();

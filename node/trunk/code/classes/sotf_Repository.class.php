@@ -59,7 +59,7 @@ class sotf_Repository {
 									);
 
   /** The order in which to send table data to neighbour nodes. */
-  var $tableOrder = "no,co,st,se,pr,ri,ed,of,mf,li,td,tt,to,pt,ge,ro,rn,sr,bl,de,ra,re,sx";
+  var $tableOrder = "no,st,co,se,pr,ri,ed,of,mf,li,td,tt,to,pt,ge,ro,rn,sr,bl,de,ra,re,sx";
 
   var $rootdir;
   var $db;
@@ -256,7 +256,7 @@ class sotf_Repository {
 
   function updateTopicCounts() {
     // calculate counts by topic
-	 $this->db->begin();
+	 $this->db->begin(true);
     $this->db->query("DROP TABLE sotf_topics_counter");
     $this->db->query("SELECT setval('sotf_topics_counter_id_seq', 1, false)");
     $this->db->query("SELECT nextval('sotf_topics_counter_id_seq') AS id, t.id AS topic_id, count(p.id) AS number, NULL::int AS total INTO sotf_topics_counter FROM sotf_topic_tree_defs t LEFT JOIN sotf_prog_topics p ON t.id = p.topic_id GROUP BY t.id");

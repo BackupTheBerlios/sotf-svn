@@ -25,11 +25,13 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	//function checkDirs
 
 	/** overrides function in sotf_NodeObject */
+	/*
 	function isLocal() {
 		$retval = is_dir($this->getDir()); 
 		debug("isLocal2", $retval);
 		return $retval;
 	}
+	*/
 
 	function create() {
 	  $succ = parent::create();
@@ -64,6 +66,17 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 		$retval['icon'] = sotf_Blob::cacheIcon($this->id);
 		return $retval;
 	}
+
+	function getStationId() {
+		//debug("class", get_class($this));
+		switch($this->tablename) {
+		case "sotf_stations":
+		  return $this->id;
+		default:
+		  return $this->get('station_id');
+		}
+	}
+
 
 	/************************************************
 	 *      METADATA

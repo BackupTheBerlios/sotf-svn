@@ -1,7 +1,8 @@
 <?php
 
 /**
-* This is a class for checking the requiested formats
+* This is a class for checking the requested formats, and for converting them
+* So this is a bad class name, should be AudioTools
 *
 * @author	Tamas Kezdi SZTAKI DSD <tbyte@sztaki.hu>
 * @package	StreamOnTheFly
@@ -34,6 +35,8 @@ class sotf_AudioCheck
 	* @see	{@link FileList}
 	*/
 	var $list;
+
+  var $console = false;
 
 	/**
 	* Sets up the object
@@ -185,6 +188,316 @@ class sotf_AudioCheck
 
 		return $config['audioFormats'][$index]['bitrate'] . 'kbps_' . $config['audioFormats'][$index]['channels'] . 'chn_' . $config['audioFormats'][$index]['samplerate'] . 'Hz.' . $config['audioFormats'][$index]['format'];
 	} // end func getFormatFilename
+
+  ////////////////////////////////////////////////////////
+  //
+  //  AUDIO CONVERSION
+  //
+  ///////////////////////////////////////////////////////
+
+
+    function getTempWavName()
+      {
+        global $config;
+        
+        $tempname = tempnam($config['tmpDir'],"__");
+        unlink($tempname);
+        return $tempname. ".wav";
+      }
+
+    function progressBar($cmd,$regexp)
+      {
+        global $config;
+
+        $line = "";
+        $out = 0;
+        $left = $config['progressBarLength'];
+
+        debug('execute',$cmd);
+        $fp = popen($cmd . ' 2>&1', 'r');
+        while(!feof($fp))
+          {
+            $data = fread($fp,1);
+            if ((ord($data) == 13) || (ord($data) == 10))
+              {
+                if (preg_match($regexp,$line,$match))
+                  {
+                    $curr = (integer) (((integer) $match[1]) * $config['progressBarLength'] / 100);
+                    for ($i=$out;$i<$curr;$i++)
+                      {
+                        echo $config['progressBarChar'];
+                        $out++;
+                        $left--;
+                      }
+                  }
+                $line = "";
+              }
+            else
+              $line .= $data;
+            flush();
+          }
+        pclose($fp);
+        while($left)
+          {
+            echo $config['progressBarChar'];
+            $left--;
+            $out++;
+          }
+        flush();
+      }
+
+    function exec($cmd) {
+      debug('execute',$cmd);
+      exec($cmd);
+    }
+
+    function encodeWithLame($cmd)
+      {
+        global $config, $page;
+
+        if($this->console) {
+          echo "<p>" . $page->getlocalized('encoding_mp3') . "<br />\n";
+          flush();
+          
+          $this->progressBar($cmd,$config['lameencRegexp']);
+          echo "</p>\n";
+          flush();
+        } else {
+          $this->exec($cmd);
+        }
+      }
+        
+    function decodeWithLame($cmd)
+      {
+        global $config, $page;
+        
+        if($this->console) {
+          echo "<p>" . $page->getlocalized('decoding_mp3') . "<br />\n";
+          flush();
+          debug('execute',$cmd);
+          $result = exec($cmd);
+          debug('result',$result);
+          for ($i=0;$i<$config['progressBarLength'];$i++)
+            echo $config['progressBarChar'];
+          echo "</p>\n";
+          flush();
+        } else {
+          $this->exec($cmd);
+        }
+      }
+    
+    function encodeWithOgg($cmd)
+      {
+        global $config, $page;
+        
+        if($this->console) {
+          echo "<p>" . $page->getlocalized('encoding_ogg') . "<br />\n";
+          flush();
+          $this->progressBar($cmd,$config['oggencRegexp']);
+          echo "</p>\n";
+          flush();
+        } else {
+          $this->exec($cmd);
+        }
+      }
+    
+    function decodeWithOgg($cmd)
+      {
+        global $config, $page;
+        
+        if($this->console) {
+          echo "<p>" . $page->getlocalized('decoding_ogg') . "<br />\n";
+          flush();
+          debug('execute',$cmd);
+          exec($cmd);
+          for ($i=0;$i<$config['progressBarLength'];$i++)
+            echo $config['progressBarChar'];
+          echo "</p>\n";
+          flush();
+        } else {
+          $this->exec($cmd);
+        }
+      }
+    
+    function convertWithSox($cmd)
+      {
+        global $config, $page;
+        
+        if($this->console) {
+          echo "<p>" . $page->getlocalized('convert_mono') . "<br />\n";
+          flush();
+          debug('execute',$cmd);
+          exec($cmd);
+          for ($i=0;$i<$config['progressBarLength'];$i++)
+            echo $config['progressBarChar'];
+          echo "</p>\n";
+          flush();
+        } else {
+          $this->exec($cmd);
+        }
+      }
+    
+    function checkFile($file) {
+      if(!is_readable($file)) {
+        raiseError("conversion_failed");
+      }
+    }
+
+    function rmFile($file) {
+      unlink($file) or logError("Could not delete file: $file");
+    }
+
+    /** returns array of names of new audio files */
+    function convertAll($id) {
+      global $config;
+      for($i=0; $i<count($config['audioFormats']); $i++) {
+        $file = $this->convert($id, $i);
+        if($file)
+          $files[] = $file;
+      }
+      return $files;
+    }
+
+    /** returns name of new audio file */
+    function convert($id, $index) {
+      global $config, $page;
+
+      debug('conversion started', $this->getFormatFilename($index));
+
+      if ($this->reqs[$index][0] === true) {
+        debug("We have this format already", $index);
+        return;
+      }
+
+      if ($this->reqs[$index][1] !== false) {
+        // We have a better quality audio
+        $sourceindex = $this->reqs[$index][1];
+      } else {
+        // We don't have a better quality audio, get the best
+        $sourceindex = $this->getBest();
+      }
+
+      if ($sourceindex === false) {
+        logError("Could not find a base format to convert format $index");
+        return;
+      }
+
+      $audioFiles = & $this->list;
+      $source = $audioFiles->list[$sourceindex]->getPath();
+      debug("source", $source);
+
+      $target = $config['tmpDir'] . '/' . $id . '_' . time() . '_' . $this->getFormatFilename($index);
+
+      $bitrate = $config['audioFormats'][$index]["bitrate"];
+      $samplerate = $config['audioFormats'][$index]["samplerate"];
+      if ($config['audioFormats'][$index]["channels"] == 1)
+        $mode = "mono";
+      else
+        $mode = "joint";
+
+      if($this->console)
+        echo "<p>" . $page->getlocalized('conversion_started') . ' ' . $this->getFormatFilename($index) . "</p>\n";
+
+      if (($config['audioFormats'][$index]['format'] == 'mp3') && ($audioFiles->list[$sourceindex]->format == 'mp3'))
+        {
+          if (($config['audioFormats'][$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
+            {
+              $tempname1 = $this->getTempWavName();
+              $this->decodeWithLame($config['lame'] . " --decode \"$source\" \"$tempname1\"");
+              $this->checkFile($tempname1);
+              $tempname2 = $this->getTempWavName();
+              $this->convertWithSox($config['sox'] . " \"$tempname1\" -c2 \"$tempname2\"");
+              $this->checkFile($tempname2);
+              $this->rmFile($tempname1);
+              $this->encodeWithLame($config['lame'] . " --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname2\" \"$target\"");
+              $this->checkFile($target);
+              $this->rmFile($tempname2);
+            }
+          else
+            {
+              $this->encodeWithLame($config['lame'] . " --disptime 1 --cbr --mp3input -b $bitrate -m $mode --resample $samplerate \"$source\" \"$target\"");
+            }
+        }
+      elseif (($config['audioFormats'][$index]['format'] == 'ogg') && ($audioFiles->list[$sourceindex]->format == 'mp3'))
+        {
+          $tempname1 = $this->getTempWavName();
+          $this->decodeWithLame($config['lame'] . " --decode \"$source\" \"$tempname1\"");
+          $this->checkFile($tempname1);
+          if (($config['audioFormats'][$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
+            {
+              $tempname2 = $this->getTempWavName();
+              $this->convertWithSox($config['sox'] . " \"$tempname1\" -c2 \"$tempname2\"");
+              $this->checkFile($tempname2);
+              $this->rmFile($tempname1);
+              $this->encodeWithOgg($config['oggenc'] . " -b $bitrate -m $bitrate -M $bitrate --resample $samplerate -o \"$target\" \"$tempname2\"");
+              $this->checkFile($target);
+              $this->rmFile($tempname2);
+            }
+          else
+            {
+              if (($config['audioFormats'][$index]['channels'] == 1) && ($audioFiles->list[$sourceindex]->channels == 2))
+                $addparam = "--downmix";
+              $this->encodeWithOgg($config['oggenc'] . " -b $bitrate -m $bitrate -M $bitrate --resample $samplerate $addparam -o \"$target\" \"$tempname1\"");
+              $this->checkFile($target);
+              $this->rmFile($tempname1);
+            }
+        }
+      elseif (($config['audioFormats'][$index]['format'] == 'mp3') && ($audioFiles->list[$sourceindex]->format == 'ogg'))
+        {
+          $tempname1 = $this->getTempWavName();
+          $this->decodeWithOgg($config['oggdec'] . " -o \"$tempname1\" \"$source\"");
+          $this->checkFile($tempname1);
+          if (($config['audioFormats'][$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
+            {
+              $tempname2 = $this->getTempWavName();
+              $this->convertWithSox($config['sox'] . " \"$tempname1\" -c2 \"$tempname2\"");
+              $this->checkFile($tempname2);
+              $this->rmFile($tempname1);
+              $this->encodeWithLame($config['lame'] . " --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname2\" \"$target\"");
+              $this->checkFile($target);
+              $this->rmFile($tempname2);
+            }
+          else
+            {
+              $this->encodeWithLame($config['lame'] . " --disptime 1 --cbr -b $bitrate -m $mode --resample $samplerate \"$tempname1\" \"$target\"");
+              $this->checkFile($target);
+              $this->rmFile($tempname1);
+            }
+        }
+      elseif (($config['audioFormats'][$index]['format'] == 'ogg') && ($audioFiles->list[$sourceindex]->format == 'ogg'))
+        {
+          $tempname1 = $this->getTempWavName();
+          $this->decodeWithOgg($config['oggdec'] . " -o \"$tempname1\" \"$source\"");
+          $this->checkFile($tempname1);
+          if (($config['audioFormats'][$index]['channels'] == 2) && ($audioFiles->list[$sourceindex]->channels == 1))
+            {
+              $tempname2 = $this->getTempWavName();
+              $this->convertWithSox($config['sox'] . " \"$tempname1\" -c2 \"$tempname2\"");
+              $this->checkFile($tempname2);
+              $this->rmFile($tempname1);
+              $this->encodeWithOgg($config['oggenc'] . " -b $bitrate -m $bitrate -M $bitrate --resample $samplerate -o \"$target\" \"$tempname2\"");
+              $this->checkFile($target);
+              $this->rmFile($tempname2);
+            }
+          else
+            {
+              if (($config['audioFormats'][$index]['channels'] == 1) && ($audioFiles->list[$sourceindex]->channels == 2))
+                $addparam = "--downmix";
+              $this->encodeWithOgg($config['oggenc'] . " -b $bitrate -m $bitrate -M $bitrate --resample $samplerate $addparam -o \"$target\" \"$tempname1\"");
+              $this->checkFile($target);
+              $this->rmFile($tempname1);
+            }
+        }
+      else
+        {
+          raiseError("No rule found to convert " . $this->getFormatFilename($index) . "!");
+        }
+
+      $this->checkFile($target);
+      debug('conversion finished', $target);
+
+      return $target;
+    }
 
 } // end class sotf_AudioCheck
 

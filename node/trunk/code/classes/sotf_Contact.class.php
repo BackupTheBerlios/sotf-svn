@@ -22,7 +22,7 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 		$this->sotf_ComplexNodeObject('sotf_contacts', $id, $data);
 	}
 
-	function create($name) {
+	function create($name, $stationId) {
 	  global $config;
 	  $id = $this->findByNameLocal($name);
 	  if($id) {
@@ -30,9 +30,10 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 		 return false;
 	  }
 	  $this->data['name'] = $name;
+	  $this->data['station_id'] = $stationId;
 	  return parent::create();
 	}
-	
+
 	/** static */
 	function isNameInUse($name) {
 		global $db, $config;
@@ -43,15 +44,13 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 	  Checks and creates subdirs if necessary.
 	*/
   function checkDirs() {
-	global $repository;
-
-	$dir = $repository->rootdir . '/__contacts';
+	$station = & $this->getObject($this->get('station_id'));
+	$dir = $station->getDir() . '/__contacts';
 	if(!is_dir($dir)) {
 	  debug("created contacts dir", $dir);
 	  mkdir($dir, 0770);
 	}
 	$dir = $dir . '/' . $this->id;
-	//$dir = $this->getDir();
 	if(!is_dir($dir)) {
 	  debug("created contact dir", $dir);
 	  mkdir($dir, 0770);
@@ -60,8 +59,8 @@ class sotf_Contact extends sotf_ComplexNodeObject {
   }
 
   function getDir() {
-	 global $repository;
-	 $dir = $repository->rootdir . '/__contacts/' . $this->id;
+	 $station = & $this->getObject($this->get('station_id'));
+	 $dir = $station->getDir() . '/__contacts/' . $this->id;
 	 return $dir;
   }
   
@@ -69,7 +68,41 @@ class sotf_Contact extends sotf_ComplexNodeObject {
   function getMetaDir() {
 	 return $this->getDir();
   }
-  
+
+  /** static */
+  function moveContactsFromStation($station) {
+	 global $db, $config;
+	 $ids = $db->getCol("SELECT id FROM sotf_contacts WHERE station_id = '$station->id'");
+	 if(!empty($ids)) {
+		foreach($ids as $id) {
+		  $contact = & $this->getObject($id);
+		  $stations1 = $db->getCol("SELECT o.id FROM sotf_object_roles r, sotf_stations o WHERE r.contact_id = '$contact->id' AND r.object_id=o.id");
+		  $stations2 = $db->getCol("SELECT o.station_id FROM sotf_object_roles r, sotf_series o WHERE r.contact_id = '$contact->id' AND r.object_id=o.id");
+		  $stations3 = $db->getCol("SELECT o.station_id FROM sotf_object_roles r, sotf_programmes o WHERE r.contact_id = '$contact->id' AND r.object_id=o.id");
+		  $stations = array_unique(array_merge($stations1, $stations2, $stations3));
+		  if(!empty($stations)) {
+			 $moved = false;
+			 foreach($stations as $st) {
+				if($st==$station->id)
+				  continue;
+				$node = $db->getOne("SELECT node_id FROM sotf_node_objects WHERE id='$st'");
+				//debug("
+				if($node==$config['nodeId']) {
+				  $contact->set("station_id", $st);
+				  $contact->update();
+				  $moved = true;
+				  break;
+				}
+			 }
+			 if(!$moved) {
+				// TODO: here we have problem: the contact is used only on stations on remote nodes!
+				logError("Could not move contact '" . $contact->get('name') . "' used at stations: " . join(" ",$stations) . " The contact is deleted, sorry.");
+			 }
+		  }
+		}
+	 }
+  }
+
 	/** static */
 	function findByNameLocal($name) {
 		global $db, $config;

@@ -503,7 +503,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		}
 		else
 		{
-			$sql = "CREATE DATABASE ".$install_node_db_name;		//create new db
+			$sql = "CREATE DATABASE ".$install_node_db_name . " WITH ENCODING='unicode' ";		//create new db
 			$result = pg_exec($conn, $sql);
 			if (!$result)
 			{
