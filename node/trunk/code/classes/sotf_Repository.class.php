@@ -11,7 +11,7 @@ require_once($classdir . '/sotf_Series.class.php');
 require_once($classdir . '/sotf_Programme.class.php');
 require_once($classdir . '/sotf_Contact.class.php');
 require_once($classdir . '/sotf_Rating.class.php');
-//require_once($classdir . '/sotf_PList.class.php');
+require_once($classdir . '/sotf_Playlist.class.php');
 //require_once($classdir . '/sotf_Metadata.class.php');
 
 class sotf_Repository {
