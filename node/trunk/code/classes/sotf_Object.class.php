@@ -399,6 +399,7 @@ class sotf_Object {
 
 	/** decides if there's a need to update metadata description for parent object, and schedules it */
 	function markParentToUpdate() {
+		global $repository;
 		$mainObjId = $this->getMainObjectId();
 		debug("parentUpdate", $mainObjId);
 		if($mainObjId) {

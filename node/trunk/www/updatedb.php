@@ -110,6 +110,7 @@ elseif ($name == "caption")		//editFiles
 elseif ($name == "addtree")		//topic_tree
 {
 	$vocabularies->addToTopic($id, $value);
+	// doesnt work: print("<script type=\"text/javascript\">window.opener.opener.reload();</script>");
 	print("success");
 }
 elseif ($name == "editorpub")		//editor bublished checkboxes
