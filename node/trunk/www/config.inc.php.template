@@ -114,8 +114,13 @@ $config['iceServer'] = "your.host.name";
 $config['icePort'] = "8000";
 $config['encoderPassword'] = "hackme";
 
-// The command to start streaming: __XX__ style tokens are replaced with the actual value
+// The command to start streaming: 
 $config['streamCmd'] = "/usr/bin/perl " . $config['basedir'] . "/code/contrib/iceplay -b __BITRATE__ -s " . $config['iceServer'] . " -P " . $config['icePort'] . " -p " . $config['encoderPassword'] . " -l __PLAYLIST__ -n __NAME__ >>" . $config['basedir'] . "/logs/play.log 2>&1 &";
+// __XX__ style tokens are replaced with the actual value
+// __PLAYLIST__ = file containing playlist
+// __NAME__ = name of stream (mount point)
+// __BITRATE__ = bitrate (e.g. 128000 or 24000)
+// __KILOBITRATE__ = bitrate/1000 (e.g. 128, 24)
 
 // The server will not start more streams than this
 $config['maxNumberOfStreams'] = 30;

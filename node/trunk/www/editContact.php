@@ -65,9 +65,9 @@ if($save || $finish1 || $finish2) {
     $contact->set('fax', sotf_Utils::getParameter('fax'));
 	 $url = sotf_Utils::getParameter('url');
 	 if($url != 'http://') {
-		if(sotf_Utils::is_valid_URL($url))
+		if(sotf_Utils::is_valid_URL($url)) {
 		  $contact->set('url', $url);
-		else {
+		} else {
 		  $error = 1;
 		  $page->addStatusMsg("invalid-url");
 		}

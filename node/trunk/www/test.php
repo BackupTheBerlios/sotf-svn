@@ -7,6 +7,10 @@ require_once($config['classdir'] . "/rpc_Utils.class.php");
 $obj = new sotf_Station;
 echo get_class($obj);
 
+$bitrate = '128400';
+$b = $bitrate/1000;
+echo "<h3>$b<?h3>";
+
 //echo strtotime('2003-05-29 09:50:06+2:00');
 
 /*

@@ -154,7 +154,7 @@ CREATE TABLE "sotf_series" (
 -- REPLICATED 
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"station_id" varchar(12) NOT NULL,
-	"name" varchar(255) DEFAULT 'untitled series' NOT NULL,  -- XXX
+	"name" varchar(255) DEFAULT 'untitled series' NOT NULL,  -- 
 	"description" text,
 	"url" varchar(100), 						-- URL for radio series website, if any
 	"language" varchar(40),											-- 2-letter codes separeted by comma
@@ -553,12 +553,19 @@ CREATE TABLE "sotf_streams" (
 	"prog_id" varchar(12),			-- id of programme
 	"file_id" varchar(12),			-- id of file being played (null if playlist)
 	"playlist" varchar(40),			-- name of playlist file
-	"started" timestamp,				-- XXX
+	"started" timestamp,				-- 
 	"length" int,						-- estimated length of playlist in seconds
-	"will_end_at" timestamp,			-- XXX
+	"will_end_at" timestamp,		-- 
 	"host" varchar(50),				-- host receiving the stream
 	"flags" varchar(20)				-- various flags
 );
+
+CREATE TABLE "sotf_station_mappings" (
+-- provides mapping between ids on station server and ids on node
+	"id" serial PRIMARY KEY,		-- just an id
+	"id_at_node" varchar(12) UNIQUE REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of thing at node
+	"id_at_station" varchar(20) UNIQUE  -- id of thing on station server
+)
 
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'admin');
 SELECT nextval('sotf_permissions_id_seq');

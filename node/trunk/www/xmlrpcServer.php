@@ -201,7 +201,8 @@ function putEvents($params)
 	global $config, $db;
 	$events = xmlrpc_decode($params->getParam(0));
 	debug("events", $events);
-	$retval = xmlrpc_encode("OK");
+
+	$retval = xmlrpc_encode(count($events));
 	return new xmlrpcresp($retval);
 }
 

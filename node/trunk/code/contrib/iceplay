@@ -141,7 +141,8 @@ if(!$sock) {
   exit;
 }
 
-$headers = <<EEE;
+# old style headers
+$headers1 = <<EEE;
 $password\r
 icy-name: $name\r
 icy-genre: $genre\r
@@ -151,8 +152,17 @@ icy-br: $bitrate\r
 \r
 EEE
 
-#SOURCE radyo /ices
-#x-audiocast-name: boo
+# new style headers
+$headers2 = <<EAA;
+SOURCE $password /$name
+x-audiocast-name: $name
+x-audiocast-bitrate: $bitrate
+x-audiocast-public: 1
+x-audiocast-description: LEt us see what happens with the description.....
+x-audiocast-url: http://sotf.dsd.sztaki.hu
+
+EAA
+
 #x-audiocast-url: http://www.icec
 #x-audiocast-genre: Default genre...
 #x-audiocast-bitrate: 128000
@@ -160,7 +170,7 @@ EEE
 #x-audiocast-description: Default
 
 #print "headers: $headers";
-$sock->print($headers);
+$sock->print($headers2);
 
 # can't check for connection success, because icecast is buggy (or Perl)
 print "\nCONNECTED TO $server:$port AT " . formatDate() . "\n" if $verbose;

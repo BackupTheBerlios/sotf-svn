@@ -50,8 +50,9 @@ class sotf_Playlist {
 	 $this->add(array('path' => $filepath));
 	 
 	 // temp: set title
-	 $this->name = urlencode($prg->get("title"));
-
+	 $title = $prg->get("title");
+	 $title = preg_replace('/\s+/', '_', $title);
+	 $this->name = urlencode($title);
 
 	 // save stats
 	 $prg->addStat($file->get('id'), 'listens');
@@ -60,12 +61,12 @@ class sotf_Playlist {
   function getTmpId() {
 	 global $user;
 	 if(!$this->tmpId) {
-		//if($this->name)
-		//  $this->tmpId = $this->name;
-		$userid = $user->id;
+		if($this->name)
+		  $this->tmpId = $this->name . '_';
+		$userid = urlencode(preg_replace('/\s+/', '_', $user->name));
 		if(!$userid)
 		  $userid = 'guest';
-		$this->tmpId = $this->tmpId . '_' . $userid . '_' . time();
+		$this->tmpId = $this->tmpId . $userid . '_' . time();
 		//$this->tmpId = $this->tmpId . '_' . time();
 	 }
 	 return $this->tmpId;
