@@ -54,7 +54,7 @@ class sotf_NodeObject extends sotf_Object {
     parent::update();
     $this->internalData = $this->db->getRow("SELECT * FROM sotf_node_objects WHERE id='$this->id' ");
     if($this->internalData['node_id'] != $nodeId && $this->internalData['node_id'] != 0 )
-      raiseError("Updating a remote object is prohibited");
+      logError("Updating a remote object: " . $this->id);
     $this->internalData['arrived_stamp'] = $sotfVars->get('sync_stamp', 0);
     $this->internalData['arrived'] = $this->db->getTimestampTz();
     $this->internalData['last_change'] = $this->db->getTimestampTz();
