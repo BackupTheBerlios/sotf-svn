@@ -29,12 +29,13 @@
 						{if $cell.class != "none"}</span>{/if}
 					{elseif $cell.resource == "query" OR $cell.resource == "playlist"}
 						<table>
+						{if $is_admin}&nbsp;&nbsp;&nbsp;<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$rootdir}/portal.php/{$portal_name}?playlist=1&filter=all&prglist={if $cell.resource == "query"}q{else}p{/if}{$cell.value}">{if $cell.resource == "query"}{#edit_it_query#}{else}{#edit_it_playlist#}{/if}</a>]</font>{/if}						
 						{foreach item=item from=$cell.items}
 							<tr id="{$item.id}"><td>
 							{if $item.icon}
-								<img src="{$item.icon}"{if $cell.class != "none"} class="{$cell.class}.icon"{/if}>
+								<a href="{$php_self}?id={$item.id}"><img src="{$item.icon}"{if $cell.class != "none"} class="{$cell.class}.icon"{/if}></a>
 							{else}
-								<img src="{$IMAGEDIR}/noicon.png"{if $cell.class != "none"} class="{$cell.class}.icon"{/if}>
+								<a href="{$php_self}?id={$item.id}"><img src="{$IMAGEDIR}/noicon.png"{if $cell.class != "none"} class="{$cell.class}.icon"{/if}></a>
 							{/if}
 							</td><td><b><a href="{$php_self}?id={$item.id}">
 							{if $cell.class != "none"}<span class="{$cell.class}.title">{/if}

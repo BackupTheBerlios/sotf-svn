@@ -94,12 +94,20 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 	{
 		if ($admin)			//if on admin page
 		{
+			if ($settings["rating"])	//if rating enabled check it (else it is disabled)
+			if (sotf_Utils::getParameter('a_rating')) $settings["a_rating"] = true;
+				else $settings["a_rating"] = false;
+			if ($settings["chat"])		//if chat (comments) enabled check it (else it is disabled)
+			if (sotf_Utils::getParameter('a_chat')) $settings["a_chat"] = true;
+				else $settings["a_chat"] = false;
+
 			if (sotf_Utils::getParameter('stylesheet')) $settings["css"] = true;
 				else $settings["css"] = false;
 			if (sotf_Utils::getParameter('rating')) $settings["rating"] = true;
 				else $settings["rating"] = false;
 			if (sotf_Utils::getParameter('chat')) $settings["chat"] = true;
 				else $settings["chat"] = false;
+
 			if (sotf_Utils::getParameter('change_password'))
 			{
 				$password_old = sotf_Utils::getParameter('password_old');
@@ -259,13 +267,43 @@ if ($id)	//if programmes view
 {
 	$comments = $portal->getComments($id);
 
-	if ($user->loggedIn())		//only for logged in users
+	if ($portal->isAdmin($user->getId()))	//if admin user
 	{
+		if (sotf_Utils::getParameter('delete_comment'))	//delete a comment (admin only)
+		{
+			$portal->deleteComment($id, $user->getId(), sotf_Utils::getParameter('delete_comment'));
+			$comments = $portal->getComments($id);		//reread comments
+		}
+		elseif (sotf_Utils::getParameter('delete_file'))	//delete a file that is associated to the programme
+		{
+			$portal->deleteFile(sotf_Utils::getParameter('delete_file'), $id);
+		}
+	}
+
+	if ( ($user->loggedIn()) OR ($settings["a_chat"]) )	//if logged in or anonym chat enabled
+	{
+		if ($settings["chat"])
 		if (sotf_Utils::getParameter('add_comment'))	//Send button pressed
 		{
 			$reply_to = sotf_Utils::getParameter('reply_to');
+			$value = sotf_Utils::getParameter('value');
+
+			//if (strpos($email, "@") == false)		//if email not valid
+			//	$page->redirect($_SERVER["PHP_SELF"]."?id=".$id."&reply_to=".$reply_to."&value=".urlencode($value)."#edit");		//redirect page, prevent resend of data
+			if ($user->loggedIn())
+			{
+				$email = NULL;
+				$user_id = $user->getId();
+			}
+			else
+			{
+				$email = sotf_Utils::getParameter('email');
+				$_SESSION['email'] = $email;
+				$user_id = NULL;
+			}
+
 			if ($reply_to == "root") $reply_to = NULL;
-			$portal->addComment($id, $user->getId(), $reply_to, sotf_Utils::getParameter('title'), sotf_Utils::getParameter('value'));
+			$portal->addComment($id, $user_id, $reply_to, sotf_Utils::getParameter('title'), $value, $email);
 			$page->redirect($_SERVER["PHP_SELF"]."?id=".$id);		//redirect page, prevent resend of data
 		}
 		elseif (sotf_Utils::getParameter('comment'))		//add comment or reply button (link) pressed
@@ -273,22 +311,18 @@ if ($id)	//if programmes view
 			$reply_to = sotf_Utils::getParameter('comment');
 			$page->redirect($_SERVER["PHP_SELF"]."?id=".$id."&reply_to=".$reply_to."#edit");		//redirect page, prevent resend of data
 		}
-		elseif (sotf_Utils::getParameter('delete_comment'))	//delete a comment (admin only)
-		{
-			if ($portal->isAdmin($user->getId())) $portal->deleteComment($id, $user->getId(), sotf_Utils::getParameter('delete_comment'));
-			$comments = $portal->getComments($id);		//reread comments
-		}
-		elseif (sotf_Utils::getParameter('rate_it'))	//programme rating
-		{
-			$page->redirect($_SERVER["PHP_SELF"]."?id=".$id);		//redirect page, prevent resend of data
-		}
-		elseif (sotf_Utils::getParameter('delete_file'))	//delete a file that is associated to the programme
-		{
-			if ($portal->isAdmin($user->getId())) $portal->deleteFile(sotf_Utils::getParameter('delete_file'), $id);
-		}
 		$reply_to = sotf_Utils::getParameter('reply_to');
 		$smarty->assign('reply_to', $reply_to);
 		$smarty->assign('reply_title', $comments[$reply_to]['title']);
+		$smarty->assign('email', $_SESSION['email']);
+	}
+
+	if ( ($user->loggedIn()) OR ($settings["a_rating"]) )	//if logged in or anonym rating enabled
+	{
+		if (sotf_Utils::getParameter('rate_it'))	//programme rating
+		{
+			$page->redirect($_SERVER["PHP_SELF"]."?id=".$id);		//redirect page, prevent resend of data
+		}
 	}
 
 	$smarty->assign('comments', $comments);
@@ -300,7 +334,29 @@ if ($id)	//if programmes view
 	$prgprop = $portal->getPrgProperties($id);
 	$programme['teaser'] = $prgprop['teaser'];
 	$programme['text'] = nl2br($prgprop['text']);
-	$programme['files'] = $prgprop['files'];
+
+//	$programme['files'] = $prgprop['files'];
+
+	foreach ($prgprop['files'] as $filename => $file)
+	{
+		$MAX_WIDTH = 100;		
+		$prop = getimagesize($_SERVER['DOCUMENT_ROOT'].$file);
+		$type = $prop[2];		//1 = GIF, 2 = JPG, 3 = PNG, 4 = SWF, 5 = PSD, 6 = BMP, 7 = TIFF(intel byte order), 8 = TIFF(motorola byte order), 9 = JPC, 10 = JP2, 11 = JPX, 12 = JB2, 13 = SWC, 14 = IFF
+		$image['name'] = $filename;
+		$image['location'] = $file;
+		$image['width'] = $prop[0];
+		$image['height'] = $prop[1];
+		if ($image['width'] > $MAX_WIDTH)
+		{
+			$image['height'] = $MAX_WIDTH/$image['width']*$image['height'];
+			$image['width'] = $MAX_WIDTH;
+		}
+		if ( ($type == 1) OR ($type == 2) OR ($type == 3) OR ($type == 4)) $programme['pictures'][] = $image;
+		else $programme['files'][$filename] = $file;
+	}
+
+
+
 	
 	foreach($result as $key => $value)
 		if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
@@ -416,6 +472,8 @@ $smarty->assign("programmes", $settings["programmes"]);
 $smarty->assign("css", $settings["css"]);			//CSS enabled
 $smarty->assign("chat", $settings["chat"]);			//chat enabled
 $smarty->assign("rating", $settings["rating"]);			//rating enabled
+$smarty->assign("a_chat", $settings["a_chat"]);			//anonym chat enabled
+$smarty->assign("a_rating", $settings["a_rating"]);		//anonym rating enabled
 
 $smarty->assign("colors", $portal->getColors());
 $smarty->assign("files", $portal->getUploadedFiles());
@@ -423,7 +481,12 @@ $smarty->assign("files", $portal->getUploadedFiles());
 $smarty->assign("error", $_SESSION['error']);			//user (error) messages
 $_SESSION['error'] = $error;					//delete the errormessages from session
 
-if ($settings["css"] == true) $smarty->assign("home_css", $settings["home"]["css"]);
+if ($settings["css"] == true)
+{
+	$smarty->assign("home_css", $settings["home"]["css"]);
+	$smarty->assign("portal_css", $settings["portal"]["css"]);
+	$smarty->assign("programmes_css", $settings["programmes"]["css"]);
+}
 
 
 //$smarty->assign("settings", $settings);		//*********************DEBUG

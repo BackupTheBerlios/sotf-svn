@@ -744,11 +744,13 @@ class sotf_Portal
 		return $portals;
 	}
 
-	function addComment($progid, $user_id, $reply_to, $title, $comment)
+	function addComment($progid, $user_id, $reply_to, $title, $comment, $email)
 	{
 		global $db;
+		$IPaddr = $_SERVER['REMOTE_ADDR'];
 		$comment = nl2br(htmlentities($comment));
 		$title = htmlentities(substr($title, 0, 30));
+		$email = htmlentities(substr($email, 0, 100));
 		if (($title == "") OR ($comment == "")) return false;		//if not filled out
 		$level = 0;
 		$path = "0";
@@ -769,7 +771,9 @@ class sotf_Portal
 		if (strlen($counter) == 2) $counter = "00".$counter;
 		if (strlen($counter) == 3) $counter = "0".$counter;
 
-		$sql="INSERT INTO programmes_comments(portal_id, progid, user_id, reply_to, title, comment, level, path) values($this->portal_id, '$progid', $user_id, $reply_to, '$title', '$comment', $level, '$path.$counter')";
+		if ($email == NULL) $sql="INSERT INTO programmes_comments(portal_id, progid, user_id, reply_to, title, comment, level, path, IPaddr) values($this->portal_id, '$progid', $user_id, $reply_to, '$title', '$comment', $level, '$path.$counter', '$IPaddr')";
+		else  $sql="INSERT INTO programmes_comments(portal_id, progid, user_id, reply_to, title, comment, level, path, IPaddr, email) values($this->portal_id, '$progid', NULL, $reply_to, '$title', '$comment', $level, '$path.$counter', '$IPaddr', '$email')";
+
 		return $db->query($sql);
 	}
 
@@ -786,7 +790,12 @@ class sotf_Portal
 	function getComments($progid)
 	{
 		global $db, $MAX_COMMENT_DEPTH;
-		$sql="SELECT id, path, portal_users.name, timestamp, title, comment, level FROM programmes_comments WHERE portal_id=$this->portal_id AND progid = '$progid' AND user_id=portal_users.id ORDER BY path";
+
+		//$sql="SELECT id, path, portal_users.name, email, timestamp, title, comment, level FROM programmes_comments WHERE portal_id=$this->portal_id AND progid = '$progid' AND user_id=portal_users.id ORDER BY path";
+		//$sql="SELECT id, path, email as name, timestamp, title, comment, level FROM programmes_comments WHERE portal_id=$this->portal_id AND progid = '$progid' ORDER BY path";
+
+		$sql="SELECT programmes_comments.id, path, portal_users.name, programmes_comments.email, timestamp, title, comment, level FROM programmes_comments LEFT JOIN portal_users ON programmes_comments.user_id=portal_users.id WHERE programmes_comments.portal_id=$this->portal_id AND progid = '$progid' ORDER BY path";
+
 		$result = $db->getAll($sql);
 		$comments = array();
 		if ($result == NULL) return $comments;

@@ -1,109 +1,145 @@
 {config_load file="$LANG.conf"}
 <table border="0" cellspacing="20" cellpadding="0" width="100%">
 	<tr> 
-		<td width="100" rowspan="4" align="left" valign="top"><img src="{$programme.icon}" width="100" height="100"></td>
-
-		<td width="15" rowspan="4">&nbsp;</td>
-
-		<td rowspan="4" align="left" valign="top">
-		<strong><font color="#FFCC33">&deg;&deg;&deg;&nbsp{$programme.title}</font></strong>
-		{if $is_admin}&nbsp;&nbsp;&nbsp;<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$rootdir}/portal.php/{$portal_name}?playlist=1{if !$back}&filter=all&prglist=current{/if}#{$programme.id}">{#edit_it#}</a>]</font>{/if}
-		<br><br><font size="2" face="Arial, Helvetica, sans-serif">
-		{foreach key=key item=cell from=$programme.values}
-			{if $cell != ""}
-			<b>{$key}:</b>&nbsp;&nbsp;{$cell}<br>
-			{/if}
-		{/foreach}
+		<td width="100" align="left" valign="top"><img src="{$programme.icon}" width="100" height="100"></td>
+		<td width="15">&nbsp;</td>
+		<td align="left" valign="top">
+			<strong><font color="#FFCC33">&deg;&deg;&deg;&nbsp{$programme.title}</font></strong>
+			{if $is_admin}&nbsp;&nbsp;&nbsp;<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$rootdir}/portal.php/{$portal_name}?playlist=1{if !$back}&filter=all&prglist=current{/if}#{$programme.id}">{#edit_it#}</a>]</font>{/if}
+			<br><br><font size="2" face="Arial, Helvetica, sans-serif">
+			{foreach key=key item=cell from=$programme.values}
+				{if $cell != ""}
+				<b>{$key}:</b>&nbsp;&nbsp;{$cell}<br>
+				{/if}
+			{/foreach}
 			<br>
+			<i>{$programme.teaser}</i>
+			{if $is_admin}<br /><font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="#" onClick="javascript:window.open('{$rootdir}/edit_text.php/{$portal_name}?id={$programme.id}&teaser=1&title={$programme.title}','','scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{#edit_teaser_big#}</a>]</font>{/if}
+			<br>
+			</font>
+		</td>
+		<td align="right" valign="top">
+			<font size="1" face="Verdana, Arial, Helvetica, sans-serif"><br>
+			<p>
+			Listen to this programme:<br>
+			MP3 24 kbps<br>
+			MP3 128 kbps<br>
+			<a href="http://www.vorbis.com">OGG Vorbis</a> 64 kbps<br>
+			</p>
+			<br>
+			<br>
+			<p>
+			Download this programme:<br>
+			MP3 24 kbps<br>
+			MP3 128 kbps<br>
+			<a href="http://www.vorbis.com">OGG Vorbis</a> 64 kbps<br>
+			</p>
+	
+			<br>
+			<p>
+			Rating: *** (average)<br>
+			<select name="rating" size="1"><option>Rate this programme</option><option>***** excellent</option><option>**** good</option><option>*** average</option><option>** mediocre</option><option>* poor</option></select>
+			<input type="submit" name="rate_it" value="Submit">
+			</p>
+			</font>
+		</td>
+	</tr>
+</table>
+
+
+<table border="0" cellspacing="20" cellpadding="0" width="100%">
+	<tr> 
+		<td width="100" align="center" valign="top">
 			{if count($programme.files) > 0}
-				<b>{#uploaded_files#}</b>:&nbsp;&nbsp;
+				<br />
+				<div align="left">
+				<b>{#uploaded_files#}</b>:<br />
 				{foreach key=filename item=file_location from=$programme.files}
-					<a href="{$file_location}" onclick="javascript:window.open('{$file_location}','','scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{$filename}</a>&nbsp;{if $is_admin}<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$php_self}?id={$id}&delete_file={$file_location}" onclick="javascript:return confirm('{#delete_the_file#}');">{#delete_file#}</a>]</font>{/if}&nbsp;&nbsp;
+					&nbsp;&nbsp;&nbsp;&nbsp;<a href="{$file_location}" onclick="javascript:window.open('{$file_location}','','resizable=yes,scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{$filename}</a>&nbsp;{if $is_admin}<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$php_self}?id={$id}&delete_file={$file_location}" onclick="javascript:return confirm('{#delete_the_file#}');">{#delete_file#}</a>]</font>{/if}<br />
+				{/foreach}
+				</div>
+				<br />
+			{/if}
+	
+			{if count($programme.pictures) > 0}
+				<br>
+				<div align="left"><b>{#uploaded_pictures#}</b>:</div><br />
+				{foreach key=counter item=file from=$programme.pictures}
+					<img src="{$file.location}" width="{$file.width}" height="{$file.height}" onclick="javascript:window.open('{$file.location}','','resizable=yes,scrollbars=yes,width=640,height=340,left=320,top=200');return false;"><br />
+					{$file.name}</a>&nbsp;{if $is_admin}<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$php_self}?id={$id}&delete_file={$file.location}" onclick="javascript:return confirm('{#delete_the_file#}');">{#delete_file#}</a>]</font>{/if}
+					<br /><br /><br />
 				{/foreach}
 				<br>
 			{/if}
-		<br>
-		{$programme.text}
-		{if $is_admin}<br /><font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="#" onClick="javascript:window.open('{$rootdir}/edit_text.php/{$portal_name}?id={$programme.id}&text=1&title={$programme.title}','','scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{#edit_text_big#}</a>]</font>{/if}
-		</font>
 		</td>
+		<td width="15">&nbsp;</td>
+		<td align="left" valign="top">
+			{$programme.text}
+			{if $is_admin}<br /><font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="#" onClick="javascript:window.open('{$rootdir}/edit_text.php/{$portal_name}?id={$programme.id}&text=1&title={$programme.title}','','scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{#edit_text_big#}</a>]</font>{/if}
 
-		<td align="right">
-		<font size="1" face="Verdana, Arial, Helvetica, sans-serif"><br>
-		<p>
-		Listen to this programme:<br>
-		MP3 24 kbps<br>
-		MP3 128 kbps<br>
-		<a href="http://www.vorbis.com">OGG Vorbis</a> 64 kbps<br>
-		</p>
-		<br>
-		<br>
-		<p>
-		Download this programme:<br>
-		MP3 24 kbps<br>
-		MP3 128 kbps<br>
-		<a href="http://www.vorbis.com">OGG Vorbis</a> 64 kbps<br>
-		</p>
-
-		<br>
-		<p>
-		Rating: *** (average)<br>
-		<select name="rating" size="1"><option>Rate this programme</option><option>***** excellent</option><option>**** good</option><option>*** average</option><option>** mediocre</option><option>* poor</option></select>
-		<input type="submit" name="rate_it" value="Submit">
-		</p>
-		</font>
-		</td>
-	</tr>
-</table>
-
-<br>
-{if $chat}
-<table border="0" cellspacing="20" cellpadding="0" width="100%">
-  <tr> 
-  <tr> 
-  <td align="left"> 
-  <font size="2" face="Arial, Helvetica, sans-serif"><strong>Comments:</strong></font>
-{if $is_logged_in}<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$php_self}?id={$id}&comment=root">{#add_comment#}</a>]</font>{/if}
-  </td> 
-  </tr> 
-  <td align="left"> 
-	<ul>
-	{foreach item=comment from=$comments}
-		{$comment.ul}
-		<li>
-		<font size="2" face="Arial, Helvetica, sans-serif">{$comment.title} ({$comment.name}, {$comment.timestamp})</font>
-		<font size="1" face="Verdana, Arial, Helvetica, sans-serif">{if $is_logged_in}&nbsp;&nbsp;[<a href="{$php_self}?id={$id}&comment={$comment.id}">{#reply#}</a>]{/if}{if $is_admin}&nbsp;&nbsp;[<a href="{$php_self}?id={$id}&delete_comment={$comment.id}" onclick="javascript:return confirm('{#delete_the_comment#}');">{#delete_comment#}</a>]{/if}</font>
-		<br>{$comment.comment}
-			{if $reply_to == $comment.id}
-			<table border="0" id="edit">
-			<tr>
-				<td align="right">{#title#}:</td>
-				<td><input type="hidden" name="reply_to" value="{$reply_to}"><input type="text" name="title" value="{#re#}: {$reply_title}"></td>
-			</tr>
-			<tr>
-				<td align="right">{#comment#}:</td>
-				<td><textarea name="value" rows=4 cols=40></textarea><input type="submit" name="add_comment" value="{#send#}"></td>
-			</tr>
+			{if $chat}
+			<table border="0" cellspacing="20" cellpadding="0" width="100%">
+			  <tr> 
+			  <tr> 
+			  <td align="left"> 
+			  <font size="2" face="Arial, Helvetica, sans-serif"><strong>Comments:</strong></font>
+				<font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="{$php_self}?id={$id}&comment=root"{if !($a_chat OR $is_logged_in)}onclick="alert('{#log_in#}');return false;"{/if}>{#add_comment#}</a>]</font>
+			  </td> 
+			  </tr> 
+			  <td align="left"> 
+				<ul>
+				{foreach item=comment from=$comments}
+					{$comment.ul}
+					<li>
+					<font size="2" face="Arial, Helvetica, sans-serif">{$comment.title} ({if $comment.name}{$comment.name}{else}{$comment.email}{/if}, {$comment.timestamp})</font>
+					<font size="1" face="Verdana, Arial, Helvetica, sans-serif">&nbsp;&nbsp;[<a href="{$php_self}?id={$id}&comment={$comment.id}"{if !($a_chat OR $is_logged_in)}onclick="alert('{#log_in#}');return false;"{/if}>{#reply#}</a>]{if $is_admin}&nbsp;&nbsp;[<a href="{$php_self}?id={$id}&delete_comment={$comment.id}" onclick="javascript:return confirm('{#delete_the_comment#}');">{#delete_comment#}</a>]{/if}</font>
+					<br>{$comment.comment}
+						{if $reply_to == $comment.id}
+						<table border="0" id="edit">
+						{if !$is_logged_in}
+						<tr>
+							<td align="right">{#your_email#}:</td>
+							<td><input type="text" name="email" size="40" value="{$email}"></td>
+						</tr>
+						{/if}
+						<tr>
+							<td align="right">{#title#}:</td>
+							<td><input type="hidden" name="reply_to" value="{$reply_to}"><input type="text" name="title" value="{#re#}: {$reply_title}"></td>
+						</tr>
+						<tr>
+							<td align="right">{#comment#}:</td>
+							<td><textarea name="value" rows=4 cols=40>{$value}</textarea><input type="submit" name="add_comment" value="{#send#}"></td>
+						</tr>
+						</table>
+						{/if}
+					</li>
+					{$comment.last}
+				{/foreach}
+				</ul>
+			
+				{if $reply_to == "root"}
+				<table border="0" id="edit">
+				{if !$is_logged_in}
+				<tr>
+					<td align="right">{#your_email#}:</td>
+					<td><input type="text" name="email" size="40" value="{$email}"></td>
+				</tr>
+				{/if}
+				<tr>
+					<td align="right">{#title#}:</td>
+					<td><input type="text" name="title"></td>
+				</tr>
+				<tr>
+					<td align="right">{#comment#}:</td>
+					<td><textarea name="value" rows=4 cols=40></textarea><input type="submit" name="add_comment" value="{#send#}"></td>
+				</tr>
+				</table>
+				{/if}
+			  </td> 
+			  </tr> 
 			</table>
 			{/if}
-		</li>
-		{$comment.last}
-	{/foreach}
-	</ul>
-
-	{if $reply_to == "root"}
-	<table border="0" id="edit">
-	<tr>
-		<td align="right">{#title#}:</td>
-		<td><input type="text" name="title"></td>
+		</td>
 	</tr>
-	<tr>
-		<td align="right">{#comment#}:</td>
-		<td><textarea name="value" rows=4 cols=40></textarea><input type="submit" name="add_comment" value="{#send#}"></td>
-	</tr>
-	</table>
-	{/if}
-  </td> 
-  </tr> 
 </table>
-{/if}
+<br>
