@@ -1,3 +1,4 @@
+-- -*- tab-width: 2; indent-tabs-mode: 1; -*-
 
 --  $Id$
 --
@@ -83,10 +84,11 @@ CREATE TABLE "sotf_portals" (
 -- list of portals connected to this node 
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-	"name" varchar(50) NOT NULL,				-- name of portal
+	"name" varchar(50) NOT NULL,				  -- name of portal
+	"language" varchar(40),						    -- 3-letter codes separeted by comma
 	"url" varchar(255) UNIQUE NOT NULL,		-- url of portal (identifies portal)
-	"page_impression" int,						-- number of downloads of starting page 
-	"reg_users" int2,								-- number of registered users
+	"page_impression" int,						    -- number of downloads of starting page 
+	"reg_users" int2,								      -- number of registered users
 	"last_access" timestamptz,
 	"last_update" timestamptz
 );
