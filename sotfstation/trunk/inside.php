@@ -44,7 +44,6 @@
 	//##############################################################################################
 	//get today's programms ;)
 	//process limits
-	$myDate = explode("-",$_GET['date']);
 	$start = $myDate[2] . "-" . $myDate[1] . "-" . $myDate[0] . " 00:00:00";
 	$end = $myDate[2] . "-" . $myDate[1] . "-" . $myDate[0] . " 23:59:59";
 	
