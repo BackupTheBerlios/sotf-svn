@@ -47,7 +47,7 @@ if($save) {
     $rights->set('stop_time', null);
   } else {
     // check input params
-    if(!is_int($startTime) || !is_int($stopTime))
+    if(!is_numeric($startTime) || !is_numeric($stopTime))
       raiseError("not_integer");
     $rights->set('start_time', $startTime);
     $rights->set('stop_time', $stopTime);

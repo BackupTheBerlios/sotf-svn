@@ -55,10 +55,10 @@ class sotf_NodeObject extends sotf_Object {
 
   /** Generates the ID for a new persistent object. */
   function generateID() {
-    global $config;
+    global $config, $db;
     if($config['nodeId'] == 0)
       raiseError('Please set config[nodeId] to a positive integer in config.inc.php');
-    $localId = $this->db->nextId($this->tablename);
+    $localId = $db->nextId($this->tablename);
 	 $id = $this->makeId($config['nodeId'], $this->tablename, $localId);
     debug("generated ID", $id);
     return $id;

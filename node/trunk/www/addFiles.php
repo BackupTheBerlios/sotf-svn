@@ -26,6 +26,7 @@ checkPerm($prgId, "change");
 $upload = sotf_Utils::getParameter('upload');
 if($upload) {
   $fname = $_FILES['userfile']['name'];
+  debug("_FILES", $_FILES['userfile']);
   $file = $user->getUserDir() . '/' . $fname;
   moveUploadedFile('userfile',  $file);
   $prg = new sotf_Programme($prgId);
