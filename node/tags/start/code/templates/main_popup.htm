@@ -1,0 +1,55 @@
+<script language="Javascript" src="popup.js"></script>
+
+{if $LANG=='de'}
+
+Sorry, no German translation!
+
+{else}
+
+<h3>Welcome to node {$NODEID} of the StreamOnTheFly network!</h3>
+
+The network consists of {$numNodes} nodes, with {$numStations} radio stations, archiving {$numItems} radio shows in total.
+<br/><a href="nodes.php">Click here</a> for a detailed list of nodes in the network.
+<br>You can:
+
+{if $CAN_UPLOAD}
+<br><a href="upload.php">Upload your radio show</a>
+{/if}
+
+<br><a href="search.php">Search the whole archive</a>
+<br><a href="station.php">Browse the stations</a>
+
+<p>
+Independent radio portals may use and link the material stored in the archive.
+<br>See an <a href="http://eden.dsd.sztaki.hu/eden/tool">example of such a portal</a>.
+</p>
+{/if}
+
+{if $localNews }
+
+<h3>Latest local updates</h3>
+<table>
+{section name=i loop=$localNews}
+<tr><td><a href="javascript:popup('get.php?popup=1&id={$localNews[i].id|escape}','{$localNews[i].track|escape|replace:".":"_"|replace:":":"_"}',{#popupH#},{#popupW#},1)">{$localNews[i].title}</a></td>
+<td><a href="listStation.php?station={$localNews[i].station|escape}">{$localNews[i].station}</a></td>
+</tr>
+{/section}
+</table>
+
+{/if}
+
+
+
+{if $otherNews }
+
+<h3>Latest updates in the network</h3>
+
+<table>
+{section name=i loop=$otherNews}
+<tr><td><a href="javascript:popup('get.php?popup=1&id={$otherNews[i].id|escape}','{$otherNews[i].track|escape|replace:".":"_"|replace:":":"_"}',{#popupH#},{#popupW#},1)">{$otherNews[i].title}</a></td>
+<td><a href="listStation.php?station={$otherNews[i].station|escape}&entered={$otherNews[i].entered|escape}">{$otherNews[i].station}</a></td>
+</tr>
+{/section}
+</table>
+
+{/if}

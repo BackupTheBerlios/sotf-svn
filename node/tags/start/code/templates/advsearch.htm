@@ -1,0 +1,81 @@
+<h3>Advanced search</h3>
+<FORM method="post" action="advsearch.php">
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="80%" BGCOLOR="{#searchBgColor2#}">
+	<TR BGCOLOR="{#searchBgColor1#}">
+		<TD COLSPAN=6>{#your_query_is#}{if $SQLquery != ""}:{else} {#empty#}{/if}
+		<INPUT type="hidden" name="SQLquerySerial" value="{$SQLquerySerial}">
+		<INPUT type="image" SRC="{$IMAGEDIR}/transp.gif" name="image">
+		</TD>
+	</TR>
+
+	{section name=i loop=$SQLquery}
+	{if $smarty.section.i.index != 0}
+		{if $SQLquery[i][0] == "AND"}<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD><TD COLSPAN=4 BGCOLOR="#FFFFFF" align=center>{#AND#}</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>{/if}
+	{/if}
+	<TR>
+		<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+		<TD><B>{$SQLqueryfields[i]}</B></TD>
+		{if $SQLquery[i][4] == "string"}
+			<TD><SELECT name="SQLeq[]">{html_options options=$EQstring selected=$SQLquery[i][2]}</SELECT></TD>
+			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30"></TD>
+		{elseif $SQLquery[i][4] == "date"}
+			<TD><SELECT name="SQLeq[]" with=13>{html_options options=$EQdate selected=$SQLquery[i][2]}</SELECT></TD>
+			<TD>{html_select_date prefix="SQLstring[]" time=$SQLquery[i][3] start_year="2000" end_year="+0" display_days=true}</TD>
+		{elseif $SQLquery[i][4] == "lang"}
+			<TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
+			<TD><SELECT name="SQLstring[]">{html_options options=$Languages selected=$SQLquery[i][3]}</TD>
+		{elseif $SQLquery[i][4] == "station"}
+			<TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
+			<TD><SELECT name="SQLstring[]">{html_options values=$Stations output=$Stations selected=$SQLquery[i][3]}</TD>
+		{elseif $SQLquery[i][4] == "length"}
+			<TD><SELECT name="SQLeq[]">{html_options options=$EQlength selected=$SQLquery[i][2]}</SELECT></TD>
+			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" MAXLENGTH=5> {#seconds#}</TD>
+		{/if}
+		<TD ALIGN="right" valign="middle"><INPUT type="image" SRC="{$IMAGEDIR}/plusz.gif" name="ADD{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGEDIR}/transp.gif" /><IMG SRC="{$IMAGEDIR}/transp.gif" /><INPUT type="image" SRC="{$IMAGEDIR}/minusz.gif" name="DEL{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGEDIR}/transp.gif" /><IMG SRC="{$IMAGEDIR}/transp.gif" /></TD>
+		<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	</TR>
+	{/section}
+	<TR BGCOLOR="{#searchBgColor1#}"><TD COLSPAN=6>&nbsp;</TD></TR>
+</TABLE>
+<BR />
+<TABLE BORDER=0 WIDTH="100%">
+<TR>
+	<TD ALIGN="center" BGCOLOR="{#searchBgColor1#}">
+	<TABLE BORDER=0 CELLPADDING=3>
+		<TR><TD COLSPAN=2><B>{#box1#}</B></TD></TR>
+		<TR><TD><INPUT type="radio" name="SQLlink" value="AND" checked> {#AND#}</TD>
+		<TD  ROWSPAN=2><SELECT name="SQLfield" size=4>{html_options options=$SQLfields selected=$SQLfieldDefault}</SELECT></TD></TR>
+		<TR><TD><INPUT type="radio" name="SQLlink" value="OR"> {#OR#}</TD></TR>
+		<TR><TD ALIGN="center"><INPUT type="submit" name="add" value="{#add#}"></TD><TD ALIGN="center"><INPUT type="submit" name="new" value="{#new_search#}"></TD></TR>
+	</TABLE>
+	</TD>
+
+	<TD ALIGN="center" BGCOLOR="{#searchBgColor2#}">
+	<TABLE BORDER=0 CELLPADDING=3>
+		<TR><TD><B>{#box2#}</B></TD></TR>
+		<TR><TD ALIGN=center>{#sort1#} <SELECT name="sort1"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$SQLfields selected=$sort1}</SELECT></TD></TR>
+		<TR><TD ALIGN=center>{#sort2#} <SELECT name="sort2"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$SQLfields selected=$sort2}</SELECT></TD></TR>
+		<TR><TD ALIGN=center><INPUT type="submit" name="run" value="{#run#}"{if $SQLquery == ""} disabled="true"{/if}></TD></TR>
+	</TABLE>
+	</TD>
+
+	<TD ALIGN="center" BGCOLOR="{#searchBgColor3#}">
+	<TABLE BORDER=0 CELLPADDING=3>
+		<TR><TD COLSPAN=2><B>{#box3#}</B></TD></TR>
+		<TR><TD COLSPAN=2 ALIGN=center><SELECT name="loadfrom">{html_options options=$saved}</SELECT> <INPUT type="submit" name="load" value="{#load#}"></TD></TR>
+		<TR><TD ALIGN=center><INPUT type="submit" name="default" value="{#default#}"></TD><TD ALIGN=center><INPUT type="submit" name="deleteq" value="{#deleteq#}"></TD></TR>
+		<TR><TD COLSPAN=2 ALIGN=center><INPUT type="submit" name="save" value="{#save#}"{if $SQLquery == ""} disabled="true"{/if}> <INPUT type="text" name="saveas" value="" MAXLENGTH=15{if $SQLquery == ""} disabled="true"{/if}></TD></TR>
+	</TABLE>
+	</TD>
+</TR>
+</TABLE>
+<BR />
+
+{foreach name=outer item=row from=$result}
+	{foreach key=key item=cell from=$row}
+		{if $cell != ""}{$key}: {$cell}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{/if}
+	{/foreach}
+	<BR />___________________________________________________________<BR />
+{/foreach}
+
+</FORM>

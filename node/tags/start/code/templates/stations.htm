@@ -1,0 +1,87 @@
+
+{if $STATION_MANAGER}
+	{if $STATUS}
+	<p>{$STATUS}</p>
+	{/if}
+		
+	<h3>{#create_station#}</h3>
+	<form method="post">
+	<table>
+		<tr>
+			<td>{#station_name#}:</td>
+			<td><input name="station"{if $STATION} value="{$STATION}"{/if}></td>
+		</tr>
+		<tr>
+			<td>{#description#}:</td>
+			<td><textarea name="desc">{$DESC}</textarea></td>
+		</tr>
+	</table>
+	<input type="submit" name="new" value="{#create#}">
+	</form>
+	<hr>
+	<h3>{#station_managers#}</h3>
+	{if $USERS}
+		<table cellspacing="0" cellpadding="2" border="1">
+		{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+		{section name=user loop=$USERS}
+			<tr bgcolor="{cycle}"><td>{$USERS[user]}</td>{if ! $smarty.section.user.first || ! $smarty.section.user.last}<td><a href="stations.php?username={$USERS[user]}&delstationmanager=1">{#delete#}</a>{/if}</td></tr>
+		{/section}
+		</table>
+	{else}
+		<p>{#no_users#}</p>
+	{/if}
+
+	<form method="post" name="adminuser">
+	<table>
+		<tr>
+			<td>{#username#}:</td>
+			<td><input name="username"> <a href="listUser.php" target="_blank" onClick="window.open('listUser.php','{#userlist#}','menubar=no, status=no, toolbar=no, width=300'); return false;">{#userlist#}</a></td>
+		</tr>
+	</table>
+	<input type="submit" name="addstationmanager" value="{#addstationmanager#}">
+	<input type="submit" name="delstationmanager" value="{#delstationmanager#}">
+	</form>
+	<hr>
+{/if}
+{if $STATION_LIST}
+	<h3>{#stations#}</h3>
+	<table border="1" cellspacing="0" cellpadding="2">
+		<tr>
+			<th>{#logo#}</th>
+			<th>{#station_name#}</th>
+			<th>{#description#}</th>
+			<th>{#num_progs#}</th>
+			{if $STATION_MANAGER || $LOCAL_STATION_MANAGER}
+				<th>{#actions#}</th>
+			{/if}
+		</tr>
+	{section name=station loop=$STATION_LIST}
+		<tr valign="top">
+			<td>{if $STATION_LIST[station].logo}
+				<a href="listProgrammes.php?&station={$STATION_LIST[station].stationId|escape}"><img src="getStationLogo.php/icon.png?station={$STATION_LIST[station].stationId|escape}" border="0"></a>
+			{else}<img src="{$IMAGEDIR}/transp.gif">
+			{/if}</td>
+			<td><a href="listProgrammes.php?&station={$STATION_LIST[station].stationId|escape}">{$STATION_LIST[station].stationId}</a></td>
+			<td>{$STATION_LIST[station].desc}</td>
+			<td>{$STATION_LIST[station].numItems}</td>
+			{if $STATION_MANAGER}
+				{if $STATION_LIST[station].local}
+					<td><a href="editStation.php?&station={$STATION_LIST[station].stationId|escape}">{#edit#}</a><br>
+					<a href="stations.php?delete=1&station={$STATION_LIST[station].stationId|escape}">{#delete#}</a></td>
+				{else}
+					<td>&nbsp;</td>
+				{/if}
+			{elseif $LOCAL_STATION_MANAGER}
+				{if $STATION_LIST[station].station_manager}
+					<td><a href="editStation.php?&station={$STATION_LIST[station].stationId|escape}">{#edit#}</a></td>
+				{else}
+					<td>&nbsp;</td>
+				{/if}
+			{/if}
+		</tr>
+	{/section}
+	</table>
+{else}
+	<p>{#no_station#}</p>
+{/if}
+

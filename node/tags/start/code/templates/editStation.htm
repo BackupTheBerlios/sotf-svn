@@ -1,0 +1,122 @@
+{literal}
+<script type="text/javascript" language="javascript1.2">
+<!--
+	function view(inputvalue)
+	{
+		alert(inputvalue);
+		window.open("getUserFile.php/"+inputvalue+"?filename="+escape(inputvalue));
+	}
+//-->
+</script>
+{/literal}
+
+</script>
+{if $LANG == "de"}
+<h3>Edit '{$STATION}'</h3>
+{else}
+<h3>Edit '{$STATION}'</h3>
+{/if}
+
+{if $STATION_MANAGER}
+	{if $STATUS}
+	<p>{$STATUS}</p>
+	{/if}
+
+	<form method="post" action="stations.php">
+	<table>
+		<tr>
+			<td>{#station_name#}:</td>
+			<td><input name="station"{if $STATION} value="{$STATION}"{/if}></td>
+		</tr>
+		<tr>
+			<td>{#description#}:</td>
+			<td><textarea name="desc">{$STATION_DATA.description}</textarea></td>
+		</tr>
+	</table>
+	<input type="submit" name="save" value="{#save#}">
+	</form>
+	<hr>
+	<h3><a name="admin_users">{#admin_users#}</a></h3>
+	{if $LANG == "de"}
+	<p>Users in station '{$STATION}'</p>
+	{else}
+	<p>Users in station '{$STATION}'</p>
+	{/if}
+	{if $OKADDUSERGROUP}<p><font color="red"><b>{#ok_addusergroup#}</b></font></p>{/if}
+	{if $ERRORADDUSERGROUP}<p><font color="red"><b>{#error_addusergroup#}</b></font></p>{/if}
+	{if $OKDELUSERGROUP}<p><font color="red"><b>{#ok_delusergroup#}</b></font></p>{/if}
+	{if $ERRORDELUSERGROUP}<p><font color="red"><b>{#ok_delusergroup#}</b></font></p>{/if}
+	{if $OKDELUSERSTATION}<p><font color="red"><b>{#ok_deluserstation#}</b></font></p>{/if}
+	{if $ERRORDELUSERSTATION}<p><font color="red"><b>{#error_deluserstation#}</b></font></p>{/if}
+
+	{if $USERS}
+		<table cellspacing="0" cellpadding="2" border="1">
+		<tr><th>{#username#}</th><th>{#groups#}</th><th>{#actions#}</th></tr>
+		{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+		{foreach item=user from=$USERS}
+			<tr bgcolor="{cycle}"><td>{$user.username}</td><td>
+			{section name=i loop=$user.groups}
+				{$user.groups[i]}{if ! $smarty.section.i.last}, {/if}
+			{/section}</td>
+			<td><a href="editStation.php?deluserstation=1&username={$user.username}&station={$STATION}">{#delete#}</a></td></tr>
+		{/foreach}
+		</table>
+	{else}
+		<p>{#no_users#}</p>
+	{/if}
+	<form method="post" name="adminuser">
+	<input type="hidden" name="station" value="{$STATION}">
+	<table>
+		<tr>
+			<td>{#username#}:</td>
+			<td><input name="username"> <a href="listUser.php" target="_blank" onClick="window.open('listUser.php','{#userlist#}','menubar=no, status=no, toolbar=no, width=300'); return false;">{#userlist#}</a></td>
+		</tr>
+		<tr>
+			<td>{#groups#}:</td>
+			<td><select name="group">{html_options values=$GROUPS output=$GROUPS selected=$GROUP}</select></td>
+		</tr>
+	</table>
+	<input type="submit" name="addusergroup" value="{#addusergroup#}">
+	<input type="submit" name="delusergroup" value="{#delusergroup#}">
+	</form>
+	<hr>
+	<h3><a name="manage_files">{#manage_files#}</a></h3>
+	{if $OKLOGO}<p><font color="red"><b>{#ok_logo#}</b></font></p>{/if}
+	{if $ERRORLOGO}<p><font color="red"><b>{#error_logo#}</b></font></p>{/if}
+	{if $OKJINGLE}<p><font color="red"><b>{#ok_jingle#}</b></font></p>{/if}
+	{if $ERRORJINGLE}<p><font color="red"><b>{#error_jingle#}</b></font></p>{/if}
+	{if $USERFILES}
+	<form method="post" name="userfiles">
+	<input type="hidden" name="okURL" value="{$OKURL}">
+	<input type="hidden" name="station" value="{$STATION}">
+	<p>{#userfiles#}:</p>
+	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
+	<input type="submit" name="view" value="{#view#}">
+	<input type="submit" name="setjingle" value="{#set_jingle#}">
+	<input type="submit" name="setlogo" value="{#set_logo#}">
+	</form>
+	{else}
+	<p>{#no_files#}</p>
+	{/if}
+	{if $LOGO}
+		<table><tr><td>{#logo#}:</td><td><img src="{$LOGO}" border="1"></td></tr></table>
+	{else}
+		{#no_logo#}
+	{/if}
+
+	{if $JINGLE}
+	<p>{#jingle_list#}</p>
+	<table cellspacing="0" cellpadding="2" border="1">
+	<tr><th>&nbsp;</th><th>{#format#}</th><th>{#bitrate#}</th><th>{#channels#}</th><th>{#samplerate#}</th></tr>
+	{cycle values="#EEEEEE,#FFFFFF" print=false advance=true}
+	{section name=i loop=$JINGLE}
+		<tr bgcolor="{cycle}">
+		{section name=j loop=$JINGLE[i]}
+			<td>{$JINGLE[i][j]}</td>
+		{/section}
+		</tr>
+	{/section}
+	{/if}
+	</table>
+{/if}
+

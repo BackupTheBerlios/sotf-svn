@@ -1,0 +1,157 @@
+{literal}
+<SCRIPT language="javascript">
+<!--
+function selectAllUser()
+{
+	for(var i=0;i<document.filesform['userfiles[]'].options.length; i++)
+	{
+		document.filesform['userfiles[]'].options[i].selected = true;
+	}
+}
+
+function deselectAllUser()
+{
+	for(var i=0;i<document.filesform['userfiles[]'].options.length; i++)
+	{
+		document.filesform['userfiles[]'].options[i].selected = false;
+	}
+}
+
+function selectAllOther()
+{
+	for(var i=0;i<document.filesform['otherfiles[]'].options.length; i++)
+	{
+		document.filesform['otherfiles[]'].options[i].selected = true;
+	}
+}
+
+function deselectAllOther()
+{
+	for(var i=0;i<document.filesform['otherfiles[]'].options.length; i++)
+	{
+		document.filesform['otherfiles[]'].options[i].selected = false;
+	}
+}
+// -->
+</SCRIPT>
+{/literal}
+
+<H3>{#Edit_files#}</H3>
+
+{if $STATUS}
+<p><font color="red">{$STATUS}</font></p>
+{/if}
+{if $DELETED}
+<p><font color="red">
+{section name=i loop=$DELETED}
+"{$DELETED[i]}" deleted!<br>
+{/section}
+</font></p>
+{/if}
+<form name="filesform" method="post">
+<input type="hidden" name="okURL" value="{$OKURL}">
+<input type="hidden" name="id" value="{$ID}">
+
+<table width="100%" cellspacing=5>
+<tr><td>{#prgfiles#}:</td><td>&nbsp;</td><td>{#userfiles#}:</td></tr>
+<tr><td>
+
+{if $AUDIOFILES}
+{#Audio_files#}
+{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+<table border="1" cellspacing="0" cellpadding="2">
+{section name=i loop=$AUDIOFILES}
+	<tr bgcolor="{cycle}"><td><input type="checkbox" name="tosel-{$AUDIOFILES[i]}[]" value="{$AUDIOFILES[i]}"></td><td><a href="getFile.php/{$AUDIOFILES[i]}?id={$ID|escape}&file={$AUDIOFILES[i]|escape}">{$AUDIOFILES[i]}</a></td></tr>
+{/section}
+</table>
+{else}
+	<p>{#no_audio_files#}</p>
+{/if}
+
+
+{if $OTHERFILES}
+{#Other_files#}
+{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+<table border="1" cellspacing="0" cellpadding="2">
+<select name="otherfiles[]" multiple="1">
+	{html_options values=$OTHERFILES output=$OTHERFILES}
+</select>
+</table>
+{else}
+	<p>{#no_other_files#}</p>
+{/if}
+
+
+
+</td>
+<td>
+{if $OTHERFILES or $AUDIOFILES}<br><input type="submit" name="itemtoftp" value="{#Move_back_to_user#}">{/if}
+{if $USERFILES}<br><input type="submit" name="ftptoaudio" value="{#Add_to_audio#}">{/if}
+{if $USERFILES}<br><input type="submit" name="ftptoother" value="{#Add_to_other#}">{/if}
+{if $USERFILES}<br><input type="submit" name="ftptoicon" value="{#Add_as_icon#}">{/if}
+</td>
+<td>
+{if $USERFILES}
+<input type="hidden" name="okURL" value="{$OKURL}">
+<input type="hidden" name="id" value="{$ID}">
+
+{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+<table border="1" cellspacing="0" cellpadding="2">
+<select name="userfiles[]" multiple="1">
+	{html_options values=$USERFILES output=$USERFILES}
+</select>
+</table>
+{else}
+	<p>{#no_user_files#}</p>
+{/if}
+</td>
+</tr>
+<tr>
+<td>
+{if $OTHERFILES}
+<p><script language="javascript">
+<!--
+document.write("<input type='button' value='{#select_all#}' onClick='selectAllOther()'> ");
+document.write("<input type='button' value='{#deselect_all#}' onClick='deselectAllOther()'>");
+// -->
+</script></p>
+<p><input type="submit" name="delother" value="{#delete_selected#}"></p>
+{else}
+&nbsp;
+{/if}
+</td>
+<td width="100">
+<input type="radio" name="copy" value="1" checked >{#copy#}
+<br><input type="radio" name="copy" value="0">{#move#}
+</td>
+<td>
+{if $USERFILES}
+<p><script language="javascript">
+<!--
+document.write("<input type='button' value='{#select_all#}' onClick='selectAllUser()'> ");
+document.write("<input type='button' value='{#deselect_all#}' onClick='deselectAllUser()'>");
+// -->
+</script></p>
+<p><input type="submit" name="deluser" value="{#delete_selected#}"></p>
+{else}
+&nbsp;
+{/if}
+</td>
+</tr>
+</table>
+</form>
+<hr>
+<p>{#user_dir_ftp_access#}: <a target="ftp" href="{$USERFTPURL}">{$USERFTPURL}</a></p>
+<form enctype="multipart/form-data" method="post">
+<input type="hidden" name="MAX_FILE_SIZE" value="10000000">
+<input type="hidden" name="okURL" value="{$OKURL}">
+<input type="hidden" name="id" value="{$ID}">
+{#upload_file#}: <input name="file" type="file">
+<input type="submit" name="send" value="{#send_file#}">
+</form>
+<hr>
+<form method="post">
+<input type="hidden" name="okURL" value="{$OKURL}">
+<input type="hidden" name="id" value="{$ID}">
+<input type="submit" name="ok" value="{#ok#}">
+</form>
