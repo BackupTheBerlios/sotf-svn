@@ -65,9 +65,10 @@
             </td>
             <td nowrap>
               <input class="action" type="button" name="b1" value="{#sync#}" onClick="redir(this.form, 'admin.php?sync=1&nodeid={$item.node_id}')" />
-              <!-- <a target="sync" href="admin.php?sync=1&nodeid={$item.node_id}">{#sync#}</a> -->
                 <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editNeighbour.php?nodeid={$item.node_id}','{#editNeighbour#}',350,400,false)" />
                   <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'admin.php?delneighbour=1&nodeid={$item.node_id}')" />
+                      <!-- <a href="admin.php?sync=1&full=1&nodeid={$item.node_id}">{#full_sync#}</a> {#full_sync_expl#} -->
+
             </td>
           </tr>
           {/foreach}

@@ -224,7 +224,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $obj->setAll(array('prog_id' => $this->id,
 							  'node_id' => $this->getNodeId(),
 							  'type' => $type,
-							  'date' => serialize($data)));
+							  'data' => serialize($data)));
 	 $obj->create();
   }
 
@@ -494,8 +494,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		" LEFT JOIN sotf_series se ON p.series_id=se.id".
 		" LEFT JOIN sotf_prog_rating rating ON p.id=rating.prog_id".
 		" LEFT JOIN sotf_user_progs flags ON p.id=flags.prog_id AND flags.user_id='$user->id'".
-		//" LEFT JOIN (SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads, prog_id".
-		//" FROM sotf_prog_stats GROUP BY prog_id) AS stats ON stats.prog_id=p.id " .
+		" LEFT JOIN sotf_prog_stats stats ON stats.prog_id=p.id " .
       ", sotf_user_permissions u".
 		" WHERE u.user_id = '$user->id' AND u.object_id=p.id";
 	 if ($series != "allseries") $sql .= " AND p.series_id='$series'";
