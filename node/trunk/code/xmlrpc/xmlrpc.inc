@@ -1215,7 +1215,8 @@
 							$rs.="<${typ}>" . ($val ? "1" : "0") . "</${typ}>";
 							break;
 						case $xmlrpcString:
-							$rs.="<${typ}>" . htmlspecialchars($val). "</${typ}>";
+              $rs.="<${typ}>" . rawurlencode(rawurldecode($val)). "</${typ}>";  // micsik
+							//$rs.="<${typ}>" . htmlspecialchars($val). "</${typ}>";
 							break;
 						default:
 							$rs.="<${typ}>${val}</${typ}>";
@@ -1305,7 +1306,7 @@
 			global $xmlrpcBoolean, $xmlrpcBase64;
 			reset($this->me);
 			list($a,$b)=each($this->me);
-			return $b;
+			return rawurldecode($b);  // micsik
 		}
 
 		function scalartyp()
@@ -1466,8 +1467,8 @@
 				$xmlrpc_val->addScalar($php_val, $xmlrpcDouble);
 				break;
 			case 'string':
-				//$xmlrpc_val->addScalar($php_val, $xmlrpcString);
-        $xmlrpc_val->addScalar($php_val, $xmlrpcBase64); // micsik changed here
+				$xmlrpc_val->addScalar($php_val, $xmlrpcString);
+        //$xmlrpc_val->addScalar($php_val, $xmlrpcBase64); // micsik changed here
 				break;
 				// <G_Giunta_2001-02-29>
 				// Add support for encoding/decoding of booleans, since they are supported in PHP
