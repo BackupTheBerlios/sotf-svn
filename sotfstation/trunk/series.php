@@ -10,16 +10,16 @@
 	/************************
 	* Settings - lets the user manage his/her client appearance settings
 	************************/
-	include("init.inc.php");													# include the global framwork
+	include("init.inc.php");								# include the global framwork
 	$myNav->add($SECTION[SERIES],'settings.php');			# add entry to Navigation Bar Stack
 	
 	
 	//create help message
 	//$myHelp = new helpBox(1,'98%');									# this will fetch a help message from the database and output it
-																										# in the template (if allowed to do so)
+																		# in the template (if allowed to do so)
 																							
 	//page output :)	
-	pageFinish('series.htm');													# enter the desired template name as a parameter
+	pageFinish('series.htm');											# enter the desired template name as a parameter
 	
 	/*
 	* Sometimes I hate PHP, Really

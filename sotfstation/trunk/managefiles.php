@@ -29,30 +29,30 @@
 			$dest = "files";
 		}
 		
-		move_uploaded_file($_FILES['file']['tmp_name'],PROG_DIR . $_GET['id'] . "/" . $dest . "/" . $_FILES['file']['name']);
+		move_uploaded_file($_FILES['file']['tmp_name'],PROG_DIR . $_GET['id'] . "/XBMF/" . $dest . "/" . $_FILES['file']['name']);
 		header("Location: managefiles.php?id=$_GET[id]");
 		exit;
 	}
 	
 	# deleting
 	if($_GET['action'] == 'delete'){
-		@unlink(PROG_DIR . $_GET['id'] . "/" . "files/" . $_GET['file']);
+		@unlink(PROG_DIR . $_GET['id'] . "/XBMF/" . "files/" . $_GET['file']);
 	}
 	
 	if($_GET['action'] == 'deleteaudio'){
-		@unlink(PROG_DIR . $_GET['id'] . "/" . "audio/" . $_GET['file']);
+		@unlink(PROG_DIR . $_GET['id'] . "/XBMF/" . "audio/" . $_GET['file']);
 	}
 	
 	#####################
 	# Listing to smarty #
 	##### AUDIO FILES #############
-	$d = dir(PROG_DIR . $_GET['id'] . "/" . "audio");	//open directory
+	$d = dir(PROG_DIR . $_GET['id'] . "/XBMF/" . "audio");	//open directory
 		
 	//loop through entries
 	while (false !== ($entry = $d->read())) {
 		if($entry != '.' and $entry != '..'){
 			$file['name'] 	= $entry;
-			$mp3info = GetAllFileinfo(PROG_DIR . $_GET['id'] . "/" . "audio/" . $entry);
+			$mp3info = GetAllFileinfo(PROG_DIR . $_GET['id'] . "/XBMF/" . "audio/" . $entry);
 			$file['length'] = $mp3info['playtime_string'];
 			$file['channelmode'] = $mp3info['audio']['channelmode'];
 			$file['bitrate'] = $mp3info['bitrate'] / 1000;
@@ -61,11 +61,11 @@
 		}
 	}
 	$d->close();
-	$smarty->assign("path",PROG_DIR . $_GET['id'] . "/" . "audio/");
+	$smarty->assign("path",PROG_DIR . $_GET['id'] . "/XBMF/" . "audio/");
 	$smarty->assign("audiofiles",$audiofiles);
 	
 	##### OTHER FILES
-	$d = dir(PROG_DIR . $_GET['id'] . "/" . "files");	//open directory
+	$d = dir(PROG_DIR . $_GET['id'] . "/XBMF/" . "files");	//open directory
 		
 	//loop through entries
 	while (false !== ($entry = $d->read())) {

@@ -10,7 +10,7 @@
 	* @requires DOMXML extension enabled in PHP
 	****/
 	class packXML{
-		var $xml;									// DOM XML OBJECT
+		var $xml;								// DOM XML OBJECT
 		var $root;								// DOM XML root node
 		
 		/**
@@ -69,6 +69,12 @@
 			$entity->new_child('logo',SOTF_PUB_LOGO);
 			$entity->new_child('uri',SOTF_PUB_URI);
 			
+			//series data
+			$series = $this->root->new_child('series',null);
+			$series->new_child('id',$data['series_id']);
+			$series->new_child('title',$data['series_title']);
+			$series->new_child('description',$data['series_desc']);
+			
 			$this->root->new_child('stationid',SOTF_STATION_ID);
 			$this->root->new_child('language',$data['prog_lang']);
 			$this->root->new_child('rights',$data['prog_rights']);
@@ -90,6 +96,18 @@
 			
 			$date = $this->root->new_child('date',$data['prog_datemodified']);
 			$date->set_attribute('type','modified');
+			
+			$owner = $this->root->new_child('owner',null);
+			$owner->new_child('auth_id',$data['owner_user_authid']);
+			$owner->new_child('login',$data['owner_user_login']);
+			$owner->new_child('name',$data['owner_user_name']);
+			$owner->new_child('role',$data['owner_user_role']);
+			
+			$publisher = $this->root->new_child('publishedby',null);
+			$publisher->new_child('auth_id',$data['owner_user_authid']);
+			$publisher->new_child('login',$data['owner_user_login']);
+			$publisher->new_child('name',$data['owner_user_name']);
+			$publisher->new_child('role',$data['owner_user_role']);
 		}
 		
 		

@@ -45,12 +45,12 @@
 		
 	//get data
 	$progsToday = $db->getAll("
-															SELECT
-																id,
-																intime,
-																outtime
-															FROM programme WHERE intime >= '$todayStart' AND outtime <= '$todayEnd'
-														");
+								SELECT
+										id,
+										intime,
+										outtime
+								FROM programme WHERE intime >= '$todayStart' AND outtime <= '$todayEnd'
+							");
 	
 	//check if recorded audio is present
 	if(!file_exists(UA_DIR . $_GET['date'] . "_lo.mp3")){
@@ -67,20 +67,21 @@
 		//check if directory is there	
 		if(!is_dir(PROG_DIR . $prog[0])){
 			mkdir(PROG_DIR . $prog[0], 0777);
-			mkdir(PROG_DIR . $prog[0] . "/audio", 0777);
-			mkdir(PROG_DIR . $prog[0] . "/files", 0777);
+			mkdir(PROG_DIR . $prog[0] . "/XBMF", 0777);
+			mkdir(PROG_DIR . $prog[0] . "/XBMF/audio", 0777);
+			mkdir(PROG_DIR . $prog[0] . "/XBMF/files", 0777);
 		}
 			
 		//convert intime and outtime to absolute times
 		$start 	= strtotime($prog[1]) - $stamp - SPLITOFFSET;
-		$end		= strtotime($prog[2]) - $stamp + SPLITOFFSET;
+		$end	= strtotime($prog[2]) - $stamp + SPLITOFFSET;
 				
 		$start	= floor($start / 60) . "." . $start%60;
-		$end		= floor($end / 60) . "." . $end%60;
+		$end	= floor($end / 60) . "." . $end%60;
 			
 		//cut it all!!!!
 		echo "<b>Splitting:</b> " . UA_DIR . $_GET['date'] . "_lo.mp3 <b>From:</b> " . $start . " <b>To:</b> " . $end . " <b>Output File:</b>" . PROG_DIR . $prog[0] . "/audio/" . uniqid("audio_") . ".mp3<br>";
-		exec("mp3splt " . UA_DIR . $_GET['date'] . "_lo.mp3 " . $start . " " . $end . " " . PROG_DIR . $prog[0] . "/audio/" . uniqid("audio_") . ".mp3");
+		exec("mp3splt " . UA_DIR . $_GET['date'] . "_lo.mp3 " . $start . " " . $end . " " . PROG_DIR . $prog[0] . "/XBMF/audio/" . uniqid("audio_") . ".mp3");
 	}
 		
 	//now the happy case - programme that goes over midnight =)
@@ -100,16 +101,17 @@
 		//error check
 		if(!is_dir(PROG_DIR . $midnightShow[0])){
 			mkdir(PROG_DIR . $midnightShow[0], 0777);
-			mkdir(PROG_DIR . $midnightShow[0] . "/audio", 0777);
-			mkdir(PROG_DIR . $midnightShow[0] . "/files", 0777);
+			mkdir(PROG_DIR . $midnightShow[0] . "/XBMF", 0777);
+			mkdir(PROG_DIR . $midnightShow[0] . "/XBMF/audio", 0777);
+			mkdir(PROG_DIR . $midnightShow[0] . "/XBMF/files", 0777);
 		}
 			
 		//convert intime and outtime to absolute times
 		$start 	= strtotime($midnightShow[1]) - $stamp + 60*60*24 - SPLITOFFSET;
-		$end		= strtotime($midnightShow[2]) - $stamp + SPLITOFFSET;
+		$end	= strtotime($midnightShow[2]) - $stamp + SPLITOFFSET;
 			
 		$start	= floor($start / 60) . "." . $start%60;
-		$end		= floor($end / 60) . "." . $end%60;
+		$end	= floor($end / 60) . "." . $end%60;
 			
 		$bitOne = uniqid("temp_");
 		$bitTwo = uniqid("temp_");
@@ -126,7 +128,7 @@
 			
 		//glue bits together and shift to appropriate location
 		echo "<b>Wrapping Together:</b> " . $bitOne . ".mp3 AND " . $bitTwo . ".mp3 <b>Output File:</b> " . PROG_DIR . $midnightShow[0] . "/audio/" . uniqid("audio_") . ".mp3<br>";
-		exec("mp3wrap " . PROG_DIR . $midnightShow[0] . "/audio/" . uniqid("audio_") . ".mp3 " . $bitOne . ".mp3 " . $bitTwo . ".mp3");
+		exec("mp3wrap " . PROG_DIR . $midnightShow[0] . "/XBMF/audio/" . uniqid("audio_") . ".mp3 " . $bitOne . ".mp3 " . $bitTwo . ".mp3");
 			
 		//delete bits
 		echo "<b>Dropping:</b> " . $bitOne . ".mp3<br>";
@@ -134,7 +136,11 @@
 			
 		echo "<b>Dropping:</b> " . $bitTwo . ".mp3<br>";
 		unlink($bitTwo . ".mp3");
-		
-		echo "</code><br><b>CUTTER COMPLETED</b>";
 	}
+	
+	//two day ago recording drop
+	$toDrop = date("Ymd",time()-60*60*24*2) . "_lo.mp3";
+	echo exec("rm -rf " . UA_DIR . $toDrop);
+	echo "</code>";
+	echo "<br><b>CUTTER COMPLETED</b>";
 ?>

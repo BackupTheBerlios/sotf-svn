@@ -23,7 +23,7 @@
 	
 	################## FETCH FILE INFO ###################################
 	//get info
-	$mp3info = GetAllFileinfo(PROG_DIR . $_GET['id'] . "/" . "audio/" . $_GET['file']);
+	$mp3info = GetAllFileinfo(PROG_DIR . $_GET['id'] . "/XBMF/" . "audio/" . $_GET['file']);
 	$file['name'] 	= $_GET['file'];
 	$file['length'] = $mp3info['playtime_string'];
 	$file['channelmode'] = $mp3info['audio']['channelmode'];
@@ -41,7 +41,7 @@
 		}else{
 			//echo "mp3splt " . PROG_DIR . $_GET['id'] . "/audio/" . $_GET['file'] . " " . $_POST['smin'] . "." . $_POST['ssec'] . " " . $_POST['emin'] . "." . $_POST['esec'] . " " . PROG_DIR . $_GET['id'] . "/audio/asda.mp3";
 			$newFile = uniqid("audio_") . ".mp3";
-			exec("mp3splt " . PROG_DIR . $_GET['id'] . "/audio/" . $_GET['file'] . " " . $_POST['smin'] . "." . $_POST['ssec'] . " " . $_POST['emin'] . "." . $_POST['esec'] . " " . PROG_DIR . $_GET['id'] . "/audio/" . $newFile);
+			exec("mp3splt " . PROG_DIR . $_GET['id'] . "/XBMF/audio/" . $_GET['file'] . " " . $_POST['smin'] . "." . $_POST['ssec'] . " " . $_POST['emin'] . "." . $_POST['esec'] . " " . PROG_DIR . $_GET['id'] . "/XBMF/audio/" . $newFile);
 			$smarty->assign("confirm",true);
 			$smarty->assign("new_file",$newFile);
 		}
@@ -69,9 +69,9 @@
 	}
 	$smarty->assign("minutes",$minutes);
 	
-	$smarty->assign("path",PROG_DIR . $_GET['id'] . "/" . "audio/");
+	$smarty->assign("path",PROG_DIR . $_GET['id'] . "/XBMF/" . "audio/");
 	$smarty->assign("id",$_GET['id']);
 	
 	//page output :)	
-	pageFinishPopup('cutaudio.htm');							# enter the desired template name as a parameter
+	pageFinishPopup('cutaudio.htm');	# enter the desired template name as a parameter
 ?>

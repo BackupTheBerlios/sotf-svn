@@ -44,12 +44,12 @@
 	
 	//define order by strings
 	switch ($_GET['sortby']){
-		case 'title':					{$sortstring = 'special'; break;}
+		case 'title':				{$sortstring = 'special'; break;}
 		case 'intime':				{$sortstring = 'intime'; break;}
 		case 'outtime':				{$sortstring = 'outtime'; break;}
 		case 'special':				{$sortstring = 'title'; break;}
 		case 'options':				{$sortstring = 'published'; break;}
-		default:							{$sortstring = 'intime';}
+		default:					{$sortstring = 'intime';}
 	}
 	
 	if(!isset($_GET['orderby']) and isset($_GET['sortby'])){
@@ -71,9 +71,10 @@
 		$_GET['id'] = $db->getOne("SELECT id FROM series WHERE owner = '$me' LIMIT 1");
 	}
 	
-	//get all the possible programme data
-	$total = $db->getOne("SELECT count(*) AS tot FROM programme WHERE series_id = '$_GET[id]'");
-	$db_result = $db->getAll("SELECT
+	if($_GET['id']){
+		//get all the possible programme data
+		$total = $db->getOne("SELECT count(*) AS tot FROM programme WHERE series_id = '$_GET[id]'");
+		$db_result = $db->getAll("SELECT
 																	programme.id,
 																	programme.title,
 																	to_char(programme.intime,'DD-MM-YYYY HH24:MI') AS prog_sd,
@@ -88,45 +89,46 @@
 																	LIMIT " . $_SESSION['USER']->get("per_page") . " OFFSET $db_block
 																");
 																
-	//get published statuses
-	while(list($key,$val) = each($db_result)){
-		if(!empty($val[6])){	//programme has been queued for sunc with the node
-			if(file_exists(SYNC_DIR . SOTF_STATION_ID . "_" . $val[0] . ".tgz")){
-				$db_result[$key]['status'] = 2;	# processing
-			}else{
-				$db_result[$key]['status'] = 9; # published
-			}
-		}else{
-			//check dir structure
-			if(!is_dir(PROG_DIR)){
-				mkdir(PROG_DIR);
-			}
-			
-			if(!is_dir(PROG_DIR . $val[0])){
-				mkdir(PROG_DIR . $val[0], 0777);
-				mkdir(PROG_DIR . $val[0] . "/audio", 0777);
-				mkdir(PROG_DIR . $val[0] . "/files", 0777);
-			}
-			
-			//is there audio data?
-			$audioflag = false;
-			$d = dir(PROG_DIR . $val[0] . "/audio");
-			while (false !== ($entry = $d->read())) {
-    		if(eregi("\.mp3$",$entry)){
-					$audioflag = true;
-					break;
+		//get published statuses
+		while(list($key,$val) = each($db_result)){
+			if(!empty($val[6])){	//programme has been queued for sunc with the node
+				if(file_exists(SYNC_DIR . SOTF_STATION_ID . "_" . $val[0] . ".tgz")){
+					$db_result[$key]['status'] = 2;	# processing
+				}else{
+					$db_result[$key]['status'] = 9; # published
 				}
-			}
-			$d->close();
-			
-			if($audioflag){
-				$db_result[$key]['status'] = 1;	# not published but ready
 			}else{
-				$db_result[$key]['status'] = 0;	# no audio
+				//check dir structure
+				if(!is_dir(PROG_DIR)){
+					mkdir(PROG_DIR);
+				}
+			
+				if(!is_dir(PROG_DIR . $val[0])){
+					mkdir(PROG_DIR . $val[0], 0777);
+					mkdir(PROG_DIR . $val[0] . "/XBMF", 0777);
+					mkdir(PROG_DIR . $val[0] . "/XBMF" . "/audio", 0777);
+					mkdir(PROG_DIR . $val[0] . "/XBMF" . "/files", 0777);
+				}
+			
+				//is there audio data?
+				$audioflag = false;
+				$d = dir(PROG_DIR . $val[0] . "/XBMF" . "/audio");
+				while (false !== ($entry = $d->read())) {
+    			if(eregi("\.mp3$",$entry)){
+						$audioflag = true;
+						break;
+					}
+				}
+				$d->close();
+			
+				if($audioflag){
+					$db_result[$key]['status'] = 1;	# not published but ready
+				}else{
+					$db_result[$key]['status'] = 0;	# no audio
+				}
 			}
 		}
 	}
-	
 	$smarty->assign("db_result",$db_result);
 	
 	//make a split

@@ -98,23 +98,23 @@
 		}else{		# errorz :(
 			//assign smarty default data
 			$smarty->assign(array(
-														"submit_series_title"				=>$_POST['series_title'],
-														"submit_series_description"	=>$_POST['series_description'],
+														"submit_series_title"			=>$_POST['series_title'],
+														"submit_series_description"		=>$_POST['series_description'],
 														"submit_programme_title"		=>$_POST['programme_title'],
 														"submit_special_needs"			=>$_POST['special_needs'],
-														"submit_series_owner"				=>$_POST['series_owner'],
-														"stime"											=>mktime($_POST['sdHour'],$_POST['sdMinute'],1,$_POST['sdMonth'],$_POST['sdDay'],$_POST['sdYear']),
-														"time"											=>mktime($_POST['edHour'],$_POST['edMinute'],1,$_POST['edMonth'],$_POST['edDay'],$_POST['edYear']),
-														"submit_alt_title"					=>$_POST['alt_title'],
-														"submit_keywords"						=>$_POST['keywords'],
+														"submit_series_owner"			=>$_POST['series_owner'],
+														"stime"							=>mktime($_POST['sdHour'],$_POST['sdMinute'],1,$_POST['sdMonth'],$_POST['sdDay'],$_POST['sdYear']),
+														"time"							=>mktime($_POST['edHour'],$_POST['edMinute'],1,$_POST['edMonth'],$_POST['edDay'],$_POST['edYear']),
+														"submit_alt_title"				=>$_POST['alt_title'],
+														"submit_keywords"				=>$_POST['keywords'],
 														"submit_programme_desc"			=>$_POST['programme_desc'],
-														"submit_contrib"						=>$_POST['contrib'],
-														"dcrtime"										=>mktime(0,0,1,$_POST['dcrMonth'],$_POST['dcrDay'],$_POST['dcrYear']),
-														"distime"										=>mktime(0,0,1,$_POST['disMonth'],$_POST['disDay'],$_POST['disYear']),
-														"submit_sotf_topic"					=>$_POST['sotf_topic'],
-														"submit_sotf_genre"					=>$_POST['sotf_genre'],
-														"submit_sotf_lang"					=>$_POST['sotf_lang'],
-														"submit_rights"							=>$_POST['rights']
+														"submit_contrib"				=>$_POST['contrib'],
+														"dcrtime"						=>mktime(0,0,1,$_POST['dcrMonth'],$_POST['dcrDay'],$_POST['dcrYear']),
+														"distime"						=>mktime(0,0,1,$_POST['disMonth'],$_POST['disDay'],$_POST['disYear']),
+														"submit_sotf_topic"				=>$_POST['sotf_topic'],
+														"submit_sotf_genre"				=>$_POST['sotf_genre'],
+														"submit_sotf_lang"				=>$_POST['sotf_lang'],
+														"submit_rights"					=>$_POST['rights']
 														));
 		}
 	}else{
