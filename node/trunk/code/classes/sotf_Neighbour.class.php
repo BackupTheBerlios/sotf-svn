@@ -112,10 +112,11 @@ class sotf_Neighbour extends sotf_Object {
     // save modified objects
     $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects);
     debug("number of updatd objects", count($updatedObjects));
+    $timestamp = $this->db->getTimestampTz();
     // get new objects to send as reply
     $objects = sotf_NodeObject::getModifiedObjects($this->get('node_id'), $lastSync, $updatedObjects);
     // save time of this sync
-    $this->saveSyncStatus($lastSync);
+    $this->saveSyncStatus($timestamp);
     return $objects;
   }
 

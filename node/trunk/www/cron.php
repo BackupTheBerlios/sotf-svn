@@ -29,7 +29,7 @@ if(count($neighbours) > 0) {
 
 //******** Expire old programmes
 
-
+// *** regenerate metadata files??
 
 //******** Update topic counts
 
