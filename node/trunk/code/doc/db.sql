@@ -106,7 +106,7 @@ CREATE TABLE "sotf_contacts" (
 	"phone" varchar(20),
 	"cellphone" varchar(20),
 	"fax" varchar(20),
-	"url" varchar(255),
+	"url" varchar(255)
 );
 
 CREATE SEQUENCE "sotf_object_roles_seq";
@@ -130,7 +130,7 @@ CREATE TABLE "sotf_stations" (
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"name" varchar(32) UNIQUE NOT NULL,
 	"description" text,
-	"entry_date" date DEFAULT CURRENT_DATE,
+	"entry_date" date DEFAULT CURRENT_DATE
 );
 
 CREATE SEQUENCE "sotf_series_seq";
