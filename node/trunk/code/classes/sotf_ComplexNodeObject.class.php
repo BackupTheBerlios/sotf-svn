@@ -24,11 +24,11 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	//function getMetaDir()
 	//function checkDirs
 
+	/** overrides function in sotf_NodeObject */
 	function isLocal() {
-		return is_dir($this->getDir()); 
-		// alternative:
-		// global $config;
-		//return ($this->getNodeId()==$config['nodeId']);
+		$retval = is_dir($this->getDir()); 
+		debug("isLocal2", $retval);
+		return $retval;
 	}
 
 	function create() {

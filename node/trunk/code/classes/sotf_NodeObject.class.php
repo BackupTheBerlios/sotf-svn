@@ -118,7 +118,9 @@ class sotf_NodeObject extends sotf_Object {
 
   function isLocal() {
 	 global $config;
-	 return ($this->getNodeId()==$config['nodeId']);
+	 $retval = ($this->getNodeId()==$config['nodeId']);
+	 debug("isLocal1", $retval);
+	 return $retval;
   }
 
   /************************************************
