@@ -23,23 +23,11 @@
                         {else} You have no series :( {/if} </td>
                       <td nowrap>&nbsp;</td>
                       <td nowrap><div align="right"> 
-                          <form name="form2" method="post" action="myseries.php?block={$block}&sortby={$sortby}&orderby={$order}&action=edit&id={$id}">
-						  <!--
-                            <table width="100" border="0" cellspacing="1" cellpadding="1">
-                              <tr> 
-                                <td>Show:</td>
-                                <td nowrap><select name="filter_active">
-                                    {html_options options=$filter_active selected=$filter_active_selected}
-                                  </select></td>
-                                <td>&nbsp;</td>
-                                <td nowrap><select name="filter_published">
-                                   {html_options options=$filter_published selected=$filter_published_selected}
-                                  </select></td>
-                                <td><input name="show" type="submit" id="show" value="&gt;&gt;"></td>
-                              </tr>
-                            </table>
-							-->
+					  {if $series}
+                          <form name="form2" method="post" action="myseries.php?block={$block}&sortby={$sortby}&orderby={$order}&action=dropseries&id={$id}">
+						  <input name="drop" type="submit" value="Delete Current Series" OnClick="return confirmLink(this,'');">
                           </form>
+					 {/if}
                         </div></td>
                     </tr>
                   </table></td>

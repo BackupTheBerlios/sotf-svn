@@ -24,27 +24,6 @@
 		$_GET['date'] = date("d-m-Y");
 	}
 	
-	
-	
-	/*
-	//create calendar
-	$myCal = new calendar($_GET['date']);				# create new calendar object (the month overview thing)
-	$myCal->select($_GET['date']);						# selects the selected day (default: today)
-	$myDay = new dayView('','',$_GET['date']);			# create the new day representer
-	
-	//mark full calendar days
-	//process limits
-	$myDate = explode("-",$_GET['date']);
-	$start = $myDate[2] . "-" . $myDate[1] . "-1 00:00:00";
-	$end = $myDate[2] . "-" . $myDate[1] . "-" . date("t",mktime(0,0,1,$myDate[1],1,$myDate[2])) . " 23:59:59";
-	
-	//mark all the days that have content associated with them
-	$myCal->setLinks($db->getCol("SELECT DISTINCT EXTRACT(DAY FROM intime) AS day FROM programme WHERE intime > '$start' AND intime < '$end'"));
-	
-	//show calendar
-	$smarty->assign('calendar',$myCal->show('inside.php'));	
-	*/
-	
 	//#################################### THIS WEEK'S SHOWS #####################################
 	//get this week's programms ;)
 	//process limits

@@ -6,6 +6,10 @@
 	*********************************
 	* Please bear in mind, that this software was written for _fun_ =) 
 	*************************/
+	
+	/**
+	* Changes made to RPC Protocol
+	**********/
 
 	/************************
 	* SeriesNew - create a new series

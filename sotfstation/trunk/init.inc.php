@@ -54,7 +54,7 @@
 		include("configs/errors.en.php");
 	}
 	
-	$smarty->assign("build_id","212");											# assigning a 'build id'
+	$smarty->assign("build_id","215");											# assigning a 'build id'
 	
 	//build database connections
 	$db=DB::connect("pgsql://" . DB_USER . ":" . DB_PASS . "@" . DB_HOST . "/" . DB_NAME);

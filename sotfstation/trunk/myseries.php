@@ -42,6 +42,11 @@
 		$db->query("UPDATE programme SET active = 'f' WHERE id = '$_GET[pid]'");
 	}else if($_GET['action']=='activate' and $mod_flag){
 		$db->query("UPDATE programme SET active = 't' WHERE id = '$_GET[pid]'");
+	}else if($_GET['action']=='dropseries' and $mod_flag){	// drop series =)
+		$db->query("DELETE FROM programme WHERE series_id = '$_GET[id]'");
+		$db->query("DELETE FROM series WHERE id = '$_GET[id]'");
+		header("Location: myseries.php");
+		exit;
 	}
 	
 	
