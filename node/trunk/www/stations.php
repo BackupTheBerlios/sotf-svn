@@ -18,7 +18,11 @@ $station = sotf_Utils::getParameter('station');
 $delete = sotf_Utils::getParameter('delete');
 
 if ($delete) {
-  checkPerm('node','delete');
+  if(!hasPerm('node','delete') !! !hasPerm($station,'admin')) {
+	 $permTransl = $page->getlocalized('perm_delete');
+	 $msg = $page->getlocalizedWithParams('no_permission', $permTransl);
+	 raiseError($msg);
+  }
   $st = & $repository->getObject($station);
   $st->delete();
   $page->addStatusMsg('delete_ok');

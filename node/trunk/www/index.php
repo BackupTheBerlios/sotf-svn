@@ -14,6 +14,7 @@ if($_REQUEST['select_station']) {
   $page->redirect($config['localPrefix'] . "/showStation.php/" . $_POST['station']);
 }
 
+$db->begin();
 
 $data['numNodes'] = sotf_Node::countAll();
 if($data['numNodes']==0) {
@@ -96,6 +97,8 @@ if($defQuery) {
 
 // get topics with most content
 $smarty->assign('TOPICS', $repository->getTopTopics(5));
+
+$db->commit();
 
 $page->send();
 
