@@ -72,7 +72,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
     }
     $fname = "$cachedir/" . $id . '.png';
     // TODO: cache cleanup!
-    debug("cache: ". filesize($fname) ."==" . strlen($icon));
+    ////debug("cache: ". filesize($fname) ."==" . strlen($icon));
     if(is_readable($fname) && filesize($fname)==strlen($icon)) {
       return;
     }
