@@ -5,6 +5,7 @@ PREREQUISITES:
 
 - Apache + PHP + PEAR
 - PostgreSQL DBMS: http://www.postgresql.org/
+- SelfAdmin tool from PublicVoiceLab (for user authentication)
 - Smarty template engine: http://smarty.php.net/
 - icecast streaming server: http://www.icecast.org/
 - tamburine streamer: http://tamburine.dyne.org/
@@ -31,6 +32,7 @@ from your browser.
 
 - Go to 'Admin' menu to join the node network
 
+- Run node/www/cron.php periodically for housekeeping
 
 NOTES
 
