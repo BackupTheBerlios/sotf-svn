@@ -19,23 +19,47 @@
 			</font>
 		</td>
 		<td align="right" valign="top">
-			<font size="1" face="Verdana, Arial, Helvetica, sans-serif"><br>
+			<font size="1" face="Verdana, Arial, Helvetica, sans-serif">
 			<p>
-			Listen to this programme:<br>
-			MP3 24 kbps<br>
-			MP3 128 kbps<br>
-			<a href="http://www.vorbis.com">OGG Vorbis</a> 64 kbps<br>
+			{if count($programme.listen) > 0}
+				<b>{#listen_to_this#}:</b><br />
+				{foreach item=file from=$programme.listen}
+				{if $file.mime_type == "audio/mp3"}
+					{if !$MP3}MP3: {else}, {/if}<a href="{$sotfSite}{$file.link}" alt="{#file_MP3#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
+					{assign var="MP3" value="true"}
+				{/if}
+				{/foreach}
+				<br />
+				{foreach item=file from=$programme.listen}
+				{if $file.mime_type == "application/x-ogg"}
+					{if !$OGG}<span onclick="javascript:window.open('http://www.vorbis.com','','resizable=yes,scrollbars=yes,width=800,height=600,left=0,top=0');return false;">OGG Vorbis</span>: {else}, {/if}<a href="{$sotfSite}{$file.link}" alt="{#file_OGG#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
+					{assign var="OGG" value="true"}
+				{/if}
+				{/foreach}
+				<br />
+			{/if}
 			</p>
-			<br>
-			<br>
+			<br />
 			<p>
-			Download this programme:<br>
-			MP3 24 kbps<br>
-			MP3 128 kbps<br>
-			<a href="http://www.vorbis.com">OGG Vorbis</a> 64 kbps<br>
+			{if count($programme.download) > 0}
+				<b>{#download_this#}:</b><br />
+				{foreach item=file from=$programme.download}
+				{if $file.mime_type == "audio/mp3"}
+					{if !$DMP3}MP3: {else}, {/if}<a href="{$sotfSite}{$file.link}" alt="{#file_MP3#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
+					{assign var="DMP3" value="true"}
+				{/if}
+				{/foreach}
+				<br />
+				{foreach item=file from=$programme.listen}
+				{if $file.mime_type == "application/x-ogg"}
+					{if !$DOGG}<span onclick="javascript:window.open('http://www.vorbis.com','','resizable=yes,scrollbars=yes,width=800,height=600,left=0,top=0');return false;">OGG Vorbis</span>: {else}, {/if}<a href="{$sotfSite}{$file.link}" alt="{#file_OGG#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
+					{assign var="DOGG" value="true"}
+				{/if}
+				{/foreach}
+				<br />
+			{/if}
 			</p>
-	
-			<br>
+			<br />
 			<p>
 			Rating: *** (average)<br>
 			<select name="rating" size="1"><option>Rate this programme</option><option>***** excellent</option><option>**** good</option><option>*** average</option><option>** mediocre</option><option>* poor</option></select>
@@ -78,7 +102,7 @@
 			{if $is_admin}<br /><font size="1" face="Verdana, Arial, Helvetica, sans-serif">[<a href="#" onClick="javascript:window.open('{$rootdir}/edit_text.php/{$portal_name}?id={$programme.id}&text=1&title={$programme.title}','','scrollbars=yes,width=640,height=340,left=320,top=200');return false;">{#edit_text_big#}</a>]</font>{/if}
 
 			{if $chat}
-			<table border="0" cellspacing="20" cellpadding="0" width="100%">
+			<table border="0" cellspacing="20" cellpadding="0" width="100%" id="comments">
 			  <tr> 
 			  <tr> 
 			  <td align="left"> 

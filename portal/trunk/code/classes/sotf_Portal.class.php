@@ -182,11 +182,24 @@ class sotf_Portal
 				$item['teaser'] = $prgprop['teaser'];
 				$item['text'] = $prgprop['text'];
 				$item['files'] = $prgprop['files'];
+				$item['comments'] = $prgprop['comments'];
+				$item['listen'] = array();
 
 				foreach($result as $key => $value)
 					if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
 						if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
 						else $values[$fields[$key]] = htmlspecialchars($value);
+				foreach($result['audioFiles'] as $audioFiles)
+				{
+					$file['mime_type'] = $audioFiles['mime_type'];
+					$file['link'] = "listen.php/audio.m3u?id=".$audioFiles['prog_id']."&fileid=".$audioFiles['id'];
+					$file['filesize'] = $audioFiles['filesize'];
+					$file['play_length'] = $audioFiles['play_length'];
+					$file['kbps'] = $audioFiles['kbps'];
+					$file['vbr'] = $audioFiles['vbr'];
+					$item['listen'][] = $file;
+				}
+
 				$item['title'] = htmlspecialchars($result['title']);
 				$item['id'] = $result['id'];
 				$item['icon'] = $result['icon'];
@@ -194,6 +207,11 @@ class sotf_Portal
 				$selected_result[] = $item;
 				$item = "";
 				$values = "";
+
+//	print("<pre>");
+//	var_dump($result['audioFiles']);
+//	print("</pre>");
+//	print("<br />");
 			}
 
 			$this->settings['table'][$row][$col]['items'] = $selected_result;
@@ -569,6 +587,9 @@ class sotf_Portal
 		{
 			$properties['files'][$file['filename']] = $file['file_location'];
 		}
+
+		$properties['comments'] = $this->countComments($progid);	//number of comments
+
 		return $properties;
 	}
 
@@ -830,6 +851,17 @@ class sotf_Portal
 		return $comments;
 	}
 
+	function countComments($progid)
+	{
+		global $db;
+
+		$sql="SELECT count(*) FROM programmes_comments WHERE programmes_comments.portal_id=$this->portal_id AND progid = '$progid'";
+
+		$result = $db->getOne($sql);
+		if ($result == NULL) return 0;
+		return $result;
+	}
+
 }
 
 
@@ -1067,7 +1099,7 @@ class html
 		$state = $BEGIN;
 
 		//define whitespace characters
-		$SPACES = array(' ', '\r', '\n', '\t');
+		$SPACES = array(' ', '\r', '\n', '\t', chr(13), chr(10));
 
 		//array to store the analyzed tag
 		$tag = array();
@@ -1093,7 +1125,7 @@ class html
 				elseif (ereg("[a-zA-Z]", $char)) $state = $TAG_NAME;
 				elseif ($char == '/') $tag['close'] = true;
 				elseif ($char == '>') return $this->addError("No tag name, tag is empty.", $pos);
-				else return $this->addError("Illegal character '$char'.", $pos);
+				else return $this->addError("Illegal character '$char' (".ord($char).").", $pos);
 			        break;
 			    case $TAG_NAME:
 			    	$tag['name'] .= $pchar;		//add pervious character to the name of the attribute
@@ -1101,23 +1133,23 @@ class html
 				elseif (ereg("[a-zA-Z0-9]", $char)) $state = $TAG_NAME;
 				elseif ($char == '/') $state = $EMPTY_ELEMENT;
 				elseif ($char == '>') $state = $END;
-				else return $this->addError("Illegal character '$char'.", $pos);
+				else return $this->addError("Illegal character '$char' (".ord($char).").", $pos);
 			        break;
 			    case $TAG_NAME_END:
 				if (in_array($char, $SPACES)) $state = $TAG_NAME_END;
 				elseif (ereg("[a-zA-Z]", $char)) $state = $ATTRIBUTE_NAME;
 				elseif ($char == '/') $state = $EMPTY_ELEMENT;
 				elseif ($char == '>') $state = $END;
-				else return $this->addError("Illegal character '$char'.", $pos);
+				else return $this->addError("Illegal character '$char' (".ord($char).").", $pos);
 			        break;
 			    case $ATTRIBUTE_NAME:
 			    	$name .= $pchar;		//add pervious character to the name of the attribute
-				if (ereg("[a-zA-Z0-9]", $char)) $state = $ATTRIBUTE_NAME;
+				if (ereg("[a-zA-Z0-9:\-]", $char)) $state = $ATTRIBUTE_NAME;
 				elseif (in_array($char, $SPACES)) $state = $ATTRIBUTE_NAME_END;
 				elseif ($char == '=') $state = $ATTRIBUTE_EQ;
 				elseif ($char == '/') return $this->addError("No value for the attribute '$name' given.", $pos);
 				elseif ($char == '>') return $this->addError("No value for the attribute '$name' given.", $pos);
-				else return $this->addError("Illegal character '$char'", $pos);
+				else return $this->addError("Illegal character '$char' (".ord($char).")", $pos);
 			        break;
 			    case $ATTRIBUTE_NAME_END:
 				if (in_array($char, $SPACES)) $state = $ATTRIBUTE_NAME_END;
@@ -1132,14 +1164,14 @@ class html
 					$state = $ATTRIBUTE_NAME;
 					$this->addWarning("No value for the attribute '$name' given", $pos);
 				}
-				else return $this->addError("Illegal character '$char'", $pos);
+				else return $this->addError("Illegal character '$char' (".ord($char).")", $pos);
 			        break;
 			    case $ATTRIBUTE_EQ:
 				if (in_array($char, $SPACES)) $state = $ATTRIBUTE_EQ;
 				elseif ($char == "'") $state = $SINGLE_QUOTE;
 				elseif ($char == '"') $state = $DOUBLE_QUOTE;
 				elseif (ereg("[a-zA-Z0-9]", $char)) {$state = $NO_QUOTE; $this->addWarning("Value of attribute '$name' not in quotes.", $pos);}
-				else return $this->addError("Illegal character '$char'", $pos);
+				else return $this->addError("Illegal character '$char' (".ord($char).")", $pos);
 			        break;
 			    case $SINGLE_QUOTE:
 			    	$value .= $pchar;		//add pervious character to the value of the attribute
@@ -1163,8 +1195,8 @@ class html
 			    	$value .= $pchar;		//add pervious character to the value of the attribute
 				if (in_array($char, $SPACES))
 				{
-					if (strpos($value, "'") === false) $value = "'".$value."'";
-					elseif (strpos($value, '"') === false) $value = '"'.$value.'"';
+					if (strpos($value, '"') === false) $value = '"'.$value.'"';
+					elseif (strpos($value, "'") === false) $value = "'".$value."'";
 					else $value = '"'.htmlspecialchars($value).'"';
 					$state = $ATTRIBUTE_VALUE_END;
 				}
@@ -1204,13 +1236,13 @@ class html
 				elseif ($char == '/') $state = $EMPTY_ELEMENT;
 				elseif ($char == '>') $state = $END;
 				elseif (ereg("[a-zA-Z]", $char)) $state = $ATTRIBUTE_NAME;
-				else return $this->addError("Illegal character '$char'", $pos);
+				else return $this->addError("Illegal character '$char' (".ord($char).")", $pos);
 			        break;
 			    case $EMPTY_ELEMENT:
 				$tag['empty'] = true;
 				if ($char == '>') $state = $END;
 				elseif (in_array($char, $SPACES)) {$state = $EMPTY_ELEMENT; $this->addWarning("There should be no space between the '/' and '>' signs.", $pos);}
-				else return $this->addError("Illegal character '$char'", $pos);
+				else return $this->addError("Illegal character '$char' (".ord($char).")", $pos);
 			        break;
 			    case $END:
 			    	$filtered_tag = "";
@@ -1252,7 +1284,7 @@ class html
 	}
 
 
-	function analyze_text($text)
+	function analyze_text($text, $delete = false)
 	{
 		$new_text = "";
 		$length = strlen($text);
@@ -1273,6 +1305,11 @@ class html
 				{
 					$new_text .= htmlspecialchars(substr($text, $lastpos, $tag_begin-$lastpos));
 					$new_text .= $retval['filtered'];
+					$lastpos = $pos+1;
+				}
+				elseif ($delete)	//if delete true do not include incorect tag
+				{
+					$new_text .= htmlspecialchars(substr($text, $lastpos, $tag_begin-$lastpos));
 					$lastpos = $pos+1;
 				}
 				$tag_begin = -1;

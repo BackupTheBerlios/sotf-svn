@@ -196,6 +196,7 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 		$fields = $portal->getAllFieldnames();
 		$selected_result = array();
 		$item = array();
+		$item['listen'] = array();
 
 		foreach($results as $result)
 		{
@@ -214,10 +215,21 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 				if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
 					if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
 					else $values[$fields[$key]] = htmlspecialchars($value);
+			foreach($result['audioFiles'] as $audioFiles)
+			{
+				$afile['mime_type'] = $audioFiles['mime_type'];
+				$afile['link'] = "listen.php/audio.m3u?id=".$audioFiles['prog_id']."&fileid=".$audioFiles['id'];
+				$afile['filesize'] = $audioFiles['filesize'];
+				$afile['play_length'] = $audioFiles['play_length'];
+				$afile['kbps'] = $audioFiles['kbps'];
+				$afile['vbr'] = $audioFiles['vbr'];
+				$item['listen'][] = $afile;
+			}
 			$item['title'] = htmlspecialchars($result['title']);
 			$item['id'] = $result['id'];
 			$item['icon'] = $result['icon'];
 			$item['files'] = $prgprop['files'];
+			$item['comments'] = $prgprop['comments'];
 			$item['values'] = $values;
 			$selected_result[] = $item;
 			$item = "";
@@ -334,6 +346,8 @@ if ($id)	//if programmes view
 	$prgprop = $portal->getPrgProperties($id);
 	$programme['teaser'] = $prgprop['teaser'];
 	$programme['text'] = nl2br($prgprop['text']);
+	$programme['listen'] = array();
+	$programme['download'] = array();
 
 //	$programme['files'] = $prgprop['files'];
 
@@ -355,13 +369,30 @@ if ($id)	//if programmes view
 		else $programme['files'][$filename] = $file;
 	}
 
-
-
-	
 	foreach($result as $key => $value)
 		if (array_key_exists($key, $fields) AND $key != 'title')		//title is presented on a diferent level
 			if ($key == 'language' AND $value != "") $values[$fields[$key]] = $page->getlocalized($value);	//language need to be translated
 			else $values[$fields[$key]] = $value;
+	foreach($result['audioFiles'] as $audioFiles)
+	{
+		$afile['mime_type'] = $audioFiles['mime_type'];
+		$afile['link'] = "listen.php/audio.m3u?id=".$audioFiles['prog_id']."&fileid=".$audioFiles['id'];
+		$afile['filesize'] = $audioFiles['filesize'];
+		$afile['play_length'] = $audioFiles['play_length'];
+		$afile['kbps'] = $audioFiles['kbps'];
+		$afile['vbr'] = $audioFiles['vbr'];
+		$programme['listen'][] = $afile;
+	}
+	foreach($result['downloadFiles'] as $downloadFiles)
+	{
+		$dfile['mime_type'] = $downloadFiles['mime_type'];
+		$dfile['link'] = "getFile.php/".$downloadFiles['filename']."?id=".$downloadFiles['prog_id']."&filename=".$downloadFiles['filename']."&audio=1";
+		$dfile['filesize'] = $downloadFiles['filesize'];
+		$dfile['play_length'] = $downloadFiles['play_length'];
+		$dfile['kbps'] = $downloadFiles['kbps'];
+		$dfile['vbr'] = $downloadFiles['vbr'];
+		$programme['download'][] = $dfile;
+	}
 	$programme['title'] = $result['title'];
 	$programme['id'] = $result['id'];
 	$programme['icon'] = $result['icon'];
