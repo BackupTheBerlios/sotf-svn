@@ -35,15 +35,15 @@ class sotf_NodeObject extends sotf_Object {
       if($exists) {
         if($this->lastChange && (strtotime($this->lastChange) > strtotime($changed))) {
           $this->update();
-          debug("updated " $this->id);
+          debug("updated ", $this->id);
         } else {
-          debug("arrived older version of" $this->id);
+          debug("arrived older version of", $this->id);
         }
         return;
       }
     }
 		$this->create();
-    debug("created " $this->id);
+    debug("created ", $this->id);
 	}
 
   function create() {
