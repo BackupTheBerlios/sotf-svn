@@ -77,10 +77,10 @@ CREATE TABLE "sotf_programmes" (
 	"broadcast_date" date,											-- dc.date.issued
 	"modify_date" date,												-- dc.date.modified
 	"expiry_date" date DEFAULT (timestamptz(date('now'::text)) + '56 days'::"interval"),	-- when programme will be made unavailable
-	"type" varchar(40) DEFAULT 'sound',							-- DCMI type (audio/video/etc.)
-	"genre" varchar(40),												-- SOMA genre
+	"type" varchar(50) DEFAULT 'sound',							-- DCMI type (audio/video/etc.)
+	"genre" varchar(50),												-- SOMA genre
 	"length" int2,														-- dc.format.extent = duration in seconds
-	"language" char(3),												-- dc.language
+	"language" varchar(10),												-- dc.language
 	"spatial_coverage" text,										-- dc.coverage.spatial
 	"temporal_coverage" date,										-- dc.coverage.temporal
 	"icon" bytea,														-- small image associated with prog
@@ -93,6 +93,14 @@ CREATE TABLE "sotf_programmes" (
 	"last_change" timestamptz DEFAULT ('now'::text)::timestamp(6) with time zone		-- needed for synchronization of nodes
 );
 
+CREATE TABLE "sotf_roles" (
+-- points to contact records for editors/artists/etc.
+	"id" varchar(76) NOT NULL,
+	"contact_id" varchar(100) NOT NULL,
+	"role" varchar(50) NOT NULL,
+	CONSTRAINT "sotf_roles_uniq" UNIQUE ("id", "contact_id", "role")
+);
+
 CREATE TABLE "sotf_extradata" (
 -- generic metadata storage (better would be an RDF store)
 -- the use of this table is not clear yet
@@ -100,7 +108,7 @@ CREATE TABLE "sotf_extradata" (
 	"element" varchar(40) NOT NULL,
 	"qualifier" varchar(40),
 	"scheme" varchar(50),
-	"language" char(2) NOT NULL,
+	"language" varchar(10) NOT NULL,
 	"value" text,
 	CONSTRAINT "sotf_extradata_uniq" UNIQUE ("id", "element", "qualifier", "scheme", "value")
 );
@@ -135,6 +143,7 @@ CREATE TABLE "sotf_stations" (
 	"station" varchar(32) PRIMARY KEY,
 	"node" varchar(20),
 	"description" varchar(250),
+	"contact_id" varchar(100),  -- pointer to contact record
 	"contact_email" varchar(60),
 	"contact_phone" varchar(20),
 	"icon" bytea,
@@ -146,9 +155,9 @@ CREATE TABLE "sotf_series" (
 	"id" varchar(65) PRIMARY KEY,
 	"station" varchar(32) NOT NULL,
 	"series_id" varchar(32) NOT NULL,
-	"editor" varchar(255),
 	"title" varchar(255) DEFAULT 'untitled' NOT NULL,
 	"description" text,
+	"editor" varchar(255),
 	"contact_email" varchar(60),
 	"contact_phone" varchar(20),
 	"icon" bytea,
@@ -181,7 +190,6 @@ CREATE TABLE "sotf_deletions" (
 	CONSTRAINT "sotf_del_pkey" PRIMARY KEY ("id")
 );
 
-
 CREATE TABLE "sotf_refs" (
 -- referencing protal URLs for a radio programme
 	"id" varchar(76) NOT NULL,
@@ -204,7 +212,7 @@ CREATE TABLE "sotf_stats" (
 	CONSTRAINT "sotf_stats_pkey" PRIMARY KEY ("id", "month", "year", "day")
 );
 
-CREATE TABLE sotf_ratings (
+CREATE TABLE "sotf_ratings" (
 -- individual ratings made by registered persons or anonym users
 	"id" varchar(76) NOT NULL,
 	"username" varchar(50) default NULL,
@@ -216,10 +224,10 @@ CREATE TABLE sotf_ratings (
 	CONSTRAINT "sotf_ratings_uniq" UNIQUE ("id", "entered", "auth_key") -- this is not perfect
 );
 
-CREATE TABLE sotf_bookmarks (
+CREATE TABLE "sotf_playlists" (
 -- registered users may bookmark things
 	"id" varchar(76) NOT NULL,
 	"username" varchar(50) NOT NULL,
-	"type" VARCHAR(10), -- bookmark or playlist? - use unclear yet
+	"type" VARCHAR(10), -- use unclear yet
 	CONSTRAINT "sotf_bookmarks_pkey" PRIMARY KEY ("id", "username")
 )
