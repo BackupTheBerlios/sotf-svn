@@ -272,10 +272,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       raiseError($res);
     $results = null;
     while (DB_OK === $res->fetchInto($row)) {
+      $row['icon'] = sotf_Blob::cacheIcon($row['id']);
       $results[] = $row;
-      if(!empty($row['icon'])) {
-        sotf_Programme::cacheIcon($row['id'], $db->unescape_bytea($row['icon']));
-      }
     }
     return $results;
   }
@@ -317,28 +315,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       raiseError("Could not remove file $filepath");
   }
 
-  function setAudio($filename, $copy=false) {
-    global $page;
-    $source = $filename;
-    if(!is_file($source))
-      raiseError("no such file: $source");
-    $srcFile = new sotf_AudioFile($source);
-    $target = $this->getAudioDir() .  '/' . $this->get('track') . '_' . $srcFile->getFormatFilename();
-    if($srcFile->type != 'audio')
-      raiseError("this is not an audio file");
-    if(is_file($target)) {
-      raiseError($page->getlocalized('format_already_present'));
-    }
-    if($copy)
-      $success = copy($source,$target);
-    else
-      $success = rename($source,$target);
-    if(!$success)
-      raiseError("could not copy/move $source");
-    // save into database
-    $this->saveFileInfo($target, true);
-  }
-
   /** Returns an array containing info about the available audio files. */
   function listAudioFiles($mainContent = 'true') {
     $objects = $this->db->getAll("SELECT * FROM sotf_media_files WHERE prog_id='$this->id' AND main_content='$mainContent' ORDER BY filename");
@@ -346,7 +322,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   function selectFileToListen() {
-      // TODO: write this better
+    // TODO: write this better
     $files = $this->listAudioFiles();
     // if lowest bitrate is free, select that
     while(list(,$f) = each($files)) {
@@ -354,7 +330,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
         return $f['id'];
     }
     reset($files);
-    // return first free to strem
+    // return first free to stream
     while(list(,$f) = each($files)) {
       if($f['stream_access']=='t')
         return $f['id'];
@@ -366,6 +342,40 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function listOtherFiles() {
     $objects = $this->db->getAll("SELECT * FROM sotf_other_files WHERE prog_id='$this->id' ORDER BY filename");
     return $objects;
+  }
+
+  function setAudio($filename, $copy=false) {
+    global $page;
+    $source = $filename;
+    if(!is_file($source))
+      raiseError("no such file: $source");
+    $srcFile = new sotf_AudioFile($source);
+    $target = $this->getAudioDir() .  '/' . $this->get('track') . '_' . $srcFile->getFormatFilename();
+    if(!$srcFile->isAudio())
+      raiseError("this is not an audio file");
+    if(is_file($target)) {
+      raiseError($page->getlocalized('format_already_present'));
+    }
+    // check and save length
+    $length = round($srcFile->duration);
+    if(!$this->get('length')) {
+      $this->set('length', $length);
+      $this->update();
+    } else {
+      $diff = abs($this->get('length') - $length);
+      if($diff > 15) { 
+        // allow for 15 sec of difference in program length
+        raiseError("audio_length_no_match");
+      }
+    }
+    if($copy)
+      $success = copy($source,$target);
+    else
+      $success = rename($source,$target);
+    if(!$success)
+      raiseError("could not copy/move $source");
+    // save file info into database
+    $this->saveFileInfo($target, true);
   }
 
   function setOtherFile($filename, $copy=false) {
@@ -400,6 +410,15 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       $fileInfo = new sotf_NodeObject('sotf_media_files');
       $fileInfo->set('play_length', round($file->duration));
       $fileInfo->set('type', $file->type);
+      if(is_numeric($file->bitrate)) {
+        // constant bitrate
+        $fileInfo->set('kbps', $file->bitrate);
+        $fileInfo->set('vbr', 'f');
+      } else {
+        // variable bitrate
+        $fileInfo->set('kbps', $file->average_bitrate);
+        $fileInfo->set('vbr', 't');
+      }
       $fileInfo->set('format', $file->getFormatFilename());
       $fileInfo->set('main_content', $mainContent);
     } else {
@@ -479,45 +498,6 @@ class sotf_Programme extends sotf_ComplexNodeObject {
       $retval[] = new sotf_Programme($item['id'], $item);
     }*/
     return $plist;
-  }
-
-  function internalSearch($text, $language) {
-    $langCond = '';
-    if($language && $language != 'any_language') {
-      $language = sotf_Utils::clean($language);
-      $sql .= " AND language='$language' ";
-    }
-    //    $sql = "FROM sotf_programmes p, sotf_object_roles o, sotf_contacts c WHERE p.id=o.object_id AND o.contact_id=c.id AND p.published='t' ";
-    //$sql .= " AND (p.title ~* '$text' OR p.keywords ~* '$text' OR p.abstract ~* '$text' OR c.name ~* '$text' OR p.spatial_coverage ~* '$text') ";
-    $query = "SELECT distinct programmes.* FROM ( SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription FROM sotf_programmes LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id LEFT JOIN sotf_series ON sotf_programmes.series_id = sotf_series.id) as programmes WHERE published = 't' $langCond AND ( (coalesce(title,'') ~* '.*$text.*' OR coalesce(alternative_title,'') ~* '.*$text.*' OR coalesce(episode_title,'') ~* '.*$text.*') OR coalesce(abstract,'') ~* '.*$text.*' OR coalesce(spatial_coverage,'') ~* '.*$text.*' OR coalesce(keywords,'') ~* '.*$text.*' OR id in (SELECT sotf_object_roles.object_id as id FROM sotf_object_roles WHERE sotf_object_roles.contact_id = sotf_contacts.id AND ( coalesce(sotf_contacts.name,'') ~* '.*$text.*' OR coalesce(sotf_contacts.alias,'') ~* '.*$text.*' OR coalesce(sotf_contacts.acronym,'') ~* '.*$text.*')) ) ORDER BY entry_date, title";
-    return $query;
-  }
-
-  function countSearch($text, $language) {
-    global $db;
-    $sql = "FROM sotf_programmes p, sotf_object_roles o, sotf_contacts c WHERE p.id=o.object_id AND o.contact_id=c.id AND p.published='t' ";
-    $sql .= " AND (p.title ~* '$text' OR p.keywords ~* '$text' OR p.abstract ~* '$text' OR c.name ~* '$text' OR p.spatial_coverage ~* '$text') ";
-    if($language && $language != 'any_language') {
-      $language = sotf_Utils::clean($language);
-      $sql .= " AND language='$language' ";
-    }
-    $sql .= " GROUP BY p.id ORDER BY p.entry_date DESC ";
-    return $db->getOne("SELECT count(*) FROM (" . sotf_Programme::internalSearch($text, $language) . ") AS foo"); 
-  }
-
-  function simpleSearch($text, $language, $from, $count) {
-    global $db;
-    $res = $db->limitQuery(sotf_Programme::internalSearch($text, $language), $from, $count);
-    if(DB::isError($res))
-      raiseError($res->getMessage());
-    while (DB_OK === $res->fetchInto($row)) {
-      //debug("row", $row['title']);
-      $list[] = $row;
-      if(!empty($row['icon'])) {
-        sotf_Programme::cacheIcon($row['id'], $db->unescape_bytea($row['icon']));
-      }
-    }
-    return $list;
   }
 
 }

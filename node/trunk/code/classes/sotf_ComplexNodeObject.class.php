@@ -14,13 +14,21 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 		$this->sotf_NodeObject($tablename, $id, $data);
 	}						
 
+  /** caches icon for object, and adds indicator flag for Smarty templates whether there is an icon */
+  function getAllWithIcon() {
+    $retval = $this->getAll();
+    $retval['icon'] = sotf_Blob::cacheIcon($this->id);
+    return $retval;
+  }
+
+  //************************* ROLE MANAGEMENT **************************************
+
   function getRoles() {
     $roles = $this->db->getAll("SELECT id, contact_id, role_id FROM sotf_object_roles WHERE object_id='$this->id' ORDER BY role_id, contact_id");
     for($i=0; $i<count($roles); $i++) {
       $roles[$i]['role_name'] = $this->repository->getRoleName($roles[$i]['role_id']);
       $cobj = new sotf_Contact($roles[$i]['contact_id']);
-      $cobj->cacheIcon();
-      $roles[$i]['contact_data'] = $cobj->getAll();
+      $roles[$i]['contact_data'] = $cobj->getAllWithIcon();
     }
     return $roles;
   }
@@ -47,6 +55,8 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
     $ro->update();
   }
 
+  //********************** ICON management ***********************************
+
 	/**
 	* Gets icon of the thing
 	*
@@ -55,10 +65,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	*/
 	function getIcon()
 	{
-    if(in_array('icon', $this->binaryFields))
-      return $this->getBlob("icon");
-    else
-      return NULL;
+    return sotf_Blob::findBlob($this->id, 'icon');
 	} // end func getIcon
 
 	/**
@@ -66,29 +73,8 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	*/
 	function deleteIcon()
 	{
-    if(!in_array('icon', $this->binaryFields))
-      raiseError("this object cannot have an icon!");
-    $this->setBlob('icon','');
+    sotf_Blob::saveBlob($this->id, 'icon','');
 	}
-
-  /** this places the icon into the www/tmp, so that you can refer to it with <img src= */
-  function cacheIcon($id = '', $icon = '') {
-    global $cachedir, $cacheprefix;
-    if(!$id) {
-      $id = $this->id;
-      $icon = $this->getBlob('icon');
-    }
-    if(empty($icon))
-      return;
-    $fname = "$cachedir/" . $id . '.png';
-    // TODO: cache cleanup!
-    ////debug("cache: ". filesize($fname) ."==" . strlen($icon));
-    if(is_readable($fname) && filesize($fname)==strlen($icon)) {
-      return;
-    }
-    debug("cached icon for", $id);
-    sotf_Utils::save($fname, $icon);
-  }
 
 	/**
 	* Sets icon for object
@@ -102,8 +88,6 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	function setIcon($file)
 	{
 		global $iconWidth,$iconHeight, $tmpdir;
-    if(!in_array('icon', $this->binaryFields))
-      raiseError("this object cannot have an icon!");
     $tmpfile = $tmpdir.'/'.time().".png";
     if (!$this->prepareIcon($file, $tmpfile, $iconWidth, $iconHeight)) {
       raiseError("Could not resize image");
@@ -113,7 +97,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
         $data = fread($fp,filesize($tmpfile));
         fclose($fp);
         // save into DB
-        $this->setBlob("icon",$data);
+        sotf_Blob::saveBlob($this->id, "icon", $data);
       } else
         raiseError("could not open icon file!");
     }
@@ -181,6 +165,5 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
 	return true;
 	}
-
 
 }

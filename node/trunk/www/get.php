@@ -8,21 +8,18 @@ if($id) {
   $smarty->assign('ID', $id);
 
   $prg = & new sotf_Programme($id);
-  $prg->cacheIcon();
 
   $page->setTitle($prg->get('title'));
 
   // general data
-  $smarty->assign('PRG_DATA', $prg->getAll());
+  $smarty->assign('PRG_DATA', $prg->getAllWithIcon());
   // station data
   $station = $prg->getStation();
-  $station->cacheIcon();
-  $smarty->assign('STATION_DATA', $station->getAll());
+  $smarty->assign('STATION_DATA', $station->getAllWithIcon());
   // series data
   $series = $prg->getSeries();
   if($series) {
-    $series->cacheIcon();
-    $smarty->assign('SERIES_DATA', $series->getAll());
+    $smarty->assign('SERIES_DATA', $series->getAllWithIcon());
   }
 
   // roles and contacts

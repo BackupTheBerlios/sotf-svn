@@ -4,8 +4,8 @@
         <table width="100%" >
           <tr><td valign="top" width="5">
               {if $CONTACT_DATA.icon}
-              <img src="getIcon.php/icon.png?id={$CONTACT_ID}">
-                {/if}
+                <img src="{$CACHEDIR}/{$CONTACT_DATA.id}.png">
+              {/if}
             </td><td>
               <table>
                 <tr>
@@ -66,6 +66,23 @@
                   <td><a href="{$CONTACT_DATA.url}">{$CONTACT_DATA.url}</a></td>
                 </tr>
                 {/if}
+                <tr class="list2">
+                  <td colspan="2">
+                    {if $NUMPROGS gt 0}
+                    <a target="progs" href="showContactProgs.php?id={$CONTACT_ID}">{$PROGS}</a>
+                    {else}
+                    {$PROGS}
+                    {/if}
+                  </td>
+                </tr>
+                <tr class="list2">
+                  <td colspan="2">
+                    {foreach item=item from=$REFS}
+                    {$item}<br />
+                    {/foreach}
+                  </td>
+                </tr>
+                
               </table>
             </td>
           </tr>

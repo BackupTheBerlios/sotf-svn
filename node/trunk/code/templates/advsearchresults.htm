@@ -43,7 +43,7 @@
 <table>
 {foreach name=outer item=item from=$result}
 	<tr>
-		<td>{if $item.icon}<img src="getIcon.php/icon.png?id={$item.id}">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
+		<td>{if $item.icon}<img src="{$CACHEDIR}/{$item.id}.png">{else}<img src="{$IMAGEDIR}/noicon.png">{/if}</td>
 		<td><b><a href="get.php?id={$item.id}">{$item.title}</a></b><BR>
 		{foreach key=key item=cell from=$item.values}
 			{if $cell != ""}

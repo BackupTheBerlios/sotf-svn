@@ -18,6 +18,12 @@ $limit = $page->splitList($max, "$php_self?ID=$ID&NAME=$NAME");
 //$result = $db->limitQuery($query, $limit["from"], $limit["maxresults"]);				//get results with limit
 $result = $db->getAll($query.$limit["limit"]);
 
+// cache icons for results
+for($i=0; $i<count($result); $i++) {
+  $result[$i]['icon'] = sotf_Blob::cacheIcon($result[$i]['id']);
+}
+
+
 $smarty->assign("ID", $ID);						//topic id
 $smarty->assign("NAME", $NAME);						//topic name
 $smarty->assign("query", $query);					//query

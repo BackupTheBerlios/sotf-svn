@@ -39,7 +39,7 @@ function deleteStationConfirm() {
 	<table width="100%" cellpadding="0" cellspacing="0">
 	{section name=station loop=$STATIONS }
 		<tr valign="top" class="{cycle}" height="{$ICON_HEIGHT}">
-			<td valign="middle" width="1%">{if $STATIONS[station].hasIcon }
+			<td valign="middle" width="1%">{if $STATIONS[station].icon }
 				<a href="showStation.php?stationid={$STATIONS[station].id}"><img alt="{$STATIONS[station].name} {#logo#}" src="{$CACHEDIR}/{$STATIONS[station].id}.png" border="0"></a>
 			{else} <img src="{$IMAGEDIR}/transp.gif">
 			{/if}

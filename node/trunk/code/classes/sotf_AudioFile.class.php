@@ -29,11 +29,11 @@ class sotf_AudioFile extends sotf_File
 	var $bitrate;
 
 	/**
-	* Avarange bitrate of the audio file in kbps.
+	* Average bitrate of the audio file in kbps.
 	* 
-	* @attribute 	float	$avarange_bitrate
+	* @attribute 	float	$average_bitrate
 	*/
-	var $avarange_bitrate;
+	var $average_bitrate;
 
 	/**
 	* Sample rate of the audio file in Hz.
@@ -79,9 +79,9 @@ class sotf_AudioFile extends sotf_File
 				$this->bitrate = $audioinfo["bitrate"]/1000;
 			if (!$this->bitrate && $this->format == 'mp3')
 				$this->bitrate = $audioinfo["mpeg"]["audio"]["bitrate"]/1000;
-			$this->avarange_bitrate = $audioinfo["bitrate_audio"]/1000;
-			if (!$this->avarange_bitrate && is_numeric($this->bitrate))
-				$this->avarange_bitrate = $this->bitrate;
+			$this->average_bitrate = $audioinfo["bitrate_audio"]/1000;
+			if (!$this->average_bitrate && is_numeric($this->bitrate))
+				$this->average_bitrate = $this->bitrate;
 			$this->samplerate = $audioinfo["frequency"];
 			if (!$this->samplerate && $this->format == 'mp3')
 				$this->samplerate = $audioinfo["mpeg"]["audio"]["frequency"];

@@ -25,26 +25,17 @@ $limit = $page->splitList(sotf_Station::countAll(), "$php_self");
 
 $stations = sotf_Station::listStations($limit["from"] , $limit["maxresults"]);
 
-for($i=0; $i<count($stations); $i++)
-{
+for($i=0; $i<count($stations); $i++) {
 	
-	if ($stations[$i]->getIcon()) {
-    $hasIcon = true;
-    $stations[$i]->cacheIcon();
-  } else
-    $hasIcon = false;
+  $sprops = $stations[$i]->getAllWithIcon();
+  
+  $sprops['numProgs'] = $stations[$i]->numProgrammes();
+  $sprops['isLocal'] = $stations[$i]->isLocal();
+  if(hasPerm('node','delete')) {
+    $sprops['managers'] = $permissions->listUsersWithPermission($stations[$i]->id, 'admin');
+  }
 
-	 $sprops = array('id'		=> $stations[$i]->id,
-                   'name'	=> $stations[$i]->get('name'),
-                   'description'	=> $stations[$i]->get('description'),
-                   'numProgs'		=> $stations[$i]->numProgrammes(),
-                   'hasIcon'			=> $hasIcon,
-                   'isLocal'			=> $stations[$i]->isLocal());
-   if(hasPerm('node','delete')) {
-     $sprops['managers'] = $permissions->listUsersWithPermission($stations[$i]->id, 'admin');
-   }
-
-   $STATION_LIST[] = $sprops;
+  $STATION_LIST[] = $sprops;
 }
 
 $smarty->assign('STATIONS',$STATION_LIST);

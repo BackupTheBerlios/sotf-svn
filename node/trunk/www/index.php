@@ -77,10 +77,8 @@ if($defQuery) {
 
     $hits = '';
     while (DB_OK === $res->fetchInto($row)) {
+      $row['icon'] = sotf_Blob::cacheIcon($row['id']);
       $hits[] = $row;
-      if(!empty($row['icon'])) {
-        sotf_Programme::cacheIcon($row['id'], $db->unescape_bytea($row['icon']));
-      }
     }
     $smarty->assign("NEWS", $hits);
 

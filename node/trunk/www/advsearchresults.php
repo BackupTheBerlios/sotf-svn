@@ -74,10 +74,10 @@ for($i =0; $i<$max; $i++)	//$selected will contain all the information about the
 			else $values[$topicname] .= "; ".$topic["name"];
 	}
 
-	$item[title] = $result[$i][title];
-	$item[id] = $result[$i][id];
-	$item[icon] = $result[$i][icon];
-	$item[values] = $values;
+	$item['title'] = $result[$i][title];
+	$item['id'] = $result[$i][id];
+	$item['icon'] = sotf_Blob::cacheIcon($item['id']);
+	$item['values'] = $values;
 	$selected[] = $item;
 	$item = "";
 	$values = "";

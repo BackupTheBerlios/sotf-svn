@@ -60,12 +60,12 @@ class sotf_AudioCheck
 					continue;							// This is not the one we need, get another one
 				//if ($audioFormats[$i]['bitrate'] != $this->list->list[$j]->bitrate)
 				//	continue;							// This is not the one we need, get another one
-				if (abs($this->list->list[$j]->avarange_bitrate - $audioFormats[$i]['bitrate']) > $bitrateTolerance)
+				if (abs($this->list->list[$j]->average_bitrate - $audioFormats[$i]['bitrate']) > $bitrateTolerance)
 					continue;							// This is not the one we need, get another one
 				else
 				{
 					$this->list->list[$j]->bitrate = $audioFormats[$i]['bitrate'];
-					$this->list->list[$j]->avarange_bitrate = $audioFormats[$i]['bitrate'];
+					$this->list->list[$j]->average_bitrate = $audioFormats[$i]['bitrate'];
 				}
 				if ($audioFormats[$i]['channels'] != $this->list->list[$j]->channels)
 					continue;							// This is not the one we need, get another one
@@ -84,7 +84,7 @@ class sotf_AudioCheck
 			{
 				if ($this->list->list[$j]->type != "audio")
 					continue;							// This is not an audio, get another one
-				if ($audioFormats[$i]['bitrate'] > $this->list->list[$j]->avarange_bitrate)
+				if ($audioFormats[$i]['bitrate'] > $this->list->list[$j]->average_bitrate)
 					continue;							// This is not the one we need, get another one
 				if ($audioFormats[$i]['channels'] > $this->list->list[$j]->channels)
 					continue;							// This is not the one we need, get another one
@@ -123,7 +123,7 @@ class sotf_AudioCheck
 				continue;								// This is not the one we need, get another one
 			//if ($audioFormats[$i]['bitrate'] != $audiofile->bitrate)
 			//	continue;								// This is not the one we need, get another one
-			if (abs($audiofile->avarange_bitrate - $audioFormats[$i]['bitrate']) > $bitrateTolerance)
+			if (abs($audiofile->average_bitrate - $audioFormats[$i]['bitrate']) > $bitrateTolerance)
 				continue;							// This is not the one we need, get another one
 			if ($audioFormats[$i]['channels'] != $audiofile->channels)
 				continue;								// This is not the one we need, get another one
@@ -145,9 +145,9 @@ class sotf_AudioCheck
 		$index = false;								// initialize file index
 		for($i=0;$i<count($this->list->list);$i++)	// walk thru files
 			if ($this->list->list[$i]->type == 'audio')
-				if ($this->list->list[$i]->avarange_bitrate > $bitrate)
+				if ($this->list->list[$i]->average_bitrate > $bitrate)
 				{
-					$bitrate = $this->list->list[$i]->avarange_bitrate;
+					$bitrate = $this->list->list[$i]->average_bitrate;
 					$index = $i;
 				}
 		return $index;
@@ -165,9 +165,9 @@ class sotf_AudioCheck
 		for($i=0;$i<count($this->list->list);$i++)	// walk thru files
 			if ($this->list->list[$i]->type == 'audio')
 				if ($this->list->list[$i]->format == 'mp3')
-					if ($this->list->list[$i]->avarange_bitrate > $bitrate)
+					if ($this->list->list[$i]->average_bitrate > $bitrate)
 					{
-						$bitrate = $this->list->list[$i]->avarange_bitrate;
+						$bitrate = $this->list->list[$i]->average_bitrate;
 						$index = $i;
 					}
 		return $index;

@@ -15,7 +15,7 @@
 	<tr>
 	<td>
 	{if $item.icon }
-	 <img src="getIcon.php/icon.png?id={$item.id}">
+	 <img src="{$CACHEDIR}/{$item.id}.png">
 	{else}
 	 <img src="{$IMAGEDIR}/noicon.png">
 	{/if}

@@ -66,7 +66,7 @@ class sotf_AdvSearch
 
 	function Deserialize($serial)					//make an array from string
 	{
-		$this->SQLquery = "";
+		$this->SQLquery = array();
 		$terms = explode("|A", $serial);
 		$max = count($terms);
 		$term = explode("|B", $terms[0]);		//sort order is the first array
@@ -76,8 +76,10 @@ class sotf_AdvSearch
 		if ($pos2) $term[1] = substr($term[1], 0, $pos2);		//remove DESC
 		if (array_key_exists($term[0], $this->getOrderFields()) AND array_key_exists($term[1], $this->getOrderFields())) $this->SetSortOrder($term[0], $term[1]);	//SetSortOrder
 		else $this->SetSortOrder();		//set default
-
 		$this->setDir($pos1, $pos2);		//set direction after field is set
+
+		if ($max < 1) return $this->SQLquery;		//at least sort order nedded
+		if (count($term) != 2) return $this->SQLquery;	//two sort orders needed
 
 		for($i=1; $i < $max; $i++)
 		{			//TODO: | char as a sepecial char so replace it
@@ -121,13 +123,14 @@ class sotf_AdvSearch
 		$query.=" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id";
 		$query.=" LEFT JOIN sotf_series ON sotf_programmes.series_id = sotf_series.id";
 		$query.=" LEFT JOIN sotf_prog_rating ON sotf_programmes.id = sotf_prog_rating.id";
-		$query.=") as programmes WHERE published = 't' AND";
+		$query.=") as programmes WHERE published = 't'";
 		$max = count($this->SQLquery);					//all rows of the advsearch
 		for($i = 0; $i < $max ;$i++)		//go through all terms
 		{
 			//AND or OR words
 			if ($i != 0) $query .= " ".$this->SQLquery[$i][0];
-
+			else $query .= " AND";
+			
 			//set begining of round bracket
 			if ( (($this->SQLquery[$i][0] == "AND") || ($i == 0)) && ($this->SQLquery[$i+1][0] == "OR") ) $query = $query." (";
 
@@ -551,7 +554,7 @@ class sotf_AdvSearch
 //		print("<pre>");
 //		var_dump($result);
 //		print("</pre>");
-	return($result);
+    return($result);
 	}
 
 }

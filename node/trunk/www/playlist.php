@@ -52,10 +52,10 @@ if (sotf_Utils::getParameter("play_selected") != "")			//delete selected button 
 $result = $playlist->load();
 
 $programmes = array();
-foreach($result as $key => $value)
+for($i=0; $i<count($result); $i++)
 {
-  sotf_ComplexNodeObject::cacheIcon($value['id'], $db->unescape_bytea($value['icon']));
-	$programmes["0:".$key] = $value["title"];
+  $result[$i]['icon'] = sotf_Blob::cacheIcon($result[$i]['id']);
+	$programmes["0:".$i] = $result[$i]["title"];
 }
 
 $smarty->assign("result", $result);

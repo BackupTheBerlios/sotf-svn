@@ -39,6 +39,17 @@ CREATE TABLE "sotf_node_objects" (
 	"node_id" int2 --- REFERENCES sotf_nodes(node_id)
 );
 
+CREATE SEQUENCE "sotf_blobs_seq";
+
+CREATE TABLE "sotf_blobs" (
+-- for storing icons, jingles, and other large binary objects
+	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
+	"object_id" varchar(12) REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
+	"name" varchar(20), -- name/type of content, e.g. icon
+	"data" bytea, -- binary content
+	CONSTRAINT "sotf_blobs_uniq" UNIQUE ("object_id", "name")
+);
+
 CREATE SEQUENCE "sotf_nodes_seq";
 
 CREATE TABLE "sotf_nodes" (
@@ -93,8 +104,6 @@ CREATE TABLE "sotf_contacts" (
 	"cellphone" varchar(20),
 	"fax" varchar(20),
 	"url" varchar(255),
-	"icon" bytea,
-	"jingle" bytea
 );
 
 CREATE SEQUENCE "sotf_object_roles_seq";
@@ -119,8 +128,6 @@ CREATE TABLE "sotf_stations" (
 	"name" varchar(32) UNIQUE NOT NULL,
 	"description" text,
 	"entry_date" date DEFAULT CURRENT_DATE,
-	"icon" bytea,
-	"jingle" bytea
 );
 
 CREATE SEQUENCE "sotf_series_seq";
@@ -132,8 +139,6 @@ CREATE TABLE "sotf_series" (
 	"title" varchar(255) DEFAULT 'untitled' NOT NULL,
 	"description" text,
 	"entry_date" date DEFAULT CURRENT_DATE,
-	"icon" bytea,
-	"jingle" bytea,
 	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE
 );
 
@@ -165,8 +170,6 @@ CREATE TABLE "sotf_programmes" (
 	"language" varchar(10),											-- dc.language
 	"spatial_coverage" text,										-- dc.coverage.spatial
 	"temporal_coverage" date,										-- dc.coverage.temporal
-	"icon" bytea,														-- small image associated with prog
-	"jingle" bytea,													-- short audio excerpt or signation
 	"published" bool DEFAULT 'f'::bool,							-- unpublished items are not searchable nor browsable
 	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE,
 	FOREIGN KEY("series_id") REFERENCES sotf_series("id") ON DELETE CASCADE --??
@@ -230,6 +233,8 @@ CREATE TABLE "sotf_media_files" (
 	"filesize" int,
 	"last_modified" timestamptz,
 	"play_length" int,
+	"kbps" int2,		-- kilobit per second
+	"vbr" bool DEFAULT 'f'::bool,		-- variable bitrate
 	"type" varchar(10),		-- e.g. audio, video
 	"mime_type" varchar(50),
 	"format" varchar(70),	-- e.g. mp3,24kbps,44100hz,stereo

@@ -38,16 +38,11 @@ if($delprog) {
 
 $smarty->assign('STATION_ID',$stationid);
 $smarty->assign('STATION',$st->get('name'));
-$smarty->assign('STATION_DATA',$st->getAll());
+$smarty->assign('STATION_DATA',$st->getAllWithIcon());
 if($st->isLocal()) {
   $smarty->assign('IS_LOCAL',1);
 }
 $smarty->assign('ROLES', $st->getRoles());
-
-if ($st->getIcon()) {
-  $smarty->assign('ICON','1');
-  $st->cacheIcon();
-}
 
 if ($entered)
      $smarty->assign('ENTERED',$entered);
@@ -57,9 +52,8 @@ if (!$start)
 $seriesList = $st->listSeries();
 if(!empty($seriesList)) {
   while(list(,$series) = each($seriesList)) {
-    $sd = $series->getAll();
+    $sd = $series->getAllWithIcon();
     $sd['count'] = $series->numProgrammes();
-    $series->cacheIcon();
     $seriesData[] = $sd;
   }
 
@@ -73,8 +67,7 @@ $progs = $st->listProgrammes($limit["from"] , $limit["maxresults"]);
 if($progs) {
 
   while(list(,$prog) = each($progs)) {
-    $prog->cacheIcon();
-    $pd = $prog->getAll();
+    $pd = $prog->getAllWithIcon();
     $progList[] = $pd;
   }
   $smarty->assign('PROGS',$progList);
