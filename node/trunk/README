@@ -3,18 +3,39 @@ StreamOnTheFly node software
 
 PREREQUISITES:
 
-- icecast: http://www.icecast.org/
-(- tamburine: )
+- Apache + PHP + PEAR
+- PostgreSQL DBMS: http://www.postgresql.org/
+- Smarty template engine: http://smarty.php.net/
+- icecast streaming server: http://www.icecast.org/
+- tamburine streamer: http://tamburine.dyne.org/
+  - w3c-libwww - http://www.w3c.org/Library (5.4.0)
+  - XMLRPC-C - http://xmlrpc-c.sf.net       (0.9.9)
+- lame mp3 tool: http://lame.sourceforge.net/
+- ogg/vorbis tool (optional) http://www.vorbis.com/
+- SoX sound conversion tool: http://sox.sourceforge.net/
+- getid3 PHP media file parser: http://getid3.sourceforge.net/
+- ImageMagick image conversion tool: http://www.imagemagick.org/
+
 
 INSTALLATION
 
-Check that the PHP scripts in node/www directory can be run by your
-web server.  Edit node/www/config.inc.php, then run
-node/www/install.php from your browser.
+- Check that the PHP scripts in node/www directory can be run by your
+web server.
 
-PROBLEMS
+- Edit node/www/config.inc.php, then run node/www/install/install.php
+from your browser.
+
+- After a successful install login as admin 
+
+- Go to 'Stations' to create the first station
+
+- Go to 'Admin' menu to join the node network
+
+
+NOTES
 
 On Apache 2 you have to set 'AcceptPathInfo on', otherwise listening
 to streams, viewing images and donwloading files will not work!
 
-
+After the installation completed you may want to protect the
+node/www/install subdir from unauthorized access.

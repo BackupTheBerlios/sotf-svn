@@ -152,7 +152,7 @@ function addChild($parent, $name, $topic_name = "", $lang = "en")
 /*
 Initial parameters
 */
-$install_maxtests = 6;					//number of tests
+$install_maxtests = 8;					//number of tests
 $install_red  =	 "FF5555";				//red for ERROR
 $install_green = "00FF00";				//green for OK
 $install_blue =	 "0000FF";				//blue for not tested
@@ -346,7 +346,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		$install_test_result[$id] .= "repositoryDir ($repositoryDir) ".@GetPerm($repositoryDir."/pmppmp.pmp", "write")."<BR />";
 		$install_test_result[$id] .= "userDirs ($userDirs) ".@GetPerm($userDirs."/pmppmp.pmp", "write")."<BR />";
 
-		$install_test_result[$id] .= "logs ($basedir/code/logs) ".@GetPerm($basedir."/code/logs/pmppmp.pmp", "write")."<BR />";
+		$install_test_result[$id] .= "logs ($basedir/logs) ".@GetPerm($basedir."/logs/pmppmp.pmp", "write")."<BR />";
 		$install_test_result[$id] .= "templates_c ($basedir/code/templates_c) ".@GetPerm($basedir."/code/templates_c/pmppmp.pmp", "write")."<BR />";
 		$install_test_result[$id] .= "tmp (../tmp) ".@GetPerm("../tmp/pmppmp.pmp", "write")."<BR />";
 //		$install_test_result[$id] .= " ($basedir) ".@GetPerm($basedir."/pmppmp.pmp", "write")."<BR />";
@@ -615,6 +615,9 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			createRole( 19, 'Transcriber');
 			createRole( 20, 'Translator');
 			createRole( 21, 'Other');
+			createRole( 22, 'Creator');
+			createRole( 23, 'Publisher');
+			createRole( 24, 'Contributor');
 			
 			// create genres
 			
@@ -805,23 +808,23 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$sql = "DELETE FROM sotf_topics";
 			$result = @pg_query($conn, $sql);
 			 */
-			 @pg_close($conn);		//close old connection
 
 			 // delete roles
 
-			 $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
-			 $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
-			 $db->query("DELETE FROM sotf_roles");
-			 $db->query("DELETE FROM sotf_role_names");
-			 $db->query("SELECT setval('sotf_roles_seq', 1, false)");
-			 $db->query("SELECT setval('sotf_role_names_seq', 1, false)");
+			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
+			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
+			 $result = @pg_query($conn, "DELETE FROM sotf_roles");
+			 $result = @pg_query($conn, "DELETE FROM sotf_role_names");
+			 $result = @pg_query($conn, "SELECT setval('sotf_roles_seq', 1, false)");
+			 $result = @pg_query($conn, "SELECT setval('sotf_role_names_seq', 1, false)");
 
 			 // delete genres
       
-			 $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
-			 $db->query("DELETE FROM sotf_genres");
-			 $db->query("SELECT setval('sotf_genres_seq', 1, false)");
+			 $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
+			 $result = @pg_query($conn, "DELETE FROM sotf_genres");
+			 $result = @pg_query($conn, "SELECT setval('sotf_genres_seq', 1, false)");
 
+			 //@pg_close($conn);		//close old connection
 
 		  }
 		$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
@@ -925,7 +928,7 @@ print('<br /><br /><DIV ALIGN="center">
 	     OR ($install_sadm_port != $userDbPort) OR ($install_sadm_db_name != $userDbName) ) {
 		print('<DIV ALIGN="center"><BR /><BIG>The database settings here do not match with the setting in config.inc.php, please update it.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
 	} else {
-    print('<DIV ALIGN="center"><BR /><BIG>ALL OK, you are now ready to use the <A HREF="../index.php">system</A>. Log in using the admin login.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
+	  print('<DIV ALIGN="center"><BR /><BIG>ALL OK, you are now ready to use the <A HREF="../index.php">system</A>. Log in using the admin login.</BIG><BR /></DIV>');	//if no error write 'ALL OK'
   }
 
 ?>

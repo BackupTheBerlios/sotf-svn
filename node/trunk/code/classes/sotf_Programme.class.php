@@ -609,16 +609,18 @@ class sotf_Programme extends sotf_ComplexNodeObject {
     $rights->create();
 
     // contacts
-    //creator, publisher, contributor
-    $role = 21; // TODO: this is just Other
+    //$role = 21; // Other
 
     foreach($metadata['publisher'] as $contact) {
+      $role = 23; // Publisher
       $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
     }
     foreach($metadata['creator'] as $contact) {
+      $role = 22; // Creator
       $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
     }
     foreach($metadata['contributor'] as $contact) {
+      $role = 24; // Contributor
       $id = sotf_Programme::importContact($contact, $role, $newPrg->id, $station);
     }
     
