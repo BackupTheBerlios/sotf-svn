@@ -82,3 +82,6 @@ If you are updating the source code from CVS, please be sure that the
 setting 'Check for changed Smarty templates and recompile them' is set
 on the bottom of the admin page.  You can also tune some
 logging/debugging options of the server at the same place.
+
+If you have an older installation, check code/doc/update.sql for
+changes in database structure.

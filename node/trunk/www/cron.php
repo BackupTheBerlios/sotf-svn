@@ -101,21 +101,46 @@ if(!empty($prgIds)) {
   $db->commit();
 }
 
-// *** regenerate metadata files??
-
 //******** Update topic counts
 
 $repository->updateTopicCounts();
 
-//******** Clean caches adn tmp dirs
+//******** Clean caches and tmp dirs
 
-// remove m3us and pngs from tmpdir
+$clearTime = time() - 24*60*60;
+$dir = dir($config['tmpDir']);
+while($entry = $dir->read()) {
+  if ($entry == "." || $entry == "..")
+    continue;
+  $file = $config['tmpDir'] . "/$entry";
+  if(is_dir($file))
+    continue;
+  //if (preg_match('/\.png$/', $entry) || preg_match('/\.m3u$/', $entry)) {
+  if(filemtime($file) < $clearTime) {
+    if(!unlink($file))
+      logError("could not delete: $file");
+  }
+}
+$dir->close();
 
-// update subject tree language availability
+$clearTime = time() - 60*60;
+$dir = dir($config['cacheDir']);
+while($entry = $dir->read()) {
+  if ($entry == "." || $entry == "..")
+    continue;
+  $file = $config['cacheDir'] . "/$entry";
+  if(is_dir($file))
+    continue;
+  if(filemtime($file) < $clearTime) {
+    if(!unlink($file))
+      logError("could not delete: $file");
+  }
+}
+$dir->close();
 
-
+// TODO update subject tree language availability
 
 stopTiming();
 $page->logRequest();
 debug("--------------- CRON FINISHED -----------------------------------");
-echo "<h4>Cron.php completed</h4>";
+//echo "<h4>Cron.php completed</h4>";

@@ -276,10 +276,9 @@ class sotf_Repository {
   /** private recursive function to calculate topic totals including subtopics */
   function sumTopics(&$topics, $index) {
     // calculate total for $topics[$index]
-    debug("sumTopics", "$index, " . $topics[$index]['id']);
+    //debug("sumTopics", "$index, " . $topics[$index]['id']);
     if(isset($topics[$index]['total'])) {
       // it's already calculated
-      debug("mar kesz", $topics[$index]['total']);
       return $topics[$index]['total'];
     }
     $topicId = $topics[$index]['id'];
@@ -289,7 +288,7 @@ class sotf_Repository {
         $total = $total + $this->sumTopics($topics, $i);
     }
     $topics[$index]['total'] = $total;
-    debug("szamitva", $topics[$index]['total']);
+    //debug("calculated", $topics[$index]['total']);
     return $topics[$index]['total'];
   }
 

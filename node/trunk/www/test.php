@@ -2,6 +2,21 @@
 
 require("init.inc.php");
 
+$clearTime = time() - 60*60;
+$dir = dir($config['cacheDir']);
+while($entry = $dir->read()) {
+  if ($entry == "." || $entry == "..")
+    continue;
+  $file = $config['cacheDir'] . "/$entry";
+  if(is_dir($file))
+    continue;
+  if(filemtime($file) < $clearTime) {
+    if(!unlink($file))
+      logError("could not delete: $file");
+  }
+}
+$dir->close();
+
 $v = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c, sotf_programmes s, sotf_object_roles r WHERE c.id = r.contact_id AND r.object_id=s.id AND s.station_id = '005st1' ORDER BY name");
 
 dump($v, "V");
