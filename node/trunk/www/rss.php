@@ -75,7 +75,6 @@ if($prgId) {
 
   // add metadata as item
   $properties=array();
-  /*
   $smarty->assign('ID', $id);
   //  $smarty->assign('LANG', 'eng');
   // general data
@@ -88,8 +87,6 @@ if($prgId) {
   if($series) {
     $smarty->assign('SERIES_DATA', $series->getAllWithIcon());
   }
-  // roles and contacts
-  $smarty->assign('ROLES', $prg->getRoles());
   // topics
   $smarty->assign('TOPICS', $prg->getTopics());
   // genre
@@ -99,48 +96,49 @@ if($prgId) {
   // rights sections
   $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
   $text = $smarty->fetch('rssMeta.htm');
-  */
-  $text = "<p>Abstract: " . $prgData['abstract']
-	 . "<br />Keywords: " . $prgData['keywords']
-	 . "<br />Production date: " . $prgData['production_date']
-	 . "</p>";
   $properties["description"] = $text;
-  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . '#general';
   debug("LANG in rss", $lang);
   $properties["title"]= $page->getlocalized('Metadata');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
 
-  /*
   // add contributors as item
   $properties=array();
-  $text = "<p>Abstract: " . $prgData['abstract']
-	 . "<br />Keywords: " . $prgData['keywords']
-	 . "<br />Production date: " . $prgData['production_date']
-	 . "</p>";
+  $smarty->assign('ROLES', $prg->getRoles());
+  $text = $smarty->fetch('rssContributors.htm');
   $properties["description"] = $text;
-  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
-  $properties["title"]= $page->getlocalized('metadata');
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . '#roles';
+  $properties["title"]= $page->getlocalized('Roles');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
-  */
 
   // add content links as item
   $properties=array();
-  $properties["link"]= $config['rootUrl'] . '/listen.php/audio.m3u?id=' . $prgId;
+  $audioFiles = $prg->getAssociatedObjects('sotf_media_files', 'main_content DESC, filename');
+  for($i=0; $i<count($audioFiles); $i++) {
+    $audioFiles[$i] =  array_merge($audioFiles[$i], sotf_AudioFile::decodeFormatFilename($audioFiles[$i]['format']));
+	 $audioFiles[$i]['playtime_string'] = strftime('%M:%S', $audioFiles[$i]['play_length']);
+  }
+  $smarty->assign('AUDIO_FILES', $audioFiles);
+  $text = $smarty->fetch('rssListen.htm');
+  $properties["description"] = $text;
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . '#mfiles';
+  //$properties["link"]= $config['rootUrl'] . '/listen.php/audio.m3u?id=' . $prgId;
   $properties["title"]= $page->getlocalized('Listen');
   //$properties["dc:date"]= $prog->get('production_date');
   $rss_writer_object->additem($properties);
 
   // add statistics as item
   $properties=array();
+  // rating
   $rating = new sotf_Rating();
-  $rate = $rating->getInstantRating($id);
-  $stats = $prg->getStats();
-  if($rate['rating_count'] > 0)
-	 $text = $rate['rating_value'] . " by " . $rate['rating_count'];
-  else
-	 $text = "No rating";
+  $smarty->assign('RATING', $rating->getInstantRating($prgId));
+  // referencing portals
+  // $smarty->assign('REFS', $prg->getRefs());
+  // statistics
+  $smarty->assign('STATS', $prg->getStats());
+  $text = $smarty->fetch('rssRating.htm');
   $properties["description"] = $text;
   $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId . "#stats";
   $properties["title"]= $page->getlocalized('Statistics');

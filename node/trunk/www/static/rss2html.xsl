@@ -79,7 +79,11 @@ div.textinput-form { font-family: sans-serif, arial, helvetica }
 <xsl:value-of select="dc:date"/>
 <xsl:text>)</xsl:text>
 </li></div>
-<div class="item-description"><xsl:value-of select="rss:description"/></div>
+<div class="item-description">
+  <!--   <xsl:copy> -->
+   <xsl:value-of select="rss:description"/>
+   <!-- </xsl:copy> -->
+</div>
 <hr />
 </xsl:for-each>
 </ul>
