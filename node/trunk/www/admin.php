@@ -101,7 +101,10 @@ if(sotf_Utils::getParameter('sync')) {
 	 sotf_NodeObject::newNodeInNetwork($nid);
   // sync
   $neighbour->sync(true);
-  $page->redirect("admin.php#network");
+  if($config['debug'])
+	 echo "<h3>Sync completed.</h3>";
+  else
+	 $page->redirect("admin.php#network");
   $page->logRequest();
 }
 
