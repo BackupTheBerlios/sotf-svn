@@ -11,7 +11,7 @@
 	* Inside - the first page that the anyone sees after login
 	*----------------------------------------
 	* This page will display the whole station schedule including the
-	* past and the future.
+	* past and the future
 	************************/
 	include("init.inc.php");											# include the global framwork
 	include("classes/calendar.class.php");				# calendar handler

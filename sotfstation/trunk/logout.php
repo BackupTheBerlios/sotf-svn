@@ -12,9 +12,9 @@
 	*----------------------------------------
 	* Destroys all session data, hence logging the user out from the control panel
 	************************/
-	include('config.inc.php');									# guest what this is ;)
-	session_start();
-	session_destroy();
-	header("Location: " . SRC_ROOT . "index.php");
-	exit;
+	include('config.inc.php');											# guess what this is ;)
+	session_start();																# start the session handler
+	session_destroy();															# destroy all session related data
+	header("Location: " . SRC_ROOT . "index.php");	# redirect to root page
+	exit;																						# exit
 ?>
