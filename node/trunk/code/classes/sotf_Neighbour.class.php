@@ -149,7 +149,9 @@ class sotf_Neighbour extends sotf_Object {
 		$objs = array($chunkInfo, $modifiedObjects);
 		$response = $rpc->call($url . "/xmlrpcServer.php/sync/$thisChunk", 'sotf.sync', $objs);
 		// error handling
-		if(is_null($response)) {
+		$replyInfo = $response[0];
+		debug("replyInfo", $replyInfo);
+		if(is_null($response) || $replyInfo['error']) {
 		  $this->set('errors', $this->get('errors')+1);
 		  $this->update();
 		  $db->rollback();
@@ -157,8 +159,6 @@ class sotf_Neighbour extends sotf_Object {
 		}
 		$db->commit();
 		// save received data
-		$replyInfo = $response[0];
-		debug("replyInfo", $replyInfo);
 		$thisChunk++;
 	 }
 
@@ -166,7 +166,11 @@ class sotf_Neighbour extends sotf_Object {
 	 //$this->log($console, "number of updated objects: " .count($updatedObjects));
 	 
 	 // save node and neighbour stats
-	 $this->set('success', $this->get('success')+1);
+	 if($error) {
+		$this->set('errors', $this->get('errors')+1);
+	 } else {
+		$this->set('success', $this->get('success')+1);
+	 }
 	 $this->set('last_sync_out', $timestamp);
 	 $localNode->set('last_sync_out', $timestamp);
 	 // take out from pending nodes
@@ -193,8 +197,11 @@ class sotf_Neighbour extends sotf_Object {
 	 $remoteId = $this->get('node_id');
 	 // save modified objects
 	 $db->begin(true);
+	 // TODO: itt gaz van! ha nem sikerul egy objektumot elmenteni, akkor soha tobbe nem lesz neki elkuldve!!!
 	 $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects, $remoteId);
 	 // if db error: don't commit!
+	 if(is_null($updatedObjects))
+		return array(array('error' => "store object failed, sync aborted"));
 	 $db->commit();
 	 debug("number of updated objects", $updatedObjects);
 	 $replyInfo = array('received' => count($objects),

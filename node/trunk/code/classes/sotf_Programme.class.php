@@ -131,7 +131,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function getStation() {
 	 if(!$this->station) {
 		$this->station = $this->getObject($this->get('station_id'));
-		$this->stationName = $this->station->get('name');
+		if(is_object($this->station))
+		  $this->stationName = $this->station->get('name');
 	 }
 	 return $this->station;
   }

@@ -253,9 +253,9 @@ class sotf_NodeObject extends sotf_Object {
 		 $this->internalData['arrived'] = $db->getTimestampTz();
 		 $internalObj = new sotf_Object('sotf_node_objects', $this->id, $this->internalData);
 		 $internalObj->create();
-		 $db->silent = true;
+		 //$db->silent = true;
 		 $changed = sotf_Object::create();
-		 $db->silent = false;
+		 //$db->silent = false;
 		 if(!$changed) {
 			// $internalObj->delete(); //not needed because of transaction
 			if(preg_match('/referential integrity violation/', $this->error)) {
@@ -362,8 +362,14 @@ class sotf_NodeObject extends sotf_Object {
 		  if($objData['node_id'] == $config['nodeId']) {
 			 logError("Received my own object back via replication: ". $objData['id']);
 		  } else {
-			 if($obj->saveReplica($fromNode))
+			 $res = $obj->saveReplica($fromNode);
+			 if($res === TRUE) {
 				$updatedObjects++;
+			 } elseif($res === FALSE) {
+			 } else {
+				debug("SYNC", "Failed to store object, sync interrupted");
+				return NULL;
+			 }
 		  }
 		}
 	 }
