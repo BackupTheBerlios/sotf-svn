@@ -589,7 +589,7 @@ CREATE TABLE "sotf_station_mappings" (
 "id" serial PRIMARY KEY,		-- just an id
 "id_at_node" varchar(12) UNIQUE REFERENCES sotf_node_objects(id) ON DELETE CASCADE,		-- id of thing at node
 "id_at_station" varchar(20) UNIQUE	-- id of thing on station server
-)
+);
 
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'admin');
 SELECT nextval('sotf_permissions_id_seq');

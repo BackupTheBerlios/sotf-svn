@@ -14,6 +14,7 @@ require_once($config['classdir'] . "/xmlwriterclass.php");
 require_once($config['classdir'] . "/rss_writer_class.php");
 require_once($config['classdir'] . "/sotf_AdvSearch.class.php");
 
+$prgId = sotf_Utils::getParameter('id');
 $stationName = sotf_Utils::getParameter('station');
 $userName = sotf_Utils::getParameter('user');
 $queryName = sotf_Utils::getParameter('qname');
@@ -39,7 +40,83 @@ $rss_writer_object->stylesheet=$config['rootUrl'] . "/static/rss2html.xsl";
 $rss_writer_object->rssnamespaces["dc"]="http://purl.org/dc/elements/1.1/";
 
 // do the job, fill in RSS
-if($stationName) {
+if($prgId) {
+  // send RSS for programme
+  $prg = & $repository->getObject($prgId);
+  if(!$prg)
+	 raiseError("no such object");
+
+  // define channel
+  $properties=array();
+  $properties["description"]= $prg->get('description');
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
+  $properties["title"]= $prg->get('title');
+  //$properties["language"]="en";
+  $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
+  $rss_writer_object->addchannel($properties);
+
+  // get and cache programme icon
+  $prgData = $prg->getAllWithIcon();
+  if($prgData['icon']) {
+	 // define icon for station
+	 $properties=array();
+	 $properties["url"]= $config['cacheUrl'] . "/$prgId.png";
+	 $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
+	 $properties["title"]= "programme icon";
+	 //$properties["description"]="";
+	 $rss_writer_object->addimage($properties);
+  }
+
+  // add metadata as item
+  $properties=array();
+  $text = "<p>Abstract: " . $prgData['abstract']
+	 . "<br />Keywords: " . $prgData['keywords']
+	 . "<br />Production date: " . $prgData['production_date']
+	 . "</p>";
+  $properties["description"] = $text;
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
+  $properties["title"]= $page->getlocalized('metadata');
+  //$properties["dc:date"]= $prog->get('production_date');
+  $rss_writer_object->additem($properties);
+  /*
+  // add contributors as item
+  $properties=array();
+  $text = "<p>Abstract: " . $prgData['abstract']
+	 . "<br />Keywords: " . $prgData['keywords']
+	 . "<br />Production date: " . $prgData['production_date']
+	 . "</p>";
+  $properties["description"] = $text;
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
+  $properties["title"]= $page->getlocalized('metadata');
+  //$properties["dc:date"]= $prog->get('production_date');
+  $rss_writer_object->additem($properties);
+
+  // add content links as item
+  $properties=array();
+  $text = "<p>Abstract: " . $prgData['abstract']
+	 . "<br />Keywords: " . $prgData['keywords']
+	 . "<br />Production date: " . $prgData['production_date']
+	 . "</p>";
+  $properties["description"] = $text;
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
+  $properties["title"]= $page->getlocalized('metadata');
+  //$properties["dc:date"]= $prog->get('production_date');
+  $rss_writer_object->additem($properties);
+
+  // add statistics as item
+  $properties=array();
+  $text = "<p>Abstract: " . $prgData['abstract']
+	 . "<br />Keywords: " . $prgData['keywords']
+	 . "<br />Production date: " . $prgData['production_date']
+	 . "</p>";
+  $properties["description"] = $text;
+  $properties["link"]= $config['rootUrl'] . "/get.php/" . $prgId;
+  $properties["title"]= $page->getlocalized('metadata');
+  //$properties["dc:date"]= $prog->get('production_date');
+  $rss_writer_object->additem($properties);
+  */
+
+} elseif($stationName) {
   // send list of new progs in station
   $station = sotf_Station::getByName($stationName);
   if(!$station)
@@ -196,12 +273,21 @@ if($stationName) {
 	
   //  Then add your channel items one by one.
   $newProgs = sotf_Programme::getNewProgrammes($fromDay, ITEMS_IN_RSS);
-  foreach($newProgs as $prog) {
+  if(!empty($newProgs)) {
+	 foreach($newProgs as $prog) {
+		$properties=array();
+		$properties["description"]= $prog['abstract'];
+		$properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
+		$properties["title"]= $prog['title'];
+		$properties["dc:date"]= $prog['production_date'];
+		$rss_writer_object->additem($properties);
+	 }
+  } else {
 	 $properties=array();
-	 $properties["description"]= $prog['abstract'];
-	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog['id'];
-	 $properties["title"]= $prog['title'];
-	 $properties["dc:date"]= $prog['production_date'];
+	 $properties["description"]= '';
+	 $properties["link"]= $config['rootUrl'];
+	 $properties["title"]= "no new items";
+	 //$properties["dc:date"]= ;
 	 $rss_writer_object->additem($properties);
   }
 

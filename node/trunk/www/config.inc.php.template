@@ -60,19 +60,19 @@ $config['publishXbmf'] = false;
 $config['basedir'] = 'C:/sotf/node';
 
 // the directory where stations and radio shows will be archived
-$config['repositoryDir'] = "$config['basedir']/repository";
+$config['repositoryDir'] = $config['basedir'] . '/repository';
 
 // the directory where stations and radio shows will be archived
-$config['musicDir'] = "$config['basedir']/music";
+$config['musicDir'] = $config['basedir'] . '/music';
 
 // the directory under which users have FTP or other access to send files to
-$config['userDirs'] = "$config['basedir']/users";
+$config['userDirs'] = $config['basedir'] . '/users';
 
 // the FTP URL for user directories (defined above), with a trailing slash
 $config['userFTP'] = 'ftp://foo.foo.org:8989/';
 
 // the directory where incoming programmes (XBMF) arrive from stations
-$config['xbmfInDir'] = "$config['basedir']/incoming";
+$config['xbmfInDir'] = $config['basedir'] . "/incoming";
 
 // where PEAR files are located
 $config['peardir'] = 'C:/Program Files/php422/pear';
@@ -135,7 +135,7 @@ $config['maxNumberOfStreams'] = 30;
 //////////////////////////////////////////////////////////////////////////
 
 // Everything will be logged here. You can configure logging on the admin screen,
-$config['logFile'] = "$config['basedir']/logs/log";
+$config['logFile'] = $config['basedir'] . '/logs/log';
 
 // Temp. solution for debugging right after install, later you may switch this off
 $config['debug'] = true;
@@ -146,10 +146,10 @@ $config['debug'] = true;
 
 // selectable languages for user interface
 $config['outputLanguages'] = array(
-																	 array("eng","in English"),
-																	 array("ger","Deutsch"),
-																	 array("hun", "magyarul")
-																	 );
+								           array("eng", "in English"),
+											  array("ger", "Deutsch"),
+											  array("hun", "magyarul")
+											);
 
 // default language if user's language cannot be determined
 $config['defaultLanguage'] = "eng";
