@@ -345,7 +345,7 @@ CREATE TABLE "sotf_prog_topics" (
 "prog_id" varchar(12) NOT NULL,
 "topic_id" varchar(12) NOT NULL,
 CONSTRAINT "sotf_prog_topics_u" UNIQUE ("topic_id", "prog_id"),
-FOREIGN KEY("topic_id") REFERENCES sotf_topic_tree_defs("id") ON DELETE CASCADE,
+-- this might cause loss of valuable data: FOREIGN KEY("topic_id") REFERENCES sotf_topic_tree_defs("id") ON DELETE CASCADE,
 FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 

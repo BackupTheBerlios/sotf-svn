@@ -662,9 +662,9 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$vocabularies->importTopicTree(file($config['basedir']."/code/share/topictree_soma_eng.txt"), 'eng');
 
 			// not really  needed any more, just here for safety
-			$result = $db->query("SELECT setval('sotf_topics_seq', ". $config['nodeId'] . "000, false)");
-			$result = $db->query("SELECT setval('sotf_topic_trees_seq', ". $config['nodeId'] . "000, false)");
-			$result = $db->query("SELECT setval('sotf_topic_tree_defs_seq', ". $config['nodeId'] . "000, false)");
+			//$result = $db->query("SELECT setval('sotf_topics_seq', ". $config['nodeId'] . "000, false)");
+			//$result = $db->query("SELECT setval('sotf_topic_trees_seq', ". $config['nodeId'] . "000, false)");
+			//$result = $db->query("SELECT setval('sotf_topic_tree_defs_seq', ". $config['nodeId'] . "000, false)");
 
 			$db->commit();
 
