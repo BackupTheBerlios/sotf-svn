@@ -1,4 +1,26 @@
 
+
+How to start a node network?
+---------------------------
+
+1. log in as admin
+2. select admin from top menu bar
+3. press "add neighbour node"
+4. fill in, for example for AT2:
+   node id: 666
+   URL: http://forschung.fh-stpoelten.ac.at/SOTF/node/www
+   Press Create
+5. The same has to be done on the 'other end of the wire', so on AT2 node
+in this example. (until that your connection will be refused)
+6. Press 'Sync' for that neighbour node. It will take some time for the
+first time. You will see problems, if any.
+7. Run cron.php regularly (as you already should do this), it will take
+care of synchronization.
+
+If there are too many bugs, or the node becomes unusable, delete the
+neighbour on the admin screen.
+
+
 About the operation of the Node network
 ---------------------------------------
 
