@@ -23,22 +23,17 @@ class sotf_NodeObject extends sotf_Object {
     $this->sotf_Object($tablename, $id, $data);
   }
 
-  /** Generates the ID for a new persistent object. */
-  function generateID() {
-    $localId = $this->db->nextId($this->tablename);
-    $id = sprintf("%03d%2s%d", $this->nodeId, $this->repository->getTableCode($this->tablename), $localId);
-    debug("generated ID", $id);
-	 return $id;
-  }
-
   /** Creates a new persistent replicated object */
   function create() {
 	 global $nodeId, $sotfVars;
    if(empty($this->id)) {
-     $this->id = $this->generateID();
+     $this->id = $this->repository->generateID($this);
      $this->adminObject->id = $this->id;
    }
-   $this->internalData['node_id'] = $nodeId;
+   if($this->repository->isVocabularyTable($this->tablename))
+     $this->internalData['node_id'] = 0;
+   else
+     $this->internalData['node_id'] = $nodeId;
    $this->internalData['arrived_stamp'] = $sotfVars->get('sync_stamp', 0);
    $this->internalData['arrived'] = $this->db->getTimestampTz();
    $this->internalData['last_change'] = $this->db->getTimestampTz();
@@ -55,9 +50,11 @@ class sotf_NodeObject extends sotf_Object {
 
   /** Updates the fields of the object. */
   function update() {
-    global $sotfVars;
+    global $sotfVars, $nodeId;
     parent::update();
     $this->internalData = $this->db->getRow("SELECT * FROM sotf_node_objects WHERE id='$this->id' ");
+    if($this->internalData['node_id'] != $nodeId && $this->internalData['node_id'] != 0 )
+      raiseError("Updating a remote object is prohibited");
     $this->internalData['arrived_stamp'] = $sotfVars->get('sync_stamp', 0);
     $this->internalData['arrived'] = $this->db->getTimestampTz();
     $this->internalData['last_change'] = $this->db->getTimestampTz();
@@ -68,12 +65,15 @@ class sotf_NodeObject extends sotf_Object {
 
   /** Deletes the object. */
   function delete() {
-	 $this->db->query("DELETE FROM sotf_node_objects WHERE id='" . $this->id . "'");
-   // propagate deletion to other nodes
-   $this->createDeletionRecord();
-	 //parent::delete();  // not needed because of cascading delete
-   // delete user permissions
-   $this->db->query("DELETE FROM sotf_user_permissions WHERE object_id='$this->id'");
+    // TODO: don't allow to delete remote or global objects??
+    // delete administrative data about object
+    $this->db->query("DELETE FROM sotf_node_objects WHERE id='" . $this->id . "'");
+    // propagate deletion to other nodes
+    $this->createDeletionRecord();
+    // delete data itself: not really needed because of cascading delete
+    parent::delete();  
+    // delete user permissions
+    $this->db->query("DELETE FROM sotf_user_permissions WHERE object_id='$this->id'");
   }
 
   /** Creates a deletion record: used when a replicated object is deleted. */

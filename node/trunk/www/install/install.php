@@ -637,6 +637,25 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
       createGenre( 21, 'Training');
       createGenre( 22, 'Community media');
 
+
+      // delete topics 
+
+      $result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
+      $result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
+      $result = $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
+      $result = $db->query("SELECT setval('sotf_topics_seq', 1, false)");
+      $result = $db->query("SELECT setval('sotf_topic_trees_seq', 1, false)");
+      $result = $db->query("SELECT setval('sotf_topic_tree_defs_seq', 1, false)");
+
+      /*
+			$sql = "DELETE FROM sotf_topic_tree_defs";
+			$result = @pg_query($conn, $sql);
+			$sql = "DELETE FROM sotf_topic_trees";
+			$result = @pg_query($conn, $sql);
+			$sql = "DELETE FROM sotf_topics";
+			$result = @pg_query($conn, $sql);
+      */
+
       // create topic tree
 
 			$id = addParent("development", "Development");
@@ -752,14 +771,42 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 		}
 		if (isset($install_delete_topic))
 		{
+      
+      // delete topics 
+
 			$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
+      $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%tt%'");
+      $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%td%'");
+      $result = @pg_query($conn, "DELETE FROM sotf_node_objects WHERE id LIKE '%to%'");
+      $result = @pg_query($conn, "SELECT setval('sotf_topics_seq', 1, false)");
+      $result = @pg_query($conn, "SELECT setval('sotf_topic_trees_seq', 1, false)");
+      $result = @pg_query($conn, "SELECT setval('sotf_topic_tree_defs_seq', 1, false)");
+      /*
 			$sql = "DELETE FROM sotf_topic_tree_defs";
 			$result = @pg_query($conn, $sql);
 			$sql = "DELETE FROM sotf_topic_trees";
 			$result = @pg_query($conn, $sql);
 			$sql = "DELETE FROM sotf_topics";
 			$result = @pg_query($conn, $sql);
+      */
 			@pg_close($conn);		//close old connection
+
+      // delete roles
+
+      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%rn%'");
+      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ro%'");
+      $db->query("DELETE FROM sotf_roles");
+      $db->query("DELETE FROM sotf_role_names");
+      $db->query("SELECT setval('sotf_roles_seq', 1, false)");
+      $db->query("SELECT setval('sotf_role_names_seq', 1, false)");
+
+      // delete genres
+      
+      $db->query("DELETE FROM sotf_node_objects WHERE id LIKE '%ge%'");
+      $db->query("DELETE FROM sotf_genres");
+      $db->query("SELECT setval('sotf_genres_seq', 1, false)");
+
+
 		}
 		$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
 		$sql = "SELECT COUNT(*) as rows FROM sotf_topic_tree_defs";
@@ -779,7 +826,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	}
 	PrintTitle($id);
 	print('<DIV ALIGN="center"><BR />
-	<INPUT type="submit" name="delete_topic" value="Delete topic tree">
+	<INPUT type="submit" name="delete_topic" value="Delete vocabularies">
 	<INPUT type="submit" name="create_topic" value="Create vocabularies (topic tree, genres, roles)">
 	</DIV>');
 	PrintButton($id);

@@ -19,6 +19,13 @@ if(sotf_Utils::getParameter('retemplate')) {
   exit;  
 }
 
+// update topic counts
+if(sotf_Utils::getParameter('updatetopics')) {
+  $repository->updateTopicCounts();
+  $page->redirect("admin.php");
+  exit;  
+}
+
 // save general data
 $save = sotf_Utils::getParameter('save_debug');
 if($save) {

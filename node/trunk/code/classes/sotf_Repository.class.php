@@ -1,6 +1,12 @@
 <?php 
-//-*- tab-width: 3; indent-tabs-mode: 1; -*-
-// $Id$
+
+/*  -*- tab-width: 3; indent-tabs-mode: 1; -*-
+ * $Id$
+ *
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
 
 require_once($classdir . '/sotf_NodeObject.class.php');
 require_once($classdir . '/sotf_ComplexNodeObject.class.php');
@@ -97,6 +103,34 @@ class sotf_Repository {
       return NULL;
     else
       return $obj;
+  }
+
+  /** Tells if the given object id is for one of the global controlled vocabularies (roles, genres, topics). */
+  function isVocabularyTable($tablename) {
+    $tc = $this->getTableCode($tablename);
+    debug('tc', $tc);
+    if($tc == 'tt' || $tc == 'td' || $tc == 'to' || $tc == 'ge' || $tc == 'ro' || $tc == 'rn') {
+      debug("vocabulary entry");
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /** Generates the ID for a new persistent object. */
+  function generateID($object) {
+    global $nodeId;
+    if($nodeId == 0)
+      raiseError('Please set $nodeId to a positive integer in config.inc.php');
+    $tableCode = $this->getTableCode($object->tablename);
+    if($this->isVocabularyTable($object->tablename)) 
+      $nid = 0;
+    else
+      $nid = $nodeId;
+    $localId = $this->db->nextId($object->tablename);
+    $id = sprintf("%03d%2s%d", $nid, $tableCode, $localId);
+    debug("generated ID", $id);
+    return $id;
   }
 
   //TODO

@@ -45,7 +45,7 @@
 <table BORDER=0 CELLPADDING=15 CELLSPACING=0 WIDTH="100%"><tr><td>
 {php}$counter = 0;{/php}
 {foreach name=outer item=row from=$result}
-{if $row.supertopic == 0}
+{if $row.supertopic eq '0'}
 {php}$counter++;{/php}
 		{if $row.id != $result.0.id}</div>{/if}
 		<div ID="el{php}print($counter);{/php}Parent" CLASS="parent">
