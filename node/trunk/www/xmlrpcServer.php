@@ -4,6 +4,8 @@ require_once("$classdir/rpc_Utils.class.php");
 
 /** This page is the service point for XML-RPC calls arriving to the node */
 
+define("XMLRPC_ERR_NO_ACCESS", $xmlrpcerruser+2);
+
 debug("--------------- XML-RPC SERVER STARTED -----------------------------------");
 
 $map['sotf.sync'] = array('function' => 'syncResp');
@@ -15,22 +17,33 @@ $map['sotf.sync'] = array('function' => 'syncResp');
 
 new xmlrpc_server($map);
 
+function checkAccess($neighbour) {
+  $url = $this->getUrl();
+  if(!$url)
+    return "No url found for neighbour node";
+  $parsed = parse_url($url);
+  $allowedIPs = gethostbynamel($parsed['host']);
+  $ip = getenv("REMOTE_ADDR");
+  if(!in_array($ip, $allowedIPs)) {
+    logError(getenv('REMOTE_HOST') . " XML-RPC access denied");
+    return "this IP is not from neighbour " . $neighbour->get('node_id');
+  }
+}
+
 function syncResp($params) {
-  $nodeData = xmlrpc_decode($params->getParam(0));
-  $objects = xmlrpc_decode($params->getParam(1));
-  $timestamp = db_Wrap::getTimestampTz();
+  $lastSync = xmlrpc_decode($params->getParam(0));
+  $nodeData = xmlrpc_decode($params->getParam(1));
+  $objects = xmlrpc_decode($params->getParam(2));
   $neighbour = sotf_Neighbour::getById($nodeData['node_id']);
-  // TODO check access
-  // save modified objects
-  sotf_NodeObject::saveModifiedObjects($objects);
-  // get new objects to send as reply
-  $objects = sotf_NodeObject::getModifiedObjects($neighbour->get('last_outgoing'), false);
-  // save time of this sync
-  $neigbour->set('last_outgoing', $timestamp);
-  $neigbour->update();
+  if(!$neighbour)
+    return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: you are not an allowed neighbour node!");
+  $msg = checkAccess($enighbour);
+  if($msg)
+    return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: $msg!");
+  $retval = $neighbour->syncResponse($lastSync, $nodeData, $objects);
   // send response
-  $objects = xmlrpc_encode($objects);
-  return new xmlrpcresp($objects);
+  $retval = xmlrpc_encode($retval);
+  return new xmlrpcresp($retval);
 }
 
 

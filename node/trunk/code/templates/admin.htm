@@ -1,6 +1,7 @@
 
 <h3>{#admin#}</h3>
 
+<!--
 <table class="tab">
   <tr> 
     <td nowrap class="tab">{#general_data#}</td>
@@ -19,7 +20,7 @@
                   </tr>
                   <tr>
                     <td>{#description#}:</td>
-                    <td><textarea onChange="if(value != defaultValue) data_changed++;" cols="50" rows="10" name="desc">{$STATION_DATA.description}</textarea></td>
+                    <td><textarea onChange="if(value != defaultValue) data_changed++;" cols="50" rows="3" name="desc">{$STATION_DATA.description}</textarea></td>
                   </tr>
                 </table>
                 <input type="submit" name="save" value="{#save#}">
@@ -29,68 +30,85 @@
   </td>
 </tr>
 </table>
+-->
 
 <p></p>
 
 <a name="network"></a>
-<form>
-<table class="tab">
-  <tr> 
-    <td nowrap class="tab">{#Node_network#}</td>
-  </tr>
-</table>
-<table class="tabarea">
-<tr> 
-  <td class="tabarea"> 
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#Node_network#}</td>
+    </tr>
+  </table>
+  <table class="tabarea">
+    <tr> 
+      <td class="tabarea">
+        <form>
+          <table>
+            <tr>
+              <td>{#node_id#}:</td><td> {$LOCAL_NODE.node_id}</td>
+            </tr>
+            <tr>
+              <td>{#node_name#}:</td><td> {$LOCAL_NODE.name}</td>
+            </tr>
+            <tr>
+              <td>{#node_desc#}:</td>
+              <td><textarea onChange="if(value != defaultValue) data_changed++;" cols="50" rows="3" name="desc">{$LOCAL_NODE.description}</textarea>
+              </td>
+            </tr>
+          </table>
+          <input type="submit" name="save" value="{#save#}">
+        </form>
+        <form>
         {if $NEIGHBOURS}
         <table>
-            <tr class="listhead">
-              <th>{#node#}</th>
-              <th>{#accept_incoming#}</th>
-              <th>{#last_incoming#}</th>
-              <th>{#use_for_outgoing#}</th>
-              <th>{#last_outgoing#}</th>
-            </tr>
-            {cycle name="roles" values="list1,list2" print=false advance=false}
-            {foreach item=item from=$NEIGHBOURS}
-            <tr class="{cycle name=roles}">
-              <td>
-                {if $item.pending_url}
-                <a href="{$item.pending_url}">{#pending#}: {$item.node_id}</a>
-                {else}
-                <a href="{$item.node.url}">{$item.node.name}</a>
-                {/if}
-              </td>
-              <td>
-                {if $item.accept_incoming}{#Yes#}{else}{#No#}{/if}
-              </td>
-              <td>
-                {$item.last_incoming}
-              </td>
-              <td>
-                {if $item.use_for_outgoing}{#Yes#}{else}{#No#}{/if}
-              </td>
-              <td>
-                {$item.last_outgoing}
-              </td>
-              <td nowrap>
-                <input class="action" type="button" name="b1" value="{#sync#}" onClick="redir(this.form, 'admin.php?sync=1&nodeid={$item.node_id}')" />
-                  <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editNeighbour.php?nodeid={$item.node_id}','{#editNeighbour#}',350,400,false)" />
-                    <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'admin.php?delneighbour=1&nodeid={$item.node_id}')" />
-              </td>
-            </tr>
+          <tr class="listhead">
+            <th>{#node#}</th>
+            <th>{#accept_incoming#}</th>
+            <th>{#use_for_outgoing#}</th>
+            <th>{#last_sync#}</th>
+            <th>{#last_sync_out#}</th>
+          </tr>
+          {cycle name="roles" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$NEIGHBOURS}
+          <tr class="{cycle name=roles}">
+            <td>
+              {if $item.pending_url}
+              <a href="{$item.pending_url}">{#pending#}: {$item.node_id}</a>
+              {else}
+              <a href="{$item.node.url}">{$item.node.name}</a>
+              {/if}
+            </td>
+            <td>
+              {if $item.accept_incoming}{#Yes#}{else}{#No#}{/if}
+            </td>
+            <td>
+              {if $item.use_for_outgoing}{#Yes#}{else}{#No#}{/if}
+            </td>
+            <td>
+              {$item.last_sync}
+            </td>
+            <td>
+              {$item.last_sync_out}
+            </td>
+            <td nowrap>
+              <input class="action" type="button" name="b1" value="{#sync#}" onClick="redir(this.form, 'admin.php?sync=1&nodeid={$item.node_id}')" />
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editNeighbour.php?nodeid={$item.node_id}','{#editNeighbour#}',350,400,false)" />
+                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'admin.php?delneighbour=1&nodeid={$item.node_id}')" />
+            </td>
+          </tr>
           {/foreach}
         </table>
         {else}
         <p>{#standalone_node#}</p>
         {/if}
         <p>
-            <input class="action" type="button" name="b1" value="{#add_neighbour#}" onClick="popup('createNeighbour.php','{#createNeighbour#}',400,400,false)" />
+          <input class="action" type="button" name="b1" value="{#add_neighbour#}" onClick="popup('createNeighbour.php','{#createNeighbour#}',400,400,false)" />
         </p>
+      </form>
       </td>
     </tr>
-</table>
-</form>
+  </table>
 
 <p></p>
 

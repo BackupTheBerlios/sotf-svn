@@ -29,20 +29,21 @@ class sotf_NodeObject extends sotf_Object {
 
 	function saveReplica() {
     if($this->id) {
-      $exists = $this->db->getOne("SELECT count(*) FROM " . $this->tablename . " WHERE " . $this->idKey . "='" . $this->id . "' ");
       $changed = $this->db->getOne("SELECT last_change FROM sotf_node_object WHERE id='$this->id' ");
-      if($exists) {
+      if($changed) {
         if($this->lastChange && (strtotime($this->lastChange) > strtotime($changed))) {
           $this->update();
           debug("updated ", $this->id);
+          return true;
         } else {
           debug("arrived older version of", $this->id);
+          return false;
         }
-        return;
       }
     }
-		$this->create();
+		$success = $this->create();
     debug("created ", $this->id);
+    return $success;
 	}
 
   function create() {
@@ -88,23 +89,21 @@ class sotf_NodeObject extends sotf_Object {
   // **** sync support
 
   /** static */
-  function getModifiedObjects($date, $localOnly = true) {
+  function getModifiedObjects($remoteNode, $date='', $updatedObjects = array()) {
     global $db, $nodeId, $repository;
-    if($localOnly)
-      $whereClause = "node_id='$nodeId'";
-    if($date && $localOnly)
-      $whereClause .= " AND ";
     if($date)
-      $whereClause .= "last_change >= '$date'";
-    $objects1 = $db->getAll("SELECT * FROM sotf_node_objects WHERE $whereClause ORDER BY substring(id, 4, 2), id");
+      $whereClause .= "AND arrived >= '$date'";
+    $objects1 = $db->getAll("SELECT * FROM sotf_node_objects WHERE node_id != '$remoteNode' $dateClause ORDER BY substring(id, 4, 2), id");
     //debug("OBJECTS__1", $objects);
     $objects = array();
     while(list(,$obj) = each($objects1)) {
-      $tablename = $repository->getTable($obj['id']);
-      $data = $db->getRow("SELECT * FROM $tablename WHERE id = '" . $obj['id'] . "'");
-      if(count($data) > 1) {         // don't send occasional empty records
-        $obj['data'] = $data;
-        $objects[] = $obj;
+      if(!in_array($obj['id'], $updatedObjects)) {   // don't send back the same object
+        $tablename = $repository->getTable($obj['id']);
+        $data = $db->getRow("SELECT * FROM $tablename WHERE id = '" . $obj['id'] . "'");
+        if(count($data) > 1) {         // don't send occasional empty records
+          $obj['data'] = $data;
+          $objects[] = $obj;
+        }
       }
     }
     //debug("OBJECTS__2", $objects);
@@ -114,6 +113,7 @@ class sotf_NodeObject extends sotf_Object {
   /** static */
   function saveModifiedObjects($objects) {
     global $repository;
+    $updatedObjects = array();
     reset($objects);
     while(list(,$objData) = each($objects)) {
       debug("saving modified object", $objData['id']);
@@ -121,15 +121,18 @@ class sotf_NodeObject extends sotf_Object {
       $obj = new sotf_NodeObject($tablename, $objData['id'], $objData['data']);
       $obj->lastChange = $objData['last_change'];
       $obj->nodeId = $objData['node_id'];
-      $obj->saveReplica();
-      // handle deletions
-      if($tablename == 'sotf_deletions') {
-        $delId = $obj->get('del_id');
-        debug("deleting object", $delId);
-        $obj = $repository->getObject($delId);
-        $obj->delete();
+      if($obj->saveReplica()) {
+        $updatedObjects[] = $objData['id'];
+        // handle deletions
+        if($tablename == 'sotf_deletions') {
+          $delId = $obj->get('del_id');
+          debug("deleting object", $delId);
+          $obj = $repository->getObject($delId);
+          $obj->delete();
+        }
       }
     }
+    return $updatedObjects;
   }
   
 

@@ -53,7 +53,7 @@ class sotf_Node extends sotf_NodeObject {
 	 */
 	function countAll() {
 		global $db;
-		return $db->getOne("SELECT count(*) FROM sotf_nodes WHERE up='t'");
+		return $db->getOne("SELECT count(*) FROM sotf_nodes");
 	}
 
 }

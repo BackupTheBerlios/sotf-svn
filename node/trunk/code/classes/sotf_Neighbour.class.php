@@ -46,21 +46,91 @@ class sotf_Neighbour extends sotf_Object {
     return $slist;
   }
 
-  function sync() {
+  function getNode() {
+    return sotf_Node::getNodeById($this->get('node_id'));
+  }
+
+  function getUrl() {
     $remoteNode = sotf_Node::getNodeById($this->get('node_id'));
-    $localNode = sotf_Node::getLocalNode();
+    if($remoteNode)
+      return $remoteNode->get('url');
+    return $this->get('pending_url');
+  }
+
+  function sync() {
+    if($this->get('use_for_outgoing')=='f') {
+      debug("node $this->id is not used for outgoing sync");
+      return;
+    }
+    $timestamp = $this->db->getTimestampTz();
+    $remoteId = $this->get('node_id');
+    $url = $this->getUrl();
+    // remove trailing '/'
+    while(substr($url, -1) == '/')
+      $url = substr($url, 0, -1);
     // collect local data to send
-    $objs = sotf_NodeObject::getModifiedObjects($this->get('last_outgoing'));
+    $localNode = sotf_Node::getLocalNode();
+    $localNodeData = $localNode->getAll();
+    // check if url is correct...
+    $localNodeData['url'] = $rootdir;
+    $objs = array($this->get('last_sync'),
+                  $localNodeData,
+                  sotf_NodeObject::getModifiedObjects($remoteId, $this->get('last_sync')));
     $rpc = new rpc_Utils;
-    $response = $rpc->call($remoteNode->get('url') . '/xmlrpcServer.php', 'sync', $objs);
+    $response = $rpc->call($url . '/xmlrpcServer.php', 'sync', $objs);
+    // error handling
+    if(!$response) {
+      logError("SYNC failed with node $remoteId");
+      $err = true;
+    }
+    if ($response->faultCode() != 0) {
+      logError("SYNC error with node $remoteId: " . $response->faultCode() . ": " . $response->faultString());
+      $err = true;
+    }
+    if($err) {
+      $this->set('errors', $this->get('errors')+1);
+      $this->update();
+      return;
+    }
     // save received data
     if(count($response) > 0) {
-      sotf_NodeObject::saveModifiedObjects($objects);
+      $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects);
+      debug("number of updatd objects", count($updatedObjects));
     }
+    
     // save last_sync
-    $this->set('last_outgoing', $timestamp);
+    $this->set('success', $this->get('success')+1);
+    $this->set('last_sync_out', $timestamp);
+    $this->saveSyncStatus($timestamp);
     $this->update();
     // send receipt of successful sync??
+  }
+
+  function syncResponse($lastSync, $nodeData, $objects) {
+    // save modified objects
+    $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects);
+    debug("number of updatd objects", count($updatedObjects));
+    // get new objects to send as reply
+    $objects = sotf_NodeObject::getModifiedObjects($this->get('node_id'), $lastSync, $updatedObjects);
+    // save time of this sync
+    $this->saveSyncStatus($lastSync);
+    return $objects;
+  }
+
+  function saveSyncStatus($lastSync) {
+    global $nodeId;
+    $this->set('last_sync', $lastSync);
+    $node = $this->getNode();
+    if($node) {
+      $node->set('last_sync', $lastSync); //TODO: get receipt from recieving sync response??
+      $node->set('authorizer', $nodeId);
+      $node->update();
+      if($this->get('pending_url')) {
+        // take out from pending nodes
+        $this->set('pending_url','');
+      }
+    }
+    $this->update();
   }
 
 }

@@ -35,6 +35,7 @@ CREATE TABLE "sotf_node_objects" (
 -- basis of replication + generic node object properties
 	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
+	"arrived" timestamptz DEFAULT CURRENT_TIMESTAMP,
 	"node_id" int2 --- REFERENCES sotf_nodes(node_id)
 );
 
@@ -46,11 +47,9 @@ CREATE TABLE "sotf_nodes" (
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"node_id" int2 UNIQUE NOT NULL, 				-- this id and name
 	"name" varchar(40) UNIQUE NOT NULL,			-- will be negotiated via e-mail within a node network
-	"url" varchar(255) NOT NULL,
-	"authorizer" varchar(40) NOT NULL,
-	"ip" inet,
 	"description" text,
-	"up" bool NOT NULL,
+	"url" varchar(255) NOT NULL,
+	"authorizer" int2,
 	"last_sync" timestamptz
 );
 
@@ -60,8 +59,10 @@ CREATE TABLE "sotf_neighbours" (
 	"node_id" int2, -- same as in sotf_nodes, except for pending nodes
 	"accept_incoming" bool DEFAULT 't'::bool,
 	"use_for_outgoing" bool DEFAULT 't'::bool,
-	"last_incoming" timestamptz,
-	"last_outgoing" timestamptz,
+	"last_sync" timestamptz,
+	"last_sync_out" timestamptz,
+	"errors" int,
+	"success" int,
 	"pending_url" varchar(200),
 	CONSTRAINT "sotf_neighbours_uniq" UNIQUE ("node_id")
 );

@@ -51,6 +51,17 @@ if($delperm) {
 
 // generate output
 
+$localNode = sotf_Node::getLocalNode();
+if(!$localNode) {
+  $localNode = new sotf_Node();
+  $localNode->set('node_id', $nodeId);
+  $localNode->set('name', $nodeName);
+  $localNode->set('url', $rootdir);
+  $localNode->create();
+}
+
+$smarty->assign("LOCAL_NODE", $localNode->getAll());
+
 // nodes
 //$nodes = sotf_Node::countAll();
 //$smarty->assign('NODES',$nodeData);
