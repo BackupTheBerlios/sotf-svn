@@ -2,10 +2,12 @@
 
 require("init.inc.php");
 
-$station = sotf_Utils::getParameter('station');
+$id = sotf_Utils::getParameter('id');
 
-$st = & new sotf_Station($station);
-$image = $st->getLogo();
+$obj = $repository->getObject($id);
+
+$image = $obj->getLogo();
+
 if($image)
 {
 	header("Content-type: image/png\n");

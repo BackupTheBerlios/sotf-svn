@@ -7,7 +7,7 @@ class sotf_Node extends sotf_NodeObject {
   var $tablename = 'sotf_nodes';
 
 	function sotf_Node($id='', $data='') {
-		$this->sotf_NodeObject('sotf_nodes', $id, $data);
+		$this->sotf_NodeObject($this->tablename, $id, $data);
 	}
 
 	/** 
@@ -52,32 +52,6 @@ class sotf_Node extends sotf_NodeObject {
 		return $db->getOne("SELECT count(*) FROM sotf_nodes WHERE up='t'");
 	}
 
-
-	function hasPermission($perm) {
-		global $user;
-		//if ($db->getOne("SELECT sotf_user_permissions.permission_id FROM sotf_user_permissions, sotf_permissions WHERE sotf_user_permissions.user_id = '$userid' AND sotf_user_permissions.object_id IS NULL AND (sotf_permissions.permission = 'admin' OR sotf_permissions.permission = '$perm')"))
-		if ($user->exist && is_array($user->permissions["node"]))
-			if (in_array($perm,$user->permissions["node"]) || in_array('admin',$user->permissions["node"]))
-				return true;
-		return false;
-	}
-
-	function addPermission($perm, $userid) {
-		global $db;
-		$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
-		$db->query("INSERT INTO sotf_user_permissions (user_id, object_id, permission_id) VALUES($userid, NULL, $permission_id)");
-	}
-
-	function delPermission($perm, $userid) {
-		global $db;
-		$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
-		$db->query("DELETE FROM sotf_user_permissions WHERE user_id = $userid and object_id IS NULL AND permission_id = $permission_id");
-	}
-
-	function listUsersAndPermissions() {
-		global $db;
-		return $db->getAll("SELECT sotf_user_permissions.user_id, sotf_permissions.permission FROM sotf_user_permissions, sotf_permissions WHERE sotf_permissions.id = sotf_user_permissions.permission_id");
-	}
 
 	/**
 	* Adds a new administrator to the node.

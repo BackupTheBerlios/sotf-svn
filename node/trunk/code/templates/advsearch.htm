@@ -26,7 +26,7 @@
 			<TD><SELECT name="SQLstring[]">{html_options options=$Languages selected=$SQLquery[i][3]}</TD>
 		{elseif $SQLquery[i][4] == "station"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
-			<TD><SELECT name="SQLstring[]">{html_options values=$Stations output=$Stations selected=$SQLquery[i][3]}</TD>
+			<TD><SELECT name="SQLstring[]">{html_options options=$Stations selected=$SQLquery[i][3]}</TD>
 		{elseif $SQLquery[i][4] == "length"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlength selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" MAXLENGTH=5> {#seconds#}</TD>

@@ -10,14 +10,6 @@ function startTiming(){
 
 startTiming();	
 	
-/**
- * stopTiming() - to stop the timer for script execution
- * 
- * @package	StreamOnTheFly
- * @return	float	end time - float
- * 
- * Version: 1.0  Date: 13.01.2002  Author: Koulikov Alexey
- */
 function stopTiming(){
   global $startTime, $totalTime;
   
@@ -68,7 +60,7 @@ function getHostName()
 }
 
 //////////////////////////////////////////////////////////////////////////
-require('config.inc.php');
+require_once('config.inc.php');
 //////////////////////////////////////////////////////////////////////////
 
  
@@ -174,6 +166,13 @@ function raiseError($msg) {
   exit;
 }
 
+// this one is used from smarty to check permissions
+function hasPerm($object, $perm) {
+  global $permissions;
+  return $permissions->hasPermission($object, $perm);
+}
+
+
 // create database connections
 
 $sqlDSN = "pgsql://$nodeDbUser:$nodeDbPasswd@$nodeDbHost:$nodeDbPort/$nodeDbName";
@@ -193,7 +192,7 @@ if (DB::isError($userdb))
 }
 $userdb->setFetchmode(DB_FETCHMODE_ASSOC);
 
-// smarty for HTML output
+// configure smarty for HTML output
 $smarty = new Smarty;
 $smarty->template_dir = "$basedir/code/templates";
 $smarty->compile_dir = "$basedir/code/templates_c";
@@ -201,10 +200,9 @@ $smarty->config_dir = "$basedir/code/configs";
 $smarty->compile_check = $debug;
 $smarty->debugging = $debug;
 $smarty->show_info_include = $debug;
-$smarty->assign("NODEID", $nodeId);
-$smarty->assign("ROOTDIR", $rootdir);
-$smarty->assign("IMAGEDIR", $imagedir);
-$smarty->assign("DEBUG", $debug);
+
+// this object contains various utilities
+$utils = new sotf_Utils;
 
 // page object is for request handling and page generation
 $page = new sotf_Page;
@@ -220,11 +218,18 @@ $repository = new sotf_Repository($repositoryDir, $db);
 
 // now you have the following global objects: $db, $userdb, $smarty, $page, $repository, $user, $permission
 
+
+// add basic variables to Smarty
+$smarty->assign("NODEID", $nodeId);
+$smarty->assign("ROOTDIR", $rootdir);
+$smarty->assign("IMAGEDIR", $imagedir);
+$smarty->assign("DEBUG", $debug);
 $smarty->assign("ACTION", $page->action);
 $smarty->assign("LANG", $lang);
 if ($page->loggedIn()) {
   $smarty->assign("loggedIn", '1');
   $smarty->assign("USERNAME", $user->name);
+  $smarty->assign("PERMISSIONS", $permissions->currentPermissions);
   if($permissions->isEditor())
     $smarty->assign("IS_EDITOR", '1');
   //$smarty->assign("STATION_MANAGER", sotf_Permission::get("station_manager"));

@@ -2,7 +2,7 @@
 // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 // $Id$
 
-class sotf_Station extends sotf_NodeObjectWithPerm {		
+class sotf_Station extends sotf_ComplexNodeObject {		
 
 	var $numProgrammes;
 	
@@ -16,20 +16,8 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 		 * @param string id id within node
 	 */
 	function sotf_Station($id='', $data=''){
-		$this->sotf_NodeObjectWithPerm('sotf_stations', $id, $data);
-		if($id) {
-			$roles = $this->loadRoles();
-		}
-	}
-
-	function loadRoles() {
-		// load roles
-    /*
-		$r = $this->db->getCol("SELECT id FROM sotf_roles WHERE object_id='$id'");
-		while (list (, $val) = each ($r)) {
-			$this->roles[$val['node_id'] . '_' . $val['id']] = new sotf_Role('sotf_station_roles', $val['node_id'], $val['id']);
-		}
-    */
+    $this->binaryFields = array('icon', 'jingle');
+		$this->sotf_ComplexNodeObject('sotf_stations', $id, $data);
 	}
 
   function isNameInUse($stationName) {
@@ -50,12 +38,14 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 			mkdir($dir, 0775);
 			mkdir("$dir/station", 0775);
 		}
+    #return $this->id;
 	}
 	
 	function delete(){
 		if(!$this->isLocal())
 			raiseError("Can delete only local stations");
 		// delete files from the repository
+    debug("deleting: ", $this->getDir());
 		sotf_Utils::erase($this->getDir());
 		// propagate deletion to other nodes
     $this->createDeletionRecord();
@@ -64,7 +54,10 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 	}
 
 	function getDir() {
-		return $this->repository->rootdir . '/' . $this->name;
+    $name = $this->get("name");
+    if(empty($name))
+      raiseError("this station has no name!");
+		return $this->repository->rootdir . '/' . $name;
 	}
 
 	function getStationDir() {
@@ -118,9 +111,14 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 				{
 					$data = fread($fp,filesize($file->getPath()));
 					fclose($fp);
+          // save into DB
 					$this->setBlob("icon",$data);
+          // save into file system
+          if(!copy($file->getPath(), $this->getStationDir() . '/icon.png'))
+            raiseError("could not copy icon file!");
 					return true;
-				}
+				} else
+          raiseError("could not open icon file!");
 		}
 		return false;
 	} // end func setLogo
@@ -136,7 +134,7 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 		return $this->getBlob("icon");
 	} // end func getLogo
 
-  /*
+  /** this places the icon into the www/tmp, so that you can refer to it with <img src=
   function cacheLogo() {
     global $cachedir, $cacheprefix;
     $fname = "$cachedir/" . $this->id . "
@@ -159,15 +157,20 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 		$index = sotf_AudioCheck::getRequestIndex($audiofile);
 		if (false === $index)
 			return false;
+    // save into file system
 		$dir = $this->getStationDir();
 		$targetFile = $dir . '/' . 'jingle_' . $audiofile->getFormatFilename();
 		$retval = copy($audiofile->getPath(), $targetFile);
-
 		if(!$retval)
-			return false;
-			//return new PEAR_Error("Could not move file $fromFile to its location");
-		//chmod($targetFile, 0770);
-		return true;
+			raiseError("could not copy jingle file!");
+    // save into DB
+    if ($fp = fopen($audiofile->getPath(),'rb'))
+      {
+        $data = fread($fp,filesize($audiofile->getPath()));
+        fclose($fp);
+        $this->setBlob("jingle",$data);
+      } else
+        raiseError("could not open logo file!");
 	}
 
 	/**
@@ -245,14 +248,16 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 
 	/**
 	 * @method static listStations
-	 * @return array of sotf_Series objects
+	 * @return array of sotf_Station objects
 	*/
-	function listAll() {
+	function listStations($start, $hitsPerPage) {
 		global $db;
-		$res = $db->getAll("SELECT * FROM sotf_stations ORDER BY name");
+    if(empty($start)) 
+      $start = 0;
+		$res = $db->limitQuery("SELECT * FROM sotf_stations ORDER BY name", $start, $hitsPerPage);
 		if(DB::isError($res))
       raiseError($res);
-    foreach($res as $st) {
+    while (DB_OK === $res->fetchInto($st)) {
 			$slist[] = new sotf_Station($st['id'], $st);
     }
 		return $slist;
@@ -262,13 +267,13 @@ class sotf_Station extends sotf_NodeObjectWithPerm {
 	 * @method static listStationNames
 	 * @return array of name
 	*/
-	function listStationNames($localOnly = false) {
-		global $nodeId, $db;
-		$sql = "SELECT name FROM sotf_stations";
-		if($localOnly)
-			$sql .= " WHERE node_id='$nodeId' ";
+	function listStationNames() {
+		global $db;
+		$sql = "SELECT id, name FROM sotf_stations";
+		//if($localOnly)
+		//	$sql .= " WHERE node_id='$nodeId' ";
 		$sql .= " ORDER BY name";
-		return $db->getCol($sql);
+		return $db->getAll($sql);
 	}
 
 	/**

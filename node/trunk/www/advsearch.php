@@ -120,7 +120,7 @@ $smarty->assign("EQlang", $advsearch->GetEQlang());			//EQ dropdown for lang
 $smarty->assign("EQlength", $advsearch->GetEQlength());			//EQ dropdown for length
 
 $smarty->assign("Languages", $advsearch->GetLanguages());		//all possible languages
-$smarty->assign("Stations", sotf_Station::listStationNames());		//all possible stationnames
+$smarty->assign("Stations", $advsearch->GetStations());		//all possible stationnames
 $smarty->assign("SQLstring", $SQLstring);				//selected values
 
 //box 1

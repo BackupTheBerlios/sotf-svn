@@ -1,0 +1,27 @@
+	<h3>{#station_managers#}</h3>
+	{if $USERS}
+		<table cellspacing="0" cellpadding="2" border="1">
+		{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+		{section name=i loop=$USERS}
+			<tr bgcolor="{cycle}"><td>{$USERS[i].name}</td>
+         {if ! $smarty.section.i.first || ! $smarty.section.i.last}
+             <td><a href="stations.php?userid={$USERS[i].id}&delstationmanager=1">{#delete#}</a></td>
+         {/if}
+      </tr>
+		{/section}
+		</table>
+	{else}
+		<p>{#no_users#}</p>
+	{/if}
+
+	<form method="post" name="adminuser">
+	<table>
+		<tr>
+			<td>{#username#}:</td>
+			<td><input name="username"> <a href="listUser.php" target="_blank" onClick="window.open('listUser.php','{#userlist#}','menubar=no, status=no, toolbar=no, width=300'); return false;">{#userlist#}</a></td>
+		</tr>
+	</table>
+	<input type="submit" name="addstationmanager" value="{#addstationmanager#}">
+	<input type="submit" name="delstationmanager" value="{#delstationmanager#}">
+	</form>
+	<hr>

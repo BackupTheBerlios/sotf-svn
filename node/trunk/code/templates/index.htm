@@ -151,8 +151,10 @@
         <tr> 
             <form name="stationsform" method="get" action="stations.php">
                 <td width="100%" bgcolor="#FFFFFF"> 
-                    <select name="station" style="width: 100%">
-                          {html_options values=$STATIONS output=$STATIONS}
+                    <select name="stationid" style="width: 100%">
+                       {foreach from=$STATIONS item=station}
+                          <option name="{$station.id}">{$station.name}</option>
+                       {/foreach}
                     </select>
                     <input type="submit" name="select_station" value="{#Go#}">
                   </td>

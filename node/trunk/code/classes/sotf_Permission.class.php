@@ -32,7 +32,7 @@ class sotf_Permission
         $permissions[$permtable[$i]["object_id"]][] = $permtable[$i]["permission"];	// object permission
       else
         $permissions["node"][] = $permtable[$i]["permission"];	// node permission
-    debug("current permissions: ", $permissions);
+    //debug("current permissions: ", $permissions);
     return $permissions;
   }
 
@@ -41,39 +41,88 @@ class sotf_Permission
 		if(!isset($this->currentPermissions))
       return false;
     while(list($key,$value) = each($this->currentPermissions)) {
-      if($repository->getTable($key) == 'sotf_stations' && (in_array('admin', $value) || in_array('create', $value)))
-        return true;
+      $table = $repository->getTable($key);
+      if( $table == 'sotf_stations' ) { 
+        if( in_array('admin', $value) || in_array('add_prog', $value) ) {
+          return true;
+        } else debug("nem jo: $key == $table,  $value");
+      }
     }
     return false;
 	}
 
-	function hasPermission($object, $perm) {
-		if($this->currentPermissions && $this->currentPermissions[$object])
-      return in_array($perm, $this->currentPermissions[$object]) || in_array('admin', $this->currentPermissions[$object]);
-    return false;
-      //			if ($db->getOne("SELECT sotf_user_permissions.permission_id FROM sotf_user_permissions, sotf_permissions WHERE sotf_user_permissions.user_id = '$user->id' AND sotf_user_permissions.object_id = '$this->id' AND (sotf_permissions.permission = 'admin' OR sotf_permissions.permission = '$perm')"))
+	function hasPermission($object, $perm, $userid='') {
+    if(empty($userid)) {
+      if($this->currentPermissions && $this->currentPermissions[$object])
+        return in_array($perm, $this->currentPermissions[$object]) || in_array('admin', $this->currentPermissions[$object]);
+      return false;
+    } else {
+      global $db;
+      if ($db->getOne("SELECT u.permission_id FROM sotf_user_permissions u, sotf_permissions p WHERE u.user_id = '$userid' AND u.object_id = '$object' AND p.id=u.permission_id AND (p.permission = 'admin' OR p.permission = '$perm')"))
+        return true;
+      else
+        return false;
+    }
 	}
 
 	function addPermission($objectId, $userid, $perm) {
     global $db;
 		if(!is_numeric($userid) || $userid < 1)
 			raiseError("Invalid user id: '$userid'");
+    if($perm=='admin') {
+      $db->query("DELETE FROM sotf_user_permissions WHERE user_id='$userid' AND object_id='$objectId'");
+    }
+    //else {
+    //  if($this->hasPermission($objectId, 'admin', $userid))
+    //    return;
+    //}
 		$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
 		$db->query("INSERT INTO sotf_user_permissions (user_id, object_id, permission_id) VALUES($userid, '$objectId', $permission_id)");
 	}
 
-	function delPermission($objectId, $userid, $perm) {
+	function delPermission($objectId, $userid, $perm = '') {
     global $db;
 		if(!is_numeric($userid) || $userid < 1)
 			raiseError("Invalid user id: '$userid'");
-		$permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
-		$db->query("DELETE FROM sotf_user_permissions WHERE user_id = '$userid' and object_id = '$objectId' AND permission_id = $permission_id");
+    if(empty($perm)) {
+      // delete all permissions
+      $db->query("DELETE FROM sotf_user_permissions WHERE user_id = '$userid' and object_id = '$objectId'");
+    } else {
+      $permission_id = $db->getOne("SELECT id FROM sotf_permissions WHERE permission='$perm'");
+      $db->query("DELETE FROM sotf_user_permissions WHERE user_id = '$userid' and object_id = '$objectId' AND permission_id = $permission_id");
+    }
 	}
 
-	function listUsersAndPermissions($objectId) {
+  function getPermissions($objectId, $userid) {
     global $db;
-    // todo:
-		return $db->getAll("SELECT sotf_user_permissions.user_id, sotf_permissions.permission FROM sotf_user_permissions, sotf_permissions WHERE sotf_permissions.id = sotf_user_permissions.permission_id");
+		$retval = $db->getCol("SELECT p.permission FROM sotf_user_permissions u, sotf_permissions p WHERE u.object_id='$objectId' AND u.user_id='$userid' AND p.id = u.permission_id");
+    if(DB::isError($retval))
+      raiseError($retval);
+    return $retval;
+  }
+
+  function listUsersWithPermission($objectId, $perm) {
+    global $db, $user;
+		$retval = $db->getAll("SELECT u.user_id AS id FROM sotf_user_permissions u, sotf_permissions p WHERE u.object_id='$objectId' AND p.id = u.permission_id AND ( p.permission='$perm' OR p.permission='admin')");
+    for($i=0;$i<count($retval);$i++) {
+      $retval[$i]['name'] = $user->getUserName($retval[$i]['id']);
+    }
+    //debug("listNodeUsersWithPerm", $retval);
+    return $retval;
+  }
+
+	function listUsersAndPermissionsLocalized($objectId) {
+    global $db, $user, $page;
+		$plist = $db->getAll("SELECT u.user_id AS id, p.permission AS perm FROM sotf_user_permissions u, sotf_permissions p WHERE p.id = u.permission_id AND u.object_id='$objectId'");
+    if(DB::isError($retval))
+      raiseError($retval);
+    while(list(,$perm) = each($plist)) {
+      $name = $user->getUserName($perm['id']);
+      $retval[$name][] = $page->getlocalized('perm_' . $perm['perm']);
+    }
+    debug("listNodeUsersWithPerm", $retval);
+    ksort($retval);
+    return $retval;
 	}
 
 	function hasNodePermission($perm) {
@@ -112,19 +161,26 @@ class sotf_Permission
     return $retval;
 	}
 
-  // not used yet
-  /*
-	function loadObjectPermissions() {
-		global $user, $db;
-		if($user && $user->id) {
-			$id = $this->id;
-			$userid = $user->id;
-			$this->permissions = $db->getCol("SELECT permission FROM sotf_permissions s, sotf_user_permissions u WHERE u.object_id = '$id' AND u.user_id = '$userId' AND u.permission_id = s.id");
-			if(DB::isError($this->permissions))
-				raiseError($this->permissions);
-		}
-	}
-  */
+  function listStationsForEditor() {
+		if(!isset($this->currentPermissions))
+      return NULL;  // not logged in yet
+    global $db, $user;
+    $retval = $db->getAll("SELECT s.name AS name, s.id AS id FROM sotf_stations s, sotf_user_permissions u, sotf_permissions p WHERE u.user_id = '$user->id' AND u.object_id=s.id AND p.id = u.permission_id AND ( p.permission='add_prog' OR p.permission='admin')");
+    return $retval;
+  }
+
+  //
+  function myProgrammes() {
+		if(!isset($this->currentPermissions))
+      return NULL;  // not logged in yet
+    global $db, $user;
+    $sql = "SELECT p.* FROM sotf_programmes p, sotf_user_permissions u WHERE u.user_id = '$user->id' AND u.object_id=p.id ORDER BY p.entry_date DESC";
+    $plist = $db->getAll($sql);
+    foreach($plist as $item) {
+      $retval[] = new sotf_Programme($item['id'], $item);
+    }
+    return $retval;
+  }
 
 
 } // end class sotf_Permission

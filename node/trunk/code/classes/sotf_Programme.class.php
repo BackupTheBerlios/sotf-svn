@@ -1,15 +1,11 @@
-<?php //-*- tab-width: 3; indent-tabs-mode: 1; -*-
+<?php 
+// -*- tab-width: 3; indent-tabs-mode: 1; -*-
+// $Id$
 
 define("GUID_DELIMITER", ':');
 define("TRACKNAME_LENGTH", 32);
 
-/***
- * Show Class
- * purpose: to represent a SOTF SHOW :)
- * Author: Alexey Koulikov - alex@pvl.at, alex@koulikov.cc
- ************/
-
-class sotf_Programme extends sotf_NodeObjectWithPerm {
+class sotf_Programme extends sotf_ComplexNodeObject {
   
   var $topics;
   var $listenTotal;
@@ -34,9 +30,10 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
    * constructor
    */
   function sotf_Programme($id='', $data='') {
-	 $this->sotf_NodeObjectWithPerm('sotf_programmes', $id, $data);
+    $this->binaryFields = array('icon', 'jingle');
+	 $this->sotf_ComplexNodeObject('sotf_programmes', $id, $data);
 	 if($id) {
-		//$roles = $this->loadRoles();
+		$this->stationName = $this->db->getOne("SELECT name FROM sotf_stations WHERE id='" . $this->get('station_id') . "'");
 	 }
   }
   
@@ -53,9 +50,10 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
 		  $track = substr($track, 0, TRACKNAME_LENGTH);
 		$this->set('track', $track);
 		$this->generateGUID();
-		while(1) {
+		$count = 0;
+		while($count < 50) {
 		  $guid = $this->get('guid');
-		  $res = $db->getOne("SELECT count(*) FROM sotf_programmes WHERE guid='$guid'");
+		  $res = $this->db->getOne("SELECT count(*) FROM sotf_programmes WHERE guid='$guid'");
 		  if(DB::isError($res))
 			 raiseError($res);
 		  if($res==0)
@@ -64,31 +62,40 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
 		  $track++;
 		  $this->set('track', $track);
 		  $this->generateGUID();
+		  $count++;
 		}
   }
 
   function create($stationId, $track='') {
+	 $this->set('station_id', $stationId);
 	 $stationName = $this->db->getOne("SELECT name FROM sotf_stations WHERE id='" . $this->get('station_id') . "'");
 	 if(DB::isError($stationName))
 		raiseError($stationName);
 	 if(empty($stationName))
 		raiseError("station with id '$stationId' does not exist");
-    $prg = new sotf_Programme();
-	 $prg->stationName = $stationName;
-    $prg->set('station_id', $stationId);
-    $prg->set('entry_date', $date);
-    $prg->set('track', $track);
-	 $prg->getNextAvailableTrackId();
-    while(1) {
+	 $this->stationName = $stationName;
+    $this->set('entry_date', date('Y-m-d'));
+    $this->set('track', $track);
+	 $this->getNextAvailableTrackId();
+	 $count = 0;
+    while($count < 20) {
       if(parent::create()) { // this will also create the required directories via setMetadataFile !!
-        debug("created new programme", $prg->get['guid']);
-        return $prg;
+        debug("created new programme", $this->get['guid']);
+		  $this->checkDirs();
+		  $this->saveMetadataFile();
+        return true;
       }
-		$prg->getNextAvailableTrackId();
+		$this->getNextAvailableTrackId();
+		$count++;
     }
+	 raiseError("Could not create new programme");
   }
 
-  /*
+  function update() {
+	 parent::update();
+	 $this->saveMetadataFile();
+  }
+
   function loadOtherFiles() {
     if(empty($this->files)) {
       $this->files = & new sotf_FileList();
@@ -102,7 +109,6 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
       $this->audioFiles->getAudioFromDir($this->getAudioDir());
     }    
   }
-  */
 
   /** deletes the program, and all its data and files
    */
@@ -114,7 +120,7 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
 
   /** returns the directory where programme files are stored */
   function getDir() {
-    return $this->repository->rootdir . '/' . $this->data['station'] . '/' . $this->data['entry_date'] . '/' . $this->data['track'];
+    return $this->repository->rootdir . '/' . $this->stationName . '/' . $this->data['entry_date'] . '/' . $this->data['track'];
   }
 
   /** returns directory where audio files are stored for the programme */
@@ -128,7 +134,7 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
   }
 
   function getStation() {
-    return $this->data['station'];
+    return new sotf_Station($this->data['station_id']);
   }
 
   function getSeries() {
@@ -137,11 +143,6 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
 
   function isLocal() {
     return is_dir($this->getDir()); 
-  }
-
-  function isEditable() {
-    global $user;
-    return ($this->get('owner') == $user->name) || sotf_Permission::get('write', $this->getStation());
   }
 
   function exists() {
@@ -174,7 +175,7 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
     $month = $now['mon'];
     $day = $now['mday'];
     $week = date('W');
-    $station = $this->getStation();
+    $station = $this->get('station_id');
     $track = $id->trackId;
     $id = $this->id;
     $where = " WHERE id='$id' AND year='$year' AND month='$month' AND day='$day' AND week='$week'";
@@ -235,16 +236,6 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
   }
 
 
-  // fix this!
-  function myProgrammes($owner) {
-    global $db;
-    $sql = "SELECT * FROM sotf_programmes WHERE owner = '$owner' ORDER BY title, id";
-    $plist = $db->getAll($sql);
-    foreach($plist as $item) {
-      $retval[] = new sotf_Programme($item['id'], $item);
-    }
-    return $retval;
-  }
 
 
   /**
@@ -271,7 +262,7 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
 	  Checks and creates subdirs if necessary.
    */
   function checkDirs() {
-    $station = $this->getStation();
+    $station = $this->stationName;
     $dir = $this->repository->rootdir . '/' . $station;
     if(!is_dir($dir))
       raiseError("Station $station does not exist!");
@@ -355,15 +346,15 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
 
   function setAudio($filename, $copy=false) {
     global $user;
-	$filename = sotf_Utils::getFileFromPath($filename);
+	 $filename = sotf_Utils::getFileFromPath($filename);
     $source = $user->getUserDir().'/'. $filename;
     if(!is_file($source))
       raiseError("no such file: $source");
     $srcFile = new sotf_AudioFile($source);
-		$target = $this->getAudioDir() .  '/' . 'prg_' . $srcFile->getFormatFilename();
+	 $target = $this->getAudioDir() .  '/' . 'prg_' . $srcFile->getFormatFilename();
     if($srcFile->type == audio) {
       if($copy)
-         $success = copy($source,$target);
+		  $success = copy($source,$target);
       else
         $success = rename($source,$target);
       if(!$success)
@@ -431,7 +422,6 @@ class sotf_Programme extends sotf_NodeObjectWithPerm {
   }
 
   function saveMetadataFile() {
-    $this->checkDirs();
     $xml = "<xml>\n";
     foreach($this->data as $key => $value) {
       $xml = $xml . "  <$key>" . htmlspecialchars($value) . "</$key>\n";

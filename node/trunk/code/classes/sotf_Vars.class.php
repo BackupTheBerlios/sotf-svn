@@ -6,30 +6,48 @@ class sotf_Vars {
 
   var $table;
 
+  var $isInitialized = false;
+
   var $vars;
 
   function sotf_Vars($db, $table_name) {
     $this->db = $db;
     $this->table = $table_name;
+    $this->initialize();
   }
 
-  function get($variable_name) {
-    if (isset($this->vars[$variable_name]))
-    return $this->vars[$variable_name];
-  
-    $query = "SELECT value FROM sotf_vars WHERE name='$variable_name'";
-    $result = $this->db->getOne($query);
-    if(DB::isError($result)) {
-      raiseError($result->getMessage());
+  function initialize() {
+    $res = $this->db->getAll("SELECT name, value FROM $this->table");
+    if(DB::isError($res))
+      raiseError($res);
+    while(list(,$value) = each($res)) {
+      $this->vars[$value['name']] = $value['value'];
     }
-    debug("getvar", "$variable_name=$result");
-    $this->vars[$variable_name] = $result;
-    return $result;
+  }
+
+  function getAll() {
+    return $this->vars;
+  }
+
+  function get($variable_name, $defaultValue) {
+    if(isset($this->vars[$variable_name]))
+      return $this->vars[$variable_name];
+    else
+      return $defaultValue;
   }
 
   function set($name,$val) {
+    $name = sotf_Utils::magicQuotes($name);
+    $val = sotf_Utils::magicQuotes($val);
+    if(isset($this->vars[$name]))
+      $update = 1;
     $this->vars[$name] = $val;
-    sotf_Base::setData("sotf_vars", array('name' => $name, 'value' => $val), 'name');
+    if($update)
+      $result = $this->db->query("UPDATE $this->table SET value='$val' WHERE name='$name'");
+    else
+      $result = $this->db->query("INSERT INTO $this->table (name,value) VALUES('$name', '$val')");
+    if(DB::isError($result)) 
+      raiseError($result);
     debug("setvar", "$name=$val");
   }
 

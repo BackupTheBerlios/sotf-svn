@@ -89,7 +89,7 @@ class sotf_Page
 	*/
 	function getlocalizedWithParams($msg)
 	  {
-	    $loc_msg = getlocalized($msg);
+	    $loc_msg = $this->getlocalized($msg);
       //if('[[')....
       $arg_list = func_get_args();
       for ($i = 1; $i <count($arg_list); $i++)

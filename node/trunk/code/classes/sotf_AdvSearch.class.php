@@ -1,10 +1,10 @@
 <?php
-/**
-* This class represents a query for the advanced search
-*
-* @author Mate Pataki MTA SZTAKI DSD
-*
-*/
+/*
+ * This class represents a query for the advanced search
+ *
+ * @author Mate Pataki MTA SZTAKI DSD
+ *
+ */
 class sotf_AdvSearch
 {
 	var $SQLquery, $sort1, $sort2;
@@ -64,14 +64,23 @@ class sotf_AdvSearch
 
 	function GetSQLCommand()			//gives back the SQL command for the search
 	{
-		$query="SELECT * FROM sotf_programmes WHERE";			//begining of the SQL command
-		$max = count($this->SQLquery);
+		global $lang;
+		$query="SELECT programmes.* FROM (";
+		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station FROM sotf_programmes";
+		$query.=" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id";
+		$query.=") as programmes WHERE";
+		$max = count($this->SQLquery);					//all rows of the advsearch
 		for($i = 0; $i < $max ;$i++)		//go through all terms
 		{
-			if ($i != 0) $query = $query." ".$this->SQLquery[$i][0];
+			if ($i != 0) $query = $query." ".$this->SQLquery[$i][0];	//AND or OR words
 			if ( (($this->SQLquery[$i][0] == "AND") || ($i == 0)) && ($this->SQLquery[$i+1][0] == "OR") ) $query = $query." (";	//set begining of round bracket
 			if ($this->SQLquery[$i][4] == "date") $query = $query." ".$this->SQLquery[$i][1];		//field name
-			else $query = $query." coalesce(".$this->SQLquery[$i][1].",'')";		//field name
+			elseif ($this->SQLquery[$i][1] == "topic")
+				$query = $query." (sotf_programmes.id = sotf_prog_topics.prog_id".
+				" and sotf_prog_topics.topic_id = sotf_topics.topic_id".
+				" and sotf_topics.language = '$lang'".
+				" and sotf_topics.topic_name";
+			else $query = $query." coalesce(".$this->SQLquery[$i][1].",'')";		//field name (coalesce => if value NULL terurns '')
 			$set = false;
 			switch ($this->SQLquery[$i][2]) {			//= < > != ...
 			    case "bigger":
@@ -113,9 +122,11 @@ class sotf_AdvSearch
 					}
 				else $query = $query." '".$this->SQLquery[$i][3]."'";	//value
 			}
+			if ($this->SQLquery[$i][1] == "topic") $query.=")";
 			
 			if (($this->SQLquery[$i][0] == "OR") && ($this->SQLquery[$i+1][0] != "OR")) $query = $query." )";		//set end of round bracket
 		}
+//		$query = $query." LEFT JOIN sotf_topics ON sotf_topics.topic_id = sotf_programmes.??id";
 		$query = $query." ORDER BY ".$this->sort1.", ".$this->sort2;			//ISBN DESC, BOOK_TITLE 
 		return $query;
 	}
@@ -143,6 +154,9 @@ class sotf_AdvSearch
 			$new[4] = "string";
 		        break;
 		    case "track":
+			$new[4] = "string";
+		        break;
+		    case "topic":
 			$new[4] = "string";
 		        break;
 		    case "entry_date":
@@ -257,6 +271,7 @@ class sotf_AdvSearch
 		$SQLfiels[language] = $page->getlocalized("language");
 		$SQLfiels[author] = $page->getlocalized("author");
 		$SQLfiels[title] = $page->getlocalized("title");
+		$SQLfiels[topic] = $page->getlocalized("topic");
 		$SQLfiels[keywords] = $page->getlocalized("keywords");
 		$SQLfiels[length] = $page->getlocalized("length");
 		$SQLfiels[series] = $page->getlocalized("series");
@@ -278,6 +293,14 @@ class sotf_AdvSearch
 		return $Languages;
 	}
 
+	function GetStations()		//returns all the stations
+	{
+		$stationsarray = sotf_Station::listStationNames();
+		$max = count($stationsarray);
+		for($i=0; $i<$max;$i++) $Stations[$stationsarray[$i][id]] = $stationsarray[$i][name];
+		return $Stations;
+	}
+
 	function GetEQdate()		//returns EQ options for dates
 	{
 		global $page;
@@ -293,7 +316,7 @@ class sotf_AdvSearch
 		global $page;
 		$EQstring[contains] = $page->getlocalized("contains");
 		$EQstring[begins_with] = $page->getlocalized("begins_with");
-		$EQstring[equals] = $page->getlocalized("is");
+		$EQstring[is] = $page->getlocalized("is");
 		$EQstring[does_not_contain] = $page->getlocalized("does_not_contain");
 		$EQstring[is_not_equal] = $page->getlocalized("is_not_equal");
 		return $EQstring;

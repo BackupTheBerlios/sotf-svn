@@ -99,6 +99,44 @@ function GetPerm($filename, $option)		//tries to write or read files and directo
 	else return "ERROR ".$option." unknown in GetPerm";	////bad option parameter
 }
 
+function addParent($name, $topic_name = "", $lang = "en")
+{
+	$x = new sotf_NodeObject("sotf_topic_tree_defs");
+	$x->set('supertopic', 0);
+	$x->set('name', $name);
+	$x->create();
+	$id = $x->getID();
+	if ($topic_name != "")
+	{
+		$y = new sotf_NodeObject("sotf_topics");
+		$y->set('topic_id', $id);
+		$y->set('language', $lang);
+		$y->set('topic_name', $topic_name);
+		$y->create();
+		//print($id);
+	}
+	return $id;
+}
+
+function addChild($parent, $name, $topic_name = "", $lang = "en")
+{
+	$x = new sotf_NodeObject("sotf_topic_tree_defs");
+	$x->set('supertopic', $parent);
+	$x->set('name', $name);
+	$x->create();
+	$id = $x->getID();
+	if ($topic_name != "")
+	{
+		$y = new sotf_NodeObject("sotf_topics");
+		$y->set('topic_id', $id);
+		$y->set('language', $lang);
+		$y->set('topic_name', $topic_name);
+		$y->create();
+		//print($id);
+	}
+	return $x->getID();
+}
+
 
 /*
 Initial parameters
@@ -133,6 +171,9 @@ $install_reload = $HTTP_POST_VARS["reload"];		//Reload config.inc.php button
 $install_createdb = $HTTP_POST_VARS["createdb"];	//Create sadm db button
 $install_writeback_sadm = $HTTP_POST_VARS["writeback_sadm"];	//write sadm connection params to config.inc.php
 $install_writeback_node = $HTTP_POST_VARS["writeback_node"];	//write node connection params to config.inc.php
+
+$install_delete_topic = $HTTP_POST_VARS["delete_topic"];	//delete topic tree
+$install_create_topic = $HTTP_POST_VARS["create_topic"];	//create topic tree
 
 
 $install_color = $HTTP_POST_VARS["color"];		//color values for the cells
@@ -506,6 +547,43 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	if ($install_color[$id] == $install_red) print('<DIV ALIGN="center"><BR /><INPUT type="submit" name="createdb" value="Create NODE db"></DIV>');
 	PrintButton($id);
 
+
+	$id = 7;	//////////////////////////Test 7
+	if (RunTest($id, "TopicTree", 6) OR isset($install_create_topic) OR isset($install_delete_topic))
+	{
+		if (isset($install_create_topic))
+		{
+			require("init.inc.php");
+		}
+		if (isset($install_delete_topic))
+		{
+			$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
+			$sql = "DELETE FROM sotf_topic_tree_defs";
+			$result = @pg_query($conn, $sql);
+			@pg_close($conn);		//close old connection
+		}
+		$conn = @pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
+		$sql = "SELECT COUNT(*) as rows FROM sotf_topic_tree_defs";
+		$result = @pg_query($conn, $sql);
+		$count = pg_fetch_array ($result);
+		@pg_close($conn);		//close old connection
+		if ($count["rows"] == 0)
+		{
+			$install_test_result[$id] = "Topic tree is empty";
+			$install_color[$id] = $install_red;
+		}
+		else
+		{
+			$install_test_result[$id] = "OK";
+			$install_color[$id] = $install_green;
+		}
+	}
+	PrintTitle($id);
+	print('<DIV ALIGN="center"><BR />
+	<INPUT type="submit" name="delete_topic" value="Delete topic tree">
+	<INPUT type="submit" name="create_topic" value="Create topic tree">
+	</DIV>');
+	PrintButton($id);
 
 /*
 	$id = ;	//////////////////////////Test 

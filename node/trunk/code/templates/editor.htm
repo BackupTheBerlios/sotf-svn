@@ -12,9 +12,17 @@
       {html_options values=$USER_AUDIO_FILES|escape output=$USER_AUDIO_FILES selected=$FNAME}
 </select>
 
+{ if count($STATIONS)==1 }
+
+<input type="hidden" name="station" value="{$STATIONS[0].id}">
+
+{ else }
 <select name="station">
-    {html_options values=$STATIONS output=$STATIONS selected=$STATION}
+        {foreach from=$STATIONS item=station}
+        <option value="{$station.id}" >{$station.name}</option>
+        {/foreach}
 </select>
+{/if}
 
 <input type="submit" name="addprog" value="{#add_programme#}">
 

@@ -247,6 +247,16 @@ CREATE TABLE "sotf_links" (
 	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
+CREATE SEQUENCE "sotf_topic_tree_defs_seq";
+
+CREATE TABLE "sotf_topic_tree_defs" (
+-- defines each node in topic trees used for classifying programmes
+-- REPLICATED
+	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
+	"supertopic" varchar(12) DEFAULT '0',
+	"name" varchar(100)
+);
+
 CREATE SEQUENCE "sotf_topic_trees_seq";
 
 CREATE TABLE "sotf_topic_trees" (
@@ -254,16 +264,10 @@ CREATE TABLE "sotf_topic_trees" (
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
 	"tree_id" int2 UNIQUE NOT NULL,
+	"subtree_id" varchar(12) REFERENCES sotf_topic_tree_defs(id),
+	"name" varchar(100) UNIQUE NOT NULL,
+	"description" text,
 	"url" varchar(100)
-);
-
-CREATE SEQUENCE "sotf_topic_tree_defs_seq";
-
-CREATE TABLE "sotf_topic_tree_defs" (
--- defines the topic trees used for classifying programmes
--- REPLICATED
-	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-	"supertopic" varchar(12) DEFAULT '0'
 );
 
 CREATE SEQUENCE "sotf_topics_seq";
@@ -277,6 +281,13 @@ CREATE TABLE "sotf_topics" (
 	"topic_name" varchar(255) NOT NULL,
 	CONSTRAINT "sotf_topics_u" UNIQUE ("topic_id", "language"),
 	FOREIGN KEY("topic_id") REFERENCES sotf_topic_tree_defs("id") ON DELETE CASCADE
+);
+
+CREATE TABLE "sotf_topics_counter" (
+-- defines the number of programmes in the topic
+	"id" serial PRIMARY KEY,
+	"topic_id" varchar(12) NOT NULL,
+	"number" int2
 );
 
 CREATE SEQUENCE "sotf_prog_topics_seq";
@@ -330,11 +341,9 @@ CREATE SEQUENCE "sotf_deletions_seq";
 
 CREATE TABLE "sotf_deletions" (
 -- remember and propagate deletions to other nodes
--- deletions of many table rows are done via foreign keys!!
 -- REPLICATED
 	"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-	"del_id" varchar(12) REFERENCES sotf_node_objects(id) NOT NULL,
-	CONSTRAINT "sotf_del_u" UNIQUE ("del_id")
+	"del_id" varchar(12) UNIQUE NOT NULL -- REFERENCES sotf_node_objects(id)
 );
 
 CREATE TABLE "sotf_playlists" (
@@ -414,11 +423,13 @@ INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'admin');
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('2', 'change');
 SELECT nextval('sotf_permissions_id_seq');
-INSERT INTO "sotf_permissions" ("id", "permission") VALUES('3', 'change_parts');
+INSERT INTO "sotf_permissions" ("id", "permission") VALUES('3', 'add_prog');
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('4', 'create');
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('5', 'delete');
+SELECT nextval('sotf_permissions_id_seq');
+INSERT INTO "sotf_permissions" ("id", "permission") VALUES('6', 'authorize');
 SELECT nextval('sotf_permissions_id_seq');
 
 INSERT INTO "sotf_user_prefs" ("id", "username") VALUES(1, 'admin');

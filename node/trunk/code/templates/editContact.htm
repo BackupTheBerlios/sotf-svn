@@ -1,0 +1,97 @@
+
+<h3>{#edit_contact#}</h3>
+
+<div align="left"><b>{#general_data#}</b></div>
+<table width="100%" bgcolor="{#editorBgColor1#}">
+<tr><td>
+	<form method="post">
+            <input type="hidden" name="id" value="{$CONTACT_ID}">
+	<table>
+		<tr>
+			<td>{#name#}:</td>
+			<td>{$CONTACT_DATA.name}</td>
+		</tr>
+		<tr>
+			<td>{#alias#}:</td>
+			<td><input size="50" maxlength="100" name="alias" value="{$CONTACT_DATA.alias}"></td>
+		</tr>
+		<tr>
+			<td>{#acronym#}:</td>
+			<td><input size="30" maxlength="30" name="acronym" value="{$CONTACT_DATA.acronym}"></td>
+		</tr>
+		<tr>
+			<td>{#intro#}:</td>
+			<td><textarea cols="50" rows="10" name="intro">{$CONTACT_DATA.intro}</textarea></td>
+		</tr>
+		<tr>
+			<td>{#email#}:</td>
+			<td><input size="50" maxlength="100" name="email" value="{$CONTACT_DATA.email}"></td>
+		</tr>
+		<tr>
+			<td>{#address#}:</td>
+			<td><input size="50" maxlength="255" name="address" value="{$CONTACT_DATA.address}"></td>
+		</tr>
+		<tr>
+			<td>{#phone#}:</td>
+			<td><input size="20" maxlength="20" name="phone" value="{$CONTACT_DATA.phone}"></td>
+		</tr>
+		<tr>
+			<td>{#cellphone#}:</td>
+			<td><input size="20" maxlength="20" name="cellphone" value="{$CONTACT_DATA.cellphone}"></td>
+		</tr>
+		<tr>
+			<td>{#fax#}:</td>
+			<td><input size="20" maxlength="20" name="fax" value="{$CONTACT_DATA.fax}"></td>
+		</tr>
+		<tr>
+			<td>{#url#}:</td>
+			<td><input size="50" maxlength="255" name="url" value="{$CONTACT_DATA.url}"></td>
+		</tr>
+	</table>
+	<input type="submit" name="save" value="{#save#}">
+	<input type="submit" name="finish1" value="{#finish#}">
+	</form>
+</td></tr>
+</table>
+
+<p></p>
+<div align="left"><b><a name="logo">{#Icon#}</a></b></div>
+<table width="100%" bgcolor="{#editorBgColor1#}">
+<tr><td>
+<p></p>
+	{if $USERFILES}
+	<form method="post" name="userfiles">
+{literal}<script language="javascript">
+function getSelected() {
+     return document.userfiles['filename'].options[document.userfiles['filename'].selectedIndex].value;
+}
+</script>{/literal}
+
+	<input type="hidden" name="id" value="{$CONTACT_ID}">
+	<p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
+	<input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
+	<input type="submit" name="setlogo" value="{#set_icon#}">
+<br \><small>{#userfiles_expl#}</small>
+	</form>
+	{else}
+	<p>{#no_files#}</p>
+	{/if}
+  <small>
+          <form enctype="multipart/form-data" method="post">
+            <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+            <input name="userfile" type="file" />
+            <input type="submit" name="upload" value="{#upload_file#}" />
+            <br />{#upload_expl#}
+          </form>
+  </small>
+	{if $LOGO}
+		<table><tr><td>{#icon#}:</td><td><img src="getIcon.php/icon.png?id={$CONTACT_ID}" border="1"></td></tr></table>
+	{else}
+		{#no_icon#}
+	{/if}
+  <form method="post">
+      <input type="hidden" name="id" value="{$CONTACT_ID}">
+      <input type="submit" name="finish2" value="{#finish#}">
+  </form>
+</td></tr>
+</table>

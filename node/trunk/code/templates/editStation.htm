@@ -10,96 +10,130 @@
 </script>
 {/literal}
 
-</script>
-{if $LANG == "de"}
-<h3>Edit '{$STATION}'</h3>
-{else}
-<h3>Edit '{$STATION}'</h3>
-{/if}
+<h3>{#edit_station#}</h3>
 
 {if $STATION_MANAGER}
-	{if $STATUS}
-	<p>{$STATUS}</p>
-	{/if}
 
-	<form method="post" action="stations.php">
+
+<div align="left"><b>{#general_data#}</b></div>
+<table width="100%" bgcolor="{#editorBgColor1#}">
+<tr><td>
+	<form method="post">
 	<table>
 		<tr>
 			<td>{#station_name#}:</td>
-			<td><input name="station"{if $STATION} value="{$STATION}"{/if}></td>
+			<td><b><a href="showStation.php?stationid={$STATION_ID}">{$STATION}</a></b></td>
 		</tr>
 		<tr>
 			<td>{#description#}:</td>
-			<td><textarea name="desc">{$STATION_DATA.description}</textarea></td>
+			<td><textarea cols="50" rows="10" name="desc">{$STATION_DATA.description}</textarea></td>
 		</tr>
 	</table>
 	<input type="submit" name="save" value="{#save#}">
 	</form>
-	<hr>
-	<h3><a name="admin_users">{#admin_users#}</a></h3>
-	{if $LANG == "de"}
-	<p>Users in station '{$STATION}'</p>
-	{else}
-	<p>Users in station '{$STATION}'</p>
-	{/if}
-	{if $OKADDUSERGROUP}<p><font color="red"><b>{#ok_addusergroup#}</b></font></p>{/if}
-	{if $ERRORADDUSERGROUP}<p><font color="red"><b>{#error_addusergroup#}</b></font></p>{/if}
-	{if $OKDELUSERGROUP}<p><font color="red"><b>{#ok_delusergroup#}</b></font></p>{/if}
-	{if $ERRORDELUSERGROUP}<p><font color="red"><b>{#ok_delusergroup#}</b></font></p>{/if}
-	{if $OKDELUSERSTATION}<p><font color="red"><b>{#ok_deluserstation#}</b></font></p>{/if}
-	{if $ERRORDELUSERSTATION}<p><font color="red"><b>{#error_deluserstation#}</b></font></p>{/if}
+</td></tr>
+</table>
 
-	{if $USERS}
+<p></p>
+<div align="left"><b>{#Roles#}</b></div>
+<table width="100%" bgcolor="{#editorBgColor1#}">
+<tr><td>
+
+	{if $ROLES}
 		<table cellspacing="0" cellpadding="2" border="1">
-		<tr><th>{#username#}</th><th>{#groups#}</th><th>{#actions#}</th></tr>
 		{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
-		{foreach item=user from=$USERS}
-			<tr bgcolor="{cycle}"><td>{$user.username}</td><td>
-			{section name=i loop=$user.groups}
-				{$user.groups[i]}{if ! $smarty.section.i.last}, {/if}
-			{/section}</td>
-			<td><a href="editStation.php?deluserstation=1&username={$user.username}&station={$STATION}">{#delete#}</a></td></tr>
+		<tr bgcolor="{cycle}"><th>{#Role#}</th><th>{#Contact#}</th><th>{#actions#}</th></tr>
+		{foreach item=item from=$ROLES}
+			<tr bgcolor="{cycle}">
+            <td>
+              {$item.role_name}
+            </td>
+            <td>
+              {$item.contact_data.name}
+            </td>
+            <td>
+              <a href="javascript:popup('editRole.php?roleid={$item.id}&objectid={$STATION_ID}','{#edit_role#}',350,400,false)">{#change#}</a>
+              <a href="editStation.php?delrole=1&roleid={$item.id}&stationid={$STATION_ID}">{#delete#}</a>
+            </td>
+      </tr>
+		{/foreach}
+		</table>
+	{else}
+		<p>{#no_roles#}</p>
+	{/if}
+     <p>
+          <a href="javascript:popup('editRole.php?new=1&objectid={$STATION_ID}','{#edit_role#}',400,400,false)">{#add_new_role#}</a>
+     </p>
+
+</td></tr>
+</table>
+
+<p></p>
+<div align="left"><b>{#access_permissions#}</b></div>
+<table width="100%" bgcolor="{#editorBgColor1#}">
+<tr><td>
+
+	{if $PERMISSIONS}
+		<table cellspacing="0" cellpadding="2" border="1">
+		{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+		<tr bgcolor="{cycle}"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
+		{foreach item=user key=username from=$PERMISSIONS}
+			<tr bgcolor="{cycle}">
+            <td>{$username}</td>
+            <td>
+              {section name=i loop=$user}
+              {$user[i]}{if ! $smarty.section.i.last}, {/if}
+              {/section}
+            </td>
+            <td>
+              <a href="javascript:popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)">{#change#}</a>
+              <a href="editStation.php?delperm=1&username={$username|escape}&stationid={$STATION_ID}">{#delete#}</a>
+            </td>
+      </tr>
 		{/foreach}
 		</table>
 	{else}
 		<p>{#no_users#}</p>
 	{/if}
-	<form method="post" name="adminuser">
-	<input type="hidden" name="station" value="{$STATION}">
-	<table>
-		<tr>
-			<td>{#username#}:</td>
-			<td><input name="username"> <a href="listUser.php" target="_blank" onClick="window.open('listUser.php','{#userlist#}','menubar=no, status=no, toolbar=no, width=300'); return false;">{#userlist#}</a></td>
-		</tr>
-		<tr>
-			<td>{#groups#}:</td>
-			<td><select name="group">{html_options values=$GROUPS output=$GROUPS selected=$GROUP}</select></td>
-		</tr>
-	</table>
-	<input type="submit" name="addusergroup" value="{#addusergroup#}">
-	<input type="submit" name="delusergroup" value="{#delusergroup#}">
+	<form method="post" name="form1">
+	<input type="hidden" name="stationid" value="{$STATION_ID}">
+    {#username#}: <input name="username"> 
+              <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username='+escape(document.form1['username'].value),'{#Permissions#}',350,400, false)">
+          <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
 	</form>
-	<hr>
-	<h3><a name="manage_files">{#manage_files#}</a></h3>
-	{if $OKLOGO}<p><font color="red"><b>{#ok_logo#}</b></font></p>{/if}
-	{if $ERRORLOGO}<p><font color="red"><b>{#error_logo#}</b></font></p>{/if}
-	{if $OKJINGLE}<p><font color="red"><b>{#ok_jingle#}</b></font></p>{/if}
-	{if $ERRORJINGLE}<p><font color="red"><b>{#error_jingle#}</b></font></p>{/if}
+
+</td></tr>
+</table>
+
+<p></p>
+<div align="left"><b><a name="logo">{#logos_and_jingles#}</a></b></div>
+<table width="100%" bgcolor="{#editorBgColor1#}">
+<tr><td>
+<p></p>
 	{if $USERFILES}
 	<form method="post" name="userfiles">
 	<input type="hidden" name="okURL" value="{$OKURL}">
-	<input type="hidden" name="station" value="{$STATION}">
-	<p>{#userfiles#}:</p>
-	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
+	<input type="hidden" name="stationid" value="{$STATION_ID}">
+	<p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
 	<input type="submit" name="view" value="{#view#}">
 	<input type="submit" name="setjingle" value="{#set_jingle#}">
 	<input type="submit" name="setlogo" value="{#set_logo#}">
+<br \><small>{#userfiles_expl#}</small>
 	</form>
 	{else}
 	<p>{#no_files#}</p>
 	{/if}
+  <small>
+          <form enctype="multipart/form-data" method="post">
+            <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+            <input type="hidden" name="stationid" value="{$STATION_ID}" />
+            <input name="userfile" type="file" />
+            <input type="submit" name="upload" value="{#upload_file#}" />
+            <br />{#upload_expl#}
+          </form>
+  </small>
 	{if $LOGO}
-		<table><tr><td>{#logo#}:</td><td><img src="{$LOGO}" border="1"></td></tr></table>
+		<table><tr><td>{#logo#}:</td><td><img src="getIcon.php/icon.png?id={$STATION_ID}" border="1"></td></tr></table>
 	{else}
 		{#no_logo#}
 	{/if}
@@ -120,3 +154,5 @@
 	</table>
 {/if}
 
+</td></tr>
+</table>

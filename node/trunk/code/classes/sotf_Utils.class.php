@@ -207,7 +207,17 @@ class sotf_Utils
 		return $val;
 	}
 	
-	
+  /** this is used before saving a string into SQL database */
+	function magicQuotes($str) {
+    return addslashes(stripslashes($str));
+  }
+
+  /** this clears not allowed chars from a string (e.g. station name, series name) and truncates to allowed length */
+  function makeValidName($str, $len) {
+    $retval = preg_replace("/[^a-zA-Z0-9_-]/","_",$str);
+    return substr($retval, 0, $len);
+  }
+
 	//function   : clean  -> removes nasty things that hurt databases
 	//Parameters : $dirty -> string or array to clean up
 	//             $allow_html -> if true, then we don't convert HTML characters

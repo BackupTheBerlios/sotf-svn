@@ -1,9 +1,41 @@
-<script language="Javascript" src="popup.js"></script>
 
-{if ! $SERIES}
+<h3 align="left">{#station#}: {$STATION}</h3>
 
-	<h3>{#station#}: {$STATION}</h3>
+<table width="100%" bgcolor="{#editorBgColor1#}">
+<tr><td width="5">
+	{if $LOGO}
+		<img src="getIcon.php/icon.png?id={$STATION_ID}">
+	{/if}
+</td><td>
+          {if $STATION_DATA.description }
+          <p>{$STATION_DATA.description}</p>
+          {/if}
 
+          {if $ROLES}
+          <table cellspacing="0" cellpadding="2">
+            {foreach item=item from=$ROLES}
+            <tr>
+              <td>
+                {$item.role_name}: {$item.contact_data.name}
+                {if $item.contact_data.url}<a href="{$item.contact_data.url}">{$item.contact_data.url}</a>
+                {elseif $item.contact_data.email}<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email}</a>
+                {/if}
+                <a href="javascript:popup('showContact.php?id={$item.contact_data.id}','{#show_contact#}',400,400)">{#More#}</a>
+              </td>
+            </tr>
+            {/foreach}
+          </table>
+          {/if}
+
+          {if hasPerm($STATION_ID,'change') }
+          <p><a href="editStation.php?stationid={$STATION_ID}">{#edit_station#}</a></p>
+          {/if}
+
+</td></tr>
+</table>
+
+
+<!--
 	<h4><a name="series">{#series#}</a></h4>
 
 	{if $EDIT_PERMISSION}
@@ -26,24 +58,8 @@
 	{else}
 		<p>{#no_series#}</p>
 	{/if}
-	{if $lang == "de"}
-	<h4><a name="programmes">Radio programmes</a></h4>
-	{else}
-	<h4><a name="programmes">Radio programmes</a></h4>
-	{/if}
-{else}
-	<h3>Series: {$SERIESDATA.title}</h3>
-	<h4>Station: <a href="listProgrammes.php?station={$STATION}">{$STATION}</a></h4>
+-->
 
-	{if $SERIESDATA.description}
-		<p>{$SERIESDATA.description}</p>
-	{/if}
-	{if $lang == "de"}
-	<h4><a name="programmes">Radio programmes in series</a></h4>
-	{else}
-	<h4><a name="programmes">Radio programmes in series</a></h4>
-	{/if}
-{/if}
 {if $ITEM_LIST}
 	{section name=i loop=$ITEM_LIST}
 		{if not $smarty.section.i.first}<br>{/if}

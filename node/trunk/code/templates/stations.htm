@@ -1,66 +1,56 @@
+{literal}
+<script>
 
-{if $NODE_ADMIN}
-		
-	<h3>{#create_station#}</h3>
-	<form method="post">
-	<table>
-		<tr>
-			<td>{#station_name#}:</td>
-			<td><input name="station"{if $STATION} value="{$STATION}"{/if}></td>
-		</tr>
-		<tr>
-			<td>{#description#}:</td>
-			<td><textarea name="desc">{$DESC}</textarea></td>
-		</tr>
-	</table>
-	<input type="submit" name="new" value="{#create#}">
-	</form>
-	<hr>
-	<h3>{#station_managers#}</h3>
-	{if $USERS}
-		<table cellspacing="0" cellpadding="2" border="1">
-		{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
-		{section name=i loop=$USERS}
-			<tr bgcolor="{cycle}"><td>{$USERS[i].name}</td>
-         {if ! $smarty.section.i.first || ! $smarty.section.i.last}
-             <td><a href="stations.php?userid={$USERS[i].id}&delstationmanager=1">{#delete#}</a></td>
-         {/if}
-      </tr>
-		{/section}
-		</table>
-	{else}
-		<p>{#no_users#}</p>
-	{/if}
+function deleteStationConfirm(url) {
+    if(confirm("{/literal}{#delete_station_confirm#}{literal}"))
+       document.location = url;
+}
 
-	<form method="post" name="adminuser">
-	<table>
-		<tr>
-			<td>{#username#}:</td>
-			<td><input name="username"> <a href="listUser.php" target="_blank" onClick="window.open('listUser.php','{#userlist#}','menubar=no, status=no, toolbar=no, width=300'); return false;">{#userlist#}</a></td>
-		</tr>
-	</table>
-	<input type="submit" name="addstationmanager" value="{#addstationmanager#}">
-	<input type="submit" name="delstationmanager" value="{#delstationmanager#}">
-	</form>
-	<hr>
+</script>
+{/literal}
+
+<div align="left">
+
+{if hasPerm('node', 'create') or hasPerm('node', 'config')}
+  <table width="40" border="0" cellspacing="0" cellpadding="2">
+    <tr> 
+      <td nowrap bgcolor="{#adminBgColor#}"><strong>{#admin_tasks#}</strong>
+        {if hasPerm('node', 'create') }
+          <a href="createStation.php">{#create_station#}</a>
+        {/if}
+        {if hasPerm('node', 'config') }
+          <a href="editRightsNode.php">{#edit_node_rights#}</a>
+        {/if}
+      </td>
+    </tr>
+  </table>
 {/if}
+
+<h3>{#stations#}</h3>
+
+{cycle values="#EEEEEE,#FFFFFF" print=false advance=false}
+
 {if count($STATIONS) gt 0 }
-	<h3>{#stations#}</h3>
 	<table border="0" cellspacing="0" cellpadding="2">
 	{section name=station loop=$STATIONS }
-		<tr valign="top" bgcolor="#EEEEEE">
+		<tr valign="top" bgcolor="{cycle}">
 			<td>{if $STATIONS[station].hasLogo }
-				<a href="listProgrammes.php?&stationid={$STATIONS[station].id}"><img src="getIcon.php/icon.png?id={$STATIONS[station].id}" border="0"></a>
+				<a href="showStation.php?&stationid={$STATIONS[station].id}"><img src="getIcon.php/icon.png?id={$STATIONS[station].id}" border="0"></a>
 			{else} <img src="{$IMAGEDIR}/transp.gif">
 			{/if}
       </td>
-			<td><a href="listProgrammes.php?&stationid={$STATIONS[station].id}">{$STATIONS[station].name}</a> ({$STATIONS[station].numProgs})
-			<br>{$STATIONS[station].description}
-      <br>
-			{if $NODE_ADMIN and $STATIONS[station].isLocal}
-					<a href="stations.php?delete=1&station={$STATIONS[station].id}">{#delete#}</a>
+			<td><a href="showStation.php?&stationid={$STATIONS[station].id}">{$STATIONS[station].name}</a> ({$STATIONS[station].numProgs})
+      {if $STATIONS[station].managers}
+          <br \>{#managed_by#} {foreach from=$STATIONS[station].managers item=manager}{$manager.name} {/foreach}
+      {/if}
+      {if !empty($STATIONS[station].description)}
+			   <br />{$STATIONS[station].description}
+      {/if}
+      <br />
+			{if hasPerm('node','delete')  and $STATIONS[station].isLocal}
+					<a href="javascript:deleteStationConfirm('stations.php?delete=1&station={$STATIONS[station].id}')">{#delete#}</a>
 			{/if}
-			{if $STATIONS[station].stationManager and $STATIONS[station].isLocal}
+			{if hasPerm($STATIONS[station].id, 'change') and $STATIONS[station].isLocal}
 					<a href="editStation.php?&stationid={$STATIONS[station].id}">{#edit#}</a>
 			{/if}
       </td>
@@ -71,3 +61,4 @@
 	<p>{#no_station#}</p>
 {/if}
 
+</div>

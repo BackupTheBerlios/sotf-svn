@@ -3,12 +3,13 @@
 // $Id$
 
 require_once($classdir . '/sotf_NodeObject.class.php');
-require_once($classdir . '/sotf_NodeObjectWithPerm.class.php');
+require_once($classdir . '/sotf_ComplexNodeObject.class.php');
 require_once($classdir . '/sotf_Node.class.php');
 require_once($classdir . '/sotf_Neighbour.class.php');
 require_once($classdir . '/sotf_Station.class.php');
 require_once($classdir . '/sotf_Series.class.php');
 require_once($classdir . '/sotf_Programme.class.php');
+require_once($classdir . '/sotf_Contact.class.php');
 //require_once($classdir . '/sotf_PList.class.php');
 //require_once($classdir . '/sotf_Metadata.class.php');
 
@@ -39,6 +40,13 @@ class sotf_Repository {
 									"sotf_stats" => "sx"
 									);
 
+  var $codeToClass = array( 
+									"co" => "sotf_Contact",
+									"st" => "sotf_Station",
+									"se" => "sotf_Series",
+									"pr" => "sotf_Programme",
+									);
+
   var $rootdir;
   var $db;
 
@@ -51,9 +59,9 @@ class sotf_Repository {
     $this->rootdir = $rootDir;
     $this->db = $db;
 	 // load roles
-	 $this->roles = $db->getAll("SELECT id, name FROM sotf_role_names WHERE language='$lang'");
+	 $this->roles = $db->getAll("SELECT role_id AS id, name FROM sotf_role_names WHERE language='$lang'");
 	 // load genres
-	 $this->genres = $db->getAll("SELECT id, name FROM sotf_genres WHERE language='$lang'");
+	 $this->genres = $db->getAll("SELECT genre_id AS id, name FROM sotf_genres WHERE language='$lang'");
   }
 
   function getTableCode($tablename) {
@@ -68,13 +76,28 @@ class sotf_Repository {
     return array_search($tc, $this->tableCodes);
   }
 
+  function getObject($objectId) {
+    $tc = substr($objectId, 3,2);
+    $class = $this->codeToClass[$tc];
+    if($class) {
+      return new $class($objectId);
+    } else {
+      $table = array_search($tc, $this->tableCodes);
+      return new sotf_NodeObject($table, $objectId);
+    }
+  }
+
   //TODO
   function getTopicTree($language) {
 
   }
 
   function getRoleName($id) {
-	 return $this->roles[$id];
+    while(list(,$r) = each($this->roles)) {
+      if($r['id']==$id)
+        return $r['name'];
+    }
+    return "UNKNOWN_ROLE";
   }
 
   function getRoles() {

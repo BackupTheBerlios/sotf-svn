@@ -24,6 +24,10 @@ class sotf_Object {
 	/** if it needs saving */
 	var $changed;
 
+	/** list of fields which are treated as binary (image, sound) */
+	var $binaryFields = array();
+
+
 	/**
 	 * Constructor
 	*
@@ -32,7 +36,7 @@ class sotf_Object {
 	 */
 	function sotf_Object($tablename, $id='', $data='') {
 		global $repository;
-    //debug("constructor", 'sotf_Object');
+		//debug("constructor", 'sotf_Object');
 		$this->repository=$repository;
 		$this->db = $repository->db;
 		$this->tablename = $tablename;
@@ -59,13 +63,14 @@ class sotf_Object {
 	 }
 	}
 
+	/** updates fields in 'data' except binary fields */
 	function update() {
 	 while(list($key,$val)=each($this->data)){
-		if($key != $this->idKey){
+		if($key != $this->idKey && !in_array($key, $this->binaryFields)) {
 			if($val === NULL){
 			 $my_sql[] = $key . " = NULL";
 			}else{
-			 $my_sql[] = $key . " = '" . $val . "'";
+			 $my_sql[] = $key . " = '" . sotf_Utils::magicQuotes($val) . "'";
 			}
 		}
 	 }
@@ -80,30 +85,35 @@ class sotf_Object {
 	 }
 	}
 
+	/** creates db record with all fields from 'data' except binary fields */
 	function create() {
-	 while(list($key,$val)=each($this->data)){
-		$keys[] = $key;
-		if($val === NULL){
-			$values[] = "NULL";
-		}else{
-			$values[] = "'" . $val . "'";
+		while(list($key,$val)=each($this->data)){
+			if(in_array($key, $this->binaryFields))
+				continue;
+			$keys[] = $key;
+			if($val === NULL){
+				$values[] = "NULL";
+			}else{
+				$values[] = "'" . sotf_Utils::magicQuotes($val) . "'";
+			}
 		}
-	 }
-	 if($this->id && !in_array($this->idKey, $keys)) {
-		$keys[] = $this->idKey;
-		$values[] = "'" . $this->id . "'";
-	 }
-	 $keys = implode(",",$keys);
-	 $values = implode(",",$values);
-	 
-	 //execute query
-	 $res = $this->db->query("INSERT INTO " . $this->tablename . "(" . $keys . ") VALUES(" . $values . ")");
-	 
-	 //if the query is dead, stop executio, output error
-	 if(DB::isError($res)){
-     addError($res);
-     return false;
-	 }
+    if(empty($this->id))
+      raiseError("no id given");
+		if(!$keys || !in_array($this->idKey, $keys)) {
+			$keys[] = $this->idKey;
+			$values[] = "'" . sotf_Utils::magicQuotes($this->id) . "'";
+		}
+		$keys = implode(",",$keys);
+		$values = implode(",",$values);
+		
+		//execute query
+		$res = $this->db->query("INSERT INTO " . $this->tablename . "(" . $keys . ") VALUES(" . $values . ")");
+		
+		//if the query is dead, stop executio, output error
+		if(DB::isError($res)){
+			addError($res);
+			return false;
+		}
 		return true;
 	}
 
@@ -135,7 +145,7 @@ class sotf_Object {
 		}
 		if (count($res)==0)
 			raiseError("No such id: '$this->id' in '$this->tablename'");
-		$this->set_all($res);
+		$this->setAll($res);
 	}
 
 	/**
@@ -179,8 +189,11 @@ class sotf_Object {
 	 * @return (void)
 	 */
 	function setBlob($prop_name, $prop_value){
-		$this->changed = true;
-		$this->data[$prop_name] = $this->db->escape_bytea($prop_value);
+    $v = $this->db->escape_bytea($prop_value);
+    $res = $this->db->query("UPDATE " . $this->tablename . " SET $prop_name = '" . sotf_Utils::magicQuotes($v) . "' WHERE " . $this->idKey . "='" . $this->id . "' ");
+    if(DB::isError($res))
+      raiseError("Error in setBlob: $res");
+		$this->data[$prop_name] = $v;
 	}
 	
 	/**
@@ -215,12 +228,11 @@ class sotf_Object {
 	}
 	
 	/**
-	 * sotf::set_all()
 	 * 
 	 * purpose: set the whole data array
 	 * @return (bool)
 	 */
-	function set_all($to_set){
+	function setAll($to_set){
 		if(!is_array($to_set)){
 			return false;
 		}
@@ -231,22 +243,20 @@ class sotf_Object {
 	}
 	
 	/**
-	 * sotf::get_all()
 	 * 
 	 * purpose: get all elements of the data array
 	 * @return (array)
 	 */
-	function get_all(){
+	function getAll(){
 		return $this->data;
 	}
 	
 	/**
-	 * sotf::get_keys()
 	 * 
 	 * purpose: get all keys from the data array
 	 * @return (array)
 	 */
-	function get_keys(){
+	function getKeys(){
 		reset($this->data);
 		while(list($key,$val)=each($this->data)){
 			$my_keys[] = $key;

@@ -2,7 +2,7 @@
 require("init.inc.php");
 
 if($_REQUEST['select_station']) {
-  $page->redirect("listStation.php?station=" . $_POST['station']);
+  $page->redirect("showStation.php?stationid=" . $_POST['station']);
 }
 
 /* defaults for main "index" page   */

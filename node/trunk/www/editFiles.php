@@ -29,7 +29,7 @@ $smarty->assign("OKURL",$okURL);
 $prg = & new sotf_Programme($id);
 
 // admins or owners can change files
-if(!$prg->isEditable()) {
+if(!hasPerm($id, 'change')) {
   raiseError("no permission to change files in this programme");
   exit;
 }

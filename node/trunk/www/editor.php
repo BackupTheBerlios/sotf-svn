@@ -5,7 +5,9 @@ $smarty->assign("PAGETITLE", $page->getlocalized("EditorPage"));
 $page->forceLogin();
 $smarty->assign("OKURL", $_SERVER['PHP_SELF']);
 
-if (!$user->isEditor()) {
+
+
+if (!$permissions->isEditor()) {
 	raiseError("You have no permission to upload to any station");
 	exit;
 }
@@ -17,14 +19,17 @@ if(sotf_Utils::getParameter('upload')) {
 }
 
 if(sotf_Utils::getParameter('addprog')) {
-  $fname = sotf_Utils::getFileSafeParameter('fname');
-  $station = sotf_Utils::getFileSafeParameter('station');
-  if(!sotf_Permission::get('upload', $station)) {
+  $fname = sotf_Utils::getParameter('fname');
+  $station = sotf_Utils::getParameter('station');
+  if(!$permissions->hasPermission($station, 'add_prog')) {
     raiseError("no permission to upload to $station");
     exit;
   }
-  $newPrg = sotf_Programme::create($station);
+  $newPrg = new sotf_Programme();
+  $track = preg_replace('/\.[^.]*$/','', $fname);
+  $newPrg->create($station, $track);
   $newPrg->setAudio($fname);
+  $permissions->addPermission($newPrg->id, $user->id, 'admin');
   //$page->redirect("editFiles.php");
   $page->redirect($_SERVER['SCRIPT_NAME']);
   exit;
@@ -34,7 +39,7 @@ if(sotf_Utils::getParameter('addprog')) {
 $userFtpUrl = str_replace('ftp://', "ftp://$userid@", "$userFTP$userid");
 	$smarty->assign("USERFTPURL", $userFtpUrl); 
 
-$stations = sotf_Permission::listStationsWithPermission('upload');
+$stations = $permissions->listStationsForEditor();
 if(!empty($stations)) {
      $smarty->assign_by_ref("STATIONS",$stations);
 }
@@ -46,11 +51,11 @@ if(!empty($list)) {
 		 $smarty->assign_by_ref("USER_AUDIO_FILES", $list);
 }
 
-$myProgs = sotf_Programme::myProgrammes($user->name);
-$plist = new sotf_PrgList($myProgs);
-// todo sort/filter using sotf_PrgList
-$l = $plist->getList();
-$smarty->assign_by_ref("MYPROGS", $l);
+$myProgs = $permissions->myProgrammes();
+//$plist = new sotf_PrgList($myProgs);
+//// todo sort/filter using sotf_PrgList
+//$l = $plist->getList();
+$smarty->assign_by_ref("MYPROGS", $myProgs);
 
 
 $page->send();

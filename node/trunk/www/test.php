@@ -1,9 +1,9 @@
 <?php
 require("init.inc.php");
 
-$page->addStatusMsgLoc('idetlen-seg');
-$page->addStatusMsgLoc('marha-sag');
+$res = $userdb->getOne("SELECT auth_id FROM authenticate WHERE username = 'akazcs'");
+echo "'$res'";
 
-$page->send();
+#$page->send();
 
 ?>
