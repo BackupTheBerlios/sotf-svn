@@ -7,15 +7,15 @@ There are several ways to set up streaming:
 4. use Tamburine via tbrcmd
 
 Only 3 and 4 support remote listening from other node.
-3. is not reliable.
-So just choose 4, and set $config['tamburineCMD'] in your config.inc.php!
+3. does not always work, try it on your site, and if it does not work,
+choose 4, and set $config['tamburineCMD'] in your config.inc.php!
 
 
 Tamburine (http://tamburine.dyne.org/)
 ---------------------------------------
 
 Follow the install instructions on http://tamburine.dyne.org/. 
-Additinoally to that:
+Additionally to that:
 
 Installation on Redhat:
 
