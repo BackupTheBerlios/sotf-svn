@@ -85,7 +85,7 @@ class sotf_Neighbour extends sotf_Object {
   function sync($console = false) {
     global $sotfVars;
     // tunable things
-    $objectsPerRPCRequest = 200;
+    $objectsPerRPCRequest = 100;
     
     global $page;
     if(!$console && $this->getBool('use_for_outgoing')) {
