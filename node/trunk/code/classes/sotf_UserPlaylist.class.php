@@ -6,9 +6,10 @@ class sotf_UserPlaylist {
 
   function load() {
     global $user, $db;
+	 // TODO: delete old items in playlist which were deleted in the meantime
     $query="SELECT prog_id as id, order_id, sotf_programmes.* FROM sotf_playlists".
-      " LEFT JOIN sotf_programmes ON sotf_programmes.id = sotf_playlists.prog_id".
-      " WHERE user_id = '$user->id' ORDER BY order_id";
+      " , sotf_programmes WHERE sotf_programmes.id = sotf_playlists.prog_id".
+      " AND user_id = '$user->id' ORDER BY order_id";
     $this->items = $db->getAll($query);
     return $this->items;
   }
