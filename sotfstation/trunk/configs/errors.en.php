@@ -32,4 +32,8 @@
 		'SETTINGS'=> 'Settings',
 		'SERIES'	=> 'Series'
 	);
+	
+	$ACTION = array(
+		0			=> 'Logged In'
+	);
 ?>

@@ -1,6 +1,18 @@
 Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
 
 ************************************************************************************************
+ 14.11.2002
+************************************************************************************************
+
+All the user actions are from now on logged in the database. This can be easily disabled from
+the config file if needed.
+
+The database has been developed further to support multiple users, series and programmes.
+
+Calendar has been linked to the database. From now on, all the days that have at least one
+programme associated with them will be maked with a small red box on the calendar display.
+
+************************************************************************************************
  13.11.2002
 ************************************************************************************************
 

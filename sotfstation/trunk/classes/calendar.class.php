@@ -69,7 +69,7 @@
 		var $empty = false;
 		var $color_off = "#d9d9d9";
 		var $color_on = "#000099";
-		var $color_link = "#cccccc";
+		var $color_link = "#eecccc";
 		
 		//make sure you include the {color} tag here, such that it gets replaces with the needed color upon request :)
 		var $header = "<td bgcolor={color}><font class=date>";
@@ -558,6 +558,8 @@
 			$this->header = str_replace("{name}",$this->getMonthFullName(),$this->header);
 			$this->header = str_replace("{year}",date("Y",$this->timestamp),$this->header);
 			
+			$t = $_GET['date'];	# make backup
+			
 			//work around the prev/next links :)
 			$_GET['date'] = date("j-n-Y", mktime(0,0,0,$this->getMonthNumber() - 1,1,date("Y",$this->timestamp)));
 			reset($_GET);
@@ -587,6 +589,8 @@
 				$out .= $val->show($root);
 			}
 			$out .= $this->footer;
+			
+			$_GET['date'] = $t;		# return backup
 			return $out;
 		}
 	}

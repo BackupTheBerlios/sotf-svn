@@ -76,5 +76,6 @@
 	
 	//Other Settings
 	define('ALLOW_GZIP',TRUE);																# Either allow or dissallow output compression :: accepted (bool)
+	define('ALLOW_LOGS',TRUE);																# Either allow or dissallow to log user's action :: accepted (bool)
 	define('NOW',time());																			# Current Timestamp :: accepted (int)
 ?>

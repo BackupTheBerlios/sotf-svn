@@ -21,6 +21,7 @@
 	include('classes/user.class.php');					# User Session Wrapper
 	include('classes/navBar.class.php');				# Navigation Bar Processor
 	include('classes/helpBox.class.php');				# Help Box Generator
+	include('classes/log.class.php');						# action log module
 	include('functions/eh.inc.php');						# Override PHP's Error's handling routines
 	include('functions/timers.inc.php');				# Timers to reveal bottlenecks
 	include('functions/prepend.inc.php');				# Smarty pre and postpend data for pop-up windows
@@ -31,7 +32,8 @@
 	$myError = new error();											# Initialize an empty 'error bin'
 	$myNav = new navBar(HOME_NAME,SRC_ROOT);		# Create an instance of the navigation bar
 	$smarty = new Smarty;												# Initialize Template Parser
-	
+	$myLog = new logBuilder();									# Initialize Log builder
+		
 	//initialization of private error handling routine
 	set_error_handler('eh');
 	

@@ -67,6 +67,9 @@
 			
 				//get additional local user related acces level data
 			
+				//log info (mark the user that he logged in)
+				$myLog->add($res['auth_id'],0);
+				
 				//redirect
 				header("Location: inside.php");
 				exit;

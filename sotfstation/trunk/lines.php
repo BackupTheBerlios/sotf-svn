@@ -19,6 +19,9 @@
 
 		$d = dir($path);
 		while($entry = $d->read()){
+			if($entry == 'templates_c'){
+				continue;
+			}
 			if(!stristr($entry,'.')){
  		 	 	$dir_tree[$entry] = $entry;
 			}

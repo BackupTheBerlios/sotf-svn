@@ -1,26 +1,38 @@
  <table width="100%" border="0" cellspacing="0" cellpadding="2"><tr>
-    <td width="100%" valign="top">{$day}</td>
-    <td width="170" valign="top"> 
-      <table width="170" border="0" cellspacing="0" cellpadding="0">
+    <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr> 
-          <td><table width="200" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+          <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
               <tr bgcolor="#ddddff"> 
-                <td class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <td colspan="6" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
                     <tr> 
-                      <td width="20" nowrap><strong><img src="{$root}img/login.gif" width="27" height="21"></strong></td>
-                      <td class=title><strong>Calendar</strong></td>
+                      <td width="20" nowrap><strong><img src="{$root}img/i-users.gif" width="27" height="21"></strong></td>
+                      <td class=title><strong>Users Registered With This Station</strong></td>
                     </tr>
                   </table></td>
               </tr>
               <tr bgcolor="#eeeeee"> 
-                <td nowrap> <div align="center">{$calendar}</div></td>
+                <td width="10%" nowrap> <div align="center"><strong> <a href="a">ID</a><img src="{$root}img/arrowdown.gif" ></strong></div>
+                  <div align="left"></div></td>
+                <td width="20%" nowrap> <div align="center"><strong><a href="a">Name</a><img src="{$root}img/arrowup.gif" ></strong></div></td>
+                <td width="20%" nowrap> <div align="center"><strong><a href="a">Status</a></strong></div></td>
+                <td width="20%" nowrap> <div align="center"><strong><a href="a">Involvement</a></strong></div></td>
+                <td width="20%" nowrap> <div align="center"><strong><a href="a">Last 
+                    Login</a></strong></div></td>
+                <td width="10%" nowrap> <div align="center"><strong>Options</strong></div></td>
+              </tr>
+              <tr bgcolor="#eeeeee"> 
+                <td nowrap><div align="center">1</div></td>
+                <td nowrap><div align="center">Alex</div></td>
+                <td nowrap><div align="center">Station Administrator</div></td>
+                <td nowrap><div align="center">12 Series</div></td>
+                <td nowrap><div align="center">12.11.2002 12:21</div></td>
+                <td nowrap><div align="center"><img src="{$root}img/i-edit.gif" width="24" height="16"><img src="{$root}img/i-delete.gif" width="24" height="16"></div></td>
               </tr>
               {section name=error_cell show=$error_out} {/section} </table></td>
         </tr>
         <tr> 
           <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
         </tr>
-      </table>
-    </td>
+      </table></td>
   </tr>
 </table>
