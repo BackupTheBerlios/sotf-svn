@@ -43,6 +43,8 @@ if($config['debug']) {
 // the base URL for the whole site
 $config['rootUrl'] = 'http://' . myGetenv('SERVER_NAME') . $config['localPrefix'];
 //$config['rootUrl'] = $config['localPrefix'];
+//if(substr($config['rootUrl'], -1) != '/')
+//	$config['rootUrl'] .= '/';
 
 // The base URL for images
 $config['imageUrl'] = $config['rootUrl'] . '/static';

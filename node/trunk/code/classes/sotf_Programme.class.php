@@ -220,6 +220,12 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $this->update();
   }
 
+  /** return URL for this object on this node */
+  function getURL() {
+	 global $config;
+	 return $config['rootUrl'] . '/get.php/' . $this->id;
+  }
+
 	/************************************************
 	 *      METADATA
 	 ************************************************/
@@ -250,16 +256,77 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 fwrite($fp, $xml);
 	 fclose($fp);
 
-	 // now save in the XBMF format
-	 /*
-	 $myPack = new packXML('sotfPublish');
-	 $myPack->addData(array('series' => $this->getSeries->getAll(),
-									'prog' => $this->getAll(),
-									$myUser,$pubUser));
-	 $myPack->toFile($this->getMetaDir() . '/metadata.xml');
-	 */
+	 $xbmf = $this->getXBMFMetadata();
+	 $file = $this->getMetaDir() . '/metadata.xml';
+	 sotf_Utils::save($file, $xbmf);
 
 	 return true;
+  }
+
+  function getXBMFMetadata() {
+	 global $vocabularies;
+	 $xml = domxml_new_xmldoc('1.0');
+	 $xbmf = domxml_add_root($xml, 'xbmf');
+	 $xbmf->new_child('title',$this->get('title'));
+	 $xbmf->new_child('type','audio');
+	 $xbmf->new_child('alternative',$this->get('alternative_title'));
+	 $xbmf->new_child('episodetitle',$this->get('episode_title'));
+	 $xbmf->new_child('episodesequence',$this->get('episode_sequence'));
+	 $xbmf->new_child('stationid', $this->get('station'));
+	 $xbmf->new_child('language', $this->get('language'));
+	 $xbmf->new_child('description', $this->get('description'));
+	 $xbmf->new_child('identifier', $this->getURL());
+	 $xbmf->new_child('genre', $vocabularies->getGenreName($this->get('genre_id')));
+	 $topics = $this->getTopics();
+	 foreach($topics as $topic) {
+		$xbmf->new_child('topic', $topic);
+	 }
+	 $nod = $xbmf->new_child('date', $this->get('production_date'));
+	 $nod->set_attribute('type','created');
+	 $nod = $xbmf->new_child('date', $this->get('broadcast_date'));
+	 $nod->set_attribute('type','issued');
+	 $nod = $xbmf->new_child('date', $this->get('entry_date'));
+	 $nod->set_attribute('type','available');
+	 $nod = $xbmf->new_child('date', $this->get('modify_date'));
+	 $nod->set_attribute('type','modified');
+	 // series
+	 $series = $this->getSeries();
+	 if($series) {
+		$se = $xbmf->new_child('series', NULL);
+		$se->new_child('id', $series->get('id'));
+		$se->new_child('title', $series->get('name'));
+		$se->new_child('description', $series->get('description'));
+	 }
+	 // rights
+	 $rights = $this->getAssociatedObjects('sotf_rights', 'start_time');
+	 foreach($rights as $right) {
+		$ri = $xbmf->new_child('right', $right['rights_text']);
+		$ri->set_attribute('from', $right['start_time']);
+		$ri->set_attribute('to', $right['stop_time']);
+	 }
+	 // contacts
+	 $roles = $this->getRoles();
+	 foreach($roles as $role) {
+		$ro = $xbmf->new_child('contributor', NULL);
+		$ro->set_attribute('role', $role['role_name']);
+		$ro->set_attribute('role_id', $role['role_id']);
+		$entity = $ro->new_child('entity',null);	
+		$entity->set_attribute('type','organisation');
+		$entity_name = $entity->new_child('name',$role['contact_data']['name']);
+		$entity_name->set_attribute('type','organizationname');
+		$entity_acronym = $entity->new_child('name',$role['contact_data']['acronym']);
+		$entity_acronym->set_attribute('type','organizationacronym');
+		$entity->new_child('e-mail',$role['contact_data']['email']);
+		$entity->new_child('address',$role['contact_data']['address']);
+		$entity->new_child('uri', $role['contact_data']['url']);
+	 }
+	 // prepare xml
+	 $xmltext = $xml->dumpmem();
+	 if(!$xmltext) {
+		logError("Error preparing XBMF XML");
+		return NULL;
+	 }
+	 return $xmltext;
   }
 
 	/************************************************
@@ -863,9 +930,12 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 // insert metadata
 	 if(is_readable($metaFile)) {
 		debug("insert meta", $metaFile);
-		$target = $newPrg->getMetaDir() . '/metadata.xml';
-		if(!copy($metaFile, $target))
-		  logError("Could not copy metadata into $target");
+		$target1 = $newPrg->getMetaDir() . '/metadata.xml';
+		$target2 = $newPrg->getMetaDir() . '/metadata-in.xml';
+		if(!copy($metaFile, $target1))
+		  logError("Could not copy metadata into $target1");
+		if(!copy($metaFile, $target2))
+		  logError("Could not copy metadata into $target2");
 	 }
 
 	 // insert icon
