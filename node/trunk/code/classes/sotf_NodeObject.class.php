@@ -174,6 +174,7 @@ class sotf_NodeObject extends sotf_Object {
 			 $db->query("INSERT INTO sotf_object_status (id, node_id) VALUES('$id', $nei)");
 		  }
 	 }
+	 debug("added to refresh table");
   }
 
   /** can be static */

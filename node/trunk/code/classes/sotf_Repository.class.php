@@ -96,6 +96,7 @@ class sotf_Repository {
 			if($table)
 				$obj = new sotf_NodeObject($table, $objectId, $data);
 			else {
+				//return NULL;
 				raiseError('Invalid id, stop this', $objectId);
 			}
     }
@@ -198,9 +199,9 @@ class sotf_Repository {
 				// TODO: how can this happen? It happens too many times!
         debug("unknown prog ref arrives: " . $event['value']['prog_id'] . ' - ' . $event['url']);
         $prg = &$this->getObject($obj->get('prog_id'));
- 		  if(!$prg)
-			 break;
-       $obj->set('station_id', $prg->get('station_id'));
+				if(!$prg)
+					break;
+				$obj->set('station_id', $prg->get('station_id'));
         $obj->set('start_date', $event['timestamp']);
         $obj->set('portal_name', $event['portal_name']);
       }
@@ -229,10 +230,15 @@ class sotf_Repository {
       $obj = new sotf_NodeObject('sotf_portals');
       $obj->set('url', $event['url']);
       $obj->find();
-      //$obj->set('name', $event['portal_name']);
-      //$obj->set('last_update', $event['timestamp']);
+			if(!$obj->exists()) {
+				$obj->set('name', $event['portal_name']);
+			}
+      $obj->set('last_update', $event['timestamp']);
       $obj->set('reg_users', $event['value']);
-      $obj->save();
+			if(!$obj->get('name') || !$obj->get('url'))
+				logError("Bad portal even teceived", implode(" | ", $event));
+			else
+				$obj->save();
       break;
     case 'rating':
 		// first save in prog_refs

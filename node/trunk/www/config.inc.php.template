@@ -150,7 +150,10 @@ $config['maxNumberOfStreams'] = 30;
 // DEBUGGING, LOGGING & ERROR HANDLING -----------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-// Everything will be logged here. You can configure logging on the admin screen,
+// If this is set, the node will send an email about each error to $config['adminEmail']
+$config['sendMailAboutErrors'] = true;
+
+// Everything will be logged here. You can configure logging on the admin screen
 $config['logFile'] = $config['basedir'] . '/logs/log';
 
 // Temp. solution for debugging right after install, later you may switch this off

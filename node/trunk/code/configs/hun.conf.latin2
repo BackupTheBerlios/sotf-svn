@@ -624,7 +624,7 @@ sort1 = Eredmények rendezése
 sort2 = Második rendezési szempont
 run = Keresés
 upload_query = Keresõkérdés feltöltése portálra
-desc = Leírás
+desc = csökkenõ
 portal_http = Portál cím (pl. http://sotf.dsd.sztaki.hu/portal/portal.php/portal_name)
 URL_missing = Az URL hiányzik!
 

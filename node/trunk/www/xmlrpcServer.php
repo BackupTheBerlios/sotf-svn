@@ -203,12 +203,20 @@ function getProgrammes($params)
 }
 
 function putEvents($params) {
-	global $config, $db, $repository;
-	$events = xmlrpc_decode($params->getParam(0));
+  global $config, $db, $repository;
+  $events = xmlrpc_decode($params->getParam(0));
   foreach($events as $event) {
+    debug("PORTAL EVENT", $event);
     $progId = $event['prog_id'];
     if($progId) {
-      $nodeId = $repository->getNodeId($progId);
+      if($repository->looksLikeId($progId))
+	$prg = &$repository->getObject($progId);
+      if(!$prg) {
+	logError("Invalid prog_id arrived in portal event: $progId");
+	continue;
+      }
+      $nodeId = $prg->getNodeId();
+      //$nodeId = $repository->getNodeId($progId);
       if($nodeId != $config['nodeId']) {
         // event for remote object
         sotf_NodeObject::createForwardObject('event', $event, $progId , $nodeId);
@@ -218,7 +226,7 @@ function putEvents($params) {
     $repository->processPortalEvent($event);
   }
   $retval = xmlrpc_encode(count($events));
-	return new xmlrpcresp($retval);
+  return new xmlrpcresp($retval);
 }
 
 stopTiming();
