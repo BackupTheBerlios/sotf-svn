@@ -74,7 +74,7 @@
 		 * @param $data (array)
 		 * @return recursive call 
 		 */
-		function parse($reference, &$data){
+		function parse($reference, &$data,$counter=0){
 			$children = $reference->children();
 			if(count($children)>1){
 				foreach($children as $child){
@@ -83,19 +83,34 @@
 						continue;
 					}
 					
-					//type cast
-					if($child->get_attribute("type") != ''){
-						$name = $child->get_attribute("type");
-					}else{
-						//id cast
-						if($child->get_attribute("id") != ''){
-							$name = $child->get_attribute("id");
+					//entity cast | //patch for type handling in users
+					if($child->node_name() == 'entity'){
+						$name = $counter;
+						$counter++;
+						$type = $child->get_attribute("type");
+					}else{ //end patch
+					
+						//type cast
+						if($child->get_attribute("type") != ''){
+							$name = $child->get_attribute("type");
 						}else{
-							$name = $child->node_name();
+							//id cast
+							if($child->get_attribute("id") != ''){
+								$name = $child->get_attribute("id");
+							}else{
+								$name = $child->node_name();
+							} 
 						}
 					}
 					$data[$name] = array();
-					$this->parse($child,$data[$name]);
+					
+					//patch for type handling in users
+					if(!empty($type)){
+						$data[$name]['type'] = $type;
+					}
+					//end patch
+					
+					$this->parse($child,$data[$name],$counter);
 				}
 			}else{
 				//charset converter
@@ -109,6 +124,7 @@
 				$data = str_replace("%%rgt%%",">",$data);
 				$data = str_replace("%%lgt%%","<",$data);
 				$data = ereg_replace("[\r\n]{2,}","<br />",$data);
+				$data = trim($data);
 				//$data = nl2br($data);
 			}
 		}
