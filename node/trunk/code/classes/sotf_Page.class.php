@@ -220,12 +220,14 @@ class sotf_Page
 		}
 
 		unset($_SESSION['halted']);
+		session_unregister('halted');
 		// handle status messages
 		$smarty->assign('STATUS_MESSAGES', $_SESSION['statusMsgs']);
 		unset($_SESSION['statusMsgs']);
+		session_unregister('statusMsgs');
 		$smarty->assign('ERROR_MESSAGES', $_SESSION['errorMsgs']);
 		unset($_SESSION['errorMsgs']);
-		
+		session_unregister('errorMsgs');
 		stopTiming();
 		$smarty->assign("totalTime", $totalTime);
 		$smarty->display($template);
