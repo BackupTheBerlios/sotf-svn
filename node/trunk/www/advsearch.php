@@ -175,6 +175,7 @@ $smarty->assign("SQLqueryfields", $advsearch->GetSQLqueryfields());	//translated
 
 $smarty->assign("EQdate", $advsearch->GetEQdate());			//EQ dropdown for date
 $smarty->assign("EQstring", $advsearch->GetEQstring());			//EQ dropdown for string
+$smarty->assign("EQtopic", $advsearch->GetEQtopic());			//EQ dropdown for topics
 $smarty->assign("EQlang", $advsearch->GetEQlang());			//EQ dropdown for lang
 $smarty->assign("EQlength", $advsearch->GetEQlength());			//EQ dropdown for length
 $smarty->assign("EQnumber", $advsearch->GetEQnumber());			//EQ dropdown for numbers

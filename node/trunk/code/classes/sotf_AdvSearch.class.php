@@ -121,24 +121,26 @@ class sotf_AdvSearch
 	function GetSQLCommand()			//gives back the SQL command for the search
 	{
 		global $lang;
+		$topic = false;		//stores whether there was a search for topic;
+		$max = count($this->SQLquery);					//all rows of the advsearch
+		for($i = 0; $i < $max; $i++)
+			if ($this->SQLquery[$i][1] == "topic")	{$topic = true;	break;}
+
 		$query="SELECT distinct programmes.* FROM (";
-		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription, sotf_prog_rating.rating_value as rating, sotf_topics.topic_name as topic_name FROM sotf_programmes";
+		$query.=" SELECT sotf_programmes.*, sotf_stations.name as station, sotf_series.title as seriestitle, sotf_series.description as seriesdescription, sotf_prog_rating.rating_value as rating";
+		if ($topic) $query.=", sotf_topics.topic_name as topic_name";
+		$query.=" FROM sotf_programmes";
 		$query.=" LEFT JOIN sotf_stations ON sotf_programmes.station_id = sotf_stations.id";
 		$query.=" LEFT JOIN sotf_series ON sotf_programmes.series_id = sotf_series.id";
 		$query.=" LEFT JOIN sotf_prog_rating ON sotf_programmes.id = sotf_prog_rating.id";
 		
-		$max = count($this->SQLquery);					//all rows of the advsearch
-		
-		// added the topics as left join for performance reasons
-		for($i = 0; $i < $max; $i++){
-			if ($this->SQLquery[$i][1] == "topic")
-			{
-				$query .= " LEFT JOIN sotf_prog_topics ON sotf_programmes.id = sotf_prog_topics.prog_id";
-				$query .= " LEFT JOIN sotf_topics ON sotf_prog_topics.topic_id = sotf_topics.topic_id";
-				break;
-			}
+		if ($topic)		// added the topics as left join for performance reasons
+		{
+			$query .= " LEFT JOIN sotf_prog_topics ON sotf_programmes.id = sotf_prog_topics.prog_id";
+			$query .= " LEFT JOIN sotf_topics ON sotf_prog_topics.topic_id = sotf_topics.topic_id";
 		}
-		
+
+
 		$query.=") as programmes WHERE published = 't'";
 		
 		for($i = 0; $i < $max ;$i++)		//go through all terms
@@ -161,6 +163,7 @@ class sotf_AdvSearch
 			{
 				$query .= " (".
 					" programmes.topic_name";
+//					" sotf_topics.topic_name";
 				$query .= $this->getEQSign($this->SQLquery[$i][2], "'".$this->SQLquery[$i][3]."'");
 				$query .= ")";
 			}
@@ -216,7 +219,7 @@ class sotf_AdvSearch
 			if (($this->SQLquery[$i][0] == "OR") && ($this->SQLquery[$i+1][0] != "OR")) $query = $query." )";
 		}
 		$query = $query." ORDER BY ".$this->sort1.", ".$this->sort2;			//ISBN, TITLE 
-		//print($query);
+		print($query);
 		//die();
 		return $query;
 	}
@@ -263,7 +266,7 @@ class sotf_AdvSearch
 			$new[4] = "string";
 		        break;
 		    case "topic":
-			$new[4] = "string";
+			$new[4] = "topic";
 		        break;
 		    case "entry_date":
 			$new[4] = "date";
@@ -493,6 +496,18 @@ class sotf_AdvSearch
 		$EQstring[is_not_equal] = $page->getlocalized("is_not_equal");
 		return $EQstring;
 	}
+
+	function GetEQtopic()		//returns EQ options for topics
+	{
+		global $page;
+		$EQstring[contains] = $page->getlocalized("contains");
+		$EQstring[begins_with] = $page->getlocalized("begins_with");
+		$EQstring[is_equal] = $page->getlocalized("is");
+		//$EQstring[does_not_contain] = $page->getlocalized("does_not_contain");
+		//$EQstring[is_not_equal] = $page->getlocalized("is_not_equal");
+		return $EQstring;
+	}
+
 
 	function GetEQlang()		//returns EQ options for languages and station
 	{
