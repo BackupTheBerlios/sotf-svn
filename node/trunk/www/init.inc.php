@@ -20,7 +20,7 @@ require_once('config.inc.php');
 //////////////////////////////////////////////////////////////////////////
 
 // this is valid only until we have an SQL connection to get persistent vars
-$config['debug'] = $config['debug'] ? false : true;
+$config['debug'] = $config['debug'] ? true : false;
 $config['debugType'] = 'later';	// 'now' for output to browser
 
 /*
@@ -57,23 +57,30 @@ $config['cacheUrl'] =  $config['rootUrl'] . '/tmp/cache';
 umask(0002);
 
 
-// load system files
+// change include_path
+// we need to put PEAR into the include_path if it's not there
 
-/*
-$os = getenv('OS');
-//error_log("OS=$os",0);
-if(preg_match("/windows/i", $os))
-     $pathSep = ";";
-     else
-     $pathSep = ":";
-     
+$WIN = stristr(PHP_OS,"win")&&!stristr(PHP_OS,"darwin")?"WIN":""; 
+$PATH_SEP = $WIN ? ";" : ":";
+
 $oldPath = ini_get("include_path");
-$pathElements = array($config['peardir'], $config['smartydir'], $config['getid3dir'], $config['classdir'], $config['xmlrpcdir'], '.', $oldPath);
-$newPath = join($pathSep, $pathElements);
-//error_log("PATH=$newPath",0);
-if(!ini_set("include_path", $newPath))
-	die("Failed to set include_path!!");
-*/
+if(!strstr($oldPath, $config['peardir'])) {
+	if($oldPath) {
+		$newPath = $config['peardir'].$PATH_SEP.$oldPath;
+	} else {
+		$newPath = $config['peardir'].$PATH_SEP.".";
+	}
+	if(!ini_set("include_path", $newPath))
+		die("Failed to set include_path!!");
+}
+if($config['debug']) {
+	error_log("OS: ".PHP_OS, 0);
+	error_log("WIN: ".$WIN, 0);
+	error_log("INCLUDE_PATH: ". $oldPath, 0);
+	error_log("CHANGED INCLUDE_PATH: ". ini_get("include_path"), 0);
+}
+
+// load system files
 
 require($config['peardir'] . '/DB.php');
 // change this if you want to use other DBMS not Postgres
@@ -149,7 +156,7 @@ if(!headers_sent())
 if($config['debug'])
 {
 	error_log("",0);
-  error_log("-------------------------------------------------------------------", 0);
+  //error_log("-------------------------------------------------------------------", 0);
   error_log("REQUEST_URI: " . myGetenv("REQUEST_URI"), 0);
 	error_log("REMOTE_HOST: " . getHostName() ,0);
   error_log("USER_AGENT: " . myGetenv('HTTP_USER_AGENT') ,0);
