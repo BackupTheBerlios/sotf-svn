@@ -9,20 +9,26 @@
 
 class sotf_Vars {
 
+  /** Database connection */
   var $db;
 
+  /** name of table to store variables */
   var $table;
 
+  /** True if variables has been read from database */
   var $isInitialized = false;
 
+  /** Persistent variables: array (name => value). */
   var $vars;
 
+  /** Constructor */
   function sotf_Vars($db, $table_name) {
     $this->db = $db;
     $this->table = $table_name;
     $this->initialize();
   }
 
+  /** Initialize object: read in all variables from database. */
   function initialize() {
     $res = $this->db->getAll("SELECT name, value FROM $this->table");
     if(DB::isError($res))
@@ -32,10 +38,12 @@ class sotf_Vars {
     }
   }
 
+  /** Returns the value of all persistent variables in an array (name => value). */
   function getAll() {
     return $this->vars;
   }
 
+  /** Returns the value of a persistent variable. */
   function get($variable_name, $defaultValue) {
     if(isset($this->vars[$variable_name]))
       return $this->vars[$variable_name];
@@ -43,6 +51,7 @@ class sotf_Vars {
       return $defaultValue;
   }
 
+  /** Sets the value of a persistent variable. */
   function set($name,$val) {
     $name = sotf_Utils::magicQuotes($name);
     $val = sotf_Utils::magicQuotes($val);

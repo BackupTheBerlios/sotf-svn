@@ -43,6 +43,8 @@ if($save) {
 // sync
 $sync = sotf_Utils::getParameter('sync');
 if($sync) {
+  // this can be long duty!
+  set_time_limit(18000);
   $nid = sotf_Utils::getParameter('nodeid');
   $neighbour = sotf_Neighbour::getById($nid);
   $neighbour->sync(true);

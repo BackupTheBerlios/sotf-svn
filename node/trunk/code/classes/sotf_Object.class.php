@@ -1,11 +1,17 @@
 <?php 
-// -*- tab-width: 3; indent-tabs-mode: 1; -*-
-// $Id$
+
+/*  -*- tab-width: 3; indent-tabs-mode: 1; -*-
+ * $Id$
+ *
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ *          Koulikov Alexey - alex@pvl.at
+ */
 
 /**
 * Basic class for SQL stored data
 *
-* @author Andras Micsik - micsik@sztaki.hu, Tamas Kezdi - kezdi@sztaki.hu, Koulikov Alexey - alex@pvl.at, alex@koulikov.cc
 */
 class sotf_Object {
 
@@ -239,8 +245,12 @@ class sotf_Object {
 		if($this->data[$this->idKey]) {
 			$this->id = $this->data[$this->idKey];
 		}
-    foreach($this->binaryFields as $bf) {
-      $this->data[$bf] = $this->db->escape_bytea($this->data[$bf]);
+    if(count($this->binaryFields) > 0 ) {
+      // translate binary fields
+      reset($this->binaryFields);
+      while(list(,$bf) = each($this->binaryFields)) {
+        $this->data[$bf] = $this->db->escape_bytea($this->data[$bf]);
+      }
     }
 		$this->changed = TRUE;
 		return true;
@@ -275,6 +285,14 @@ class sotf_Object {
       }
     }
 	}
+
+  /** Returns value for a bool, translating SQL notation of true/false into PHP notation. */
+  function getBool($prop_name) {
+    if(isset($this->data[$prop_name]) && $this->data[$prop_name] == 't')
+      return TRUE;
+    else
+      return FALSE;
+  }
 	
 	/**
 	 * 
@@ -283,8 +301,12 @@ class sotf_Object {
 	 */
 	function getAll(){
 		$retval = $this->data;
-    foreach($this->binaryFields as $bf) {
-      $retval[$bf] = $this->db->unescape_bytea($retval[$bf]);
+    if(count($this->binaryFields) > 0 ) {
+      // translate binary fields
+      reset($this->binaryFields);
+      while(list(,$bf) = each($this->binaryFields)) {
+        $retval[$bf] = $this->db->unescape_bytea($retval[$bf]);
+      }
     }
     return $retval;
 	}

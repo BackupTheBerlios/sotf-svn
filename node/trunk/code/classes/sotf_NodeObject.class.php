@@ -1,11 +1,15 @@
 <?php 
-// -*- tab-width: 3; indent-tabs-mode: 1; -*-
-// $Id$
+
+/*  -*- tab-width: 3; indent-tabs-mode: 1; -*-
+ * $Id$
+ *
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
 
 /**
 * Objects that are replicated in the network
-*
-* @author Andras Micsik - micsik@sztaki.hu
 */
 class sotf_NodeObject extends sotf_Object {
 
@@ -129,21 +133,31 @@ class sotf_NodeObject extends sotf_Object {
     }
 	}
 
+  /** Static: count the objects to be sent to the neighbour node. */
+  function countModifiedObjects($remoteNode, $syncStamp = 0) {
+    return $db->getOne("SELECT count(*) FROM sotf_node_objects WHERE node_id != '$remoteNode' AND arrived_stamp >= '$syncStamp'");
+  }
+
   /** Static: collects the objects to send to the neighbour node. */
-  function getModifiedObjects($remoteNode, $date='', $updatedObjects = array()) {
+  function getModifiedObjects($remoteNode, $syncStamp = 0, $from, $objectsPerPage, $updatedObjects = array()) {
     global $db, $nodeId, $repository;
     // an ordering in which objects should be retrieved because of foreign keys
     $tableOrder = "no,co,st,se,pr,ri,ed,of,mf,li,td,tt,to,pt,ge,ro,rn,sr,de,ra,re,sx";
-    if($date)
-      $dateClause .= "AND arrived >= '$date'";
-    $objects1 = $db->getAll("SELECT * FROM sotf_node_objects WHERE node_id != '$remoteNode' $dateClause ORDER BY strpos('$tableOrder', substring(id, 4, 2)), id");
-    //debug("OBJECTS__1", $objects);
+    // select objects to send to neighbour
+    $result = $db->limitQuery("SELECT * FROM sotf_node_objects WHERE node_id != '$remoteNode' AND arrived_stamp >= '$syncStamp' ORDER BY strpos('$tableOrder', substring(id, 4, 2)), id", $from, $objectsPerPage);
+    while (DB_OK === $res->fetchInto($row)) {
+      $objects1[] = $row;
+    }
+    //debug("OBJECTS1", $objects1);
+    // collect object data for selected objects
     $objects = array();
     while(list(,$obj) = each($objects1)) {
-      if(!in_array($obj['id'], $updatedObjects)) {   // don't send back the same object
+      // don't send back the same object
+      if(!in_array($obj['id'], $updatedObjects)) {   
         $tablename = $repository->getTable($obj['id']);
         $data = $db->getRow("SELECT * FROM $tablename WHERE id = '" . $obj['id'] . "'");
-        if(count($data) > 1) {         // don't send occasional empty records
+        // don't send occasional empty records
+        if(count($data) > 1) {         
           $obj['data'] = $data;
           $objects[] = $obj;
           debug("sending modified object", $obj['id']);
@@ -166,8 +180,8 @@ class sotf_NodeObject extends sotf_Object {
         unset($objData['data']);
         $obj->internalData = $objData;
         reset($obj->data);
-        // url decoding and else
         /*
+        // url decoding and else
         while(list($k,$v) = each($obj->data)) {
           $obj->data[$k] = urldecode($v);
         }

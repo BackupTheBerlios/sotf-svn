@@ -6,6 +6,9 @@ require_once("$classdir/rpc_Utils.class.php");
 
 define("XMLRPC_ERR_NO_ACCESS", $xmlrpcerruser+2);
 
+// this can be long duty!
+set_time_limit(18000);
+
 debug("--------------- XML-RPC SERVER STARTED -----------------------------------");
 
 $map['sotf.sync'] = array('function' => 'syncResp');
@@ -32,7 +35,7 @@ function checkAccess($neighbour) {
 
 function syncResp($params) {
   debug("incoming SYNC request");
-  $lastSync = xmlrpc_decode($params->getParam(0));
+  $chunkInfo = xmlrpc_decode($params->getParam(0));
   $nodeData = xmlrpc_decode($params->getParam(1));
   $objects = xmlrpc_decode($params->getParam(2));
   $neighbour = sotf_Neighbour::getById($nodeData['node_id']);
@@ -45,7 +48,7 @@ function syncResp($params) {
     logError($msg);
     return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: $msg!");
   }
-  $retval = $neighbour->syncResponse($lastSync, $nodeData, $objects);
+  $retval = $neighbour->syncResponse($chunkInfo, $nodeData, $objects);
   // send response
   $retval = xmlrpc_encode($retval);
   return new xmlrpcresp($retval);
