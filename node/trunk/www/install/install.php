@@ -15,8 +15,15 @@ header ("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 // TODO: cache dir letrehozasa!!
 // TODO chekc imagemagick installed
 
-error_log("install.php started",0);
+ini_set("error_log", "../../logs/log");
+ini_set("log_errors", true);
+error_reporting (E_ALL ^ E_NOTICE);
 
+function dbug($msg) {
+  error_log($msg,0);
+}
+
+dbug("install.php started");
 
 function PrintTitle($number)		//'header' af all tests
 {
@@ -347,6 +354,7 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	$id = 3;	//////////////////////////Test 3
 	if (RunTest($id, "Directory and file permissions", 2))
 	{
+	  dbug("TEST 3");
 		$install_test_result[$id] = "";
 
 		//log file
@@ -401,8 +409,9 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 
 
 	$id = 4;	//////////////////////////Test 4
-	if (RunTest($id, "PostGresql connection"))
+	if (RunTest($id, "PostgreSQL connection"))
 	{
+	  dbug("TEST 4");
 		$conn = pg_connect("host=$install_host port=$install_port user=$install_user dbname=template1 password=$install_pass");
 		if (!$conn)
 		{
@@ -429,6 +438,8 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	$id = 5;	//////////////////////////Test 5
 	if (RunTest($id, "DB connection to SelfAdmin", 4))		//////////////////////////Test 4 should be OK to run this test
 	{
+	  dbug("TEST 5");
+
 		$conn = pg_connect("host=$install_sadm_host port=$install_sadm_port dbname=$install_sadm_db_name user=$install_sadm_user password=$install_sadm_pass");
 		if (!$conn)
 		{
@@ -480,6 +491,8 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	$id = 6;	
 	if (RunTest($id, "DB connection to 'node'", 5))		//////////////////////////Test 5 should be OK to run this test
 	{
+	  dbug("TEST 6");
+
 		$conn = pg_connect("host=$install_node_host port=$install_node_port dbname=$install_node_db_name user=$install_node_user password=$install_node_pass");
 		if (!$conn)
 		{
@@ -579,6 +592,8 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 	$id = 7;
 	if (RunTest($id, "Vocabularies", 6) OR isset($install_create_topic) OR isset($install_delete_topic))
 	{
+	  dbug("TEST 7");
+
 		if (isset($install_create_topic))
 		{
 			require_once("../init.inc.php");
@@ -781,6 +796,7 @@ PrintButton($id);
 $id = 8;	
 if (RunTest($id, "Node administrator", 7)) // OR isset($install_node_admin))
 {
+  dbug("TEST 8");
   require_once("../init.inc.php");
 
   if($admin_name && $admin_pass) {
