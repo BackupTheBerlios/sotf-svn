@@ -21,16 +21,25 @@ if (isset($portal_http))
 	$smarty->assign("old_upload", $portal_http);	//save given URL (next time no nedd to write it again)
 	$portal_http_new = str_replace("/portal.php/", "/portal_upload.php/", $portal_http);		//replace portal.php name with the php file responsible for upload
 	if (strstr($portal_http_new, "/portal_upload.php/")) $file = @fopen ( $portal_http_new, "r");		//open file if string could be replaced
-	if (!$file) $smarty->assign("upload_query", "http://");	//if not exist
-	else	
-		{
-			$smarty->assign("upload_query", $portal_http_new);		//if exists
-			$page->redirect($portal_http_new."?type=".$type."&data=".$data);
-//			echo "OK";
-			$_SESSION['portal_http'] = $portal_http;		//TODO save to user properties
-		}
+	if (!$file) $smarty->assign("error", $page->getlocalized("URL_not_found"));	//if not exist
+	else			//if exists
+	{
+		$smarty->assign("upload_query", $portal_http_new);
+
+		$_SESSION['portal_http'] = $portal_http;		//TODO save to user properties
+		$prefs = $user->getPreferences();
+		$prefs->portalSettings = array("URL" => $portal_http);
+		$prefs->save();
+
+		$page->redirect($portal_http_new."?type=".$type."&data=".$data);
+
+	}
 }
-else $smarty->assign("old_upload", $_SESSION['portal_http']);		//TODO load from user properties
+else
+{
+	$prefs = $user->getPreferences();
+	$smarty->assign("old_upload", $prefs->portalSettings["URL"]);		//TODO load from user properties
+}
 
 
 

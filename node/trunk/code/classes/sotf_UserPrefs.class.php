@@ -26,6 +26,10 @@ class sotf_UserPrefs
 	*/
 	var $editorSettings = array();
 
+	/**
+	* URL of the portal used by the user
+	*/
+	var $portalSettings = array();
 
 
   /** this will clear default query or queries, so the user will have normal home page with list of new programmes */

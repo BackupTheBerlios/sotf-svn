@@ -16,7 +16,6 @@ function selectAll(formObj, isInverse)
 </script>
 {/literal}
 
-  <form>
     <table class="title" cellspacing="0" cellpadding="5" width="100%">
       <tr valign="bottom">
         <td class="titlehead" width="20%">
@@ -30,7 +29,6 @@ function selectAll(formObj, isInverse)
         </td>
       </tr>
     </table>
-  </form>
   
   <p></p>
   
@@ -73,26 +71,35 @@ function selectAll(formObj, isInverse)
                 </tr>
               </table>
 
-<div align="center">
-<table width="100%">
-	<tr>
-	<td>
-		<table><tr><td align="center">
-			<input type="button" name="select_all" value="{#select_all#}" onclick="javascript:selectAll(this.form, 0)" /><br>
-			<input type="button" name="invert_selection" value="{#invert_selection#}" onclick="javascript:selectAll(this.form, 1)" />
-		</td></tr></table>
-	</td>
-	<td valign="middle" width="100%">
-		<table width="80%" align="center"><tr>
-			<td valign="middle" align="center"><input type="button" name="change_order" value="{#change_order#}" onclick="javascript:popup('playlistPopup.php', 'playlistOrder', 300, 600, true);return true;" /></td>
-			<td valign="middle" align="center"><input type="submit" name="delete_selected" value="{#delete_selected#}" /></td>
-			<td valign="middle" align="center"><input type="submit" name="play_selected" value="{#play_selected#}" /></td>
-		</tr></table>
-	</td>
-	</tr>
-</table>
-</div>
-</form>
+		<div align="center">
+		<table width="100%">
+			<tr>
+			<td>
+				<table><tr>
+					<td align="center"><input type="button" name="select_all" value="{#select_all#}" onclick="javascript:selectAll(this.form, 0)" /></td>
+				<tr></tr>
+					<td align="center"><input type="button" name="invert_selection" value="{#invert_selection#}" onclick="javascript:selectAll(this.form, 1)" />
+				</tr></table>
+			</td>
+			<td valign="middle" width="100%">
+				<table width="80%" align="center"><tr>
+					<td valign="middle" align="center"><input type="submit" name="play_selected" value="{#play_selected#}" /></td>
+					<td valign="middle" align="center"><input type="submit" name="delete_selected" value="{#delete_selected#}" /></td>
+				</tr></table>
+			</td>
+			<td valign="middle" width="100%">
+				<table width="80%" align="center"><tr>
+					<td valign="middle" align="center"><input type="button" name="change_order" value="{#change_order#}" onclick="javascript:popup('playlistPopup.php', 'playlistOrder', 300, 600, true);return true;" /></td>
+				<tr></tr>
+					<td valign="middle" align="center"><input type="button" name="send_selected" value="{#send_selected#}"
+					{literal}onclick="javascript: ids = ''; for(i=0;i< this.form.elements.length;i++) { if (this.form.elements[i].checked==true) ids = ids + '|' + this.form.elements[i].value}; window.open('portal_upload.php?type=prglist&data='+ids,'','scrollbars=yes,width=640,height=340,left=320,top=200');"{/literal}
+					/></td>
+				</tr></table>
+			</td>
+			</tr>
+		</table>
+		</div>
+	</form>
 {/if}
 <!--
 {foreach name=outer item=row from=$result}
