@@ -1089,11 +1089,28 @@ class sotf_Portal
 				{
 					//decode encoded values
 					if (($event['name'] == 'comment') OR($event['name'] == 'file_uploaded') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit'))
+					{
 						$events[$key]['value'] = unserialize(base64_decode(($event['value'])));
+					}
+
+          // put prog_id in root array if exists
+					if (($event['name'] == 'comment') OR($event['name'] == 'file_uploaded') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit'))
+					{
+						$events[$key]['prog_id'] = $events[$key]['value']['prog_id'];
+					}
+					if (($event['name'] == 'programme_added') OR ($event['name'] == 'programme_deleted'))
+					{
+						$events[$key]['prog_id'] = $events[$key]['value'];
+					}
+
 					//make an URL which leads directly to the portal/programme on the portal
-					if ($event['name'] == 'file_uploaded') $events[$key]['url'] = "http://".$_SERVER['HTTP_HOST'].$events[$key]['value']['location'];
-					elseif (($event['name'] == 'comment') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit')) $events[$key]['url'] = $rootdir."/portal.php/".$events[$key]['portal_name']."?id=".$events[$key]['value']['prog_id'];
-					else $events[$key]['url'] = $rootdir."/portal.php/".$events[$key]['portal_name'];
+					if ($event['name'] == 'file_uploaded') {
+            $events[$key]['url'] = "http://".$_SERVER['HTTP_HOST'].$events[$key]['value']['location'];
+					} elseif (($event['name'] == 'programme_added') OR ($event['name'] == 'programme_deleted') OR ($event['name'] == 'rating') OR ($event['name'] == 'visit')) {
+            $events[$key]['url'] = $rootdir."/portal.php/".$events[$key]['portal_name']."?id=".$events[$key]['value']['prog_id'];
+					} else {
+            $events[$key]['url'] = $rootdir."/portal.php/".$events[$key]['portal_name'];
+          }
 				}
 				
 				$objs = array($events);
