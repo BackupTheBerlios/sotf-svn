@@ -1,7 +1,7 @@
 var confirmMsg  = 'time blocks?';
 function confirmLink(theLink, theSqlQuery)
 {
-    var is_confirmed = confirm('Are you sure you want to delete ' + theSqlQuery);    
+    var is_confirmed = confirm('Are you sure you want to delete this?');    
     return is_confirmed;
 }
 

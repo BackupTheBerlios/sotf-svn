@@ -16,23 +16,23 @@
 	************************/
 
 	//Massive Includer
-	include('config.inc.php');									# guest what this is ;)
-	include('classes/error.class.php');					# Error Collector
-	include('classes/user.class.php');					# User Session Wrapper
-	include('classes/navBar.class.php');				# Navigation Bar Processor
-	include('classes/helpBox.class.php');				# Help Box Generator
-	include('classes/log.class.php');						# action log module
-	include('functions/eh.inc.php');						# Override PHP's Error's handling routines
-	include('functions/timers.inc.php');				# Timers to reveal bottlenecks
-	include('functions/prepend.inc.php');				# Smarty pre and postpend data for pop-up windows
-	require(SMARTY_PATH . '/Smarty.class.php');	# Template Processor
-	require(PEAR_PATH . 'DB.php');							# Pear DB Object .::. http://pear.php.net/
+	include('config.inc.php');																# guest what this is ;)
+	include('classes/error.class.php');												# Error Collector
+	include('classes/user.class.php');												# User Session Wrapper
+	include('classes/navBar.class.php');											# Navigation Bar Processor
+	include('classes/helpBox.class.php');											# Help Box Generator
+	include('classes/log.class.php');													# action log module
+	include('functions/eh.inc.php');													# Override PHP's Error's handling routines
+	include('functions/timers.inc.php');											# Timers to reveal bottlenecks
+	include('functions/prepend.inc.php');											# Smarty pre and postpend data for pop-up windows
+	require(SMARTY_PATH . '/Smarty.class.php');								# Template Processor
+	require(PEAR_PATH . 'DB.php');														# Pear DB Object .::. http://pear.php.net/
 	
 	//Massive Initializer
-	$myError = new error();											# Initialize an empty 'error bin'
-	$myNav = new navBar(HOME_NAME,SRC_ROOT);		# Create an instance of the navigation bar
-	$smarty = new Smarty;												# Initialize Template Parser
-	$myLog = new logBuilder();									# Initialize Log builder
+	$myError = new error();																		# Initialize an empty 'error bin'
+	$myNav = new navBar(HOME_NAME,SRC_ROOT);									# Create an instance of the navigation bar
+	$smarty = new Smarty;																			# Initialize Template Parser
+	$myLog = new logBuilder();																# Initialize Log builder
 		
 	//initialization of private error handling routine
 	set_error_handler('eh');
@@ -52,7 +52,7 @@
 		include("configs/errors.en.php");
 	}
 	
-	$smarty->assign("build_id","14");													# assigning a 'build id'
+	$smarty->assign("build_id","28");													# assigning a 'build id'
 	
 	//build database connections
 	$db = DB::connect(array(																	# Start a connection to the database
@@ -67,8 +67,8 @@
 	
 	//did the connection to local database fail?
 	if(DB::isError($db)){
-		trigger_error($ERR[3]);		# trigger error
-		exit;											# stop page processing
+		trigger_error($ERR[3]);																	# trigger error
+		exit;																										# stop page processing
 	}
 	
 	//start page generation timer

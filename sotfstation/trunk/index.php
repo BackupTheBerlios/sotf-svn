@@ -66,6 +66,7 @@
 				$_SESSION['USER']->set("group_id",$membername[0]);
 			
 				//get additional local user related acces level data
+				$_SESSION['USER']->set("per_page",20);
 			
 				//log info (mark the user that he logged in)
 				$myLog->add($res['auth_id'],0);

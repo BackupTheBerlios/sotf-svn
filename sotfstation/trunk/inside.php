@@ -18,6 +18,11 @@
 	include("classes/dayview.class.php");					# current day calendar handler
 	$myNav->add($SECTION[INSIDE],'index.php');		# add entry to Navigation Bar Stack
 	
+	//fix missing date (if any)
+	if(!$_GET['date']){
+		$_GET['date'] = date("d-m-Y");
+	}
+	
 	//create calendar
 	$myCal = new calendar($_GET['date']);
 	$myCal->select($_GET['date']);			
@@ -38,10 +43,6 @@
 	
 	//##############################################################################################
 	//get today's programms ;)
-	if(!$_GET['date']){									# fix the missing date
-		//$_GET['date'] = date("d-m-Y");
-	}
-	
 	//process limits
 	$myDate = explode("-",$_GET['date']);
 	$start = $myDate[2] . "-" . $myDate[1] . "-" . $myDate[0] . " 00:00:00";

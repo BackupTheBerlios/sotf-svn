@@ -1,6 +1,16 @@
 Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
 
 ************************************************************************************************
+ 15.11.2002
+************************************************************************************************
+
+The stations users navigation panel has been developed massively. Page Splitting has been
+introduced 'software wide'. The interface has been adopted to allow sorting data by columns
+in either ascending or descending order. JavaScript added to support user deletion. The last
+admin user will not be deleted from the list.
+
+
+************************************************************************************************
  14.11.2002
 ************************************************************************************************
 
@@ -11,6 +21,7 @@ The database has been developed further to support multiple users, series and pr
 
 Calendar has been linked to the database. From now on, all the days that have at least one
 programme associated with them will be maked with a small red box on the calendar display.
+
 
 ************************************************************************************************
  13.11.2002
@@ -48,20 +59,27 @@ Added Java Script for popups and deletion confirmation.
  08.11.2002
 ************************************************************************************************
 
-Overall page generation framework is now fully integrated together with the garbage collector. Any errors spawned during page generation will be reported in a nice form to the user.
+Overall page generation framework is now fully integrated together with the garbage collector. 
+Any errors spawned during page generation will be reported in a nice form to the user.
 
-Multilangiage support built in, which relies on the HTTP_ACCEPT_LANG global variable and will be by default set to english.
+Multilangiage support built in, which relies on the HTTP_ACCEPT_LANG global variable and will 
+be by default set to english.
 
 Error lang file has been introduced.
 
-Failure of Local Database Connection will force the server down and spawn an error message. Failure in Remote Database Connection (SADM) will spawn an error message for the garbage collector.
+Failure of Local Database Connection will force the server down and spawn an error message. 
+Failure in Remote Database Connection (SADM) will spawn an error message for the garbage collector.
 
 PHP error handler has been overriden with custom error handling routines.
 
-User Authentication runs through SADM, no matter whether it is on a local server or found remotely. In the latter case it will be accessed via XMLRPC. The two various access methods are seamless for the client and the best one should be choosen at setup time. Error reporting included.
+User Authentication runs through SADM, no matter whether it is on a local server or found remotely. 
+In the latter case it will be accessed via XMLRPC. The two various access methods are seamless 
+for the client and the best one should be choosen at setup time. Error reporting included.
 
 No Access page has been defined and linked to appropriate authentication handling routines
 
 Overall Navigation Menu has been linked with Access Parameters
 
-HelpBox class created and database scheme designed to support it. Now any section of the website can easily get ondemand help. This is part of the main development framework and must be used to the greatest extent.
+HelpBox class created and database scheme designed to support it. Now any section of the 
+website can easily get ondemand help. This is part of the main development framework and must 
+be used to the greatest extent.

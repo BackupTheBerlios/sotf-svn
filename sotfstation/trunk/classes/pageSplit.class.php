@@ -1,6 +1,6 @@
 <?
 	//default error corrector...
-	if((!isset($_GET['block'])) or ($_GET['block']==0)){
+	if(!isset($_GET['block'])){
 		$_GET['block'] = 1;
 		$db_block = 0;
 	}else{
