@@ -14,12 +14,12 @@
 	************************/
 	include("init.inc.php");	# include the global framework
 	
-	//authorative data
-	$smarty->assign("station_access",$_SESSION['USER']->get("edit_station"));
-	
 	//can I edit this?
-	if($_SESSION['USER']->get("edit_station")==2){
+	if(($_SESSION['USER']->get("edit_station")==2) or ($_SESSION['USER']->get("auth_id") == $db->getOne("SELECT series.owner FROM programme LEFT JOIN series ON (programme.series_id = series.id) WHERE programme.id = '$_GET[id]'"))){
 		$mod_flag = TRUE;
+		
+		//authorative data
+		$smarty->assign("station_access",$mod_flag);
 	}
 	
 	####################################################################################################################

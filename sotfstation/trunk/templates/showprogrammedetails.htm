@@ -1,5 +1,5 @@
  <form name="form1" method="post" action="showprogrammedetails.php?id={$programme_id}">
- {if $station_access < 2}
+ {if !$station_access}
   <table width="100%" border="0" cellspacing="0" cellpadding="2">
     <tr> 
       <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
