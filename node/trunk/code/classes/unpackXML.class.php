@@ -27,7 +27,8 @@
 				$this->error = true;
 				return array('error'=>'File ' . $file . ' not found at specified location. DOMXML needs an absolute path to this file starting from htdocs root or a URI!');
 			}else{
-				//get encoding - doesn't
+				/**
+ * //get encoding - doesn't
 				$myfile = fopen($file, "r");
 				$contents = fread($myfile, 64);
 				fclose($myfile);
@@ -38,7 +39,8 @@
 				}else{	
 					$this->encoding = "UTF-8";
 				}
-				
+ */
+				$this->encoding = "UTF-8";
 				//set root
 				$this->root = $this->xml->root();
 			}
