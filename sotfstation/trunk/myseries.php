@@ -111,7 +111,7 @@
 			}else{
 				//check dir structure
 				if(!is_dir(PROG_DIR)){
-					mkdir(PROG_DIR);
+					mkdir(PROG_DIR, 0700);
 				}
 			
 				if(!is_dir(PROG_DIR . $val[0])){
