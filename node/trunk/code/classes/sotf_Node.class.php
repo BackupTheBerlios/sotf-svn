@@ -47,7 +47,8 @@ class sotf_Node extends sotf_NodeObject {
 	  if(!$node) {
 		 raiseError("Could not find home node for programme: " . $prg->id);
 	  }
-	  $url = $node->get('url') . "/$script?" . getenv('QUERY_STRING');
+	  $oldUrl = myGetenv("REQUEST_URI");
+	  $url = $node->get('url') . '/' . strstr($oldUrl, $script);
 	  $page->redirect($url);
 	  exit;
 	}
