@@ -42,14 +42,17 @@
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
-        <tr>
-          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="a" class=menu1>Home</a></td>
+        <tr {if $action == 'inside.htm'}bgcolor=#E7EBF7{/if}>
+          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="{$server_root}inside.php" class=menu1>Programme</a></td>
         </tr>
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
         <tr>
-          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="a" class=menu1>Stations</a></td>
+          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}inside.php" class="menu2l">Overview</a><br>
+		  &nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">New 
+            Programme</a><br>
+			&nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">Print Version</a></td>
         </tr>
 		
         <tr>
@@ -73,7 +76,7 @@
 		<tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr><tr>
-          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="a" class=menu1>Logout</a></td>
+          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="{$server_root}logout.php" class=menu1>Logout</a></td>
         </tr>
 		<tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>

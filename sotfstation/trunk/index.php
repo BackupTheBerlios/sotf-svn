@@ -56,8 +56,8 @@
 				
 				//get group data
 				$membername = $sdb->getRow("select base_id, ent_name from authenticate, base_entities where username ='" . $_POST['user'] . "' and base_id=general_id");
-				$_SESSION['SadmUser']->set("group_name",$membername[1]);
-				$_SESSION['SadmUser']->set("group_id",$membername[0]);
+				$_SESSION['USER']->set("group_name",$membername[1]);
+				$_SESSION['USER']->set("group_id",$membername[0]);
 			
 				//get additional local user related acces level data
 			

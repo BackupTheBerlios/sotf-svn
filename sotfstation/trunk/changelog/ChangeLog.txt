@@ -1,6 +1,14 @@
 Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
 
 ************************************************************************************************
+ 12.11.2002
+************************************************************************************************
+
+A lot of minor bugs fixed that had to do with user object initialization. Calendar classe fully
+adopted to new interface. Hierachichal menues have been developed. Object destroyer set it
+action (currently user for loggin out). Minor changes in design.
+
+************************************************************************************************
  11.11.2002
 ************************************************************************************************
 

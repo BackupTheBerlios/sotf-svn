@@ -17,9 +17,11 @@
 		}
 		
 		//user logged in?
-		if($_SESSION['USER']->get("name")){
-			$smarty->assign('logged_in',TRUE);
-			$smarty->assign('user_name',ucfirst($_SESSION['USER']->get("name")));
+		if(is_object($_SESSION['USER'])){
+			if($_SESSION['USER']->get("name")){
+				$smarty->assign('logged_in',TRUE);
+				$smarty->assign('user_name',ucfirst($_SESSION['USER']->get("name")));
+			}
 		}
 		
 		//output!
