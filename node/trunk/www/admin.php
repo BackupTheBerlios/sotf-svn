@@ -37,7 +37,8 @@ if($xbmfFile) {
 
 // update CVS
 if(sotf_Utils::getParameter('updatecvs')) {
-	checkPerm('node', 'change');
+  die("doesn't work this way, sorry");
+  checkPerm('node', 'change');
 
   chdir($config['basedir']);
   header("Content-type: text/plain\n");

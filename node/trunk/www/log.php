@@ -7,8 +7,10 @@
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
-require("config.inc.php");
-require($config['classdir'] . '/sotf_Utils.class.php');
+require("init.inc.php");
+$page->forceLogin();
+checkPerm('node', "change");
+
 ?>
 
 <html>
