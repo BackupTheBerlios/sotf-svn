@@ -110,7 +110,7 @@ window.onerror = suppressError;
 					<a href="{$sotfSite}advsearch.php" onClick="javascript:window.open('{$sotfSite}advsearch.php','','scrollbars=yes, resizable=yes, menubar=yes,width=640,height=340,left=320,top=200');return false;">[{#UPLOAD_QUERY#}]</a><br />
 				{if $is_query}
 					<a href="{$sotfSite}advsearchresults.php?back=true&SQLquerySerial={$is_query}" onClick="javascript:window.open('{$sotfSite}advsearchresults.php?back=true&SQLquerySerial={$is_query}','','scrollbars=yes, resizable=yes, menubar=yes,width=640,height=340,left=320,top=200');return false;">[{#EDIT_QUERY#}]</a>
-					<br /><a href="{$php_self}?playlist=1&delete_query={$is_query}" onclick="javascript:return confirm('{#delete_the_query#}');">[{#DELETE_QUERY#} <i>({$query_name})</i></a>
+					<br /><a href="{$php_self}?playlist=1&delete_query={$is_query}" onclick="javascript:return confirm('{#delete_the_query#}');">[{#DELETE_QUERY#} <i>({$query_name})</i>]</a>
 				{/if}
 				{if $is_playlist}
 					<a href="{$php_self}?playlist=1&delete_playlist={$is_playlist}" onclick="javascript:return confirm('{#delete_the_playlist#}');">[{#DELETE_PLAYLIST#} <i>({$playlist_name})</i></a>

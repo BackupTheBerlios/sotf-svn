@@ -38,7 +38,8 @@
 				<br />
 				{foreach item=file from=$programme.listen}
 				{if $file.mime_type == "application/x-ogg"}
-					{if !$OGG}<span onclick="javascript:window.open('http://www.vorbis.com','','resizable=yes,scrollbars=yes,width=800,height=600,left=0,top=0');return false;">OGG Vorbis</span>: {else}, {/if}<a href="{$sotfSite}{$file.link}&portal=1" alt="{#file_OGG#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
+					{if !$OGG}<span onclick="javascript:window.open('http://www.vorbis.com','','resizable=yes,scrollbars=yes,width=800,height=600,left=0,top=0');return false;">OGG Vorbis</span>: {else}, {/if}
+					<a href="{$sotfSite}{$file.link}&portal=1" alt="{#file_OGG#}{if $file.vbr == "t"} {#file_vbr#}{/if}, {#file_filesize#}{$file.filesize}, {#file_length#}{$file.play_length}, {#file_bitrate#}{$file.kbps}">{$file.kbps} kbps</a>
 					{assign var="OGG" value="true"}
 				{/if}
 				{/foreach}
