@@ -1,4 +1,4 @@
-1 Künstler
+1 Artist
 2 Autor
 3 Kommentator
 4 Komponist

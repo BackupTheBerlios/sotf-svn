@@ -450,6 +450,7 @@ class sotf_Vocabularies {
 		if(empty($this->genres)) {
 			global $lang, $db;
 			$this->genres = $db->getAll("SELECT genre_id AS id, name FROM sotf_genres WHERE language='$lang'");
+			debug("genres", $this->genres);
 		}
 	}
 
@@ -460,7 +461,14 @@ class sotf_Vocabularies {
 	
   function getGenreName($id) {
 		$this->loadGenres();
-		return $this->genres[$id-1];
+    while(list(,$r) = each($this->genres)) {
+      if($r['id']==$id) {
+				debug("XXX", $r);
+        return $r['name'];
+			}
+    }
+    debug("unknown genre id", $id);
+    return "UNKNOWN_GENRE";
   }
 	
   /************************************************

@@ -44,12 +44,13 @@ if($id) {
 
   // roles and contacts
   $smarty->assign('ROLES', $prg->getRoles());
+
   // genre
+  $smarty->assign('GENRE', $vocabularies->getGenreName($prg->get('genre_id')));
 
   // topics
   $smarty->assign('TOPICS', $prg->getTopics());
 
-  $smarty->assign('GENRE', $vocabularies->getGenreName($prg->get('genre_id')));
   // language
   $smarty->assign('LANGUAGE', $prg->getLanguagesLocalized());
   // rights sections
