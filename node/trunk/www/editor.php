@@ -60,8 +60,8 @@ $max = 10;
 $limit = $page->splitList($max, "");
 //$result = $db->getAll($query.$limit["limit"]);
 
-var_dump($stationId);
-var_dump(sotf_Permission::mySeriesData($stationId));
+//var_dump($stationId);
+//var_dump(sotf_Permission::mySeriesData($stationId));
 
 $sortby[a] = "a";
 $sortby[b] = "b";

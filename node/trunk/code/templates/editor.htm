@@ -73,7 +73,6 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 <tr> 
   <td class="tabarea"> 
 
-<!--
 <table width="100%" bgcolor="{#editorBgColor2#}">
 <tr>
       <td>
@@ -89,13 +88,17 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         </select>
       </td>
       <td>{#sortby#}
-        <select name="sort">
-          <option name="all">Prod. date - Station - Status</option>
-          <option name="unpub">Status - Station - Entry date</option>
+        <select name="sort1">
+		{html_options options=$sortby selected=$sort1}
+        </select>
+        <select name="sort2">
+		{html_options options=$sortby selected=$sort2}
         </select>
       </td>
+      <td>
+		{include file="splitList.htm"}
+      </td>
 </tr></table>
--->
 
 <table width="100%">
 <tr class="listhead">
