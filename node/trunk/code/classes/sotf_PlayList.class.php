@@ -54,7 +54,7 @@ class sotf_Playlist {
 
 
 	 // save stats
-	 $prg->addStat($file->get('filename'), 'listens');
+	 $prg->addStat($file->get('id'), 'listens');
   }
 
   function getTmpId() {

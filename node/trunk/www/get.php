@@ -19,6 +19,14 @@ if($id) {
 
   $prg = &$repository->getObject($id);
 
+  if(!$prg->getBool('published')) {
+	 if(!hasPerm($prg->id, 'change')) {
+		raiseError("not_published_yet");
+		exit;
+	 }
+	 $smarty->assign("UNPUBLISHED", 1);
+  }
+
   $page->setTitle($prg->get('title'));
 
   // general data
