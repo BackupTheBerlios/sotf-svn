@@ -97,8 +97,9 @@ class sotf_Neighbour extends sotf_Object {
 	global $db;
 
 	 global $page;
-	 if(!$console && $this->getBool('use_for_outgoing')) {
-		debug("node $this->id is not used for outgoing sync");
+	 $remoteId = $this->get('node_id');
+	 if(!$console && $this->get('use_for_outgoing') != 't') {
+		debug("node $remoteId is not used for outgoing sync");
 		return;
 	 }
 	 debug("SYNCing with ", $this->get("node_id"));
@@ -107,7 +108,6 @@ class sotf_Neighbour extends sotf_Object {
 	 if($config['debug'])
 		$rpc->debug = true;
 	 $timestamp = $db->getTimestampTz();
-	 $remoteId = $this->get('node_id');
 	 $url = $this->getUrl();
 	 // remove trailing '/'
 	 while(substr($url, -1) == '/')

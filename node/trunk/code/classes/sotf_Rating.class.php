@@ -14,7 +14,6 @@ class sotf_Rating	 extends sotf_Object {
 	var $maxValue = 5;
 
 	function sotf_Rating($id='', $data='') {
-		debug("new rating object", $id);
 		$this->sotf_Object('sotf_ratings', $id, $data);
 	}
 

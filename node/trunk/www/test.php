@@ -4,7 +4,9 @@ require("init.inc.php");
 
 require_once($config['classdir'] . "/rpc_Utils.class.php");
 
+echo strtotime('2003-05-29 09:50:06+2:00');
 
+/*
 $rpc = new rpc_Utils;
 $rpc->debug = true;
 
@@ -31,6 +33,7 @@ $objects = array($obj);
 
 $objs = array($chunkInfo, $objects);
 $response = $rpc->call('http://sotf2.dsd.sztaki.hu/node2/www/xmlrpcServer.php', 'sotf.sync', $objs);
+*/
 
 /*
 print "<pre>";

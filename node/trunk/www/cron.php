@@ -40,7 +40,7 @@ sotf_Object::doUpdates();
 // sync with all neighbours
 $rpc = new rpc_Utils;
 $neighbours = sotf_Neighbour::listAll();
-debug("neihbours", $neighbours);
+//debug("neighbours", $neighbours);
 if(count($neighbours) > 0) {
   while(list(,$neighbour) = each($neighbours)) {
       $neighbour->sync();

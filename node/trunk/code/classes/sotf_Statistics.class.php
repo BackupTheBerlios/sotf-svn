@@ -29,7 +29,7 @@ class sotf_Statistics extends sotf_Object {
 							 "unique_listens" => 0, "unique_downloads" => 0, "unique_visits" => 0, "detail" => '');
 	 }
 	 $result['last_change'] = $db->getOne("SELECT last_change FROM sotf_node_objects WHERE id='" . $result['id'] . "'");
-	 debug("STATS", $result);
+	 // debug("STATS", $result);
 	 return $result;
   }
 
@@ -54,7 +54,7 @@ class sotf_Statistics extends sotf_Object {
 
   /** static */
   function addRemoteStat($data) {
-	 debug("remote stat", $data);
+	 // debug("remote stat", $data);
 	 return sotf_Statistics::recordStat($data);
   }
 
@@ -67,8 +67,10 @@ class sotf_Statistics extends sotf_Object {
 
     // update periodic stat
 
-	 $date = strtotime($data['date']);
+	 $date = $data['date'];
+	 debug("date", $db->getTimestampTz($date));
     $now = getdate($date);
+	 debug("now", $now);
     $year = $now['year'];
     $month = $now['mon'];
     $day = $now['mday'];
@@ -98,12 +100,11 @@ class sotf_Statistics extends sotf_Object {
     sotf_Statistics::addUniqueAccess($data['ip'], $prgId, $fileId, $type);
 
     // would be too often: 
-	 if($update) {
+	 if($update)
 		$obj->updateStats(false);
-	 } else {
-		sotf_Object::addToUpdate('sotf_stats', $obj->id);
-	 }
     $obj->save();
+	 if(!$update)
+		sotf_Object::addToUpdate('sotf_stats', $obj->id);
 	 return $obj;
   }
 
@@ -115,7 +116,7 @@ class sotf_Statistics extends sotf_Object {
 	 
 	 $data = array('prog_id' => $obj->id,
 						'station_id' => $obj->get('station_id'),
-						'date' => $db->getTimestampTz(),
+						'date' => time(),
 						'ip' => getHostName(),
 						'type' => $type,
 						'file' => $fileId);
