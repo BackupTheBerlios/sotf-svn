@@ -25,6 +25,10 @@
 		$mod_flag = TRUE;
 	}
 	
+	################# PROCESS POST ACTION ######################################################
+	
+	
+	
 	################# PROCESS ACTIONS ##########################################################
 	if($_GET['action']=='delete' and $mod_flag){
 		$db->query("DELETE FROM programme WHERE id = '$_GET[pid]'");
@@ -94,7 +98,12 @@
 	while(list($key,$val)=each($go)){
 		$new_go['myseries.php?id='.$key] = $val;
 	}
-	$smarty->assign(array("series"=>$new_go,"series_selected"=>'myseries.php?id='.$_GET['id'],"id"=>$_GET['id']));
+	$smarty->assign(array(
+													"series"=>$new_go,
+													"series_selected"=>'myseries.php?id='.$_GET['id'],"id"=>$_GET['id'],
+													"filter_active"=>array(0=>"Active And Inactive",1=>"Only Active",2=>"Only Inactive"),
+													"filter_published"=>array(0=>"Published And Unpublished",1=>"Only Published",2=>"Only Unpublushed")
+												));
 	//create help message
 	//$myHelp = new helpBox(3,'90%');
 				

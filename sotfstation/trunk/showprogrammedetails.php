@@ -205,6 +205,4 @@
 	
 	//page output :)	
 	pageFinishPopup('showprogrammedetails.htm');							# enter the desired template name as a parameter
-	
-	//shared ru_exit remove ryth
 ?>

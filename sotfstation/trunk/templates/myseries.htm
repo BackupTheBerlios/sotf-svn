@@ -11,20 +11,34 @@
                   </table></td>
               </tr>
               <tr bgcolor="#dddddd"> 
-                <td colspan="6" class="title"><table width="100" border="0" cellspacing="1" cellpadding="1">
+                <td colspan="6" class="title"><table width="100%" border="0" cellspacing="1" cellpadding="1">
                     <tr> 
-                      <td nowrap>My Series:</td>
-                      <td nowrap>
-{if $series != ''}					  
-					  <form name="form1">
+                      <td width="50" nowrap>My Series:</td>
+                      <td width="100" nowrap> {if $series != ''} 
+                        <form name="form1">
                           <select name="menu1" onChange="MM_jumpMenu('parent',this,0)">
                             {html_options options=$series selected=$series_selected}
                           </select>
                         </form>
-{else}
-You have no series :(
-{/if}
-</td>
+                        {else} You have no series :( {/if} </td>
+                      <td nowrap>&nbsp;</td>
+                      <td nowrap><div align="right">
+                          <form name="form2" method="post" action="myseries.php?block={$block}&sortby={$sortby}&orderby={$order}&action=edit&id={$id}">
+                            <table width="100" border="0" cellspacing="1" cellpadding="1">
+                              <tr> 
+                                <td>Show:</td>
+                                <td nowrap><select name="filter_active">
+                                    {html_options options=$filter_active selected=$filter_active_selected}
+                                  </select></td>
+                                <td>&nbsp;</td>
+                                <td nowrap><select name="filter_published">
+                                   {html_options options=$filter_published selected=$filter_published_selected}
+                                  </select></td>
+								  <td><input name="show" type="submit" id="show" value="&gt;&gt;"></td>
+                              </tr>
+                            </table>
+                          </form>
+                        </div></td>
                     </tr>
                   </table></td>
               </tr>
