@@ -1,70 +1,46 @@
-<?php //-*- tab-width: 3; indent-tabs-mode: 1; -*-
+<?php 
+// -*- tab-width: 3; indent-tabs-mode: 1; -*-
+// $Id$
 
-/***
- * Station Class
- * purpose: to represent a SOTF STATION :)
- * Author: Alexey Koulikov - alex@pvl.at, alex@koulikov.cc
- ************/
-class sotf_Station extends sotf_Base {		
+class sotf_Station extends sotf_RepBase {		
 
 	var $numProgrammes;
+	
+	var $roles;
 
-  /**
-   * sotfStation::sotfStation()
-   * 
-   * el constructor
-   * 
-   * @param	string	$id
-   * @param	object	$db_handle
-   * @return (void)
+   /**
+     * Constructor: loads the object from database if ids are given
+     *
+     * @param string tablename name of SQL table to store
+     * @param string node node id
+     * @param string id id within node
    */
-  function sotf_Station($id='', $data='') {
-    $this->sotf_Base($id, $data);
-  }
-
-  /**
-   * prupose: populate the object from the database
-   * @return
-   */
-  function load(){
-    //fetch data from database and fill values
-    return parent::load("sotf_stations","station");
+  function sotf_Station($nodeId='', $id=''){
+    parent::constructor('sotf_stations', $nodeId, $id);
+    // load roles
+    $r = $this->db->getAll("SELECT node_id, id FROM sotf_station_roles WHERE station_id='$id' AND node_id='$nodeId'");
+    while (list (, $val) = each ($r)) {
+      $this->roles[$val['node_id'] . '_' . $val['id']] = new sotf_Role('sotf_station_roles', $val['node_id'], $val['id']);
+    }
+    // load access rights
   }
 
   function create($station, $desc) {
   	global $nodeId;
 	$st = & new sotf_Station();
 	$st->id = $station;
-	$st->set('station', $station);
+	$st->set('id', $station);
 	$st->set('description', $desc);
-	$st->set('node', $nodeId);
-    $dir = $st->getDir();
-    if(!is_dir($dir)) {
-      mkdir($dir, 0775);
-      mkdir("$dir/station", 0775);
-    }
-    $st->save();
-    return $st;
+	$st->set('node_id', $nodeId);
+	$dir = $st->getDir();
+	if(!is_dir($dir)) {
+	  mkdir($dir, 0775);
+	  mkdir("$dir/station", 0775);
+	}
+	$st->save();
+	return $st;
   }
   
-  /**
-   * purpose: to commit the changes made to the object with
-   * 					the database.
-   * @return (bool)
-   */
-  function save(){
-
-    $this->data['last_change'] = db_Wrap::getTimestampTz();
-    return parent::save("sotf_stations","station");
-  }
-
-  /**
-   * sotfShow::delete()
-   *
-   * purpose: to delete data from the tables
-   *
-   * @return (bool)
-   */
   function delete(){
     if(! $this->isLocal()) {
       error("Can delete only local stations");
@@ -72,17 +48,10 @@ class sotf_Station extends sotf_Base {
     }
     // delete files from the repository
     sotf_Utils::erase($this->getDir());
-    // delete programmes of the station
-    // TODO getallprogrammes: call delete
-    // delete user permissions
-    $this->db->query("DELETE FROM sotf_user_group WHERE station = '" . $this->id . "'");
     // propagate deletion to other nodes
-    $data = array( 'what' => 'station',
-		   'del_time' => db_Wrap::getTimestampTZ(),
-		   'node' => $GLOBALS['nodeId']);
-    sotf_Base::saveDataWithId("sotf_deletions", 'id', $this->id, $data);
-    // delete station description
-    return parent::delete("sotf_stations","station");
+	 $this->createDeletionRecord();
+    // delete from sql db
+    return parent::delete();
   }
 
   function getDir() {
@@ -160,57 +129,6 @@ class sotf_Station extends sotf_Base {
 		return $this->getBlob("icon");
 	} // end func getLogo
 
-  /** sets logo of the station */
-  /*function setLogo($fromFile) {
-    $dir = $this->getDir();
-      $parts = explode('.',$fromFile);
-    if (count($parts) > 1) {
-      $targetFile = $dir . '/logo.' . $parts[count($parts)-1];
-    } else {
-      $targetFile = $dir . '/logo';
-    }
-    $this->deleteLogo();
-    $retval = rename($fromFile, $targetFile);
-    if(!$retval)
-      error("Could not move file $fromFile to its location");
-    chmod($targetFile, 0770);
-    return $targetFile;
-  }*/
-	
-  /** returns the path of the logo of the station */
-  /*function getLogo() {
-    $dir = $this->getDir();
-    if (is_dir($dir)) {
-      $handle = opendir($dir);
-    }
-    if ($handle) {
-      $found = false;
-      while (($file = readdir($handle)) !== false) {
-	if (preg_match('/^logo/',$file)) {
-	  $found = true;
-	  break;
-	}
-      }
-      closedir($handle);
-      if ($found) {
-	return $dir . '/' . $file;
-      } else {
-	return new PEAR_Error($this->id . " has no logo!");
-      }
-    } else {
-      return new PEAR_Error("Cannot open station subdirectory in station " . $this->id . "!");
-    }
-  }*/
-
-  function getNode() {
-    $id = $this->id;
-    $node = $this->db->getRow("SELECT n.* FROM sotf_nodes n, sotf_stations s WHERE n.id=s.node AND s.station='$id'");
-    if(!DB::isError($node))
-      return $node;
-    else
-      return null;
-  }
-
 	/**
 	* Sets jingle of the station.
 	*
@@ -260,68 +178,25 @@ class sotf_Station extends sotf_Base {
 		}
 	}
 
-  /*function setJingle($fromFile) {
-    $dir = $this->getDir();
-    $targetFile = $dir . '/' . JINGLE;
-    $retval = rename($fromFile, $targetFile);
-    if(!$retval)
-      return new PEAR_Error("Could not move file $fromFile to its location");
-    //chmod($targetFile, 0770);
-    return $targetFile;
-  }*/
-
-  /** sets jingle24 of the station */
-  /*function setJingle24($fromFile) {
-    $dir = $this->getDir();
-    $targetFile = $dir . '/' . JINGLE24;
-    $retval = rename($fromFile, $targetFile);
-    if(!$retval)
-      return new PEAR_Error("Could not move file $fromFile to its location");
-    //chmod($targetFile, 0770);
-    return $targetFile;
-  }*/
-
-  /** returns the path of the jingle of the station */
-  /*function getJingle() {
-    $file = $this->getDir();
-    if (is_file($file) && !is_file($file.'.lock')) {
-      return $file;
-    } else {
-      return new PEAR_Error($stationId . " has no jingle!");
-    }
-  }*/
-
-  /** returns the path of the jingle24 of the station */
-  /*function getJingle24() {
-    $file = $this->getDir();
-    if (is_file($file) && !is_file($file.'.lock')) {
-      return $file;
-    } else {
-      return new PEAR_Error($stationId . " has no jingle24!");
-    }
-  }*/
-
   /** get number of published programmes */
   function numProgrammes($onlyPublished = true) {
   	if(isset($this->numProgrammes))
   		return $this->numProgrammes;
-	$sql = "SELECT COUNT(*) FROM sotf_programmes WHERE station = '$id'";
-    if($onlyPublished)
-      $sql .= " AND published='t'";
-    $id = $this->id;
-    $count = $this->db->getOne($sql);
-    if (DB::isError($count))
-      return 0;
-    else
-      return $count;
+	$sql = "SELECT COUNT(*) FROM sotf_programmes WHERE station_id = '" . $this->id . "' AND node_id='" . $this->node . "' ";
+	if($onlyPublished)
+	  $sql .= " AND published='t'";
+	$count = $this->db->getOne($sql);
+	if (DB::isError($count))
+	  return 0;
+	else
+	  return $count;
   }
 
   /** list programmes */
   function listProgrammes($start, $num, $onlyPublished = true) {
-	global $db;
-
     $id = $this->id;
-    $sql = "SELECT * FROM sotf_programmes WHERE station = '$id' ";
+	 $node = $this->node;
+    $sql = "SELECT id, node_id FROM sotf_programmes WHERE station_id = '$id' AND node_id='$node'";
     if($onlyPublished)
       $sql .= " AND published='t' ";
     $sql .= " ORDER BY entry_date DESC,track ASC";
@@ -335,62 +210,60 @@ class sotf_Station extends sotf_Base {
       raiseError($res->getMessage());
 
     foreach($res as $item) {
-      $list[] = new sotf_Programme($item['id'], $item);
+      $list[] = new sotf_Programme($item['node_id'], $item['id']);
     }
     return $list;
   }
 
-  /** get the list of series at the station*/
+  /**
+   * @method listSeries
+   * @return array of sotf_Series objects
+  */
   function listSeries() {
-    return sotf_Series::listSeries($this->id);
+    $id = $this->id;
+	 $node = $this->node;
+    $slist = $this->db->getAll("SELECT node_id, id FROM sotf_series WHERE station_id='$id' AND node_id='$node'");
+    while (list (, $val) = each ($slist)) {
+      $retval[] = new sotf_Series($val['node_id'], $val['id']);
+    }
+    return $retval;
   }
 
-  /*
-  function listStationsAndCounts() {
-    global $db;
-    $sql = "SELECT s.*, count(i.track) AS nump FROM sotf_stations AS s LEFT JOIN sotf_programmes AS i ON s.station=i.station AND i.published='t' GROUP BY s.station ORDER BY s.station";
-    $res = $db->getAll($sql);
-    // if(isError)...
-	foreach($res as $st) {
-		$s = new sotf_Station($st['station'], $st);
-		$s->numProgrammes = $s->data['nump'];
-		unset($s->data['nump']);
-		$slist[] = $s;
-	}
-    return $slist;
-  }
-*/
-
+  /**
+   * @method static listStations
+   * @return array of sotf_Series objects
+  */
   function listStations() {
     global $db;
-    $sql = "SELECT * FROM sotf_stations ORDER BY station";
-    $res = $db->getAll($sql);
-    // if(isError)...
-	foreach($res as $st) {
-      $slist[] = new sotf_Station($st['station'], $st);
-	}
+    $res = $db->getAll("SELECT node_id, id FROM sotf_stations ORDER BY name");
+    if(DB::isError($res))
+		raiseError($res);
+	 foreach($res as $st) {
+      $slist[] = new sotf_Station($st['node_id'], $st['id']);
+	 }
     return $slist;
   }
 
-  /** station.php search.php */
+  /**
+   * @method static listStationNames
+   * @return array of name
+  */
   function listStationNames($localOnly = false) {
     global $nodeId, $db;
-    $sql = "SELECT station FROM sotf_stations";
+    $sql = "SELECT name FROM sotf_stations";
     if($localOnly)
-      $sql .= " WHERE node='$nodeId' ";
-    $sql .= " ORDER BY station";
+      $sql .= " WHERE node_id='$nodeId' ";
+    $sql .= " ORDER BY name";
     return $db->getCol($sql);
   }
 
+  /**
+   * @method static numStations
+   * @return array of name
+  */
   function numStations() {
     global $db;
     return $db->getOne("SELECT count(*) FROM sotf_stations");
   }
-
-  /*
-  function getURL($station) {
-    return $this->db->getOne("SELECT n.url FROM sotf_nodes n, sotf_stations s WHERE n.id=s.node AND s.station='$station'");
-  }
-  */
 
 }

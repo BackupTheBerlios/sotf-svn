@@ -1,6 +1,7 @@
 <?php //-*- tab-width: 3; indent-tabs-mode: 1; -*-
 
 require($classdir . '/sotf_Base.class.php');
+require($classdir . '/sotf_RepBase.class.php');
 require($classdir . '/sotf_Node.class.php');
 require($classdir . '/sotf_Neighbour.class.php');
 require($classdir . '/sotf_Station.class.php');
@@ -11,29 +12,77 @@ require($classdir . '/sotf_Metadata.class.php');
 
 class sotf_Repository {
 
+  var $tableCodes = array( 
+									"sotf_nodes" => "no",
+									"sotf_contacts" => "co",
+									"sotf_stations" => "st",
+									"sotf_station_roles" => "sr",
+									"sotf_series" => "se",
+									"sotf_series_roles" => "rr",
+									"sotf_programmes" => "pr",
+									"sotf_rights" => "ri",
+									"sotf_prog_roles" => "pp",
+									"sotf_extradata" => "ed",
+									"sotf_other_files" => "of",
+									"sotf_media_files" => "mf",
+									"sotf_links" => "li",
+									"sotf_topic_trees" => "tt",
+									"sotf_topic_tree_defs" => "td",
+									"sotf_topics" => "to",
+									"sotf_prog_topics" => "pt",
+									"sotf_genres" => "ge",
+									"sotf_role_names" => "ro",
+									"sotf_deletions" => "de",
+									"sotf_prog_rating" => "ra",
+									"sotf_refs" => "re",
+									"sotf_stats" => "sx"
+									)
+
   var $rootdir;
   var $db;
 
+  var $roles;
+
+  var $genres;
+
   function sotf_Repository($rootDir, $db) {
+	 global $lang;
     $this->rootdir = $rootDir;
     $this->db = $db;
+	 // load roles
+	 $this->roles = $db->getAll("SELECT id, name FROM sotf_roles WHERE language='$lang'");
+	 // load genres
+	 $this->genres = $db->getAll("SELECT id, name FROM sotf_genres WHERE language='$lang'");
   }
 
+  function getTableCode($tablename) {
+	 $tc = $this->tableCodes[$tablename];
+	 if(!$tc)
+		raiseError("no table code for table $tablename");
+	 return $tc;
+  }
 
   //TODO
   function getTopicTree($language) {
 
   }
 
-  //TODO
-  function getRoles($language) {
-
+  function getRoleName($id) {
+	 return $this->roles[$id];
   }
 
-  //TODO
-  function getGenres($language) {
-
+  function getRoles() {
+		return $this->roles;
   }
+
+  function getGenres() {
+	 return $this->genres;
+  }
+
+  function getGenreName($id) {
+	 return $this->genres[$id];
+  }
+
 
 
 

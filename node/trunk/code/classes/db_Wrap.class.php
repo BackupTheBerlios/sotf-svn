@@ -1,4 +1,6 @@
 <?php
+// -*- tab-width: 3; indent-tabs-mode: 1; -*-
+// $Id$
 
 include_once($peardir . '/DB/pgsql.php');
 
@@ -105,6 +107,7 @@ class db_Wrap extends DB_pgsql {
 	  return parent::query($query);
 	}
 
+  /** utility method for storing and loading binary data in postgres */
 	function escape_bytea($binary)
 	{
 		$bytea = "";
@@ -113,19 +116,20 @@ class db_Wrap extends DB_pgsql {
 		return $bytea;
 	}
 
+  /** utility method for storing and loading binary data in postgres */
 	function unescape_bytea($bytea)
 	{
 		return eval("return \"".str_replace('$', '\\$', str_replace('"', '\\"', $bytea))."\";");
 	}
 
-	/** SELECT $field FROM $table WHERE $idKey = '$id' */
+	/** Loads a binary object from database. SELECT $field FROM $table WHERE $idKey = '$id' */
 	function getBlob($table, $id, $idKey, $field)
 	{
 	    debug("DB","getBlob: Table: $table, ID: $id, IDKey: $idKey, Field: $field");
 		return $this->unescape_bytea(parent::getOne("SELECT $field FROM $table WHERE $idKey = '$id'"));
 	}
 
-	/** UPDATE $table SET $field = '$binary' WHERE $idKey = '$id' */
+	/** Stores a binary object in database. UPDATE $table SET $field = '$binary' WHERE $idKey = '$id' */
 	function setBlob($table, $id, $idKey, $field, $binary)
 	{
 	    debug("DB","setBlob: Table: $table, ID: $id, IDKey: $idKey, Field: $field");

@@ -1,73 +1,41 @@
 <?php
+// -*- tab-width: 3; indent-tabs-mode: 1; -*-
+// $Id$
 
-/***
- * Show Class
- * purpose: to represent a SOTF SHOW :)
- * Author: Alexey Koulikov - alex@pvl.at, alex@koulikov.cc
- ************/
+/**
+* Models a series
+*
+* @author Andras Micsik SZTAKI DSD micsik@sztaki.hu
+*/
+class sotf_Series extends sotf_RepBase {		
 
-class sotf_Series extends sotf_Base {		
-  
-  /**
-   * sotfShow::sotfShow()
-   * 
-   * el constructor
-   * 
-   * @param	string	$id
-   * @param	object	$db_handle
-   * @return (void)
+  var $roles;
+
+  var $access;
+
+   /**
+     * Constructor: loads the object from database if ids are given
+     *
+     * @param string tablename name of SQL table to store
+     * @param string node node id
+     * @param string id id within node
    */
-  function sotf_Series($id='', $data='') {
-    $this->sotf_Base($id, $data);
-  }
-
-  function listSeries($station) {
-    global $db;
-    $slist = $db->getAll("SELECT * FROM sotf_series WHERE station='$station'");
-    foreach($slist as $item) {
-      $retval[] = new sotf_Series($item['id'], $item);
+  function sotf_Series($nodeId='', $id=''){
+    parent::constructor('sotf_series', $nodeId, $id);
+    // load roles
+    $r = $this->db->getAll("SELECT node_id, id FROM sotf_series_roles WHERE series_id='$id' AND node_id='$nodeId'");
+    while (list (, $val) = each ($r)) {
+      $this->roles[$val['node_id'] . '_' . $val['id']] = new sotf_Role('sotf_series_roles', $val['node_id'], $val['id']);
     }
-    return $retval;
-  }
-
-  /**
-   * sotfShow::populate()
-   * 
-   * prupose: populate the object from the database
-   * @return 
-   */
-  function load(){
-    //fetch data from database and fill values
-    return parent::load("sotf_series","id");	
-  }
-		
-  /**
-   * sotfShow::commit()
-   * 
-   * purpose: to commit the changes made to the object with
-   * 					the database.
-   * @return (bool)
-   */
-  function save(){
-    return parent::save("sotf_series","id");	
-  }
-  
-  /**
-   * sotfShow::delete()
-   * 
-   * purpose: to delete data from the tables
-   * 
-   * @return (bool)
-   */
-  function delete(){
-    return parent::delete("sotf_series","id");
+    // load access rights
   }
 
   /** get number of published programmes */
   function numProgrammes($onlyPublished = true) {
+    $node = $this->node;
     $id = $this->id;
     $station = $this->data['station'];
-	$sql = "SELECT COUNT(*) FROM sotf_programmes WHERE station = '$station' AND series='$id'";
+    $sql = "SELECT COUNT(*) FROM sotf_programmes WHERE node_id = '$node' AND series_id='$id'";
     if($onlyPublished)
       $sql .= " AND published='t'";
     $count = $this->db->getOne($sql);
@@ -78,9 +46,9 @@ class sotf_Series extends sotf_Base {
   }
 
   function listProgrammes($start, $num, $onlyPublished = true) {
-    $station = $this->data['station'];
-    $series = $this->id;
-    $sql = "SELECT * FROM sotf_programmes WHERE station = '$station' AND series = '$series' ";
+    $node = $this->node;
+    $id = $this->id;
+    $sql = "SELECT node_id, id FROM sotf_programmes WHERE node_id = '$node' AND series_id='$id'";
     if($onlyPublished)
       $sql .= " AND published='t' ";
     $sql .= " ORDER BY entry_date DESC,track ASC";
@@ -93,10 +61,10 @@ class sotf_Series extends sotf_Base {
     if(DB::isError($res))
       raiseError($res->getMessage());
     foreach($res as $item) {
-      $list[] = new sotf_Programme($item['id'], $item);
+      $list[] = new sotf_Programme($item['node_id'], $item['id']);
     }
     return $list;
-  }	
+  }
 
 
 }	

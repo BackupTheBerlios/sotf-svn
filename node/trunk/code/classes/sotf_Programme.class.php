@@ -6,30 +6,35 @@
  * Author: Alexey Koulikov - alex@pvl.at, alex@koulikov.cc
  ************/
 
-class sotf_Programme extends sotf_Base {
+class sotf_Programme extends sotf_RepBase {
   
   var $topics;
-  var $metaData;
-  var $files;
-  var $audioFiles;
+  var $listenTotal;
+  var $downloadTotal;
+  var $visitTotal;
+  var $rating;
+  var $ratingTotal;
+  var $genre;
+  var $station;
+  var $series;
+
+  var $roles;
+  var $extradata;
+  var $other_files;
+  var $media_files;
+  var $links;
+  var $rights;
+  var $refs;
 
   /**
    * constructor
    */
   function sotf_Programme($id='', $data='') {
-    $this->sotf_Base($id, $data);
+	 parent::constructor('sotf_programmes', $id, $data);
   }
   
-  /**
-   * loads basic object data from database, does not load stats, references, files, etc.
-   */
-  function load(){
-    //fetch data from database and fill values
-    return parent::load("sotf_programmes","id");
-  }
-
   /** finds the next available track id within the station ($track may be empty) */
-  function getNextTrackId($station, $date, $track) {
+  function createTrackId($station, $date, $track) {
     global $db;
     if(!$track)
       $track = '1';
@@ -64,15 +69,7 @@ class sotf_Programme extends sotf_Base {
     }
   }
 
-  /** loads all data for the object, in contrat to load() which loads just the basic data */
-  function loadAllData() {
-    $this->topics = $this->db->getAll("SELECT tree_id, topic_id FROM sotf_prg_topics WHERE id='" . $this->id . "'");
-    $this->metaData = new sotf_Metadata();
-    $this->metaData->fillExtra($this->id);
-    $this->loadOtherFiles();
-    $this->loadAudioFiles();
-  }
-
+  /*
   function loadOtherFiles() {
     if(empty($this->files)) {
       $this->files = & new sotf_FileList();
@@ -86,31 +83,14 @@ class sotf_Programme extends sotf_Base {
       $this->audioFiles->getAudioFromDir($this->getAudioDir());
     }    
   }
+  */
 
-  /** saves basic object data into database */
-  function save(){
-    $this->data['last_change'] = db_Wrap::getTimestampTz();
-    if(parent::save("sotf_programmes","id")) {
-      return $this->saveMetadataFile();
-    } else
-      return false;
-  }
-  
   /** deletes the program, and all its data and files
    */
   function delete(){
-    $id = $this->id;
-    $this->deleteStats();
-    $this->deleteRefs();
-    // todo: delete topics
-    // todo: delete extradata
-    $ii = array( 
-                'what' => 'item',
-                'id' => $id->toString(),
-                'del_time' => DBWrap::getTimestampTZ(),
-                'node' => $nodeId);
-    sotf_Base::saveDataWithId("sotf_deletions", 'id', $this->id, $ii);
-    return parent::delete("sotf_programmes","id");
+	 $this->createDeletionRecord();
+	 sotf_Utils::erase($this->getDir());
+    return parent::delete();
   }
 
   /** returns the directory where programme files are stored */

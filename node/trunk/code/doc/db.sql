@@ -14,19 +14,12 @@ CREATE TABLE "sotf_permissions" (
 	"permission" varchar(20) UNIQUE NOT NULL
 );
 
-INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'station_manager');
-INSERT INTO "sotf_permissions" ("id", "permission") VALUES('2', 'read');
-INSERT INTO "sotf_permissions" ("id", "permission") VALUES('3', 'write');
-
 CREATE TABLE "sotf_groups" (
 -- a group can have a set of permissions
-	"id" serial PRIMARY KEY, -- just an id
+	"id" serial PRIMARY KEY, 			-- just an id
+	"global" bool DEFAULT false,  	-- if this group is a global one or not
 	"name" varchar(30) UNIQUE NOT NULL
 );
-
-INSERT INTO "sotf_groups" ("id", "name") VALUES('1', 'station_manager');
-INSERT INTO "sotf_groups" ("id", "name") VALUES('2', 'editor');
-INSERT INTO "sotf_groups" ("id", "name") VALUES('3', 'admin');
 
 CREATE TABLE "sotf_group_permission" (
 -- a group can have a set of permissions
@@ -36,13 +29,6 @@ CREATE TABLE "sotf_group_permission" (
 	CONSTRAINT "sotf_group_perm_u" UNIQUE ("group_id", "permission_id")
 );
 
-INSERT INTO "sotf_group_permission" ("group_id", "permission_id") VALUES(1, 1);
-INSERT INTO "sotf_group_permission" ("group_id", "permission_id") VALUES(2, 2);
-INSERT INTO "sotf_group_permission" ("group_id", "permission_id") VALUES(2, 3);
-INSERT INTO "sotf_group_permission" ("group_id", "permission_id") VALUES(3, 1);
-INSERT INTO "sotf_group_permission" ("group_id", "permission_id") VALUES(3, 2);
-INSERT INTO "sotf_group_permission" ("group_id", "permission_id") VALUES(3, 3);
-
 CREATE TABLE "sotf_user_prefs" (
 -- user preferences stored as serialized objects
 	"id" int PRIMARY KEY,					-- same as auth_id in sadm
@@ -51,25 +37,21 @@ CREATE TABLE "sotf_user_prefs" (
 	"prefs" text
 );
 
-INSERT INTO "sotf_user_prefs" ("id", "username") VALUES(1, 'admin');
-
-CREATE TABLE "sotf_user_global_groups" (
+CREATE TABLE "sotf_user_groups" (
 -- a user may belong to global or station-local groups thus defining permissions 
 	"id" serial PRIMARY KEY, -- just an id
 	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE,
+	"object_id" varchar(12), -- the object in which group permissions apply (if null, the permissions are global)
 	"group_id" int REFERENCES sotf_groups(id) ON DELETE CASCADE,
-	CONSTRAINT "sotf_user_global_group_uniq" UNIQUE ("user_id", "group_id")
+	CONSTRAINT "sotf_user_global_group_uniq" UNIQUE ("user_id", "object_id", "group_id")
 );
-
-INSERT INTO "sotf_user_global_groups" ("user_id", "group_id") VALUES(1,1);
 
 CREATE TABLE "sotf_user_history" (
 -- past actions of the user, may be used for collaborative filtering
 	"id" serial PRIMARY KEY, -- just an id
 	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE,
-	"action" VARCHAR(30), -- type of action the user did with target
-	"target_type" varchar(40),	-- e.g. station, programme, etc.
-	"target_id" int,
+	"action" varchar(30), -- type of action the user did with object
+	"object_id" varchar(12),
 	"when" datetime
 );
 
@@ -77,14 +59,15 @@ CREATE TABLE "sotf_nodes" (
 -- data about nodes in the network 
 -- REPLICATED
 	"id" int2 PRIMARY KEY, 							-- this id will be negotiated via e-mail within a node network
+	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
+-- end of basic stuff
 	"name" varchar(40) UNIQUE NOT NULL,
 	"url" varchar(255) NOT NULL,
 	"authorizer" varchar(40) NOT NULL,
 	"ip" inet,
 	"description" varchar(255),
 	"up" bool NOT NULL,
-	"last_sync" timestamptz,
-	"last_change" timestamptz
+	"last_sync" timestamptz
 );
 
 CREATE TABLE "sotf_neighbours" (
@@ -103,8 +86,7 @@ CREATE SEQUENCE "sotf_contacts_seq";
 CREATE TABLE "sotf_contacts" (
 -- this is a person or organization record
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_contacts_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
 	"name" varchar(100) NOT NULL,
@@ -118,46 +100,20 @@ CREATE TABLE "sotf_contacts" (
 	"fax" varchar(20),
 	"url" varchar(255),
 	"icon" bytea,
-	"jingle" bytea,
-	CONSTRAINT "sotf_contacts_pkey" PRIMARY KEY ("id", "node_id")
-);
-
-CREATE TABLE "sotf_contact_access" (
--- who can edit this contact record
-	"id" serial PRIMARY KEY, 	-- just an id
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
-	"contact_id" int NOT NULL,
-	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE,
-	"group_id" int REFERENCES sotf_groups(id) ON DELETE CASCADE,
-	CONSTRAINT "sotf_contact_access_uniq" UNIQUE ("contact_id", "user_id", "group_id"),
-	FOREIGN KEY("contact_id","node_id") REFERENCES sotf_contacts("id", "node_id") MATCH FULL ON DELETE CASCADE
+	"jingle" bytea
 );
 
 CREATE SEQUENCE "sotf_stations_seq";
 
 CREATE TABLE "sotf_stations" (
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_stations_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
 	"name" varchar(32) UNIQUE NOT NULL,
 	"description" varchar(255),
 	"icon" bytea,
-	"jingle" bytea,
-	CONSTRAINT "sotf_stations_pkey" PRIMARY KEY ("id", "node_id")
-);
-
-CREATE TABLE "sotf_station_access" (
--- a user may belong to global or station-local groups thus defining permissions 
--- for him as in table sotf_group_permission
-	"id" serial PRIMARY KEY, -- just an id
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
-	"station_id" int,
-	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE,
-	"group_id" int REFERENCES sotf_groups(id) ON DELETE CASCADE,
-	CONSTRAINT "sotf_station_access_uniq" UNIQUE ("user_id", "station_id", "group_id"),
-	FOREIGN KEY("station_id","node_id") REFERENCES sotf_stations("id", "node_id") ON DELETE CASCADE
+	"jingle" bytea
 );
 
 CREATE SEQUENCE "sotf_station_roles_seq";
@@ -165,46 +121,30 @@ CREATE SEQUENCE "sotf_station_roles_seq";
 CREATE TABLE "sotf_station_roles" (
 -- points to contact records for editors/artists/etc.
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_station_roles_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"station_id" int NOT NULL,
-	"contact_id" int NOT NULL,
-	"contact_node_id" int2 NOT NULL,
-	"role" int2 NOT NULL,
-	CONSTRAINT "sotf_station_roles_uniq" UNIQUE ("station_id", "contact_id", "role"),
-	CONSTRAINT "sotf_station_roles_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("contact_id","contact_node_id") REFERENCES sotf_contacts("id", "node_id") MATCH FULL ON DELETE CASCADE,
-	FOREIGN KEY("station_id","node_id") REFERENCES sotf_stations("id", "node_id") MATCH FULL ON DELETE CASCADE
+	"station_id" varchar(12) NOT NULL,
+	"contact_id" varchar(12) NOT NULL,
+	"role_id" int2 NOT NULL,
+	CONSTRAINT "sotf_station_roles_uniq" UNIQUE ("station_id", "contact_id", "role_id"),
+	FOREIGN KEY("contact_id") REFERENCES sotf_contacts("id") ON DELETE CASCADE,
+	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_series_seq";
 
 CREATE TABLE "sotf_series" (
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_series_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"station_id" int NOT NULL,
+	"station_id" varchar(12) NOT NULL,
 	"title" varchar(255) DEFAULT 'untitled' NOT NULL,
 	"description" text,
 	"icon" bytea,
 	"jingle" bytea,
-	CONSTRAINT "sotf_series_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("station_id","node_id") REFERENCES sotf_stations("id", "node_id") MATCH FULL ON DELETE CASCADE
-);
-
-CREATE TABLE "sotf_series_access" (
--- who can edit this series
-	"id" serial PRIMARY KEY, 	-- just an id
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
-	"series_id" int NOT NULL,
-	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE,
-	"group_id" int REFERENCES sotf_groups(id) ON DELETE CASCADE,
-	CONSTRAINT "sotf_series_access_uniq" UNIQUE ("series_id", "user_id", "group_id"),
-	FOREIGN KEY("series_id","node_id") REFERENCES sotf_series("id", "node_id") MATCH FULL ON DELETE CASCADE
+	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_series_roles_seq";
@@ -212,18 +152,15 @@ CREATE SEQUENCE "sotf_series_roles_seq";
 CREATE TABLE "sotf_series_roles" (
 -- points to contact records for editors/artists/etc.
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_series_roles_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"series_id" int NOT NULL,
-	"contact_id" int NOT NULL,
-	"contact_node_id" int2 NOT NULL,
-	"role" int2 NOT NULL,
-	CONSTRAINT "sotf_series_roles_uniq" UNIQUE ("series_id", "contact_id", "contact_node_id", "node_id", "role"),
-	CONSTRAINT "sotf_series_roles_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("contact_id","contact_node_id") REFERENCES sotf_contacts("id", "node_id") MATCH FULL ON DELETE CASCADE,
-	FOREIGN KEY("series_id","node_id") REFERENCES sotf_series("id", "node_id") MATCH FULL ON DELETE CASCADE
+	"series_id" varchar(12) NOT NULL,
+	"contact_id" varchar(12) NOT NULL,
+	"role_id" int2 NOT NULL,
+	CONSTRAINT "sotf_series_roles_uniq" UNIQUE ("series_id", "contact_id", "role_id"),
+	FOREIGN KEY("contact_id") REFERENCES sotf_contacts("id") ON DELETE CASCADE,
+	FOREIGN KEY("series_id") REFERENCES sotf_series("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_programmes_seq";
@@ -231,18 +168,18 @@ CREATE SEQUENCE "sotf_programmes_seq";
 CREATE TABLE "sotf_programmes" (
 -- used to store generic and searchable metadata about radio programmes
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_programmes_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,	-- needed for synchronization of nodes
 -- end of basic stuff
 	"guid" varchar(76) UNIQUE NOT NULL,							-- globally unique id
-	"station_id" int NOT NULL,										-- dc.publisher ??
-	"series_id" int,													-- this prog is part of series TODO: foreign key
+	"station_id" varchar(12) NOT NULL,										-- dc.publisher ??
+	"series_id" varchar(12),													-- this prog is part of series
 	"track" varchar(32) NOT NULL,									-- part of id: unique within station and entry_date
 	"title" varchar(255) DEFAULT 'untitled',					-- dc.title
 	"alternative_title" varchar(255), 							-- may be known under a different title
 	"episode_title" varchar(255),									-- may be used if the show is part of a series
 	"episode_sequence" int4,										-- may be used if the show is in a series
+	"is_part_of" varchar(76),										-- pointer to embedding show using GUID
 	"keywords" text, 													-- dc.subject (free keywords)
 	"abstract" text,													-- dc.description
 	"entry_date" date DEFAULT date('now'::text) NOT NULL,	-- dc.date.available
@@ -251,27 +188,16 @@ CREATE TABLE "sotf_programmes" (
 	"modify_date" date,												-- dc.date.modified
 	"expiry_date" date DEFAULT (timestamptz(date('now'::text)) + '56 days'::"interval"),	-- when programme will be made unavailable
 	"type" varchar(50) DEFAULT 'sound',							-- DCMI type (audio/video/etc.)
-	"genre" int2,														-- SOMA genre (ref. to sotf_genres)
+	"genre_id" int2,														-- SOMA genre (ref. to sotf_genres)
 	"length" int2,														-- dc.format.extent = duration in seconds
 	"language" varchar(10),											-- dc.language
 	"spatial_coverage" text,										-- dc.coverage.spatial
 	"temporal_coverage" date,										-- dc.coverage.temporal
 	"icon" bytea,														-- small image associated with prog
+	"jingle" bytea,													-- short audio excerpt or signation
 	"published" bool DEFAULT 'f'::bool,							-- unpublished items are not searchable nor browsable
-	CONSTRAINT "sotf_programmes_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("station_id","node_id") REFERENCES sotf_stations("id", "node_id") MATCH FULL ON DELETE CASCADE,
-	FOREIGN KEY("series_id","node_id") REFERENCES sotf_series("id", "node_id") ON DELETE CASCADE
-);
-
-CREATE TABLE "sotf_prog_access" (
--- who can edit this programme
-	"id" serial PRIMARY KEY, 	-- just an id
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
-	"prog_id" int NOT NULL,
-	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE,
-	"group_id" int REFERENCES sotf_groups(id) ON DELETE CASCADE,
-	CONSTRAINT "sotf_prog_access_uniq" UNIQUE ("prog_id", "user_id", "group_id"),
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") MATCH FULL ON DELETE CASCADE
+	FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE,
+	FOREIGN KEY("series_id") REFERENCES sotf_series("id") ON DELETE CASCADE --??
 );
 
 CREATE SEQUENCE "sotf_rights_seq";
@@ -279,16 +205,14 @@ CREATE SEQUENCE "sotf_rights_seq";
 CREATE TABLE "sotf_rights" (
 -- used to store the rights for a programme
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_rights_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"prog_id" int NOT NULL,
+	"prog_id" varchar(12) NOT NULL,
 	"start_time" int4 NOT NULL,   --starting second of the rightcontrolled part
 	"stop_time"  int4 NOT NULL,  -- ending second. Both may be empty. If so, the rights text is valid for the complete programme
 	"rights_text" text,
-	CONSTRAINT "sotf_rights_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") MATCH FULL ON DELETE CASCADE
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_prog_roles_seq";
@@ -296,18 +220,15 @@ CREATE SEQUENCE "sotf_prog_roles_seq";
 CREATE TABLE "sotf_prog_roles" (
 -- points to contact records for editors/artists/etc.
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_prog_roles_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"prog_id" int NOT NULL,
-	"contact_id" int NOT NULL,
-	"contact_node_id" int2 NOT NULL,
-	"role" int2,	-- SOMA role (ref. to sotf_roles)
-	CONSTRAINT "sotf_prog_roles_uniq" UNIQUE ("prog_id", "contact_id", "role"),
-	CONSTRAINT "sotf_prog_roles_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("contact_id","contact_node_id") REFERENCES sotf_contacts("id", "node_id") ON DELETE CASCADE,
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") MATCH FULL ON DELETE CASCADE
+	"prog_id" varchar(12) NOT NULL,
+	"contact_id" varchar(12) NOT NULL,
+	"role_id" int2,	-- SOMA role (ref. to sotf_role_names)
+	CONSTRAINT "sotf_prog_roles_uniq" UNIQUE ("prog_id", "contact_id", "role_id"),
+	FOREIGN KEY("contact_id") REFERENCES sotf_contacts("id") ON DELETE CASCADE,
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_extradata_seq";
@@ -315,19 +236,17 @@ CREATE SEQUENCE "sotf_extradata_seq";
 CREATE TABLE "sotf_extradata" (
 -- generic metadata storage used for external metadata which cannot be translated into our db
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_extradata_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"prog_id" int NOT NULL,
+	"prog_id" varchar(12) NOT NULL,
 	"element" varchar(40) NOT NULL,
 	"qualifier" varchar(40),
 	"scheme" varchar(50),
 	"language" varchar(10) NOT NULL,
 	"value" text,
 	CONSTRAINT "sotf_extradata_uniq" UNIQUE ("prog_id", "element", "qualifier", "scheme", "language", "value"),
-	CONSTRAINT "sotf_extradata_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") MATCH FULL ON DELETE CASCADE
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_other_files_seq";
@@ -335,19 +254,17 @@ CREATE SEQUENCE "sotf_other_files_seq";
 CREATE TABLE "sotf_other_files" (
 -- permissions on associated audio and other files for a radio programme
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_other_files_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"prog_id" int NOT NULL,
+	"prog_id" varchar(12) NOT NULL,
 	"filename" varchar(32) NOT NULL,
 	"caption" varchar(255),
 	"filesize" int,
 	"last_modified" datetime,
 	"public_access" bool DEFAULT 'f'::bool,
 	CONSTRAINT "sotf_other_files_u" UNIQUE ("prog_id", "filename"),
-	CONSTRAINT "sotf_other_files_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") MATCH FULL ON DELETE CASCADE
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_media_files_seq";
@@ -355,11 +272,10 @@ CREATE SEQUENCE "sotf_media_files_seq";
 CREATE TABLE "sotf_media_files" (
 -- permissions on associated audio and other files for a radio programme
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_media_files_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"prog_id" int NOT NULL,
+	"prog_id" varchar(12) NOT NULL,
 	"filename" varchar(32) NOT NULL,
 	"caption" varchar(255),
 	"filesize" int,
@@ -371,8 +287,7 @@ CREATE TABLE "sotf_media_files" (
 	"download_access" bool DEFAULT 'f'::bool,	-- if users may download it
 	"main_content" bool DEFAULT 'f'::bool,		-- if this file is a variation of the main programme audio/video or sg. else
 	CONSTRAINT "sotf_media_files_u" UNIQUE ("prog_id", "filename"),
-	CONSTRAINT "sotf_media_files_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") MATCH FULL ON DELETE CASCADE
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_links_seq";
@@ -380,36 +295,52 @@ CREATE SEQUENCE "sotf_links_seq";
 CREATE TABLE "sotf_links" (
 -- web links associated with a radio programme
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_links_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"prog_id" int NOT NULL,
+	"prog_id" varchar(12) NOT NULL,
 	"url" varchar(255) NOT NULL,
 	"caption" varchar(255),
 	CONSTRAINT "sotf_links_u" UNIQUE ("prog_id", "url"),
-	CONSTRAINT "sotf_links_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") MATCH FULL ON DELETE CASCADE
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
+CREATE SEQUENCE "sotf_topic_trees_seq";
+
 CREATE TABLE "sotf_topic_trees" (
--- defines the topic trees used for classifying programmes
-	"id" serial,		-- not really needed...
-	"tree_id" int2 NOT NULL,
-	"topic_id" int NOT NULL,
-	"supertopic" int DEFAULT '0',
-	CONSTRAINT "sotf_topic_trees_pkey" PRIMARY KEY ("topic_id", "tree_id")
+-- basic data about available topic trees
+-- REPLICATED
+	"id" varchar(12) PRIMARY KEY,
+	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
+-- end of basic stuff
+	"tree_id" int2 UNIQUE NOT NULL,
+	"url" varchar(100)
 );
+
+CREATE SEQUENCE "sotf_topic_tree_defs_seq";
+
+CREATE TABLE "sotf_topic_tree_defs" (
+-- defines the topic trees used for classifying programmes
+-- REPLICATED
+	"id" varchar(12) PRIMARY KEY,
+	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
+-- end of basic stuff
+	"supertopic" varchar(12) DEFAULT '0'
+);
+
+CREATE SEQUENCE "sotf_topics_seq";
 
 CREATE TABLE "sotf_topics" (
 -- defines the topic translations used for classifying programmes
-	"id" serial,		-- not really needed...
-	"tree_id" int2 NOT NULL,
-	"topic_id" int NOT NULL,
+-- REPLICATED
+	"id" varchar(12) PRIMARY KEY, -- node_id,table_id,tree_id,topic_id e.g.: 001to012
+	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
+-- end of basic stuff
+	"topic_id" varchar(12) NOT NULL,
 	"language" varchar(10) NOT NULL,
-	"topic_name" varchar(255),
-	CONSTRAINT "sotf_topics_u" UNIQUE ("topic_id", "tree_id", "language"),
-	FOREIGN KEY("topic_id", "tree_id") REFERENCES sotf_topic_trees("topic_id", "tree_id") ON DELETE CASCADE
+	"topic_name" varchar(255) NOT NULL,
+	CONSTRAINT "sotf_topics_u" UNIQUE ("topic_id", "language"),
+	FOREIGN KEY("topic_id") REFERENCES sotf_topic_tree_defs("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_prog_topics_seq";
@@ -417,33 +348,42 @@ CREATE SEQUENCE "sotf_prog_topics_seq";
 CREATE TABLE "sotf_prog_topics" (
 -- defines the topics associated with a radio programme
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_prog_topics_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"prog_id" int NOT NULL,
-	"tree_id" int2 NOT NULL,
-	"topic_id" int NOT NULL,
-	CONSTRAINT "sotf_prog_topics_u" UNIQUE ("topic_id", "tree_id", "prog_id"),
-	CONSTRAINT "sotf_prog_topics_pkey" PRIMARY KEY ("id", "node_id"),
-	FOREIGN KEY("topic_id", "tree_id") REFERENCES sotf_topic_trees("topic_id", "tree_id") ON DELETE CASCADE,
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") MATCH FULL ON DELETE CASCADE
+	"prog_id" varchar(12) NOT NULL,
+	"topic_id" varchar(12) NOT NULL,
+	CONSTRAINT "sotf_prog_topics_u" UNIQUE ("topic_id", "prog_id"),
+	FOREIGN KEY("topic_id") REFERENCES sotf_topic_tree_defs("id") ON DELETE CASCADE,
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
+
+CREATE SEQUENCE "sotf_genres_seq";
 
 CREATE TABLE "sotf_genres" (
 -- defines the accepted list of genres
-	"id" int2 NOT NULL,
+-- REPLICATED
+	"id" varchar(12) PRIMARY KEY,
+	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
+-- end of basic stuff
+	"genre_id" int2 NOT NULL,
 	"language" varchar(10) NOT NULL,
 	"name" varchar(255) NOT NULL,
-	CONSTRAINT "sotf_genres_pkey" PRIMARY KEY ("id", "language")
+	CONSTRAINT "sotf_genres_u" UNIQUE ("genre_id", "language")
 );
 
-CREATE TABLE "sotf_roles" (
+CREATE SEQUENCE "sotf_role_names_seq";
+
+CREATE TABLE "sotf_role_names" (
 -- defines the accepted list of roles
-	"id" int2 NOT NULL,
+-- REPLICATED
+	"id" varchar(12) PRIMARY KEY,
+	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
+-- end of basic stuff
+	"role_id" int2 NOT NULL,
 	"language" varchar(10) NOT NULL,
 	"name" varchar(255) NOT NULL,
-	CONSTRAINT "sotf_roles_pkey" PRIMARY KEY ("id", "language")
+	CONSTRAINT "sotf_role_names_u" UNIQUE ("role_id", "language")
 );
 
 CREATE SEQUENCE "sotf_deletions_seq";
@@ -452,32 +392,28 @@ CREATE TABLE "sotf_deletions" (
 -- remember and propagate deletions to other nodes
 -- deletions of many table rows are done via foreign keys!!
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_deletions_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,  -- this here means time of deletion!!
 -- end of basic stuff
-	"table_name" varchar(10) NOT NULL,
-	"del_id" varchar(100) NOT NULL,
-	CONSTRAINT "sotf_del_pkey" PRIMARY KEY ("node_id","id"),
-	CONSTRAINT "sotf_del_u" UNIQUE ("table_name","node_id", "del_id")
+-- not needed now:	"table_name" varchar(10) NOT NULL,
+	"del_id" varchar(12) NOT NULL,
+	CONSTRAINT "sotf_del_u" UNIQUE ("del_id")
 );
 
 CREATE TABLE "sotf_playlists" (
 -- registered users may bookmark things
 	"id" serial PRIMARY KEY, -- just an id
-	"prog_id" int NOT NULL,
-	"node_id" int2 NOT NULL,
+	"prog_id" varchar(12) NOT NULL,
 	"user_id" int REFERENCES sotf_user_prefs(id) ON DELETE CASCADE,
 	"type" VARCHAR(10), -- use unclear yet
-	CONSTRAINT "sotf_playlists_u" UNIQUE ("prog_id", "node_id", "user_id"),
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") MATCH FULL ON DELETE CASCADE
+	CONSTRAINT "sotf_playlists_u" UNIQUE ("prog_id", "user_id"),
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
 CREATE TABLE "sotf_ratings" (
 -- individual ratings made by registered persons or anonym users
 	"id" serial PRIMARY KEY, 										-- just an id
-	"node_id" int2 NOT NULL,										-- node of programme
-	"prog_id" int NOT NULL,											-- sotf programme id
+	"prog_id" varchar(12) NOT NULL,											-- sotf programme id
 	"user_node_id" int2,												-- node from where user came
 	"user_id" int,														-- user who rated or NULL if anonymous
 	-- REFERENCES sotf_user_prefs(id) ON DELETE CASCADE
@@ -487,8 +423,8 @@ CREATE TABLE "sotf_ratings" (
 	"entered" datetime NOT NULL DEFAULT '-infinity',		-- date when rating arrived
 	"auth_key" varchar(50),											-- anti-abuse thingie
 	"problem" varchar(50) default NULL,							-- if any suspicious thing occurred during rating
-	CONSTRAINT "sotf_ratings_uniq" UNIQUE ("node_id", "prog_id", "entered", "auth_key"), -- this is not perfect
-	FOREIGN KEY("prog_id", "node_id") REFERENCES sotf_programmes("id", "node_id") MATCH FULL ON DELETE CASCADE
+	CONSTRAINT "sotf_ratings_uniq" UNIQUE ("prog_id", "entered", "auth_key"), -- this is not perfect
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_prog_rating_seq";
@@ -496,16 +432,14 @@ CREATE SEQUENCE "sotf_prog_rating_seq";
 CREATE TABLE "sotf_prog_rating" (
 -- calculated overall rating for a programme is stored here
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_prog_rating_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"prog_id" int NOT NULL,											-- id of programme rated
+	"prog_id" varchar(12) NOT NULL,											-- id of programme rated
 	"rating_value" float,											-- value of rating
 	"rating_count_reg" int,											-- number of registered raters	
 	"rating_count_anon" int,										-- number of anonymous raters
-	CONSTRAINT "sotf_prog_rating_pkey" PRIMARY KEY ("node_id","id"),
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") ON DELETE CASCADE
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_refs_seq";
@@ -513,17 +447,15 @@ CREATE SEQUENCE "sotf_refs_seq";
 CREATE TABLE "sotf_refs" (
 -- referencing portal URLs for a radio programme
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_refs_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"prog_id" int NOT NULL,							-- programme being referenced
-	"station_id" int NOT NULL,
+	"prog_id" varchar(12) NOT NULL,							-- programme being referenced
+	"station_id" varchar(12) NOT NULL,
 	"url" varchar(255) NOT NULL,					-- URL of portal article referencing to the program
 	"comments" int2 DEFAULT '0',					-- number of comments
 	CONSTRAINT "sotf_refs_u" UNIQUE ("prog_id", "url"),
-	CONSTRAINT "sotf_refs_pkey" PRIMARY KEY ("node_id","id"),
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") ON DELETE CASCADE
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 
 CREATE SEQUENCE "sotf_stats_seq";
@@ -531,12 +463,11 @@ CREATE SEQUENCE "sotf_stats_seq";
 CREATE TABLE "sotf_stats" (
 -- download and listen statistics for a radio programme
 -- REPLICATED
-	"id" int DEFAULT nextval('sotf_stats_seq') NOT NULL,
-	"node_id" int2 REFERENCES sotf_nodes(id) ON DELETE CASCADE,
+	"id" varchar(12) PRIMARY KEY,
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
 -- end of basic stuff
-	"prog_id" int NOT NULL,
-	"station_id" int NOT NULL,
+	"prog_id" varchar(12) NOT NULL,
+	"station_id" varchar(12) NOT NULL,
 	"year" int2 NOT NULL,
 	"month" int2 NOT NULL,
 	"week" int2 NOT NULL,
@@ -545,7 +476,6 @@ CREATE TABLE "sotf_stats" (
 	"downloads" int DEFAULT '0',				-- number of downloads
 	"visits" int DEFAULT '0',					-- number of times page has been visited
 	CONSTRAINT "sotf_stats_u" UNIQUE ("prog_id", "month", "year", "day"),
-	CONSTRAINT "sotf_stats_pkey" PRIMARY KEY ("node_id","id"),
-	FOREIGN KEY("prog_id","node_id") REFERENCES sotf_programmes("id", "node_id") ON DELETE CASCADE
+	FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );
 

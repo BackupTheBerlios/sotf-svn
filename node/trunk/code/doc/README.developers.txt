@@ -92,8 +92,9 @@ Explanation:
      * Replies if the current user is same as
      * the specified user.
      *
+     * @method static name
      * @param object user is the user
-     * @return <code>TRUE</code> if
+     * @return bool if
      *     the specified user is the same
      *     as the current.
    */
