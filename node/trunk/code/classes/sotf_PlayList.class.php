@@ -110,7 +110,7 @@ class sotf_Playlist {
 
   /** Saves the local playlist */
   function makeLocalPlaylist() {
-	 global $config, $user;
+	 global $config, $user, $db;
 
 	 if(count($this->audioFiles) == 0)
 		raiseError("playlist_empty");
@@ -144,7 +144,7 @@ class sotf_Playlist {
   }
 
   function startStreaming() {
-	 global $config, $page;
+	 global $config, $page, $db;
 
 	 if($config['tamburineURL']) {
 		// tamburine-based streaming
@@ -170,6 +170,37 @@ class sotf_Playlist {
 		  $_SESSION['playlist_id'] = $id;
 		}
 
+	 } elseif($config['tamburineCMD']) {
+		// streaming with tbrcmd
+
+		if(!$this->localPlaylist) 
+		  $this->makeLocalPlaylist();
+
+		$cmd = $config['tamburineCMD'] . " setpls " . $this->localPlaylist . " 2>&1";
+		exec($cmd, $output, $retval);
+		debug("cmd", $cmd);
+		debug("output", $output);
+		debug("retval", $retval);
+
+		//$lines = preg_grep('/Stream\[(\d+)\]\s+spawned on (\S+)/', $output);
+		foreach($output as $line) {
+		  if(preg_match('/Stream\[(\d+)\]\s+spawned on (\S+)/', $line, $mm)) {
+			 $streamId = $mm[1];
+			 $this->url = $mm[2];
+			 break;
+		  }
+		}
+		if(!$this->url)
+		  raiseError("Could not find mount point for stream!");
+		$streamData = array('pid' => $streamId,
+								  'url' => $this->url,
+								  'started' => $db->getTimestamp(),
+								  'length' => $this->totalLength,
+								  'will_end_at' => $db->getTimestamp(time() + $this->totalLength),
+								  'host' => getHostName(),
+								  );
+		$_SESSION['stream'] = $streamData;
+		
 	 } else {
 		// command-line streaming
 
@@ -187,6 +218,26 @@ class sotf_Playlist {
 		$this->cmdStart($this->localPlaylist, $this->getMountPoint(), $bitrate);
 		//$this->cmdStart2($bitrate);
 
+	 }
+  }
+
+  function stopStream($streamData) {
+	 global $config;
+
+	 if($config['tamburineCMD']) {
+		// streaming with tbrcmd
+		
+		$cmd = $config['tamburineCMD'] . " quit " . $streamData['pid'] . " 2>&1";
+		exec($cmd, $output, $retval);
+		debug("cmd", $cmd);
+		debug("output", $output);
+		debug("retval", $retval);
+	 }
+  }
+
+  function stopMyStream() {
+	 if($_SESSION['stream']) {
+		$this->stopStream($_SESSION['stream']);
 	 }
   }
 

@@ -109,6 +109,11 @@ $config['localPrefix'] = '/node/www';
 // Example: http://your.host.name:8080/RPC2
 $config['tamburineURL'] = '';
 
+// this is an alternative way for streaming with tamburine
+// works only on Unix
+// Example: /usr/local/bin/tbrcmd
+$config['tamburineCMD'] = ''; 
+
 // Parameters for connection to icecast streaming server
 $config['iceServer'] = "your.host.name";
 $config['icePort'] = "8000";

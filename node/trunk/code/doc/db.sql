@@ -554,6 +554,7 @@ CREATE TABLE "sotf_streams" (
 	"prog_id" varchar(12),			-- id of programme
 	"file_id" varchar(12),			-- id of file being played (null if playlist)
 	"playlist" varchar(40),			-- name of playlist file
+	"url" varchar(200),	-- mount point
 	"started" timestamp,				-- 
 	"length" int,						-- estimated length of playlist in seconds
 	"will_end_at" timestamp,		-- 

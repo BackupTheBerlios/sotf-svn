@@ -26,6 +26,8 @@ if(!$prg->isLocal()) {
 
 $playlist = new sotf_Playlist();
 
+$playlist->stopMyStream();
+
 $playlist->addProg($prg, $fileid);
 
 $playlist->startStreaming();

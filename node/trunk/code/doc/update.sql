@@ -61,3 +61,6 @@ DELETE FROM "sotf_permissions" WHERE permission='add_prog';
 SELECT * FROM "sotf_user_permissions" where permission_id=3; -- if any exists, you may change these permissions to 4 (create)
 -- DELETE FROM "sotf_user_permissions" where permission_id=3; 
 
+-- 2003-06-18
+
+ALTER TABLE sotf_streams ADD COLUMN "url" varchar(200);
