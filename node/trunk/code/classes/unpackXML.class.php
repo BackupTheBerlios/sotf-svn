@@ -80,6 +80,8 @@
 					$this->parse($child,$data[$name]);
 				}
 			}else{
+				$data = str_replace("%%rgt%%",">",$data);
+				$data = str_replace("%%lgt%%","<",$data);
 				$data = iconv("UTF-8","ISO-8859-1",$reference->get_content());
 			}
 		}
