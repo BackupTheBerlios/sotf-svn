@@ -5,67 +5,50 @@ The node network has a set of predefined lists and trees for use in metadata:
 - roles (e.g. author, composer, narrator)
 - types (e.g. audio, video, text)
 
-These are served from a central, predefined server in the network, the
-so-called topic server via XML-RPC calls. The node ships with default
-lists which are overriden by the first download from the topic server.
-The topic server is periodically checked for updates. While the topic
-server is down, the last update is used from cache.
+Type is unhandled currently, it is always 'audio'.
 
-Genres, roles and types are simple lists with translations:
-The ids may be numeric or textual for better readability of db.
+All other lists are propagated in the network the same way as audio metadata.
+There is a so-called topic server for station management tool to
+download actual versions of these lists via XML-RPC calls.
+The node ships with default lists which are overriden when a node is connected to a node network.
 
-genre_lists_def = array (
-                "en" => english_list_def,
-                "de" => german_list_def
-                ...
-                )
+The XML-RPC calls are defined as:
 
-genre_list_def = array(
-        "comedy" => "commedia"
+sotf.cv.listnames: lists available controlled vocabularies in format (type, name, language)
+
+Example:
+(topics, 1, 'en')
+(roles, , 'en:de')
+(genres, , 'en:de')
+
+sotf.cv.get: retrieves selected vocabularies selected as (type, name, language)
+
+Returns an array, each vocabulary item is one array in the big array.
+
+Example:
+
+Array
+(
+    [0] => Array
+        (
+            [id] => 000td1
+            [name] => Development
+            [supertopic] => 0
+            [level] => 0
         )
 
-Definition of topic trees:
-
-topic_def = array(treeId, topicId)
-A topic is given by the numeric id of topic tree and leaf within that
-tree. Example: array(2, 23)
-
-topic_tree_def = array(
-        id => 2,
-        names => array(
-                en => "SOMA topics",
-                hu => "SOMA temakorok"
-                )
-        1 => array(
-                parent => 0,
-                id => 1,
-                names => array(
-                        en => "Politics",
-                        hu => "Politika"
-                        )
-                )
-        2 => array(
-                parent => 1,
-                id => 2,
-                names => array(
-                        en => "Austrian elections",
-                        hu => "Ausztriai valasztasok"
-                        )
-                )
+    [1] => Array
+        (
+            [id] => 000td2
+            [name] => Agriculture
+            [supertopic] => 000td1
+            [level] => 1
         )
 
-So each topic has a set of translations to languages, and a parent topic
-(or 0 if it's a root topic). Even we can consider the name of the
-topic tree as topic 0 to have a very generalized dataset.
-
-The topic server will serve this PHP dataset through XML-RPC to the nodes.
-There will be a single request supported: get all topic trees.
-
-How the maintenance of the topic trees is done on the topic server is
-a separate problem.
-
-There will be a default topic server configured by default for sotf nodes.
-Nodes will periodically get the topic trees, and cache the topic tree
-definitions, so if the topic server is done, only the updates are not
-propagated to the node.
-
+    [2] => Array
+        (
+            [id] => 000td3
+            [name] => Aid
+            [supertopic] => 000td1
+            [level] => 1
+        )

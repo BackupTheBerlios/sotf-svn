@@ -380,12 +380,14 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
               </table>
             </td>
             <td>
+              {if $loggedIn}
               <p>
                 <form method="post" action="get.php?id={$ID}">
                 <input type="button" name="put_into_playlist" value="{#put_into_playlist#}" onclick="javascript:setvalue('addplaylist', '{$ID}', 'add');this.disabled='true';return true;" {if $inplaylist}disabled="true"{/if} />
                 <input type="button" value="{#upload_to_portal#}" onclick="javascript:window.open('portal_upload.php?type=prg&data={$ID}','','scrollbars=yes,width=640,height=340,left=320,top=200');" />
                 </form>
               </p>
+              {/if}
               <p>
                 <form>
                   <input type="hidden" name="id" value="{$ID}" />
