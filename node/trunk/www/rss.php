@@ -52,7 +52,7 @@ $rss_writer_object->inputencoding="utf-8";
 $rss_writer_object->outputencoding="utf-8";
 $rss_writer_object->about=$config['rootUrl'] . "/rss.php";
 // Specify the URL of an optional XSL stylesheet. This lets the document be rendered automatically in XML capable browsers.
-$rss_writer_object->stylesheet=$config['rootUrl'] . "/static/rss2html.xsl";
+// $rss_writer_object->stylesheet=$config['rootUrl'] . "/static/rss2html.xsl";
 // When generating RSS version 1.0, you may declare additional namespaces that enable the use of 
 // more property tags defined by extension modules of the RSS specification.
 $rss_writer_object->rssnamespaces["dc"]="http://purl.org/dc/elements/1.1/";
