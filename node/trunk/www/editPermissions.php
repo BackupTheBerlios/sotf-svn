@@ -2,6 +2,7 @@
 
 require("init.inc.php");
 
+//$page->popup = true;
 $page->forceLogin();
 
 $context = sotf_Utils::getParameter('context');
