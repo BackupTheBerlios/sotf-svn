@@ -1,0 +1,64 @@
+
+<h3>{if $loggedIn}{#Personal#}{else}{#Register#}{/if}</h3>
+
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea"> 
+
+        <FORM method="post" action="register.php">
+          <INPUT type="hidden" name="okURL" value="{$OK_URL}">
+          <INPUT type="hidden" name="filled" value="1">
+          <TABLE>
+          {if $ERRORMSG}
+                <TR>
+                  <TD COLSPAN="2">
+                    <font color="red">{$ERRORMSG}</font>
+                  </TD>
+                </TR>
+                <TR>
+                  {/if}
+                  <TD>{#Username#}:</TD>
+                  <TD>
+                    {$USER_FIELD}{if $INVALID_USERNAME} <font color="red">{#invalid_username#}</font>{/if}{if $USERNAME_RESERVED} <font color="red">{#username_in_use#}</font>{/if}
+                  </TD>
+                </TR>
+                
+                <TR>
+                  <TD>{#Password#}:</TD>
+                  <TD><INPUT type="password" name="password" value="">{if $PASSWORD_SHORT} <font color="red">{#password_too_short#}</font>{/if}
+                  </TD>
+                </TR>
+                
+                <TR>
+                  <TD>{#Password_confirm#}:</TD>
+                  <TD><INPUT type="password" name="password2" value="">{if $PASSWORD_MISMATCH} <font color="red">{#password_mismatch#}</font>{/if}
+                  </TD>
+                </TR>
+                
+<!--
+                <TR>
+                  <TD>{#Realname#}:</TD>
+                  <TD><INPUT size="40" type="text" name="realname" value="{$REALNAME}"></TD>
+                </TR>
+-->
+                
+                <TR>
+                  <TD>{#Language#}:</TD>
+                  <TD><select name="language">
+                      {html_options values=$LANGUAGES output=$LANGUAGES selected=$LANGUAGE}
+                    </select></TD>
+                </TR>
+                
+                <TR>
+                  <TD>{#Email#}:</TD>
+                  <TD><INPUT size="40" type="text" name="email" value="{$EMAIL}"></TD>
+                </TR>
+                
+              </TABLE>
+
+              <INPUT type="submit" name="save" value="{$SUBMIT_TEXT}">
+        </FORM>
+      </td>
+    </tr>
+  </table>
+

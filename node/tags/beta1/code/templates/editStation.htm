@@ -1,0 +1,279 @@
+
+<h3>{#edit_station#}</h3>
+
+{if hasPerm($STATION_ID, 'change') }
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#general_data#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        <table width="100%">
+          <tr><td>
+              <form method="post">
+                <table>
+                  <tr>
+                    <td>{#station_name#}:</td>
+                    <td><b><a href="showStation.php/{$STATION_ID}">{$STATION}</a></b></td>
+                  </tr>
+                  <tr>
+                    <td>{#description#}:</td>
+                    <td><textarea onChange="if(value != defaultValue) data_changed++;" cols="50" rows="10" name="desc">{$STATION_DATA.description}</textarea></td>
+                  </tr>
+                </table>
+                <input type="submit" name="save" value="{#save#}">
+              </form>
+            </td></tr>
+        </table>
+  </td>
+</tr>
+</table>
+
+<p></p>
+
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Roles#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $ROLES}
+        <table>
+          <tr class="listhead"><th>{#Role#}</th><th>{#Contact#}</th><th>{#actions#}</th></tr>
+          {cycle name="roles" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$ROLES}
+          <tr class="{cycle name=roles}">
+            <td>
+              {$item.role_name}
+            </td>
+            <td>
+              {$item.contact_data.name}
+            </td>
+            <td nowrap>
+              <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$STATION_ID}','{#edit_role#}',200,450,false)" />
+             {if $item.change_contact }
+              <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="popup('editContact.php?id={$item.contact_id}','{#editcontact#}',500,500,true)" />
+             {/if}
+              <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?delrole=1&roleid={$item.id}&stationid={$STATION_ID}')" />
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_roles#}</p>
+        {/if}
+        <p>
+            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$STATION_ID}','{#edit_role#}',200,450,false)" />
+        </p>
+      </td>
+    </tr>
+</table>
+</form>
+
+{else}
+
+  <table>
+    <tr>
+      <td>{#station_name#}:</td>
+      <td><b><a href="showStation.php/{$STATION_ID}">{$STATION}</a></b></td>
+    </tr>
+  </table>
+{/if}
+
+<p></p>
+
+{if hasPerm($STATION_ID, 'authorize') }
+<a name="perms"></a>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#access_permissions#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $PERMISSIONS}
+        <form>
+        <table>
+          <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
+          {cycle name="perms" values="list1,list2" print=false advance=false}
+          {foreach item=user key=username from=$PERMISSIONS}
+          <tr class="{cycle name=perms}">
+            <td>{$username}</td>
+            <td>
+              {section name=i loop=$user}
+              {$user[i]}{if ! $smarty.section.i.last}, {/if}
+              {/section}
+            </td>
+            <td nowrap>
+                {if $USERNAME ne $username}
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username={$username|escape}','Permissions',350,400,false)" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?delperm=1&username={$username|escape}&stationid={$STATION_ID}')" />              
+                {/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        </form>
+        {else}
+        <p>{#no_users#}</p>
+        {/if}
+        <form method="post" name="form1">
+          <input type="hidden" name="stationid" value="{$STATION_ID}">
+            {#username#}: <input name="username"> 
+              <input type="button" name="addperm" value="{#change_perm#}" onClick="if(checkIfEmpty(this.form.username,'{#select_user#}')) popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&username='+escape(this.form['username'].value),'{#Permissions#}',350,400, false)">
+                <br />  <a href="listUser.php" target="_blank" onClick="popup('listUser.php','{#userlist#}',500,80,true); return false;">{#userlist#}</a>	
+        </form>
+      </td>
+    </tr>
+</table>
+{/if}
+
+<p></p>
+
+{if hasPerm($STATION_ID, 'change') }
+<a name="series"></a>
+
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#series#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        {if $SERIES}
+        <table>
+          <tr class="listhead"><th>{#series_title#}</th><th>{#actions#}</th></tr>
+          {cycle name="perms" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$SERIES}
+          <tr class="{cycle name=perms}">
+            <td><a href="showSeries.php/{$item.id}">{$item.title}</a></td>
+            <td nowrap>
+                {if hasPerm($item.id, 'change') }
+              <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editSeries.php?seriesid={$item.id}','{#series#}',550,550,true)" />
+                {/if}
+                {if hasPerm($STATION_ID, 'delete') or hasPerm($item.id, 'admin') }
+              <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?delseries=1&seriesid={$item.id}&stationid={$STATION_ID}')" />
+                {/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_series#}</p>
+        {/if}
+          <input class="action" type="button" name="b1" value="{#add_series#}" onClick="popup('createSeries.php?stationid={$STATION_ID}','{#series#}',550,550,true)" />
+
+
+      </td>
+    </tr>
+</table>
+</form>
+
+<p></p>
+
+        <a name="icon"></a>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#icons_and_jingles#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+   <td class="tabarea"> 
+        <form>
+     <table>
+          <tr>
+            <th>{#icon#}</th><th>{#jingle_list#}</th>
+          </tr>
+          <tr>
+            <td>
+              {if $ICON}
+              <img src="getIcon.php/icon.png?id={$STATION_ID}" border="1">
+              {else}
+                {#no_icon#}
+              {/if}
+           </td><td>   
+              <table>
+                <tr class="listhead"><th>&nbsp;</th><th>{#format#}</th><th>{#bitrate#}</th><th>{#channels#}</th><th>{#samplerate#}</th><th></th></tr>
+                {cycle values="list1,list2" print=false advance=false}
+                {foreach item=item from=$JINGLE}
+                <tr class="{cycle}">
+                  <td>
+                    {if $item.filename}
+                    <a href="getJingle.php/{$item.filename}?id={$STATION_ID}&index={$item.index}">{#exists#}</a>
+                    {else}
+                    <font color="red">{#missing#}</font>
+                    {/if}
+                  </td>
+                  <td>
+                    {$item.format}
+                  </td>
+                  <td>
+                    {$item.bitrate}
+                  </td>
+                  <td>
+                    {$item.channels}
+                  </td>
+                  <td>
+                    {$item.samplerate}
+                  </td>
+                  <td>
+                      {if empty($item.filename) }
+                        {if $HAS_JINGLE}
+                        <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=80')" />
+                        {/if}
+                      {else}
+                        <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editStation.php?deljingle=1&filename={$item.filename}&index={$item.index}&stationid={$STATION_ID}')" />
+                      {/if}
+                  </td>
+                </tr>
+                {/foreach}
+              </table>
+            </td></tr>
+        </table>
+                       </form>
+
+        {if $USERFILES}
+{literal}
+<script language="javascript">
+function getSelected() {
+     return document.userfiles['filename'].options[document.userfiles['filename'].selectedIndex].value;
+}
+</script>
+{/literal}
+
+        <form method="post" name="userfiles">
+          <input type="hidden" name="okURL" value="{$OKURL}">
+          <input type="hidden" name="stationid" value="{$STATION_ID}">
+          <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
+          <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
+          <input type="submit" name="seticon" value="{#set_icon#}" onClick="return confirmUnsaved()" >
+          <input type="submit" name="setjingle" value="{#set_jingle#}" onClick="return confirmUnsaved()" >
+          <br \><small>{#userfiles_expl#}</small>
+        </form>
+        {else}
+        <p>{#no_files#}</p>
+        {/if}
+        <small>
+          <form enctype="multipart/form-data" method="post">
+            <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+            <input type="hidden" name="stationid" value="{$STATION_ID}" />
+            <input name="userfile" type="file" />
+            <input type="submit" name="uploadicon" value="{#set_icon#}"  onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
+            <input type="submit" name="uploadjingle" value="{#set_jingle#}"  onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
+            <br />{#upload_expl#}
+          </form>
+        </small>
+        
+      </td>
+    </tr>
+  </table>
+{/if}

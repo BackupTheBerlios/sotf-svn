@@ -1,0 +1,32 @@
+{config_load file="$LANG.conf"}
+
+<html>
+<head>
+<title>{#userlist#}</title>
+<link href="{$IMAGE_URL}/main.css" rel="stylesheet" type="text/css">
+{literal}
+<script type="text/javascript" language="javascript1.2">
+<!--
+	function doWrite(inputvalue)
+	{
+		window.opener.document.form1.username.value = inputvalue;
+	}
+//-->
+</script>
+{/literal}
+
+</head>
+
+<body>
+<table>
+{foreach from=$USERS item=user}
+	<tr><td><a href="#" onClick="doWrite('{$user}'); return false;">{$user}</a></td></tr>
+{/foreach}
+</table>
+<p><script type="text/javascript" language="javascript1.2">
+<!--
+document.write("<input type='button' value='{#close#}' onClick='self.close()'> ");
+// -->
+</script></p>
+</body>
+</html>

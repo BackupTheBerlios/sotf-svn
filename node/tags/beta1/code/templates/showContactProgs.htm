@@ -1,0 +1,39 @@
+<h3>{#contributions#} <a href="javascript:popup('{$ROOT_URL}/showContact.php?id={$CONTACT_ID}','{#show_contact#}',400,400)">{$CONTACT_NAME}</a></h3>
+
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea"> 
+
+        <table width="100%">
+          <tr class="listhead">
+            <td colspan="3" align="center">
+		{include file="splitList.htm"}
+            </td>
+          </tr>
+          {cycle name="progs" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$PROGS}
+          <tr valign="top" class="{cycle name="progs"}">
+            <td width="1%">
+              {if $item.icon }
+                 <img src="{$CACHE_URL}/{$item.id}.png">
+              {else}
+                 <img src="{$IMAGE_URL}/noicon.png">
+              {/if}
+            </td>
+            <td width="98%">
+              <a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">{$item.title}</a> ({$item.entry_date})
+              {if $item.alternative_title}<br>{$item.alternative_title}{/if}
+              {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
+              {if $item.abstract}
+                  <div class="abstract">{$item.abstract|truncate:300}</div>
+              {/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+

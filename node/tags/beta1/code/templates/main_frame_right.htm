@@ -1,0 +1,80 @@
+{config_load file="layout.conf"}
+{config_load file="$LANG.conf" section="$ACTION"}
+  <html>
+    <head>
+      <title>{$PAGETITLE} (StreamOnTheFly:{$NODEID})</title>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+        <link href="{$IMAGE_URL}/main.css" rel="stylesheet" type="text/css">
+          <script src="{$IMAGE_URL}/base.js"></script>
+    </head>
+    <body background="{$IMAGE_URL}/bg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+      <div align="center"> 
+        <table width="100%" height="99%" border="0" cellpadding="0" cellspacing="0">
+          <tr> 
+            <td background="{$IMAGE_URL}/bg_main_LEFT.gif"> 
+              <div align="center"><img src="{$IMAGE_URL}/bg_main_LEFT.gif" width="7" height="6"></div>
+            </td>
+            <td width="100%" align="right" valign="top" bgcolor="#FFFFFF"> 
+              <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr> 
+                  <td bgcolor="#000000" height="17">&nbsp;
+                  </td>
+                </tr>
+                <tr> 
+                  <td>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr> 
+                        <td height="60" bgcolor="#CEDDFC"> 
+                          <div align="right"> 
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                              <tr> 
+                                <td> 
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr> 
+                  <td width="100%" height="18" bgcolor="#FFFFFF"> 
+                    <table width="100%" border="0" cellspacing="0" cellpadding="2">
+                      <tr> 
+                        <td class="menu">
+                          
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr> 
+                  <td background="{$IMAGE_URL}/top_r4_c2.gif">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr> 
+                        <td><img name="top_r4_c1" src="{$IMAGE_URL}/top_r4_c1.gif" width="2" height="6" border="0" alt=""></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+              <table width="100%" border="0" cellspacing="0" cellpadding="5">
+                <tr> 
+                  <td>
+                    <div align="left"> {include file="$ACTION.htm"} </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </body>
+  </html>
+  
+  <script language="Javascript">
+    {if $STATUS_MESSAGES or $ERROR_MESSAGES }
+    alert("{foreach from=$ERROR_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}{foreach from=$STATUS_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}");
+    {/if}
+  </script>

@@ -1,0 +1,244 @@
+#!/usr/local/bin/perl
+#
+# iceplay
+# - MP3 File Streamer
+#
+# Copyright (c) 1999 Jack Moffitt, Barath Raghavan
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+
+#use strict;
+use IO::Socket;
+#use Time::HiRes qw( sleep gettimeofday tv_interval );
+
+my ($server, $port, $password, $playlist, $webfile, $bitrate, $public);
+my ($name, $genre, $url);
+
+$port = 8000;
+$public = 1;
+$bitrate = 128;
+$playlist = "playlist";
+#$webfile = "webfile";
+
+while (scalar(@ARGV) > 0) {
+	$_ = shift @ARGV;
+	if (/^-([A-Za-z])$/) {
+		SWITCH: {
+		$1 =~ /s/	&& do {
+					$server = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /P/	&& do {
+					$port = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /p/	&& do {
+					$password = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /l$/	&& do {
+					$playlist = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /lf/	&& do {
+					$logfile = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /w/	&& do {
+					$webfile = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /v/	&& do {
+					$verbose = 1;
+					last SWITCH;
+				};
+		$1 =~ /n/	&& do {
+					$name = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /g/	&& do {
+					$genre = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /u/	&& do {
+					$url = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /d/	&& do {
+					$public = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /b/	&& do {
+					$bitrate = shift @ARGV;
+					last SWITCH;
+				};
+		$1 =~ /h/	&& do {
+					&usage;
+					exit(0);
+				};
+
+		&usage;
+		}
+	} else {
+		&usage;
+	}
+}
+
+#print "START: $0\n";
+print "\nIceplay started\n" if $verbose;
+
+$logfile='iceplay.log' if(!$logfile);
+
+unless ($server && $port && $password && $name && defined($public) && $bitrate) {
+	&usage;
+	exit(1);
+}
+
+sub formatDate {
+  ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+  $year += 1900;
+  $mon++;
+  return "$year/$mon/$mday $hour:$min:$sec";
+}
+
+
+print "OS: $^O\n" if $verbose;
+my $fork = false;
+
+if(0 && $^O =~ /linux|unix/i) {
+  print "Forking.. \n" if $verbose;
+  defined(my $pid = fork) or die "Can't fork: $!";
+  if($pid) {
+    select(undef, undef, undef, 2); # waiting a little for the stream to start...
+    print "parent exits now" if $verbose;
+    exit;
+  }
+  setsid                  or die "Can't start a new session: $!";
+  #open STDIN, '/dev/null' or die "Can't read /dev/null: $!";
+  #open STDOUT, $logfile or die "Can't write to STDOUT";
+  #open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
+}
+
+my $sock = IO::Socket::INET->new(Proto => "tcp",
+				 PeerAddr => $server,
+				 PeerPort => $port);
+
+if(!$sock) {
+  print "Connection failed to $server:$port";
+  exit;
+}
+
+$headers = <<EEE;
+$password\r
+icy-name: $name\r
+icy-genre: $genre\r
+icy-url: $url\r
+icy-pub: $public\r
+icy-br: $bitrate\r
+\r
+EEE
+
+#print "headers: $headers";
+$sock->print($headers);
+
+# can't check for connection success, because icecast is buggy (or Perl)
+print "\nCONNECTED TO $server:$port AT " . formatDate() . "\n" if $verbose;
+print "BITRATE: $bitrate \n" if $verbose;
+
+open(PLAYLIST, $playlist) || die "Cannot open playlist: $playlist";
+my @songs = <PLAYLIST>;
+close(PLAYLIST);
+
+my $num_songs = $#songs;
+
+#print STDERR time() . "playlist loaded: $playlist\n";
+print "Playlist $playlist loaded\n   $num_songs total songs...\n" if $verbose;
+
+# Figure out the sleep time and data size
+#my $buffsize = 4000;
+#if ($bitrate < 48) {
+#  $buffsize = 1000;
+#}
+#my $timetosleep = $buffsize / ($bitrate * 1000 / 8);
+
+my $buffsize = int($bitrate/8);
+my $timetosleep = 1;
+print "buffsize: $buffsize\n" if $verbose;
+print "timetosleep: $timetosleep\n" if $verbose;
+
+
+
+$i=0;
+while ($i <= $num_songs) {
+#  my $song = $songs[rand $num_songs];
+  my $song = $songs[$i];
+  if(!open(SONG, $song)) {
+    print "Cannot open: $song\n" if $verbose;
+  } else {
+    print "Playing: $song\n" if $verbose;
+  }
+  binmode SONG; # needed for windows
+  $song =~ /.*\/(.*) - (.*)\.mp3/;
+  my $artist = $1;
+  my $title = $2;
+#  open(WEBFILE, ">$webfile");
+#  print WEBFILE "$title by $artist";
+#  close(WEBFILE);
+
+  my ($read, $buff, $sleeptime);
+  $buff='';
+  do {
+    $read = read(SONG, $buff, $buffsize);
+    print "read: $read\n" if $verbose;
+    $sock->print($buff);
+    $sleeptime = $timetosleep * $read / $buffsize;
+    #sleep($sleeptime);
+    select(undef, undef, undef, $sleeptime);
+    print "slept: $sleeptime\n" if $verbose;
+  } while ($read == $buffsize);
+  close(SONG);
+  $i++;
+}
+
+$sock->close();
+
+print "FINISHED: " . formatDate() . "\n" if $verbose;
+
+exit(0);
+
+sub usage {
+print<<"END";
+i c e p l a y - Version 0.56789 hacked by Mixik
+ ` ` ` ` ` `
+Usage:
+iceplay -s <server> -p <password> -n <name> -g <genre> -u <url> [-P <port>] [-b <bitrate>] [-d <0/1>] [-l <playlist>] [-w <webfile>]
+
+        Options explained (default in parenthesis):
+	-s: the server to connect to
+        -p: the password to access the server
+	-n: the name of the stream
+	-g: the genre of the stream
+	-u: the homepage url of the stream
+	-P: the port to connect on (8001)
+	-b: the bitrate of the stream (128)
+	-d: is the server public? (0)
+	-l: playlist file (playlist)
+	-w: web data file (webfile)
+  -v: verbose
+  -lf: logfile
+
+END
+}

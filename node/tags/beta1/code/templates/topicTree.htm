@@ -1,0 +1,91 @@
+{config_load file="$LANG.conf" section="$ACTION"}
+  <HTML> 
+    <HEAD> 
+{literal}
+<style type="text/css">
+<!--
+        .child {font-family: verdana, helvetica, arial, geneva, sans-serif; font-size: 8pt; color: #333399; text-decoration: none}
+        .item, .item:active, .item:hover { color: #000000; text-decoration: none}
+        .topic {font-size:smaller;}
+        .tblItem:hover {color: #FF0000; text-decoration: underline}
+        //-->
+</style>
+{/literal}
+    </HEAD> 
+    <BODY bgcolor="#CEDEFF" >
+
+      <div align="center">
+        <form>
+          <table width="100%">
+            <tr>
+              <td>
+                {if $ADD_MODE}
+                <input type="hidden" name="prgid" value="{$prgid}" />
+                 {/if}
+                <select name="tree" onChange='form.submit()'>
+                  {foreach from=$TREES item=item}
+                  <option value="{$item.tree_id}" {if $TREE_ID eq $item.tree_id}SELECTED{/if}>
+                    {if $item.topic_name}{$item.topic_name}{else}{$item.name}{/if}
+                  </option>
+                  {/foreach}
+                </select>
+              </td>
+              <td align="right">
+                {if not $ADD_MODE}
+                <a href="javascript:closeThis()"><img src="{$IMAGE_URL}/close.png" border="0">
+                {/if}
+              </td>
+            </tr>
+          </table>
+        </form>
+
+        <table BORDER=0 CELLPADDING=15 CELLSPACING=0 WIDTH="100%">
+          <tr>
+            <td>
+              
+              {section name=i loop=$TREE}
+
+              {if $TREE[i].level gt $TREE[i.index_prev].level}<ul compact>{/if}
+              {if $TREE[i].level lt $TREE[i.index_prev].level}</ul>{/if}
+              <li class="topic">
+                <nobr><a name="{$TREE[i].id}"></a>
+                  {if $ADD_MODE}
+                    {if $TREE[i].topic_name != ""}{$TREE[i].topic_name}{else}{$TREE[i].name}{/if}
+                    <a href="#" onclick="javascript:setvalue('addtree','{$prgid}','{$TREE[i].id}');window.opener.location.href='{$OPENER_URL}&t='+new Date().getTime()+'#topics';return false;">{#add#}</a>
+                  {else}
+                    <a class="item" target="search" href="topicSearch.php?ID={$TREE[i].id}">
+                    {if $TREE[i].topic_name != ""}{$TREE[i].topic_name}{else}{$TREE[i].name}{/if}
+                    ({if $TREE[i].total}{$TREE[i].total}{else}{$TREE[i].number}{/if})
+                    </a>
+                  {/if}
+                </nobr>
+              </li>
+              {/section}
+            </td>
+          </tr>
+        </table>
+      </div>
+
+<SCRIPT language=javascript1.2 type=text/javascript>
+{literal}
+
+  function closeThis() {
+    window.top.location.href = window.top.frames['search'].location.href;
+  }
+
+  function setvalue(name, id, value){
+    var popurl="updatedb.php?name="+name+"&id="+id+"&value="+value;
+    winpops=window.open(popurl,"","width=200,height=150,left=320,top=200");
+  }
+
+{/literal}
+</SCRIPT>
+
+{if $ADD_MODE}
+<form><input class="action" type="button" onClick="javascript:window.location.href='closeAndRefresh.php?anchor=topics'" name="bla" value="{#close#}"></form>
+{else}
+<form><input class="action" type="button" onClick="javascript:closeThis()" name="bla" value="{#close#}"></form>
+{/if}
+
+</BODY>
+</HTML> 

@@ -1,0 +1,413 @@
+{literal}
+<SCRIPT language="javascript">
+<!--
+function setvalue(name, id, value){
+var popurl="{/literal}{$ROOT_URL}{literal}/updatedb.php?name="+name+"&id="+id+"&value="+value
+winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
+} 
+-->
+</SCRIPT>
+{/literal}
+{if not $ID}
+  <form action="{$ROOT_URL}/get.php">
+    {if $POPUP}
+    <input type="hidden" name="popup" value="1">
+    {/if}
+      <h4>{#please_enter#}</h4>
+      <input type="text" name="id" size="60" value="{$ID}">
+  </form>
+{else}
+
+  <form>
+    <table class="title" cellspacing="0" cellpadding="5" width="100%">
+      <tr valign="bottom">
+        <td class="titlehead" width="2%">
+          {if $PRG_DATA.icon}
+          <img src="{$CACHE_URL}/{$ID}.png" align="left">
+          {/if}
+        </td>
+        <td class="titlehead" width="20%">
+          <font size="-1">{#prog#}:</font>
+          <br>{$PRG_DATA.title}
+        </td>
+        <td class="title2">
+          <a href="#general">{#Metadata#}</a>{if $ROLES}, <a href="#roles">{#Roles#}</a>{/if}{if $RIGHTS}, <a href="#rights">{#Rights#}</a>{/if},
+          <a href="#mfiles">{#Content#}</a>{if $LINKS }, <a href="#links">{#Links#}</a>{/if}, <a href="#stats">{#Statistics#}</a>
+        </td>
+        <td class="title2" width="15%">
+        {if $SERIES_DATA and $SERIES_DATA.icon}
+          {strip}
+          <a href="{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}">
+            <img height="50" border="0" src="{$CACHE_URL}/{$SERIES_DATA.id}.png"  alt="{#series#}: {$SERIES_DATA.title}">
+          </a>
+          {/strip}
+        {/if}
+        </td>
+        <td class="title2" width="15%">
+        {if $STATION_DATA.icon}
+          {strip}
+          <a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">
+            <img height="50" border="0" src="{$CACHE_URL}/{$STATION_DATA.id}.png" alt="{#station#}: {$STATION_DATA.name}">
+          </a>
+          {/strip}
+        {/if}
+      </td>
+        <td class="title2" width="10%" align="right" valign="bottom">
+          {if hasPerm($ID,'change') }
+          <input class="action" type="button" name="b1" value="{#edit_meta#}" onClick="redir(this.form,'{$ROOT_URL}/editMeta.php?id={$ID}')" />
+          <input class="action" type="button" name="b1" value="{#edit_files#}" onClick="redir(this.form,'{$ROOT_URL}/editFiles.php?id={$ID}')" />
+          {/if}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6" class="titlehead" height="5">
+        </td>
+      </tr>
+    </table>
+  </form>
+
+
+    </tr>
+  </table>
+
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#Metadata#}</td>
+    </tr>
+  </table>
+  <table class="tabarea" width="100%" >
+    <tr> 
+      <td class="tabarea"> 
+        <a name="general"></a>
+        <table width="100%">
+            <tr valign="top"><td class="meta" nowrap width="10%">{#station#}:</td><td><a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a></td></tr>
+            {if $SERIES_DATA}
+            <tr valign="top"><td class="meta" nowrap>{#series#}:</td><td><a href="{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}">{$SERIES_DATA.title}</a></td></tr>
+            {/if}
+            <tr valign="top"><td class="meta" nowrap>{#title#}:</td><td>{$PRG_DATA.title}</td></tr>
+            {if $PRG_DATA.alternative_title}
+            <tr valign="top"><td class="meta" nowrap>{#alternative_title#}:</td><td>{$PRG_DATA.alternative_title}</td></tr>
+            {/if}
+            {if $PRG_DATA.episode_title}
+            <tr valign="top"><td class="meta" nowrap>{#episode_title#}:</td><td>{$PRG_DATA.episode_title}</td></tr>
+            {/if}
+            {if $PRG_DATA.episode_sequence}
+            <tr valign="top"><td class="meta" nowrap>{#episode_sequence#}:</td><td>{$PRG_DATA.episode_sequence}</td></tr>
+            {/if}
+            <tr valign="top"><td class="meta" nowrap>{#language#}:</td><td>{$LANGUAGE}</td></tr>
+            {if $PRG_DATA.abstract}
+            <tr valign="top"><td class="meta" nowrap>{#abstract#}:</td><td>{$PRG_DATA.abstract}</td></tr>
+            {/if}
+            {if $PRG_DATA.keywords}
+            <tr valign="top"><td class="meta" nowrap>{#keywords#}:</td><td>{$PRG_DATA.keywords}</td></tr>
+            {/if}
+            {if $PRG_DATA.genre_id}
+            <tr valign="top"><td class="meta" nowrap>{#genre#}:</td><td>{$GENRE.name}</td></tr>
+            {/if}
+            {if $TOPICS}
+            <tr valign="top">
+              <td class="meta" nowrap>{#topics#}:</td>
+              <td>
+                <table>
+                  {foreach item=item from=$TOPICS}
+                  <tr>
+                    <td>
+                      {$item.name}
+                    </td>
+                  </tr>
+                  {/foreach}
+                </table>
+              </td>
+            </tr>
+            {/if}
+            {if $PRG_DATA.temporal_coverage}
+            <tr valign="top"><td class="meta" nowrap>{#temporal_coverage#}:</td><td>{$PRG_DATA.temporal_coverage}</td></tr>
+            {/if}
+            {if $PRG_DATA.spatial_coverage}
+            <tr valign="top"><td class="meta" nowrap>{#spatial_coverage#}:</td><td>{$PRG_DATA.spatial_coverage}</td></tr>
+            {/if}
+            {if $PRG_DATA.production_date}
+            <tr valign="top"><td class="meta" nowrap>{#production_date#}:</td><td>{$PRG_DATA.production_date}</td></tr>
+            {/if}
+            {if $PRG_DATA.broadcast_date}
+            <tr valign="top"><td class="meta" nowrap>{#broadcast_date#}:</td><td>{$PRG_DATA.broadcast_date}</td></tr>
+            {/if}
+            {if $PRG_DATA.entry_date}
+            <tr valign="top"><td class="meta" nowrap>{#entry_date#}:</td><td>{$PRG_DATA.entry_date}</td></tr>
+            {/if}
+            {if $PRG_DATA.modify_date}
+            <tr valign="top"><td class="meta" nowrap>{#modify_date#}:</td><td>{$PRG_DATA.modify_date}</td></tr>
+            {/if}
+            {if $PRG_DATA.expiry_date}
+            <tr valign="top"><td class="meta" nowrap>{#expiry_date#}:</td><td>{$PRG_DATA.expiry_date}</td></tr>
+            {/if}
+          </table>
+		</td> 
+	</tr>
+</table>
+
+{if $ROLES}
+<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Roles#}</td>
+  </tr>
+</table>
+<table class="tabarea" width="100%" >
+<tr> 
+  <td class="tabarea">
+        <a name="roles"></a>
+        <table>
+          {foreach item=item from=$ROLES}
+          <tr valign="top">
+            <td>
+              {$item.role_name}
+            </td>
+            <td>
+              <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">{$item.contact_data.name}</a>
+              {if $item.contact_data.url}<br>(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
+                {elseif $item.contact_data.email}<br>(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
+                  {/if}
+            </td>
+            <td>
+              {if $item.contact_data.icon }{strip}
+              <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','{#show_contact#}',400,400,true)">
+                <img height="50" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
+              </a>{/strip}
+              {/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+      </td>
+    </tr>
+</table>
+{/if}
+
+{if $RIGHTS}
+<p></p>
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Rights#}</td>
+  </tr>
+</table>
+<table class="tabarea" width="100%" >
+<tr> 
+  <td class="tabarea">
+        <a name="rights"></a>
+        <table>
+          {cycle name="rights" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$RIGHTS}
+          <tr class="{cycle name=rights}">
+            <td>
+              {if empty($item.start_time) and empty($item.stop_time) }
+                {#for_whole_prg#}
+              {else}
+                 {$item.start_time} {#sec#} - {$item.stop_time} {#sec#}
+              {/if}
+            </td>
+            <td>
+              {$item.rights_text}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+      </td>
+    </tr>
+</table>
+{/if}
+
+<p></p>
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Content#}</td>
+  </tr>
+</table>
+<table class="tabarea" width="100%" >
+<tr> 
+  <td class="tabarea"> 
+   {if $AUDIO_FILES }
+        <div class="subheader">{#audio_file_list#}</div>
+        <a name="mfiles"></a>
+    <table>
+       {cycle name="audio" values="list1,list2" print=false advance=false}
+       {foreach item=item from=$AUDIO_FILES}
+          {if $item.download_access eq 't' or $item.stream_access eq 't' }
+          <tr class="{cycle name=audio}">
+            <td width="5%"></td>
+            <td>
+              {if $item.main_content eq 't' }
+                 {#programme_audio#}
+              {elseif $item.caption} 
+                 {$item.caption}
+              {else}
+                 {$item.filename}
+              {/if}
+            </td>
+            <td align="right">
+              {$item.bitrate} kbps 
+            </td>
+            <td>
+                {$item.format}
+            </td>
+            <td align="right">
+              {$item.playtime_string}
+            </td>
+            <td>
+              { if $item.download_access eq 't'}
+                <!-- <input class="action" type="button" name="b1" value="{#Download#}" onClick="popup('{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}','{#viewpopup#}',500,500,true)" /> -->
+                <a href="{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/download.gif" border="0" alt="{#Download#}"></a>
+              {/if}
+            </td>
+            <td>
+              { if $item.stream_access eq 't' }
+                <a href="{$ROOT_URL}/listen.php/audio.m3u?id={$ID}&fileid={$item.id}"><img src="{$IMAGE_URL}/listen.gif" border="0" alt="{#Listen#}"></a>
+              {/if}
+            </td>
+          </tr>
+          {/if}
+          {/foreach}    
+    </table>
+   {/if}
+   {if $OTHER_FILES }
+        <div class="subheader">{#other_file_list#}</div>
+        <a name="ofiles"></a>
+        <table>
+          {cycle name=other values="list1,list2" print=false advance=false}
+          {foreach item=item from=$OTHER_FILES}
+          {if $item.public_access eq 't' }
+          <tr class="{cycle name=other}">
+            <td width="5%"></td>
+            <td>
+              {if $item.caption}
+                {$item.caption}
+              {else} 
+                {$item.filename}
+              {/if}
+            </td>
+            <td align="right">
+              {$item.filesize} {#bytes#}
+            </td>
+            <td nowrap>
+              {if $item.public_access eq 't' }
+                <!-- <input class="action" type="button" name="b1" value="{#View#}" onClick="popup('{$ROOT_URL}/getFile.php/{$item.filename}?id={$ID}&filename={$item.filename}','{#viewpopup#}',500,500,true)" /> -->
+                  <a target="link" href="{$ROOT_URL}/getFile.php/{$item.filename}?id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/download.gif" border="0" alt="{#Download#}"></a>
+              {/if}
+            </td>
+          </tr>
+          {/if}
+          {/foreach}    
+        </table>
+   {/if}
+   {if !$AUDIO_FILES and !$OTHER_FILES }
+        <p>{#no_files#}</p>
+   {/if}
+  </td>
+</tr>
+</table>
+</form>
+
+<p></p>
+
+{if $LINKS } 
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#Links#}</td>
+    </tr>
+  </table>
+  <table class="tabarea" width="100%" >
+    <tr> 
+      <td class="tabarea">
+        <a name="links"></a>
+        <table>
+          {foreach item=item from=$LINKS}
+          <tr>
+            <td>
+              <a target="link" href="{$item.url}">{if $item.caption}{$item.caption}{else}{$item.url}{/if}</a>
+            </td>
+          </tr>
+          {/foreach}    
+        </table>
+      </td>
+    </tr>
+  </table>
+{/if}
+
+<p></p>
+
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#Statistics#}</td>
+    </tr>
+  </table>
+  <table class="tabarea" width="100%" >
+    <tr> 
+      <td class="tabarea">
+        <table width="100%">
+          <tr>
+            <td>
+              <a name="stats"></a>
+              <table>
+                <tr>
+                  <td>{#Visits#}:</td>
+                  <td>{if $STATS.visits}{$STATS.visits}{else}0{/if}</td>
+                </tr>
+                <tr>
+                  <td>{#Listens#}:</td>
+                  <td>{if $STATS.listens}{$STATS.listens}{else}0{/if}</td>
+                </tr>
+                <tr>
+                  <td>{#Downloads#}:</td> 
+                  <td>{if $STATS.downloads}{$STATS.downloads}{else}0{/if}</td>
+                </tr>
+                <tr>
+                  <td>{#Rating#}:</td> 
+                  <td>{if $RATING}{$RATING.rating_value} ({#by#} {$RATING.rating_count}){else}-{/if}</td>
+                </tr>
+                {if $REFERENCES}
+                <tr valign="top">
+                  <td>{#References#}:</td>
+                  <td>
+                    {section name=i loop=$REFERENCES}
+                    <div><a href="{$REFERENCES[i].url}">{$REFERENCES[i].url}</a> ({$REFERENCES[i].comments} {#Comments#})</div>
+                    {/section}
+                  </td>
+                </tr>
+                {/if}
+              </table>
+            </td>
+            <td>
+              {if $loggedIn}
+              <p>
+                <form method="post" action="{$ROOT_URL}/get.php?id={$ID}">
+                <input type="button" name="put_into_playlist" value="{#put_into_playlist#}" onclick="javascript:setvalue('addplaylist', '{$ID}', 'add');this.disabled='true';return true;" {if $inplaylist}disabled="true"{/if} />
+                <input type="button" value="{#upload_to_portal#}" onclick="javascript:window.open('{$ROOT_URL}/portal_upload.php?type=prg&data={$ID}','','scrollbars=yes,width=640,height=340,left=320,top=200');" />
+                </form>
+              </p>
+              {/if}
+              <p>
+                <form>
+                  <input type="hidden" name="id" value="{$ID}" />
+                  <select name="rating">
+                    <option value="1" {if $MY_RATING==1}SELECTED=1{/if} >*</option>
+                    <option value="2" {if $MY_RATING==2}SELECTED=1{/if} >**</option>
+                    <option value="3" {if $MY_RATING==3}SELECTED=1{/if} >***</option>
+                    <option value="4" {if $MY_RATING==4}SELECTED=1{/if} >****</option>
+                    <option value="5" {if $MY_RATING==5}SELECTED=1{/if} >*****</option>
+                  </select>
+                  <input type="button" name="rate" value="{if $MY_RATING}{#change_rating#}{else}{#rate_it#}{/if}"   
+                         onclick="javascript:setvalue('rating', '{$ID}', this.form.rating.options[this.form.rating.selectedIndex].value);this.value='{#change_rating#}';return true;"
+                         />
+                  
+                </form>
+
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+{/if}

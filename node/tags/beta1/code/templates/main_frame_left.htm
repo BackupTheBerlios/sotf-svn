@@ -1,0 +1,128 @@
+{config_load file="layout.conf"}
+{config_load file="$LANG.conf" section="$ACTION"}
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+<title>{$PAGETITLE} (StreamOnTheFly:{$NODEID})</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="{$IMAGE_URL}/main.css" rel="stylesheet" type="text/css">
+<script src="{$IMAGE_URL}/base.js"></script>
+</head>
+<body background="{$IMAGE_URL}/bg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<div align="center"> 
+  <table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td width="100%" valign="top" bgcolor="#FFFFFF"> 
+        <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
+          <!-- fwtable fwsrc="stream1.png" fwbase="top.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="1" -->
+          <tr> 
+            <td bgcolor="#000000"><img name="top_r1_c1" src="{$IMAGE_URL}/top_r1_c1.gif" width="700" height="17" border="0" alt=""></td>
+          </tr>
+          <tr> 
+            <td>
+              <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
+                <tr> 
+                  <td height="60" bgcolor="#CEDDFC"> 
+                    <div align="right"> 
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr> 
+                          <td background="{$IMAGE_URL}/top_r2_c1.gif" class=tablebg> 
+                            <table cellSpacing=0 cellPadding=6 width="100%" border=0>
+                              <tr> 
+                                <td>
+                                  <script language="Javascript1.2" src="{$IMAGE_URL}/cal.js"></script>
+                                  <script language="Javascript1.2">
+                                  <!--
+                                  //setInterval("upclock()",1000);
+                                  //-->
+                                  </script>
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                          <td width="264"><img name="top_r2_c3" src="{$IMAGE_URL}/top_r2_c3.jpg" width="264" height="60" border="0" alt=""></td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr> 
+            <td width="{#pageW#}" height="18" bgcolor="#FFFFFF"> 
+              <table width="100%" border="0" cellspacing="0" cellpadding="2">
+                <tr> 
+                  <td class="menu">
+                    <p><strong>
+                      <!-- begin navbar -->
+                      <a target="_top" class="menu" href="{$ROOT_URL}/">{#Home#}</a> 
+                      | <a target="_top" class="menu" href="{$ROOT_URL}/advsearch.php">{#Search#}</a> 
+                      | <a target="_top" class="menu" href="{$ROOT_URL}/stations.php">{#Stations#}</a> 
+                      {if $loggedIn}
+                        | <a target="_top" class="menu" href="{$ROOT_URL}/playlist.php">{#Playlist#}</a>
+                      {/if}
+                      {if $IS_EDITOR} | <a target="_top" class="menu" href="{$ROOT_URL}/editor.php">{#EditorPage#}</a> {/if} 
+                      {if $loggedIn}
+                      | <a target="_top" class="menu" href="{$ROOT_URL}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$USERNAME})</a>
+                      | <a target="_top" class="menu" href="{$ROOT_URL}/logout.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Logout#}</a>
+                      {else}
+                      | <a target="_top" class="menu" href="{$ROOT_URL}/login.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Login#}</a>
+                      {/if}
+                      | <a target="_top" class="menu" href="{$ROOT_URL}/help.php">{#Help#}</a> 
+                      <!-- end navbar -->
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr> 
+            <td background="{$IMAGE_URL}/top_r4_c2.gif">
+              <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
+                <tr> 
+                  <td><img name="top_r4_c1" src="{$IMAGE_URL}/top_r4_c1.gif" width="2" height="6" border="0" alt=""></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="5">
+          <!-- {if $STATUS_MESSAGES}
+            {foreach from=$STATUS_MESSAGES item=MSG}
+                <tr> 
+                  <td class="status">
+                      {$MSG}
+                  </td>
+                </tr>
+            {/foreach}
+          {/if} -->
+          <tr> 
+            <td>
+              <div align="left"> {include file="$ACTION.htm"} </div>
+                <p align="center">
+                <hr>
+                <font size="-1"> 
+                <div style="text-align : center; font-size: 8pt"> Copyright &copy; 
+                  2002 <a href="http://www.streamonthefly.com">StreamOnTheFly 
+                  project</a>, <a  href="http://www.gnu.org/copyleft/gpl.html">GPL</a> 
+                </div>
+                </font> 
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td width="7" background="{$IMAGE_URL}/bg_main.gif"><img src="{$IMAGE_URL}/bg_main.gif" width="7" height="6"></td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>
+
+<script language="Javascript">
+  {if $STATUS_MESSAGES or $ERROR_MESSAGES }
+       alert("{foreach from=$ERROR_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}{foreach from=$STATUS_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}");
+  {/if}
+</script>

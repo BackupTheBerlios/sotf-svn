@@ -1,0 +1,18 @@
+{config_load file="layout.conf"}
+{config_load file="$LANG.conf" section="portal_upload"}
+<html>
+<head>
+<title>Upload page</title>
+</head>
+<body bgcolor="{#searchBgColor1#}">
+<form action="portal_upload.php" method="post">
+
+{if $error}<b>{$error}</b><br>{/if}
+{#portal_http#}:<br><input type="portal_http" name="portal_http" value="{$old_upload}" size="60"><br>
+<input type="hidden" name="type" value="{$type}"><br>
+<input type="hidden" name="data" value="{$data}"><br>
+<input type="submit" name="submit" value="{#ok#}">
+
+</form>
+</body>
+</html>

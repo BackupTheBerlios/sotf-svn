@@ -1,0 +1,97 @@
+{literal}
+<script>
+
+function toggleAdmin()
+{
+	var elts = document.form1.elements;
+  var on = document.form1['perm_admin'].checked;
+	for (var i = 0; i < elts.length; i++) {
+    var elt = elts[i];
+		if (elt.type == "checkbox" && elt.name != 'perm_admin') {
+        	elt.checked = on;
+		}
+	}
+}
+
+</script>
+{/literal}
+
+<h3>{#change_permissions#}</h3>
+
+{#target#}: {$OBJECT_NAME}, {#user#}: {$USER_NAME}
+
+<form method=POST name="form1">
+<input type="hidden" name="username" value="{$USER_NAME|escape:"html"}" />
+<input type="hidden" name="userid" value="{$USER_ID|escape:"html"}" />
+<input type="hidden" name="objectname" value="{$OBJECT_NAME|escape:"html"}" />
+<input type="hidden" name="objectid" value="{$OBJECT_ID|escape:"html"}" />
+
+<table class="tabarea">
+<tr> 
+  <td class="tabarea">
+              <table>
+                <tr>
+                  <td>
+                    <input name="perm_admin" type="checkbox" onClick="toggleAdmin()" {if in_array('admin', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#admin#} ({#admin_expl#})
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input name="perm_change" type="checkbox"  {if in_array('change', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#change#} ({#change_expl#})
+                  </td>
+                </tr>
+                {if $CONTEXT=='station' or $CONTEXT=='series' }
+                <tr>
+                  <td>
+                    <input name="perm_add_prog" type="checkbox"  {if in_array('add_prog', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#add_prog#} ({#add_prog_expl#})
+                  </td>
+                </tr>
+                {/if}
+                {if $CONTEXT=='station' or $CONTEXT=='node' }
+                <tr>
+                  <td>
+                    <input name="perm_create" type="checkbox"  {if in_array('create', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#create#} ({#create_expl#})
+                  </td>
+                </tr>
+                {/if}
+                <tr>
+                  <td>
+                    <input name="perm_delete" type="checkbox"  {if in_array('delete', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#delete#} ({#delete_expl#})
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input name="perm_authorize" type="checkbox"  {if in_array('authorize', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#authorize#} ({#authorize_expl#})
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+<p></p>
+
+<input type="submit" name="save" value="{#save#}" />
+<input type="button" onClick="window.close();" name="save" value="{#close#}" />
+
+</form>
+
+
+
