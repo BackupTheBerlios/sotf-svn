@@ -3,7 +3,7 @@
 <head>
 <title>{#portal_editor#}</title>
 </head>
-<body {if $view OR $edit}bgcolor="#{$home.bg}" background="{$home.wall}" text="#{$home.font}" link="#{$home.link}" alink="#{$home.alink}" vlink="#{$home.vlink}"{elseif $id}bgcolor="#{$programmes.bg}" background="{$programmes.wall}" text="#{$programmes.font}" link="#{$programmes.link}" alink="#{$programmes.alink}" vlink="#{$programmes.vlink}"{else}bgcolor="#{$portal.bg2}"{/if} topmargin="0" leftmargin="0" rightmargin="0" marginwidth="0" marginheight="0">
+<body {if $view OR $edit}bgcolor="#{$home.bg}" background="{$home.wall}" text="#{$home.font}" link="#{$home.link}" alink="#{$home.alink}" vlink="#{$home.vlink}"{elseif $id}bgcolor="#{$programmes.bg}" background="{$programmes.wall}" text="#{$programmes.font}" link="#{$programmes.link}" alink="#{$programmes.alink}" vlink="#{$programmes.vlink}"{else}bgcolor="#{$portal.bg2}"{/if} topmargin="0" leftmargin="0" rightmargin="0" marginwidth="0" marginheight="0"{if $error != ''} onload="alert('{$error}')"{/if}>
 <form action="{$php_self}{if $edit}?edit=1{elseif $id}?id={$id}{/if}" method="post" name="myform" enctype="multipart/form-data">
 {if $portal.picture}<img src="{$portal.picture}">{/if}
 <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
@@ -321,6 +321,7 @@
 				{#old_password#}: <input type="password" name="password_old"><br>
 				{#new_password#}: <input type="password" name="password_new1"><br>
 				{#new_password_again#}: <input type="password" name="password_new2"><br>
+				<input type="submit" name="change_password" value="{#change_password#}"><br>
 			</td>
 			<td align="center">&nbsp;</td>
 			<td align="left">

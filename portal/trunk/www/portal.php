@@ -4,6 +4,7 @@
 //header("Expires: $anhour");
 
 require("portal_login.php");
+$error = "";			//to collect the (error) messages for the user
 
 if (sotf_Utils::getParameter('logout'))			//if logout link pressed
 {
@@ -97,6 +98,16 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 				else $settings["rating"] = false;
 			if (sotf_Utils::getParameter('chat')) $settings["chat"] = true;
 				else $settings["chat"] = false;
+			if (sotf_Utils::getParameter('change_password'))
+			{
+				$password_old = sotf_Utils::getParameter('password_old');
+				$password_new1 = sotf_Utils::getParameter('password_new1');
+				$password_new2 = sotf_Utils::getParameter('password_new2');
+				if ($password_new1 == "") $error .= $page->getlocalized("password_empty");
+				elseif ($password_new1 != $password_new2) $error .= $page->getlocalized("password_different");
+				elseif ($portal->changePortalPassword($password_old, $password_new1)) $error .= $page->getlocalized("password_incorrect");
+				else $error .= $page->getlocalized("password_changed");
+			}
 		}
 		if ($portal->saveSettings($settings) == 1) $_SESSION['old_settings'] = $settings;	//if saved delete from session
 	}
@@ -235,7 +246,6 @@ if ($portal->isAdmin($user->getId()))		//only for admin users
 
 }	////end of admin section
 
-
 $activate = sotf_Utils::getParameter('activate');
 
 if ($id)	//if programmes view
@@ -335,6 +345,7 @@ elseif (sotf_Utils::getParameter('resend_pass'))		//if resend password pressed o
 	$smarty->assign('reply', $page->getlocalized("pass_sent"));
 }
 
+
 $smarty->assign('activate', $activate);
 $smarty->assign('uname', sotf_Utils::getParameter('uname'));
 if ($login == "2") $smarty->assign('bad_login', true);
@@ -357,10 +368,11 @@ $smarty->assign("view", $view);		//in view result mode
 $smarty->assign("id", $id);		//in view programme mode
 $smarty->assign("admin", $admin);	//admin page
 
-
 //prevent browsers from reload/reprocess the page
+
 if ((count($_POST) > 0) AND !$login)
 {
+	$_SESSION['error'] = $error;			//needed after reload
 	$page->redirect($_SERVER["PHP_SELF"]."?".$subpage."=1");		//redirect page
 }
 
@@ -389,6 +401,9 @@ $smarty->assign("rating", $settings["rating"]);			//rating enabled
 
 $smarty->assign("colors", $portal->getColors());
 $smarty->assign("files", $portal->getUploadedFiles());
+
+$smarty->assign("error", $_SESSION['error']);			//user (error) messages
+$_SESSION['error'] = $error;					//delete the errormessages from session
 
 if ($settings["css"] == true) $smarty->assign("home_css", $settings["home"]["css"]);
 

@@ -475,7 +475,7 @@ class sotf_Portal
 	{
 		global $db;
 
-		if ($name == "unsorted")
+		if (($name == "unsorted") or ($name == ""))
 		{
 			$sql="SELECT progid FROM portal_programmes WHERE portal_id = '$this->portal_id' and prglist_id is NULL";
 			$list = $db->getCol($sql);
@@ -637,6 +637,15 @@ class sotf_Portal
 			$sql="DELETE FROM portal_programmes WHERE portal_id = '$this->portal_id' AND progid='$prg_id' AND prglist_id = '$name'";
 			$db->query($sql);
 		}
+	}
+
+	function changePortalPassword($old, $new)		//for changeing the portal (upload) password
+	{
+		global $db;
+		if ($old != $this->portal_password) return true;
+		$query = "UPDATE portal_settings SET password='$new' WHERE id='$this->portal_id'";
+		$db->query($query);
+		return false;
 	}
 
 	function uploadData($type, $data, $portal_password)		//for upload programmes and queries from the node
