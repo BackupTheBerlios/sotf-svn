@@ -72,8 +72,8 @@ function cvGet($params) {
 function syncResp($params) {
   debug("incoming SYNC request");
   $chunkInfo = xmlrpc_decode($params->getParam(0));
-  $nodeData = xmlrpc_decode($params->getParam(1));
-  $objects = xmlrpc_decode($params->getParam(2));
+  $nodeData = $chunkInfo['node'];
+  $objects = xmlrpc_decode($params->getParam(1));
   $neighbour = sotf_Neighbour::getById($nodeData['node_id']);
   if(!$neighbour) {
     logError("No access: you are not an allowed neighbour node!");
@@ -84,7 +84,7 @@ function syncResp($params) {
     logError($msg);
     return new xmlrpcresp(0, XMLRPC_ERR_NO_ACCESS, "No access: $msg!");
   }
-  $retval = $neighbour->syncResponse($chunkInfo, $nodeData, $objects);
+  $retval = $neighbour->syncResponse($chunkInfo, $objects);
   // send response
   $retval = xmlrpc_encode($retval);
   return new xmlrpcresp($retval);
@@ -105,6 +105,13 @@ function getQueryResults($params)
 		$icon = sotf_Blob::cacheIcon($result['id']);
 		$results[$key]['icon'] = $config['cacheUrl']."/".$result['id'].".png";
 		//TODO if no icon {$IMAGEDIR}/noicon.png $imageprefix????
+
+		$prg = & new sotf_Programme($result['id']);
+		// audio files for programme
+		$audioFiles = $prg->listAudioFiles('true');
+		$results[$key]['audioFiles'] = array();
+		foreach($audioFiles as $fileList)
+			if ($fileList['stream_access'] == "t") $results[$key]['audioFiles'][] = $fileList;
 	}
 	$retval = xmlrpc_encode($results);
 	return new xmlrpcresp($retval);
@@ -137,6 +144,21 @@ function getProgrammes($params)
 		$icon = sotf_Blob::cacheIcon($result['id']);
 		$results[$key]['icon'] = $config['cacheUrl']."/".$result['id'].".png";
 		//TODO if no icon {$IMAGEDIR}/noicon.png $imageprefix????
+
+		$prg = & new sotf_Programme($result['id']);
+		// audio files for programme
+		$audioFiles = $prg->listAudioFiles('true');
+		$results[$key]['audioFiles'] = array();
+		foreach($audioFiles as $fileList)
+			if ($fileList['stream_access'] == "t") $results[$key]['audioFiles'][] = $fileList;
+
+
+//		$audioFiles = $prg->listAudioFiles('true');
+//		for ($i=0;$i<count($audioFiles);$i++)
+//		{
+//			$mainAudio[$audioFiles[$i]['filename']] = $audioFiles[$i];
+//		}
+
 	}
 	$retval = xmlrpc_encode($results);
 	return new xmlrpcresp($retval);

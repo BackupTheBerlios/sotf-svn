@@ -51,3 +51,12 @@ this node on their neighbour list (for this they need the node id and
 the url). After this the local admin also enters neighbour nodes into
 the local neighbour list and issues the first sync request.
 
+Method of replication
+
+Objects with node id 0 are global objects, typically controlled
+vocabularies.  Each replicated object has a change_stamp and a
+time_stamp. Change_stamp is incremented in case of the object
+changes. There is a sync_stamp which is incremented after each sync on
+the node (both incoming and outgoing). The arrived_stamp of an object
+is the sync_stamp of the node when the modified object was accepted
+and stored during a sync. 

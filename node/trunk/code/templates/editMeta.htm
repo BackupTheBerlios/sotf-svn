@@ -92,8 +92,18 @@ window.onload=myonload;
             <tr valign="top" class="list1">
               <td class="meta">{#language#}:</td>
               <td>
-                <select name="language">
-                  {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_DATA.language}
+                <!-- <table>
+                  <tr><td></td> -->
+                <select name="language1">
+                  {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG1}
+                </select>
+                <select name="language2">
+                  <option value="0">{#no_second_lang#}</option>
+                  {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG2}
+                </select>
+                <select name="language3">
+                  <option value="0">{#no_third_lang#}</option>
+                  {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG3}
                 </select>
               </td>
             </tr>		

@@ -1,10 +1,16 @@
-<?php
-// -*- tab-width: 3; indent-tabs-mode: 1; -*-
-// $Id$
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
+
+/*
+ * $Id$
+ *
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri
+ *					at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
 
 class sotf_Node extends sotf_NodeObject {
 
-  var $tablename = 'sotf_nodes';
+	var $tablename = 'sotf_nodes';
 
 	function sotf_Node($id='', $data='') {
 		$this->sotf_NodeObject($this->tablename, $id, $data);
@@ -18,10 +24,10 @@ class sotf_Node extends sotf_NodeObject {
 		$id = $db->getOne("SELECT id FROM sotf_nodes WHERE node_id = '$nodeId'");
 		if(DB::isError($id))
 			raiseError($id);
-    if($id)
-      return new sotf_Node($id);
-    else
-      return NULL;
+		if($id)
+			return new sotf_Node($id);
+		else
+			return NULL;
 	}
 
 	/** 
@@ -41,7 +47,7 @@ class sotf_Node extends sotf_NodeObject {
 		$res = $db->getAll($sql);
 		if(DB::isError($res))
 			raiseError($res);
-    $slist = array();
+		$slist = array();
 		foreach($res as $st) {
 			$slist[] = new sotf_Node($st['id'], $st);
 		}

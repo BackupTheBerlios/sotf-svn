@@ -33,11 +33,6 @@ set_time_limit(18000);
 
 //******** Synchronize with network: send new local data and recievie new global data
 
-// get sync stamp and increment it
-$syncStamp = $sotfVars->get('sync_stamp', 0);
-$syncStamp++;
-$sotfVars->set('sync_stamp', $syncStamp);
-
 // sync with all neighbours
 $rpc = new rpc_Utils;
 $neighbours = sotf_Neighbour::getAll();

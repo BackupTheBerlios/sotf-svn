@@ -124,6 +124,20 @@ class db_Wrap extends DB_pgsql {
 		//return " date_format($fieldName, '%e') ";
 	}
 
+  function begin($serializable = false) {
+    if($serializable)
+      $this->query("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE");
+    return $this->query("BEGIN TRANSACTION");
+  }
+
+  function commit() {
+    return $this->query("COMMIT");
+  }
+
+  function rollback() {
+    return $this->query("ROLLBACK");
+  }
+
 	// just don't forget this...
 	function limitQuery($query, $from, $count) {
 	  if($this->debug)

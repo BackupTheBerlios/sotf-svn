@@ -1,6 +1,12 @@
-<?php
-// -*- tab-width: 3; indent-tabs-mode: 1; -*-
-// $Id$
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
+
+/* 
+ * $Id$
+ *
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *				at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
 
 /**
 * Models a series
@@ -17,9 +23,11 @@ class sotf_Series extends sotf_ComplexNodeObject {
      * @param string id id within node
    */
   function sotf_Series($id='', $data='') {
+	global $db;
+
     $this->sotf_ComplexNodeObject('sotf_series', $id, $data);
     if($id) {
-      //$this->stationName = $this->db->getOne("SELECT name FROM sotf_stations WHERE id='" . $this->get('station_id') . "'");
+      //$this->stationName = $db->getOne("SELECT name FROM sotf_stations WHERE id='" . $this->get('station_id') . "'");
     }
   }
 
@@ -29,10 +37,12 @@ class sotf_Series extends sotf_ComplexNodeObject {
 
   /** get number of published programmes */
   function numProgrammes($onlyPublished = true) {
+	global $db;
+
     $sql = "SELECT COUNT(*) FROM sotf_programmes WHERE series_id='$this->id'";
     if($onlyPublished)
       $sql .= " AND published='t'";
-    $count = $this->db->getOne($sql);
+    $count = $db->getOne($sql);
     if (DB::isError($count))
       raiseError($count->getMessage());
     else
@@ -41,13 +51,15 @@ class sotf_Series extends sotf_ComplexNodeObject {
 
 	/** list programmes */
 	function listProgrammes($start, $hitsPerPage, $onlyPublished = true) {
+	global $db;
+
 		$id = $this->id;
 		$sql = "SELECT * FROM sotf_programmes WHERE series_id = '$id' ";
 		if($onlyPublished)
 			$sql .= " AND published='t' ";
 		$sql .= " ORDER BY entry_date DESC,track ASC";
     if(!$start) $start = 0;
-		$res = $this->db->limitQuery($sql, $start, $hitsPerPage);
+		$res = $db->limitQuery($sql, $start, $hitsPerPage);
 		if(DB::isError($res))
 			raiseError($res);
     while (DB_OK === $res->fetchInto($item)) {

@@ -4,6 +4,12 @@ require("init.inc.php");
 
 require_once($config['classdir'] . "/rpc_Utils.class.php");
 
+#$db->begin();
+#$db->query("INSERT INTO TEST VALUES(9,9)");
+
+$db->commit();
+
+/*
 $rpc = new rpc_Utils;
 $rpc->debug = true;
 //$response = $rpc->call($config['rootUrl'] . "/xmlrpcServer.php", 'sotf.cv.listnames', '');
@@ -11,7 +17,7 @@ $response = $rpc->call($config['rootUrl'] . "/xmlrpcServer.php", 'sotf.cv.get', 
 print "<pre>";
 print_r($response);
 print "</pre>";
-
+*/
 
 /*
 $tree = $repository->getTree(1, 'en');

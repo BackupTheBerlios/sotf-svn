@@ -42,10 +42,16 @@ CREATE TABLE "sotf_node_objects" (
 	"last_change" timestamptz DEFAULT CURRENT_TIMESTAMP,
    "change_stamp" int2 DEFAULT 0,
 	"arrived" timestamptz DEFAULT CURRENT_TIMESTAMP,
-	"arrived_stamp" int DEFAULT 0,
+	"node_id" int2 --- REFERENCES sotf_nodes(node_id)
+---	"st_id" varchar(40), -- id used at the station management side
+---	"comments" varchar(10)  XXXX
+);
+
+CREATE TABLE "sotf_object_status" (
+-- data needed for replication mechanism XXX
+	"id" varchar(12),
 	"node_id" int2, --- REFERENCES sotf_nodes(node_id)
-	"st_id" varchar(40), -- id used at the station management side
-	"comments" varchar(10)
+	CONSTRAINT "sotf_object_status_uniq" UNIQUE ("id", "node_id")
 );
 
 CREATE SEQUENCE "sotf_blobs_seq";
@@ -70,7 +76,7 @@ CREATE TABLE "sotf_nodes" (
 	"description" text,
 	"url" varchar(255) NOT NULL,
 	"authorizer" int2,
-	"last_sync" timestamptz
+	"last_sync" timestamptz							-- time of last sync XXX
 );
 
 CREATE TABLE "sotf_neighbours" (
@@ -79,9 +85,8 @@ CREATE TABLE "sotf_neighbours" (
 	"node_id" int2, -- same as in sotf_nodes, except for pending nodes
 	"accept_incoming" bool DEFAULT 't'::bool,
 	"use_for_outgoing" bool DEFAULT 't'::bool,
-	"last_sync" timestamptz,
-	"last_sync_out" timestamptz,
-	"sync_stamp" int DEFAULT 0,
+	"last_sync_in" timestamptz,
+	"last_sync_out" timestamptz,  -- XXX
 	"errors" int,
 	"success" int,
 	"pending_url" varchar(200),
