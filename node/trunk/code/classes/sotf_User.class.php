@@ -106,6 +106,8 @@ class sotf_User
 		while (false!==($f = readdir($handle))) {
 			if ($f == "." || $f == "..")
 				continue;
+      if(is_dir($f))
+        continue;
 			$list[] = $f;
 		}
 		closedir($handle);

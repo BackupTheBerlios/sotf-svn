@@ -91,9 +91,9 @@ $localPrefix = '/node/www';
 //////////////////////////////////////////////////////////////////////////
 
 // Parameters for connection to icecast streaming server
-$iceServer = "sotf.dsd.sztaki.hu";
+$iceServer = "your.host.name";
 $icePort = "8000";
-$encoderPassword = "radjo";
+$encoderPassword = "hackme";
 
 // The command to start streaming __XX__ style tokens are replaced with the actual value
 $streamCmd = "C:/Perl/bin/perl $basedir/code/contrib/iceplay -b __BITRATE__ -s $iceServer -P $icePort -p $encoderPassword -l __PLAYLIST__ -n __NAME__ ";

@@ -154,7 +154,7 @@ for ($i=0;$i<count($audioFormats);$i++)
 }
 $jfiles = $jinglelist->getFiles();
 for($i=0;$i<count($jfiles);$i++) {
-  if(!in_array($jfiles[$i]->name, $usedAudio)) {
+  if(!$usedAudio || !in_array($jfiles[$i]->name, $usedAudio)) {
     $hasJingle = 1;
     $JINGLE[] = array( 'filename' => $jfiles[$i]->name,
                        'format' => $jfiles[$i]->format,

@@ -121,6 +121,10 @@ $debug = $sotfVars->get('debug', 1);
 $userdb->debug = $sotfVars->get('debug_sql', 1);
 $db->debug = $sotfVars->get('debug_sql', 1);
 
+// start session
+if(!headers_sent())
+		 session_start();
+
 if($debug)
 {
   error_log("------------------------------------------", 0);
@@ -136,6 +140,11 @@ if($debug)
   }
   foreach($_COOKIE as $key => $value) {
     error_log("COOKIE: $key = $value",0);
+  }
+  if(count($_SESSION) > 0) {
+    foreach($_SESSION as $key => $value) {
+      error_log("SESSION: $key = $value",0);
+    }
   }
   //  foreach($_ENV as $key => $value) {
   //  error_log("ENV: $key = $value",0);

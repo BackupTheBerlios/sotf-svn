@@ -34,10 +34,6 @@ class sotf_Page
 		global $lang, $user, $outputLanguages, $smarty, $defaultLanguage;
 		global $nodeId, $basedir, $lang, $rootdir, $imagedir, $smartyDebug, $debug;
 
-		// start session
-		if(!headers_sent())
-			session_start();
-
 		// load user data
 		if($_SESSION['userid'])
 		{
