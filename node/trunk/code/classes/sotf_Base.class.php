@@ -47,52 +47,60 @@ class sotf_Base {
   }						
 
   function save() {
-    //if($this->changed){
-	 //UPDATE or INSERT?
-	 $res = $this->db->getOne("SELECT count(*) AS tot FROM " . $this->tablename . " WHERE " . $this->idKey . "='" . $this->id . "' ");
-	 if(is_numeric($res) && $res > 0) { //UPDATE!
-		//create a small portion of SQL for Update Statement based on the keys
-		while(list($key,$val)=each($this->data)){
-		  if($key != $this->idKey){
-			 if($val === NULL){
-				$my_sql[] = $key . " = NULL";
-			 }else{
-				$my_sql[] = $key . " = '" . $val . "'";
-			 }
-		  }
+	 if($this->id) {
+		//$res = $this->db->getOne("SELECT count(*) AS tot FROM " . $this->tablename . " WHERE " . $this->idKey . "='" . $this->id . "' ");
+		//if(is_numeric($res) && $res > 0) { //UPDATE!
+		if($this->changed){
+		  $this->update();
 		}
-		$my_sql = implode(", ", $my_sql);
-	
-		//execute the query
-		$res = $this->db->query("UPDATE " . $this->tablename . " SET " . $my_sql . " WHERE " . $this->idKey . "='" . $this->id . "' ");
-		
-		//if the query is dead, stop executio, output error
-		if(DB::isError($res)){
-		  raiseError($res);
-		}
-	 }else{	//INSERT!!!
-		while(list($key,$val)=each($this->data)){
-		  $keys[] = $key;
+	 } else {
+		$this->create();
+	 }
+  }
+
+  function update() {
+	 while(list($key,$val)=each($this->data)){
+		if($key != $this->idKey){
 		  if($val === NULL){
-			 $values[] = "NULL";
+			 $my_sql[] = $key . " = NULL";
 		  }else{
-			 $values[] = "'" . $val . "'";
+			 $my_sql[] = $key . " = '" . $val . "'";
 		  }
 		}
-		if(!in_array($this->idKey, $keys)) {
-		  $keys[] = $this->idKey;
-		  $values[] = "'" . $this->id . "'";
+	 }
+	 $my_sql = implode(", ", $my_sql);
+
+	 //execute the query
+	 $res = $this->db->query("UPDATE " . $this->tablename . " SET " . $my_sql . " WHERE " . $this->idKey . "='" . $this->id . "' ");
+	 
+	 //if the query is dead, stop executio, output error
+	 if(DB::isError($res)){
+		raiseError($res);
+	 }
+  }
+
+  function create() {
+	 while(list($key,$val)=each($this->data)){
+		$keys[] = $key;
+		if($val === NULL){
+		  $values[] = "NULL";
+		}else{
+		  $values[] = "'" . $val . "'";
 		}
-		$keys = implode(",",$keys);
-		$values = implode(",",$values);
-		
-		//execute query
-		$res = $this->db->query("INSERT INTO " . $this->tablename . "(" . $keys . ") VALUES(" . $values . ")");
-	
-		//if the query is dead, stop executio, output error
-		if(DB::isError($res)){
-		  raiseError($res);
-		}
+	 }
+	 if($this->id && !in_array($this->idKey, $keys)) {
+		$keys[] = $this->idKey;
+		$values[] = "'" . $this->id . "'";
+	 }
+	 $keys = implode(",",$keys);
+	 $values = implode(",",$values);
+	 
+	 //execute query
+	 $res = $this->db->query("INSERT INTO " . $this->tablename . "(" . $keys . ") VALUES(" . $values . ")");
+	 
+	 //if the query is dead, stop executio, output error
+	 if(DB::isError($res)){
+		raiseError($res);
 	 }
     return true;
   }
