@@ -66,7 +66,7 @@ class sotf_Neighbour extends sotf_Object {
   }
 
   function sync($console = false) {
-    set_time_limit(300);
+    set_time_limit(1800);
     global $page;
     if(!$console && $this->get('use_for_outgoing')=='f') {
       debug("node $this->id is not used for outgoing sync");
@@ -113,7 +113,7 @@ class sotf_Neighbour extends sotf_Object {
   }
 
   function syncResponse($lastSync, $nodeData, $objects) {
-    set_time_limit(300);
+    set_time_limit(1800);
     // save modified objects
     $updatedObjects = sotf_NodeObject::saveModifiedObjects($objects);
     debug("number of updatd objects", count($updatedObjects));

@@ -30,8 +30,18 @@ if($sync) {
   $nid = sotf_Utils::getParameter('nodeid');
   $neighbour = sotf_Neighbour::getById($nid);
   $neighbour->sync(true);
-  //$page->redirect("admin.php#network");
-  exit;
+  $page->redirect("admin.php#network");
+}
+
+// delete neighbour
+$deln = sotf_Utils::getParameter('delneighbour');
+debug("deln", $deln);
+if($deln) {
+  debug("deln", "!!");
+  $nid = sotf_Utils::getParameter('nodeid');
+  $neighbour = sotf_Neighbour::getById($nid);
+  $neighbour->delete();
+  $page->redirect("admin.php#network");
 }
 
 // manage permissions

@@ -1440,6 +1440,7 @@
 		global $xmlrpcInt;
 		global $xmlrpcDouble;
 		global $xmlrpcString;
+    global $xmlrpcBase64;  // micsik added
 		global $xmlrpcArray;
 		global $xmlrpcStruct;
 		global $xmlrpcBoolean;
@@ -1465,7 +1466,8 @@
 				$xmlrpc_val->addScalar($php_val, $xmlrpcDouble);
 				break;
 			case 'string':
-				$xmlrpc_val->addScalar($php_val, $xmlrpcString);
+				//$xmlrpc_val->addScalar($php_val, $xmlrpcString);
+        $xmlrpc_val->addScalar($php_val, $xmlrpcBase64); // micsik changed here
 				break;
 				// <G_Giunta_2001-02-29>
 				// Add support for encoding/decoding of booleans, since they are supported in PHP

@@ -69,11 +69,16 @@ class sotf_NodeObject extends sotf_Object {
    return $success;
   }
 
+  /** private */
+  function updateInternalData() {
+    if(!$this->lastChange)
+      $this->lastChange = $this->db->getTimestampTz();
+    $this->db->query("UPDATE sotf_node_objects SET last_change='$this->lastChange', arrived=CURRENT_TIMESTAMP WHERE id='" . $this->id . "'");
+  }
+
   function update() {
 	 parent::update();
-   if(!$this->lastChange)
-     $this->lastChange = $this->db->getTimestampTz();
-	 $this->db->query("UPDATE sotf_node_objects SET last_change='$this->lastChange', arrived=CURRENT_TIMESTAMP WHERE id='" . $this->id . "'");
+   $this->updateInternalData();
   }
 
   function delete() {
@@ -87,7 +92,7 @@ class sotf_NodeObject extends sotf_Object {
 
 	function setBlob($prop_name, $prop_value) {
     parent::setBlob($prop_name, $prop_value);
-    $this->db->query("UPDATE sotf_node_objects SET last_change='" . $this->db->getTimestampTz() . "' WHERE id='" . $this->id . "'");
+    $this->updateInternalData();
   }
 
   function createDeletionRecord() {
