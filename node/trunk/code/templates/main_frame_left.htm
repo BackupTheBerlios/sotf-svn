@@ -38,7 +38,31 @@
                                   //setInterval("upclock()",1000);
                                   //-->
                                   </script>
+                                  {if $STREAM_DATA}
+                                      {#now_playing#}: {if $STREAM_INFO.url}
+                                                           <b><a href="{$STREAM_INFO.url}">{$STREAM_INFO.name}</a></b>
+                                                       {elseif $STREAM_INFO}
+                                                           {$STREAM_INFO.name}
+                                                       {else}
+                                                           {#unkown_audio#}
+                                                       {/if}
+                    <input class="action" type="button" name="b1" value="{#reconnect#}" onClick="redir(this.form,'{$ROOT_URL}/listen.php?reconnect=1')" />
+                    <input class="action" type="button" name="b1" value="{#stop#}" onClick="redir(this.form,'{$ROOT_URL}/listen.php?stop=1')" />
+                                     
+                                  {/if}
+
                                 </td>
+                                     </form>
+                                  <form>
+                                <td>
+                                   <input type="hidden" name="okURL" value="{$smarty.server.REQUEST_URI|escape}" />
+                                   <select name="uilang" onChange="this.form.submit()">
+                                     {foreach item=item from=$UI_LANGS}                 
+                                       <option value="{$item[0]}" {if $LANG eq $item[0]}SELECTED="1"{/if} >{$item[1]}</option>
+                                     {/foreach}
+                                   </select>
+                                </td>
+                                 </form>
                               </tr>
                             </table>
                           </td>

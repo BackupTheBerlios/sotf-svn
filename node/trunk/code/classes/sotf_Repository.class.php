@@ -76,10 +76,6 @@ class sotf_Repository {
 	 global $lang;
     $this->rootdir = $rootDir;
     $this->db = $db;
-	 // load roles
-	 $this->roles = $db->getAll("SELECT role_id AS id, name FROM sotf_role_names WHERE language='$lang'");
-	 // load genres
-	 $this->genres = $db->getAll("SELECT genre_id AS id, name FROM sotf_genres WHERE language='$lang'");
   }
 
   function getTableCode($tablename) {
@@ -389,80 +385,160 @@ class sotf_Repository {
 	 return $list;
   }
 
-  
+  function importTopicTree($lines, $language) {
 
-  function importTopicTree($treedata, $lines) {
-	 
-	 $treeId = $treedata['tree_id'];
+		debug("START import topic tree", $language);
 
-	 // create tree def
-	 $o1 = & new sotf_NodeObject("sotf_topic_trees");
-	 $o1->set('tree_id', $treeId);
-	 $o1->set('name', $treedata['shortname']);
-	 $o1->set('languages', 'eng');
-	 $o1->create();
-
-	 // create root description
-	 $x = new sotf_NodeObject("sotf_topic_tree_defs");
-	 $x->set('supertopic', 0);
-	 $x->set('name', $treedata['name']);
-	 $x->set('tree_id', $treeId);
-	 $x->create();
-	 $rootId = $x->getID();
-	 // create root translation
-	 $y = new sotf_NodeObject("sotf_topics");
-	 $y->set('topic_id', $rootId);
-	 $y->set('language', 'eng');
-	 $y->set('topic_name', $treedata['name']);
-	 $y->set('description', $treedata['description']);
-	 $y->create();
-	 
-	 $parentId = $rootId;
-	 $prevId = $rootId;
-	 $level = 0;
-	 
-	 reset($lines);
-	 while(list(,$line) = each($lines)) {
-		if(preg_match('/^\s*$/', $line) || preg_match('/^#/', $line))
-		  continue;
-		if(!preg_match('/^\s*(\d+)\s+(\d+)\s+(.*)/', $line, $items)) {
-		  logError("bad line syntax: $line");
-		  continue;
+		// read in topic tree definition
+		reset($lines);
+		$more = true;
+		while($more) {
+			$line = array_shift($lines);
+			if(preg_match('/^\s*$/', $line) || preg_match('/^#/', $line)) {
+				$more = false;
+			} else {
+				if(preg_match('/^\s*([\w_]+)\s*=\s*(.*)/', $line, $items)) {
+					$treedata[$items[1]] = trim($items[2]);
+				} else {
+					logError("Bad line: $line");
+				}
+			}
 		}
-		//$items = preg_split('/\s+/', $line, PREG_SPLIT_NO_EMPTY);
-		debug("tree items", $items);
-		$id = $items[1];
-		$l = $items[2];
-		$name = $items[3];
-		if($level < $l) {
-		  $roots[] = $parentId;
-		  $parentId = $prevId;
+		debug("tree data", $treedata);
+		if(!$treedata['tree_id'] || !$treedata['name'])
+			raiseError("bad topic tree definition");
+		
+		$treeId = $treedata['tree_id'];
+		
+		// create tree def
+		$td = & new sotf_NodeObject("sotf_topic_trees");
+		$td->set('tree_id', $treeId);
+		$td->find();
+		if($td->exists()) {
+			$langs = $td->get('languages');
+			if(strpos($langs, $language) === FALSE) {
+				$td->set('languages', $langs . ",$language");
+				$td->update();
+			}
+		} else {
+			$td->set('name', $treedata['shortname']);
+			$td->set('languages', $language);
+			$td->create();
 		}
-		if($level > $l) {
-		  $parentId = array_pop($roots);
-		}
-		$level = $l;
-		debug("", "LEVEL: $level, PARENT: $parentId, ROOTS: " . join(",", $roots));
+		
+		// create root description
 		$x = new sotf_NodeObject("sotf_topic_tree_defs");
-		$x->set('supertopic', $parentId);
-		$x->set('name', $name);
+		$x->set('supertopic', 0);
+		$x->set('name', $treedata['name']);
 		$x->set('tree_id', $treeId);
-		$x->create();
-		$id = $x->getID();
+		$x->find();
+		if(!$x->exists())
+			$x->create();
+		$rootId = $x->getID();
+		
+		// create root translation
 		$y = new sotf_NodeObject("sotf_topics");
-		$y->set('topic_id', $id);
-		$y->set('language', 'eng');
-		$y->set('topic_name', $name);
-		$y->create();
-		$prevId = $id;
-	 }
+		$y->set('topic_id', $rootId);
+		$y->set('language', $language);
+		$y->find();
+		$y->set('topic_name', $treedata['name']);
+		$y->set('description', $treedata['description']);
+		$y->save();
+		
+		$parentId = $rootId;
+		$prevId = $rootId;
+		$level = 0;
+		
+		reset($lines);
+		while(list(,$line) = each($lines)) {
+			if(preg_match('/^\s*$/', $line) || preg_match('/^#/', $line))
+				continue;
+			if(!preg_match('/^\s*(\d+)\s+(\d+)\s+(.*)/', $line, $items)) {
+				logError("bad line syntax: $line");
+				continue;
+			}
+			//$items = preg_split('/\s+/', $line, PREG_SPLIT_NO_EMPTY);
+			debug("tree items", $items);
+			$id = $items[1];
+			$l = $items[2];
+			$name = trim($items[3]);
+			if($level < $l) {
+				$roots[] = $parentId;
+				$parentId = $prevId;
+			}
+			if($level > $l) {
+		  $parentId = array_pop($roots);
+			}
+			$level = $l;
+			debug("", "LEVEL: $level, PARENT: $parentId, ROOTS: " . join(",", $roots));
+			$id = '000td' . $id;
+			$x = new sotf_NodeObject("sotf_topic_tree_defs", $id);
+			if(!$x->exists()) {
+				$x->set('supertopic', $parentId);
+				$x->set('name', $name);
+				$x->set('tree_id', $treeId);
+				$x->create();
+			}
+			$id = $x->getID();
+			$y = new sotf_NodeObject("sotf_topics");
+			$y->set('topic_id', $id);
+			$y->set('language', $language);
+			$y->set('topic_name', $name);
+			$y->create();
+			$prevId = $id;
+		}
+
+		debug("END import topic tree", $language);
+
   }
   
   /************************************************
    *      ROLES
    ************************************************/
 
+	/** Imports role translations from a text files into database */
+	function importRoles($lines, $language) {
+		if(empty($lines)) {
+			logError("importRoles: file is empty");
+			return;
+		}
+		reset($lines);
+		while(list(,$line) = each($lines)) {
+			if(preg_match('/^\s*$/', $line) || preg_match('/^#/', $line))
+				continue;
+			if(!preg_match('/^\s*(\d+)\s+(.*)/', $line, $items)) {
+				logError("bad line syntax: $line");
+				continue;
+			}
+			debug("role item", $items);
+			$id = $items[1];
+			$name = trim($items[2]);
+
+			$o1 = new sotf_NodeObject("sotf_roles");
+			$o1->set('role_id', $id);
+			$o1->find();
+			if(!$o1->exists()) {
+				$o1->set('creator', 'f');
+				$o1->create();
+			}
+			$o2 = new sotf_NodeObject("sotf_role_names");
+			$o2->set('role_id', $id);
+			$o2->set('language', $language);
+			$o2->set('name', $name);
+			$o2->create();
+		}
+	}
+
+	// load roles
+	function loadRoles() {
+		if(empty($this->roles)) {
+			global $lang, $db;
+			$this->roles = $db->getAll("SELECT role_id AS id, name FROM sotf_role_names WHERE language='$lang'");
+		}
+	}
+
   function getRoleName($id) {
+		$this->loadRoles();
     reset($this->roles);
     while(list(,$r) = each($this->roles)) {
       if($r['id']==$id)
@@ -473,12 +549,14 @@ class sotf_Repository {
   }
 
   function getRoleId($name, $language) {
+		$this->loadRoles();
     $name = sotf_Utils::magicQuotes($name);
     $language = sotf_Utils::magicQuotes($language);
     return $this->db->getOne("SELECT role_id FROM sotf_role_names WHERE name='$name' AND language='$language'");
   }
 
   function getRoles() {
+		$this->loadRoles();
 		return $this->roles;
   }
 
@@ -486,14 +564,50 @@ class sotf_Repository {
    *      GENRES
    ************************************************/
 
+	/** Imports genre translations from a text files into database */
+	function importGenres($lines, $language) {
+		if(empty($lines)) {
+			logError("importGenres: file is empty");
+			return;
+		}
+		reset($lines);
+		while(list(,$line) = each($lines)) {
+			if(preg_match('/^\s*$/', $line) || preg_match('/^#/', $line))
+				continue;
+			if(!preg_match('/^\s*(\d+)\s+(.*)/', $line, $items)) {
+				logError("bad line syntax: $line");
+				continue;
+			}
+			debug("genre item", $items);
+			$id = $items[1];
+			$name = trim($items[2]);
+
+			$o1 = new sotf_NodeObject("sotf_genres");
+			$o1->set('genre_id', $id);
+			$o1->set('language', $language);
+			$o1->set('name', $name);
+			$o1->create();
+		}
+	}
+
+	// load genres
+	function loadGenres() {
+		if(empty($this->genres)) {
+			global $lang, $db;
+			$this->genres = $db->getAll("SELECT genre_id AS id, name FROM sotf_genres WHERE language='$lang'");
+		}
+	}
+
   function getGenres() {
-	 return $this->genres;
+		$this->loadGenres();
+		return $this->genres;
   }
-
+	
   function getGenreName($id) {
-	 return $this->genres[$id-1];
+		$this->loadGenres();
+		return $this->genres[$id-1];
   }
-
+	
   /************************************************
    *      XML-RPC ACCESS TO CONTROLLED VOCABULARIES
    ************************************************/

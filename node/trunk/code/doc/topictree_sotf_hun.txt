@@ -1,32 +1,32 @@
 tree_id=1
-name=SOTF general topic tree
-shortname=SOTF general
-description=An attempt to create a general subject tree for radios.
+name=SOTF témafa
+shortname=SOTF témák
+description=Kísérlet egy rádióknak szóló általános téma klasszifikáció megalkotására.
 url=
 
 # End of tree definition
       
-101 1 Arts, Medias, Entertainment and Leisure
+101 1 Múvészet, média, szórakozás 
 
-102 2 News 
-103 2 New Media (Internet, CD, DVD, Mini Disk, etc.) 
-104 2 Press 
-105 2 Radio 
-106 2 Television 
-107 2 Advertising and Public Relations 
-108 2 Foreign news (should remain) 
-109 2 Motion Pictures (Documentary, Fiction) 
-110 2 Performing Arts (Theater, Dance, Circus, etc.) 
-111 2 Music (All genres - including Opera, Classical Concert, etc.) 
-112 2 Plastic Arts (Painting, Sculpture, Photography, Comics, etc.) 
-113 2 Architecture and Urbanism 
-114 2 Literature (Poetry, Fiction, Essays, etc.) 
-115 2 Detective stories 
-116 2 Science Fiction and Fantasy 
-117 2 Cartoons, caricatures & comics 
-118 2 Recreational Activities 
-119 2 Journey and Tourism 
-120 2 Games 
+102 2 Hírek
+103 2 Új média (Internet, CD, DVD, Mini Disk, stb.) 
+104 2 Sajtó 
+105 2 Rádió 
+106 2 Televízió 
+107 2 Hirdetés és PR
+108 2 Külföldi hírek
+109 2 Filmek (Dokumentumfilmek és irodalom) 
+110 2 Elõadómûvészet (színház, tánc, cirkusz, stb.)
+111 2 Zene (mindenfajta: klasszikus és populáris is)
+112 2 Képzõmûvészet (festés, szobrászat, fotó, stb.)
+113 2 Építészet és urbanizáció
+114 2 Irodalom 
+115 2 Krimi 
+116 2 Fantasztikus irodalom
+117 2 Képregény, karikatûra
+118 2 Kikapcsolódás, aktív pihenés
+119 2 Utazás és turizmus
+120 2 Játékok
 
 121 1 Human Practices and Social Issues
 

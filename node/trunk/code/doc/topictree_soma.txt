@@ -1,3 +1,10 @@
+tree_id=2
+name=SOMA Metadata version 1
+shortname=SOMA
+description=The Shared Online Media Archive initiative gave a topic tree for its metadata definition. It is provided as an alternative topic tree here.
+url=http://soma-dev.sourceforge.net/
+
+# End of tree definition
 
 501 1 development
 502 2 agriculture

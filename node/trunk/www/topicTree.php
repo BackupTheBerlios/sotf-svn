@@ -36,7 +36,13 @@ $smarty->assign('ADD_MODE', $addMode);
 $smarty->assign('TREES', $repository->listTopicTrees($lang));
 
 // TODO; use user's language
-$result = $repository->getTree($treeId, 'eng', true);
+$info = $repository->getTopicTreeInfo($treeId, $lang);
+//debug("INFO", $info);
+$treeLang = $lang;
+if(strpos($info['languages'], $lang) === FALSE)
+	  $treeLang = 'eng'; // fall back to English
+
+$result = $repository->getTree($treeId, $treeLang, true);
 $smarty->assign('TREE_ID', $treeId);
 $smarty->assign("TREE", $result);
 

@@ -612,42 +612,12 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$db->query("SELECT setval('sotf_roles_seq', 1, false)");
 			$db->query("SELECT setval('sotf_role_names_seq', 1, false)");
 			
-			function createRole($id, $english, $creator = 'f') {
-			  $o1 = new sotf_NodeObject("sotf_roles");
-			  $o1->set('role_id', $id);
-			  $o1->set('creator', $creator);
-			  $o1->create();
-			  $o2 = new sotf_NodeObject("sotf_role_names");
-			  $o2->set('role_id', $id);
-			  $o2->set('language', 'eng');
-			  $o2->set('name', $english);
-			  $o2->create();
-			}
-			
-			createRole( 1, 'Artist');
-			createRole( 2, 'Author', 't');
-			createRole( 3, 'Commentator');
-			createRole( 4, 'Composer');
-			createRole( 5, 'Copyright holder', 't');
-			createRole( 6, 'Correspondent');
-			createRole( 7, 'Designer');
-			createRole( 8, 'Director', 't');
-			createRole( 9, 'Editor', 't');
-			createRole( 10, 'Funder / Sponsor');
-			createRole( 11, 'Interviewee');
-			createRole( 12, 'Interviewer', 't');
-			createRole( 13, 'Narrator');
-			createRole( 14, 'Participant');
-			createRole( 15, 'Performer');
-			createRole( 16, 'Producer', 't');
-			createRole( 17, 'Production Personnel');
-			createRole( 18, 'Speaker');
-			createRole( 19, 'Transcriber');
-			createRole( 20, 'Translator');
-			createRole( 21, 'Other');
-			createRole( 22, 'Creator', 't');
-			createRole( 23, 'Publisher');
-			createRole( 24, 'Contributor', 't');
+			// create default roles: THE ORDER IS IMPORTANT!
+			$repository->importRoles(file($config['basedir']."/code/doc/roles.txt"), 'eng');
+			$repository->importRoles(file($config['basedir']."/code/doc/roles_ger.txt"), 'ger');
+			$repository->importRoles(file($config['basedir']."/code/doc/roles_hun.txt"), 'hun');
+
+			$db->query("UPDATE sotf_roles SET creator='t' WHERE role_id='2' OR role_id='5' OR role_id='8' OR role_id='9' OR role_id='12' OR role_id='16' OR role_id='22' OR role_id='24'");
 			
 			// create genres
 			
@@ -655,37 +625,10 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$db->query("DELETE FROM sotf_genres");
 			$db->query("SELECT setval('sotf_genres_seq', 1, false)");
 			
-			function createGenre($id, $english) {
-			  $o1 = new sotf_NodeObject("sotf_genres");
-			  $o1->set('genre_id', $id);
-			  $o1->set('language', 'eng');
-			  $o1->set('name', $english);
-			  $o1->create();
-			}
-			
-			createGenre( 1, 'Actuality');
-			createGenre( 2, 'Advert / jingle / spot');
-			createGenre( 3, 'Announcement');
-			createGenre( 4, 'Call-in show');
-			createGenre( 5, 'Children / youth');
-			createGenre( 6, 'Comedy');
-			createGenre( 7, 'Dance');
-			createGenre( 8, 'Documentary');
-			createGenre( 9, 'Drama');
-			createGenre( 10, 'Education');
-			createGenre( 11, 'Feature');
-			createGenre( 12, 'Game show');
-			createGenre( 13, 'Interview');
-			//createGenre( 14, 'Jingle');
-			createGenre( 15, 'Magazine');
-			//createGenre( 16, 'Mocroprogramme');
-			createGenre( 17, 'Music');
-			createGenre( 18, 'News');
-			createGenre( 19, 'Oral history / storytelling');
-			createGenre( 20, 'Talk show / discussion');
-			createGenre( 21, 'Training');
-			createGenre( 22, 'Community media');
-
+			// create default genres: THE ORDER IS IMPORTANT!
+			$repository->importGenres(file($config['basedir']."/code/doc/genres.txt"), 'eng');
+			$repository->importGenres(file($config['basedir']."/code/doc/genres_ger.txt"), 'ger');
+			$repository->importGenres(file($config['basedir']."/code/doc/genres_hun.txt"), 'hun');
 
 			// delete topics 
 
@@ -708,22 +651,11 @@ if (($install_color[$id] = $install_green) AND ($nodeDbHost == NULL))			//if tes
 			$result = pg_exec($conn, $sql);
 			*/
 
-			// create default topic trees
-
-			$treedata= array('tree_id' => 1,
-								  'name' => 'SOTF general topic tree',
-								  'shortname' => 'SOTF general',
-								  'description' => "An attempt to create a general subject tree for radios."
-								  );
-			$repository->importTopicTree($treedata, file($config['basedir']."/code/doc/topictree_sotf.txt"));
-
-			$treedata= array('tree_id' => 2,
-								  'name' => 'SOMA Metadata version 1',
-								  'shortname' => 'SOMA',
-								  'url', 'http://soma-dev.sourceforge.net/',
-								  'description' => "The Shared Online Media Archive initiative gave a topic tree for its metadata definition. It is provided as an alternative topic tree here."
-								  );
-			$repository->importTopicTree($treedata, file($config['basedir']."/code/doc/topictree_soma.txt"));
+			// create default topic trees: THE ORDER IS IMPORTANT!
+			$repository->importTopicTree(file($config['basedir']."/code/doc/topictree_sotf.txt"), 'eng');
+			$repository->importTopicTree(file($config['basedir']."/code/doc/topictree_soma.txt"), 'eng');
+			$repository->importTopicTree(file($config['basedir']."/code/doc/topictree_sotf_ger.txt"), 'ger');
+			$repository->importTopicTree(file($config['basedir']."/code/doc/topictree_sotf_hun.txt"), 'hun');
 
 			$result = $db->query("SELECT setval('sotf_topics_seq', ". $config['nodeId'] . "000, false)");
 			$result = $db->query("SELECT setval('sotf_topic_trees_seq', ". $config['nodeId'] . "000, false)");
