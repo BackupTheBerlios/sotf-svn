@@ -178,7 +178,7 @@
 						for (k=0; k<6; k++)
 						{
 							color=toHex(i)+toHex(j)+toHex(k);
-							document.write('<td bgcolor="#'+color+'"><a href="#'+color+'" onclick="javascript:document.myform.colorcode.value=\''+color+'\';return false;"><img src="{$IMAGEDIR}/transp.gif" border="0" width="10" height="10" alt="#'+color+'"></a></td>');
+							document.write('<td bgcolor="#'+color+'"><a href="#'+color+'" onclick="javascript:document.myform.colorcode.value=\''+color+'\';return false;"><img src="{/literal}{$IMAGEDIR}{literal}/transp.gif" border="0" width="10" height="10" alt="#'+color+'"></a></td>');
 						}
 					}
 				document.write('</tr>');
