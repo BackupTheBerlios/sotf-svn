@@ -103,7 +103,6 @@ class sotf_Rating	 extends sotf_Object {
 	  global $db, $user, $config, $page;
 
 	  $data = array('prog_id' => $objId,
-						 'id' => $id,
 						 'user_node_id' => $config['nodeId'],
 						 'user_id' => $user->id,
 						 'rate' => $value,
@@ -116,13 +115,13 @@ class sotf_Rating	 extends sotf_Object {
 	function setRating($objId, $rating) {
 	  $data = $this->createLocalRatingInfo($objId, $rating);
 	  $this->recordRating($data);
-	  sotf_Object::addToUpdate('updateInstant', $data['prog_id']);
+	  sotf_Object::addToUpdate('ratingUpdate', $data['prog_id']);
 	  //$this->updateInstant($objId);
 	}
 
 	function setRemoteRating($data) {
 		$this->recordRating($data);
-		sotf_Object::addToUpdate('updateInstant', $data['prog_id']);
+		sotf_Object::addToUpdate('ratingUpdate', $data['prog_id']);
 		//$this->updateInstant($data['prog_id']);
 	}
 

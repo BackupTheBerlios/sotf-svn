@@ -153,6 +153,7 @@ class sotf_Node extends sotf_NodeObject {
 
 	 if($chunkInfo['objects_remaining'] == 0) {
 		// last chunk, do something useful!!
+		sotf_Object::doUpdates();
 	 }
 	 return array($replyInfo);
   }

@@ -207,7 +207,7 @@ class sotf_Page
 		$host = getHostName();
 		error_log("$host: $totalTime ms, " . myGetenv("REQUEST_URI"),0);
 		if($config['debug'])
-		  error_log("--------------------------------------------------------------------\n",0);
+		  error_log("--------------------------------------------------------------------",0);
 	}
 
 	function send($template = 'main.htm'){

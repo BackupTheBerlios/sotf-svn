@@ -344,11 +344,27 @@ class sotf_Object {
 	}
 
 	/** static */
-	function getToUpdate($table, $id) {
+	function doUpdates() {
 		global $db;
-		return $db->getAll("SELECT * FROM sotf_to_update");
+		$db->begin(true);
+		$list = $db->getAll("SELECT * FROM sotf_to_update");
+		while(list(,$item) = each($list)) {
+			debug("to_update", $item['tablename'] . ", " . $item['row_id']);
+			switch($item['tablename']) {
+			case 'ratingUpdate':
+				$rating = new sotf_Rating();
+				$rating->updateInstant($item['row_id']);
+				break;
+			case 'sotf_stats':
+				$obj = new sotf_Object('sotf_stats', $item['row_id']);
+				$obj->updateStats();
+				break;
+			default:
+				logError("Unknown to_update type: " . $item['tablename']);
+			}
+		}
+		$db->commit();
 	}
-	
 
   /**
 	* sotf::debug()

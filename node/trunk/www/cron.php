@@ -31,6 +31,10 @@ set_time_limit(18000);
 // don't garble reply message with warnings in HTML
 //ini_set("display_errors", 0);
 
+//******** Perform expensive updates on objects
+
+sotf_Object::doUpdates();
+
 //******** Synchronize with network: send new local data and forward new remote data
 
 // sync with all neighbours

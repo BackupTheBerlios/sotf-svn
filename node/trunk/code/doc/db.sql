@@ -512,7 +512,7 @@ CREATE TABLE "sotf_to_forward" (
 	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
 	"type" varchar(10),  -- type of data
 	"data" text,			-- data to be sent
-	"when" timestamptz	-- date of object
+	"entered" timestamptz	-- date of object
 );
 
 CREATE TABLE "sotf_to_update" (
@@ -535,12 +535,26 @@ CREATE TABLE "sotf_unique_access" (
 
 CREATE TABLE "sotf_user_progs" (
 -- stores editor-specific private settings for programmes
--- REPLICATED
 	"id" serial PRIMARY KEY, 		-- just an id
 	"user_id"  int, 				-- cannot reference to sadm.authenticate(auth_id)
 	"prog_id" varchar(12) REFERENCES sotf_programmes(id) ON DELETE CASCADE,		-- id of programme
 	"comments" text,					-- editor's private comments
 	"flags" varchar(20)				-- various flags (e.g. important, to-do)
+);
+
+CREATE TABLE "sotf_streams" (
+-- list of started streams XXX
+	"id" serial PRIMARY KEY, 		-- just an id
+	"pid" int,							-- process id of streamer
+	"user_id"  int, 					-- identify
+	"auth_key" varchar(50),			-- another way to identify user
+	"prog_id" varchar(12),			-- id of programme
+	"file_id" varchar(12),			-- id of file being played (null if playlist)
+	"playlist" varchar(40),			-- name of playlist file
+	"started" timestamptz,			-- 
+	"length" int,						-- estimated length of playlist in seconds
+	"host" varchar(50),				-- host receiving the stream
+	"flags" varchar(20)				-- various flags
 );
 
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('1', 'admin');

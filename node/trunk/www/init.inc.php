@@ -22,10 +22,6 @@ require_once('config.inc.php');
 $config['debug'] = $config['debug'] ? false : true;
 $config['debugType'] = 'later';	// 'now' for output to browser
 
-if($config['debug']) {
-     error_log("\n---------------------------------------------------------------------------------\n" .  getenv("REQUEST_URI") . "\n",3, $config['logFile']);
-}
-
 /*
 if($_COOKIE['debug']) {
   $config['debug'] = $_COOKIE['debug'] == 'yes';
@@ -36,6 +32,10 @@ if($_COOKIE['debug']) {
 ini_set("error_log", $config['logFile']);
 ini_set("log_errors", true);
 error_reporting (E_ALL ^ E_NOTICE);
+
+if($config['debug']) {
+     error_log("\n\n---------------------------------------------------------------------------------\n" .  getenv("REQUEST_URI") . "\n",3, $config['logFile']);
+}
 
 //logger('debug', $config['debug']);
 
@@ -130,7 +130,8 @@ if(!headers_sent())
 
 if($config['debug'])
 {
-  error_log("------------------------------------------", 0);
+	error_log("",0);
+  error_log("-------------------------------------------------------------------", 0);
   error_log("REQUEST_URI: " . myGetenv("REQUEST_URI"), 0);
 	error_log("REMOTE_HOST: " . getHostName() ,0);
   error_log("USER_AGENT: " . myGetenv('HTTP_USER_AGENT') ,0);
