@@ -51,7 +51,7 @@ ALTER TABLE sotf_contacts ADD COLUMN "station_id" varchar(12) REFERENCES sotf_st
 
 UPDATE sotf_contacts SET station_id=pr.station_id FROM sotf_object_roles r, sotf_programmes pr WHERE r.contact_id=sotf_contacts.id AND r.object_id=pr.id; 
 UPDATE sotf_contacts SET station_id=se.station_id FROM sotf_object_roles r, sotf_series se WHERE r.contact_id=sotf_contacts.id AND r.object_id=se.id; 
-UPDATE sotf_contacts SET station_id=r.object_id FROM sotf_object_roles r WHERE r.contact_id=sotf_contacts.id AND r.object_id LIKE '%st%' 
+UPDATE sotf_contacts SET station_id=r.object_id FROM sotf_object_roles r WHERE r.contact_id=sotf_contacts.id AND r.object_id LIKE '%st%';
 
 -- 2003-06-13
 

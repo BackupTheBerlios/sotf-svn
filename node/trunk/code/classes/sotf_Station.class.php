@@ -179,27 +179,31 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	 * @method static listStations
 	 * @return array of sotf_Station objects
 	*/
-	function listStations($start, $hitsPerPage, $mode='newest', $language = 'none') {
+	function listStations($start, $hitsPerPage, $mode='', $language = '') {
 	  global $db;
 
-		if(empty($start)) 
-			$start = 0;
-		if($mode=='newest')
-		  $sortExpr = '  ORDER BY entry_date DESC ';
-		else
-		  $sortExpr = '  ORDER BY name ';
-		$language = sotf_Utils::magicQuotes($language);
-		if($language != 'none')
-		  $whereExpr = " WHERE language LIKE '%$language%' ";
-		else
-		  $whereExpr = "";
-		$res = $db->limitQuery("SELECT * FROM sotf_stations $whereExpr $sortExpr", $start, $hitsPerPage);
-		if(DB::isError($res))
-			raiseError($res);
-		while (DB_OK === $res->fetchInto($st)) {
-			$slist[] = new sotf_Station($st['id'], $st);
-		}
-		return $slist;
+	  if(empty($start)) 
+		 $start = 0;
+	  if(empty($mode))
+		 $mode = 'newest';
+	  if(empty($language))
+		 $language = 'none';
+	  if($mode=='newest')
+		 $sortExpr = '  ORDER BY entry_date DESC ';
+	  else
+		 $sortExpr = '  ORDER BY name ';
+	  $language = sotf_Utils::magicQuotes($language);
+	  if($language != 'none')
+		 $whereExpr = " WHERE language LIKE '%$language%' ";
+	  else
+		 $whereExpr = "";
+	  $res = $db->limitQuery("SELECT * FROM sotf_stations $whereExpr $sortExpr", $start, $hitsPerPage);
+	  if(DB::isError($res))
+		 raiseError($res);
+	  while (DB_OK === $res->fetchInto($st)) {
+		 $slist[] = new sotf_Station($st['id'], $st);
+	  }
+	  return $slist;
 	}
 
 	/**
