@@ -88,7 +88,7 @@ class sotf_NodeObject extends sotf_Object {
 
   /** static */
   function getModifiedObjects($date, $localOnly = true) {
-    global $db, $nodeId;
+    global $db, $nodeId, $repository;
     if($localOnly)
       $whereClause = "node_id='$nodeId'";
     if($date && $localOnly)
@@ -97,8 +97,9 @@ class sotf_NodeObject extends sotf_Object {
       $whereClause .= "last_change >= '$date'";
     $objects1 = $db->getAll("SELECT * FROM sotf_node_objects WHERE $whereClause ORDER BY substring(id, 4, 2), id");
     //debug("OBJECTS__1", $objects);
-    while(list(,$obj) = each($objects)) {
-      $tablename = $this->repository->getTable($obj['id']);
+    $objects = array();
+    while(list(,$obj) = each($objects1)) {
+      $tablename = $repository->getTable($obj['id']);
       $data = $db->getRow("SELECT * FROM $tablename WHERE id = '" . $obj['id'] . "'");
       if(count($data) > 1) {         // don't send occasional empty records
         $obj['data'] = $data;

@@ -54,10 +54,23 @@ if(!empty($list)) {
 		 $smarty->assign_by_ref("USER_AUDIO_FILES", $list);
 }
 
-$myProgs = sotf_Programme::myProgrammes();
+//$max = $db->getAll("SELECT count(*) FROM (".$query.") as count");	//get the number of results
+//$max = $max[0]["count"];
+$max = 10;
+$limit = $page->splitList($max, "");
+//$result = $db->getAll($query.$limit["limit"]);
+
+var_dump($stationId);
+var_dump(sotf_Permission::mySeriesData($stationId));
+
+$sortby[a] = "a";
+$sortby[b] = "b";
+
+$myProgs = sotf_Programme::myProgrammes("", "", "name");
 //$plist = new sotf_PrgList($myProgs);
 //// todo sort/filter using sotf_PrgList
 //$l = $plist->getList();
+$smarty->assign_by_ref("sortby", $sortby);
 $smarty->assign_by_ref("MYPROGS", $myProgs);
 
 

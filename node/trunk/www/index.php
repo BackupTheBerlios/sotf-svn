@@ -70,7 +70,7 @@ if($defQuery) {
   
     debug("query", $query);
     //get the number of results
-    $max = $db->getOne("SELECT count(*) FROM (".$query.") as count");       
+    $max = $db->getOne("SELECT count(*) FROM ( $query ) as foo ");       
     $smarty->assign("DEF_QUERY_MAX", $max);
 
     $res = $db->limitQuery($query, 0, MAX_ITEMS_IN_INDEX);

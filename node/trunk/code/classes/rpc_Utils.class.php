@@ -1,5 +1,6 @@
 <?php
-include_once("$xmlrpcdir/xmlrpc.inc");  
+require_once("$xmlrpcdir/xmlrpc.inc");  
+require_once("$xmlrpcdir/xmlrpcs.inc");  
 
 class rpc_Utils {
 

@@ -1,3 +1,10 @@
+<?php
+require("init.inc.php");
+
+$page->popup = true;
+
+?>
+
 <html>
 <head>
 <title>Sending data</title>
@@ -15,11 +22,9 @@ function windowclose()
 	if (noerror) window.close();
 }
 </script>
+
 <?php
 //<body>
-require("init.inc.php");
-
-$page->popup = true;
 
 //TODO: test
 //$name = sotf_Utils::magicQuotes($_GET["name"]);
