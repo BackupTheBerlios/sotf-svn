@@ -22,6 +22,7 @@ $save = sotf_Utils::getParameter('save');
 $roleSelected = sotf_Utils::getParameter('role');
 $scopeChange = sotf_Utils::getParameter('scope_change');
 $scope = sotf_Utils::getParameter('scope');
+$pattern = sotf_Utils::getParameter('pattern');
 
 if(empty($objectId)) {
      raiseError("Object id is missing!");
@@ -33,11 +34,11 @@ if($scopeChange) {
   if(sotf_Utils::getParameter('change')) {
 	 $scope = sotf_Utils::getParameter('newscope');
   }
-  if(sotf_Utils::getParameter('search')) {
-	 $pattern = sotf_Utils::getParameter('pattern');
+  $newPattern = sotf_Utils::getParameter('newpattern');
+  if($newPattern) {
 	 $scope = 6;
   }
-  $page->redirect("editRole.php?roleid=$roleId&objectid=$objectId&pattern=" . urlencode($pattern) . "&scope=$scope");
+  $page->redirect("editRole.php?roleid=$roleId&objectid=$objectId&pattern=" . urlencode($newPattern) . "&scope=$scope");
 }
 
 if($roleId) {
@@ -53,10 +54,7 @@ if($roleId) {
     $smarty->assign("ROLE_SELECTED", $roleSelected);
   else
     $smarty->assign("ROLE_SELECTED", $role->get('role_id'));
-    
-} else {
-  $smarty->assign('NEW', 1);
-}
+} 
 
 if($save) {
   if(!$roleSelected)
@@ -83,6 +81,7 @@ if($save) {
 
 // general data
 $smarty->assign("OBJECT_ID", $objectId);
+$smarty->assign("ROLE_ID", $roleId);
 $smarty->assign('ROLE_LIST', $repository->getRoles());
 
 if(!$scope) {

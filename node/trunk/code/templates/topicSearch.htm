@@ -115,7 +115,7 @@
               {/if}
             </td>
             <td width="98%">
-              <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> ({$item.entry_date})
+              <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> ({$item.broadcast_date|default:$item.entry_date})
               {if $item.alternative_title}<br>{$item.alternative_title}{/if}
               {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
               {if $item.abstract}

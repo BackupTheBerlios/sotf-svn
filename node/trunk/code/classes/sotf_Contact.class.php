@@ -150,7 +150,7 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 	function searchContactNames($pattern) {
 		global $db, $config, $user;
 		$pattern = sotf_Utils::magicQuotes($pattern);
-		$res = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c WHERE name ~ '$pattern' ORDER BY name");
+		$res = $db->getAssoc("SELECT c.id AS id, c.name AS name FROM sotf_contacts c WHERE name ~* '$pattern' ORDER BY name");
 		if(DB::isError($res))
 			raiseError($res);
 		return $res;

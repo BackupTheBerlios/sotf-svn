@@ -1,16 +1,22 @@
 
-{if $NEW}
-<h3>{#new_role#}</h3>
+<h3>
+{if $ROLE_ID}
+{#change_role#}
 {else}
-<h3>{#change_role#}</h3>
+{#new_role#}
 {/if}
+</h3>
 
 <form name="form1" method="POST">
 
-<!--<input name="contactname" value="{$CONTACT_NAME}">-->
+<input type="hidden" name="roleid" value="{$ROLE_ID}">
 <input type="hidden" name="objectid" value="{$OBJECT_ID}">
 <input type="hidden" name="scope" value="{$SCOPE}">
-<input type="hidden" name="scope" value="{$PATTERN}">
+<input type="hidden" name="pattern" value="{$PATTERN}">
+
+{if $SCOPE eq 6}
+<p>{#contact_search_for#} '{$PATTERN}'</p>
+{/if}
 
 {if count($CONTACTS) gt 0 }
 
@@ -25,10 +31,10 @@
    {/foreach}
   </select>
 
-  {if $NEW}
-    <input type="submit" name="save" value="{#Add#}">
-  {else}
+  {if $ROLE_ID}
     <input type="submit" name="save" value="{#Change#}">
+  {else}
+    <input type="submit" name="save" value="{#Add#}">
   {/if}
 
 {else}
@@ -37,9 +43,10 @@
 </form>
 <form>
 <input type="hidden" name="scope_change" value="1">
+<input type="hidden" name="roleid" value="{$ROLE_ID}">
 <input type="hidden" name="objectid" value="{$OBJECT_ID}">
 <input type="hidden" name="scope" value="{$SCOPE}">
-<input type="hidden" name="scope" value="{$PATTERN}">
+<input type="hidden" name="pattern" value="{$PATTERN}">
       <table>
         <tr>
           <td class="tab" colspan="3">
@@ -55,7 +62,7 @@
              <!-- <br /><input type="radio" name="newscope" value="2" {if $SCOPE eq 2}CHECKED{/if}> {#series_scope#}</nobr> -->
              <br /><nobr><input type="radio" name="newscope" value="3" {if $SCOPE eq 3}CHECKED{/if}> {#station_scope#}</nobr>
              <br /><nobr><input type="radio" name="newscope" value="4" {if $SCOPE eq 4}CHECKED{/if}> {#local_scope#}</nobr>
-             <br /><nobr><input type="radio" name="newscope" value="5" {if $SCOPE eq 5}CHECKED{/if}> {#all_scope#}</nobr>
+             <!-- <br /><nobr><input type="radio" name="newscope" value="5" {if $SCOPE eq 5}CHECKED{/if}> {#all_scope#}</nobr> -->
           </td>
           <td>
             <input type="submit" name="change" value="{#change_scope#}">
@@ -70,7 +77,7 @@
               {#search_contact#}
           </td>
           <td>
-            <input name="pattern" value=""> 
+            <input name="newpattern" value="{$PATTERN}"> 
           </td>
           <td>
           <input type="submit" name="search" value="{#search#}">

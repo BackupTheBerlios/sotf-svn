@@ -90,11 +90,22 @@ if(!empty($XBMF)) {
 
 //******** Expire old programmes
 
+$prgIds = sotf_Programme::getExpiredProgrammes();
+if(!empty($prgIds)) {
+  debug("deleting expired", $prgIds);
+  $db->begin();
+  foreach($prgIds as $id) {
+    $prg = & $repository->getObject($id);
+    $prg->delete();
+  }
+  $db->commit();
+}
+
 // *** regenerate metadata files??
 
 //******** Update topic counts
 
-//$repository->updateTopicCounts();
+$repository->updateTopicCounts();
 
 //******** Clean caches adn tmp dirs
 

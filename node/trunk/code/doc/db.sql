@@ -116,9 +116,9 @@ CREATE TABLE "sotf_contacts" (
 	"intro" text,
 	"email" varchar(100),
 	"address" varchar(255),
-	"phone" varchar(20),
-	"cellphone" varchar(20),
-	"fax" varchar(20),
+	"phone" varchar(50),
+	"cellphone" varchar(50),
+	"fax" varchar(50),
 	"url" varchar(255)
 );
 

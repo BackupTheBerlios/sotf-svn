@@ -330,6 +330,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 return $plist;
   }
 
+  function getExpiredProgrammes() {
+	 global $db, $config;
+	 return $db->getCol("SELECT p.id FROM sotf_programmes p, sotf_node_objects n WHERE p.id=n.id AND expiry_date < CURRENT_DATE AND n.node_id='".$config['nodeId'] . "'"); 
+  }
+
   /************************************************
    *  FILE MANAGEMENT
    ************************************************/

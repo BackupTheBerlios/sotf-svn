@@ -141,7 +141,7 @@ window.onload=myonload;
               <td class="meta">{#production_date#}:</td>
               <td>
                   <input type="radio" name="production_date_radio0" value="selected" onclick="javascript:disable('production_date', 0)">
-                  {html_select_date time=$PRG_DATA.production_date start_year="-5" prefix="production_date" month_format="%m" field_order="YMD" field_separator="-"}
+                  {html_select_date time=$PRG_DATA.production_date start_year="-20" prefix="production_date" month_format="%m" field_order="YMD" field_separator="-"}
                   <br><input type="radio" name="production_date_radio1" value="unselected" onclick="javascript:disable('production_date', 1)">{#not_available#}
               </td>
             </tr>
@@ -149,7 +149,7 @@ window.onload=myonload;
               <td class="meta">{#broadcast_date#}:</td>
               <td>
                   <input type="radio" name="broadcast_date_radio0" value="selected" onclick="javascript:disable('broadcast_date', 0)">
-                  {html_select_date time=$PRG_DATA.broadcast_date start_year="-5" prefix="broadcast_date" month_format="%m" field_order="YMD" field_separator="-"}
+                  {html_select_date time=$PRG_DATA.broadcast_date start_year="-20" prefix="broadcast_date" month_format="%m" field_order="YMD" field_separator="-"}
                   <br><input type="radio" name="broadcast_date_radio1" value="unselected" onclick="javascript:disable('broadcast_date', 1)">{#not_available#}
             </td>
             </tr>
