@@ -60,7 +60,9 @@ function selectAudio(&$prg) {
   foreach($files as $f) {
 	 if($f['download_access']=='t') {
 		//$f['url'] = $config['rootUrl'] . '/getFile.php/' . $f['filename'] . '?audio=1&id=' . $prg->id . '&filename=' . $f['filename'];
-		$f['url'] = $config['rootUrl'] . '/getFile.php?audio=1&id=' . $prg->id . '&filename=' . $f['filename'];
+		//$f['url'] = $config['rootUrl'] . '/getFile.php?audio=1&id=' . $prg->id . '&filename=' . $f['filename'];
+		$baseUrl = sotf_Node::getHomeNodeRootUrl($prg);
+		$f['url'] = $baseUrl . '/getFile.php/fid__' . $f['id'];
 		return $f;
 	 }
   }
@@ -84,19 +86,17 @@ function addItem(&$rss, &$prog) {
   writeTag($rss, "link", $config['rootUrl'] . "/get.php?id=".$prog->id);
   writeTag($rss, "pubDate", toW3CDate($prog->get('entry_date')));
   writeTag($rss, "description", $prog->get('abstract'));
-  if($prog->isLocal()) {
-	 $audioAttrs = selectAudio($prog);
-	 if($audioAttrs) {
-		$filepath = $prog->getFilePath($audioAttrs);
-		$tmpFile = linkAudio($filepath, $audioAttrs);
-		$enclAttrs = array('type' => 'audio/mpeg',
-								 'length' => $audioAttrs['filesize'],
-								 'url' => $config['tmpUrl'] . '/' . basename($tmpFile),
-								 //'url' => $audioAttrs['url'],
-								 //'url' => $config['tmpUrl'] . '/' . 'au_011pr105_budh1204_24kbps_1chn_22050Hz.mp3',
-								 );
-		writeTag($rss, "enclosure", NULL, NULL, $enclAttrs);
-	 }
+  $audioAttrs = selectAudio($prog);
+  if($audioAttrs) {
+	 //$filepath = $prog->getFilePath($audioAttrs);
+	 //$tmpFile = linkAudio($filepath, $audioAttrs);
+	 $enclAttrs = array('type' => 'audio/mpeg',
+							  'length' => $audioAttrs['filesize'],
+							  //'url' => $config['tmpUrl'] . '/' . basename($tmpFile),
+							  'url' => $audioAttrs['url'],
+							  //'url' => $config['tmpUrl'] . '/' . 'au_011pr105_budh1204_24kbps_1chn_22050Hz.mp3',
+							  );
+	 writeTag($rss, "enclosure", NULL, NULL, $enclAttrs);
   }
   $rss .= "\n</item>";
 }

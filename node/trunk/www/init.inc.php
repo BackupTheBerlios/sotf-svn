@@ -222,7 +222,7 @@ if($_GET['uilang']) {
 // we need trick for making pages indexed by Google
 // therefore we pass some parameters in pathinfo
 // after this call getParameter can be used to get these parameters as well
-$pathinfoParamExceptions = array('getFile','getIcon','getJingle','getUserFile');
+$pathinfoParamExceptions = array('getIcon','getJingle','getUserFile');
 if(!in_array($page->action, $pathinfoParamExceptions)) {
 	sotf_Utils::collectPathinfoParams();
 }
