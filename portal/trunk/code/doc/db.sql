@@ -73,6 +73,8 @@ CREATE TABLE programmes_comments (
 "reply_to" int4 REFERENCES programmes_comments(id),
 "path" varchar,
 "timestamp" timestamp DEFAULT date('now'::timestamp) NOT NULL,
+"ipaddr" varchar(24) NOT NULL,
+"email" varchar(100),
 "title" varchar,
 "comment" varchar,
 "level" int2);
