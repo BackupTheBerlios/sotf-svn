@@ -1,3 +1,20 @@
+{literal}
+<script language="javascript">
+function selectAll(formObj, isInverse) 
+{
+   for (var i=0;i < formObj.length;i++) 
+   {
+      fldObj = formObj.elements[i];
+      if (fldObj.type == 'checkbox')
+      { 
+         if(isInverse)
+            fldObj.checked = (fldObj.checked) ? false : true;
+         else fldObj.checked = true; 
+       }
+   }
+}
+</script>
+{/literal}
 
   <form>
     <table class="title" cellspacing="0" cellpadding="5" width="100%">
@@ -30,7 +47,7 @@
                     <table>
                       {foreach name=outer item=item from=$result}
                       <tr valign="top">
-                        <td width="5%" align="center"><input type="checkbox" value="{$item.id}" name="checkbox[]" /> </td>
+                        <td width="5%" align="center" valign="middle"><input type="checkbox" value="{$item.id}" name="checkbox[]" /> </td>
                         <td width="1%">
                           {if $item.icon }
                           <img src="{$CACHEDIR}/{$item.id}.png">
@@ -54,11 +71,21 @@
               </table>
 
 <div align="center">
-<table width="80%" align="center">
-	<tr align="center">
-		<td><input type="button" name="change_order" value="{#change_order#}" onclick="javascript:popup('playlistPopup.php', 'playlistOrder', 300, 600, true);return true;" /></td>
-		<td><input type="submit" name="delete_selected" value="{#delete_selected#}" /></td>
-		<td><input type="button" name="play_selected" value="{#play_selected#}" /></td>
+<table width="100%">
+	<tr>
+	<td>
+		<table><tr><td align="center">
+			<input type="button" name="select_all" value="{#select_all#}" onclick="javascript:selectAll(this.form, 0)" /><br>
+			<input type="button" name="invert_selection" value="{#invert_selection#}" onclick="javascript:selectAll(this.form, 1)" />
+		</td></tr></table>
+	</td>
+	<td valign="middle" width="100%">
+		<table width="80%" align="center"><tr>
+			<td valign="middle" align="center"><input type="button" name="change_order" value="{#change_order#}" onclick="javascript:popup('playlistPopup.php', 'playlistOrder', 300, 600, true);return true;" /></td>
+			<td valign="middle" align="center"><input type="submit" name="delete_selected" value="{#delete_selected#}" /></td>
+			<td valign="middle" align="center"><input type="submit" name="play_selected" value="{#play_selected#}" /></td>
+		</tr></table>
+	</td>
 	</tr>
 </table>
 </div>

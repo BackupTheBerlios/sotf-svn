@@ -6,7 +6,7 @@ require("init.inc.php");
 
 #$page->send();
 
-$repository->updateTopicCounts();
+///$repository->updateTopicCounts();
 
 /*
 $mainContent = false;
@@ -22,6 +22,12 @@ if(empty($k))
      else
      print("not");
 */
+
+$prog = new sotf_Programme('001pr4');
+$prog->setBlob('icon', $prog->get('icon'));
+
+echo "Icon saved";
+
 
 ?>
 

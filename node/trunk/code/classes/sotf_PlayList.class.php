@@ -18,6 +18,11 @@ class sotf_Playlist {
 		$db->query("DELETE FROM sotf_playlists WHERE user_id = '$user->id' AND prog_id='$progId' ");
   }
   
+  function getFilename($progId) {
+    global $db;
+	return $db->getOne("SELECT filename FROM sotf_media_files WHERE prog_id='$progId' AND stream_access='t'");
+  }
+
   function add($progId) {
     global $user, $db;
     $exist = $db->getOne("SELECT count(*) FROM sotf_playlists WHERE user_id='$user->id' AND prog_id='$progId' ");

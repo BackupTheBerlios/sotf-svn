@@ -37,7 +37,7 @@ class sotf_NodeObject extends sotf_Object {
           $this->update();
           reset($this->binaryFields);
           while(list(,$field)=each($this->binaryFields)) {
-            sotf_Object::setBlob($field, $this->data[$field]);
+            sotf_Object::setBlob($field, $this->db->unescape_bytea($this->data[$field]));
           }
           debug("updated ", $this->id);
           return true;
@@ -61,7 +61,7 @@ class sotf_NodeObject extends sotf_Object {
    if(empty($this->id)) {
      $this->id = $this->generateID();
    }
-	 $this->db->query("INSERT INTO sotf_node_objects (id, node_id, last_change) VALUES('$this->id','$this->nodeId', '$this->lastChange')");
+	 $this->db->query("INSERT INTO sotf_node_objects (id, node_id, last_change, arrived) VALUES('$this->id','$this->nodeId', '$this->lastChange', CURRENT_TIMESTAMP)");
 	 $success = parent::create();
    if(!$success) {
      $this->db->query("DELETE FROM sotf_node_objects WHERE id='$this->id'");

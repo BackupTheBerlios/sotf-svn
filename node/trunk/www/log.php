@@ -13,7 +13,7 @@ require($classdir . '/sotf_Utils.class.php');
 $full = sotf_Utils::getParameter("full");
 $lines = sotf_Utils::getParameter("lines");
 if(!$lines || !is_numeric($lines))
-     $lines = 300;
+     $lines = 700;
 if($full) {
   echo "<pre>";
   readfile($logFile);
