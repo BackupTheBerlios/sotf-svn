@@ -959,4 +959,329 @@ class portal_user
 //	}
 
 }
+
+
+class html
+{
+	var $allowed_tags, $errors = array(), $warnings = array(), $messages = array();
+	
+	function html($allowed_tags = NULL)			//constuctor
+	{
+		if (is_array($allowed_tags)) $this->setAllowedTags($allowed_tags);
+		else	//if list not given use this default list of elements (no onclick, onmouseover...)
+		{
+			$allow['allow_all'] = array('id', 'class', 'title', 'style', 'dir', 'lang', 'xml:lang');
+		
+			$allow['a'] = array('href', 'hreflang', 'name', 'type', 'charset');
+			$allow['br'] = array();
+			$allow['img'] = array('src', 'alt', 'align', 'border', 'height', 'hspace', 'longdesc', 'vspace', 'width');
+			$allow['hr'] = array('align', 'noshade', 'size', 'width');	//Defines a horizontal rule
+		
+			$allow['div'] = array('align');
+			$allow['p'] = array('align');
+			$allow['blockquote'] = array('cite');
+		
+			//list elements
+			$allow['li'] = array('type', 'value');
+			$allow['ol'] = array('type', 'start', 'compact');
+			$allow['ul'] = array('type', 'compact');
+		
+			//headers
+			$allow['h1'] = array();
+			$allow['h2'] = array();
+			$allow['h3'] = array();
+			$allow['h4'] = array();
+			$allow['h5'] = array();
+			$allow['h6'] = array();
+		
+			//phrase elements
+			$allow['em'] = array();			//Renders as emphasized text 
+			$allow['strong'] = array();		//Renders as strong emphasized text
+			$allow['dfn'] = array();		//Defines a definition term
+			$allow['code'] = array();		//Defines computer code text
+			$allow['samp'] = array();		//Defines sample computer code
+			$allow['kbd'] = array();		//Defines keyboard text
+			$allow['var'] = array();		//Defines a variable
+			$allow['cite'] = array();		//Defines a citation
+		
+			$allow['sub'] = array();		//subsctipted text
+			$allow['sup'] = array();		//superscripted text
+		
+			//font style elements
+			$allow['tt'] = array();			//Renders as teletype or mono spaced text
+			$allow['i'] = array();			//Renders as italic text
+			$allow['b'] = array();			//Renders as bold text
+			$allow['big'] = array();		//Renders as bigger text
+			$allow['small'] = array();		//Renders as smaller text
+			$allow['s'] = array();			//strikethrough
+			$allow['font'] = array('color', 'face', 'size');
+
+			$this->setAllowedTags($allow);
+		}
+	}
+
+	function setAllowedTags($allowed_tags)
+	{
+		if (!isset($allowed_tags['allow_all'])) $allowed_tags['allow_all'] = array();
+		$this->allowed_tags = $allowed_tags;
+	}
+
+	function getErrors()
+	{
+		$retval['errors'] = $this->errors;
+		$retval['warnings'] = $this->warnings;
+		$retval['messages'] = $this->messages;
+		return $retval;
+	}
+
+	function addError($error, $pos)
+	{
+		$this->errors[$pos] = $error;
+		return $this->getErrors();
+	}
+
+	function addWarning($warning, $pos)
+	{
+		$this->warnings[$pos] = $warning;
+		return true;
+	}
+
+	function addMessage($message, $pos)
+	{
+		$this->messages[$pos] = $message;
+		return true;
+	}
+
+	function analyze_tag($original_tag, $filter = false)
+	{
+		$length = strlen($original_tag);
+		if ($original_tag{0} != '<') return $this->addError("Tag must begin with '<'.", 0);
+		if ($original_tag{$length-1} != '>') return $this->addError("Tag must end with '>'.", $length);
+
+
+		//define states for the machine
+		$BEGIN = 0; $TAG_NAME = 1; $ATTRIBUTE_NAME = 2; $ATTRIBUTE_NAME_END = 3;
+		$ATTRIBUTE_EQ = 4; $SINGLE_QUOTE = 5; $DOUBLE_QUOTE = 6; $NO_QUOTE = 7;
+		$ATTRIBUTE_VALUE_END = 8; $EMPTY_ELEMENT = 9; $END = 10; $TAG_NAME_END = 11;
+		//set begin state
+		$state = $BEGIN;
+
+		//define whitespace characters
+		$SPACES = array(' ', '\r', '\n', '\t');
+
+		//array to store the analyzed tag
+		$tag = array();
+		$tag['name'] = "";
+		$tag['attributes'] = array();
+		$tag['empty'] = false;
+		$tag['close'] = false;
+
+		$name = "";
+		$value = "";
+		$char = $original_tag{0};
+
+		for ($pos = 1; $pos <= $length; $pos++)
+		{
+			$pchar = $char;
+			$char = $original_tag{$pos};
+
+			//var_dump($pos);print(":");var_dump($state);print("<br>");
+			switch ($state)
+			{
+			    case $BEGIN:
+				if (in_array($char, $SPACES)) $state = $BEGIN;
+				elseif (ereg("[a-zA-Z]", $char)) $state = $TAG_NAME;
+				elseif ($char == '/') $tag['close'] = true;
+				elseif ($char == '>') return $this->addError("No tag name, tag is empty.", $pos);
+				else return $this->addError("Illegal character '$char'.", $pos);
+			        break;
+			    case $TAG_NAME:
+			    	$tag['name'] .= $pchar;		//add pervious character to the name of the attribute
+				if (in_array($char, $SPACES)) $state = $TAG_NAME_END;
+				elseif (ereg("[a-zA-Z0-9]", $char)) $state = $TAG_NAME;
+				elseif ($char == '/') $state = $EMPTY_ELEMENT;
+				elseif ($char == '>') $state = $END;
+				else return $this->addError("Illegal character '$char'.", $pos);
+			        break;
+			    case $TAG_NAME_END:
+				if (in_array($char, $SPACES)) $state = $TAG_NAME_END;
+				elseif (ereg("[a-zA-Z]", $char)) $state = $ATTRIBUTE_NAME;
+				elseif ($char == '/') $state = $EMPTY_ELEMENT;
+				elseif ($char == '>') $state = $END;
+				else return $this->addError("Illegal character '$char'.", $pos);
+			        break;
+			    case $ATTRIBUTE_NAME:
+			    	$name .= $pchar;		//add pervious character to the name of the attribute
+				if (ereg("[a-zA-Z0-9]", $char)) $state = $ATTRIBUTE_NAME;
+				elseif (in_array($char, $SPACES)) $state = $ATTRIBUTE_NAME_END;
+				elseif ($char == '=') $state = $ATTRIBUTE_EQ;
+				elseif ($char == '/') return $this->addError("No value for the attribute '$name' given.", $pos);
+				elseif ($char == '>') return $this->addError("No value for the attribute '$name' given.", $pos);
+				else return $this->addError("Illegal character '$char'", $pos);
+			        break;
+			    case $ATTRIBUTE_NAME_END:
+				if (in_array($char, $SPACES)) $state = $ATTRIBUTE_NAME_END;
+				elseif ($char == '=') $state = $ATTRIBUTE_EQ;
+				elseif (ereg("[a-zA-Z]", $char))
+				{
+					if (array_key_exists($name, $tag['attributes'])) $this->addWarning("Attribute '$name' redefined.", $pos);
+					$tag['attributes'][$name] = "'".$name."'";
+					$name = "";
+					$value = "";
+
+					$state = $ATTRIBUTE_NAME;
+					$this->addWarning("No value for the attribute '$name' given", $pos);
+				}
+				else return $this->addError("Illegal character '$char'", $pos);
+			        break;
+			    case $ATTRIBUTE_EQ:
+				if (in_array($char, $SPACES)) $state = $ATTRIBUTE_EQ;
+				elseif ($char == "'") $state = $SINGLE_QUOTE;
+				elseif ($char == '"') $state = $DOUBLE_QUOTE;
+				elseif (ereg("[a-zA-Z0-9]", $char)) {$state = $NO_QUOTE; $this->addWarning("Value of attribute '$name' not in quotes.", $pos);}
+				else return $this->addError("Illegal character '$char'", $pos);
+			        break;
+			    case $SINGLE_QUOTE:
+			    	$value .= $pchar;		//add pervious character to the value of the attribute
+				if ($char == "'")
+				{
+				    	$value .= $char;		//add currend character to the value of the attribute
+					$state = $ATTRIBUTE_VALUE_END;
+				}
+				else $state = $SINGLE_QUOTE;
+			        break;
+			    case $DOUBLE_QUOTE:
+			    	$value .= $pchar;		//add pervious character to the value of the attribute
+				if ($char == '"')
+				{
+				    	$value .= $char;		//add currend character to the value of the attribute
+					$state = $ATTRIBUTE_VALUE_END;
+				}
+				else $state = $DOUBLE_QUOTE;
+			        break;
+			    case $NO_QUOTE:
+			    	$value .= $pchar;		//add pervious character to the value of the attribute
+				if (in_array($char, $SPACES))
+				{
+					if (strpos($value, "'") === false) $value = "'".$value."'";
+					elseif (strpos($value, '"') === false) $value = '"'.$value.'"';
+					else $value = '"'.htmlspecialchars($value).'"';
+					$state = $ATTRIBUTE_VALUE_END;
+				}
+				elseif ($char == '/')
+				{
+					if (strpos($value, "'") === false) $value = "'".$value."'";
+					elseif (strpos($value, '"') === false) $value = '"'.$value.'"';
+					else $value = '"'.htmlspecialchars($value).'"';
+					if (array_key_exists($name, $tag['attributes'])) $this->addWarning("Attribute '$name' redefined.", $pos);
+					$tag['attributes'][$name] = $value;
+					$name = "";
+					$value = "";
+					$state = $EMPTY_ELEMENT;
+				}
+				elseif ($char == '>')
+				{
+					if (strpos($value, "'") === false) $value = "'".$value."'";
+					elseif (strpos($value, '"') === false) $value = '"'.$value.'"';
+					else $value = '"'.htmlspecialchars($value).'"';
+					if (array_key_exists($name, $tag['attributes'])) $this->addWarning("Attribute '$name' redefined.", $pos);
+					$tag['attributes'][$name] = $value;
+					$name = "";
+					$value = "";
+					$state = $END;
+				}
+				else $state = $NO_QUOTE;
+			        break;
+			    case $ATTRIBUTE_VALUE_END:
+				if ($name != '')
+				{
+					if (array_key_exists($name, $tag['attributes'])) $this->addWarning("Attribute '$name' redefined.", $pos);
+					$tag['attributes'][$name] = $value;
+					$name = "";
+					$value = "";
+				}
+				if (in_array($char, $SPACES)) $state = $ATTRIBUTE_VALUE_END;
+				elseif ($char == '/') $state = $EMPTY_ELEMENT;
+				elseif ($char == '>') $state = $END;
+				elseif (ereg("[a-zA-Z]", $char)) $state = $ATTRIBUTE_NAME;
+				else return $this->addError("Illegal character '$char'", $pos);
+			        break;
+			    case $EMPTY_ELEMENT:
+				$tag['empty'] = true;
+				if ($char == '>') $state = $END;
+				elseif (in_array($char, $SPACES)) {$state = $EMPTY_ELEMENT; $this->addWarning("There should be no space between the '/' and '>' signs.", $pos);}
+				else return $this->addError("Illegal character '$char'", $pos);
+			        break;
+			    case $END:
+			    	$filtered_tag = "";
+				if ($filter)
+				{
+					if (!array_key_exists($tag['name'], $this->allowed_tags)) $this->addMessage("Tag '".$tag['name']."' not allowed.", $tag['name']);
+					else
+					{
+						$filtered_tag = "<";
+						if ($tag['close']) $filtered_tag .= "/";
+						$filtered_tag .= $tag['name'];
+						foreach ($tag['attributes'] as $name => $value)
+						{
+							if (!in_array($name, $this->allowed_tags[$tag['name']]) AND !in_array($name, $this->allowed_tags['allow_all']))
+							{
+								$this->addMessage("Attribute '$name' not allowed.", $name);
+							}
+							else $filtered_tag .= " ".$name."=".$value;
+						}
+						if ($tag['empty']) $filtered_tag .= " /";
+						$filtered_tag .= ">";
+					}
+				}
+				else
+				{
+					$filtered_tag = "<";
+					if ($tag['close']) $filtered_tag .= "/";
+					$filtered_tag .= $tag['name'];
+					foreach ($tag['attributes'] as $name => $value) $filtered_tag .= " ".$name."=".$value;
+					if ($tag['empty']) $filtered_tag .= " /";
+					$filtered_tag .= ">";
+				}
+				$retval = $this->getErrors();
+				$retval['filtered'] = $filtered_tag;
+				return $retval;
+			        break;
+			}
+		}
+	}
+
+
+	function analyze_text($text)
+	{
+		$new_text = "";
+		$length = strlen($text);
+		$tag_begin = -1;
+		$tag_end = -1;
+		$lastpos = 0;
+	
+		for ($pos = 0; $pos < $length; $pos++)
+		{
+			$char = $text{$pos};
+			if ($char == '<') $tag_begin = $pos;
+			if (($tag_begin != -1) AND ($char == '>'))
+			{
+				$tag_end = $pos;
+				$tag = substr($text, $tag_begin, $tag_end-$tag_begin+1);
+				$retval = $this->analyze_tag($tag, true);
+				if (count($retval['errors'] == 0) AND count($retval['messages'] == 0) AND $retval['filtered'] != "")		//no fatal errors and no illegal tags
+				{
+					$new_text .= htmlspecialchars(substr($text, $lastpos, $tag_begin-$lastpos));
+					$new_text .= $retval['filtered'];
+					$lastpos = $pos+1;
+				}
+				$tag_begin = -1;
+				$tag_end = -1;
+			}
+		}
+		$new_text .= htmlspecialchars(substr($text, $lastpos, $pos-$lastpos));
+		return $new_text;
+	}
+}
+
 ?>

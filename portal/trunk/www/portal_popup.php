@@ -30,6 +30,14 @@ else
 }
 
 
+if ($cell["resource"] == 'text')			//if text analyze html code
+{
+	$html = new html();
+	$cell["value"] = $html->analyze_text($cell["value"]);
+}
+
+
+
 if (sotf_Utils::getParameter('insert_after'))		//insert after button pressed
 {
 	$portal->setCell($row, $col, $cell);		//save current values
