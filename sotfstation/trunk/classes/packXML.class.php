@@ -33,86 +33,65 @@
 		 * @param $sData (array)
 		 * @return (void)
 		 */
-		function addSeriesData($sData){
-			$sNode = $this->root->new_child('series',null);
-			$sNode->new_child('id',$sData['series_id']);		
-			$sNode->new_child('title',$sData['series_title']);
-			$sNode->new_child('description',$sData['series_desc']);		
+		function addData($data){
+			//encode array
+			while(list($key,$val) = each($data)){
+				$data[$key] = utf8_encode($val);
+			}
+			
+			$title = $this->root->new_child('title',null);
+			$title->new_child('basetitle',$data['series_title']);	
+			$title->new_child('alternative',$data['prog_alt_title']);	
+			$title->new_child('episodesequence',$data['series_id']);
+			$title->new_child('episodetitle',$data['prog_title']);
+			
+			$creator = $this->root->new_child('creator',null);
+			$entity = $creator->new_child('entity',null);	
+			$entity->set_attribute('type','organisation');
+			$entity_name = $entity->new_child('name',SOTF_PUB);
+			$entity_name->set_attribute('type','organizationname');
+			$entity_acronym = $entity->new_child('name',SOTF_PUB_ACR);
+			$entity_acronym->set_attribute('type','organizationacronym');
+			$entity->new_child('e-mail',SOTF_PUB_MAIL);
+			$entity->new_child('address',SOTF_PUB_ADR);
+			$entity->new_child('logo',SOTF_PUB_LOGO);
+			$entity->new_child('uri',SOTF_PUB_URI);
+			
+			$publisher = $this->root->new_child('publisher',null);
+			$entity = $publisher->new_child('entity',null);	
+			$entity->set_attribute('type','organisation');
+			$entity_name = $entity->new_child('name',SOTF_PUB);
+			$entity_name->set_attribute('type','organizationname');
+			$entity_acronym = $entity->new_child('name',SOTF_PUB_ACR);
+			$entity_acronym->set_attribute('type','organizationacronym');
+			$entity->new_child('e-mail',SOTF_PUB_MAIL);
+			$entity->new_child('address',SOTF_PUB_ADR);
+			$entity->new_child('logo',SOTF_PUB_LOGO);
+			$entity->new_child('uri',SOTF_PUB_URI);
+			
+			$this->root->new_child('stationid',SOTF_STATION_ID);
+			$this->root->new_child('language',$data['prog_lang']);
+			$this->root->new_child('rights',$data['prog_rights']);
+			$this->root->new_child('subject',$data['prog_genre']);
+			$this->root->new_child('type',$data['prog_topic']);
+			
+			$this->root->new_child('description',$data['prog_desc']);
+			$this->root->new_child('contributor',$data['prog_contrib']);
+			$this->root->new_child('identifier',$data['prog_id']);
+			
+			$date = $this->root->new_child('date',$data['prog_datecreated']);
+			$date->set_attribute('type','created');
+			
+			$date = $this->root->new_child('date',$data['prog_dateissued']);
+			$date->set_attribute('type','issued');
+			
+			$date = $this->root->new_child('date',$data['prog_dateavailable']);
+			$date->set_attribute('type','available');
+			
+			$date = $this->root->new_child('date',$data['prog_datemodified']);
+			$date->set_attribute('type','modified');
 		}
 		
-		
-		/**
-		 * packXML::addProgrammeData() - fill xml document with programme related data
-		 * 
-		 * @param $pData (array)
-		 * @return (void)
-		 */
-		function addProgrammeData($pData){
-			$pNode = $this->root->new_child('programme',null);
-			$pNode->new_child('id',$pData['prog_id']);
-			$pNode->new_child('title',$pData['prog_title']);
-			$pNode->new_child('alternative_title',$pData['prog_alt_title']);
-			
-			//sub-child -- creator
-			$creator = $pNode->new_child('creator',null);
-			$creator->new_child('name',$pData['user_name']);
-			$creator->new_child('role',$pData['user_role']);
-			
-			//sub-child -- keywords
-			if(!empty($pData['prog_keywords'])){
-				$keywords = $pNode->new_child('keywords',null);
-				$pData['prog_keywords'] = explode(",",$pData['prog_keywords']);
-				reset($pData['prog_keywords']);
-				while(list($key,$val) = each($pData['prog_keywords'])){
-					$child = $keywords->new_child('keyword',trim($val));
-					$child->set_attribute('id',$key);
-				}
-			}
-			
-			//back in track
-			$pNode->new_child('description',$pData['prog_desc']);
-			
-			//sub-child -- publisher
-			$pub = $pNode->new_child('publisher',null);
-			$pub->new_child('name',SOTF_PUB);
-			$pub->new_child('uri',SOTF_PUB_URI);
-			$pub->new_child('logo',SOTF_PUB_LOGO);
-			
-			//sub-child -- contributors
-			if(!empty($pData['prog_contrib'])){
-				$contrib = $pNode->new_child('contributors',null);
-				$pData['prog_contrib'] = explode(",",$pData['prog_contrib']);
-				reset($pData['prog_contrib']);
-				while(list($key,$val) = each($pData['prog_contrib'])){
-					$child = $contrib->new_child('contributor',trim($val));
-					$child->set_attribute('id',$key);			
-				}
-			}
-			
-			//sub-child -- dates
-			$dates = $pNode->new_child('dates',null);
-			$dates->new_child('initial',$pData['prog_intime']);
-			$dates->new_child('created',$pData['prog_datecreated']);
-			$dates->new_child('issued',$pData['prog_dateissued']);
-			$dates->new_child('available',date("Y-m-d H:i:s"));
-			
-			//back in track
-			$pNode->new_child('language',$pData['prog_lang']);
-			$pNode->new_child('topic',$pData['prog_topic']);
-			$pNode->new_child('genre',$pData['prog_genre']);
-			
-			//sub child -- rights
-			if(!empty($pData['prog_rights'])){
-				$rights = $pNode->new_child('rights',null);
-				$pData['prog_rights'] = explode(",",$pData['prog_rights']);
-				reset($pData['prog_rights']);
-				while(list($key,$val) = each($pData['prog_rights'])){
-					$child = $rights->new_child('rights_holder',trim($val));
-					$child->set_attribute('id',$key);
-				}
-			}
-		}
-			
 		
 		/**
 		 * packXML::process() - create XML data from arrayz
@@ -149,7 +128,7 @@
 		 */
 		function toFile($fileName = 'export.xml'){
 			if($content = $this->process()){
-				$fp = fopen('sync/' . $fileName,'w');
+				$fp = fopen($fileName,'w');
 				fwrite($fp,$content);
 				fclose($fp);
 				return true;

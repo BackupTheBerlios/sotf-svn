@@ -26,7 +26,8 @@
                 </tr>
                 <tr bgcolor="#eeeeee"> 
                   <td nowrap><div align="right">{#autologin#}:</div></td>
-                  <td nowrap><input name="autologin" type="checkbox" id="autologin" value="t" {if $submit_autologin == 't'}checked{/if}></td>
+                  <td nowrap><input name="autologin" type="checkbox" id="autologin" value="t" {if $submit_autologin == 't'}checked{/if}>
+                  </td>
                 </tr>
                 <tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right">{#access_level#}:</div></td>
@@ -42,6 +43,22 @@
                 <tr bgcolor="#f4f4f4"> 
                   <td nowrap><div align="right">{#user_mail#}:</div></td>
                   <td nowrap><input name="mail" type="text" class="myinput" id="mail2" maxlength="100" value="{$submit_mail}"></td>
+                </tr>
+				<tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">Telephone Number:</div></td>
+                  <td nowrap><input name="tel" type="text" class="myinput" id="mail2" maxlength="100" value="{$submit_tel}"></td>
+                </tr>
+				<tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">PIN:</div></td>
+                  <td nowrap><input name="pin" type="text" class="myinput" id="mail2" maxlength="4" value="{$submit_pin}"></td>
+                </tr>
+				<tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">Welcome Message:</div></td>
+                  <td nowrap><input name="mes" type="text" class="myinput" id="mail2" maxlength="128" value="{$submit_mes}"></td>
+                </tr>
+				<tr bgcolor="#f4f4f4"> 
+                  <td nowrap><div align="right">Voice Box Number:</div></td>
+                  <td nowrap>{$vbnum}</td>
                 </tr>
                 {section name=error_cell show=$error_out} 
                 <tr bgcolor="#FFCCCC"> 

@@ -17,7 +17,7 @@
 	//authorize('edit_station');								# check access rights
 	
 	//create help message
-	//$myHelp = new helpBox(1);									# this will fetch a help message from the database and output it
+$myHelp = new helpBox(1);									# this will fetch a help message from the database and output it
 																							# in the template (if allowed to do so)
 																							
 	//page output :)

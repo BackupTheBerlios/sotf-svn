@@ -44,6 +44,7 @@
 															rights AS prog_rights,
 															active AS prog_active
 														FROM programme WHERE id = '$_GET[pid]'",DB_FETCHMODE_ASSOC);
+		
 		if(!$myError->checkLength($myProg['prog_keywords'],2) 
 				or !$myError->checkLength($myProg['prog_desc'],2) 
 				or !$myError->checkLength($myProg['prog_datecreated'],2) 
@@ -65,6 +66,7 @@
 		
 		//only if no errors occured, then publish
 		if($myError->getLength()==0){
+			
 			//prepare XML data
 			$mySeries = $db->getRow("SELECT
 																	id AS series_id,
@@ -80,18 +82,17 @@
 			
 			//pack XML data
 			$myPack = new packXML('sotfPublish');
-			$myPack->addSeriesData($mySeries);
-			$myPack->addProgrammeData(array_merge($myProg,$myUser));
-			$myPack->toFile($_GET['pid'] . ".xml");
+			$myPack->addData(array_merge($mySeries,$myProg,$myUser));
+			$myPack->toFile(PROG_DIR . $_GET['pid'] . "/Metadata.xml");
 			
-			//prepare audio
-			
-			//pack xbmf
-			
-			//notify node of content availability
+			//echo "tar.sh " . PROG_DIR . $_GET['pid'] . " ../" . $_GET['pid'] . ".tgz";
+			system("tar.sh " . PROG_DIR . $_GET['pid'] . " ../" . SOTF_STATION_ID . "_" . $_GET['pid'] . ".tgz");
+			chmod(PROG_DIR . SOTF_STATION_ID . "_" . $_GET['pid'] . ".tgz",0777);
+			system("mv " . PROG_DIR . SOTF_STATION_ID . "_" . $_GET['pid'] . ".tgz " . SYNC_DIR);
 			
 			//mark programme as published
 			$db->query("UPDATE programme SET published = '" . date("Y-m-d H:i:s") . "' WHERE id = '$_GET[pid]'");
+			
 			
 			//close window
 			unset($_GET['pid']);

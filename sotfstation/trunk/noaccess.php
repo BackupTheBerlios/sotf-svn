@@ -17,7 +17,7 @@
 	************************/
 	include("init.inc.php");										# include the global framwork
 	$myNav->add($SECTION[403],'index.php');			# add entry to Navigation Bar Stack
-	
+
 	//page output :)
 	pageFinish('noaccess.htm');
 ?>

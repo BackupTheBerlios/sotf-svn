@@ -68,9 +68,9 @@
 		}
 		
 		//check if at least one day is selected
-		if($mon or $tue or $wed or $thu or $fri or $sat or $sun){
+		if($_POST[mon] or $_POST[tue] or $_POST[wed] or $_POST[thu] or $_POST[fri] or $_POST[sat] or $_POST[sun]){
 			//fix values
-			$days = array(1=>$mon,2=>$tue,3=>$wed,4=>$thu,5=>$fri,6=>$sat,0=>$sun);
+			$days = array(1=>$_POST[mon],2=>$_POST[tue],3=>$_POST[wed],4=>$_POST[thu],5=>$_POST[fri],6=>$_POST[sat],0=>$_POST[sun]);
 		}else{
 			$myError->add($ERR[20]);
 		}

@@ -22,6 +22,7 @@
 	include('classes/navBar.class.php');											# Navigation Bar Processor
 	include('classes/helpBox.class.php');											# Help Box Generator
 	include('classes/log.class.php');													# action log module
+
 	include('functions/eh.inc.php');													# Override PHP's Error's handling routines
 	include('functions/timers.inc.php');											# Timers to reveal bottlenecks
 	include('functions/prepend.inc.php');											# Smarty pre and postpend data for pop-up windows
@@ -42,6 +43,7 @@
 	
 	//smarty global assignments
 	$smarty->assign("root",SRC_ROOT . TPL_DIR . "/");					# assigning where the path to templates
+
 	$smarty->assign("server_root",SRC_ROOT);									# assigning the path to root links
 	
 	if($_SERVER['HTTP_ACCEPT_LANGUAGE']=='en'){								# choosing the right language file
@@ -55,15 +57,11 @@
 	$smarty->assign("build_id","201");												# assigning a 'build id'
 	
 	//build database connections
-	$db = DB::connect(array(																	# Start a connection to the database
-    'phptype'  => DB_TYPE,
-    'dbsyntax' => false,
-    'protocol' => false,
-    'hostspec' => DB_HOST,
-    'database' => DB_NAME,
-    'username' => DB_USER,
-    'password' => DB_PASS
-	));
+	$db=DB::connect("pgsql://" . DB_USER . ":" . DB_PASS . "@" . DB_HOST . "/" . DB_NAME);
+
+	//hack from mk
+	$appRecDir=REC_DIR;
+	//end hack
 	
 	//did the connection to local database fail?
 	if(DB::isError($db)){
@@ -82,6 +80,13 @@
 	 */
 	function authorize($section,$report=TRUE){
 		global $ERR, $myError, $smarty;
+		
+		if(!is_object($_SESSION['USER'])){
+			//redirect to no access page
+			header('Location: index.php');
+			exit;
+		}
+		
 		if($_SESSION['USER']->get($section)==2){					# user has full access to this section
 			//nothing
 			return true;

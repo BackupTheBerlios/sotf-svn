@@ -91,6 +91,7 @@
  		  	'username' => SDB_USER,
  		  	'password' => SDB_PASS
 			));
+			$sdb = DB::connect("pgsql://mk:247spyz@xaos.grendelkom.com/SADM",false);
 			
 			//did the connection to SADM database fail?
 			if(DB::isError($sdb)){
@@ -140,11 +141,11 @@
 				$db->query("INSERT INTO user_map(auth_id,access_id,name,mail,role) VALUES('$my_new_id','$_POST[access_level]','$_POST[name]','$_POST[mail]','$_POST[role]')");
 				
 				//create maildirs
-				$fp = @fopen("/var/squirrel/maildir-creation/new-maildirs","a+");
-  			@fputs($fp,"$_POST[login]\n");
-  			@fclose($fp);
+				//$fp = @fopen("/var/squirrel/maildir-creation/new-maildirs","a+");
+  			//@fputs($fp,"$_POST[login]\n");
+  			//@fclose($fp);
 			
-				system("/usr/local/bin/maildirmake /home/imap/$_POST[login]");
+				//system("/usr/local/bin/maildirmake /home/imap/$_POST[login]");
 				
 				//redirect
 				header("Location: confirm.php?action=1&next=users");

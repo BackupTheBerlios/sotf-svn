@@ -80,6 +80,7 @@
 		1			=> 'A new user has been created, you will be shortly redirected to the user management page!',
 		2			=> 'A new programme has been added to the station management console, you will be shortly redirected to the programme overview page!',
 		3			=> 'A new series has been added and filled with programmes for the defined period of time, you will be shortly redirected to the programme overview page!',
-		4			=> 'Your personal settings have been updated, you will be shortly redirected to your settings management page!'
+		4			=> 'Your personal settings have been updated, you will be shortly redirected to your settings management page!',
+		5			=> 'Your new settings have been saved! You will be shortly redirected to your settings management page!'
 	);
 ?>

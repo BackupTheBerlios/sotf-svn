@@ -25,8 +25,41 @@
 	define('DB_TYPE','pgsql');																# Type of Database :: accepted (string)
 	define('DB_HOST','localhost');														# Where the Database is located :: accepted (string)
 	define('DB_NAME','sotf_station');													# Database Name :: accepted (string)
-	define('DB_USER','Dolce');																# Database User :: accepted (string)
-	define('DB_PASS','');																			# Database Access Password :: accepted (string)
+	define('DB_USER','Dolce');																	# Database User :: accepted (string)
+	define('DB_PASS','1234');																	# Database Access Password :: accepted (string)
+	
+	//Voice Box DB ACCESS
+	define('VDB_TYPE','pgsql');																# Type of Database :: accepted (string)
+	define('VDB_HOST','xaos.grendelkom.com');									# Where the Database is located :: accepted (string)
+	define('VDB_NAME','voicebox');														# Database Name :: accepted (string)
+	define('VDB_USER','alex');																# Database User :: accepted (string)
+	define('VDB_PASS','1234');																# Database Access Password :: accepted (string)
+	
+	//Present Box DB ACCESS
+	define('PDB_TYPE','pgsql');																# Type of Database :: accepted (string)
+	define('PDB_HOST','xaos.grendelkom.com');									# Where the Database is located :: accepted (string)
+	define('PDB_NAME','present_box');													# Database Name :: accepted (string)
+	define('PDB_USER','alex');																# Database User :: accepted (string)
+	define('PDB_PASS','1234');																# Database Access Password :: accepted (string)
+	
+	/*
+	* Present Box Settings 
+	**/
+	// the root dir of this package
+	$config['base_dir'] = 'e:/local/htdocs/work/pvx/present_box';
+	// path for all recorded audio
+	$config['recorded_dir'] = 'e:/local/htdocs/work/pvx/present_box/recorded';
+	// place of log file
+	$config['log_file'] = 'e:/local/htdocs/work/pvx/present_box/log';
+	// the place where PublicVoiceXML puts recorded audio
+	// set this empty on Windows
+	$config['tmp_record_dir'] = '/usr/src/build/publicVoiceXML/PVX_1.2.11/OpenVXI_2.0.1/bin/';
+	
+	/*
+	* Voice Box Settings
+	**/
+	define('VBBASEURL','http://localhost/work/pvx/pvxmailbox/');
+	define('REC_DIR','/usr/local/apache/htdocs/pvxmailbox/message_dir/');
 	
 	/*
 	* Now, there are TWO ways to get around the the user authentication database, in case it runs on
@@ -40,10 +73,10 @@
 	//if the above is set to true, then the following
 	//have a meaning
 	define('SDB_TYPE','pgsql');																# Type of Database :: accepted (string)
-	define('SDB_HOST','localhost');														# Where the Database is located :: accepted (string)
+	define('SDB_HOST','localhost');									# Where the Database is located :: accepted (string)
 	define('SDB_NAME','temp');																# Database Name :: accepted (string)
 	define('SDB_USER','Dolce');																# Database User :: accepted (string)
-	define('SDB_PASS','');																		# Database Access Password :: accepted (string)
+	define('SDB_PASS','1234');																# Database Access Password :: accepted (string)
 	
 	//if SADM is accessed via XMLRPC then the
 	//following has a meaning
@@ -55,12 +88,17 @@
 	
 	//SOTF META DATA CONFIG
 	define('SOTF_PUB','Radio Tienes');												# publisher of the resorces
+	define('SOTF_PUB_ACR','RT');															# publisher of the resorces acronym
+	define('SOTF_PUB_MAIL','radio@tienes.com');								# publisher of the resorces e-mail
+	define('SOTF_PUB_ADR','Vienna is a big city');						# publisher of the resorces e-mail
 	define('SOTF_PUB_URI','http://www.pvl.at/');							# link to the homepage
 	define('SOTF_PUB_LOGO','http://www.pvl.at/logo.gif');			# link to logo
+	define('SOTF_PUB_ROLE','Editor');													# publisher role scheme="EBU v1"
 	
 	define('SOTF_NODE','AA1');																# id of the node
 	define('SOTF_NODE_URI','http://www.hello.com');						# uri of the node
 	define('SOTF_STATION_ID','1121');													# id of THIS station on the node netwORK
+	
 	
 	/*
 	* The critical settings are now configured, below you will find other data to play with that
@@ -76,10 +114,13 @@
 	//Paths
 	define('TPL_DIR','templates');														# Templates are found in this directory (relative) :: accepted (string)
 	define('SRC_ROOT','http://localhost/work/sotfstation/');	# The program is located under this URL (absolute) :: accepted (string)
+	define('SYNC_DIR','sync/');																# xmbf export gateway
+	define('PROG_DIR','progs/');															# raw mp3 and file storage before publishing
+	define('UA_DIR','uncutaudio/');														# where recorder day feeds reside
 	
 	define('PEAR_PATH','');																		# Path to Pear, by default it is empty, if PHP has been compiled correctly :: accepted (string)
 	
-	define('SMARTY_PATH','Smarty');														# Path to the template parser, by default it is included with this distro
+	define('SMARTY_PATH','../../smarty');														# Path to the template parser, by default it is included with this distro
 																														# and you don't have to edit this entry, but you may wish to use the external
 																														# library. (relative) :: accepted (string)
 	
@@ -87,7 +128,10 @@
 																														# and you don't have to change this entry, but you may with to use an external
 																														# library. (relative) :: accepted (string)
 	
+	define('REC_DIR','/usr/local/apache/htdocs/pvxmailbox/message_dir');
+	
 	//Other Settings
+	define('SPLITOFFSET', 30);																# mp3 Split offset in seconds
 	define('ALLOW_GZIP',TRUE);																# Either allow or dissallow output compression :: accepted (bool)
 	define('ALLOW_LOGS',TRUE);																# Either allow or dissallow to log user's action :: accepted (bool)
 	define('NOW',time());																			# Current Timestamp :: accepted (int)

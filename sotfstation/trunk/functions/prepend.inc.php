@@ -22,6 +22,9 @@
 				$smarty->assign('logged_in',TRUE);
 				$smarty->assign('user_name',ucfirst($_SESSION['USER']->get("name")));
 			}
+			
+			//mark permissions
+			$smarty->assign('edit_presentbox',$_SESSION['USER']->get("edit_presentbox"));
 		}
 		
 		//output!

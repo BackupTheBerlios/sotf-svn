@@ -1,0 +1,85 @@
+ <form action="cutaudio.php?id={$id}&file={$file.name}" method="post" enctype="multipart/form-data" name="form1">
+  <table width="100%" border="0" cellspacing="0" cellpadding="2">
+    <tr> 
+      <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr> 
+            <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+                <tr bgcolor="#ddddff"> 
+                  <td width="100%" colspan="3" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr> 
+                        <td width="20" nowrap><strong><img src="{$root}img/i-users.gif" width="27" height="21"></strong></td>
+                        <td class=title><strong>Cut Audio File</strong></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="3" nowrap bgcolor="#dddddd" class=whitesmall> <div align="left"><strong>Parameters</strong></div></td>
+                </tr>
+                <tr bgcolor="{cycle values="#eeeeee, #f4f4f4"}"> 
+                  <td width="10%" nowrap> 
+                    <div align="right">File To Cut:</div></td>
+                  <td width="80%" nowrap><a href="{$path}{$file.name}">{$file.name}</a> 
+                    <br>
+                    ({$file.length} minutes, {$file.bitrate} Kbps, {$file.samplerate} 
+                    KHz, {$file.channelmode})</td>
+                  <td width="10%" nowrap><div align="center"><a href="managefiles.php?id={$id}&action=deleteaudio&file={$file.name}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" width="24" height="16" border="0"></a></div></td>
+                </tr>
+                <tr bgcolor="{cycle values="#eeeeee, #f4f4f4"}"> 
+                  <td width="10%" nowrap> 
+                    <div align="right">Cut From:</div></td>
+                  <td colspan="2" nowrap><table width="100" border="0" cellspacing="0" cellpadding="1">
+                      <tr> 
+                        <td><select name="smin">
+						{html_options  options=$minutes selected=$smin}
+                          </select></td>
+                        <td><select name="ssec">
+						{html_options  options=$seconds selected=$ssec}
+                          </select></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr bgcolor="{cycle values="#eeeeee, #f4f4f4"}"> 
+                  <td width="10%" nowrap> 
+                    <div align="right">Cut To:</div></td>
+                  <td colspan="2" nowrap><table width="100" border="0" cellspacing="0" cellpadding="1">
+                      <tr> 
+                        <td><select name="emin">
+						{html_options  options=$minutes selected=$emin}
+                          </select></td>
+                        <td><select name="esec">
+						{html_options  options=$seconds selected=$esec}
+                          </select></td>
+                      </tr>
+                    </table></td>
+                </tr>
+				{if $confirm}
+                <tr bgcolor="#CAFBC8"> 
+                  <td colspan="3" nowrap><div align="center"> 
+                      <strong><font color="#006600">File Has Been Successfully 
+                        cut! New files resides in the XBMF Container! <br>
+                      new file: <a href="{$path}{$new_file}">{$new_file}</a></font></strong> 
+                    </div></td>
+                </tr>
+				{/if}
+				{if $error}
+                <tr bgcolor="#FFCCFF"> 
+                  <td colspan="3" nowrap><div align="center"><strong><font color="#FF0000">File 
+                      Has NOT Been Cut, please check cut times!</font></strong></div></td>
+                </tr>
+				{/if}
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="3" nowrap><div align="center"> 
+                      <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
+                      <a href="managefiles.php?id={$id}"><img src="{$root}img/b_back.gif" width="90" height="16" border="0"></a>
+                      <input name="Submit" type="hidden" id="Submit" value="do">
+                    </div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr> 
+            <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+  </form>

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 {config_load file="$lang.conf"}<html>
 <head>
-<title>:: SOTF :: Station Management</title>
+<title>:: PVX :: Station Management</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="{$root}main.css" rel="stylesheet" type="text/css">
 <script language="JavaScript" src="{$root}scripts.js"></script>
@@ -14,13 +14,13 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#FFFFFF">
   <tr> 
     <td width="150" bgcolor="#660000">&nbsp;</td>
-    <td bgcolor="#660000">&nbsp;<span class="whitesmall">SOTF Station Management 
+    <td bgcolor="#660000">&nbsp;<span class="whitesmall">PVX Station Management 
       :: build {$build_id}</span></td>
   </tr>
   <tr> 
     <td height="70" bgcolor="#F7EFE7"> 
       <div align="center"><img name="Something" src="{$root}img/radlogo.gif" width="100" height="60" alt=""></div></td>
-    <td bgcolor="#E7EBF7"><div align="right"><img src="{$root}img/sotf.gif" width="342" height="41">&nbsp;&nbsp;</div></td>
+    <td bgcolor="#E7EBF7"><div align="right">&nbsp;&nbsp;</div></td>
   </tr>
   <tr>
     <td bgcolor="#DED7AD">&nbsp;</td>
@@ -45,31 +45,35 @@
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
-        <tr {if $action == 'inside.htm' or $action == 'programmenew.htm'}bgcolor=#E7EBF7{/if}>
+        <tr {if $action == 'inside.htm' or $action == 'programmenew.htm' or $action == 'presentbox.htm'}bgcolor=#E7EBF7{/if}>
           <td class="menu1">&nbsp;&nbsp;&raquo; <a href="{$server_root}inside.php" class=menu1>{#station#}</a></td>
         </tr>
-		{if $action == 'inside.htm' or $action == 'programmenew.htm'}
+		{if $action == 'inside.htm' or $action == 'programmenew.htm' or $action == 'presentbox.htm'}
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
         <tr>
           <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}inside.php" class="menu2l">{#overview#}</a><br>
-		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}programmenew.php" class="menu2l">{#new_prog#}</a></td>
+		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}programmenew.php" class="menu2l">{#new_prog#}</a>
+		  {if $edit_presentbox == 2}
+		  <br>
+		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}presentbox.php" class="menu2l">Present Box</a>{/if}</td>
         </tr>
 		{/if}
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
 		 <tr>
-          <td class="menu1" {if $action == 'series.htm' or $action == 'seriesnew.htm' or $action == 'myseries.htm'}bgcolor=#E7EBF7{/if}>&nbsp;&nbsp;&raquo; <a href="{$server_root}myseries.php" class=menu1>{#series#}</a></td>
+          <td class="menu1" {if $action == 'series.htm' or $action == 'seriesnew.htm' or $action == 'myseries.htm' or $action == 'seriesforum.htm'}bgcolor=#E7EBF7{/if}>&nbsp;&nbsp;&raquo; <a href="{$server_root}myseries.php" class=menu1>{#series#}</a></td>
         </tr>
-		{if $action == 'series.htm' or $action == 'seriesnew.htm' or $action == 'myseries.htm'}
+		{if $action == 'series.htm' or $action == 'seriesnew.htm' or $action == 'myseries.htm' or $action == 'seriesforum.htm'}
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
         <tr>
           <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}myseries.php" class="menu2l">{#overview#}</a><br>
-            &nbsp;&nbsp;&nbsp; <a href="{$server_root}seriesnew.php" class="menu2l">{#new_ser#}</a></td>
+            &nbsp;&nbsp;&nbsp; <a href="{$server_root}seriesnew.php" class="menu2l">{#new_ser#}</a><br>
+			&nbsp;&nbsp;&nbsp; <a href="{$server_root}seriesforum.php" class="menu2l">Series Forum</a></td>
         </tr>
 		{/if}
         <tr>
@@ -91,14 +95,17 @@
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
 		 <tr>
-          <td class="menu1" {if $action == 'settings.htm'}bgcolor=#E7EBF7{/if}>&nbsp;&nbsp;&raquo; <a href="{$server_root}settings.php" class=menu1>{#settings#}</a></td>
+          <td class="menu1" {if $action == 'settings.htm' or $action == 'voice.htm' or $action == 'prsettings.htm'}bgcolor=#E7EBF7{/if}>&nbsp;&nbsp;&raquo; <a href="{$server_root}settings.php" class=menu1>{#settings#}</a></td>
         </tr>
-		{if $action == 'settings.htm'}
+		{if $action == 'settings.htm' or $action == 'voice.htm' or $action == 'prsettings.htm'}
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
         <tr>
-          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}settings.php" class="menu2l">{#my_set#}</a></td>
+          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}settings.php" class="menu2l">{#my_set#}</a><br>
+		  {if $edit_presentbox == 2}
+		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}prsettings.php" class="menu2l">Present Box</a><br>{/if}
+		  &nbsp;&nbsp;&nbsp; <a href="{$server_root}voicemail.php" class="menu2l">Voice Box</a></td>
         </tr>
 		{/if}
 		<tr>

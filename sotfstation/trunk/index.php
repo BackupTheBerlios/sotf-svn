@@ -62,15 +62,7 @@
 		//choose an authentication method
 		if(DIRECTSADM_ACCESS){												# SADM is found on local server
 			//create second database connection
-			$sdb = DB::connect(array(										# Start a connection to the database
-  			'phptype'  => SDB_TYPE,
-   			'dbsyntax' => false,
-  			'protocol' => false,
- 		  	'hostspec' => SDB_HOST,
- 		  	'database' => SDB_NAME,
- 		  	'username' => SDB_USER,
- 		  	'password' => SDB_PASS
-			));
+			$sdb = DB::connect("pgsql://" . SDB_USER . ":" . SDB_PASS . "@" . SDB_HOST . "/" . SDB_NAME);
 			
 			//did the connection to SADM database fail?
 			if(DB::isError($sdb)){
@@ -79,6 +71,9 @@
 			
 			//send query
 			$res = $sdb->getRow("SELECT auth_id FROM authenticate WHERE username = '" . $_POST['user'] . "' AND passwd = '" . $_POST['pass'] . "'",DB_FETCHMODE_ASSOC);
+			 
+			$vbnum = $sdb->getOne("SELECT extension FROM pvx_mapping WHERE mapped_id = '" . $res['auth_id'] . "'");
+			
 			
 			//filter response
 			if((!empty($res)) and (!$myError->getLength())){	# user and password match

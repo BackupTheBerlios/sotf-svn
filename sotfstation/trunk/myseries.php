@@ -87,6 +87,46 @@
 																	ORDER BY $sortstring
 																	LIMIT " . $_SESSION['USER']->get("per_page") . " OFFSET $db_block
 																");
+																
+	//get published statuses
+	while(list($key,$val) = each($db_result)){
+		if(!empty($val[6])){	//programme has been queued for sunc with the node
+			if(file_exists(SYNC_DIR . SOTF_STATION_ID . "_" . $val[0] . ".tgz")){
+				$db_result[$key]['status'] = 2;	# processing
+			}else{
+				$db_result[$key]['status'] = 9; # published
+			}
+		}else{
+			//check dir structure
+			if(!is_dir(PROG_DIR)){
+				mkdir(PROG_DIR);
+			}
+			
+			if(!is_dir(PROG_DIR . $val[0])){
+				mkdir(PROG_DIR . $val[0], 0777);
+				mkdir(PROG_DIR . $val[0] . "/audio", 0777);
+				mkdir(PROG_DIR . $val[0] . "/files", 0777);
+			}
+			
+			//is there audio data?
+			$audioflag = false;
+			$d = dir(PROG_DIR . $val[0] . "/audio");
+			while (false !== ($entry = $d->read())) {
+    		if(eregi("\.mp3$",$entry)){
+					$audioflag = true;
+					break;
+				}
+			}
+			$d->close();
+			
+			if($audioflag){
+				$db_result[$key]['status'] = 1;	# not published but ready
+			}else{
+				$db_result[$key]['status'] = 0;	# no audio
+			}
+		}
+	}
+	
 	$smarty->assign("db_result",$db_result);
 	
 	//make a split

@@ -1,0 +1,72 @@
+ <form action="managefiles.php?id={$id}" method="post" enctype="multipart/form-data" name="form1">
+  <table width="100%" border="0" cellspacing="0" cellpadding="2">
+    <tr> 
+      <td width="100%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr> 
+            <td><table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="#FFFFFF">
+                <tr bgcolor="#ddddff"> 
+                  <td width="100%" colspan="3" class="title"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr> 
+                        <td width="20" nowrap><strong><img src="{$root}img/i-users.gif" width="27" height="21"></strong></td>
+                        <td class=title><strong>Programme Related Files</strong></td>
+                      </tr>
+                    </table></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="3" nowrap bgcolor="#dddddd" class=whitesmall> <div align="left"><strong>Audio 
+                      Files</strong></div></td>
+                </tr>
+                {if $audiofiles} {foreach from=$audiofiles item=file} 
+                <tr bgcolor="{cycle values="#eeeeee, #f4f4f4"}"> 
+                  <td width="10%" nowrap> <div align="right">File:</div></td>
+                  <td width="80%" nowrap><a href="{$path}{$file.name}">{$file.name}</a> 
+                    <br>
+                    ({$file.length} minutes, {$file.bitrate} Kbps, {$file.samplerate} 
+                    KHz, {$file.channelmode})</td>
+                  <td width="10%" nowrap><div align="center"><a href="cutaudio.php?id={$id}&file={$file.name}"><img src="{$root}img/i-cut.gif" alt="cut" width="24" height="16" border="0"></a><a href="managefiles.php?id={$id}&action=deleteaudio&file={$file.name}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" width="24" height="16" border="0"></a></div></td>
+                </tr>
+                {/foreach} {else} 
+                <tr bgcolor="{cycle values="#eeeeee, #f4f4f4"}"> 
+                  <td colspan="3" nowrap><div align="center"></div>
+                    <div align="center">No Files</div></td>
+                </tr>
+                {/if} 
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="3" nowrap bgcolor="#dddddd" class=whitesmall> <div align="left"><strong>Other 
+                      Files</strong></div></td>
+                </tr>
+                {if $files} {foreach from=$files item=file} 
+                <tr bgcolor="{cycle values="#eeeeee, #f4f4f4"}"> 
+                  <td width="10%" nowrap> <div align="right">File:</div></td>
+                  <td width="80%" nowrap>{$file}</td>
+                  <td width="10%" nowrap><div align="center"><a href="managefiles.php?id={$id}&action=delete&file={$file}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" width="24" height="16" border="0"></a></div></td>
+                </tr>
+                {/foreach} {else} 
+                <tr bgcolor="{cycle values="#eeeeee, #f4f4f4"}"> 
+                  <td colspan="3" nowrap><div align="center"></div>
+                    <div align="center">No Files</div></td>
+                </tr>
+                {/if} 
+                <tr bgcolor="#dddddd"> 
+                  <td colspan="3" nowrap class=whitesmall> <div align="left"><strong>Add</strong></div></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td nowrap><div align="right">Add File:</div></td>
+                  <td colspan="2" nowrap><input type="file" name="file" style="widht:100%;"></td>
+                </tr>
+                <tr bgcolor="#eeeeee"> 
+                  <td colspan="3" nowrap><div align="center"> 
+                      <input name="imageField" type="image" src="{$root}img/b_submit.gif" width="90" height="16" border="0">
+                      <input name="imageField2" type="image" src="{$root}img/b_back.gif" width="90" height="16" border="0" onClick="window.close();">
+                      <input name="Submit" type="hidden" id="Submit" value="do">
+                    </div></td>
+                </tr>
+              </table></td>
+          </tr>
+          <tr> 
+            <td><div align="right"><img src="{$root}img/shadow1.gif" width=200 height="9"></div></td>
+          </tr>
+        </table></td>
+    </tr>
+  </table>
+  </form>

@@ -81,16 +81,16 @@
                   </table>
                   {/if}</td>
                 <td width="10%" nowrap> 
-                  <div align="center"><a href="showprogrammedetails.php?block={$block}&sortby={$sortby}&orderby={$order}&action=edit&id={$db_result[data][0]}&sid={$id}" onclick="NewWindow(this.href,'14','600','420','yes');return false"><img src="{$root}img/i-edit.gif" alt="{#edit#}" width="24" height="16" border="0"></a><a href="{$server_root}myseries.php?block={$block}&sortby={$sortby}&orderby={$order}&action=delete&pid={$db_result[data][0]}&id={$id}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" alt="{#delete#}" width="24" height="16" border="0"></a></div></td>
+                  <div align="center"><a href="showprogrammedetails.php?block={$block}&sortby={$sortby}&orderby={$order}&action=edit&id={$db_result[data][0]}&sid={$id}" onclick="NewWindow(this.href,'14','600','420','yes');return false"><img src="{$root}img/i-edit.gif" alt="{#edit#}" width="24" height="16" border="0"></a><a href="managefiles.php?block={$block}&sortby={$sortby}&orderby={$order}&action=edit&id={$db_result[data][0]}&sid={$id}" onclick="NewWindow(this.href,'14','600','420','yes');return false"><img src="{$root}img/i-clips.gif" border="0"></a><a href="{$server_root}myseries.php?block={$block}&sortby={$sortby}&orderby={$order}&action=delete&pid={$db_result[data][0]}&id={$id}" OnClick="return confirmLink(this,'');"><img src="{$root}img/i-delete.gif" alt="{#delete#}" width="24" height="16" border="0"></a></div></td>
                 <td width="10%" nowrap>
-<div align="center">{if $db_result[data][6] != ''} 
+<div align="center">{if $db_result[data].status == '9'} 
                     <table width="100" border="0" cellspacing="1" cellpadding="1">
                       <tr> 
                         <td align=center><a href="publish.php?action=unpublish&pid={$db_result[data][0]}&block={$block}&sortby={$sortby}&orderby={$order}&id={$id}" onclick="NewWindow(this.href,'14','400','200','yes');return false"><img src="{$root}img/true.gif" width="24" height="16" border="0"></a></td>
                         <td><a href="publish.php?action=unpublish&pid={$db_result[data][0]}&block={$block}&sortby={$sortby}&orderby={$order}&id={$id}" onclick="NewWindow(this.href,'14','400','200','yes');return false">{#published#}</a></td>
                       </tr>
                     </table>
-                    {else} 
+                    {elseif $db_result[data].status == '1'} 
                     <table width="100" border="0" cellspacing="1" cellpadding="1">
                       <tr> 
                         <td align=center><a href="publish.php?action=publish&pid={$db_result[data][0]}&block={$block}&sortby={$sortby}&orderby={$order}&id={$id}" onclick="NewWindow(this.href,'14','400','200','yes');return false"><img src="{$root}img/false.gif" width="24" height="16" border="0"></a></td>
@@ -98,7 +98,22 @@
                           {#notpublished#}</a></td>
                       </tr>
                     </table>
-                    {/if}</div></td>
+                    {elseif $db_result[data].status == '0'} 
+                    <table width="100" border="0" cellspacing="1" cellpadding="1">
+                      <tr> 
+                        <td align=center><img src="{$root}img/false.gif" width="24" height="16" border="0"></td>
+                        <td nowrap> {#noaudio#}</td>
+                      </tr>
+                    </table>
+                    {elseif $db_result[data].status == '2'} 
+                    <table width="100" border="0" cellspacing="1" cellpadding="1">
+                      <tr> 
+                        <td align=center><img src="{$root}img/semi_locked.gif" width="24" height="16" border="0"></td>
+                        <td nowrap>
+                          {#processing#}</td>
+                      </tr>
+                    </table>
+                    {/if} </div></td>
               </tr>
               {sectionelse} 
               <tr bgcolor="#eeeeee"> 
