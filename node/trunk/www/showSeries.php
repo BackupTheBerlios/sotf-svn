@@ -20,14 +20,14 @@ $prgid = sotf_Utils::getParameter('prgid');
 if($delprog) {
   $prg = & $repository->getObject($prgid);
   $prg->delete();
-  $page->redirect("showSeries.php/$seriesid#progs");
+  $page->redirect(mygetenv('PHP_SELF') . "#progs");
   exit;
 }
 
 $series = & $repository->getObject($seriesid);
 $station = $series->getStation();
 
-$page->errorURL = "showSeries.php/$seriesid";
+$page->errorURL = $scriptUrl . '/' . $seriesid;
 $page->setTitle($series->get('name'));
 
 $smarty->assign('SERIES_ID',$seriesid);
