@@ -43,40 +43,67 @@
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
         <tr {if $action == 'inside.htm'}bgcolor=#E7EBF7{/if}>
-          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="{$server_root}inside.php" class=menu1>Programme</a></td>
+          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="{$server_root}inside.php" class=menu1>{#station#}</a></td>
         </tr>
+		{if $action == 'inside.htm'}
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
         <tr>
-          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}inside.php" class="menu2l">Overview</a><br>
-		  &nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">New 
-            Programme</a><br>
-			&nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">Print Version</a></td>
+          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}inside.php" class="menu2l">{#overview#}</a><br>
+		  &nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">{#new_prog#}</a><br>
+			&nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">{#print_ver#}</a></td>
         </tr>
-		
-        <tr>
-          <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
-        </tr>
-		 <tr>
-          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="a" class=menu1>Series</a></td>
-        </tr>
+		{/if}
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
 		 <tr>
-          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="a" class=menu1>Users</a></td>
+          <td class="menu1" {if $action == 'series.htm'}bgcolor=#E7EBF7{/if}>&nbsp;&nbsp;&raquo; <a href="{$server_root}series.php" class=menu1>{#series#}</a></td>
         </tr>
+		{if $action == 'series.htm'}
+        <tr>
+          <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
+        </tr>
+        <tr>
+          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}series.php" class="menu2l">{#overview#}</a><br>
+            &nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">{#new_ser#}</a><br>
+			&nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">{#print_ver#}</a></td>
+        </tr>
+		{/if}
         <tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr>
 		 <tr>
-          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="a" class=menu1>Settings</a></td>
+          <td class="menu1" {if $action == 'users.htm'}bgcolor=#E7EBF7{/if}>&nbsp;&nbsp;&raquo; <a href="{$server_root}users.php" class=menu1>{#users#}</a></td>
         </tr>
+		{if $action == 'users.htm'}
+        <tr>
+          <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
+        </tr>
+        <tr>
+          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}users.php" class="menu2l">{#overview#}</a><br>
+            &nbsp;&nbsp;&nbsp; <a href="a" class="menu2l">{#new_user#}</a></td>
+        </tr>
+		{/if}
+        <tr>
+          <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
+        </tr>
+		 <tr>
+          <td class="menu1" {if $action == 'settings.htm'}bgcolor=#E7EBF7{/if}>&nbsp;&nbsp;&raquo; <a href="{$server_root}settings.php" class=menu1>{#settings#}</a></td>
+        </tr>
+		{if $action == 'settings.htm'}
+        <tr>
+          <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
+        </tr>
+        <tr>
+          <td class="menu2">&nbsp;&nbsp;&nbsp; <a href="{$server_root}settings.php" class="menu2l">{#my_set#}</a></td>
+        </tr>
+		{/if}
 		<tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>
         </tr><tr>
-          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="{$server_root}logout.php" class=menu1>Logout</a></td>
+          <td class="menu1">&nbsp;&nbsp;&raquo; <a href="{$server_root}logout.php" class=menu1>{#logout#}</a></td>
         </tr>
 		<tr>
           <td height="1" bgcolor="#FFFFFF"><img src="{$root}img/fake.gif" width="1" height="1"></td>

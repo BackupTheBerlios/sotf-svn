@@ -1,6 +1,15 @@
 Change Log was started from build 12, which has taken place at 1700 on the 7th of November 2002.
 
 ************************************************************************************************
+ 13.11.2002
+************************************************************************************************
+
+Database Structure Development. Land File Filled massively with menu onformation. Additional
+Templates developed for User Access management and User Settings Management.
+Template developement started for Series Overview Management.
+
+
+************************************************************************************************
  12.11.2002
 ************************************************************************************************
 

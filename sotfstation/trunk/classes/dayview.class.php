@@ -262,7 +262,7 @@
 								$this_row_content = str_replace("{special}",'',$this_row_content);
 							}else{
 								if($val->getSpecial()=='pp'){
-									$spec = "<b>p.p.</b>";
+									$spec = "<b>pp</b>";
 								}else if($val->getSpecial()=='na'){
 									$spec = "<b><font color=#ff0000>n.a.</font></b>";
 								}else{

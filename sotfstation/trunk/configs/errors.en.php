@@ -27,6 +27,9 @@
 		'LOGIN'		=> 'Login',
 		'HOME'		=> 'Home',
 		'403'			=> 'No Access',
-		'INSIDE'	=> 'Day Overview'
-	)
+		'INSIDE'	=> 'Day Overview',
+		'USERS'		=> 'Users',
+		'SETTINGS'=> 'Settings',
+		'SERIES'	=> 'Series'
+	);
 ?>

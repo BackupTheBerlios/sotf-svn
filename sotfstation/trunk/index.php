@@ -17,6 +17,12 @@
 	include("init.inc.php");												# include the global framwork
 	$myNav->add($SECTION['LOGIN'],'index.php');			# add entry to Navigation Bar Stack
 	
+	//is the user already logged in?
+	if(is_object($_SESSION['USER'])){
+		header("Location: inside.php");
+		exit;
+	}
+	
 	//process login call
 	if($_POST['login']){
 		//clean inputs
