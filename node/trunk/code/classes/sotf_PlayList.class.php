@@ -36,7 +36,10 @@ class sotf_Playlist {
 	 $file = new sotf_NodeObject("sotf_media_files", $fileid);
 
 	 if(!$prg->isLocal()) {
-		raiseError("Currently you can listen only to programmes of local stations");
+		$node = sotf_Node::getNodeById($file->getNodeId());
+		$path = $node->get('url') . "/listen.php?id=" . $prg->id . "&fileid=" . $file->id;
+		$this->add(array('path' => $path));
+		return;
 	 }
 	 
 	 if($prg->get('published') != 't' || $file->get('stream_access') != 't') {
