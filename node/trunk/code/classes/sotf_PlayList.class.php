@@ -24,6 +24,7 @@ class sotf_Playlist {
 	 $item['bitrate'] = $bitrate;
 
 	 if($config['httpStreaming']) {
+		//$tmpFileName = 'au_' . $item['id'] . '_' . ($item['name'] ? $item['name'] : basename($item['path']));
 		$tmpFileName = 'au_' . $item['id'] . '_' . basename($item['path']);
 		$tmpFile = $config['tmpDir'] . "/$tmpFileName";
 		if(!@readlink($tmpFile)) {
@@ -36,6 +37,14 @@ class sotf_Playlist {
 
 	 $this->audioFiles[] = $item;
 	 $this->totalLength += $mp3info["playtime_seconds"];
+  }
+
+  function addJingle($obj) {
+	 $jfile = $obj->getJingle();
+	 if($jfile)
+		$this->add(array('id' => $obj->id, 'path' => $jfile, 'jingle' => 1, 'name' => 'jingle'));
+	 else
+		raiseError("error while playing jingle");
   }
 
   function addProg($prg, $fileid='') {
@@ -69,19 +78,19 @@ class sotf_Playlist {
 	 $station = $prg->getStation();
 	 $jfile = $station->getJingle($index);
 	 if($jfile)
-		$this->add(array('path' => $jfile, 'jingle' => 1));
+		$this->add(array('id' => $station->id, 'path' => $jfile, 'jingle' => 1, 'name' => 'station_jingle'));
 
 	 // add jingle for series (if exists)
 	 $series = $prg->getSeries();
 	 if($series) {
 		$jfile = $series->getJingle($index);
 		if($jfile)
-		  $this->add(array('path' => $jfile, 'jingle' => 1));
+		  $this->add(array('id' => $series->id, 'path' => $jfile, 'jingle' => 1, 'name' => 'series_jingle'));
 	 }
 
 	 // add program file
 	 $filepath = $prg->getFilePath($file);
-	 $this->add(array('path' => $filepath));
+	 $this->add(array('id' => $prg->id, 'path' => $filepath, 'name' => urlencode($prg->get('title')) ));
 	 
 	 // temp: set title
 	 $title = $prg->get("title");
@@ -368,6 +377,7 @@ class sotf_Playlist {
   }
 
   function sendRemotePlaylist() {
+	 /*
 	 // send playlist to client
 	 header("Content-type: audio/x-mpegurl\n");
 	 //header("Content-transfer-encoding: binary\n");
@@ -375,7 +385,8 @@ class sotf_Playlist {
 	
 	 // send playlist
 	 echo $this->url;
-	
+	 */
+	 header("Location: " .  $this->url);
 	 debug("sent playlist", $this->url);
   }
 

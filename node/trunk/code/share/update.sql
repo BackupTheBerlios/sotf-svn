@@ -114,3 +114,47 @@ ALTER TABLE sotf_contacts ALTER feedback SET DEFAULT 'f'::bool;
 -- it's better to allow stations with the same name
 DROP INDEX sotf_stations_name_key;
 CREATE INDEX sotf_stations_name_index ON sotf_stations (name);
+
+-- 2003-09-15
+
+-- changed broadcast time from date to timestamp
+
+CREATE TABLE "sotf_programmes_1063641060" AS SELECT "id", "guid", "station_id", "series_id", "track", "foreign_id", "title", "alternative_title", "episode_title", "episode_sequence", "is_part_of", "keywords", "abstract", "entry_date", "production_date", "broadcast_date", "modify_date", "expiry_date", "type", "genre_id", "length", "language", "spatial_coverage", "temporal_coverage", "published" FROM "sotf_programmes";
+
+DROP TABLE "sotf_programmes";
+
+CREATE TABLE "sotf_programmes" (
+-- used to store generic and searchable metadata about radio programmes 
+-- REPLICATED
+"id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
+"guid" varchar(76) UNIQUE NOT NULL,							-- globally unique id
+"station_id" varchar(12) NOT NULL,										-- dc.publisher ??
+"series_id" varchar(12),													-- this prog is part of series
+"track" varchar(32) NOT NULL,									-- part of id: unique within station and entry_date
+"foreign_id" varchar(120),										-- if the publisher has some id schema...
+"title" varchar(255) DEFAULT 'untitled',					-- dc.title
+"alternative_title" varchar(255),							-- may be known under a different title
+"episode_title" varchar(255),									-- may be used if the show is part of a series
+"episode_sequence" int4,										-- may be used if the show is in a series
+"is_part_of" varchar(12),										-- pointer to embedding show using GUID
+"keywords" text,													-- dc.subject (free keywords)
+"abstract" text,													-- dc.description
+"entry_date" date DEFAULT date('now'::text) NOT NULL,	-- dc.date.available
+"production_date" date,											-- dc.date.created
+"broadcast_date" timestamptz,											-- dc.date.issued
+"modify_date" date,												-- dc.date.modified
+"expiry_date" date DEFAULT (timestamptz(date('now'::text)) + '56 days'::"interval"),	-- when programme will be made unavailable
+"type" varchar(50) DEFAULT 'sound',							-- DCMI type (audio/video/etc.)
+"genre_id" int2,														-- SOMA genre (ref. to sotf_genres)
+"length" int2,														-- dc.format.extent = duration in seconds
+"language" varchar(30),											-- dc.language (3-letter codes separeted by comma)
+"spatial_coverage" text,										-- dc.coverage.spatial
+"temporal_coverage" date,										-- dc.coverage.temporal
+"published" bool DEFAULT 'f'::bool,							-- unpublished items are not searchable nor browsable
+FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE,
+FOREIGN KEY("series_id") REFERENCES sotf_series("id") ON DELETE CASCADE
+);
+CREATE INDEX "prg_lang_idx" ON "sotf_programmes" ("language");
+
+INSERT INTO "sotf_programmes" SELECT * FROM "sotf_programmes_1063641060";
+DROP TABLE "sotf_programmes_1063641060";

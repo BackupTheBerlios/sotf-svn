@@ -78,6 +78,9 @@ if($save || $finish || $finishpublish) {
 	      $value = sotf_Utils::getParameter($param . 'Year') . '-'
 	        . sotf_Utils::getParameter($param . 'Month') . '-'
 	        . sotf_Utils::getParameter($param . 'Day');
+			if($param == 'broadcast_date') {
+			  $value = $value . ' ' . sotf_Utils::getParameter('broadcast_timeHour') . ':' . sotf_Utils::getParameter('broadcast_timeMinute') . ' ' . $db->myTZ();
+			}
 		} else {
 		  $value = NULL;
 		}
@@ -186,6 +189,7 @@ if($seticon) {
 if($new)
      $smarty->assign("NEW",1);
 $smarty->assign('PRG_DATA', $prg->getAllForHTML());
+$smarty->assign('BROADCAST_TIME', strtotime($prg->get('broadcast_date')));
 
 // station data
 $station = $prg->getStation();

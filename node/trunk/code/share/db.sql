@@ -187,7 +187,7 @@ CREATE TABLE "sotf_programmes" (
 "abstract" text,													-- dc.description
 "entry_date" date DEFAULT date('now'::text) NOT NULL,	-- dc.date.available
 "production_date" date,											-- dc.date.created
-"broadcast_date" date,											-- dc.date.issued
+"broadcast_date" timestamptz,											-- dc.date.issued
 "modify_date" date,												-- dc.date.modified
 "expiry_date" date DEFAULT (timestamptz(date('now'::text)) + '56 days'::"interval"),	-- when programme will be made unavailable
 "type" varchar(50) DEFAULT 'sound',							-- DCMI type (audio/video/etc.)

@@ -21,7 +21,7 @@
 			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30"></TD>
 		{elseif $SQLquery[i][4] == "date"}
 			<TD><SELECT name="SQLeq[]" with=13>{html_options options=$EQdate selected=$SQLquery[i][2]}</SELECT></TD>
-			<TD>{html_select_date prefix="SQLstring[]" time=$SQLquery[i][3] start_year="2000" end_year="+0" display_days=true}</TD>
+			<TD>{html_select_date prefix="SQLstring[]" time=$SQLquery[i][3] start_year="2000" end_year="+0" display_days=true month_format="%m" field_order="YMD" }</TD>
 		{elseif $SQLquery[i][4] == "lang"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD><SELECT name="SQLstring[]">{html_options options=$Languages selected=$SQLquery[i][3]}</SELECT></TD>

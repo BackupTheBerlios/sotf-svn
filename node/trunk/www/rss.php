@@ -16,12 +16,28 @@ require_once($config['classdir'] . "/sotf_AdvSearch.class.php");
 
 $prgId = sotf_Utils::getParameter('id');
 $stationName = sotf_Utils::getParameter('station');
+$seriesId = sotf_Utils::getParameter('series');
 $userName = sotf_Utils::getParameter('user');
 $queryName = sotf_Utils::getParameter('qname');
 $query = sotf_Utils::getParameter('query');
 
 function createImageTag($url, $title, $link) {
   return "<url>$url</url><title>$title</title><link>$link</link>";
+}
+
+function getW3CDate() {
+  $retval = date("Y-m-d\TH:i:sO");// 1997-07-16T19:20:30+01:00  "2002-05-06T00:00:00Z";
+  $retval = substr($retval, 0, -2) . ':' . substr($retval, -2);
+  return $retval;
+}
+
+/** this is a hack to convert pgsql date format to W3C date format required by RSS */
+function toW3CDate($date) {
+  //2003-02-21 00:00:00+01
+  //debug("date", $date);
+  //$retval = substr($date, 0, 10) . 'T' . substr($date, 12) . ':00';
+  //return $retval;
+  return $date;
 }
 
 // calculate day to list things after that
@@ -60,8 +76,7 @@ if($prgId) {
 	 $properties["title"] = 'Untitled';
   $properties["description"]= ($prg->get('abstract') ? $prg->get('abstract') : '  ');
   $properties["dc:language"]= $prg->get2LetterLanguageCode();
-  $properties["dc:date"]= date("Y-m-d\TH:i:sO");// 1997-07-16T19:20:30+01:00  "2002-05-06T00:00:00Z";
-  $properties["dc:date"] = substr($properties["dc:date"], 0, -2) . ':' . substr($properties["dc:date"], -2);
+  $properties["dc:date"]= getW3CDate();
   $rss_writer_object->addchannel($properties);
 
   // get and cache programme icon
@@ -172,7 +187,71 @@ if($prgId) {
   $rss_writer_object->additem($properties);
 
   $db->commit();
+} elseif($seriesId) {
+  //******************************************************
+  //
+  //   SERIES
+  //
+  //******************************************************
+
+  // send list of new progs in series
+  $series = $repository->getObject($seriesId);
+  if(!$series)
+	 raiseError("no such series: $seriesId");
+
+  // define channel
+  $properties=array();
+  $properties["description"] = $page->getlocalized('new_programmes'); //"New programmes at " . $series->get('title');
+  $properties["link"]=$config['rootUrl'] . "/showSeries.php/" . $series->id;
+  $properties["title"]= $series->get('title');
+  $properties["dc:language"]= $series->get2LetterLanguageCode();
+  $properties["dc:date"]= getW3CDate();
+  $rss_writer_object->addchannel($properties);
+
+  // get and cache series icon
+  $seriesData = $series->getAllWithIcon();
+  if($seriesData['icon']) {
+	 // define icon for series
+	 $properties=array();
+	 $properties["url"]=$config['cacheUrl'] . "/$series->id.png";
+	 $properties["link"]=$config['rootUrl'] . "/showSeries.php/" . $series->id;
+	 $properties["title"]= $series->get('title') . " logo";
+	 //$properties["description"]="";
+	 $rss_writer_object->addimage($properties);
+  }
+
+  // add items
+  $newProgs = $series->listProgrammes(0, ITEMS_IN_RSS);
+  //debug("progs", $newProgs);
+  foreach($newProgs as $prog) {
+	 $properties=array();
+	 $properties["description"]= $prog->get('abstract');
+	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
+	 $properties["title"]= $prog->get('title');
+	 if($prog->get('production_date')) {
+		$properties["dc:date"]= toW3CDate($prog->get('production_date'));
+	 }
+	 $rss_writer_object->additem($properties);
+  }
+
+  /*
+  // define search box
+  $properties=array();
+  // The name of the text input form field
+  $properties["name"]="pattern";
+  $properties["link"]=$config['rootUrl'] . "/search.php?language=any_language&station=$stationName";
+  $properties["title"]="Search for:";
+  $properties["description"]="Search in $stationName";
+  $rss_writer_object->addtextinput($properties);
+  */
+
 } elseif($stationName) {
+  //******************************************************
+  //
+  //   STATION
+  //
+  //******************************************************
+
   // send list of new progs in station
   $station = sotf_Station::getByName($stationName);
   if(!$station)
@@ -180,11 +259,11 @@ if($prgId) {
 
   // define channel
   $properties=array();
-  $properties["description"]="New programmes at $stationName";
+  $properties["description"] = $page->getlocalized('new_programmes'); //"New programmes at $stationName";
   $properties["link"]=$config['rootUrl'] . "/showStation.php/" . $station->id;
-  $properties["title"]="$stationName";
-  //$properties["language"]="en";
-  $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
+  $properties["title"] = "$stationName";
+  $properties["dc:language"]= $station->get2LetterLanguageCode();
+  $properties["dc:date"]= getW3CDate();
   $rss_writer_object->addchannel($properties);
 
   // get and cache station icon
@@ -207,7 +286,9 @@ if($prgId) {
 	 $properties["description"]= $prog->get('abstract');
 	 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
 	 $properties["title"]= $prog->get('title');
-	 $properties["dc:date"]= $prog->get('production_date');
+	 if($prog->get('production_date')) {
+		$properties["dc:date"]= toW3CDate($prog->get('production_date'));
+	 }
 	 $rss_writer_object->additem($properties);
   }
 
@@ -217,7 +298,7 @@ if($prgId) {
   $properties["name"]="pattern";
   $properties["link"]=$config['rootUrl'] . "/search.php?language=any_language&station=$stationName";
   $properties["title"]="Search for:";
-  $properties["description"]="Search in $stationName";
+  $properties["description"]= $page->getlocalizedWithParams('search_in_station', $stationName);
   $rss_writer_object->addtextinput($properties);
 
 } elseif($userName) {
@@ -239,7 +320,7 @@ if($prgId) {
   $properties["link"]=$config['rootUrl'] . "";
   $properties["title"]="StreamOnTheFly query results";
   //$properties["language"]="en";
-  $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
+  $properties["dc:date"]= getW3CDate();
   $rss_writer_object->addchannel($properties);
 	
   //  If your channel has a logo, before adding any channel items, specify the logo details this way.
@@ -278,7 +359,7 @@ if($prgId) {
   $properties["link"]=$config['rootUrl'] . "";
   $properties["title"]="StreamOnTheFly query results";
   //$properties["language"]="en";
-  $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
+  $properties["dc:date"]= getW3CDate();
   $rss_writer_object->addchannel($properties);
 	
   //  If your channel has a logo, before adding any channel items, specify the logo details this way.
@@ -316,7 +397,7 @@ if($prgId) {
   $properties["link"]=$config['rootUrl'] . "";
   $properties["title"]="StreamOnTheFly";
   //$properties["language"]="en";
-  $properties["dc:date"]= date("Y-m-d H:i:s");// "2002-05-06T00:00:00Z";
+  $properties["dc:date"]= getW3CDate();
   $rss_writer_object->addchannel($properties);
 	
   //  If your channel has a logo, before adding any channel items, specify the logo details this way.

@@ -37,6 +37,8 @@ $smarty->assign('SERIES_ID',$seriesid);
 $smarty->assign('SERIES_DATA',$series->getAllWithIcon());
 $smarty->assign('STATION_DATA',$station->getAllWithIcon());
 $smarty->assign('ROLES', $series->getRoles());
+if($series->getJingle())
+	  $smarty->assign('JINGLE', 1);
 
 $numProgs = $series->numProgrammes();
 $limit = $page->splitList($numProgs, "$scriptUrl/$seriesid", "progs");

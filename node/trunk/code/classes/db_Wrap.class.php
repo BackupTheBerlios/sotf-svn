@@ -59,6 +59,10 @@ class db_Wrap extends DB_pgsql {
 	    return $date['year'] . '-' . $date['mon'] . '-' . $date['mday'] . ' ' . $date['hours']. ':' . $date['minutes'];
 	  }
 
+  function myTZ() {
+    return $this->formatTZ(date('Z'));
+  }
+
 	function formatTZ($sec) {
 	  $h = intval($sec/3600);
 	  $m = sprintf('%02d',abs(intval(($sec-$h*3600)/60)));

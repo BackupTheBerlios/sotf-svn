@@ -25,23 +25,37 @@ if(sotf_Utils::getParameter('stop')) {
 
 $id = sotf_Utils::getParameter('id');
 $fileid = sotf_Utils::getParameter('fileid');
+$jingle = sotf_Utils::getParameter('jingle');
 
 if(empty($id)) {
   raiseError("Missing parameters!");
 }
 
-$prg = new sotf_Programme($id);
-
-if(!$prg->isLocal()) {
-  // have to send user to home node of this programme
-  sotf_Node::redirectToHomeNode($prg, 'listen.php');
-  exit;
-}
-
 $playlist = new sotf_Playlist();
 
-$playlist->addProg($prg, $fileid);
-
+if($jingle) {
+  $obj = $repository->getObject($id);
+  if(!$obj)
+	 raiseError("no_such_object");
+  if(!$obj->isLocal()) {
+	 // have to send user to home node of this programme
+	 sotf_Node::redirectToHomeNode($obj, 'listen.php');
+	 exit;
+  }
+  $playlist->addJingle($obj);
+} else {
+  // add normal programme 
+  $prg = new sotf_Programme($id);
+  
+  if(!$prg->isLocal()) {
+	 // have to send user to home node of this programme
+	 sotf_Node::redirectToHomeNode($prg, 'listen.php');
+	 exit;
+  }
+  
+  $playlist->addProg($prg, $fileid);
+}
+  
 $playlist->startStreaming();
 
 // must start stream before! otherwise we don't know stream url

@@ -54,6 +54,8 @@ if($st->isLocal()) {
   $smarty->assign('IS_LOCAL',1);
 }
 $smarty->assign('ROLES', $st->getRoles());
+if($st->getJingle())
+	  $smarty->assign('JINGLE', 1);
 
 if ($entered)
      $smarty->assign('ENTERED',$entered);

@@ -14,6 +14,17 @@ class sotf_Blob extends sotf_NodeObject {
 		$this->sotf_NodeObject($this->tablename, $id, $data);
 	}
 
+  function hasBlob($id, $name) {
+    $obj = new sotf_Blob();
+    $obj->set('object_id', $id);
+    $obj->set('name', $name);
+    $obj->find();
+    if($obj->exists()) {
+      return true;
+    } else
+      return false;
+  }
+
   /** Static: returns the blob with the given name for the given object ('id'). */
   function findBlob($id, $name) {
     $obj = new sotf_Blob();
