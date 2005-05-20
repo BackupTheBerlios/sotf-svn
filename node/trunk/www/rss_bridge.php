@@ -160,7 +160,7 @@ $fromDay = date('Y-m-d', $dayInThePast);
 
 // prepare RSS writer
 $rss = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
-$rss .= "<rss version=\"2.0\" xmlns:sotf=\"http://sotf.sourceforge.net/rss/2.0/modules/sotf\" xlmns:dc=\"http://purl.org/dc/elements/1.1/\">";
+$rss .= "<rss version=\"2.0\" xmlns:sotf=\"http://sotf.sourceforge.net/rss/2.0/modules/sotf\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">";
 
 // do the job, fill in RSS
 if($prgId) { //************************* PROGRAMME ********************************
