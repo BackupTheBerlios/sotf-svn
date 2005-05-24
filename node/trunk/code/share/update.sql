@@ -199,3 +199,7 @@ ALTER TABLE "sotf_stations" ADD "id2" varchar (50);
 
 ALTER TABLE "sotf_deletions" ADD "del_time" timestamptz;
 
+-- 2005-05-04
+
+DROP INDEX "sotf_media_files_u";
+CREATE INDEX "sotf_media_files_f" ON "sotf_media_files"("filename");

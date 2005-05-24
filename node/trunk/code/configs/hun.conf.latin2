@@ -195,7 +195,7 @@ users = regisztrált felhasználó
 
 contacts = Kapcsolat
 node_admin = Rendszergazda
-contacts_text = <a target="_blank" href="http://www.streamonthefly.com">StreamOnTheFly projekt</a><br><a target="_blank" href="http://dsd.sztaki.hu">MTA SZTAKI DSD</a><br><a target="_blank" href="http://szotar.sztaki.hu">szotar.sztaki.hu</a>
+contacts_text = <a target="_blank" href="http://www.streamonthefly.org">StreamOnTheFly projekt</a><br><a target="_blank" href="http://dsd.sztaki.hu">MTA SZTAKI DSD</a><br><a target="_blank" href="http://szotar.sztaki.hu">szotar.sztaki.hu</a>
 
 recent_uploads = Friss anyagok
 topics = Témák

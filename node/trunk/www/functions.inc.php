@@ -185,6 +185,11 @@ function hasPermPrivate($mixed, $permName) {
 
 /** wrapper function for move_uploaded_file, because sometimes chmod is needed afterwards. */
 function moveUploadedFile($fieldName, $file) {
+	// check and convert filename
+	$trans = array("'" => "", '"' => '', '..' => '', );
+	//$file = strtr(urldecode(stripslashes(urldecode($file))), $trans);
+	$file = strtr(stripslashes($file), $trans);
+	// move file to final location
   if(!move_uploaded_file($_FILES[$fieldName]['tmp_name'], $file))
 		raiseError("Could not move uploaded file from " . $_FILES[$fieldName]['tmp_name'] . " to $file");
 	//debug("Moved uploaded file", $_FILES[$fieldName]['tmp_name'] . " to $file");
