@@ -27,7 +27,10 @@ function line($msg) { // just for screen output (testing)
 <body>
 <?php 
 
+while (@ob_end_flush());
+
 debug("--------------- CRON STARTED -----------------------------------");
+line("CRON STARTED");
 
 // this can be long duty!
 set_time_limit(18000);
@@ -37,6 +40,7 @@ set_time_limit(18000);
 //******** Perform expensive updates on objects
 
 sotf_Object::doUpdates();
+line("UPDATES FINISHED");
 
 //******** Synchronize with network: send new local data and forward new remote data
 
@@ -50,6 +54,8 @@ if(count($neighbours) > 0) {
   }
 }
 
+line("SYNC FINISHED");
+
 //******** Forward messages to remote nodes 
 
 // for all nodes
@@ -61,6 +67,8 @@ if(count($nodes) > 0) {
     }
   }
 }
+
+line("FORWARD FINISHED");
 
 //********* IMPORT ARRIVED XBMF
 //if(false) {
@@ -88,6 +96,8 @@ if(!empty($XBMF)) {
 }
 //}
 
+line("XBMF IMPORT FINISHED");
+
 //******** Expire old programmes
 
   /*
@@ -101,12 +111,15 @@ if(!empty($prgIds)) {
   }
   $db->commit();
 }
+line("EXPIRED OLD SHOWS");
   */
 
 //******** Update topic counts
 
 debug("updating", "topic counts");
 $vocabularies->updateTopicCounts();
+
+line("TOPIC COUNTS UPDATED");
 
 //******** Clean caches and tmp dirs
 
@@ -127,6 +140,8 @@ while($entry = $dir->read()) {
 }
 $dir->close();
 
+line("CLEANED TMP DIR");
+
 debug("cleaning", "cacheDir");
 $clearTime = time() - 60*60;
 $dir = dir($config['cacheDir']);
@@ -143,6 +158,8 @@ while($entry = $dir->read()) {
 }
 $dir->close();
 
+line("CLEANED CACHE DIR");
+
 // TODO update subject tree language availability
 
 // TODO remove old sotf_delete objects
@@ -152,6 +169,7 @@ $dir->close();
 $playlist = new sotf_Playlist();
 $playlist->stopOldStreams();
 
+line("CRON FINISHED");
 
 stopTiming();
 $page->logRequest();
