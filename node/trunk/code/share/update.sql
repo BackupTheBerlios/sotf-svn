@@ -190,9 +190,6 @@ CREATE INDEX "prog_id_sotf_prog_topics_key" ON "sotf_prog_topics"("prog_id");
 -- VERY IMPORTANT!
 -- you have to rename all station dirs under node/repository!
 -- do commands like: mv Test_Radio 011st2
-
--- some placeholder
-ALTER TABLE "sotf_stations" ADD "id2" varchar (50);
 -- also sotf_stations.name field became longer, but not a big problem
 
 -- 2004-10-19

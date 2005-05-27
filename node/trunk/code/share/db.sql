@@ -135,7 +135,6 @@ CREATE SEQUENCE "sotf_stations_seq";
 CREATE TABLE "sotf_stations" (
 -- REPLICATED 
 "id" varchar(12) PRIMARY KEY REFERENCES sotf_node_objects(id) ON DELETE CASCADE,
-"id2" varchar(50),                    -- currently not used
 "name" varchar(60) NOT NULL,
 "description" text,
 "url" varchar(100),										-- URL for radio station website, if any
