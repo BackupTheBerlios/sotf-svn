@@ -26,6 +26,9 @@ if(empty($fid)) {
 }
 
 if($fid) {
+  $pos = strpos($fid, ".mp3");
+  if ($pos !== false) { $fid = rtrim($fid, ".mp3"); }
+  debug ("fid", $fid);
   $fobj = &$repository->getObject($fid);
   if(!$fobj)
 	 raiseError("no_such_object", $fid);
@@ -69,6 +72,16 @@ if ($file->type != "none")
 	  header("Content-transfer-encoding: binary\n"); 
 	  //}
 	// send file
+	
+	// wreutz: added this to get rid of fid_123mf12 filename and save as the real filename of the file
+	$user_agent = strtolower ($_SERVER["HTTP_USER_AGENT"]);
+    if ((is_integer (strpos($user_agent, "msie"))) && (is_integer (strpos($user_agent, "win")))) {
+        header( "Content-Disposition: filename=".basename($filename).";\n" );
+    } else {
+        header( "Content-Disposition: attachment; filename=".basename($filename).";\n" );
+    }
+    // wreutz: end
+
 	readfile($filename);
 }
 else

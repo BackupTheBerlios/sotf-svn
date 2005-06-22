@@ -62,7 +62,7 @@ function selectAudio(&$prg) {
 		//$f['url'] = $config['rootUrl'] . '/getFile.php/' . $f['filename'] . '?audio=1&id=' . $prg->id . '&filename=' . $f['filename'];
 		//$f['url'] = $config['rootUrl'] . '/getFile.php?audio=1&id=' . $prg->id . '&filename=' . $f['filename'];
 		$baseUrl = sotf_Node::getHomeNodeRootUrl($prg);
-		$f['url'] = $baseUrl . '/getFile.php/fid__' . $f['id'];
+		$f['url'] = $baseUrl . '/getFile.php/fid__' . $f['id'].".mp3"; // wreutz: very dirty hack for ipooder to work on os x
 		return $f;
 	 }
   }
