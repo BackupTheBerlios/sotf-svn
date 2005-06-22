@@ -246,7 +246,7 @@ $vocabularies = new sotf_Vocabularies($db);
 $smarty->assign("NODEID", $config['nodeId']);
 $smarty->assign("NODE_NAME", $config['nodeName']);
 $smarty->assign("ROOT_URL", $config['rootUrl']);
-//$smarty->assign("ROOT_URL", $config['localPrefix']);
+$smarty->assign("ROOT_PREFIX", $config['localPrefix']);
 $smarty->assign("IMAGE_URL", $config['imageUrl']);
 $smarty->assign("CACHE_URL", $config['cacheUrl']);
 $smarty->assign("PHP_SELF", mygetenv('PHP_SELF'));
