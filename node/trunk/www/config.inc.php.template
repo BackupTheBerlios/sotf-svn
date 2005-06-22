@@ -16,7 +16,7 @@
 
 // the sql connection parameters for the node database
 $config['nodeDbUser'] = 'user';
-$config['nodeDbHost'] = 'host';
+$config['nodeDbHost'] = 'localhost';
 $config['nodeDbPort'] = '5432';
 $config['nodeDbPasswd'] = '';
 $config['nodeDbName'] = 'node';
@@ -35,7 +35,7 @@ $config['userDbClass'] = 'userdb_node';
 // only fill in if you specified selfUserDb = false!!
 $config['userDbType'] = 'pgsql';              //pgsql or mysql
 $config['userDbUser'] = 'user';
-$config['userDbHost'] = 'host';
+$config['userDbHost'] = 'localhost';
 $config['userDbPort'] = '5432';
 $config['userDbPasswd'] = '';
 $config['userDbName'] = 'sadm';
@@ -73,47 +73,47 @@ $config['publishXbmf'] = false;
 //////////////////////////////////////////////////////////////////////////
 
 // complete filesystem path for this software package
-$config['basedir'] = 'C:/sotf/node';
+$config['basedir'] = "C:/sotf/node";
 
 // the directory where stations and radio shows will be archived
-$config['repositoryDir'] = $config['basedir'] . '/repository';
+$config['repositoryDir'] = $config['basedir'] . "/repository";
 
 // the directory where stations and radio shows will be archived
-$config['musicDir'] = $config['basedir'] . '/music';
+$config['musicDir'] = $config['basedir'] . "/music";
 
 // the directory under which users have FTP or other access to send files to
-$config['userDirs'] = $config['basedir'] . '/users';
+$config['userDirs'] = $config['basedir'] . "/users";
 
 // the FTP URL for user directories (defined above), with a trailing slash
-$config['userFTP'] = 'ftp://foo.foo.org:8989/';
+$config['userFTP'] = "ftp://foo.foo.org:8989/";
 
 // the directory where incoming programmes (XBMF) arrive from stations
 $config['xbmfInDir'] = $config['basedir'] . "/incoming";
 
 // where PEAR files are located
-$config['peardir'] = 'C:/Program Files/php422/pear';
+$config['peardir'] = "C:/Program Files/php422/pear";
 
 // where Smarty files are located
-$config['smartydir'] = 'C:/sotf/helpers/smarty2.3';
+$config['smartydir'] = $config['basedir'] . "/code/Smarty-2.6.9/libs";
 
 // where getid3 files are located
-$config['getid3dir'] = 'C:/sotf/helpers/getid3';
+$config['getid3dir'] = $config['basedir'] . "/code/getid3-1.6.2";
 
 // where ImageMagick is installed
-$config['magickDir'] = 'C:/Program Files/ImageMagick';
+$config['magickDir'] = "C:/Program Files/ImageMagick";
 
 // Path to the class files
-$config['classdir'] = $config['basedir'] . '/code/classes';
+$config['classdir'] = $config['basedir'] . "/code/classes";
 
 // Path to XML-RPC libraries
-$config['xmlrpcdir'] = $config['basedir'] . '/code/xmlrpc';
+$config['xmlrpcdir'] = $config['basedir'] . "/code/xmlrpc";
 
 // path to PHP scripts and images
-$config['wwwdir'] = $config['basedir'] . '/www';
+$config['wwwdir'] = $config['basedir'] . "/www";
 
 // The URL prefix for code/www subdir 
 // i.e. http://<your-host>/$config['localPrefix'] will open the home page of the node
-$config['localPrefix'] = '/node/www';
+$config['localPrefix'] = "/node/www";
 
 //////////////////////////////////////////////////////////////////////////
 // STREAMING --------------------------------------------

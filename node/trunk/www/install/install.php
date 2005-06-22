@@ -177,41 +177,41 @@ $install_test_name = "";				//array for the name of the tests
 
 
 /*
-$install_user = $HTTP_POST_VARS["user"];		//username for DB
-$install_pass = $HTTP_POST_VARS["pass"];		//password for DB
-$install_host = $HTTP_POST_VARS["host"];		//host for DB
-$install_port = $HTTP_POST_VARS["port"];		//port for DB
+$install_user = $_POST["user"];		//username for DB
+$install_pass = $_POST["pass"];		//password for DB
+$install_host = $_POST["host"];		//host for DB
+$install_port = $_POST["port"];		//port for DB
 
-$install_sadm_user = $HTTP_POST_VARS["sadm_user"];		//username for DB
-$install_sadm_pass = $HTTP_POST_VARS["sadm_pass"];		//password for DB
-$install_sadm_host = $HTTP_POST_VARS["sadm_host"];		//host for DB
-$install_sadm_port = $HTTP_POST_VARS["sadm_port"];		//port for DB
-$install_sadm_db_name = $HTTP_POST_VARS["sadm_db_name"];	//DB name
+$install_sadm_user = $_POST["sadm_user"];		//username for DB
+$install_sadm_pass = $_POST["sadm_pass"];		//password for DB
+$install_sadm_host = $_POST["sadm_host"];		//host for DB
+$install_sadm_port = $_POST["sadm_port"];		//port for DB
+$install_sadm_db_name = $_POST["sadm_db_name"];	//DB name
 
-$install_node_user = $HTTP_POST_VARS["node_user"];		//username for DB
-$install_node_pass = $HTTP_POST_VARS["node_pass"];		//password for DB
-$install_node_host = $HTTP_POST_VARS["node_host"];		//host for DB
-$install_node_port = $HTTP_POST_VARS["node_port"];		//port for DB
-$install_node_db_name = $HTTP_POST_VARS["node_db_name"];	//DB name
+$install_node_user = $_POST["node_user"];		//username for DB
+$install_node_pass = $_POST["node_pass"];		//password for DB
+$install_node_host = $_POST["node_host"];		//host for DB
+$install_node_port = $_POST["node_port"];		//port for DB
+$install_node_db_name = $_POST["node_db_name"];	//DB name
 */
 
-$install_run_test = $HTTP_POST_VARS["run_test"];	//Run test X buttons
-$install_run_all = $HTTP_POST_VARS["RUN_ALL"];		//Run all button
-$install_reload = $HTTP_POST_VARS["reload"];		//Reload config.inc.php button
-$install_createdb = $HTTP_POST_VARS["createdb"];	//Create sadm db button
-$install_writeback_sadm = $HTTP_POST_VARS["writeback_sadm"];	//write sadm connection params to config.inc.php
-$install_writeback_node = $HTTP_POST_VARS["writeback_node"];	//write node connection params to config.inc.php
+$install_run_test = $_POST["run_test"];	//Run test X buttons
+$install_run_all = $_POST["RUN_ALL"];		//Run all button
+$install_reload = $_POST["reload"];		//Reload config.inc.php button
+$install_createdb = $_POST["createdb"];	//Create sadm db button
+$install_writeback_sadm = $_POST["writeback_sadm"];	//write sadm connection params to config.inc.php
+$install_writeback_node = $_POST["writeback_node"];	//write node connection params to config.inc.php
 
-$install_delete_topic = $HTTP_POST_VARS["delete_topic"];	//delete topic tree
-$install_create_topic = $HTTP_POST_VARS["create_topic"];	//create topic tree
+$install_delete_topic = $_POST["delete_topic"];	//delete topic tree
+$install_create_topic = $_POST["create_topic"];	//create topic tree
 
 // test 8: node admin
-$admin_name = $HTTP_POST_VARS["admin_name"];
-$admin_pass = $HTTP_POST_VARS["admin_pass"];
+$admin_name = $_POST["admin_name"];
+$admin_pass = $_POST["admin_pass"];
 
 
-$install_color = $HTTP_POST_VARS["color"];		//color values for the cells
-$install_test_result = $HTTP_POST_VARS["test_result"];	//result strings of the tests
+$install_color = $_POST["color"];		//color values for the cells
+$install_test_result = $_POST["test_result"];	//result strings of the tests
 
 
 if ($install_user === NULL)		//set default parameter if first time here
@@ -774,6 +774,7 @@ if ($install_createdb)			//if create node db button pressed
 			 $install_color[$id] = $install_green;
 		  }
 	}
+	print('fertig');
 PrintTitle($id);
 print('<DIV ALIGN="center"><BR />
 	<INPUT type="submit" name="delete_topic" value="Delete vocabularies">
