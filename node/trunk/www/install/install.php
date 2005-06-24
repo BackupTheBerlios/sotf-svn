@@ -774,7 +774,8 @@ if ($install_createdb)			//if create node db button pressed
 			 $install_color[$id] = $install_green;
 		  }
 	}
-	print('fertig');
+
+
 PrintTitle($id);
 print('<DIV ALIGN="center"><BR />
 	<INPUT type="submit" name="delete_topic" value="Delete vocabularies">
