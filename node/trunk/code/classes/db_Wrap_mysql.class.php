@@ -90,7 +90,7 @@ class db_Wrap_mysql extends DB_mysql {
   function formatTZ($sec) {
     $h = intval($sec/3600);
     $m = sprintf('%02d',abs(intval(($sec-$h*3600)/60)));
-    if($h{0} != '-')
+    if($h >= 0)
       $h = "+$h";
     return "$h:$m";
   }
