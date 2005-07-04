@@ -200,3 +200,7 @@ ALTER TABLE "sotf_deletions" ADD "del_time" timestamptz;
 
 DROP INDEX "sotf_media_files_u";
 CREATE INDEX "sotf_media_files_f" ON "sotf_media_files"("filename");
+
+-- 2005-07-04
+-- removed default of now + 56 days for expiry_date in sotf_programmes
+ALTER TABLE sotf_programmes ALTER COLUMN expiry_date DROP DEFAULT;

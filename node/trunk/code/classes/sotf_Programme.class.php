@@ -83,7 +83,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $db->begin();
 	 // TODO may need some locking to get unique track id
 	 $container = & $repository->getObject($stationOrSeriesId);
-	 switch(get_class($container)) {
+	 echo get_class($container);
+	 switch(strtolower(get_class($container))) {
 	 case 'sotf_series':
 		$this->set('series_id', $container->id);
 		$station = $container->getStation();
@@ -588,18 +589,21 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   /** saves some info into ID3 $file=sotf_AudioFile object */
+  // wreutz: changed behaviour to leave ID3 as is in file, only add comment with id
   function saveID3($file) {
 	 global $config;
 	 $fileInfo = $file->allInfo;
 	 $id3 = $fileInfo['id3v1'];
-	 $id3['comment'] =  substr(substr($config['rootUrl'], 7), 0, 30);
-	 $id3['album'] =  "id: " . $this->id;
-	 if(!$id3['title'])
-		$id3['title'] = substr($this->get('title'), 0, 30);
-	 if(!$id3['artist'])
-		$id3['artist'] = substr($this->getCreatorNames(), 0, 30);
+	 //$id3['comment'] =  substr(substr($config['rootUrl'], 7), 0, 30);
+	 $id3['comment'] = "id: " . $this->id;
+	 //$id3['album'] =  "id: " . $this->id;
+	 //if(!$id3['title'])
+	 // $id3['title'] = substr($this->get('title'), 0, 30);
+	 //if(!$id3['artist'])
+	 //	$id3['artist'] = substr($this->getCreatorNames(), 0, 30);
 	 debug("writing ID3V1", $id3);
-	 $succ = WriteID3v1($file->path, $id3['title'], $id3['artist'], $id3['album'], $id3['year'], $id3['comment'], $id3['genre'], NULL /*track*/);
+	 //$succ = WriteID3v1($file->path, $id3['title'], $id3['artist'], $id3['album'], $id3['year'], $id3['comment'], $id3['genre'], NULL /*track*/);
+	 $succ = WriteID3v1($file->path, $id3['comment'], NULL /*track*/);
 	 if(!$succ)
 		logError("Could not change ID3V1 tags in file ". $file->path);
   }

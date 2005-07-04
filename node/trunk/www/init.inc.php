@@ -10,6 +10,17 @@
 	//	echo "<h3>Karbantartás miatt pár percig zárva.</h3><h3>Sorry, the server is currently under maintenance. Please try again later.</h3>"; exit;
 
 //////////////////////////////////////////////////////////////////////////
+// wreutz: added domxml wrapper for PHP5
+//         todo: implement PHP5 dom to replace PHP4 domxml
+//               build a switch based on PHP version for both implementations
+
+
+if (version_compare(PHP_VERSION,'5','>='))
+ require_once('domxml-php4-to-php5.php'); //Load the PHP5 converter
+ 
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
 require_once('functions.inc.php');
 //////////////////////////////////////////////////////////////////////////
 
