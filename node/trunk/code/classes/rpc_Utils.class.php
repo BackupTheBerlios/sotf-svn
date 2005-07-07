@@ -8,8 +8,10 @@ class rpc_Utils {
   var $debug = false;
 
   // timeout in seconds for establishing connection
-  var $timeout = 20;
-  
+  var $connTimeout = 30;
+  // timeout in seconds for receiving answer
+  var $recvTimeout = 600;
+
   function call($url, $method, $params) {
     // xmlrpc encode parameters
     for($i=0;$i<count($params);$i++){
@@ -25,11 +27,11 @@ class rpc_Utils {
       //("XML-RPC message:\n $message->serialize()",0);
     }
     $addr = parse_url($url);
-    $client = new xmlrpc_client($url, $addr['host'], $addr['port']);
+    $client = new xmlrpc_client($url, $addr['host'], $addr['port'], $this->connTimeout, $this->recvTimeout);
     if($this->debug)
       $client->setDebug(1);
     debug("XML-RPC", "call to " . $url);
-    $response = $client->send($message, $this->timeout);
+    $response = $client->send($message);
     if($this->debug)
       print("<PRE>".htmlentities($response->serialize())."</PRE>\n");
     // process response

@@ -442,6 +442,7 @@ class sotf_Object {
 	/** static */
 	function doUpdates() {
 		global $db, $repository;
+		debug("object updates started");
 		$list = $db->getAll("SELECT * FROM sotf_to_update");
 		while(list(,$item) = each($list)) {
 			$db->begin(true);
@@ -469,6 +470,7 @@ class sotf_Object {
 			$db->query("DELETE FROM sotf_to_update WHERE tablename='$tablename' AND row_id='$rowId'");
 			$db->commit();
 		}
+		debug("object updates finished");
 	}
 
   /**

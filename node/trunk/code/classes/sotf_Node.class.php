@@ -158,13 +158,13 @@ class sotf_Node extends sotf_NodeObject {
 	 $updatedObjects = sotf_NodeObject::saveForwardObjects($objects);
 	 // if db error: don't commit!
 	 $db->commit();
-	 debug("number of updated objects", $updatedObjects);
+	 debug("number of processed forward objects", $updatedObjects);
 	 $replyInfo = array('received' => count($objects),
 							  'updated' => $updatedObjects);
 
 	 if($chunkInfo['objects_remaining'] == 0) {
 		// last chunk, do something useful!!
-		sotf_Object::doUpdates();
+		//temporarily taken out sotf_Object::doUpdates();
 	 }
 	 return array($replyInfo);
   }
