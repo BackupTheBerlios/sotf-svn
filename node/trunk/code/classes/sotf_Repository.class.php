@@ -165,7 +165,16 @@ class sotf_Repository {
    ************************************************/
 
   function processPortalEvent($event) {
-	 debug("processing event", $event);
+		debug("processing event", $event);
+		$progId = $event['prog_id'];
+		if($progId) {
+      if($this->looksLikeId($progId))
+				$prg = &$this->getObject($progId);
+      if(!$prg) {
+				debug("Invalid prog_id arrived in portal event", $progId);
+				return -1;
+      }
+		}
     switch($event['name']) {
     case 'programme_added':
       $obj = new sotf_NodeObject('sotf_prog_refs');
@@ -173,9 +182,6 @@ class sotf_Repository {
       $obj->set('url', $event['url']);
       $obj->find();
       if(!$obj->exists()) {
-        $prg = &$this->getObject($obj->get('prog_id'));
-		  if(!$prg)
-			 break;
         $obj->set('station_id', $prg->get('station_id'));
       }
       $obj->set('start_date', $event['timestamp']);
@@ -189,9 +195,6 @@ class sotf_Repository {
       $obj->find();
       if(!$obj->exists()) {
         debug("unknown prog ref arrives: "  . $event['value'] . ' - ' . $event['url']);
-        $prg = &$this->getObject($obj->get('prog_id'));
-				if(!$prg)
-					break;
         $obj->set('station_id', $prg->get('station_id'));
         $obj->set('portal_name', $event['portal_name']);
       }
@@ -207,9 +210,6 @@ class sotf_Repository {
       if(!$obj->exists()) {
 				// TODO: how can this happen? It happens too many times!
         debug("unknown prog ref arrives: " . $event['value']['prog_id'] . ' - ' . $event['url']);
-        $prg = &$this->getObject($obj->get('prog_id'));
-				if(!$prg)
-					break;
 				$obj->set('station_id', $prg->get('station_id'));
         $obj->set('start_date', $event['timestamp']);
         $obj->set('portal_name', $event['portal_name']);
@@ -257,9 +257,6 @@ class sotf_Repository {
       $obj->find();
       if(!$obj->exists()) {
         debug("unknown prog ref arrives: " . $event['url']);
-        $prg = &$this->getObject($obj->get('prog_id'));
-		  if(!$prg)
-			 break;
         $obj->set('station_id', $prg->get('station_id'));
         $obj->set('start_date', $event['timestamp']);
         $obj->set('portal_name', $event['portal_name']);
@@ -288,7 +285,6 @@ class sotf_Repository {
       $obj->find();
       if(!$obj->exists()) {
         logError("unknown prog ref arrives: " . $event['value']['prog_id'] . ' - ' . $event['url']);
-        $prg = &$this->getObject($obj->get('prog_id'));
         $obj->set('station_id', $prg->get('station_id'));
         $obj->set('start_date', $event['timestamp']);
         $obj->set('portal_name', $event['portal_name']);
