@@ -78,6 +78,11 @@ class sotf_Statistics extends sotf_Object {
 	 $prgId = $data['prog_id'];
 	 $fileId = $data['file'];
     $where = " WHERE prog_id='$prgId' AND year='$year' AND month='$month' AND day='$day' AND week='$week'";
+	 $prg = $repository->getObject($prgId);
+	 if(!$prg) {
+		// don't raiseError("addStat: no such programme: $prgId");
+		return null;
+	 }
 	 $db->begin();
 	 // to avoid deadlocks I try this:
 	 $db->query("LOCK TABLE sotf_stats, sotf_unique_access, sotf_to_update IN ROW EXCLUSIVE MODE");
@@ -85,14 +90,10 @@ class sotf_Statistics extends sotf_Object {
 	 if($id) {
 		$obj = new sotf_Statistics($id);
 		$obj->set($type, $obj->get($type)+1);
+		// station may change!!
+		$obj->set('station_id', $prg->get('station_id'));
 	 } else {
 		$obj = new sotf_Statistics();
-      $prg = $repository->getObject($prgId);
-      if(!$prg) {
-        // don't raiseError("addStat: no such programme: $prgId");
-		  $db->rollback();
-		  return null;
-		}
 		$obj->setAll(array('prog_id' => $prgId,
                          'station_id' => $prg->get('station_id'),
                          'year' => $year,
@@ -181,10 +182,10 @@ class sotf_Statistics extends sotf_Object {
     if(!$id) {
       $obj = new sotf_NodeObject("sotf_prog_stats");
       $obj->set('prog_id', $this->get('prog_id'));
-      $obj->set('station_id', $this->get('station_id'));
     } else {
       $obj = $repository->getObject($id);
     }
+	 $obj->set('station_id', $this->get('station_id'));
     $obj->set('unique_visits', $this->get('unique_visits'));
     $obj->set('unique_listens', $this->get('unique_listens'));
     $obj->set('unique_downloads', $this->get('unique_downloads'));

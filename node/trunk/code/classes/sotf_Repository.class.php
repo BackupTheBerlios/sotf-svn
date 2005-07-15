@@ -181,9 +181,7 @@ class sotf_Repository {
       $obj->set('prog_id', $event['value']);
       $obj->set('url', $event['url']);
       $obj->find();
-      if(!$obj->exists()) {
-        $obj->set('station_id', $prg->get('station_id'));
-      }
+			$obj->set('station_id', $prg->get('station_id'));
       $obj->set('start_date', $event['timestamp']);
       $obj->set('portal_name', $event['portal_name']);
       $obj->save();
@@ -195,9 +193,9 @@ class sotf_Repository {
       $obj->find();
       if(!$obj->exists()) {
         debug("unknown prog ref arrives: "  . $event['value'] . ' - ' . $event['url']);
-        $obj->set('station_id', $prg->get('station_id'));
         $obj->set('portal_name', $event['portal_name']);
       }
+			$obj->set('station_id', $prg->get('station_id'));
       $obj->set('end_date', $event['timestamp']);
       //$obj->set('portal_name', $event['portal_name']);
       $obj->save();
@@ -210,10 +208,10 @@ class sotf_Repository {
       if(!$obj->exists()) {
 				// TODO: how can this happen? It happens too many times!
         debug("unknown prog ref arrives: " . $event['value']['prog_id'] . ' - ' . $event['url']);
-				$obj->set('station_id', $prg->get('station_id'));
         $obj->set('start_date', $event['timestamp']);
         $obj->set('portal_name', $event['portal_name']);
       }
+			$obj->set('station_id', $prg->get('station_id'));
       $obj->set('visits', (int)$obj->get('visits')+1);
       // TODO: count unique accesses
       $obj->save();
@@ -257,10 +255,10 @@ class sotf_Repository {
       $obj->find();
       if(!$obj->exists()) {
         debug("unknown prog ref arrives: " . $event['url']);
-        $obj->set('station_id', $prg->get('station_id'));
         $obj->set('start_date', $event['timestamp']);
         $obj->set('portal_name', $event['portal_name']);
       }
+			$obj->set('station_id', $prg->get('station_id'));
       $obj->set('rating', $event['value']['RATING_VALUE']);
       $obj->set('raters', $event['value']['RATING_COUNT']);
       $obj->save();
@@ -285,10 +283,10 @@ class sotf_Repository {
       $obj->find();
       if(!$obj->exists()) {
         logError("unknown prog ref arrives: " . $event['value']['prog_id'] . ' - ' . $event['url']);
-        $obj->set('station_id', $prg->get('station_id'));
         $obj->set('start_date', $event['timestamp']);
         $obj->set('portal_name', $event['portal_name']);
       }
+			$obj->set('station_id', $prg->get('station_id'));
       $obj->set('comments', (int)$obj->get('comments')+1);
       $obj->save();
 		// save comment

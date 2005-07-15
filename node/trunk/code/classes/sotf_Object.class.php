@@ -103,10 +103,20 @@ class sotf_Object {
 	 if(DB::isError($res)){
 		raiseError($res);
 	 }
-	 $this->changed = false;
-	 
-	 // mark if this change requires a refresh in the metadata.xml file
-	 $this->markParentToUpdate();
+
+	 //$count = $db->affectedRows();
+	 $count = $res;
+
+	 if($count > 1)
+		 logError("This updated more objects", $count);
+	 if($count < 1)
+		 logError("Update failed", $count);
+	 if($count==1) {
+		 $this->changed = false;
+		 // mark if this change requires a refresh in the metadata.xml file
+		 $this->markParentToUpdate();
+	 }
+	 return $count;
   }
 
   /** creates db record with all fields from 'data' */

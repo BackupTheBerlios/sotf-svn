@@ -223,7 +223,11 @@ class sotf_NodeObject extends sotf_Object {
 		 if($this->internalData['change_stamp'] && $this->internalData['change_stamp'] > $oldData['change_stamp']) {
 			// this is newer, save it
 			debug("arrived newer version of", $this->id);
-			sotf_Object::update();
+			$changed = sotf_Object::update();
+			if(!$changed) {
+			  $changed = sotf_Object::create();
+			  logger("WARNING: Object $this->id did not exist, so created!!!", $change);
+			}
 			// save internal data
 			$this->internalData['arrived'] = $db->getTimestampTz();
 			$internalObj = new sotf_Object('sotf_node_objects', $this->internalData['id'], $this->internalData);
@@ -238,7 +242,6 @@ class sotf_NodeObject extends sotf_Object {
 			debug("updated ", $this->id);
 			$this->addToRefreshTable($this->id, $fromNode);
 			$this->removeFromRefreshTable($this->id, $fromNode);
-			$changed = true;
 		 } elseif($this->internalData['change_stamp'] == $oldData['change_stamp']) {
 			debug("arrived same version of", $this->id);
 			$this->removeFromRefreshTable($this->id, $fromNode);
