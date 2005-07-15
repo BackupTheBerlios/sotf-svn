@@ -116,7 +116,7 @@ class sotf_Object {
 		 // mark if this change requires a refresh in the metadata.xml file
 		 $this->markParentToUpdate();
 	 }
-	 return $count;
+	 return ($count==1);
   }
 
   /** creates db record with all fields from 'data' */
