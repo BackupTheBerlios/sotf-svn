@@ -74,12 +74,7 @@ if ($file->type != "none")
 	// send file
 	
 	// wreutz: added this to get rid of fid_123mf12 filename and save as the real filename of the file
-	$user_agent = strtolower ($_SERVER["HTTP_USER_AGENT"]);
-    if ((is_integer (strpos($user_agent, "msie"))) && (is_integer (strpos($user_agent, "win")))) {
-        header( "Content-Disposition: filename=".basename($filename).";\n" );
-    } else {
-        header( "Content-Disposition: attachment; filename=".basename($filename).";\n" );
-    }
+    header( "Content-Disposition: filename=".basename($filename).";\n" );
     // wreutz: end
 
 	readfile($filename);
