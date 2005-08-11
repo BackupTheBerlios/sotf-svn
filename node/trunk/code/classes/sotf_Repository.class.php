@@ -312,6 +312,39 @@ class sotf_Repository {
     }
   }
 
+  /************************************************
+   *      MAINTENANCE
+	 *
+	 * This is rarely needed, but with some old postgres, cascading deletes may have problems.
+	 * Not complete, partial solution, to be finished.
+   ************************************************/
+
+	function cleanTables($test = false) {
+		$data = $this->db->getAll("select r.* from sotf_prog_refs r left join sotf_programmes p on (r.prog_id=p.id) where p.id is null");
+		$this->cleanOrphans('sotf_prog_refs', $data, 'prog_id', $test);
+		$data = $this->db->getAll("select r.* from sotf_media_files r left join sotf_programmes p on (r.prog_id=p.id) where p.id is null");
+		$this->cleanOrphans('sotf_media_files', $data, 'prog_id', $test);
+
+
+	}
+
+	function cleanOrphans($table, $rows, $ref, $test) {
+		while(list(,$row) = each($rows)) {
+			//debug("ROW", $row);
+			$id = $row['id'];
+			$refId = $row[$ref];
+			$obj = &$this->getObjectNoCache($refId);
+			if(!$obj) {
+				if($test)
+					logger("DELETE FROM $table WHERE id='$id'");
+				else
+					$this->db->query("DELETE FROM $table WHERE id='$id'");
+			} else {
+				logError("$id cannot be deleted: $refId still exists?");
+			}
+		}
+	}
+
 }
 
 ?>

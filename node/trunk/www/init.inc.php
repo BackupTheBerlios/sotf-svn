@@ -7,7 +7,8 @@
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
-	//	echo "<h3>Karbantartás miatt pár percig zárva.</h3><h3>Sorry, the server is currently under maintenance. Please try again later.</h3>"; exit;
+//echo "<h3>Sorry, the server is currently under maintenance. Please try again tomorrow.</h3>
+// <h3>Karbantartás miatt mai nap zárva.</h3>"; exit;
 
 //////////////////////////////////////////////////////////////////////////
 // wreutz: added domxml wrapper for PHP5

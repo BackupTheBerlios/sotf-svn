@@ -83,7 +83,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $db->begin();
 	 // TODO may need some locking to get unique track id
 	 $container = & $repository->getObject($stationOrSeriesId);
-	 echo get_class($container);
+	 // echo get_class($container);
 	 switch(strtolower(get_class($container))) {
 	 case 'sotf_series':
 		$this->set('series_id', $container->id);
