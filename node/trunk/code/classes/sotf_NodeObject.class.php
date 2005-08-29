@@ -223,10 +223,15 @@ class sotf_NodeObject extends sotf_Object {
 		 if($this->internalData['change_stamp'] && $this->internalData['change_stamp'] > $oldData['change_stamp']) {
 			// this is newer, save it
 			debug("arrived newer version of", $this->id);
-			$changed = sotf_Object::update();
-			if(!$changed) {
+			$oldObj = $repository->getObjectNoCache($this->id);
+			if(!$oldObj) {
+			  debug("creating, because object did not exist...");
 			  $changed = sotf_Object::create();
-			  logger("WARNING: Object $this->id did not exist, so created!!!", $change);
+			} else {
+			  $changed = sotf_Object::update();
+			}
+			if(!$changed) {
+			  logger("WARNING: Object creation failed ($this->id)!!!", $change);
 			}
 			// save internal data
 			$this->internalData['arrived'] = $db->getTimestampTz();

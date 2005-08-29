@@ -322,8 +322,15 @@ class sotf_Repository {
 	function cleanTables($test = false) {
 		$data = $this->db->getAll("select r.* from sotf_prog_refs r left join sotf_programmes p on (r.prog_id=p.id) where p.id is null");
 		$this->cleanOrphans('sotf_prog_refs', $data, 'prog_id', $test);
+
+		$data = $this->db->getAll("select r.* from sotf_prog_stats r left join sotf_programmes p on (r.prog_id=p.id) where p.id is null");
+		$this->cleanOrphans('sotf_prog_stats', $data, 'prog_id', $test);
+
 		$data = $this->db->getAll("select r.* from sotf_media_files r left join sotf_programmes p on (r.prog_id=p.id) where p.id is null");
 		$this->cleanOrphans('sotf_media_files', $data, 'prog_id', $test);
+
+		$data = $this->db->getAll("select r.* from sotf_rights r left join sotf_programmes p on (r.prog_id=p.id) where p.id is null");
+		$this->cleanOrphans('sotf_rights', $data, 'prog_id', $test);
 
 
 	}
