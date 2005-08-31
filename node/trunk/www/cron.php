@@ -37,6 +37,10 @@ set_time_limit(18000);
 // don't garble reply message with warnings in HTML
 //ini_set("display_errors", 0);
 
+//******** cascading deletes may have problems.
+
+  //$repository->cleanTables();
+
 //******** Perform expensive updates on objects
 
 sotf_Object::doUpdates();

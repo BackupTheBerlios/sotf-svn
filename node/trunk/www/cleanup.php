@@ -22,7 +22,9 @@ checkPerm('node', "change");
 
 <?php
 
-$config['debug_type'] = 'now';
+ //$config['debug_type'] = 'now';
+
+set_time_limit(18000);
 
 $repository->cleanTables();
 

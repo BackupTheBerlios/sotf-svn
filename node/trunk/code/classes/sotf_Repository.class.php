@@ -320,19 +320,45 @@ class sotf_Repository {
    ************************************************/
 
 	function cleanTables($test = false) {
-		$data = $this->db->getAll("select r.* from sotf_prog_refs r left join sotf_programmes p on (r.prog_id=p.id) where p.id is null");
-		$this->cleanOrphans('sotf_prog_refs', $data, 'prog_id', $test);
 
-		$data = $this->db->getAll("select r.* from sotf_prog_stats r left join sotf_programmes p on (r.prog_id=p.id) where p.id is null");
-		$this->cleanOrphans('sotf_prog_stats', $data, 'prog_id', $test);
+		$this->cleanForeignKey('sotf_blobs', 'object_id', 'sotf_node_objects', 'id');
 
-		$data = $this->db->getAll("select r.* from sotf_media_files r left join sotf_programmes p on (r.prog_id=p.id) where p.id is null");
-		$this->cleanOrphans('sotf_media_files', $data, 'prog_id', $test);
+		$this->cleanForeignKey('sotf_prog_refs', 'prog_id', 'sotf_programmes', 'id');
 
-		$data = $this->db->getAll("select r.* from sotf_rights r left join sotf_programmes p on (r.prog_id=p.id) where p.id is null");
-		$this->cleanOrphans('sotf_rights', $data, 'prog_id', $test);
+		$this->cleanForeignKey('sotf_prog_stats', 'prog_id', 'sotf_programmes', 'id');
+		
+		$this->cleanForeignKey('sotf_media_files', 'prog_id', 'sotf_programmes', 'id');
 
+		$this->cleanForeignKey('sotf_rights', 'prog_id', 'sotf_programmes', 'id');
 
+		$this->cleanForeignKey('sotf_object_roles', 'contact_id', 'sotf_contacts', 'id');
+
+		$this->cleanForeignKey('sotf_object_roles', 'object_id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_other_files', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_links', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_playlists', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_ratings', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_prog_rating', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_prog_stats', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_stats', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_comments', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_unique_access', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_user_progs', 'prog_id', 'sotf_programmes', 'id');
+	}
+
+	function cleanForeignKey($table1, $id1, $table2, $id2) {
+		$data = $this->db->getAll("select r.* from $table1 r left join $table2 p on (r.$id1=p.$id2) where p.$id2 is null");
+		$this->cleanOrphans($table1, $data, $id1, $test);
 	}
 
 	function cleanOrphans($table, $rows, $ref, $test) {
@@ -342,6 +368,7 @@ class sotf_Repository {
 			$refId = $row[$ref];
 			$obj = &$this->getObjectNoCache($refId);
 			if(!$obj) {
+				echo "<div>DELETING $id</div>\n";
 				if($test)
 					logger("DELETE FROM $table WHERE id='$id'");
 				else

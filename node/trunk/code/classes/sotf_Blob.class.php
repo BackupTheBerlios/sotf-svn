@@ -90,8 +90,11 @@ class sotf_Blob extends sotf_NodeObject {
         return true;
       else {
 	debug("cached icon of $id expired");
-	if(!unlink($fname))
-	  logError("Could not delete $fname");
+	if(!unlink($fname)) {
+	  clearstatcache();
+	  if(file_exists($fname))
+	    logError("Could not delete $fname");
+	}
       }
     }
     $icon = sotf_Blob::findBlob($id, 'icon');
