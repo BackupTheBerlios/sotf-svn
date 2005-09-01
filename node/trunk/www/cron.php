@@ -39,7 +39,7 @@ set_time_limit(18000);
 
 //******** cascading deletes may have problems.
 
-  //$repository->cleanTables();
+$repository->cleanTables();
 
 //******** Perform expensive updates on objects
 

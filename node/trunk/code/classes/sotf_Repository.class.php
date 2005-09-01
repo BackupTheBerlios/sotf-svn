@@ -321,39 +321,115 @@ class sotf_Repository {
 
 	function cleanTables($test = false) {
 
+		$this->cleanForeignKey('sotf_blobs', 'id', 'sotf_node_objects', 'id');
+
 		$this->cleanForeignKey('sotf_blobs', 'object_id', 'sotf_node_objects', 'id');
 
-		$this->cleanForeignKey('sotf_prog_refs', 'prog_id', 'sotf_programmes', 'id');
+		$this->cleanForeignKey('sotf_nodes', 'id', 'sotf_node_objects', 'id');
 
-		$this->cleanForeignKey('sotf_prog_stats', 'prog_id', 'sotf_programmes', 'id');
-		
-		$this->cleanForeignKey('sotf_media_files', 'prog_id', 'sotf_programmes', 'id');
+		$this->cleanForeignKey('sotf_user_permissions', 'permission_id', 'sotf_permissions', 'id');
 
-		$this->cleanForeignKey('sotf_rights', 'prog_id', 'sotf_programmes', 'id');
+		$this->cleanForeignKey('sotf_stations', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_contacts', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_contacts', 'station_id', 'sotf_stations', 'id');
+
+		$this->cleanForeignKey('sotf_series', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_series', 'station_id', 'sotf_stations', 'id');
+
+		$this->cleanForeignKey('sotf_object_roles', 'id', 'sotf_node_objects', 'id');
 
 		$this->cleanForeignKey('sotf_object_roles', 'contact_id', 'sotf_contacts', 'id');
 
 		$this->cleanForeignKey('sotf_object_roles', 'object_id', 'sotf_node_objects', 'id');
 
+		$this->cleanForeignKey('sotf_programmes', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_programmes', 'station_id', 'sotf_stations', 'id');
+
+		//// series field is not compulsory! 
+		//// $this->cleanForeignKey('sotf_programmes', 'series_id', 'sotf_series', 'id');
+
+		$this->cleanForeignKey('sotf_rights', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_rights', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_extradata', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_extradata', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_other_files', 'id', 'sotf_node_objects', 'id');
+
 		$this->cleanForeignKey('sotf_other_files', 'prog_id', 'sotf_programmes', 'id');
 
+		$this->cleanForeignKey('sotf_media_files', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_media_files', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_links', 'id', 'sotf_node_objects', 'id');
+
 		$this->cleanForeignKey('sotf_links', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_topic_tree_defs', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_topic_trees', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_topics', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_topics', 'topic_id', 'sotf_topic_tree_defs', 'id');
+
+		$this->cleanForeignKey('sotf_prog_topics', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_prog_topics', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_genres', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_roles', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_role_names', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_role_names', 'role_id', 'sotf_roles', 'role_id');
+
+		$this->cleanForeignKey('sotf_deletions', 'id', 'sotf_node_objects', 'id');
 
 		$this->cleanForeignKey('sotf_playlists', 'prog_id', 'sotf_programmes', 'id');
 
 		$this->cleanForeignKey('sotf_ratings', 'prog_id', 'sotf_programmes', 'id');
 
+		$this->cleanForeignKey('sotf_prog_rating', 'id', 'sotf_node_objects', 'id');
+
 		$this->cleanForeignKey('sotf_prog_rating', 'prog_id', 'sotf_programmes', 'id');
 
+		$this->cleanForeignKey('sotf_prog_refs', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_prog_refs', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_prog_stats', 'id', 'sotf_node_objects', 'id');
+
 		$this->cleanForeignKey('sotf_prog_stats', 'prog_id', 'sotf_programmes', 'id');
+		
+		$this->cleanForeignKey('sotf_prog_stats', 'station_id', 'sotf_stations', 'id');
 
 		$this->cleanForeignKey('sotf_stats', 'prog_id', 'sotf_programmes', 'id');
 
+		$this->cleanForeignKey('sotf_stats', 'station_id', 'sotf_stations', 'id');
+
 		$this->cleanForeignKey('sotf_comments', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_to_forward', 'prog_id', 'sotf_programmes', 'id');
 
 		$this->cleanForeignKey('sotf_unique_access', 'prog_id', 'sotf_programmes', 'id');
 
 		$this->cleanForeignKey('sotf_user_progs', 'prog_id', 'sotf_programmes', 'id');
+
+		$this->cleanForeignKey('sotf_portals', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_station_mappings', 'id_at_node', 'sotf_node_objects', 'id');
+
+		$this->cleanForeignKey('sotf_station_mappings', 'station', 'sotf_stations', 'id');
+
 	}
 
 	function cleanForeignKey($table1, $id1, $table2, $id2) {
@@ -369,9 +445,8 @@ class sotf_Repository {
 			$obj = &$this->getObjectNoCache($refId);
 			if(!$obj) {
 				echo "<div>DELETING $id</div>\n";
-				if($test)
-					logger("DELETE FROM $table WHERE id='$id'");
-				else
+				logError("Database inconsistency ($id), please add constraints.sql!","DELETE FROM $table WHERE id='$id'");
+				if(!$test)
 					$this->db->query("DELETE FROM $table WHERE id='$id'");
 			} else {
 				logError("$id cannot be deleted: $refId still exists?");
