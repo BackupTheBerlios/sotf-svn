@@ -442,8 +442,32 @@ class sotf_Repository {
 			//debug("ROW", $row);
 			$id = $row['id'];
 			$refId = $row[$ref];
-			$obj = &$this->getObjectNoCache($refId);
-			if(!$obj) {
+			//debug("REF", "'".$refId."'");
+			$delete = false;
+			if($table=='sotf_contacts' && $ref=='station_id') {
+				global $db;
+				$count = $db->getOne("SELECT count(*) from sotf_object_roles WHERE contact_id = '$id'");
+				if($count > 0) {
+					logError("Strange! Contact is still used.", $id);
+					continue;
+				}
+				$delete = true;
+			}
+			elseif(empty($refId)) {
+				logError("Empty reference in $id to ", $refId);
+				//$delete = true;
+				continue;
+			}
+			elseif(!$this->looksLikeId($refId)) {
+				logError("Invalid reference in $id to ", $refId);
+				$delete = true;
+				//continue;
+			} else {
+				$obj = &$this->getObjectNoCache($refId);
+				if(!$obj)
+					$delete = true;
+			}
+			if($delete) {
 				echo "<div>DELETING $id</div>\n";
 				logError("Database inconsistency ($id), please add constraints.sql!","DELETE FROM $table WHERE id='$id'");
 				if(!$test)
