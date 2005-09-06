@@ -192,7 +192,7 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 	function countProgrammes() {
 	global $db, $repository;
 
-		return $db->getOne("SELECT count(p.id) FROM sotf_contacts c, sotf_object_roles r, sotf_programmes p WHERE c.id = '$this->id' AND c.id=r.contact_id AND r.object_id = p.id");
+		return $db->getOne("SELECT count(distinct(p.id)) FROM sotf_contacts c, sotf_object_roles r, sotf_programmes p WHERE c.id = '$this->id' AND c.id=r.contact_id AND r.object_id = p.id");
 	}
 
 	function references() {
@@ -203,7 +203,8 @@ class sotf_Contact extends sotf_ComplexNodeObject {
 	function listProgrammes($start, $hitsPerPage) {
 		global $db;
 
-		$sql = "SELECT p.*, r.role_id FROM sotf_contacts c, sotf_object_roles r, sotf_programmes p WHERE c.id = '$this->id' AND c.id=r.contact_id AND r.object_id = p.id";
+		// TODO: make it distinct, but also list roles (if multiple) ... r.role_id is not collected
+		$sql = "SELECT distinct(p.*) FROM sotf_contacts c, sotf_object_roles r, sotf_programmes p WHERE c.id = '$this->id' AND c.id=r.contact_id AND r.object_id = p.id";
 		$res = $db->limitQuery($sql, $start, $hitsPerPage);
 		if(DB::isError($res))
 			raiseError($res);
