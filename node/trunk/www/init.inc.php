@@ -126,6 +126,7 @@ $config['sqlDSN'] = 'pgsql://' . $config['nodeDbUser'] . ':' . $config['nodeDbPa
 debug("sqlDSN", $config['sqlDSN']);
 
 $db = new db_Wrap;
+
 $db->debug = $config['debug'];
 $success = $db->makeConnection($config['sqlDSN'], false, 'node');
 if (DB::isError($success))
