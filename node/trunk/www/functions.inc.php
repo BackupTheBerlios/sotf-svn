@@ -39,7 +39,7 @@ function logError($msg, $private='') {
 	global $config;
 	$email = $config['adminEmail'];
 	$host = getHostName();
-  error_log("$host: ERROR: $msg. ($private)", 0);
+  error_log("$host: ERROR: $msg. $private", 0);
 	if($email && $config['sendMailAboutErrors'] && $msg != 'no_such_object' )
 		mail($email, "SOTF error - $host", "$host: $msg\n$private");
 }
@@ -212,5 +212,134 @@ function checkAdminAccess() {
 	else
 		debug("admin access OK for", $host); 
 }
+
+//---------------- convert_special_chars() added by wolfi_fhstp ----------------------
+
+function convert_special_chars($str){
+	$tmp = "";
+       for($i = 0; $i < strlen($str); $i++) {
+           // alle durch _ ersetzte Zeichen
+                           if((ord($str[$i]) >= 32 && ord($str[$i]) <= 45) ||
+                                (ord($str[$i]) >= 58 && ord($str[$i]) <= 64) ||
+                                        (ord($str[$i]) >= 91 && ord($str[$i]) <= 94) ||
+                                                (ord($str[$i]) >= 123 && ord($str[$i]) <= 191) ||
+                                                        (ord($str[$i]) == 47) || (ord($str[$i]) == 96) ||
+                                                                (ord($str[$i]) == 247) || (ord($str[$i]) == 254) ||
+                                                                        (ord($str[$i]) == 222) || (ord($str[$i]) == 240) ||
+                                                                                (ord($str[$i]) == 215)) {
+                                                        $tmp .= "_";
+                                        }
+
+                        else if((ord($str[$i]) >= 192 && ord($str[$i]) <= 197)) {
+                                                        $tmp .= "A";
+                                        }
+                        else if((ord($str[$i]) >= 200 && ord($str[$i]) <= 203)){
+                                                        $tmp .= "E";
+                                        }
+                        else if((ord($str[$i]) >= 204 && ord($str[$i]) <= 207)){
+                                                        $tmp .= "I";
+                                        }
+                        else if((ord($str[$i]) >= 210 && ord($str[$i]) <= 213)){
+                                                        $tmp .= "O";
+                                        }
+                        else if((ord($str[$i]) >= 217 && ord($str[$i]) <= 219)){
+                                                        $tmp .= "U";
+                                        }
+                        else if((ord($str[$i]) >= 224 && ord($str[$i]) <= 227)) {
+                                                        $tmp .= "a";
+                                        }
+                        else if((ord($str[$i]) >= 232 && ord($str[$i]) <= 235)){
+                                                        $tmp .= "e";
+                                        }
+                        else if((ord($str[$i]) >= 236 && ord($str[$i]) <= 239)) {
+                                                        $tmp .= "i";
+                                        }
+                        else if((ord($str[$i]) >= 242 && ord($str[$i]) <= 245)) {
+                                                        $tmp .= "o";
+                                        }
+                        else if((ord($str[$i]) >= 249 && ord($str[$i]) <= 251)) {
+                                                        $tmp .= "u";
+                                        }
+
+
+                        else {
+
+
+               switch(ord($str[$i])) {
+
+                               case 46:
+                               $tmp .= "_";
+                               break;
+                                                case 198:
+                               $tmp .= "Ae";
+                               break;
+                                                case 199:
+                               $tmp .= "C";
+                               break;
+                                                case 208:
+                               $tmp .= "D";
+                               break;
+                                                case 209:
+                               $tmp .= "N";
+                               break;
+                                                case 214:
+                               $tmp .= "Oe";
+                               break;
+                                                case 216:
+                               $tmp .= "O";
+                               break;
+                                                case 220:
+                               $tmp .= "Ue";
+                               break;
+                                                case 221:
+                               $tmp .= "Y";
+                               break;
+                                                case 223:
+                               $tmp .= "ss";
+                               break;
+                                                case 228:
+                               $tmp .= "ae";
+                               break;
+                                                case 229:
+                               $tmp .= "a";
+                               break;
+                                                case 230:
+                               $tmp .= "ae";
+                               break;
+                                                case 231:
+                               $tmp .= "c";
+                               break;
+                                                case 241:
+                               $tmp .= "n";
+                               break;
+                                                case 246:
+                               $tmp .= "oe";
+                               break;
+                                                case 248:
+                               $tmp .= "o";
+                               break;
+                                                case 252:
+                               $tmp .= "ue";
+                               break;
+                                                case 253:
+                               $tmp .= "y";
+                               break;
+                                                case 255:
+                               $tmp .= "y";
+                               break;
+
+                                                default:
+                               $tmp .= (string)$str[$i];
+                               break;
+               }
+       }
+	
+    }
+	
+    return($tmp);
+
+
+}
+//----------------------------------------------------------------------
 
 ?>

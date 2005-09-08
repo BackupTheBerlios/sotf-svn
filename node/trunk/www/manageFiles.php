@@ -18,12 +18,21 @@ $page->forceLogin();
 
 // upload to my files
 $upload = sotf_Utils::getParameter('upload');
+
+//-------- mod by buddhafly/wolfi_fhstp 05-08-31
 if($upload) {
-  $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
+  $userDir =  $user->getUserDir() . '/';
+  $filename=$_FILES['userfile']['name'];
+  $extension = substr($filename, strrpos($filename, '.') +1);
+  $restname = substr($filename, 0, (-1*(strlen($extension)+1)));
+  $newname = convert_special_chars(utf8_decode($restname)); //UTF-Module for PHP REQUIRED!!!
+  $file = $userDir . $newname . "." . $extension;
+
   moveUploadedFile('userfile',  $file);
   $page->redirect("manageFiles.php");
   exit;
 }
+//---------
 
 // delete files
 $del = sotf_Utils::getParameter('del');
