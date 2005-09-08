@@ -220,10 +220,10 @@ class sotf_NodeObject extends sotf_Object {
 	  //debug("changed", $changed);
 	  //debug("lch", $this->lastChange);
 	  if(count($oldData) > 0) {
-		 if($this->internalData['change_stamp'] && $this->internalData['change_stamp'] > $oldData['change_stamp']) {
+		 $oldObj = $repository->getObjectNoCache($this->id);
+		 if(!$oldObj or ($this->internalData['change_stamp'] && $this->internalData['change_stamp'] > $oldData['change_stamp'])) {
 			// this is newer, save it
 			debug("arrived newer version of", $this->id);
-			$oldObj = $repository->getObjectNoCache($this->id);
 			if(!$oldObj) {
 			  debug("creating, because object did not exist...");
 			  $changed = sotf_Object::create();
@@ -314,6 +314,10 @@ class sotf_NodeObject extends sotf_Object {
 		reset($objects1);
 		while(list(,$obj) = each($objects1)) {
 		  $tablename = $repository->getTable($obj['id']);
+		  if(empty($tablename)) {
+			 logError("No tablename found for ", $obj['id']);
+			 continue;
+		  }
 		  $data = $db->getRow("SELECT * FROM $tablename WHERE id = '" . $obj['id'] . "'");
 		  // don't send occasional empty records
 		  if(count($data) > 1) {			  
@@ -326,6 +330,9 @@ class sotf_NodeObject extends sotf_Object {
 				$size = $size + strlen($obj['data']['data']);
 				debug("blobsize", $size);
 			 }
+		  } else {
+			 logError("DELETED object with empty fields", $obj['id']);
+			 $db->query("DELETE FROM sotf_node_objects WHERE id='" . $obj['id'] . "'");
 		  }
 		  // delete from refresh table (will roll back if failed)
 		  sotf_NodeObject::removeFromRefreshTable($obj['id'], $remoteNode);
