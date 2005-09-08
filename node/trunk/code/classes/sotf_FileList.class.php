@@ -4,6 +4,8 @@ require_once($config['getid3dir'] . "/getid3.php");
 require_once("sotf_File.class.php");
 require_once("sotf_AudioFile.class.php");
 
+// $Id$
+
 /**
 * This is a class for handling list of files.
 *
