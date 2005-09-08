@@ -286,11 +286,18 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	* @param	object	$file	pathname of file
 	* @return	boolean	True if the function succeeded, else false
 	*/
-	function setIcon($file)
+	//----- change from wolfi_fhstp and buddhafly (change person icons to 50x50)
+	function setIcon($file, $ispersonicon = false)
 	{
 		global $config;
 		$tmpfile = $config['tmpDir'].'/'.time().".png";
-		$succ = $this->prepareIcon($file, $tmpfile, $config['iconWidth'], $config['iconHeight']);
+		if($ispersonicon) {
+		$succ = $this->prepareIcon($file, $tmpfile, 50, 50);
+		} 
+		else $succ = $this->prepareIcon($file, $tmpfile, $config['iconWidth'], $config['iconHeight']);
+		
+	//-----------------------------------------------------------------------------------------
+	
 		if (!$succ) {
 			addError("Could not resize image");
 			//return false;
@@ -317,6 +324,7 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
 	/** Resizes the given image 'imgfile', converts it into PNG and puts it into 'newfile'. */
 	function prepareIcon($imgfile, $newfile, $iconWidth = 100, $iconHeight = 100) {
+	//echo $newfile."<br>";
 		global $config;
 		if ($imgfile == "") { 
 			raiseError("No image file specified");
@@ -358,12 +366,17 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 
 		debug("resizing image", $newsize);
 
-		$cmd = '"' . $config['magickDir'] . "/convert\" $imgfile -resize $newsize $newfile 2>&1";			
-
+		
+		// ------- Change from wolfi_fhstp and buddhafly (Change size of person icons) -----------	
+		$cmd = "convert $imgfile -resize $newsize $newfile 2>&1";
+		// when this line doesn´t work, use this line:
+		//$cmd = '"' . $config['magickDir'] . "/convert\" $imgfile -resize $newsize $newfile 2>&1";	
+		//---------------------------------------------------------------------------------------
+		
 		debug("resize command", $cmd);
 
 		exec($cmd, $exec_output, $exec_retval);
-
+		//echo $cmd;
 		if($exec_retval > 0) {
 		  logError("img resize error", join("\n",$exec_output));
 		  return false;

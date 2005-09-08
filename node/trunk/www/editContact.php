@@ -65,7 +65,11 @@ $uploadicon = sotf_Utils::getParameter('uploadicon');
 if($uploadicon) {
   $file =  $user->getUserDir() . '/' . $_FILES['userfile']['name'];
   moveUploadedFile('userfile',  $file);
-  $contact->setIcon($file);
+  
+  //----- change from wolfi_fhstp (change person icons to 50x50)
+  $contact->setIcon($file, true);
+  //----------------------------------------------------------- 
+  
   $page->redirect("editContact.php?id=$contactId#icon");
   exit;
 }
@@ -95,14 +99,18 @@ $seticon = sotf_Utils::getParameter('seticon');
 if($seticon) {
   $filename = sotf_Utils::getParameter('filename');
   $file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
-  if ($contact->setIcon($file)) {
+  
+  //----- change from wolfi_fhstp (change person icons to 50x50)
+  if ($contact->setIcon($file, true)) {
     //$page->addStatusMsg("icon_ok");
   } else {
     $page->addStatusMsg("icon_error");
   }
   $page->redirect("editContact.php?id=$contactId#icon");
 }
-
+  //---------------------------------------------------------------
+  
+  
 // general data
 $smarty->assign('CONTACT_DATA',$contact->getAllForHTML());
 
