@@ -283,12 +283,13 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 	/**
 	* Sets icon for object.
 	*
+  * @internal change person icons to 50x50 done by wofli_fhsp and buddafly
 	* @param	object	$file	pathname of file
 	* @return	boolean	True if the function succeeded, else false
 	*/
-	//----- change from wolfi_fhstp and buddhafly (change person icons to 50x50)
 	function setIcon($file, $ispersonicon = false)
 	{
+    // change from wolfi_fhstp and buddhafly (change person icons to 50x50)
 		global $config;
 		$tmpfile = $config['tmpDir'].'/'.time().".png";
 		if($ispersonicon) {
