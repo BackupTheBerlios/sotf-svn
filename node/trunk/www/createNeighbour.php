@@ -20,6 +20,11 @@ checkPerm('node', "change");
 $url = sotf_Utils::getParameter('url');
 $nid = sotf_Utils::getParameter('node_id');
 
+if($nid && !$url) {
+  $node = sotf_Node::getNodeById($nid);
+  $url = $node->get('url');
+}
+
 //
 $createNew = sotf_Utils::getParameter('create_new_node');
 if($createNew) {

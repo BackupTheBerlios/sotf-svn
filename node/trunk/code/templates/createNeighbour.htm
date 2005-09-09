@@ -1,7 +1,7 @@
 
   <h3>{#create_neighbour#}</h3>
   
-{if count($NODES) gt 0}
+{if not $URL and count($NODES) gt 0}
   <table class="tab">
     <tr> 
       <td nowrap class="tab">{#create_from_nodes#}</td>

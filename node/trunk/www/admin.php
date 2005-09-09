@@ -165,15 +165,28 @@ $smarty->assign("LOCAL_NODE", $localNode->getAll());
 //$smarty->assign('NODES',$nodeData);
 
 // neighbours
-$neighbours = sotf_Neighbour::listAll();
-while(list(,$nei)= each($neighbours)) {
-  $node = sotf_Node::getNodeById($nei->get('node_id'));
-  $data = $nei->getAll();
-  if($node)
-    $data['node'] = $node->getAll();
-  $neighbourData[] = $data;
+//$neighbours = sotf_Neighbour::listAll();
+$nodes = sotf_Node::listAll();
+while(list(,$node)= each($nodes)) {
+  $nodeId = $node->get('node_id');
+  if($nodeId == $config['nodeId'])
+	 continue;
+  $data = $node->getAll();
+  $nei = sotf_Neighbour::getById($nodeId);
+  if($nei)
+    $data['neighbour'] = $nei->getAll();
+  $data['pending_objects'] = $db->getOne("select count(*) from sotf_object_status where node_id='$nodeId'");
+  $data['pending_forwards'] = $db->getOne("select count(*) from sotf_to_forward where node_id='$nodeId'");
+  $neighbors = $data['neighbours'];
+  debug("X0", $data['neighbours']);
+  $neighbors = str_replace("io","&lt;-&gt;",$neighbors);
+  $neighbors = str_replace("i","&lt;-",$neighbors);
+  $neighbors = str_replace("o","-&gt;",$neighbors);
+  $data['neighbours'] = explode(',', $neighbors);
+  debug("XX", $data['neighbours']);
+  $nodeData[] = $data;
 }
-$smarty->assign('NEIGHBOURS',$neighbourData);
+$smarty->assign('NODES',$nodeData);
 
 // user permissions: editors and managers
 $smarty->assign('PERMISSIONS', $permissions->listUsersAndPermissionsLocalized('node'));
