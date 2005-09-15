@@ -430,11 +430,32 @@ class sotf_Repository {
 
 		$this->cleanForeignKey('sotf_station_mappings', 'station', 'sotf_stations', 'id');
 
+		// very important! for syncing!!
+		$this->cleanForeignKey('sotf_object_status', 'id', 'sotf_node_objects', 'id');
+
+		$this->cleanNodeObjects();
+
 	}
 
 	function cleanForeignKey($table1, $id1, $table2, $id2) {
 		$data = $this->db->getAll("select r.* from $table1 r left join $table2 p on (r.$id1=p.$id2) where p.$id2 is null");
 		$this->cleanOrphans($table1, $data, $id1, $test);
+	}
+
+	function cleanNodeObjects() {
+		foreach($this->tableCodes as $table => $tc) {
+			$data = $this->db->getCol("select r.id from sotf_node_objects r left join $table p on (r.id=p.id) where p.id is null and r.id LIKE '___$tc%'");
+			while(list(,$id) = each($data)) {
+				$obj = &$this->getObjectNoCache($id);
+				if(!$obj) {
+					debug("DELETING from sotf_node_objects", $id);
+					//echo("DELETE FROM sotf_node_objects WHERE id='$id'<br>");
+					$this->db->query("DELETE FROM sotf_node_objects WHERE id='$id'");
+				} else {
+					logError("$id cannot be deleted: object content still exists?", "$table - $tc");
+				}
+			}
+		}
 	}
 
 	function cleanOrphans($table, $rows, $ref, $test) {
