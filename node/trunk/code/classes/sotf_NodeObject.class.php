@@ -111,12 +111,24 @@ class sotf_NodeObject extends sotf_Object {
   function delete() {
 	 global $db;
 
-	 // TODO: don't allow to delete remote or global objects??
-	 // delete administrative data about object
+	 // TODO: if version stamp is 0 and the object id is in
+	 // sotf_object_status for all neighbours, then maybe no deletion
+	 // record is necessary, but that's too dangerous therefore we
+	 // would need another field in sotf_node_objects to store whether
+	 // the object has already been sent out
+
+	 // TODO: don't allow to delete remote or global objects?? NO, BECAUSE:
+	 // when a delete object arrives, it calls this same method for the object to be deleted!!
+
+	 // we fetch admin data before deleting from table
+	 $this->loadInternalData();
+	 // delete all data about object
 	 $db->query("DELETE FROM sotf_node_objects WHERE id='" . $this->id . "'");
-	 // propagate deletion to other nodes
-	 if($this->isLocal())
+
+	 if($this->isLocal()) {
+		// propagate deletion to other nodes
 		$this->createDeletionRecord();
+	 }
 	 // delete data itself: not really needed because of cascading delete
 	 parent::delete();  
 	 // delete user permissions
@@ -155,7 +167,8 @@ class sotf_NodeObject extends sotf_Object {
 
   function isLocal() {
 	 global $config;
-	 $retval = ($this->getNodeId()==$config['nodeId']);
+	 // Andras: this should be safer with intval
+	 $retval = ($this->getNodeId()==intval($config['nodeId']));
 	 debug("isLocal1", $retval);
 	 return $retval;
   }
