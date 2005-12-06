@@ -88,3 +88,4 @@ logging/debugging options of the server at the same place.
 
 If you have an older installation, check code/doc/update.sql for
 changes in database structure.
+
