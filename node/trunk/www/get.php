@@ -3,7 +3,7 @@
 /*  
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ * Authors: Andrï¿½s Micsik, Mï¿½tï¿½ Pataki, Tamï¿½s Dï¿½ri 
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
@@ -72,7 +72,9 @@ if($id) {
 		}
 	 }
     $audioFiles[$i] =  array_merge($audioFiles[$i], sotf_AudioFile::decodeFormatFilename($audioFiles[$i]['format']));
-	 $audioFiles[$i]['playtime_string'] = strftime('%M:%S', $audioFiles[$i]['play_length']);
+	$d = getdate($audioFiles[$i]['play_length']);
+	$d['hours']--;
+	$audioFiles[$i]['playtime_string'] = ($d['hours'] ? $d['hours'].':' : '') . sprintf('%02d',$d['minutes']) . ':' . sprintf('%02d',$d['seconds']);
   }
   $smarty->assign('AUDIO_FILES', $audioFiles);
 
