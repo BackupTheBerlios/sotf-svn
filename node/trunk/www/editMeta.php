@@ -137,6 +137,7 @@ if($save || $finish || $finishpublish) {
 	        . sotf_Utils::getParameter($param . 'Day');
 			if($param == 'broadcast_date') {
 			  $value = $value . ' ' . sotf_Utils::getParameter('broadcast_dateHour') . ':' . sotf_Utils::getParameter('broadcast_dateMinute') . ' ' . $db->myTZ();
+              	  $value = $value . ' ' . sotf_Utils::getParameter('broadcast_dateHour') . ':' . sotf_Utils::getParameter('broadcast_dateMinute'); // . ' ' . $db->myTZ();
 			}
 		} else {
 		  $value = NULL;
