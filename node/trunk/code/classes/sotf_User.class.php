@@ -5,7 +5,7 @@
 * This is a class for basic handling of users. Preferences and
 * playlists are handled in separate classes.
 *
-* @author Andras Micsik SZTAKI DSD micsik@sztaki.hu
+* @author Andras Micsik SZTAKI DSD micsik@sztaki.hu, Martin Schmidt ptmschmidt@fh-stpoelten.ac.at
 */
 
 class sotf_User {
@@ -227,6 +227,38 @@ class sotf_User {
 	  if(!is_dir($dir)) {
 		 if(!mkdir($dir, 0775))
 			raiseError("Could not create directory for user");
+
+         //-------------------- added by martin schmidt 05-09-19
+		 else {
+		  	
+			$htaccess=fopen($dir . "/.htaccess", "w");
+     			$htaccess_string = "AuthName \"Directory for User ".$this->name."\"";
+			$htaccess_string .= "\nAuthType basic";
+			$htaccess_string .= "\nAuth_PG_host " . $config['nodeDbHost'];
+			$htaccess_string .= "\nAuth_PG_user " . $config['nodeDbUser'];
+			$htaccess_string .= "\nAuth_PG_pwd " . $config['nodeDbPasswd'];
+			$htaccess_string .= "\nAuth_PG_port " . $config['nodeDbPort'];
+			$htaccess_string .= "\nAuth_PG_database " . $config['nodeDbName'];
+			$htaccess_string .= "\nAuth_PG_pwd_table sotf_users";
+			$htaccess_string .= "\nAuth_PG_uid_field username";
+			$htaccess_string .= "\nAuth_PG_pwd_field password";
+			$htaccess_string .= "\nAuth_PG_encrypted off";
+			$htaccess_string .= "\nRequire user " . $this->name;
+			$htaccess_string .= "\n\n<Files .htaccess>";
+			$htaccess_string .= "\norder allow,deny";
+			$htaccess_string .= "\ndeny from all";
+			$htaccess_string .= "\n</Files>";
+			fwrite($htaccess, $htaccess_string, "400");
+			fclose($htaccess);
+
+			$warnfile=fopen($dir . "/DO NOT DELETE .HTACCESS", "w");
+			fwrite($warnfile, "If you delete the .htaccess-file, your user directory could be read by other users if WebDav is enabled.", "400");
+			fclose($warnfile);
+			
+               }
+
+	  //------------------------------------------------
+
 	  }
 	  return $dir;
 	}

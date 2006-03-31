@@ -1,4 +1,5 @@
-<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
+<?php 
+// -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
 /* 
  * $Id$
@@ -6,6 +7,7 @@
  * Created for the StreamOnTheFly project (IST-2001-32226)
  * Authors: András Micsik, Máté Pataki, Tamás Déri 
  *				at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ *          Wolfgang Csacsinovits, Martin Schmidt at FH St. Poelten
  */
 
 class sotf_Metadata {
@@ -15,6 +17,26 @@ class sotf_Metadata {
 
   /** The xml output */
   var $xml;
+
+
+function getUsername($user_id) {
+	  global $userdb;
+	  static $userNameCache;
+	  $storage = &sotf_User::getStorageObject();
+	  if (is_numeric($user_id)) {
+		 if($userNameCache[$user_id])
+			return $userNameCache[$user_id];
+		 $data = $storage->userDbSelect(array('userid' => sotf_Utils::magicQuotes($user_id)));
+		 if(!$data)
+			return false;
+		 $name = $data['username'];
+		 $userNameCache[$user_id] = $name;
+		 return $name;
+	  }
+	  return false;
+	}
+
+
 
 
   function sotf_Metadata($prg) {
@@ -52,9 +74,25 @@ class sotf_Metadata {
  >';
 
 	 $this->writeMetaTag('dc:title', $prg->get('title'), $lang);
-	 $this->writeMetaTag('dcterms:alternative', $prg->get('alternative_title'), $lang);
+	 
+	 //---- new tags changed by wolfgang csacsinovits and martin schmidt
+	 $this->writeMetaTag('dc:alternative', $prg->get('alternative_title'), $lang);
+	 $this->writeMetaTag('dcterms:created', $prg->get('production_date'), $lang);
+	 $this->writeMetaTag('dcterms:location', $prg->get('URL'), $lang);
+	 $this->writeMetaTag('dc:source', 'DEFAULT', $lang);
+	 $this->writeMetaTag('dc:relation', 'DEFAULT', $lang);
+	 $this->writeMetaTag('dcterms:IsVersionOf', 'DEFAULT', $lang);
+	 $this->writeMetaTag('dcterms:HasVersion', 'DEFAULT', $lang);
+	 $this->writeMetaTag('dcterms:IsReplacedBy', 'DEFAULT', $lang);
+   	 $this->writeMetaTag('dcterms:Replaces', 'DEFAULT', $lang);
+	 
+	 //NEW: getting the right path to the get.php - file
+	require('config.inc.php');
+	$this->writeMetaTag('dc:identifier', 'http://' . $_SERVER['HTTP_HOST'] . $config['localPrefix'] . '/get.php/' . $prg->get('id'));
+	$this->writeMetaTag('dc:coverage', 'DEFAULT', $lang);
+	//-----------------------------------------------------
+	
 	 $this->writeMetaTag('dc:publisher', $prg->stationName); // TODO: station or StreamOnTheFly?
-	 //$this->writeMetaTag('dcterms:isPartOf', $prg->stationName, $lang);
 	 $series = $prg->getSeries();
 	 if($series) {
 	   $this->writeMetaTag('dcterms:isPartOf', $series->get('name'));
@@ -87,18 +125,33 @@ class sotf_Metadata {
 	   foreach($langs as $l)
 	     $this->writeMetaTag('dc:language', $l, '', 'xsi:type="dcterms:ISO639-2"');
 
-	 $this->writeMetaTag('dc:identifier', 'streamonthefly:' . $prg->get('id'));
-	 $this->writeMetaTag('dc:identifier', 'http://radio.sztaki.hu/node/get.php/' . $prg->get('id'));
-
+	//$this->writeMetaTag('dc:identifier', 'streamonthefly:' . $prg->get('id'));
+	//$this->writeMetaTag('dc:identifier', 'http://radio.sztaki.hu/node/get.php/' . $prg->get('id'));
+	
+	
+	
 	 $this->writeMetaTag('dcterms:spatial', $prg->get('spatial_coverage'));
 	 $this->writeMetaTag('dcterms:temporal', $prg->get('temporal_coverage'));
 
 	 // XBMF extensions
 	 $this->writeMetaTag('xbmf:station', $prg->stationName);
+	 
+	 //  ---- new tags changed by wolfgang csacsinovits and martin schmidt
+	 $this->writeMetaTag('xbmf:alternative', $prg->get('alternative_title'), $lang);
+	 $this->writeMetaTag('xbmf:SubjectEncodingScheme', 'DEFAULT', $lang);
+	 //---------------------------------------------------
+	 
 	 if($series) {
 	   $this->xml .= "\n<xbmf:series>";
 	   $this->writeMetaTag('xbmf:seriestitle', $series->get('name'));
-	   $this->writeMetaTag('xbmf:seriestitle', $series->get('description'));
+	   
+	   // ---------------------- new tags changed by wolfgang csacsinovits and martin schmidt
+	 $this->writeMetaTag('xbmf:seriesdescription', 'DEFAULT' , $lang);
+	 $this->writeMetaTag('xbmf:extendedInformation', 'DEFAULT' , $lang);
+	 $this->writeMetaTag('xbmf:ExtendedInformationScheme', 'DEFAULT' , $lang);
+	   // --------------------------------------------------
+	   
+	   //$this->writeMetaTag('xbmf:seriestitle', $series->get('description'));
 	   $this->xml .= "\n</xbmf:series>";
 	 }
 	 $this->writeMetaTag('xbmf:episodetitle', $prg->get('episodetitle'));
@@ -115,6 +168,12 @@ class sotf_Metadata {
 	 $rights = $prg->getAssociatedObjects('sotf_rights', 'start_time');
 	 foreach($rights as $right) {
 	   $this->xml .= "\n<xbmf:rights>";
+	   
+	   // ---------------------- new tags changed by wolfgang csacsinovits and martin schmidt
+	   $this->writeMetaTag('xbmf:creativecommons', 'DEFAULT'); // $lang?
+ 	   $this->writeMetaTag('xbmf:RightControlledParts', 'DEFAULT'); // $lang?
+	   // -------------------------------------------------------------------
+	   
 	   $this->writeMetaTag('xbmf:rightstext', $right['rights_text']); // $lang?
 	   $this->writeMetaTag('xbmf:startime', $right['start_time']);
 	   $this->writeMetaTag('xbmf:endtime', $right['stop_time']);
@@ -126,12 +185,44 @@ class sotf_Metadata {
 		$this->xml .= "\n<xbmf:contributor>";
 		$this->writeMetaTag('xbmf:role', $role['role_name'], 'eng');
 		$this->writeMetaTag('xbmf:name', $role['contact_data']['name']);
-		$this->writeMetaTag('xbmf:acronym', $role['contact_data']['acronym']);
+		//$this->writeMetaTag('xbmf:acronym', $role['contact_data']['acronym']);
 		$this->writeMetaTag('xbmf:email', $role['contact_data']['email']);
 		$this->writeMetaTag('xbmf:phone', $role['contact_data']['phone']);
 		$this->writeMetaTag('xbmf:address', $role['contact_data']['address']);
-		$this->writeMetaTag('xbmf:uri', $role['contact_data']['uri']);
 		$this->writeMetaTag('xbmf:intro', $role['contact_data']['intro']); // lang??
+		$this->writeMetaTag('xbmf:uri', $role['contact_data']['uri']);
+
+		
+	// ------------------ new tags changed by wolfgang csacsinovits and martin schmidt
+	 $this->writeMetaTag('xbmf:alias', $role['contact_data']['alias']);
+	 $this->writeMetaTag('xbmf:OrganizationAlias', $role['contact_data']['OrganizationAlias']);
+	 
+
+
+	/*function getUserDir($dir) {
+	  global $config;
+	  $dir = $config['userDirs'] . "/" . $this->name;
+	  if(!is_dir($dir)) {
+		 if(!mkdir($dir, 0775))
+			raiseError("Could not create directory for user");
+	  }
+	  return $dir;
+	}	*/
+	
+	 $dir = $config['userDirs']; // . "/" . getUsername($filename);
+	 //$dir = getUserDir($dir);
+        //$file =  sotf_Utils::getFileInDir($user->getUserDir(), $filename);
+	 echo "userdir: ".$dir;
+
+	 $this->writeMetaTag('xbmf:logo', $dir);
+	 
+	 $this->writeMetaTag('cc:creativecommons', $role['contact_data']['creativecommons']);
+	 $this->writeMetaTag('cc:permissions', $role['contact_data']['permissions']);
+	 $this->writeMetaTag('cc:prohibitions', $role['contact_data']['prohibitions']);
+	 $this->writeMetaTag('cc:requirements', $role['contact_data']['requirements']);
+	 $this->writeMetaTag('xbmf:RightControlledParts', $role['contact_data']['RightControlledParts']);
+	//-----------------------------------------------------------
+		
 		$this->xml .= "\n</xbmf:contributor>";
 	 }
 
@@ -223,3 +314,4 @@ class sotf_Metadata {
 */
 
 }
+?>

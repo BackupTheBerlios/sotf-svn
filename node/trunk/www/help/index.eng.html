@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Untitled Document</title>
+<title>StreamOnTheFly Online Help</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <style type="text/css">
 <!--
@@ -35,8 +35,8 @@ h6 {
   &nbsp;&nbsp;&nbsp;<a href="#13">1.3) Metadata</a><br />
   &nbsp;&nbsp;&nbsp;<a href="#14">1.4) Portals</a><br />
   <a href="#2">2) Interface Overview</a><br />
-  <a href="#3">3) Registration / Preferences</a><br />
-  <a href="#4">4) The Search Engine</a><br />
+  <a href="#register">3) Registration / Preferences</a><br />
+  <a href="#advsearch">4) The Search Engine</a><br />
   &nbsp;&nbsp;&nbsp;<a href="#41">4.1) Easy Search</a><br />
   &nbsp;&nbsp;&nbsp;<a href="#42">4.2) Search for Content of Stations</a><br />
   &nbsp;&nbsp;&nbsp;<a href="#43">4.3) Search for Topics</a><br />
@@ -46,10 +46,12 @@ h6 {
   <a href="#5">5) The Programme Interface</a><br />
   &nbsp;&nbsp;&nbsp;<a href="#51">5.1) The content of a programme</a><br />
   &nbsp;&nbsp;&nbsp;<a href="#52">5.2) Feedback and Statistics</a><br />
-  <a href="#6">6) My Playlist</a><br />
+  <a href="#playlist">6) My Playlist</a><br />
   <a href="#7">7) RSS and PODCAST</a><br />
   <a href="#8">8) Stations in the Network</a><br />
-  <a href="#9">9) Topics</a></h3>
+  <a href="#topicSearch">9) Topics</a><br />
+   <a href="#editor">10) Editor&acute;s Console</a>
+</h3>
 <hr size="1" />
 <p>&nbsp;</p>
 <h1>1<a name="1" id="1"></a>) General architecture of StreamOnTheFly</h1>
@@ -70,12 +72,14 @@ h6 {
 <p>Nodes are transparently organized into a etwork. All nodes have metadata about 
   all radio shows and stations in the network. Nodes communicate with each other 
   to keep their local database up-to-date. </p>
-<h2>1.2<a name="12" id="12"></a>) Station</h2>
+<h2>1.2<a name="stations" id="stations"></a>) Station</h2>
 <p><a href="#top">[top]</a></p>
 <p>A station is archived at a single node, while it is searchable and browseable 
   by all nodes in the network. Each station has admins and editors. Admins may 
   change logos and jingles and manage all data, while editors can upload shows 
-  and manage their own data.</p>
+  and manage their own data.<br />
+  <a href="#8">more Infos about the stations here</a>
+</p>
 <h2>1.3<a name="13" id="13"></a>) Metadata</h2>
 <p><a href="#top">[top]</a></p>
 <p>For each radio show a set of metadata is required from the editors (title, 
@@ -115,7 +119,7 @@ h6 {
 <p class="abb"><em>Abb.: The SOTF main interface</em></p>
 <hr size="1" />
 <h1>&nbsp;</h1>
-<h1>3<a name="3" id="3"></a>) Registration / Preferences</h1>
+<h1>3<a name="register" id="register"></a>) Registration / Preferences</h1>
 <p><a href="#top">[top]</a></p>
 <p>SOTF offers all users free registration for personalized features in the node 
   network. To reach the registration interface, click the 'register' link below 
@@ -132,7 +136,7 @@ h6 {
   </tr>
 </table>
 <hr size="1" />
-<h1>4<a name="4" id="4"></a>) The Search Engine</h1>
+<h1>4<a name="advsearch" id="advsearch"></a>) The Search Engine</h1>
 <p><a href="#top">[top]</a></p>
 SOTF provides you with several different searching tools. The search function 
 in the right section of the interface is a very basic version, but there is also 
@@ -277,7 +281,7 @@ you have three boxes:
 <p><span class="abb"><em>Abb: Feedbacks and Statistics</em> </span></p>
 <p>&nbsp; </p>
 <hr size="1" />
-<h2>6<a name="6" id="6"></a>) My Playlist</h2>
+<h2>6<a name="playlist" id="playlist"></a>) My Playlist</h2>
 <p><a href="#top">[top]</a></p>
 <p>This feature is very useful for users who want to listen to several audio files 
   at once. It is only available to registered users. As we have seen in the programme 
@@ -337,7 +341,7 @@ you have three boxes:
 </p>
 <hr size="1" />
 <p>&nbsp; </p>
-<h1>9<a name="9" id="9"></a>) Topics</h1>
+<h1>9<a name="topicSearch" id="topicSearch"></a>) Topics</h1>
 <p><a href="#top">[top]</a></p>
 <p>Click on 'Topics' in the main menu to get a full list of topics and their related 
   programmes.<br />
@@ -347,8 +351,28 @@ you have three boxes:
 <p>As we have already seen in the search section of this document, you get a split 
   interface. In the left section you see the topic tree with all sub-topics and 
   the number of related programmes. In the right part you get a list of sub-topics. 
-  When you click the sub-topics, SOTF returns you a list of related programmes.</p>
+  When you click the sub-topics, SOTF returns you a list of related programmes.<br />
+<a href="#43">how to search for topics </a></p>
 <p>&nbsp; </p>
 <p>&nbsp;</p>
+
+<hr size="1" />
+<p>&nbsp; </p>
+<h1>10<a name="editor" id="editor"></a>) Editor´s Console</h1>
+<p><a href="#top">[top]</a></p>
+<p>In the Editor&acute;s Console station editors can upload files per FTP or HTTP, and add appropriate metadata. </p>
+<p><strong>UPLOAD VIA FTP:</strong><br />
+  Much faster than HTTP - Upload, but needs an extra client, like SmartFTP (<a href="http://www.smartftp.com" target="_blank">download</a>). Another advantage is the resumability of uploads.</p>
+<p>To access your personal SOTF directory, use the URL of your node and type in your personal access data in the FTP client. </p>
+<p><strong>UPLOAD VIA HTTP:</strong> (use link &quot;Manage your files&quot;) <br />
+Comfortable web interface  for adding and deleting files (no extra software required), but may cause problems when transferring larger files. </p>
+<p><br /> 
+ </p>
+<p><img src="images/create_new_programme.jpg" width="911" height="124" /></p>
+<p><span class="abb"><em>Abb: Create new programme / file upload </em></span></p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+
+
 </body>
 </html>
