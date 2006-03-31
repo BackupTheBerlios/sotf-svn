@@ -7,7 +7,7 @@
  * CUSTOMIZABLE CLASS: if you want to fit sotf users with another existing database
  * included by config.inc.php
  *
- * @author Andras Micsik SZTAKI DSD micsik@sztaki.hu
+ * @author Andras Micsik SZTAKI DSD micsik@sztaki.hu, MODIFIED by Martin Schmidt ptmschmidt@fh-stpoelten.ac.at
  */
 
 class userdb_node {
@@ -98,6 +98,24 @@ class userdb_node {
     } else
       return NULL;
   }
+
+// ADDED BY Martin Schmidt 05-11-21
+   function userCheckPwd($fields) {
+    $query = sprintf("SELECT password FROM sotf_users WHERE username='%s'", $fields['username']);
+    $res = $this->userdb->getRow($query);
+    if($res && $res['password'] == $fields['password']) {
+      return true;
+    } else
+      return false;
+  }
+  
+  function getUserPwd($fields){
+  	$query = sprintf("SELECT password FROM sotf_users WHERE username='%s'", $fields['username']);
+    $res = $this->userdb->getRow($query);
+	return $res['password'];
+  }
+// ----------------------------
+
 
   function userDbLogout($fields) {
   }
