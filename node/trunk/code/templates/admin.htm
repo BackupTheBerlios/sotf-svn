@@ -1,6 +1,6 @@
 
   <h3>{#admin#}</h3>
-
+{if $TTREE_UPD_MESS}{$TTREE_UPD_MESS}{/if}
 {if hasPerm('node', 'change') }
 <a name="network"></a>
   <table class="tab">
@@ -240,10 +240,10 @@
             </td>
 						<td>
 							<a target="log" href="log.php#end">{#view_log#}</a>
-              <br /><a target="config" href="viewConfig.php">{#view_config#}</a>
+              <br /><a target="config" href="viewConfig.php">{#view_config#}</a> | <a href="phpinfo.php">phpinfo()</a>
 								<br /><a href="admin.php?retemplate=1">{#recompile_templates#}</a>
+								<br /><a href="admin.php?updatetopictree=1">Update topic tree</a>
 									<br /><a href="admin.php?updatetopics=1">{#update_topic_counts#}</a>
-										<br /><a href="phpinfo.php">phpinfo()</a>
 											<br /><a href="admin.php?updatecvs=1">{#update_from_cvs#}</a>
             </td></tr>
 

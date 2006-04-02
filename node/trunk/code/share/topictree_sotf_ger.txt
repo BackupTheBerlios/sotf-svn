@@ -1,305 +1,147 @@
 tree_id=1
 name=SOTF topic tree
 shortname=SOTF
-description=Ein versuch der allgemeinen Verzeichnis für Radios
+description=Ein Versuch eines allgemeinen Verzeichnisses für Radios.
 url=
 
 # End of tree definition
-      
-  1 1 Kunst, Kultur, Medien, Unterhaltung
-       
-  2 2  Nachrichten
-  3 2  Neue Medien (Internet, CD, DVD, Mini Disk, etc.) 
-  4 2  Zeitungen, Zeitschriften 
-  5 2  Radio 
-  6 2  Fernsehen
-  7 2  Werbung und Öffentlichkeitsarbeit 
-  8 2  Nachrichten Ausland (should remain) 
-  9 2  Kino (Dokumentation, Spielfilm) 
- 10 2  Darstellende Kunst (Theater, Tanz, Zirkus, etc.) 
- 11 2  Musik (All genres - including Opera, Classical Concert, etc.) 
- 12 2  Bildendene Kunst (Malerein, Bildhauerei, Fotografie, Comics, etc.) 
- 13 2  Architektur und Stadtplanung 
- 14 2  Literatur (Dichtung, Roman, Essay, etc.) 
- 15 2  Krimis 
- 16 2  Science Fiction 
- 17 2  Cartoons
- 18 2  Erholung 
- 19 2  Reisen und Tourismus 
- 20 2  Spiel
-      
- 21 1 Gesellschaft
-      
- 22 2  Frauen
- 23 2  Männer
- 24 2  Jugendliche 
- 25 2  Ältere / Senioren 
- 26 2  Familie
- 27 2  Menschen mit Behinderung 
-      
- 28 2  Body practices (?)
- 29 2  Sexualität
- 30 2  Drogen
- 31 2  Armut
- 32 2  Migration 
-      
- 33 2  Multikulturalität 
- 34 2  Feminismus 
- 35 2  Queer 
-      
- 36 2  soziales Zusammenleben (Housing, Transportation, Area planning, Urban communities, Rural communities) 
- 37 2  Folklore 
- 38 2  Religion, Metaphysik 
- 39 2  Rassimus 
- 40 2  Sexissmusm 
-      
-      
- 41 1 Medizin
-      
- 42 2  körperliche Gebrechen 
- 43 2  Geisteskrankheiten 
- 44 2  Pharamazie 
- 45 2  AIDS 
- 46 2  Hygene
- 47 2  Volksgesundheit 
- 48 2  Arzneimittel 
- 49 2  Drogen 
- 50 2  traditionelle Medizin 
- 51 2  medizinische Versuche 
- 52 2  altenative Medizin
- 53 2  Erste Hilfe 
- 54 2  Seuchen
- 55 2  Medizinische Forschung 
- 56 2  Biotechnologie  
-      
-      
- 57 1 Lernen, Lehre und Studium
-      
- 58 2  Universität
- 59 2  Schule
- 60 2  Lebenslanges Lernen 
- 61 2  Kurse 
- 62 2  Fernlehre 
- 63 2  Lehrer, Lehrerin
- 64 2  Lehrmethoden 
- 65 2  besondere Lehrmethoden 
- 66 2  e-learning 
-      
- 67 2  Erziehung
- 68 2  Pedagogik
- 69 2  Literacy (?)
- 70 2  Biographik
- 71 2  Lehreinheiten
- 72 2  Vorlesung
-      
-      
- 73 1 Forschung und Technologie 
-      
- 74 2  Naturwissenschaften (Ethologie, Ecologie, Botanik, etc.) 
- 75 2  Geowissenschaften (Astronomy, Geography, Oceanography, Climatology, Geology,etc.) 
- 76 2  Naturwissenschaften (Physics, Chemistry, etc.) 
- 77 2  Humanwissenschaften (Biologie, Genetik, Anatomy, etc.) 
- 78 2  Sozialwissenschaften (Sociology, Anthropology, etc.) 
- 79 2  Psychologie
- 80 2  Archeologie und Palentologie 
- 81 2  Geschichte
- 82 2  Kommunikation, Telekommunikation und Internet 
- 83 2  Energie, Niklearenergie und Eneuerbare Energiequellen 
- 84 2  Informatik 
-      
-      
- 85 1 Umweltthemen, Landwirtschaft
-      
- 86 2  Landwirtschaft & landwirtschaftliche Technologien 
- 87 2  Biologische Produkte 
- 88 2  Lebensmitteltechnik 
- 89 2  Biological resources (?) 
- 90 2  Jagd und Fischerei 
- 91 2  Bedrohte Arten 
- 92 2  Klima
- 93 2  Bevölkerung
- 94 2  Wasserversorgung 
- 95 2  biologischer Kreislauf
- 96 2  Viehzucht
- 97 2  Umweltverschmutzung 
- 98 2  Hungersnot
- 99 2  Artenvielfalt 
-100 2  genmanipuliertes Leben 
-101 2  Verschmutzung
-      
-      
-102 1 Recht- und Regierungssystem
-      
-103 2  Internationale Zusammenarbeit 
-104 2  Weltpolitik 
-105 2  Innenpolitik 
-106 2  Entwicklungspolitik 
-107 2  Sozialpolitik 
-108 2  NRO
-109 2  Gewerkschaften
-110 2  Staats- und Regierungsysteme 
-111 2  Humanitäre Hilfe 
-112 2  Arbeit
-113 2  Verteidigung
-      
-114 2  Politische Verfolgung
-115 2  Menschenrechte 
-116 2  Polizei 
-117 2  Strafvollzug
-118 2  Kriminalität  
-119 2  Terrorismus 
-120 2  Lizensen und Rechte 
-      
-      
-121 1 Politiken und Krieg
-       
-122 2  Anarchismus 
-123 2  Kapitalismus 
-124 2  Kommunismus 
-125 2  Grüne  
-126 2  Wahlen 
-127 2  Faschismus and Nazionalsozialismus 
-128 2  Liberale
-129 2  Politische Parteien 
-130 2  Pazifismus
-131 2  Sozialismus / Sozialdemokraten
-132 2  Nationalismus 
-133 2  democratische Systeme 
-134 2  authoritäre Systeme 
-135 2  revolutionäre Gruppen (activism) 
-136 2  Globalisierung 
-      
-137 2  Aufstände
-138 2  Krieg
-139 2  Bürgerkrieg und Revolution 
-140 2  Waffen
-      
-      
-141 1 Sport
-      
-142 2  Hindernislauf
-143 2  Airsoft (?)
-144 2  Tierwettkämpfe 
-145 2  Bogenschießen
-146 2  Badminton 
-147 2  Baseball 
-148 2  Basketball 
-149 2  Billiard 
-150 2  Boccia
-151 2  Boomerang 
-152 2  Bowling 
-153 2  Boxen
-154 2  Schlachtenbummler
-155 2  Cricket 
-156 2  Croquet 
-157 2  Radfahren
-158 2  Darts 
-159 2  Dressurreiten
-160 2  Extremsportarten
-161 2  Fechten 
-162 2  Fischen
-163 2  Dikuswurf 
-164 2  Fußball 
-165 2  Gaelic (?)
-166 2  Goalball (?)
-167 2  Golf 
-168 2  Greyhound Racing (?)
-169 2  Turnen 
-170 2  Handball 
-171 2  Hockey 
-172 2  Reiten 
-173 2  Jagd
-174 2  Informal Sports (?)
-175 2  Jai Alai (?)
-176 2  Kabbadi (?)
-177 2  Korfball 
-178 2  Lacrosse (?)
-179 2  Holzhacken
-180 2  Motorsport 
-181 2  Multi-Sports (?)
-182 2  Korbball
-183 2  Orientierungslauf 
-184 2  Paddleball (?)
-185 2  Paintball (?)
-186 2  Petanque (?)
-187 2  Racquetball 
-188 2  Rodeo 
-189 2  Hüpfseilspringen
-190 2  Rounders (?)
-191 2  Laufen 
-192 2  Sepak Takraw (?)
-193 2  Schießen 
-194 2  Skateboard 
-195 2  Eislauf
-196 2  Fußball
-197 2  Softball 
-198 2  Squash 
-199 2  Kraftsport 
-200 2  Tischtennis 
-201 2  Tchoukball (?)
-202 2  Handball 
-203 2  Tennis 
-204 2  Leichtathletik 
-205 2  Volleyball 
-206 2  Walking 
-207 2  Wassersport 
-208 2  Wintersports 
-209 2  Wrestling
-      
-      
-210 1 Wirtschaft
-      
-211 2  Buchhaltung
-212 2  Genossenschaften, Gesellschaften
-213 2  Kundendienst 
-214 2  E-Commerce 
-215 2  Aus- und Weiterbildung 
-216 2  Beschäftigung
-217 2  Arbeiter und Angestellte 
-218 2  internationaler Handel 
-219 2  Investionen
-220 2  Großfirmen 
-221 2  Management 
-222 2  Verkauf und Werbung 
-223 2  Kleinfirmen 
-224 2  Firmendienstleistungen
-225 2  Finanzdienstleistungen 
-226 2  Großhandel 
-      
-      
-227 1 Verkauf und Verbrauchsgüter
-      
-228 2  Antiquitäten  
-229 2  Schönheitsprodukte
-230 2  Bücher
-231 2  Spielsachen
-232 2  Kleidung
-233 2  Computer  
-234 2  Unterhaltungselectronics  
-235 2  Kunsthandwerk 
-236 2  Bestattung  
-237 2  Unterhaltung
-238 2  traditionelle und regionale Produkte 
-239 2  Blumen
-240 2  Nahrungsmittel
-241 2  Möbel
-242 2  allgemeine Handelsware  
-243 2  Geschenkartikel
-244 2  Gesundheitsartikel
-245 2  Urlaub
-246 2  Heim und Garten  
-247 2  Schmuck
-248 2  Musik
-249 2  Büroartikel  
-250 2  Haustiere
-251 2  Photographie
-252 2  Magazine
-253 2  Erholung
-254 2  Rauchwaren
-255 2  Werkzeug
-256 2  Kinderspielzeug  
-257 2  Reisen
-258 2  Fahrzeuge
-259 2  Heiratsanzeigen
-260 2  Großhandel
+
+
+  1 1 Kunst, Kultur, Medien, Unterhaltung 
+  2 2 Nachrichten 
+  3 2 Neue Medien (Internet, CD, DVD, MiniDisk, etc.) 
+  4 2 Zeitungen und Zeitschriften 
+  5 2 Radio 
+  6 2 Kino und Fernsehen 
+  7 2 Werbung 
+  8 2 Darstellende Kunst (Theater, Tanz, Zirkus, etc.) 
+  9 2 Musik 
+ 10 2 Bildendene Kunst (Malerei, Bildhauerei, Fotografie, Comics, etc.) 
+ 11 2 Architektur und Stadtplanung 
+ 12 2 Literatur (Dichtung, Roman, Essay, etc.) 
+ 13 2 Science Fiction 
+ 14 2 Erholung 
+ 15 2 Reisen und Tourismus 
+ 16 2 Spiel 
+ 17 2 Sport
+
+ 18 1 Gesellschaft 
+ 19 2 Frauen 
+ 20 2 Männer 
+ 21 2 Jugendliche 
+ 22 2 Ältere / Senioren 
+ 23 2 Familie 
+ 24 2 Menschen mit Behinderung 
+ 25 2 Sexualität 
+ 26 2 Drogen 
+ 27 2 Armut und Hunger 
+ 28 2 Migration 
+ 29 2 Multikulturalität 
+ 30 2 soziales Zusammenleben (Wohnbau, Verkehrsmittel, Landschaftsgestaltung, Stadt/Land, ...) 
+ 31 2 Religion, Metaphysik 
+ 32 2 Rassismus 
+ 33 2 N.R.O.
+ 
+ 34 1 Medizin 
+ 35 2 Krankheiten 
+ 36 2 Arzneimittel 
+ 37 2 traditionelle Medizin 
+ 38 2 medizinische Forschung 
+ 39 2 alternative Medizin 
+ 40 2 Erste Hilfe 
+
+ 41 1 Bildung (Lernen, Lehre und Studium) 
+ 42 2 Universität 
+ 43 2 Schule 
+ 44 2 Lebenslanges Lernen 
+ 45 2 Pädagogik 
+ 46 2 besondere Lehrmethoden 
+ 47 2 e-learning 
+ 48 2 Erziehung 
+ 49 2 Biographien 
+
+ 50 1 Forschung und Technologie 
+ 51 2 Naturwissenschaften (Physik, Chemie, Ökologie, Zoologie, Botanik, etc.) 
+ 52 2 Geowissenschaften (Astronomie, Geographie, Klimatologie, Geologie, etc.) 
+ 53 2 Humanwissenschaften (Biologie, Genetik, Anatomie, etc.) 
+ 54 2 Sozialwissenschaften (Soziologie, Anthropologie, etc.) 
+ 55 2 Psychologie 
+ 56 2 Archäologie und Paläontologie 
+ 57 2 Geschichte 
+ 58 2 Kommunikation, Telekommunikation und Internet 
+ 59 2 Informatik 
+
+ 60 1 Umweltthemen, Landwirtschaft 
+ 61 2 Landwirtschaft & landwirtschaftliche Technologien 
+ 62 2 Biologische Produkte 
+ 63 2 Lebensmitteltechnik 
+ 64 2 Jagd und Fischerei 
+ 65 2 Artenvielfalt 
+ 66 2 Klima 
+ 67 2 Bevölkerung 
+ 68 2 Wasserversorgung 
+ 69 2 Umweltverschmutzung 
+ 70 2 Gentechnik 
+
+ 71 1 Rechts- und Regierungsthemen 
+ 72 2 Internationale Zusammenarbeit 
+ 73 2 Weltpolitik 
+ 74 2 Innenpolitik 
+ 75 2 Entwicklungspolitik 
+ 76 2 Sozialpolitik 
+ 77 2 Staats- und Regierungsysteme 
+ 78 2 Verteidigung 
+ 79 2 Politische Verfolgung 
+ 80 2 Menschenrechte 
+ 81 2 Polizei 
+ 82 2 Strafvollzug 
+ 83 2 Kriminalität 
+ 84 2 Terrorismus 
+ 85 2 Lizensen und Rechte 
+
+ 86 1 Politische Systeme und Krieg 
+ 87 2 Anarchismus 
+ 88 2 Kapitalismus 
+ 89 2 Kommunismus 
+ 90 2 Politische Parteien 
+ 91 2 demokratische Systeme 
+ 92 2 Faschismus und Nationalsozialismus 
+ 93 2 Pazifismus 
+ 94 2 Nationalismus 
+ 95 2 autoritäre Systeme 
+ 96 2 Aktivismus 
+ 97 2 Globalisierung 
+ 98 2 Bürgerkrieg und Revolution 
+ 99 2 Krieg 
+100 2 Waffen 
+
+101 1 Wirtschaft 
+102 2 Buchhaltung 
+103 2 Firmen 
+104 2 Kundendienst 
+105 2 E-Commerce 
+106 2 Arbeit 
+107 2 Management 
+108 2 Verkauf und Werbung 
+109 2 Dienstleistungen 
+110 2 Großhandel 
+111 2 Gewerkschaften 
+
+112 1 Verkauf und Verbrauchsgüter 
+113 2 Heim und Garten 
+114 2 Schönheitsprodukte 
+115 2 Bücher 
+116 2 Kleidung 
+117 2 Computer 
+118 2 Unterhaltungselektronik 
+119 2 andere Handelsware 
+120 2 Unterhaltung 
+121 2 Blumen 
+122 2 Nahrungsmittel 
+123 2 Gesundheitsartikel 
+124 2 Schmuck 
+125 2 Haustiere 
+126 2 Freizeitartikel 
+127 2 Fahrzeuge 
+
 

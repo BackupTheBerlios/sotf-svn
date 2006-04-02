@@ -5,301 +5,141 @@ description=Kísérlet egy rádióknak szóló általános téma klasszifikáci�
 url=
 
 # End of tree definition
-      
-  1 1 Művészet, média, szórakozás 
-   
+
+  1 1 Muvészet, média, szórakozás
   2 2 Hírek
-  3 2 Új média (Internet, CD, DVD, Mini Disk, stb.) 
-  4 2 Sajtó 
-  5 2 Rádió 
-  6 2 Televízió 
-  7 2 Hirdetés és PR
-  8 2 Külföldi hírek
-  9 2 Filmek (Dokumentumfilmek és irodalom) 
- 10 2 Előadóművészet (színház, tánc, cirkusz, stb.)
- 11 2 Zene (mindenfajta: klasszikus és populáris is)
- 12 2 Képzőművészet (festés, szobrászat, fotó, stb.)
- 13 2 Építészet és urbanizáció
- 14 2 Irodalom 
- 15 2 Krimi 
- 16 2 Fantasztikus irodalom
- 17 2 Képregény, karikatűra
- 18 2 Kikapcsolódás, aktív pihenés
- 19 2 Utazás és turizmus
- 20 2 Játékok
-   
- 21 1 Emberi tényezők, szociális ügyek
-   
- 22 2 Nők
- 23 2 Férfiak 
- 24 2 Fiatalok 
- 25 2 Idősek
- 26 2 Család
- 27 2 Hátrányos helyzetűek
-   
- 28 2 Body practices (?) 
- 29 2 Szexualitás
- 30 2 Kábítószer 
- 31 2 Szegénység 
- 32 2 Kivándorlás
-   
- 33 2 Multiculturalism (?) 
- 34 2 Feministák
- 35 2 Queer (?)
-   
- 36 2 Közösségek (lakás, közlekedés, településtervezés, stb.)
- 37 2 Folklór
- 38 2 Vallás, metafizika
- 39 2 Rasszizmus, fajgyűlölet 
- 40 2 Szexizmus
-   
-   
- 41 1 Egészség, gyógyítás
-   
- 42 2 Fizikai betegségek
- 43 2 Mentális egészség, mentális betegségek
- 44 2 Healing Substance (?) 
- 45 2 AIDS
- 46 2 Higiénia 
- 47 2 Közegészségügy
- 48 2 Legális gyógyszerek
- 49 2 Illegális gyógyszerek
- 50 2 Hagyományos gyógymódok
- 51 2 Clinical Test (?)
- 52 2 Alternatív gyógymódok 
- 53 2 Elsősegély
- 54 2 Járványok
- 55 2 Orvosi kutatás 
- 56 2 Bio technológia (pl. génsebészet) 
-   
-   
- 57 1 Oktatás, tanítás, tanulás
-   
- 58 2 Egyetemek
- 59 2 Iskolák
- 60 2 Élethosszig tartó tanulás
- 61 2 Tanfolyamok, tréningek
- 62 2 Távoktatás
- 63 2 Oktatók, nevelők
- 64 2 Oktatási módszerek 
- 65 2 Különleges oktatás
- 66 2 e-learning 
-   
- 67 2 Oktatás
- 68 2 Pedagógia 
- 69 2 Műveltség
- 70 2 Életrajzok 
- 71 2 Tananyagok, tantervek
- 72 2 Előadások
-   
-   
- 73 1 Tudomány és technológia
-   
- 74 2 Természettudományok (etológia, ökológia, botanika, stb.)
- 75 2 Földtudományok (csillagászat, földrajz, geológia, stb.)
- 76 2 Anyagtudományok (fizika, kémia, stb.)
- 77 2 Élettudományok (biológia, genetika, anatómia, stb.)
- 78 2 Társadalomtudományok (szociológia, antropológia, stb.)
- 79 2 Pszichológia és pszichiátria
- 80 2 Régészet, őslénytan
- 81 2 Történelem
- 82 2 Kommunikáció, telekommunikáció és Internet
- 83 2 Energetika, atomenergia, fenntartható energiatermelés
- 84 2 Számítógéptudomány
-   
-   
- 85 1 Környezet, környezetvédelem, mezőgazdaság
-   
- 86 2 Mezőgazdaság, mezőgazdasági technológiák
- 87 2 Organic farming (?)
- 88 2 Élelmiszergyártási technológiák
- 89 2 Biológiai erőforrások
- 90 2 Vadászat és halászat
- 91 2 Veszélyeztetett fajták
- 92 2 Klíma
- 93 2 Népesség 
- 94 2 Vízgazdálkodás
- 95 2 Ökológiai rendszerek 
- 96 2 Állattenyésztés
- 97 2 Környezeti problémák
- 98 2 Éhínség
- 99 2 Biodiverzitás 
-100 2 Genetikailag módosított organizmusok, táplálék
-101 2 Szennyezés
-   
-   
-102 1 Állam és igazságügy
-   
-103 2 Nemzetközi együttműködés
-104 2 Geopolitika
-105 2 Belpolitika
-106 2 Fejlesztési irányelvek
-107 2 Szociális politika (munkavállalás, jólét)
-108 2 Civil szervezetek
-109 2 Szakszervezetek
-110 2 Államszervezetek, kormányzat
-111 2 Humanitárius segély
-112 2 Munka
-113 2 Védelem
-   
-114 2 Politika üldözés (rabok, menekültek)
-115 2 Emberi jogok (menedékjog, szólásszabadság)
-116 2 Rendőrség
-117 2 Börtönök
-118 2 Bűnözés
-119 2 Terrorizmus 
-120 2 Liszenszek és szerzői jogok
-   
-   
-121 1 Politika, politikai rendszerek, háborúk
-   
-122 2 Anarchizmus
-123 2 Kapitalizmus
-124 2 Kommunizmus
-125 2 Zöld pártok 
-126 2 Választások 
-127 2 Fasizmus, nácizmus
-128 2 Liberalizmus
-129 2 Politikai pártok
-130 2 Pacifizmus
-131 2 Szocializmus
-132 2 Nacionalizmus
-133 2 Demokratikus rendszerek
-134 2 Tekintélyuralmi rendszerek
-135 2 Forradalmi és felforgató csoportok (aktivizmus)
-136 2 Globalizáció
-   
-137 2 Felkelés
-138 2 Háború
-139 2 Polgárháború és forradalom
-140 2 Fegyverek
-   
-   
-141 1 Sport
-   
-142 2 Adventure Racing 
-143 2 Airsoft 
-144 2 Animal Fighting 
-145 2 Íjászat
-146 2 Badminton 
-147 2 Baseball 
-148 2 Basketball 
-149 2 Billiards 
-150 2 Bocce 
-151 2 Boomerang 
-152 2 Bowling 
-153 2 Boxing 
-154 2 Cheerleading 
-155 2 Cricket 
-156 2 Croquet 
-157 2 Cycling 
-158 2 Darts 
-159 2 Equestrian 
-160 2 Extreme Sports 
-161 2 Fencing 
-162 2 Fishing 
-163 2 Flying Discs 
-164 2 Football 
-165 2 Gaelic 
-166 2 Goalball 
-167 2 Golf 
-168 2 Greyhound Racing 
-169 2 Gymnastics 
-170 2 Handball 
-171 2 Hockey 
-172 2 Horse Racing 
-173 2 Hunting 
-174 2 Informal Sports 
-175 2 Jai Alai 
-176 2 Kabbadi 
-177 2 Korfball 
-178 2 Lacrosse 
-179 2 Lumberjack 
-180 2 Motorsports 
-181 2 Multi-Sports 
-182 2 Netball 
-183 2 Orienteering 
-184 2 Paddleball 
-185 2 Paintball 
-186 2 Petanque 
-187 2 Racquetball 
-188 2 Rodeo 
-189 2 Rope Skipping 
-190 2 Rounders 
-191 2 Running 
-192 2 Sepak Takraw 
-193 2 Shooting 
-194 2 Skateboarding 
-195 2 Skating 
-196 2 Soccer 
-197 2 Softball 
-198 2 Squash 
-199 2 Strength Sports 
-200 2 Table Tennis 
-201 2 Tchoukball 
-202 2 Team Handball 
-203 2 Tennis 
-204 2 Track and Field 
-205 2 Volleyball 
-206 2 Walking 
-207 2 Water Sports 
-208 2 Winter Sports 
-209 2 Wrestling
-   
-   
-210 1 Üzlet
-   
-211 2 Könyvelés 
-212 2 Cooperatives 
-213 2 Customer Service 
-214 2 E-Commerce 
-215 2 Education and Training 
-216 2 Employment 
-217 2 Human Resources 
-218 2 International Business and Trade 
-219 2 Investing 
-220 2 Major Companies 
-221 2 Management 
-222 2 Marketing and Advertising 
-223 2 Small Business 
-224 2 Business Services 
-225 2 Financial Services 
-226 2 Wholesale Trade 
-   
-   
-227 1 Vásárlás és termékek
-   
-228 2 Antik tárgyak, gyűjtemények (bélyeg, kupak, stb.) 
-229 2 Szépségipari termékek
-230 2 Könyvek
-231 2 Gyermekeknek
-232 2 Ruházat
-233 2 Számítógép  
-234 2 Szórakoztató elektronika
-235 2 Iparművészet, kézműipar
-236 2 Death Care (?)  
-237 2 Szórakoztatás
-238 2 Etnikai és vallási cikkek
-239 2 Virágok
-240 2 Élelmiszer
-241 2 Bútor 
-242 2 General Merchandise (?)  
-243 2 Ajándékok  
-244 2 Egészség
-245 2 Nyaralás
-246 2 Otthon és kert
-247 2 Ékszerek  
-248 2 Zene 
-249 2 Irodai termékek
-250 2 Állatok
-251 2 Fotózás  
-252 2 Kiadványok
-253 2 Szabadidő
-254 2 Dohányáru  
-255 2 Szerszámok 
-256 2 Játékok
-257 2 Utazás
-258 2 Járművek  
-259 2 Esküvő  
-260 2 Nagybani kereskedés
+  3 2 Új média (Internet, CD, DVD, Mini Disk, stb.)
+  4 2 Sajtó
+  5 2 Rádió
+  6 2 Filmek és televízió
+  7 2 Hirdetés
+  8 2 Eloadómuvészet (színház, tánc, cirkusz, stb.)
+  9 2 Zene
+ 10 2 Képzomuvészet (festés, szobrászat, fotó, stb.)
+ 11 2 Építészet és urbanizáció
+ 12 2 Irodalom
+ 13 2 Fantasztikus irodalom
+ 14 2 Kikapcsolódás, aktív pihenés
+ 15 2 Utazás és turizmus
+ 16 2 Játékok
+ 17 2 Sport
+
+ 18 1 Emberi tényezok, szociális ügyek
+ 19 2 Nok
+ 20 2 Férfiak
+ 21 2 Fiatalok
+ 22 2 Idosek
+ 23 2 Család
+ 24 2 Hátrányos helyzetuek
+ 25 2 Szexualitás
+ 26 2 Kábítószer
+ 27 2 Szegénység és éhezés
+ 28 2 Kivándorlás
+ 29 2 Multiculturalism (?)
+ 30 2 Közösségek (lakás, közlekedés, településtervezés, stb.)
+ 31 2 Vallás, metafizika
+ 32 2 Rasszizmus, fajgyulölet
+ 33 2 Civil szervezetek
+
+ 34 1 Egészség, gyógyítás
+ 35 2 Betegségek
+ 36 2 Gyógyszerek
+ 37 2 Hagyományos gyógymódok
+ 38 2 Orvosi kutatás
+ 39 2 Alternatív gyógymódok
+ 40 2 Elsosegély
+
+ 41 1 Oktatás, tanítás, tanulás
+ 42 2 Egyetemek
+ 43 2 Iskolák
+ 44 2 Élethosszig tartó tanulás
+ 45 2 Pedagógia
+ 46 2 Különleges oktatás
+ 47 2 e-learning
+ 48 2 Oktatás
+ 49 2 Életrajzok
+
+ 50 1 Tudomány és technológia
+ 51 2 Tudományok (fizika, kémia, ökológia, állattan, botanika, stb.)
+ 52 2 Földtudományok (csillagászat, földrajz, geológia, stb.)
+ 53 2 Élettudományok (biológia, genetika, anatómia, stb.)
+ 54 2 Társadalomtudományok (szociológia, antropológia, stb.)
+ 55 2 Pszichológia és pszichiátria
+ 56 2 Régészet, oslénytan
+ 57 2 Történelem
+ 58 2 Kommunikáció, telekommunikáció és Internet
+ 59 2 Számítógéptudomány
+
+ 60 1 Környezet, környezetvédelem, mezogazdaság
+ 61 2 Mezogazdaság, mezogazdasági technológiák
+ 62 2 Biológiai eroforrások
+ 63 2 Élelmiszergyártási technológiák
+ 64 2 Vadászat és halászat
+ 65 2 Biodiverzitás
+ 66 2 Klíma
+ 67 2 Népesség
+ 68 2 Vízgazdálkodás
+ 69 2 Szennyezés
+ 70 2 Genetikailag módosított organizmusok, táplálék
+
+ 71 1 Állam és igazságügy
+ 72 2 Nemzetközi együttmuködés
+ 73 2 Geopolitika
+ 74 2 Belpolitika
+ 75 2 Fejlesztési irányelvek
+ 76 2 Szociális politika (munkavállalás, jólét)
+ 77 2 Államszervezetek, kormányzat
+ 78 2 Védelem
+ 79 2 Politika üldözés (rabok, menekültek)
+ 80 2 Emberi jogok (menedékjog, szólásszabadság)
+ 81 2 Rendorség
+ 82 2 Börtönök
+ 83 2 Bunözés
+ 84 2 Terrorizmus
+ 85 2 Licencek és szerzoi jogok
+
+ 86 1 Politika, politikai rendszerek, háborúk
+ 87 2 Anarchizmus
+ 88 2 Kapitalizmus
+ 89 2 Kommunizmus
+ 90 2 Politikai pártok
+ 91 2 Demokratikus rendszerek
+ 92 2 Fasizmus, nácizmus
+ 93 2 Pacifizmus
+ 94 2 Nacionalizmus
+ 95 2 Tekintélyuralmi rendszerek
+ 96 2 Forradalmi és felforgató csoportok (aktivizmus)
+ 97 2 Globalizáció
+ 98 2 Polgárháború és forradalom
+ 99 2 Háború
+100 2 Fegyverek
+
+101 1 Üzlet
+102 2 Könyvelés
+103 2 Vállalatok
+104 2 Ügyfélkapcsolatok
+105 2 e-kereskedelem
+106 2 Munka
+107 2 Menedzsment
+108 2 Marketing és reklámozás
+109 2 Szolgáltatások
+110 2 Nagykereskedelem
+111 2 Szakszervezetek
+
+112 1 Vásárlás és termékek
+113 2 Otthon és kert
+114 2 Szépségipari termékek
+115 2 Könyvek
+116 2 Ruházat
+117 2 Számítógép
+118 2 Szórakoztató elektronika
+119 2 Egyéb termékek
+120 2 Szórakoztatás
+121 2 Virágok
+122 2 Élelmiszer
+123 2 Egészség
+124 2 Ékszerek
+125 2 Állatok
+126 2 Szabadido
+127 2 Jármuvek
 

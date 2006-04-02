@@ -5,301 +5,141 @@ description=An attempt to create a general subject tree for radios.
 url=
 
 # End of tree definition
-      
-  1  1 Arts, Medias, Entertainment and Leisure
 
-  2  2 News 
-  3  2 New Media (Internet, CD, DVD, Mini Disk, etc.) 
-  4  2 Press 
-  5  2 Radio 
-  6  2 Television 
-  7  2 Advertising and Public Relations 
-  8  2 Foreign news (should remain) 
-  9  2 Motion Pictures (Documentary, Fiction) 
- 10  2 Performing Arts (Theater, Dance, Circus, etc.) 
- 11  2 Music (All genres - including Opera, Classical Concert, etc.) 
- 12  2 Plastic Arts (Painting, Sculpture, Photography, Comics, etc.) 
- 13  2 Architecture and Urbanism 
- 14  2 Literature (Poetry, Fiction, Essays, etc.) 
- 15  2 Detective stories 
- 16  2 Science Fiction and Fantasy 
- 17  2 Cartoons, caricatures & comics 
- 18  2 Recreational Activities 
- 19  2 Journey and Tourism 
- 20  2 Games 
+  1 1 Arts, Medias, Entertainment and Leisure 
+  2 2 News 
+  3 2 New Media (Internet, CD, DVD, MiniDisk, etc.) 
+  4 2 Press 
+  5 2 Radio 
+  6 2 Motion Pictures and Television 
+  7 2 Advertising 
+  8 2 Performing Arts (Theater, Dance, Circus, etc.) 
+  9 2 Music 
+ 10 2 Plastic Arts (Painting, Sculpture, Photography, Comics, etc.) 
+ 11 2 Architecture and Urbanism 
+ 12 2 Literature (Poetry, Fiction, Essays, etc.) 
+ 13 2 Science Fiction and Fantasy 
+ 14 2 Recreational Activities 
+ 15 2 Journey and Tourism 
+ 16 2 Games 
+ 17 2 Sport 
 
- 21  1 Human Practices and Social Issues
+ 18 1 Human Practices and Social Issues 
+ 19 2 Women 
+ 20 2 Men 
+ 21 2 Young people 
+ 22 2 Elderly people 
+ 23 2 Family 
+ 24 2 Handicapped persons 
+ 25 2 Sexuality 
+ 26 2 Drugs 
+ 27 2 Poverty and Hunger 
+ 28 2 Migration 
+ 29 2 Multiculturalism 
+ 30 2 Community Issues (Housing, Transportation, Area planning, Urban communities, Rural communities) 
+ 31 2 Religion, Metaphysics 
+ 32 2 Racism 
+ 33 2 N.G.O. 
 
- 22  2 Women 
- 23  2 Men 
- 24  2 Young people 
- 25  2 Elderly people 
- 26  2 Family 
- 27  2 Handicapped persons 
+ 34 1 Healing and Medicine 
+ 35 2 Diseases 
+ 36 2 Healing Substance 
+ 37 2 Traditional healings 
+ 38 2 Medical Research 
+ 39 2 Altenative Medicine 
+ 40 2 First Aid 
 
- 28  2 Body practices 
- 29  2 Sexuality 
- 30  2 Drugs 
- 31  2 Poverty 
- 32  2 Migration 
+ 41 1 Teaching, Learning and Studying 
+ 42 2 Universities 
+ 43 2 Schools 
+ 44 2 Life long learning 
+ 45 2 Pedagogie 
+ 46 2 Special Education 
+ 47 2 e-learning 
+ 48 2 Education 
+ 49 2 Biography
 
- 33  2 Multiculturalism 
- 34  2 Feminism 
- 35  2 Queer 
+ 50 1 Sciences and Technologies 
+ 51 2 Nature Scienses (Physics, Chemistry, Ecology, Zoology, Botanique, etc.) 
+ 52 2 Earth Sciences (Astronomy, Geography, Oceanography, Climatology, Geology,etc.) 
+ 53 2 Live Sciences (Biology, Genetic, Anatomy, etc.) 
+ 54 2 Social Sciences (Sociology, Anthropology, etc.) 
+ 55 2 Psychology and Psychiatry 
+ 56 2 Archeology and Palentology 
+ 57 2 History 
+ 58 2 Communications, telecommuncation and Internet 
+ 59 2 Computer science 
 
- 36  2 Community Issues (Housing, Transportation, Area planning, Urban communities, Rural communities) 
- 37  2 Folklore 
- 38  2 Religion, Metaphysics 
- 39  2 Racism 
- 40  2 Sexism 
+ 60 1 Environmental Issues, Agriculture and related technologies 
+ 61 2 Agriculture & related technologies 
+ 62 2 Biological Products 
+ 63 2 Food technology 
+ 64 2 Hunting & fishing 
+ 65 2 Bio diversity 
+ 66 2 Climate 
+ 67 2 Population 
+ 68 2 Water supply 
+ 69 2 Pollution 
+ 70 2 GMO-Genetically modified organism 
 
+ 71 1 Justice and Governmental 
+ 72 2 International cooperation 
+ 73 2 Geopolitics 
+ 74 2 Domestic policy 
+ 75 2 Development policies 
+ 76 2 Social policy (Employment policies, Welfare) 
+ 77 2 Systems of governments and states 
+ 78 2 Defense 
+ 79 2 Political persecution (prisoners, refugees, ...) 
+ 80 2 Human rights (Right of asylum, Freedom of speech 
+ 81 2 Police services 
+ 82 2 Prison 
+ 83 2 Crime & delinquency 
+ 84 2 Terrorism 
+ 85 2 Licences and copyright/copyleft 
 
- 41  1 Healing and Medicine
+ 86 1 Politic, politic systems and Wars 
+ 87 2 Anarchism 
+ 88 2 Capitalism 
+ 89 2 Communism 
+ 90 2 Political Parties 
+ 91 2 Democratic systems 
+ 92 2 Fascim and Nazism 
+ 93 2 Pacifism 
+ 94 2 Nationalism 
+ 95 2 Authoritarian systems 
+ 96 2 Revolutionary and subversive groups (activism) 
+ 97 2 Globalization 
+ 98 2 Civil war and revolution 
+ 99 2 War 
+100 2 Weapons 
 
- 42  2 Physical diseases 
- 43  2 Mental health/diseases 
- 44  2 Healing Substance 
- 45  2 AIDS 
- 46  2 Hygiene 
- 47  2 Public health 
- 48  2 Legal drugs 
- 49  2 Illegal drugs 
- 50  2 Traditional healings 
- 51  2 Clinical Test 
- 52  2 Altenative Medicine 
- 53  2 First Aid 
- 54  2 Epidemic 
- 55  2 Medical Research 
- 56  2 Bio technology (genetic engineering) 
+101 1 Business 
+102 2 Accounting 
+103 2 Companies 
+104 2 Customer Service 
+105 2 E-Commerce 
+106 2 Labor 
+107 2 Management 
+108 2 Marketing and Advertising 
+109 2 Services 
+110 2 Wholesale Trade 
+111 2 Labor unions
 
-
- 57  1 Teaching, Learning and Studying
-
- 58  2 Universities 
- 59  2 Schools 
- 60  2 Life long learning 
- 61  2 Cources and Training 
- 62  2 Distance Learning 
- 63  2 Educators 
- 64  2 Teaching Methods 
- 65  2 Special Education 
- 66  2 e-learning 
-
- 67  2 Education 
- 68  2 Pedagogie 
- 69  2 Literacy 
- 70  2 Biography 
- 71  2 Curricula 
- 72  2 Lecture
-
-
- 73  1 Sciences and Technologies 
-
- 74  2 Natural Sciences (Ethology, Ecology, Botanique, etc.) 
- 75  2 Earth Sciences (Astronomy, Geography, Oceanography, Climatology, Geology,etc.) 
- 76  2 Material Sciences (Physics, Chemistry, etc.) 
- 77  2 Live Sciences (Biology, Genetic, Anatomy, etc.) 
- 78  2 Social Sciences (Sociology, Anthropology, etc.) 
- 79  2 Psychology and psychiatry 
- 80  2 Archeology and Palentology 
- 81  2 History 
- 82  2 Communications, telecommuncation and Internet 
- 83  2 Energy, Nuclear energy and sustanaible energy production 
- 84  2 Computer science 
-
-
- 85  1 Environmental Issues, Agriculture and related technologies
-
- 86  2 Agriculture & related technologies 
- 87  2 Organic farming 
- 88  2 Food technology 
- 89  2 Biological resources 
- 90  2 Hunting & fishing 
- 91  2 Endagered Species 
- 92  2 Climate 
- 93  2 Population 
- 94  2 Water supply 
- 95  2 Ecological systems 
- 96  2 Stockbreeding 
- 97  2 Environmental problems 
- 98  2 Famine 
- 99  2 Bio diversity 
-100  2 GMO-Genetically modified organism 
-101  2 Pollution 
-
-
-102  1 Justice and Governmental
-
-103  2 International cooperation 
-104  2 Geopolitics 
-105  2 Domestic policy 
-106  2 Development policies 
-107  2 Social policy (Employment policies, Welfare) 
-108  2 NGO 
-109  2 Labor unions (Trade unions) 
-110  2 Systems of governments and states 
-111  2 Humanitarian aid 
-112  2 Labor 
-113  2 Defense 
-
-114  2 Political persecution (prisoners, refugees, ...) 
-115  2 Human rights (Right of asylum, Freedom of speech 
-116  2 Police services 
-117  2 Prison 
-118  2 Crime & delinquency 
-119  2 Terrorism 
-120  2 Licences and copyright/copyleft 
-
-
-121  1 Politic, politic systems and Wars
-
-122  2 Anarchism 
-123  2 Capitalism 
-124  2 Communism 
-125  2 Green parties 
-126  2 Elections 
-127  2 Fascim and Nazism (including parties) 
-128  2 Liberalism 
-129  2 Political parties 
-130  2 Pacifism 
-131  2 Socialism 
-132  2 Nationalism 
-133  2 Democratic systems 
-134  2 Authoritarian systems 
-135  2 Revolutionary and subversive groups (activism) 
-136  2 Globalization 
-
-137  2 Rebellion 
-138  2 War 
-139  2 Civil war and revolution 
-140  2 Weapons 
-
-
-141  1 Sport
-
-142  2 Adventure Racing 
-143  2 Airsoft 
-144  2 Animal Fighting 
-145  2 Archery 
-146  2 Badminton 
-147  2 Baseball 
-148  2 Basketball 
-149  2 Billiards 
-150  2 Bocce 
-151  2 Boomerang 
-152  2 Bowling 
-153  2 Boxing 
-154  2 Cheerleading 
-155  2 Cricket 
-156  2 Croquet 
-157  2 Cycling 
-158  2 Darts 
-159  2 Equestrian 
-160  2 Extreme Sports 
-161  2 Fencing 
-162  2 Fishing 
-163  2 Flying Discs 
-164  2 Football 
-165  2 Gaelic 
-166  2 Goalball 
-167  2 Golf 
-168  2 Greyhound Racing 
-169  2 Gymnastics 
-170  2 Handball 
-171  2 Hockey 
-172  2 Horse Racing 
-173  2 Hunting 
-174  2 Informal Sports 
-175  2 Jai Alai 
-176  2 Kabbadi 
-177  2 Korfball 
-178  2 Lacrosse 
-179  2 Lumberjack 
-180  2 Motorsports 
-181  2 Multi-Sports 
-182  2 Netball 
-183  2 Orienteering 
-184  2 Paddleball 
-185  2 Paintball 
-186  2 Petanque 
-187  2 Racquetball 
-188  2 Rodeo 
-189  2 Rope Skipping 
-190  2 Rounders 
-191  2 Running 
-192  2 Sepak Takraw 
-193  2 Shooting 
-194  2 Skateboarding 
-195  2 Skating 
-196  2 Soccer 
-197  2 Softball 
-198  2 Squash 
-199  2 Strength Sports 
-200  2 Table Tennis 
-201  2 Tchoukball 
-202  2 Team Handball 
-203  2 Tennis 
-204  2 Track and Field 
-205  2 Volleyball 
-206  2 Walking 
-207  2 Water Sports 
-208  2 Winter Sports 
-209  2 Wrestling
-
-
-210  1 Business
-
-211  2 Accounting 
-212  2 Cooperatives 
-213  2 Customer Service 
-214  2 E-Commerce 
-215  2 Education and Training 
-216  2 Employment 
-217  2 Human Resources 
-218  2 International Business and Trade 
-219  2 Investing 
-220  2 Major Companies 
-221  2 Management 
-222  2 Marketing and Advertising 
-223  2 Small Business 
-224  2 Business Services 
-225  2 Financial Services 
-226  2 Wholesale Trade 
-
-
-227  1 Shopping and consumer products
-
-228  2 Antiques and Collectibles 
-229  2 Beauty Products
-230  2 Books 
-231  2 Children 
-232  2 Clothing  
-233  2 Computers  
-234  2 Consumer Electronics  
-235  2 Crafts 
-236  2 Death Care  
-237  2 Entertainment
-238  2 Ethnic and Regional  
-239  2 Flowers 
-240  2 Food  
-241  2 Furniture 
-242  2 General Merchandise  
-243  2 Gifts  
-244  2 Health  
-245  2 Holidays  
-246  2 Home and Garden  
-247  2 Jewelry  
-248  2 Music 
-249  2 Office Products  
-250  2 Pets  
-251  2 Photography  
-252  2 Publications 
-253  2 Recreation  
-254  2 Tobacco  
-255  2 Tools  
-256  2 Toys and Games  
-257  2 Travel 
-258  2 Vehicles  
-259  2 Weddings  
-260  2 Wholesale  
+112 1 Shopping and consumer products 
+113 2 Home and Garden 
+114 2 Beauty Products 
+115 2 Books 
+116 2 Clothing 
+117 2 Computers 
+118 2 Consumer Electronics 
+119 2 Other Merchandise 
+120 2 Entertainment 
+121 2 Flowers 
+122 2 Food 
+123 2 Health 
+124 2 Schmuck 
+125 2 Pets 
+126 2 Recreation 
+127 2 Vehicles
 
