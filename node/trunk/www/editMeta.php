@@ -36,6 +36,7 @@ if($delTopic) {
 
 $prg = & new sotf_Programme($prgId);
 
+
 // ---- changed by wolfgang csacsinovits and martin schmidt GET ID3 TAGS and write into Metadata - Fields
 
 
@@ -186,13 +187,21 @@ if($save || $finish || $finishpublish) {
 
 		
 		// STATION
+		
+		$prg->station = $prg->getObject($prg->get('station_id'));
+		if(is_object($prg->station)) {
+			$prg->stationName = $prg->station->get('name');
+			$station_name = $prg->stationName;
+		}
+		else $station_name = "";
+		
 		$data['id3v2']['TPE1']['encodingid'] = 0;
-		$data['id3v2']['TPE1']['data']       = SafeStripSlashes($prg->getStation()->get('name'));
-		$data['ape']['artist'][] = SafeStripSlashes($prg->getStation()->get('name'));
+		$data['id3v2']['TPE1']['data']       = SafeStripSlashes($station_name);
+		$data['ape']['artist'][] = SafeStripSlashes($station_name);
 		
 		$data['id3v1']['TPE1']['encodingid'] = 0;
-		$data['id3v1']['TPE1']['data']       = SafeStripSlashes($prg->getStation()->get('name'));
-		$data['ape']['artist'][] = SafeStripSlashes($prg->getStation()->get('name'));
+		$data['id3v1']['TPE1']['data']       = SafeStripSlashes($station_name);
+		$data['ape']['artist'][] = SafeStripSlashes($station_name);
 		$artist = $data['ape']['artist'][0];
 
 		
