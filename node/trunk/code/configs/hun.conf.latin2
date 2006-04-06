@@ -152,7 +152,7 @@ decoding_ogg = OGG-ból PCM készítés...
 convert_mono = Mono PCM-bõl sztereó készítése...
 
 [rss]
-new_programmes = Ûj programok listája:
+new_programmes = Új programok listája:
 search_in_station = Keresés a %1 rádió anyagai között
 Statistics = Statisztika
 Rights = Jogok
@@ -205,6 +205,9 @@ No_news = Nincs új anyag a hálózatban
 Default_query = Alapértelmezett keresésének eredménye:
 No_results = Nincs találat
 total = összesen:
+
+#added by buddhafly 05-11-22
+Forgot = Elfelejtette a jelszavát?
 
 [stations]
 admin_tasks = Adminisztrátori feladatok:
@@ -383,7 +386,7 @@ admin_expl = Az összes alábbi jog, sõt...
 change = Módosítás
 change_expl = Módosíthatja az objektumot, pl. a leírást vagy az ikont.
 create = Létrehozás
-create_expl = Üj dolgokat adhat az objektumhoz, pl. üj mûsorokat.
+create_expl = Új dolgokat adhat az objektumhoz, pl. új mûsorokat.
 delete = Törlés
 delete_expl = Törölhet az objektumhoz tartozó dolgokat, pl. mûsorokat.
 authorize = Felhatalmazás
@@ -671,6 +674,10 @@ missing_parameters = Hiányzó paraméterek
 invalid_login = Érvénytelen bejelentkezés
 register_here = Ha még nem regisztrált felhasználónk, <a href="register.php">itt regisztrálhat</a>.
 
+#added by buddhafly 05-11-22
+forgot_password = Elfelejtette a jelszavát? Itt kérhet <a href="newPassword.php">új jelszót</a>.
+
+
 [register]
 username_in_use = Ezt a nevet már más használja!
 invalid_username = Nem engedélyezett felhasználói név!
@@ -680,6 +687,22 @@ password_mismatch = A jelszavak nem egyeznek.
 Realname = Teljes név
 Email = E-mail
 Language = Nyelv
+
+old_password = Jelenlegi jelszó
+new_password = Új jelszó
+email_missing = Kérjük írja be e-mail címét.
+bad_email = Érvénytelen e-mail címet adott meg.
+password_empty = Kérjük írja be jelenlegi jelszavát.
+
+[newPassword]
+new_pass_title = Új jelszó kérése
+new_pass_explain = Az ûrlap kitöltése után egy új jelszót küldünk a regisztrációkor megadott e-mail címre.
+request_button = Új jelszó kérése
+pass_mail_subject = Az Ön új StreamOnTheFly jelszava
+pass_mail_message = Kedves %1,<br>&nbsp;<br>kérésére az új jelszó elkészült.<br>Az új jelszava a StreamOnTheFly szerverhez: %2<br>&nbsp;<br><a href='%3'>Bejelentkezés</a> után, a Beállítások oldalon tudja a jelszót megváltoztatni<br>&nbsp;<br>Adminisztrátor
+new_pass_error = A felhasználói név vagy az e-mail cím nem egyezik.
+missing_parameters = Hiányzó paraméterek
+
 
 [get]
 not_published_yet = Ez a mûsor még nem nyilvános.
@@ -695,7 +718,7 @@ Content = Tartalom
 Statistics = Visszajelzések, statisztika
 no_references = Nincs hivatkozás
 Comments = Megjegyzések
-From = Mikortól
+>From = Mikortól
 Until = Meddig
 Nodes = Hálózat
 Portals = Portálok
@@ -889,7 +912,7 @@ userfiles = User's files (*)
 select_all = Select all (*)
 deselect_all = Deselect all (*)
 delete_selected = Delete selected (*)
-upload_file = Upload file to user's directory (*) ??
+upload_file = Fájl feltöltése a felhasználó könyvtárába
 send_file = Send file (*) ??
 
 [editLink]
@@ -949,9 +972,9 @@ change_tree = Váltás
 other_trees = Témafák
 
 [convert]
-encode = Kódolás ??
-decode = Dekódolás ??
-progress_bar = Hátralevõ idõ ??
+encode = Kódolás
+decode = Dekódolás
+progress_bar = Hátralevõ idõ
 
 [listen]
 no_listen_access = Ezt a hangfájlt nem hallgathatja meg.
@@ -974,11 +997,11 @@ buttom = Aljára
 save = Mentés
 
 [admin]
-admin = Node administrator's console (*)
-general_data = General data (*)
-save = Save (*)
-access_permissions = Administrators and permissions (*)
-Permissions = Permissions (*)
+admin = Csomópont adminsztráció
+general_data = Általános adatok
+save = Mentés
+access_permissions = Adminisztrátori jogosultságok
+Permissions = Jogosultságok
 username = User name (*)
 userlist = Userlist (*)
 permissions = Permissions (*)

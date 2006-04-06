@@ -24,6 +24,8 @@ ALTER TABLE "sotf_series" ADD CONSTRAINT "to_node_objects" FOREIGN KEY("id") REF
 
 ALTER TABLE "sotf_series" ADD CONSTRAINT "to_stations" FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE;
 
+ALTER TABLE "sotf_object_roles" ADD  CONSTRAINT "sotf_roles_uniq" UNIQUE("object_id", "contact_id", "role_id");
+
 ALTER TABLE "sotf_object_roles" ADD CONSTRAINT "to_node_objects" FOREIGN KEY("id") REFERENCES sotf_node_objects(id) ON DELETE CASCADE;
 
 ALTER TABLE "sotf_object_roles" ADD CONSTRAINT "to_contacts" FOREIGN KEY("contact_id") REFERENCES sotf_contacts("id") ON DELETE CASCADE;
