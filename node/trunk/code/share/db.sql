@@ -656,3 +656,6 @@ SELECT nextval('sotf_permissions_id_seq');
 -- update sotf_programmes set language='deu' where language='de' 
 -- update sotf_programmes set language='eng' where language='en' 
 -- update sotf_programmes set language='hun' where language='hu' 
+
+-- ADDED BY Martin Schmidt to provide the new vocabularies (apr 06) to be destroyed
+INSERT INTO sotf_vars (name, value) VALUES ('topic_update_done', '1');
