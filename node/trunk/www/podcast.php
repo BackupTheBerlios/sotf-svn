@@ -4,6 +4,8 @@
 	* $Id$
 	* Authors: András Micsik
 	*          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+	* nicer filenames, stream link, broadcastdate and
+	* role supporte by rama + rjankowski
 	*/
 
 define('ITEMS_IN_RSS', 10);
@@ -17,6 +19,11 @@ $seriesId = sotf_Utils::getParameter('series');
 //$userName = sotf_Utils::getParameter('user');
 //$queryName = sotf_Utils::getParameter('qname');
 $query = sotf_Utils::getParameter('query');
+
+$items = intval(sotf_Utils::getParameter('count'));
+if(!$items or $items < 1 or $items > 200)
+  $items = ITEMS_IN_RSS;
+//debug("ITEMS", $items);
 
 function writeTag(&$rss, $tag, $value, $lang='', $attr='') {
   if($lang)
@@ -54,20 +61,55 @@ function toW3CDate($date) {
   return $date;
 }
 
+  
+
+function selectStream(&$prg) {
+  global $config;
+  $files = $prg->listAudioFiles('TRUE','kbps DESC');
+  if(is_array($files)) {
+       foreach($files as $f) {
+              if($f['stream_access']=='t') {
+                $f['url'] = $config['rootUrl'] . '/listen.php?id=' . $prg->id . '&fileid=' . $f['id'];
+                return $f;
+              }
+      }
+  }
+  return NULL;
+}
+
+
+
 function selectAudio(&$prg) {
   global $config;
   $files = $prg->listAudioFiles('TRUE','kbps DESC');
-  foreach($files as $f) {
-	 if($f['download_access']=='t') {
-		//$f['url'] = $config['rootUrl'] . '/getFile.php/' . $f['filename'] . '?audio=1&id=' . $prg->id . '&filename=' . $f['filename'];
-		//$f['url'] = $config['rootUrl'] . '/getFile.php?audio=1&id=' . $prg->id . '&filename=' . $f['filename'];
-		$baseUrl = sotf_Node::getHomeNodeRootUrl($prg);
-		$f['url'] = $baseUrl . '/getFile.php/fid__' . $f['id'].".mp3"; // wreutz: very dirty hack for ipooder to work on os x
-		return $f;
+  if(is_array($files)) {
+	 foreach($files as $f) {
+		if($f['download_access']=='t') {
+		  /* sun 8.2.06 added to format properly the enclosure url --rama */
+		  $station = sotf_Utils::makeValidName($prg->get('station'), 23);
+		  $series = sotf_Utils::makeValidName($prg->get('series'), 23);
+		  $title = sotf_Utils::makeValidName($prg->get('title'), 30);
+		  if($station != "" && $series != "" && $title != "") {
+			 $fname = "$station-$series-$title";
+		  } elseif($station != "" && $title != "") {
+			 $fname = "$station-$title";
+		  } elseif($title != "") {
+			 $fname = $title;
+		  }
+		  /* end properly format enclosure url */
+		  
+		  //$f['url'] = $config['rootUrl'] . '/getFile.php/' . $f['filename'] . '?audio=1&id=' . $prg->id . '&filename=' . $f['filename'];
+		  //$f['url'] = $config['rootUrl'] . '/getFile.php?audio=1&id=' . $prg->id . '&filename=' . $f['filename'];
+		  $baseUrl = sotf_Node::getHomeNodeRootUrl($prg);
+		  //$f['url'] = $baseUrl . '/getFile.php/fid__' . $f['id'].".mp3"; // wreutz: very dirty hack for ipooder to work on os x
+		  $f['url'] = $baseUrl . '/getFile.php/' . 'fid__' . $f['id']. '__' . $fname.".mp3"; //rjankowski changed order to get parsed by getFile.php
+		  // rama: included $fname as formatted name $station-$series-$title
+		  return $f;
+		}
 	 }
   }
   /*
-  if(!$retval) {
+  if(!$retval and is_array($files)) {
 	 foreach($files as $f) {
 		if($f['stream_access']=='t') {
 		  $f['url'] = $config['rootUrl'] . '/listen.php?id=' . $prg->id . '&fileid=' . $f['id'];
@@ -83,9 +125,23 @@ function addItem(&$rss, &$prog) {
   global $config;
   $rss .= "\n\n<item>";
   writeTag($rss, "title", $prog->get('title'));
+  
+  /* 08.02.06 start rama hack to print roles */
+  $roleArr = $prog->getRoles();
+  $roleArrSize = count($roleArr);
+  for ($i=0 ; $i < $roleArrSize ; $i++) {
+  	$role_name = $roleArr[$i]["role_name"];
+	$contact_name = $roleArr[$i]["contact_data"]["name"];
+	//$role_info = "$contact_name, $role_name";
+	$role_info = array('contact_name' => $contact_name, 'role_name' => $role_name);
+  	writeTag($rss, "roles", NULL, NULL, $role_info);
+  }
+  /* end rama hack to print roles */
+  
   writeTag($rss, "link", $config['rootUrl'] . "/get.php?id=".$prog->id);
   writeTag($rss, "pubDate", toW3CDate($prog->get('entry_date')));
   writeTag($rss, "description", $prog->get('abstract'));
+  writeTag($rss, "BroadcastDate", toW3CDate($prog->get('broadcast_date')));
   $audioAttrs = selectAudio($prog);
   if($audioAttrs) {
 	 //$filepath = $prog->getFilePath($audioAttrs);
@@ -97,6 +153,18 @@ function addItem(&$rss, &$prog) {
 							  //'url' => $config['tmpUrl'] . '/' . 'au_011pr105_budh1204_24kbps_1chn_22050Hz.mp3',
 							  );
 	 writeTag($rss, "enclosure", NULL, NULL, $enclAttrs);
+  }
+  $streamAttrs = selectStream($prog);
+  if($streamAttrs) {
+       //$filepath = $prog->getFilePath($audioAttrs);
+       //$tmpFile = linkAudio($filepath, $audioAttrs);
+       $enclAttrs = array('type' => 'audio/mpeg',
+                                                        'length' => $streamAttrs['filesize'],
+                                                        //'url' => $config['tmpUrl'] . '/' . basename($tmpFile),
+                                                        'url' => $streamAttrs['url'],
+                                                        //'url' => $config['tmpUrl'] . '/' . 'au_011pr105_budh1204_24kbps_1chn_22050Hz.mp3',
+                                                        );
+       writeTag($rss, "streamurl", NULL, NULL, $enclAttrs);
   }
   $rss .= "\n</item>";
 }
@@ -163,10 +231,12 @@ if($seriesId) { //***************** SERIES *************************************
 	 }
 
 	 // add items
-	 $newProgs = $series->listProgrammes(0, ITEMS_IN_RSS);
+	 $newProgs = $series->listProgrammes(0, $items);
 	 //debug("progs", $newProgs);
-	 foreach($newProgs as $prog) {
-		addItem($rss, $prog);
+	 if(is_array($newProgs)) {
+		foreach($newProgs as $prog) {
+		  addItem($rss, $prog);
+		}
 	 }
 	 $rss .= "\n</channel>";
 
@@ -185,6 +255,7 @@ if($seriesId) { //***************** SERIES *************************************
   // define channel
   $rss .= "\n<channel>";
   writeTag($rss, "title", $station->get('name'));
+  
   writeTag($rss, "link", $config['rootUrl'] . "/showStation.php/" . $station->id);
   writeTag($rss, "language", $station->get2LetterLanguageCode());
   writeTag($rss, "description", $station->get('description'));
@@ -205,10 +276,12 @@ if($seriesId) { //***************** SERIES *************************************
   }
 
   // add items
-  $newProgs = $station->listProgrammes(0, ITEMS_IN_RSS);
+  $newProgs = $station->listProgrammes(0, $items);
   //debug("progs", $newProgs);
-  foreach($newProgs as $prog) {
-	 addItem($rss, $prog);
+  if(is_array($newProgs)) {
+	 foreach($newProgs as $prog) {
+		addItem($rss, $prog);
+	 }
   }
   
   /*
@@ -252,7 +325,7 @@ if($seriesId) { //***************** SERIES *************************************
   $rss .= "\n</image>";
 
   $query = $advsearch->GetSQLCommand();
-  $res = $db->limitQuery($query, 0, ITEMS_IN_RSS);
+  $res = $db->limitQuery($query, 0, $items);
   $hits = array();
   while (DB_OK === $res->fetchInto($row)) {
 	 //$row['icon'] = sotf_Blob::cacheIcon($row['id']);

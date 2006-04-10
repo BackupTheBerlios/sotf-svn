@@ -60,6 +60,7 @@ $rss_writer_object->about=$config['rootUrl'] . "/rss.php";
 // When generating RSS version 1.0, you may declare additional namespaces that enable the use of 
 // more property tags defined by extension modules of the RSS specification.
 $rss_writer_object->rssnamespaces["dc"]="http://purl.org/dc/elements/1.1/";
+$rss_writer_object->allownoitems = 1;
 
 // do the job, fill in RSS
 if($prgId) {
@@ -230,15 +231,17 @@ if($prgId) {
 	 // add items
 	 $newProgs = $series->listProgrammes($from, $count);
 	 //debug("progs", $newProgs);
-	 foreach($newProgs as $prog) {
-		$properties=array();
-		$properties["description"]= $prog->get('abstract');
-		$properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
-		$properties["title"]= $prog->get('title');
-		if($prog->get('production_date')) {
-		  $properties["dc:date"]= toW3CDate($prog->get('production_date'));
+	 if(is_array($newProgs)) {
+		foreach($newProgs as $prog) {
+		  $properties=array();
+		  $properties["description"]= $prog->get('abstract');
+		  $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
+		  $properties["title"]= $prog->get('title');
+		  if($prog->get('production_date')) {
+			 $properties["dc:date"]= toW3CDate($prog->get('production_date'));
+		  }
+		  $rss_writer_object->additem($properties);
 		}
-		$rss_writer_object->additem($properties);
 	 }
 
 	 /*
@@ -293,17 +296,18 @@ if($prgId) {
 		  // add items
 		  $newProgs = $station->listProgrammes($from, $count);
 		  //debug("progs", $newProgs);
-		  foreach($newProgs as $prog) {
-			 $properties=array();
-			 $properties["description"]= $prog->get('abstract');
-			 $properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
-			 $properties["title"]= $prog->get('title');
-			 if($prog->get('production_date')) {
-				$properties["dc:date"]= toW3CDate($prog->get('production_date'));
+		  if(is_array($newProgs)) {
+			 foreach($newProgs as $prog) {
+				$properties=array();
+				$properties["description"]= $prog->get('abstract');
+				$properties["link"]= $config['rootUrl'] . "/get.php?id=".$prog->id;
+				$properties["title"]= $prog->get('title');
+				if($prog->get('production_date')) {
+				  $properties["dc:date"]= toW3CDate($prog->get('production_date'));
+				}
+				$rss_writer_object->additem($properties);
 			 }
-			 $rss_writer_object->additem($properties);
 		  }
-
 		  // define search box
 		  $properties=array();
 		  // The name of the text input form field
