@@ -213,7 +213,7 @@ if(sotf_Utils::getParameter('updatetopictree')) {
 	$query = "SELECT * FROM sotf_vars WHERE name='topic_update_done' AND value=1";
 	$result = $db->getRow($query);
 	if (count($result) == 0) {
-		if(is_file($config['basedir'].'/code/share/update_topics.txt')){
+		if(is_file($config['basedir'].'/code/share/update_topics.txt') && sotf_Utils::getParameter('confirmed')){
 			$db->query("BEGIN;");
 			
 			// UPDATE sotf_topic_tree_defs, sotf_topics
@@ -256,11 +256,17 @@ if(sotf_Utils::getParameter('updatetopictree')) {
 			$db->query("INSERT INTO sotf_vars (name, value) VALUES ('topic_update_done', '1');");
 			$db->query("COMMIT;");
 			$vocabularies->updateTopicCounts();
-			$smarty->assign("TTREE_UPD_MESS", 'The Topic Tree has successfully been updated.');
-		} // if is_file
+			$smarty->assign("TTREE_UPD_MESS", '<span style="color:green">The Topic Tree has successfully been updated.</span>');
+		} // if is_file && confirmed
+		elseif(is_file($config['basedir'].'/code/share/update_topics.txt')){
+			$smarty->assign("TTREE_UPD_MESS", '<span style="color:red">Please confirm the update to the new topic tree definitions - Version Spring 2006.<br>Make sure you have made a dump of your node database before!</span><br>&nbsp;<br><a href="admin.php?updatetopictree=1&confirmed=1">Yes, update this node\'s topic tree!</a>');
+		}
+		else{
+			$smarty->assign("TTREE_UPD_MESS", '<span style="color:red">The file '.is_file($config['basedir']).'/code/share/update_topics.txt could not have been found.<br>Get the current version from SVN!</span>');
+		}
 	} // if count($result)==0
 	else {
-		$smarty->assign("TTREE_UPD_MESS", 'The Topic Tree had already been updated before.');
+		$smarty->assign("TTREE_UPD_MESS", '<span style="color:red">The Topic Tree had already been updated before.</span>');
 	}
 } // if "updatetopictree"
 
