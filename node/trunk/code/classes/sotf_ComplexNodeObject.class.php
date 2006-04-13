@@ -366,13 +366,8 @@ class sotf_ComplexNodeObject extends sotf_NodeObject {
 		$newsize = $newwidth . "x" . $newheight;
 
 		debug("resizing image", $newsize);
-
 		
-		// ------- Change from wolfi_fhstp and buddhafly (Change size of person icons) -----------	
-		$cmd = "convert $imgfile -resize $newsize $newfile 2>&1";
-		// when this line doesn´t work, use this line:
-		//$cmd = '"' . $config['magickDir'] . "/convert\" $imgfile -resize $newsize $newfile 2>&1";	
-		//---------------------------------------------------------------------------------------
+		$cmd = '"' . $config['magickDir'] . "/convert\" $imgfile -resize $newsize $newfile 2>&1";	
 		
 		debug("resize command", $cmd);
 
