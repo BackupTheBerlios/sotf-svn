@@ -44,6 +44,8 @@ $prg = & new sotf_Programme($prgId);
 	
 	$file =  $prg->getAudioDir() . '/' . $audioFiles[0] ['filename'];
 
+	if($new){
+
 	$ThisFileInfo = GetAllFileInfo($file, 'mp3', false, false, false) ;
 	
 	
@@ -68,6 +70,8 @@ $prg = & new sotf_Programme($prgId);
 
 		$prg->set('title' , $title);
 		$prg->set('keywords' ,$keywords);
+
+	}
 // -------------------------------------------------------------------------------------
 
 
