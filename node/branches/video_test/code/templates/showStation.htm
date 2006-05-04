@@ -11,8 +11,8 @@
         </td>
         <td class="title2" width="10%" align="right" valign="bottom">
           {if $JINGLE}<a href="{$ROOT_URL}/listen.php?id={$STATION_ID}&jingle=1">{#jingle#}</a>, {/if}
-	  <a href="{$HOME_URL}/podcast.php?station={$STATION_ID}">podcast</a><br />
-          <a href="{$ROOT_URL}/rss.php?station={$STATION_ID}&uiLang={$LANG}">RSS</a><br />
+	  <a href="{$HOME_URL}/podcast.php?station={$STATION_ID}">Pod-/Vodcast</a> | 
+          <a href="{$ROOT_URL}/rss.php?station={$STATION_ID}&uiLang={$LANG}"><img border='0' style="vertical-align:bottom" src='{$IMAGE_URL}/rss.gif'/></a><br />
           {if hasPerm($STATION_DATA,'change','authorize') }
           <input class="action" type="button" name="b1" value="{#edit_station#}" onClick="redir(this.form, '{$ROOT_URL}/editStation.php?stationid={$STATION_ID}')">
             {/if}

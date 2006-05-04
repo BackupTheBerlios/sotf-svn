@@ -12,13 +12,17 @@
                     <select name="language" style="width: 100%">
                         {html_options values=$searchLangs selected=$LANGUAGE output=$langNames}
                     </select>
-                  </td>
-                  <td width="1"> 
-                    <input type="submit" name="search" value="{#Search#}">
-                  </td>
+					
+                  </td>				
+				  <td width="1"> {*ADDED BY Martin Schmidt *}
+
+                  <input type="checkbox" {if $AUDIO}checked{/if} name="audio" value="1"> Audio
+				<input type="checkbox" {if $VIDEO}checked{/if} name="video" value="1"> Video
+                    <input type="submit" name="search" value="{#Search#}">  </td>
                 </tr>
+
                 <tr>
-                    <td><font size=2><A href="advsearch.php">{#advSearch#}</a></font>
+                    <td colspan=3 ><font size=2><A href="advsearch.php">{#advSearch#}</a></font></td>
                     </tr>
               </table>
             </form>

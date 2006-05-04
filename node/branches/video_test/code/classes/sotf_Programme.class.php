@@ -15,7 +15,13 @@ require_once($config['classdir'] . '/Tar.php');
 require_once($config['classdir'] . '/unpackXML.class.php');
 //require_once($config['classdir'] . '/packXML.class.php');
 require_once($config['classdir'] . '/sotf_Statistics.class.php');
-require_once($config['getid3dir'] . "/getid3.putid3.php");
+
+//ADDED BY BUDDHAFLY - 06-02-14
+require_once($config['getid3dir'] . "/getid3.php");
+
+
+//require_once($config['getid3dir'] . "/getid3.putid3.php");
+
 require_once($config['classdir'] . '/sotf_Metadata.class.php');
 
 class sotf_Programme extends sotf_ComplexNodeObject {
@@ -38,6 +44,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   var $links;
   var $rights;
   var $refs;
+  
+  var $type;
 
   /**
 	* constructor
@@ -77,7 +85,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		raiseError("Could not create unique dir for prog!");
   }
 
-  function create($stationOrSeriesId, $track='') {
+  function create($stationOrSeriesId, $track='', $is_video=false) {
 	 global $db, $repository;
 
 	 $db->begin();
@@ -103,6 +111,14 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 if(empty($track))
 		$track = 'prg';
 	 $this->getStation();
+	 
+	 if($is_video){
+	 $this->set('type', 'video');
+	 }	 
+	 else {
+	 $this->set('type', 'sound');
+	 }
+	 
 	 $this->set('entry_date', date('Y-m-d'));
 	 $this->set('modify_date', date('Y-m-d'));
 	 $this->set('track', sotf_Utils::makeValidName($track, 32));
@@ -190,12 +206,14 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 return $this->getDir();
   }
 
-  /** returns directory where audio files are stored for the programme */
+  /** returns directory where content files are stored for the programme */
   function getAudioDir() {
-	 return $this->getDir() . '/audio';
+	 return $this->getDir() . '/content'; // MOD BY BUDDHAFLY
   }
+  
 
-  /** returns directory where other files are stored for the programme */
+  
+   /** returns directory where other files are stored for the programme */
   function getOtherFilesDir() {
 	 return $this->getDir() . '/files';
   }
@@ -215,8 +233,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 if(!is_dir($dir)) {
 		mkdir($dir, 0770);
 	 }
-	 if(!is_dir($dir . '/audio')) {
-		mkdir($dir . '/audio', 0770);
+	 if(!is_dir($dir . '/content')) { //CHANGED BY BUDDHAFLY
+		mkdir($dir . '/content', 0770); //CHANGED BY BUDDHAFLY
 	 }
 	 if(!is_dir($dir . '/files')) {
 		mkdir($dir . '/files', 0770);
@@ -462,6 +480,29 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 return $objects;
   }
 
+  function isVideoPrg(){ //ADDED BY BUDDHAFLY
+  
+   if ($this->get('type')=='video') return true;
+   else return false;
+  
+  }
+  
+  function isAudioPrg(){ //ADDED BY BUDDHAFLY
+  
+  	if ($this->get('type')=='sound') return true;
+    else return false;
+  
+  }
+  
+  function getType(){ //ADDED BY BUDDHAFLY
+ 
+  	return $this->get('type');
+  
+  }
+  
+  
+
+
   function selectFileToListen() {
 
 	 // TODO: write this better
@@ -487,9 +528,17 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 if(!is_file($source))
 		raiseError("no such file: $source");
 	 $srcFile = new sotf_AudioFile($source);
+	 
+	 //ADDED BY BUDDHAFLY 06-02-20
+	 if($srcFile->isVideo()) $srcFile = new sotf_VideoFile($source);
+	// if($srcFile->isVideo()) $File = new sotf_VideoFile($filepath);
+	 //--------------------------
+	
 	 $target = $this->getAudioDir() .  '/' . $this->get('track') . '_' . $srcFile->getFormatFilename();
-	 if(!$srcFile->isAudio())
-		raiseError("this is not an audio file");
+
+	 if(!$srcFile->isAudio() && !$srcFile->isVideo()){
+		raiseError("$source is neither an audio nor a video file"); // was THIS
+	}
 	 //if(is_file($target)) {
 	 //	raiseError($page->getlocalized('format_already_present'));
 	 //}
@@ -502,7 +551,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$diff = abs($this->get('length') - $length);
 		if($diff > 15) { 
 		  // allow for 15 sec of difference in program length
-		  $page->addStatusMsg("audio_length_no_match");
+		  if($this->isAudioPrg()) $page->addStatusMsg("audio_length_no_match"); //MODIFIED BY Martin Schmidt
 		  //raiseError("audio_length_no_match");
 		  $this->set('length', $length);
 		  $this->update();
@@ -541,7 +590,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
   function saveFileInfo($filepath, $mainContent = false) {
 	 global $db;
-
+	
 	 // convert boolean into pgsql format
 	 if($mainContent)
 		$mainContent = 'true';
@@ -549,8 +598,14 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$mainContent = 'false';
 	 // get audio properties of file
 	 $file = new sotf_AudioFile($filepath);
+	 
+	 //ADDED BY BUDDHAFLY 06-02-20
+	 if($file->isVideo()) $file = new sotf_VideoFile($filepath);
+	 //--------------------------
+	  
+	 
 	 // find if this is an existing file
-	 if($file->isAudio()) {
+	 if($file->isAudio() || $file->isVideo()) { //CHANGED BY BUDDHAFLY 06-02-20
 		$fileInfo = new sotf_NodeObject('sotf_media_files');
 	 } else {
 		$fileInfo = new sotf_NodeObject('sotf_other_files');
@@ -558,8 +613,40 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $fileInfo->set("prog_id", $this->id);
 	 $fileInfo->set("filename", $file->name);
 	 $fileInfo->find();
+	 
 	 // save file info into database
-	 if($file->isAudio()) {
+	 
+	//ADDED BY BUDDHAFLY 06-02-20
+	if($file->isVideo()) {
+		$fileInfo->set('play_length', round($file->duration));
+		$fileInfo->set('type', $file->type);
+		if(is_numeric($file->bitrate)) {
+		  // constant bitrate
+		  $fileInfo->set('kbps', round($file->bitrate));
+		  $fileInfo->set('vbr', 'f');
+		} else {
+		  // variable bitrate
+		  $fileInfo->set('kbps', round($file->average_bitrate));
+		  $fileInfo->set('vbr', 't');
+		}
+		$fileInfo->set('format', $file->getFormatFilename());
+		$fileInfo->set('main_content', $mainContent);
+		
+		
+		$fileInfo->set('codec', $file->codec);
+		$fileInfo->set('frame_rate', $file->frame_rate);
+		$fileInfo->set('resolution_x', $file->resolution_x);
+		$fileInfo->set('resolution_y', $file->resolution_y);
+		$fileInfo->set('pixel_aspect_ratio', $file->pixel_aspect_ratio);
+		
+		//manage access rights for video
+		$fileInfo->set('download_access', 't');
+		$fileInfo->set('stream_access', 'f');
+	
+	 }
+	 
+	 
+	 else if($file->isAudio()) {
 		$fileInfo->set('play_length', round($file->duration));
 		$fileInfo->set('type', $file->type);
 		if(is_numeric($file->bitrate)) {
@@ -574,6 +661,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 		$fileInfo->set('format', $file->getFormatFilename());
 		$fileInfo->set('main_content', $mainContent);
 	 }
+	 
 	 $fstat = stat($filepath);
 	 $fileInfo->set('filesize', $fstat['size']);
 	 $fileInfo->set('last_modified', $db->getTimestampTz($fstat['mtime']));
@@ -593,8 +681,30 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function saveID3($file) {
 	 global $config;
 	 $fileInfo = $file->allInfo;
+	 //----------------- CHANGED BY BUDDHAFLY 06-02-19
 	 $id3 = $fileInfo['id3v1'];
-	 //$id3['comment'] =  substr(substr($config['rootUrl'], 7), 0, 30);
+
+	require_once($config['getid3dir'] . "/write.php");
+	 $tagwriter = new getid3_writetags;
+	 $tagwriter->filename   = $file;
+	 $TagData['comment'][] = "id: " . $this->id;
+	 debug("writing ID3V1", $id3);	
+
+	// write tags
+	if ($tagwriter->WriteTags()) {
+		//echo 'Successfully wrote tags<br>';
+		if (!empty($tagwriter->warnings)) {
+			logError('Wrtiting ID3V1 Tags: There were some warnings:<br>'.implode('<br><br>', $tagwriter->warnings));
+		}
+	} else {
+		logError("Could not change ID3V1 tags in file ". $file->path);
+	}
+	
+	//---------------------------------------------------	
+	
+	
+	/*
+	//$id3['comment'] =  substr(substr($config['rootUrl'], 7), 0, 30);
 	 $id3['comment'] = "id: " . $this->id;
 	 //$id3['album'] =  "id: " . $this->id;
 	 //if(!$id3['title'])
@@ -602,10 +712,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 //if(!$id3['artist'])
 	 //	$id3['artist'] = substr($this->getCreatorNames(), 0, 30);
 	 debug("writing ID3V1", $id3);
-	 //$succ = WriteID3v1($file->path, $id3['title'], $id3['artist'], $id3['album'], $id3['year'], $id3['comment'], $id3['genre'], NULL /*track*/);
-	 $succ = WriteID3v1($file->path, $id3['comment'], NULL /*track*/);
+	 //$succ = WriteID3v1($file->path, $id3['title'], $id3['artist'], $id3['album'], $id3['year'], $id3['comment'], $id3['genre'], NULL /*track*//*);
+	 $succ = WriteID3v1($file->path, $id3['comment'], NULL /*track*//*);
 	 if(!$succ)
 		logError("Could not change ID3V1 tags in file ". $file->path);
+	*/
   }
 
   function deleteFile($fid) {
@@ -947,7 +1058,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 // convert missing formats!
 	 $audioFiles = & new sotf_FileList();
 	 $audioFiles->getAudioFromDir($newPrg->getAudioDir());
-	 $checker = & new sotf_AudioCheck($audioFiles);
+	 $checker = & new sotf_ContentCheck($audioFiles); //MOD BY BUDDHAFLY
 	 $checker->console = $console; // if we don't want progress bars
 	 $targets = $checker->convertAll($newPrg->id);
 	 if(is_array($targets)) {

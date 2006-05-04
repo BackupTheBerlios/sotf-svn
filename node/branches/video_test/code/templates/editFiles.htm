@@ -17,6 +17,7 @@ else  window.location.href = this.location.href
 </SCRIPT>
 {/literal}
 
+
 <form>
 {if $NEW}
   <table width="100%">
@@ -41,7 +42,10 @@ else  window.location.href = this.location.href
 <form>
 <table class="tab">
   <tr> 
-    <td nowrap class="tab">{#Prg_files#}</td>
+    <td nowrap class="tab">
+	{#Prg_files#} 
+
+	</td>
   </tr>
 </table>
 <table class="tabarea" width="100%">
@@ -55,7 +59,9 @@ else  window.location.href = this.location.href
           <th>{#filesize#}</th>
           <th>{#last_modified#}</th>
           <th>{#play_length#}</th>
+		  {if !$VIDEO}
           <th>{#stream_access#}</th>
+		  {/if}
           <th>{#download_access#}</th>
           <th></th>
        </tr>
@@ -65,6 +71,10 @@ else  window.location.href = this.location.href
             <td>
               {if !empty($item.filename) }
               <a target="link" href="getFile.php/{$item.filename}?audio=1&id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
+			  {elseif !empty($item.errors) }
+			  	<font color="red">converting error</font>
+			  {elseif $item.converting}
+			  <font color="green">converting {$item.percentage}</font>
               { else }
               <font color="red">{#missing#}</font>
               {/if}
@@ -83,22 +93,28 @@ else  window.location.href = this.location.href
               {$item.play_length} {#sec#}
               {/if}
             </td>
+			{if !$VIDEO}
             <td>
                 {if !empty($item.filename) }
                 <input type="checkbox" onclick="javascript:setvalue('audiofilesa', '{$item.id}', this.checked);return true;"{ if $item.stream_access eq 't' } CHECKED="1" {/if} />
                 {/if}
             </td>
+			{/if}
             <td>
                 {if !empty($item.filename) }
               <input type="checkbox" onclick="javascript:setvalue('audiofilesd', '{$item.id}', this.checked);return true;"{ if $item.download_access eq 't' } CHECKED="1" {/if} />
                 {/if}
             </td>
             <td nowrap>
-              {if empty($item.filename) }
+			{if !$item.converting and empty($item.errors)}
+              {if empty($item.filename) and $PRG_DATA.type!='video'}
               <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=180')" />
-              {else}
+              {elseif empty($item.filename) and $PRG_DATA.type=='video'}
+			  <input class="action" type="button" name="b1" value="{#convert#}" onClick="javascript:document.location.href='editFiles.php?id={$PRG_ID}&convertindex={$item.index}&videoconversion=1'" />
+			   {else}
                 <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
               {/if}
+			 {/if}
             </td>
           </tr>
           {/foreach}    
@@ -107,9 +123,18 @@ else  window.location.href = this.location.href
                  <input class="action" type="button" name="b1" value="{#add_content#}" onClick="popup('addFiles.php?main=1&prgid={$PRG_ID}','AddFiles',500,500,true)" />
               </td>
               <td colspan="8" align="right">
-                {if $MAIN_AUDIO_COUNT gt 0 and $MISSING}
-                   <input class="action" type="button" name="b2" value="{#convert_all#}" onClick="window.open('convert.php?id={$PRG_ID}&all=1','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=400')" />
-                {/if}
+			  {if !$CONVERTING}
+                {if $MAIN_AUDIO_COUNT gt 0 and $MISSING and $PRG_DATA.type!='video'}
+                   <input class="action" type="button" name="b2" value="{#convert_all#}" onClick="window.open('convert.php?id={$PRG_ID}&all=1','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=600')" />
+                
+				{else if $MAIN_AUDIO_COUNT gt 0 and $MISSING and $PRG_DATA.type=='video'}
+					<input class="action" type="button" name="b2" value="{#convert_all#}" onClick="javascript:document.location.href='editFiles.php?id={$PRG_ID}&convertall=1&videoconversion=1'" /><br>
+				{/if}
+				
+			  {/if}
+			  {if $PRG_DATA.type=='video' AND !$STILL_FOUND}
+                   <input class="action" type="button" name="b2" value="Create Stills" onClick="javascript:document.location.href='editFiles.php?id={$PRG_ID}&createstills=1'" />
+			{/if}
               </td>
           </tr>  
     </table>
@@ -285,4 +310,8 @@ else  window.location.href = this.location.href
   <div align="right">
     <input class="action" type="button" name="b1" value="{#goto_step2#}" onClick="redir(this.form, 'editMeta.php?new=1&id={$PRG_ID}')" />
   </div>
+{/if}
+
+{if $CONVERTING OR $CREATESTILLS}
+		<script type="text/javascript" language="javascript">setTimeout("document.location.href='editFiles.php?id={$PRG_ID}'", 5000);</script>
 {/if}

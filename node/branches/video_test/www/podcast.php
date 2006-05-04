@@ -65,13 +65,28 @@ function toW3CDate($date) {
 
 function selectStream(&$prg) {
   global $config;
-  $files = $prg->listAudioFiles('TRUE','kbps DESC');
+  $files = $prg->listAudioFiles('TRUE','kbps DESC'); //meant ContentFiles
   if(is_array($files)) {
        foreach($files as $f) {
-              if($f['stream_access']=='t') {
-                $f['url'] = $config['rootUrl'] . '/listen.php?id=' . $prg->id . '&fileid=' . $f['id'];
-                return $f;
-              }
+	   		if($f['stream_access']=='t'){
+			
+				  //MODIFIED BY Martin Schmidt
+				  $f =  array_merge($f, sotf_AudioFile::decodeFormatFilename($f['format']));
+				 
+				  if($prg->isVideoPrg() && $f['format']=="mp4"){
+				  	$f['url'] = $config['rootUrl'] . '/listen.php?id=' . $prg->id . '&fileid=' . $f['id'];
+					
+					return $f;
+				  }
+			      
+				  elseif($prg->isAudioPrg()) {
+				  
+					$f['url'] = $config['rootUrl'] . '/listen.php?id=' . $prg->id . '&fileid=' . $f['id'];
+					return $f;
+				  }
+				  /////////////////////////////
+				  
+			}
       }
   }
   return NULL;
@@ -79,10 +94,11 @@ function selectStream(&$prg) {
 
 
 
-function selectAudio(&$prg) {
+function selectAudioVideo(&$prg) {
   global $config;
   $files = $prg->listAudioFiles('TRUE','kbps DESC');
   if(is_array($files)) {
+
 	 foreach($files as $f) {
 		if($f['download_access']=='t') {
 		  /* sun 8.2.06 added to format properly the enclosure url --rama */
@@ -102,9 +118,22 @@ function selectAudio(&$prg) {
 		  //$f['url'] = $config['rootUrl'] . '/getFile.php?audio=1&id=' . $prg->id . '&filename=' . $f['filename'];
 		  $baseUrl = sotf_Node::getHomeNodeRootUrl($prg);
 		  //$f['url'] = $baseUrl . '/getFile.php/fid__' . $f['id'].".mp3"; // wreutz: very dirty hack for ipooder to work on os x
-		  $f['url'] = $baseUrl . '/getFile.php/' . 'fid__' . $f['id']. '__' . $fname.".mp3"; //rjankowski changed order to get parsed by getFile.php
+		  
+		  //MODIFIED BY Martin Schmidt
+		  $f =  array_merge($f, sotf_AudioFile::decodeFormatFilename($f['format']));
+		  if ($prg->isVideoPrg() && $f['format']=="mp4"){
+		  //echo "drinnen";
+		  	$f['url'] = $baseUrl . '/getFile.php/' . 'fid__' . $f['id']. '__' . $fname.".mp4";
+			return $f;
+		  }
+		  
+		  else if ($prg->isAudioPrg()){
+		  	$f['url'] = $baseUrl . '/getFile.php/' . 'fid__' . $f['id']. '__' . $fname.".mp3"; //rjankowski changed order to get parsed by getFile.php
+			return $f;
+		  }
+		  //////////////////////////
+		  
 		  // rama: included $fname as formatted name $station-$series-$title
-		  return $f;
 		}
 	 }
   }
@@ -142,29 +171,35 @@ function addItem(&$rss, &$prog) {
   writeTag($rss, "pubDate", toW3CDate($prog->get('entry_date')));
   writeTag($rss, "description", $prog->get('abstract'));
   writeTag($rss, "BroadcastDate", toW3CDate($prog->get('broadcast_date')));
-  $audioAttrs = selectAudio($prog);
-  if($audioAttrs) {
+  
+  if($prog->isVideoPrg()) $type = 'video/mov'; //ADDED BY Martin Schmidt
+  else $type = 'audio/mpeg';
+  
+  $audioAttrs = selectAudioVideo($prog);
+  if($audioAttrs['url']) { //MODIFIED BY Martin Schmidt, was if($audioAttrs)
 	 //$filepath = $prog->getFilePath($audioAttrs);
 	 //$tmpFile = linkAudio($filepath, $audioAttrs);
-	 $enclAttrs = array('type' => 'audio/mpeg',
-							  'length' => $audioAttrs['filesize'],
-							  //'url' => $config['tmpUrl'] . '/' . basename($tmpFile),
-							  'url' => $audioAttrs['url'],
-							  //'url' => $config['tmpUrl'] . '/' . 'au_011pr105_budh1204_24kbps_1chn_22050Hz.mp3',
-							  );
+	 $enclAttrs = array('type' => $type,
+						  'length' => $audioAttrs['filesize'],
+						  //'url' => $config['tmpUrl'] . '/' . basename($tmpFile),
+						  'url' => $audioAttrs['url']
+						  //'url' => $config['tmpUrl'] . '/' . 'au_011pr105_budh1204_24kbps_1chn_22050Hz.mp3',
+						  );
 	 writeTag($rss, "enclosure", NULL, NULL, $enclAttrs);
   }
+  
   $streamAttrs = selectStream($prog);
-  if($streamAttrs) {
+  if($streamAttrs['url']) { //MODIFIED BY Martin Schmidt, was if($streamAttrs)
        //$filepath = $prog->getFilePath($audioAttrs);
        //$tmpFile = linkAudio($filepath, $audioAttrs);
-       $enclAttrs = array('type' => 'audio/mpeg',
-                                                        'length' => $streamAttrs['filesize'],
-                                                        //'url' => $config['tmpUrl'] . '/' . basename($tmpFile),
-                                                        'url' => $streamAttrs['url'],
-                                                        //'url' => $config['tmpUrl'] . '/' . 'au_011pr105_budh1204_24kbps_1chn_22050Hz.mp3',
-                                                        );
+       $enclAttrs = array('type' => $type,
+							'length' => $streamAttrs['filesize'],
+							//'url' => $config['tmpUrl'] . '/' . basename($tmpFile),
+							'url' => $streamAttrs['url']
+							//'url' => $config['tmpUrl'] . '/' . 'au_011pr105_budh1204_24kbps_1chn_22050Hz.mp3',
+							);
        writeTag($rss, "streamurl", NULL, NULL, $enclAttrs);
+	   
   }
   $rss .= "\n</item>";
 }
@@ -314,7 +349,7 @@ if($seriesId) { //***************** SERIES *************************************
   $queryText = implode(' ', $queryTexts);
   writeTag($rss, "title", "StreamOnTheFly query results");
   writeTag($rss, "description", $queryText);
-  writeTag($rss, "link", $config['rootUrl'] . "advsearchresults.php?back=true&SQLquerySerial=$query");
+  writeTag($rss, "link", $config['rootUrl'] . "/advsearchresults.php?back=true&SQLquerySerial=$query"); //added slash - martin schmidt
   //$properties["language"]="en";
 	
   $rss .= "\n<image>";

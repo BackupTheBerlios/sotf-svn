@@ -27,10 +27,14 @@ function startPage()
 		echo " ";
 }
 
-function endPage()
+function endPage($file_errors=0)
 {
 	echo "<script>\n";
-	echo "alert('Convert ready!');\n";
+	
+	echo "alert('Convert ready!";
+	if($file_errors==1) echo "\\n 1 file has not successfully been converted";
+	elseif($file_errors) echo "\\n $file_errors files has not successfully been converted";
+	echo "');\n";
 	echo "document.location.href='closeAndRefresh.php';\n";
 	echo "</script>\n";
 	echo "</body>\n";
@@ -68,6 +72,7 @@ function progressBar($cmd,$regexp)
 	while(!feof($fp))
 	{
 		$data = fread($fp,1);
+		
 		if ((ord($data) == 13) || (ord($data) == 10))
 		{
 			if (preg_match($regexp,$line,$match))
@@ -95,6 +100,8 @@ function progressBar($cmd,$regexp)
 	}
 	flush();
 }
+
+
 
 function encodeWithLame($cmd)
 {
@@ -162,6 +169,19 @@ function convertWithSox($cmd)
 	flush();
 }
 
+function transcodeWithFfmpeg($cmd) //ADDED BY BUDDHAFLY
+{
+	global $config;
+
+	echo "<p>Encoding Video file...<br />\n";
+	flush();
+
+	progressBar($cmd,$config['ffmpegRegexp']);
+	echo "</p>\n";
+	flush();
+}
+
+
 function checkFile($file) {
   if(!is_readable($file)) {
 	 raiseError("conversion_failed");
@@ -172,49 +192,78 @@ function rmFile($file) {
   unlink($file) or logError("Could not delete file: $file");
 }
 
+function fileOK($file) {
+
+	$getID3 = new getID3();
+	$fileinfo = $getID3->analyze($file);
+	getid3_lib::CopyTagsToComments($fileinfo);
+	
+  if(!is_readable($file) || filesize($file)==0 || !isset($fileinfo['audio'])) {
+	return false;
+  }
+	return true;
+}
+
+
 $id = sotf_Utils::getParameter('id'); 
 $index = sotf_Utils::getParameter('index'); 
 $jingle = sotf_Utils::getParameter('jingle'); 
-$all = sotf_Utils::getParameter('all'); 
+$all = sotf_Utils::getParameter('all');
+
 
 $obj = $repository->getObject($id);
+
 if(!$obj)
 	  raiseError("object does not exist!");
-
 checkPerm($obj->id, 'change');
 
-$audioFiles = & new sotf_FileList();
+
+// CHANGED BY BUDDHAFLY
+$audioVideoFiles = & new sotf_FileList(); 
 if($jingle) {
-  $audioFiles->getAudioFromDir($obj->getMetaDir());
+  $audioVideoFiles->getAudioVideoFromDir($obj->getMetaDir());
 } else {
-  $audioFiles->getAudioFromDir($obj->getAudioDir());
+  $audioVideoFiles->getAudioVideoFromDir($obj->getAudioDir()); 
 }
-$checker = & new sotf_AudioCheck($audioFiles);
-$checker->console = true;
+$checker = & new sotf_ContentCheck($audioVideoFiles);
+$checker = $checker->selectType(); 
+if($videoconv) $checker->console = false;
+else $checker->console = true;
+////////////////////////////////////////////////////////
 
 startPage();
+
+$file_errors = 0;
 
 if($all) {
   $targets = $checker->convertAll($obj->id);
 
   foreach($targets as $target) {
+  	 if(!$checker->fileOK($target)) {
+	 	$file_errors++;
+		continue;
+	 }
+	 
 	 if($jingle) {
 		$obj->setJingle($target);
-	 } else {
+	 } else{
 		$obj->setAudio($target);
 	 }
   }
 
 } else {
   $target = $checker->convert($obj->id, $index);
-  
-  if($jingle) {
-	 $obj->setJingle($target);
-  } else {
-	 $obj->setAudio($target);
-  }
+  if($checker->fileOK($target)){
+	  if($jingle) {
+		 $obj->setJingle($target);
+	  } else{
+		 $obj->setAudio($target);
+	  }
+   }
+   else $file_errors++;
 }
 
-endPage();
+
+endPage($file_errors);
 
 ?>

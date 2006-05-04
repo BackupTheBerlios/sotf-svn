@@ -3,7 +3,7 @@
 /*  
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ * Authors: Andrs Micsik, Mt Pataki, Tams Dri 
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  * Update Topic Tree by Martin Schmidt, FH St. Poelten
  */
@@ -168,6 +168,7 @@ $smarty->assign("LOCAL_NODE", $localNode->getAll());
 // neighbours
 //$neighbours = sotf_Neighbour::listAll();
 $nodes = sotf_Node::listAll();
+print_r($neighbours);
 while(list(,$node)= each($nodes)) {
   $nodeId = $node->get('node_id');
   if($nodeId == $config['nodeId'])

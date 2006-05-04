@@ -26,8 +26,11 @@ if(empty($fid)) {
 }
 
 if($fid) {
+  
   $pos = strpos($fid, ".mp3");
   if ($pos !== false) { $fid = rtrim($fid, ".mp3"); }
+  
+  
   debug ("fid", $fid);
   $fobj = &$repository->getObject($fid);
   if(!$fobj)

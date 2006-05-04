@@ -7,6 +7,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 } 
 -->
 </SCRIPT>
+
 {/literal}
 {if not $ID}
   <form action="{$ROOT_URL}/get.php">
@@ -56,7 +57,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         {/if}
       </td>
         <td class="title2" width="10%" align="right" valign="bottom">
-          <a href="{$ROOT_URL}/rss.php?id={$ID}&uiLang={$LANG}">RSS</a><br />
+          <a href="{$ROOT_URL}/rss.php?id={$ID}&uiLang={$LANG}"><img border='0' style="vertical-align:bottom" src='{$IMAGE_URL}/rss.gif'/></a><br />
           {if hasPerm($ID,'change') }
           <input class="action" type="button" name="b1" value="{#edit_meta#}" onClick="redir(this.form,'{$ROOT_URL}/editMeta.php?id={$ID}')" />
           <input class="action" type="button" name="b1" value="{#edit_files#}" onClick="redir(this.form,'{$ROOT_URL}/editFiles.php?id={$ID}')" />
@@ -73,7 +74,59 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 
     </tr>
   </table>
+  
+  {*ADDED BY Martin Schmidt*}
+  
+  {if $VIDEO_PRG}
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">Preview</td>
+    </tr>
+  </table>
 
+  <table class="tabarea" width="100%" >
+    <tr> 
+	
+	{if $FLV_FOUND} 
+      <td class="tabarea"> 
+	  {*
+  <OBJECT class="videoplayer" classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000'
+        codebase='http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0'
+        width='216' height='186' style="padding:0; margin:0">
+        <param name='movie' value="{$ROOT_URL}/videoplayer.swf">
+		<param name='bgcolor' value="#EFF4FE">
+        <param name='quality' value="high">
+       <param name='loop' value="false">
+        <EMBED class="videoplayer" style="padding:0; margin:0" src="{$ROOT_URL}/videoplayer.swf" quality='high' width='216' height='186' bgcolor="#EFF4FE" loop="false" type='application/x-shockwave-flash'
+        pluginspage='http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash'>
+        </EMBED>
+		  </OBJECT> *}
+		
+	<object type="application/x-shockwave-flash" width="176" height="144" 
+    wmode="transparent" data="flvplayer.swf?file={$FLV_PATH}">
+  <param name="movie" value="flvplayer.swf?file={$FLV_PATH}" />
+  <param name="wmode" value="transparent" />
+  </object>
+  
+  	
+
+  </td>
+  
+{elseif !$FLV_FOUND and $VIDEO_PRG}
+<td class="tabarea"> 
+  		Flash-Preview for this programme is not available.
+		</td>
+  {/if}
+  
+  {if $STILLS}<td  class="tabarea">{foreach item=item from=$STILLS}
+  <img style="padding:10px" src='getFile.php/{$item.filename}?id={$PRG_DATA.id}&filename={$item.filename}'>
+  {/foreach}    </td>
+  {/if}
+</tr></table>
+<p></p>
+ {/if}
+ 
+	
   <table class="tab">
     <tr> 
       <td nowrap class="tab">{#Metadata#}</td>
@@ -234,7 +287,12 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 <tr> 
   <td class="tabarea"> 
    {if $AUDIO_FILES }
-        <div class="subheader">{#audio_file_list#}</div>
+        <div class="subheader">
+		{if $VIDEO_PRG}
+			Video Files:
+		{else}
+			{#audio_file_list#}
+		{/if}</div>
         <a name="mfiles"></a>
     <table>
        {cycle name="audio" values="list1,list2" print=false advance=false}
@@ -244,22 +302,42 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
             <td width="5%"></td>
             <td>
               {if $item.main_content eq 't' }
+			  	{if $VIDEO_PRG}
+				 Programme video
+				 {else}
                  {#programme_audio#}
+				{/if}
               {elseif $item.caption} 
                  {$item.caption}
               {else}
                  {$item.filename}
               {/if}
             </td>
-            <td align="right">
-              {$item.bitrate} kbps 
-            </td>
-            <td>
-                {$item.format}
-            </td>
-            <td align="right">
-              {$item.playtime_string}
-            </td>
+			{if $VIDEO_PRG}
+				<td>
+					<strong>{$item.format}</strong>
+				</td>
+				<td align="right">
+				  {$item.bitrate} kbps 
+				</td>
+				
+				<td align="right">
+				  {$item.playtime_string}
+				</td>
+				<td align="right">
+				  {$item.filesize} {#bytes#}
+				</td>
+			{else}
+				<td align="right">
+				  {$item.bitrate} kbps 
+				</td>
+				<td>
+				  {$item.format}
+				</td>
+				<td align="right">
+				  {$item.playtime_string}
+				</td>
+			{/if}
             <td>
               { if $item.download_access eq 't'}
                 <!-- <input class="action" type="button" name="b1" value="{#Download#}" onClick="popup('{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}','ViewPopup',500,500,true)" /> -->

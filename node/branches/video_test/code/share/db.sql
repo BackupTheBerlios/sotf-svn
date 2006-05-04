@@ -104,6 +104,7 @@ CREATE TABLE "sotf_nodes" (
 "neighbours" varchar(255), -- 
 "last_sync_in" timestamptz,							-- time of last sync 
 "last_sync_out" timestamptz							-- time of last sync 
+"video_capable" bool DEFAULT 'f'::bool --ADDED BY Martin Schmidt
 );
 
 CREATE TABLE "sotf_neighbours" (

@@ -107,7 +107,9 @@ require($config['smartydir'] . '/Config_File.class.php');
 require($config['classdir'] . '/db_Wrap.class.php');
 require($config['classdir'] . '/sotf_Utils.class.php');
 require($config['classdir'] . '/sotf_FileList.class.php');
+require($config['classdir'] . '/sotf_ContentCheck.class.php'); //ADDED BY BUDDHAFLY
 require($config['classdir'] . '/sotf_AudioCheck.class.php');
+require($config['classdir'] . '/sotf_VideoCheck.class.php'); //ADDED BY BUDDHAFLY
 require($config['classdir'] . '/sotf_User.class.php');
 require($config['classdir'] . '/sotf_UserPrefs.class.php');
 require($config['classdir'] . '/sotf_Page.class.php');

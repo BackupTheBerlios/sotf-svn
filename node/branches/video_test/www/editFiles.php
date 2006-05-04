@@ -12,6 +12,10 @@ require("init.inc.php");
 $id = sotf_Utils::getParameter('id');
 $new = sotf_Utils::getParameter('new');
 $okURL = sotf_Utils::getParameter('okURL');
+$videoconv=sotf_Utils::getParameter('videoconversion');
+$convertall=sotf_Utils::getParameter('convertall');
+$convertindex=sotf_Utils::getParameter('convertindex');
+$createstills=sotf_Utils::getParameter('createstills');
 
 if($new) {
   $smarty->assign("PAGETITLE", $page->getlocalized("New_prog_step1"));
@@ -45,6 +49,11 @@ elseif ($capname == "mfiles")
 
 $prg = & new sotf_Programme($id);
 
+if($prg->isVideoPrg()) $video=true;
+else $video = false;
+$converting=false;
+
+
 // admins or owners can change files
 checkPerm($id, 'change');
 
@@ -68,8 +77,7 @@ if($delFile) {
 
 // generate output
 //$smarty->assign("OKURL",$okURL);
-if($new)
-     $smarty->assign("NEW",1);
+if($new)$smarty->assign("NEW",1);
 
 $smarty->assign('PRG_DATA', $prg->getAll());
 
@@ -83,15 +91,16 @@ $smarty->assign('OTHER_FILES', $otherFiles);
 
 // audio files which does not contain the main programme
 $smarty->assign('AUDIO_FILES', $prg->listAudioFiles('false'));
-
+ 
 // audio files for programme
 $audioFiles = $prg->listAudioFiles('true');
+
 for ($i=0;$i<count($audioFiles);$i++) {
     $mainAudio[$audioFiles[$i]['filename']] = $audioFiles[$i];
 }
 
 $prgAudiolist = & new sotf_FileList();
-$prgAudiolist->getAudioFromDir($prg->getAudioDir());
+$prgAudiolist->getAudioVideoFromDir($prg->getAudioDir()); //CHANGED BY BUDDHAFLY
 
 // check SQL validity
 if($prgAudiolist->count() != count($mainAudio)) {
@@ -99,7 +108,7 @@ if($prgAudiolist->count() != count($mainAudio)) {
 }
 
 $files = $prgAudiolist->getFiles();
-debug('mainAUdio', $mainAudio);
+debug('mainAudio', $mainAudio);
 debug('prgaudiolist', $files);
 for ($i=0;$i<count($files);$i++) {
   if(!$mainAudio[$files[$i]->name]) {
@@ -112,37 +121,171 @@ for ($i=0;$i<count($files);$i++) {
   // TODO: check all fields
 }
 
+
+
+
+
+if($video){
+	$still_found=false;
+	
+	if ($directory = opendir($prg->getOtherFilesDir())) {
+	   while (false !== ($filename = readdir($directory))) {
+			if(preg_match("/^still_".$id."_[12345]\.gif$/",$filename)){
+				$still_found=true;
+		   }
+	   }
+	   closedir($directory);
+	}
+	
+	if ($tempdir = opendir($config['wwwdir']."/tmp")) {
+	   while (false !== ($filename = readdir($tempdir))) {
+			if(preg_match("/^still_".$id."_[12345]\.gif$/",$filename)){
+				$still_found=true;
+		   }
+	   }
+	   closedir($tempdir);
+	}
+	
+	if(!$still_found && $createstills) {
+		sotf_VideoFile::createStills($files[0]->path, $files[0]->duration, $id);
+	}
+}
+
+
 if($missing) {
   // there was a missing file description, so we have to restart the whole process
   $page->redirectSelf();
   exit;
 }
 
-// compare with required formats
-$checker = & new sotf_AudioCheck($prgAudiolist);
 
-$PRG_AUDIO = array();
-for ($i=0;$i<count($config['audioFormats']);$i++)
-{
-  $PRG_AUDIO[$i] = array("format" => $checker->getFormatFileName($i),
-                         "index" => $i);
-  if ($checker->reqs[$i][0]) {
-    $fname = $prgAudiolist->list[$checker->reqs[$i][1]]->name;
-    $PRG_AUDIO[$i] = array_merge($PRG_AUDIO[$i], $mainAudio[$fname]);
-    //$PRG_AUDIO[$i]['name'] = $fname;
-    unset($mainAudio[$fname]);
-  } else {
-    $PRG_AUDIO[$i]['missing'] = 1;
-	 $missing = 1;
-  }
+$checker = & new sotf_ContentCheck($prgAudiolist); //todo $prgAudioList MEANT CONTENT
+$checker = $checker->selectType();
+
+//check for recently converted files or transcoding in progress
+if($video && $prgAudiolist->count()){
+	$temppath=$config['wwwdir']."/tmp/";
+	$obj = $repository->getObject($id);
+	if(!$obj) raiseError("object does not exist!");
+	
+	$list_changed=false;
+	
+	if ($tempdir = opendir($config['wwwdir']."/tmp")) {
+	   while (false !== ($filename = readdir($tempdir))) {
+			if(preg_match("/^".$id."_/",$filename)){
+				if($checker->fileOK($temppath.$filename)) {
+					if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
+					$obj->setAudio($temppath.$filename);
+					$list_changed=true;
+				}
+			
+			}if(preg_match("/^still_".$id."_[12345]\.gif$/",$filename)){
+				$obj_id=$prg->setOtherFile($temppath.$filename);
+				//$still=new sotf_NodeObject('sotf_other_files', $obj_id);
+					$fileInfo = &$repository->getObject($obj_id);
+					$fileInfo->set('public_access', 'f');
+					$fileInfo->update();
+				$list_changed=true;
+		   }
+	   }
+	   closedir($tempdir);
+	}
+	
+	if($list_changed) {
+	  $page->redirectSelf();
+	  exit;
+	}
 }
 
-debug("mainAudio", $mainAudio);
-if(is_array($mainAudio)) {
-  while(list($fn,$finfo) = each($mainAudio)) {
-	 $PRG_AUDIO[] = $finfo;
-  }
+
+	
+// compare with required formats	
+	
+	$PRG_AUDIO = array();
+	
+	
+	for ($i=0;$i<count($config[$checker->prefix.'Formats']);$i++) // is either "audioFormats" or "videoFormats"
+	{
+	  $PRG_AUDIO[$i] = array("format" => $checker->getFormatFileName($i),
+							 "index" => $i);
+	  if ($checker->reqs[$i][0]) {
+		$fname = $prgAudiolist->list[$checker->reqs[$i][1]]->name;
+		$PRG_AUDIO[$i] = array_merge($PRG_AUDIO[$i], $mainAudio[$fname]);
+		//$PRG_AUDIO[$i]['name'] = $fname;
+		unset($mainAudio[$fname]);
+	  } else {
+	  	
+		if($video){
+			// if conversion in progress calculate percentage
+			$regexp_file="/^".$id . '_.*_' . $checker->getFormatFilename($i)."$/";
+			$source = $prgAudiolist->list[$checker->reqs[$i][1]]->getPath();
+			
+			if ($tempdir = opendir($config['wwwdir']."/tmp")) {
+			   while (false !== ($filename = readdir($tempdir))) {
+					if(preg_match($regexp_file, $filename)){
+						$PRG_AUDIO[$i]['converting']=true;
+						$totalframes=$checker->getTotalFrames($source, $i);
+						$perc_error = $checker->getPercentageOrError($temppath.$filename, $totalframes);
+						$PRG_AUDIO[$i]['errors']=$perc_error['errors'];
+						if($perc_error['percentage'])$PRG_AUDIO[$i]['percentage']="~ ".$perc_error['percentage']."%";
+						if(!empty($perc_error['errors'])) $PRG_AUDIO[$i]['converting'] = false;
+				   }
+			   }
+			   closedir($tempdir);
+			}
+		}
+				
+		$PRG_AUDIO[$i]['missing'] = 1;
+		 $missing = 1;
+	  }
+	}
+	
+	
+	//check whether a file is converting
+	$converting=false;
+	for ($i=0;$i<count($config[$checker->prefix.'Formats']);$i++){
+		if($PRG_AUDIO[$i]['converting']==true) $converting=true;	
+	}
+	
+
+	debug("mainAudio", $mainAudio);
+	if(is_array($mainAudio)) {
+	  while(list($fn,$finfo) = each($mainAudio)) {
+		 $PRG_AUDIO[] = $finfo;
+	  }
+	}
+
+
+
+// start converting required formats
+if($videoconv && $missing){
+
+	if(!$obj)
+		  raiseError("object does not exist!");
+	checkPerm($obj->id, 'change');
+	
+	$checker->console = false;
+	
+	if($convertall) {
+	  $checker->convertAll($obj->id);
+	} 
+	elseif($convertindex!="") {
+	  $checker->convert($obj->id, $convertindex);
+	}
+	
+	$page->redirect("editFiles.php?id=$id");
+	exit;
 }
+
+//////////////////////////////////////////////////////////
+
+$smarty->assign('CREATESTILLS', $createstills);
+
+$smarty->assign('STILL_FOUND', $still_found);
+
+$smarty->assign('VIDEO',$video);
+
+$smarty->assign('CONVERTING',$converting);
 
 $smarty->assign('MISSING',$missing);
 

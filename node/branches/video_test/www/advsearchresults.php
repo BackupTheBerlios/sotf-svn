@@ -97,6 +97,7 @@ for($i =0; $i<$max; $i++)	//$selected will contain all the information about the
 			if ($values[$topicname] == "") $values[$topicname] = $topic["name"];
 			else $values[$topicname] .= "; ".$topic["name"];
 	}
+	
 
 	$item['title'] = $result[$i][title];
 	$item['id'] = $result[$i][id];
@@ -111,6 +112,15 @@ for($i =0; $i<$max; $i++)	//$selected will contain all the information about the
 //if (DB::isError($result)) die($result->getMessage());
 //print("<BR />".count($result));
 
+// GET FIRST "NON-IGNORE"-FIELD - ADDED BY Martin Schmidt
+$i=0;
+while($SQLquery[$i][0]=="IGNORE"){
+	$i++;
+} 
+$FirstNonIgnore=$i;
+///////////////////////
+
+$smarty->assign("FirstNonIgnore", $FirstNonIgnore); //ADDED BY Martin Schmidt
 $smarty->assign("SQLquery", $SQLquery);					//the query
 $smarty->assign("SQLquerySerial", $SQLquerySerial);			//the serialized query
 //$smarty->assign("SQLqueryfields", $advsearch->GetSQLqueryfields());	//translated name for all fieldnames of the query

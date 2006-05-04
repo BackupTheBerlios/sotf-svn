@@ -15,6 +15,10 @@ $pattern = sotf_Utils::getSQLSafeParameter('pattern');
 $language = sotf_Utils::getSQLSafeParameter('language');
 $station = sotf_Utils::getSQLSafeParameter('station');
 
+//ADDED BY Martin Schmidt
+$audio = sotf_Utils::getParameter('audio');
+$video = sotf_Utils::getParameter('video');
+
 if($pattern) {
   //  debug("language", $language);
   //  if(strpos($pattern, '?') || strpos($pattern, '*') || strpos($pattern, '+')) {
@@ -26,7 +30,9 @@ if($pattern) {
 
   $advsearch = new sotf_AdvSearch();						//create new search object object with this array
 
-  $total = $advsearch->simpleSearch($pattern, $language, $station);
+  //$total = $advsearch->simpleSearch($pattern, $language, $station);
+  $total = $advsearch->simpleSearch($pattern, $language, $station, $audio, $video); //MOD by Martin Schmidt
+  
   $limit = $page->splitList($total, "?pattern=" . urlencode($pattern) . "&language=$language");
   $result = $advsearch->getSimpleSearchResults($limit["from"] , $limit["to"]);
 
@@ -38,7 +44,12 @@ if($pattern) {
   $smarty->assign('RESULTS', $result);
   $smarty->assign('PATTERN', $pattern);
   $smarty->assign('LANGUAGE', $language);
+  
+  //ADDED BY Martin Schmidt
+  $smarty->assign('VIDEO', $video);
+  $smarty->assign('AUDIO', $audio);
 }
+else $page->redirect("index.php"); //ADDED BY Martin Schmidt
 
 $searchLangs = $config['languages'];
 array_unshift($searchLangs, "any_language");

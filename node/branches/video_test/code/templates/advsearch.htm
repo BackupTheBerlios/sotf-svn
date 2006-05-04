@@ -3,24 +3,41 @@
 <div align="center">
 <TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="80%" BGCOLOR="{#searchBgColor2#}">
 	<TR BGCOLOR="{#searchBgColor1#}">
-		<TD COLSPAN=6>{#your_query_is#}{if count($SQLquery) > 0}:{else} {#empty#}{/if}
+		<TD COLSPAN=6>{* commented out by Martin Schmidt{#your_query_is#}{if count($SQLquery) > 0}:{else} {#empty#}{/if}*}&nbsp;&nbsp;
 		<INPUT type="hidden" name="SQLquerySerial" value="{$SQLquerySerial}">
 		<INPUT type="image" SRC="{$IMAGE_URL}/transp.gif" name="image">
 		</TD>
 	</TR>
-
+	<TR>
+	<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	<TD colspan='4' ALIGN=center>&nbsp;&nbsp;</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+	
+	<TR>
+	<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	<TD colspan='4' ALIGN=center><B>{#combine#}</B></TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	</TR>
+	
+	<TR>
+	<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	<TD colspan='4' ALIGN=center>&nbsp;&nbsp;</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	</TR>
+	
+	<tr height="3"><TD BGCOLOR="{#searchBgColor1#}"></TD><td height="3" colspan="4" bgcolor="#FFFFFF"></td><TD BGCOLOR="{#searchBgColor1#}"></TD></tr>
 	{section name=i loop=$SQLquery}
-	{if $smarty.section.i.index != 0}
-		{if $SQLquery[i][0] == "AND"}<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD><TD COLSPAN=4 BGCOLOR="#FFFFFF" align=center>{#AND#}</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>{/if}
-	{/if}
+	{* commented out by Martin Schmidt{if $smarty.section.i.index != 0}
+		 {if $SQLquery[i][0] == "AND"}<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD><TD COLSPAN=4 BGCOLOR="#FFFFFF" align=center>{#AND#}</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>{/if}
+	{/if}*}
 	<TR>
 		<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+		
+		<TD>&nbsp;&nbsp;<INPUT type="checkbox" name="SQLchosen[]" value="{$SQLquery[i][1]}" {if $SQLquery[i][0] == "AND"} checked {/if}/></TD> {*ADDED BY Martin Schmidt*}
+		 
 		<TD><B>{$SQLqueryfields[i]}</B></TD>
 		{if $SQLquery[i][4] == "string"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQstring selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30"></TD>
 		{elseif $SQLquery[i][4] == "date"}
-			<TD><SELECT name="SQLeq[]" with=13>{html_options options=$EQdate selected=$SQLquery[i][2]}</SELECT></TD>
+			<TD><SELECT name="SQLeq[]" width=13>{html_options options=$EQdate selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD>{html_select_date prefix="SQLstring[]" time=$SQLquery[i][3] start_year="2000" end_year="+0" display_days=true month_format="%m" field_order="YMD" }</TD>
 		{elseif $SQLquery[i][4] == "lang"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
@@ -43,18 +60,62 @@
 		{elseif $SQLquery[i][4] == "topic"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQtopic selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30"></TD>
+			
+		{* added by Martin Schmidt *}
+		{elseif $SQLquery[i][4] == "contenttype"}
+			<TD><SELECT name="SQLeq[]">{html_options options=$EQcontenttype selected=$SQLquery[i][2]}</SELECT></TD>
+			<TD><SELECT name="SQLstring[]">{html_options options=$ContentTypes selected=$SQLquery[i][3]}</SELECT></TD>
+		{**************************************}
+		
 		{/if}
-		<TD ALIGN="right" valign="middle"><INPUT type="image" SRC="{$IMAGE_URL}/plusz.gif"  ALT="{#add#}" name="ADD{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGE_URL}/transp.gif" /><IMG SRC="{$IMAGE_URL}/transp.gif" /><INPUT type="image" ALT="{#delete#}" SRC="{$IMAGE_URL}/minusz.gif" name="DEL{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGE_URL}/transp.gif" /><IMG SRC="{$IMAGE_URL}/transp.gif" /></TD>
+		
+		{* commented out by Martin Schmidt <TD ALIGN="right" valign="middle"><INPUT type="image" SRC="{$IMAGE_URL}/plusz.gif"  ALT="{#add#}" name="ADD{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGE_URL}/transp.gif" /><IMG SRC="{$IMAGE_URL}/transp.gif" /><INPUT type="image" ALT="{#delete#}" SRC="{$IMAGE_URL}/minusz.gif" name="DEL{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGE_URL}/transp.gif" /><IMG SRC="{$IMAGE_URL}/transp.gif" /></TD>*}
+		
 		<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
 	</TR>
+	<tr height="3"><TD BGCOLOR="{#searchBgColor1#}"></TD><td height="3" colspan="4" bgcolor="#FFFFFF"></td><TD BGCOLOR="{#searchBgColor1#}"></TD></tr>
 	{/section}
+	
+	<TR>
+	<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	<TD colspan='4' ALIGN=center>&nbsp;&nbsp;</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+		<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD><TD colspan='4' ALIGN=center><B>{#sort1#}</B><BR>&nbsp;<BR><SELECT name="sort1"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort1}</SELECT><INPUT type="checkbox" name="dir1"{if $dir1} checked{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+		<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD><TD colspan='4' ALIGN=center>{#sort2#}<BR><SELECT name="sort2"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort2}</SELECT><INPUT type="checkbox" name="dir2"{if $dir2} checked{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+		<TR>
+	<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	<TD colspan='4' ALIGN=center>&nbsp;&nbsp;</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+		<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD><TD colspan='4' ALIGN=center><INPUT type="submit" name="run" value="{#run#}"{if $SQLquery == ""} disabled="true"{/if}><BR><INPUT type="submit" name="new" value="{#new_search#}"></TD><!--<TD ALIGN=center><INPUT type="submit" name="upload_query" value="{#upload_query#}"{if $SQLquery == ""} disabled="true"{/if} onclick="javascript:Q=prompt('{#portal_http#}: ','{$old_upload}');if (Q) {literal}{this.form.upload_http.value = Q; this.form.submit();} else return false;{/literal}"><input type="hidden" name="upload_http"></TD>-->
+		<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+		</TR>
+		<TR>
+	<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	<TD colspan='4' ALIGN=center>&nbsp;&nbsp;</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+	
+	{if $notLoggedIn == false}
+	<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	<TD colspan='4' ALIGN=center BGCOLOR="{#searchBgColor3#}">&nbsp;&nbsp;</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+	
+	<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	<TD ALIGN="center" COLSPAN=4 BGCOLOR="{#searchBgColor3#}"><B>{#manage_queries#}</B></TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+	
+		<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD><TD COLSPAN=4 ALIGN=center BGCOLOR="{#searchBgColor3#}"><SELECT name="loadfrom" {if $saved == ""}disabled="true"{/if}>{html_options options=$saved}</SELECT> <INPUT type="submit" name="load" value="{#load#}" {if $saved == ""}disabled="true"{/if}></TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+		<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD><TD COLSPAN=4 ALIGN=center BGCOLOR="{#searchBgColor3#}"><INPUT type="submit" name="default" value="{#default#}" {if $saved == ""}disabled="true"{/if}>&nbsp;&nbsp;<INPUT type="submit" name="deleteq" value="{#deleteq#}" {if $saved == ""}disabled="true"{/if}><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+		<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD><TD COLSPAN=4 ALIGN=center BGCOLOR="{#searchBgColor3#}"><INPUT type="submit" name="save" value="{#save#}"{if $SQLquery == ""} disabled="true"{/if}> <INPUT type="text" name="saveas" value="" MAXLENGTH=15{if $SQLquery == ""} disabled="true"{/if}></TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+		
+		<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	<TD ALIGN="center" COLSPAN=4 BGCOLOR="{#searchBgColor3#}">&nbsp;&nbsp;</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>
+
+
+	{/if}
+	
+	
 	<TR BGCOLOR="{#searchBgColor1#}"><TD COLSPAN=6>&nbsp;</TD></TR>
 </TABLE>
 </div>
 <BR />
-<TABLE BORDER=0 WIDTH="100%">
+{*<TABLE BORDER=0 WIDTH="100%">
 <TR>
-	<TD ALIGN="center" BGCOLOR="{#searchBgColor1#}">
+	 commented out by Martin Schmidt<TD ALIGN="center" BGCOLOR="{#searchBgColor1#}">
 	<TABLE BORDER=0 CELLPADDING=3>
 		<TR><TD COLSPAN=2><B>{#box1#}</B></TD></TR>
 		<TR><TD><INPUT type="radio" name="SQLlink" value="AND" checked> {#AND#}</TD>
@@ -63,7 +124,6 @@
 		<TR><TD ALIGN="center"><INPUT type="submit" name="add" value="{#add#}"></TD><TD ALIGN="center"><INPUT type="submit" name="new" value="{#new_search#}"></TD></TR>
 	</TABLE>
 	</TD>
-
 	<TD ALIGN="center" BGCOLOR="{#searchBgColor2#}">
 	<TABLE CELLPADDING=3>
 		<TR><TD colspan='2'><B>{#box2#}</B></TD></TR>
@@ -72,7 +132,6 @@
 		<TR><TD ALIGN=center><INPUT type="submit" name="run" value="{#run#}"{if $SQLquery == ""} disabled="true"{/if}></TD><!--<TD ALIGN=center><INPUT type="submit" name="upload_query" value="{#upload_query#}"{if $SQLquery == ""} disabled="true"{/if} onclick="javascript:Q=prompt('{#portal_http#}: ','{$old_upload}');if (Q) {literal}{this.form.upload_http.value = Q; this.form.submit();} else return false;{/literal}"><input type="hidden" name="upload_http"></TD>--></TR>
 	</TABLE>
 	</TD>
-
 	{if $notLoggedIn == false}
 	<TD ALIGN="center" BGCOLOR="{#searchBgColor3#}">
 	<TABLE BORDER=0 CELLPADDING=3>
@@ -83,8 +142,9 @@
 	</TABLE>
 	</TD>
 	{/if}
+	
 </TR>
-</TABLE>
+</TABLE>*}
 </FORM>
 {if $upload_query}
 	<script language="javascript">

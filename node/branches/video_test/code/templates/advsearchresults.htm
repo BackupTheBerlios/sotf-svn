@@ -9,6 +9,32 @@
               <td>
                 <p>
                 <b>{#your_query_is#}:</b>
+				
+				{* ADDED BY Martin Schmidt *}
+				{section name=i loop=$SQLquery}
+				{if $HumanReadable[i][0] != "IGNORE"}
+				  {if $smarty.section.i.index != 0 && $smarty.section.i.index!=$FirstNonIgnore}
+                     {$HumanReadable[i][0]}
+                  {/if}
+                  {if $SQLquery[i.index_next][0] == "OR"}
+                     {if $SQLquery[i][0] == "AND"}
+                       (
+                     {elseif $smarty.section.i.index == 0}
+                       (
+                     {/if}
+                  {/if}
+                  {$HumanReadable[i][1]} {$HumanReadable[i][2]} <i>{$HumanReadable[i][3]}</i>
+                  {if $SQLquery[i][0] == "OR"}
+                    {if $SQLquery[i.index_next][0] != "OR"}
+                      )
+                    {/if}
+                  {/if}
+				{/if}
+                {/section}			
+				{***************************}
+				
+				
+				{*COMMENTED OUT BY Martin Schmidt
                   {section name=i loop=$SQLquery}
                   {if $smarty.section.i.index != 0}
                      {$HumanReadable[i][0]}
@@ -27,6 +53,7 @@
                     {/if}
                   {/if}
                   {/section}
+				  *}
                   <br />
                 <a href="advsearchresults.php?back=true&SQLquerySerial={$SQLquerySerial}">{#back#}</a>
                 </p>
@@ -35,8 +62,10 @@
               <TD ALIGN="right" width="10%">
               <!-- <INPUT class="action" type="submit" name="back" value="{#back#}"> 
                   <br /> -->
-		  <a href="{$ROOT_URL}/podcast.php?uiLang={$LANG}&query={$SQLquerySerial}">podcast</a><br />
-              <INPUT class="action" type="button" name="upload_query" value="{#upload_query#}" onclick="javascript:window.open('portal_upload.php?type=query&data={$SQLquerySerial}','','scrollbars=yes,width=640,height=340,left=320,top=200');">
+				  <INPUT class="action" type="button" name="upload_query" value="{#upload_query#}" onclick="javascript:window.open('portal_upload.php?type=query&data={$SQLquerySerial}','','scrollbars=yes,width=640,height=340,left=320,top=200');">
+		  <br>&nbsp;<br>
+				<a href="{$ROOT_URL}/podcast.php?uiLang={$LANG}&query={$SQLquerySerial}"><img border='0' style="vertical-align:bottom" src='{$IMAGE_URL}/rss.gif'/></a> <a href="{$ROOT_URL}/podcast.php?uiLang={$LANG}&query={$SQLquerySerial}">Pod-/Vodcast</a> <br />{* mod by Martin Schmidt *}
+              
               </TD>
             </TR>
           </TABLE>

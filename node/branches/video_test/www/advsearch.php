@@ -37,6 +37,8 @@ $run = $paramcache->getRegistered('run');				//run query button
 $run_image = $paramcache->getRegistered('image_x');		//TRANSPARENT_run query button (default by enter)
 $portal_http = $paramcache->getRegistered('upload_http');	//if upload pressed, the portal field
 
+$SQLchosen = $paramcache->getRegistered('SQLchosen'); //ADDED BY Martin Schmidt
+
 //3. Manage your queries
 $loadfrom = $paramcache->getRegistered('loadfrom');		//dropdown box with the saved queries
 $load = $paramcache->getRegistered('load');			//load button
@@ -49,7 +51,45 @@ $saveas = $paramcache->getRegistered('saveas');			//text field
 $SQLeq = $paramcache->getRegistered('SQLeq');			//= < > ... values array
 $SQLstring = $paramcache->getRegistered('SQLstring');		//last parameter value array
 
+/*
+// select all fields - ADDED BY Martin Schmidt
+$timestamp = time();
+$SQLall = 'entry_date DESC|Bstation|AAND|Babstract|Bcontains|B|Bstring|AAND|Bbroadcast_date|Bbigger|B1145397600|Bdate|AAND|Bcontenttype|Bis|Bsound|Bcontenttype|AAND|Bentry_date|Bbigger|B'.$timestamp.'|Bdate|AAND|Bexpiry_date|Bbigger|B'.$timestamp.'|Bdate|AAND|Bgenre_id|Bis|B1|Bgenre|AAND|Bkeywords|Bcontains|B|Bstring|AAND|Blanguage|Bis|Beng|Blang|AAND|Blength|Bbigger|B0|Blength|AAND|Bmodify_date|Bbigger|B'.$timestamp.'|Bdate|AAND|Bperson|Bcontains|B|Bstring|AAND|Bproduction_date|Bbigger|B'.$timestamp.'|Bdate|AAND|Brating|Bbigger|B1|Brating|AAND|Bseriesdescription|Bcontains|B|Bstring|AAND|Bseriestitle|Bcontains|B|Bstring|AAND|Bspatial_coverage|Bcontains|B|Bstring|AAND|Bstation|Bis|Bsunny fm|Bstation|AAND|Btemporal_coverage|Bbigger|B'.$timestamp.'|Bdate|AAND|Btitle|Bcontains|B|Bstring';
+
+
+$SQLquerySerial = $SQLall;*/
+
+
+// MODIFIED BY Martin Schmidt
+
 $SQLquerySerial = $paramcache->getRegistered('SQLquerySerial');		//the serialized query come from ADVSEARCH.PHP (hidden field)
+
+if ($SQLquerySerial == "") {
+	$fromSearchResults = true; //ADDED BY Martin Schmidt
+	$SQLquerySerial = $_SESSION["SQLquerySerial"];	//  from ADVSEARCHRESULTS.PHP or somewhere else (session)
+}
+
+if ($SQLquerySerial == "")			//make a new query if first time here
+{
+	$SQLquery = $_SESSION["SQLquery"];		//get array from session
+	$advsearch = new sotf_AdvSearch();	//create search object object with this array
+	$SQLquery = $advsearch->addAll(); //add all fields - ADDED BY Martin Schmidt
+	$advsearch->SetSortOrder();
+}
+else 						//else careate query from loaded
+{
+	$advsearch = new sotf_AdvSearch();		//create new search object object
+	$SQLquery = $advsearch->Deserialize($SQLquerySerial);	//deserialize the content of the hidden field
+	
+}
+///////////////////////////////////////////////
+
+
+/*
+
+$SQLquerySerial = $paramcache->getRegistered('SQLquerySerial');		//the serialized query come from ADVSEARCH.PHP (hidden field)
+
+
 if ($SQLquerySerial == "") $SQLquerySerial = $_SESSION["SQLquerySerial"];	//  from ADVSEARCHRESULTS.PHP or somewhere else (session)
 
 if ($SQLquerySerial == "")			//make a new query if first time here
@@ -62,6 +102,7 @@ else 						//else careate query from loaded
 	$advsearch = new sotf_AdvSearch();		//create new search object object
 	$SQLquery = $advsearch->Deserialize($SQLquerySerial);	//deserialize the content of the hidden field
 }
+*/
 
 if ($SQLquery == NULL) $advsearch->SetSortOrder();	//set DEFAULT sort order for new queries
 
@@ -89,7 +130,29 @@ for ($i=0; $i < $max; $i++)			//go through all the values on the form
 	else	$SQLquery[$i][3] = $SQLstring[$k];
 	$k++;
 }
+
+	
+// ADDED BY Martin Schmidt
+
+if (!$fromSearchResults){
+	for($j=0;$j<count($SQLquery);$j++){
+		$was_chosen=false;
+		for($l=0;$l<count($SQLchosen);$l++){
+			if($SQLchosen) {
+				if($SQLquery[$j][1] == $SQLchosen[$l]){
+					 $SQLquery[$j][0]="AND";
+					 $was_chosen=true;
+				}
+			}
+		}
+		if(!$was_chosen) $SQLquery[$j][0]="IGNORE";
+	}
+}
+
+/////////////////////////////////
+
 $advsearch->sotf_AdvSearch($SQLquery);			//set the inner variables of the class as well
+
 
 if($add)									////add term button pressed
 {
@@ -99,15 +162,25 @@ if($add)									////add term button pressed
 }
 elseif (($run or ($run_image=="0")) and $SQLquery!=NULL)			////run query button pressed, run if any terms
 {
-	//$_SESSION["SQLquery"] = $SQLquery;
-	//$_SESSION["SQLquerySerial"] = $advsearch->Serialize();
-	$SQLquerySerial = $advsearch->Serialize();
-	$_SESSION["SQLquerySerial"] = $SQLquerySerial;	//save the new query to the session
-	$page->redirect("advsearchresults.php?SQLquerySerial=$SQLquerySerial");
+	//ADDED BY Martin Schmidt - Make sure min 1 field is selected
+	$minOneField=false;
+	for($j=0;$j<count($SQLquery);$j++){
+			if($SQLquery[$j][0] != "IGNORE") $minOneField=true;
+	}
+	///////////////////////////////////////////////
+	
+	if($minOneField){
+		//$_SESSION["SQLquery"] = $SQLquery;
+		//$_SESSION["SQLquerySerial"] = $advsearch->Serialize();
+		$SQLquerySerial = $advsearch->Serialize();
+		$_SESSION["SQLquerySerial"] = $SQLquerySerial;	//save the new query to the session
+		$page->redirect("advsearchresults.php?SQLquerySerial=$SQLquerySerial");
+	}
 }
 elseif ($new)									////new query button pressed
 {
 	$SQLquery = $advsearch->DeleteQuery();
+	$SQLquery = $advsearch->addAll();
 	$advsearch->SetSortOrder();		//set back default sort order for new queries
 }
 elseif ($load)									////load button pressed
@@ -180,11 +253,14 @@ $smarty->assign("EQtopic", $advsearch->GetEQtopic());			//EQ dropdown for topics
 $smarty->assign("EQlang", $advsearch->GetEQlang());			//EQ dropdown for lang
 $smarty->assign("EQlength", $advsearch->GetEQlength());			//EQ dropdown for length
 $smarty->assign("EQnumber", $advsearch->GetEQnumber());			//EQ dropdown for numbers
+$smarty->assign("EQcontenttype", $advsearch->GetEQcontenttype());	//EQ dropdown for contenttype - ADDED BY Martin Schmidt
 
 $smarty->assign("Languages", $advsearch->GetLanguages());		//all possible languages
 $smarty->assign("Stations", $advsearch->GetStations());			//all possible stationnames
 $smarty->assign("Genres", $advsearch->GetGenres());			//all possible genrenames
 $smarty->assign("Ratings", $advsearch->getRatings());			//all possible ratings + a half value between all
+$smarty->assign("ContentTypes", $advsearch->GetContentTypes());		//all possible contenttypes - ADDED BY Martin Schmidt
+
 $smarty->assign("SQLstring", $SQLstring);				//selected values
 
 //box 1

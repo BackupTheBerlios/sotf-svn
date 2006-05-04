@@ -1,0 +1,104 @@
+<h3>{#Advanced_search#}</h3>
+<FORM method="post" action="advsearch.php">
+<div align="center">
+<TABLE BORDER=0 CELLPADDING=0 CELLSPACING=0 WIDTH="80%" BGCOLOR="{#searchBgColor2#}">
+        <TR BGCOLOR="{#searchBgColor1#}">
+                <TD COLSPAN=6>{#your_query_is#}{if count($SQLquery) > 0}:{else} {#empty#}{/if}
+                <INPUT type="hidden" name="SQLquerySerial" value="{$SQLquerySerial}">
+                <INPUT type="image" SRC="{$IMAGE_URL}/transp.gif" name="image">
+                </TD>
+        </TR>
+
+        {section name=i loop=$SQLquery}
+        {if $smarty.section.i.index != 0}
+                {if $SQLquery[i][0] == "AND"}<TR><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD><TD COLSPAN=4 BGCOLOR="#FFFFFF" align=center>{#AND#}</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD></TR>{/if}
+        {/if}
+        <TR>
+                <TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+                <TD><B>{$SQLqueryfields[i]}</B></TD>
+                {if $SQLquery[i][4] == "string"}
+                        <TD><SELECT name="SQLeq[]">{html_options options=$EQstring selected=$SQLquery[i][2]}</SELECT></TD>
+                        <TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30"></TD>
+                {elseif $SQLquery[i][4] == "date"}
+                        <TD><SELECT name="SQLeq[]" with=13>{html_options options=$EQdate selected=$SQLquery[i][2]}</SELECT></TD>
+                        <TD>{html_select_date prefix="SQLstring[]" time=$SQLquery[i][3] start_year="2000" end_year="+0" display_days=true month_format="%m" field_order="YMD" }</TD>
+                {elseif $SQLquery[i][4] == "lang"}
+                        <TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
+                        <TD><SELECT name="SQLstring[]">{html_options options=$Languages selected=$SQLquery[i][3]}</SELECT></TD>
+                {elseif $SQLquery[i][4] == "station"}
+                        <TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
+                        <TD><SELECT name="SQLstring[]">{html_options options=$Stations selected=$SQLquery[i][3]}</SELECT></TD>
+                {elseif $SQLquery[i][4] == "genre"}
+                        <TD><SELECT name="SQLeq[]">{html_options options=$EQlang selected=$SQLquery[i][2]}</SELECT></TD>
+                        <TD><SELECT name="SQLstring[]">{html_options options=$Genres selected=$SQLquery[i][3]}</SELECT></TD>
+                {elseif $SQLquery[i][4] == "length"}
+                        <TD><SELECT name="SQLeq[]">{html_options options=$EQlength selected=$SQLquery[i][2]}</SELECT></TD>
+                        <TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" MAXLENGTH=5> {#seconds#}</TD>
+                {elseif $SQLquery[i][4] == "rating"}
+                        <TD><SELECT name="SQLeq[]">{html_options options=$EQnumber selected=$SQLquery[i][2]}</SELECT></TD>
+                        <TD><SELECT name="SQLstring[]">{html_options options=$Ratings selected=$SQLquery[i][3]}</SELECT></TD>
+                {elseif $SQLquery[i][4] == "number"}
+                        <TD><SELECT name="SQLeq[]">{html_options options=$EQnumber selected=$SQLquery[i][2]}</SELECT></TD>
+                        <TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" MAXLENGTH=5></TD>
+                {elseif $SQLquery[i][4] == "topic"}
+                        <TD><SELECT name="SQLeq[]">{html_options options=$EQtopic selected=$SQLquery[i][2]}</SELECT></TD>
+                        <TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30"></TD>
+                {/if}
+                <TD ALIGN="right" valign="middle"><INPUT type="image" SRC="{$IMAGE_URL}/plusz.gif"  ALT="{#add#}" name="ADD{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGE_URL}/transp.gif" /><IMG SRC="{$IMAGE_URL}/transp.gif" /><INPUT type="image" ALT="{#delete#}" SRC="{$IMAGE_URL}/minusz.gif" name="DEL{$smarty.section.i.index}" value="{#delete#}"><IMG SRC="{$IMAGE_URL}/transp.gif" /><IMG SRC="{$IMAGE_URL}/transp.gif" /></TD>
+                <TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+        </TR>
+        {/section}
+        <TR BGCOLOR="{#searchBgColor1#}"><TD COLSPAN=6>&nbsp;</TD></TR>
+</TABLE>
+</div>
+<BR />
+<TABLE BORDER=0 WIDTH="100%">
+<TR>
+        <TD ALIGN="center" BGCOLOR="{#searchBgColor1#}">
+        <TABLE BORDER=0 CELLPADDING=3>
+                <TR><TD COLSPAN=2><B>{#box1#}</B></TD></TR>
+                <TR><TD><INPUT type="radio" name="SQLlink" value="AND" checked> {#AND#}</TD>
+                <TD  ROWSPAN=2><SELECT name="SQLfield" size=4>{html_options options=$SQLfields selected=$SQLfieldDefault}</SELECT></TD></TR>
+                <TR><TD><INPUT type="radio" name="SQLlink" value="OR"> {#OR#}</TD></TR>
+                <TR><TD ALIGN="center"><INPUT type="submit" name="add" value="{#add#}"></TD><TD ALIGN="center"><INPUT type="submit" name="new" value="{#new_search#}"></TD></TR>
+        </TABLE>
+        </TD>
+
+        <TD ALIGN="center" BGCOLOR="{#searchBgColor2#}">
+        <TABLE CELLPADDING=3>
+                <TR><TD colspan='2'><B>{#box2#}</B></TD></TR>
+                <TR><TD colspan='2' ALIGN=center>{#sort1#} <SELECT name="sort1"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort1}</SELECT><INPUT type="checkbox" name="dir1"{if $dir1} checked{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}</TD></TR>
+                <TR><TD colspan='2' ALIGN=center>{#sort2#} <SELECT name="sort2"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort2}</SELECT><INPUT type="checkbox" name="dir2"{if $dir2} checked{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}</TD></TR>
+                <TR><TD ALIGN=center><INPUT type="submit" name="run" value="{#run#}"{if $SQLquery == ""} disabled="true"{/if}></TD><!--<TD ALIGN=center><INPUT type="submit" name="upload_query" value="{#upload_query#}"{if $SQLquery == ""} disabled="true"{/if} onclick="javascript:Q=prompt('{#portal_http#}: ','{$old_upload}');if (Q) {literal}{this.form.upload_http.value = Q; this.form.submit();} else return false;{/literal}"><input type="hidden" name="upload_http"></TD>--></TR>
+        </TABLE>
+        </TD>
+
+        {if $notLoggedIn == false}
+        <TD ALIGN="center" BGCOLOR="{#searchBgColor3#}">
+        <TABLE BORDER=0 CELLPADDING=3>
+                <TR><TD COLSPAN=2><B>{#box3#}</B></TD></TR>
+                <TR><TD COLSPAN=2 ALIGN=center><SELECT name="loadfrom" {if $saved == ""}disabled="true"{/if}>{html_options options=$saved}</SELECT> <INPUT type="submit" name="load" value="{#load#}" {if $saved == ""}disabled="true"{/if}></TD></TR>
+                <TR><TD ALIGN=center><INPUT type="submit" name="default" value="{#default#}" {if $saved == ""}disabled="true"{/if}></TD><TD ALIGN=center><INPUT type="submit" name="deleteq" value="{#deleteq#}" {if $saved == ""}disabled="true"{/if}></TD></TR>
+                <TR><TD COLSPAN=2 ALIGN=center><INPUT type="submit" name="save" value="{#save#}"{if $SQLquery == ""} disabled="true"{/if}> <INPUT type="text" name="saveas" value="" MAXLENGTH=15{if $SQLquery == ""} disabled="true"{/if}></TD></TR>
+        </TABLE>
+        </TD>
+        {/if}
+</TR>
+</TABLE>
+</FORM>
+{if $upload_query}
+        <script language="javascript">
+        <!--
+        function my_onload()
+        {literal}{{/literal}
+                {if $upload_query != "http://"}
+                //alert("OK");
+		window.open('{$upload_query}?type=query&data={$SQLquerySerial}','','scrollbars=yes,width=640,height=340,left=320,top=200');
+                {else}
+                alert("{#URL_missing#}");
+                {/if}
+        {literal}}{/literal}
+        document.body.onload = my_onload;
+        // -->
+	</script> 
+{/if}

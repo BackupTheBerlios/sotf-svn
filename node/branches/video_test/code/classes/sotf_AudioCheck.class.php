@@ -1,7 +1,6 @@
 <?php
 
 
-
 /**
 
 * This is a class for checking the requested formats, and for converting them
@@ -18,9 +17,10 @@
 
 */
 
-class sotf_AudioCheck
+class sotf_AudioCheck extends sotf_ContentCheck
 
 {
+	
 
 	/**
 
@@ -72,7 +72,8 @@ class sotf_AudioCheck
 
 	var $list;
 
-
+    var $prefix = 'audio';
+	var $type = 'audioChecker';
 
   var $console = false;
 
@@ -97,9 +98,6 @@ class sotf_AudioCheck
 	{
 
 		global $config;
-
-		global $config;
-
 
 
 		$this->list = & $list;
@@ -274,41 +272,26 @@ class sotf_AudioCheck
 
 
 
-	/**
-
-	* Gets best quality audio file
-
+ 	/**
+	* Encode format to a filename.
 	*
-
-	* @return	mixed	If found return the index of the file, else returns boolean false
-
+	* @param	integer	$index	Format index of the jingle in the $config['audioFormats'] global variable
+	* @return	string	Encoded format. Example: 24kbps_1chn_22050Hz.mp3
+	* @use	$config['audioFormats']
 	*/
 
-	function getBest()
+	function getFormatFilename($index)
 
 	{
 
-		$bitrate = 0;								// set minimum bitrate
+		global $config;
 
-		$index = false;								// initialize file index
 
-		for($i=0;$i<count($this->list->list);$i++)	// walk thru files
 
-			if ($this->list->list[$i]->type == 'audio')
+		return $config['audioFormats'][$index]['bitrate'] . 'kbps_' . $config['audioFormats'][$index]['channels'] . 'chn_' . $config['audioFormats'][$index]['samplerate'] . 'Hz.' . $config['audioFormats'][$index]['format'];
 
-				if ($this->list->list[$i]->average_bitrate > $bitrate)
+	} // end func getFormatFilename
 
-				{
-
-					$bitrate = $this->list->list[$i]->average_bitrate;
-
-					$index = $i;
-
-				}
-
-		return $index;
-
-	}
 
 
 
@@ -349,34 +332,18 @@ class sotf_AudioCheck
 		return $index;
 
 	}
+	
+	
+	function checkFile($file) {
 
+      if(!is_readable($file)) {
+		
+        raiseError("conversion_failed");
 
+      }
 
-	/**
+    }
 
-	* Encode format to a filename.
-
-	*
-
-	* @param	integer	$index	Format index of the jingle in the $config['audioFormats'] global variable
-
-	* @return	string	Encoded format. Example: 24kbps_1chn_22050Hz.mp3
-
-	* @use	$config['audioFormats']
-
-	*/
-
-	function getFormatFilename($index)
-
-	{
-
-		global $config;
-
-
-
-		return $config['audioFormats'][$index]['bitrate'] . 'kbps_' . $config['audioFormats'][$index]['channels'] . 'chn_' . $config['audioFormats'][$index]['samplerate'] . 'Hz.' . $config['audioFormats'][$index]['format'];
-
-	} // end func getFormatFilename
 
 
 
@@ -394,25 +361,11 @@ class sotf_AudioCheck
 
 
 
-    function getTempWavName()
-
-      {
-
-        global $config;
-
-        
-
-        $tempname = tempnam($config['tmpDir'],"__");
-
-        unlink($tempname);
-
-        return $tempname. ".wav";
-
-      }
+   
 
 
 
-    function progressBar($cmd,$regexp)
+   /* function progressBar($cmd,$regexp) COMMENTED OUT BY BUDDHAFLY
 
       {
 
@@ -500,7 +453,7 @@ class sotf_AudioCheck
 
       exec($cmd);
 
-    }
+    }*/
 
 
 
@@ -676,7 +629,7 @@ class sotf_AudioCheck
 
     
 
-    function checkFile($file) {
+    /*function checkFile($file) {
 
       if(!is_readable($file)) {
 
@@ -692,7 +645,7 @@ class sotf_AudioCheck
 
       unlink($file) or logError("Could not delete file: $file");
 
-    }
+    }*/
 
 
 

@@ -31,10 +31,16 @@ class sotf_Playlist {
 		}
 	 } else {
 		// this is a local file
-
-		$mp3info = GetAllFileInfo($item['path']);
+		// CHANGED BY BUDDHAFLY 06-02-20
+		$getID3 = new getID3();
+		$mp3info = $getID3->analyze($item['path']);
+		getid3_lib::CopyTagsToComments($mp3info);
+		//$mp3info = GetAllFileInfo($item['path']);
 		//debug('mp3info', $mp3info);
-		$bitrate = (string) $mp3info['audio']['bitrate'];
+		// CHANGED BY BUDDHAFLY 06-02-20
+		
+		$bitrate = (string) $mp3info['bitrate'];
+		
 		if(!$bitrate)
 		  raiseError("Could not determine bitrate, maybe this audio is temporarily unavailable");
 		$item['bitrate'] = $bitrate;

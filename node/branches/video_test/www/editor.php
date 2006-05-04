@@ -31,11 +31,20 @@ if(sotf_Utils::getParameter('addprog')) {
   $fname = sotf_Utils::getParameter('fname');
   $station = sotf_Utils::getParameter('station');
   checkPerm($station, 'create');
+  
+  //ADDED BY BUDDHAFLY
+	$getID3 = new getID3();
+	$fileinfo = $getID3->analyze($user->getUserDir().'/'.$fname);
+	getid3_lib::CopyTagsToComments($fileinfo);
+	if (isset ($fileinfo['video'])) $is_video = true;
+  //--------------------------------------------
+  //logError(print_r($fileinfo, true));
   $newPrg = new sotf_Programme();
   $track = preg_replace('/\.[^.]*$/','', $fname);
   debug("create with track", $track);
-  $newPrg->create($station, $track);
+  $newPrg->create($station, $track, $is_video); //MOD BY BUDDHAFLY
   $newPrg->setAudio($user->getUserDir() . '/' . $fname);
+  
   $permissions->addPermission($newPrg->id, $user->id, 'admin');
   //$page->redirect("editFiles.php");
   $page->redirect("editFiles.php?new=1&id=" . $newPrg->getID());
@@ -83,7 +92,7 @@ if(!empty($stations)) {
 }
 
 $userAudioFiles = new sotf_FileList();
-$userAudioFiles->getAudioFromDir($user->getUserDir());
+$userAudioFiles->getAudioVideoFromDir($user->getUserDir()); //CHANGED BY BUDDHAFLY, $userAudioFiles MEANT CONTENT
 $list = $userAudioFiles->getFileNames();
 if(!empty($list)) {
 		 $smarty->assign_by_ref("USER_AUDIO_FILES", $list);

@@ -3,6 +3,7 @@
 require_once($config['getid3dir'] . "/getid3.php");
 require_once("sotf_File.class.php");
 require_once("sotf_AudioFile.class.php");
+require_once("sotf_VideoFile.class.php"); //ADDED BY BUDDHAFLY 06-02-20
 
 // $Id$
 
@@ -60,13 +61,26 @@ class sotf_FileList
 		{
 			if (!$this->pathExist($path))
 			{
-				$audioinfo = GetAllFileInfo($path);
-				if (isset($audioinfo["audio"]))
+				//CHANGED BY BUDDHAFLY 06-02-14
+				//echo $path;
+				$getID3 = new getID3();
+				$fileinfo = $getID3->analyze($path);
+				getid3_lib::CopyTagsToComments($fileinfo);
+				
+				//print_r ($fileinfo);
+				
+				//$audioinfo = GetAllFileInfo($path);
+				if(isset($fileinfo["video"])){
+					$this->list[] = & new sotf_VideoFile($path);
+				}
+				else if (isset($fileinfo["audio"])){
 					$this->list[] = & new sotf_AudioFile($path);
-				else
+				}
+				else{
 					$this->list[] = & new sotf_File($path);
-			}
-		}
+				}  // if-elseif-else
+			} //if
+		} //if
 		return false;
 	} // end func add
 
@@ -97,11 +111,34 @@ class sotf_FileList
 	/**
 	* Removes all non-audio files from the list.
 	*/
+	
+	//new functions by buddhafly 
+	
+	function removeNonAudioVideo(){
+		$paths = array();
+		for ($i=0;$i<count($this->list);$i++)
+			if (!$this->list[$i]->isAudio() && !$this->list[$i]->isVideo())
+				$paths[] = $this->list[$i]->getPath();
+		for ($i=0;$i<count($paths);$i++)
+			$this->remove($paths[$i]);
+	}
+	
+	function removeNonVideo(){
+		$paths = array();
+		for ($i=0;$i<count($this->list);$i++)
+			if (!$this->list[$i]->isVideo()) 
+				$paths[] = $this->list[$i]->getPath();
+		for ($i=0;$i<count($paths);$i++)
+			$this->remove($paths[$i]);
+	}
+	
+	/////////
+	
 	function removeNonAudio()
 	{
 		$paths = array();
 		for ($i=0;$i<count($this->list);$i++)
-			if (!$this->list[$i]->isAudio())
+			if (!$this->list[$i]->isAudio()) 
 				$paths[] = $this->list[$i]->getPath();
 		for ($i=0;$i<count($paths);$i++)
 			$this->remove($paths[$i]);
@@ -125,7 +162,7 @@ class sotf_FileList
           if(!$prefix || preg_match("/^$prefix/", $filename))			
 		  
 		  	// START ----- added by buddhafly 05-08-30
-			if(!preg_match('/^\./', $filename)){
+			if(!preg_match('/^\./', $filename) && $filename!='stills'){
 
 				 $extension = substr($filename, strrpos($filename, '.') +1);
 
@@ -155,6 +192,27 @@ class sotf_FileList
 	* @param	string	$path	Path of the directory
 	* @return	boolean	If the list was successfully created return true, else false
 	*/
+	
+	// new function by buddhafly
+	
+	function getVideoFromDir($path, $prefix='')
+	{
+		$retval = $this->getDir($path, $prefix);
+		$this->removeNonVideo();
+
+		return $retval;
+	} 
+	
+	function getAudioVideoFromDir($path, $prefix='')
+	{
+		$retval = $this->getDir($path, $prefix);
+		$this->removeNonAudioVideo();
+
+		return $retval;
+	} 
+	
+	/////////////////////////////////
+	
 	function getAudioFromDir($path, $prefix='')
 	{
 		$retval = $this->getDir($path, $prefix);

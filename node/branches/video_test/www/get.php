@@ -58,29 +58,97 @@ if($id) {
   // rights sections
   $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
 
-  // audio files 
-  $audioFiles = $prg->getAssociatedObjects('sotf_media_files', 'main_content DESC, filename');
-  $to = count($audioFiles);
+
+//check for recently converted files or transcoding in progress
+
+if($prg->isVideoPrg()){
+  $prgAudiolist = & new sotf_FileList();
+  $prgAudiolist->getAudioVideoFromDir($prg->getAudioDir());
+  
+  $checker = & new sotf_ContentCheck($prgAudiolist); //todo $prgAudioList MEANT CONTENT
+  $checker = $checker->selectType();
+
+	$temppath=$config['wwwdir']."/tmp/";
+	
+	if ($tempdir = opendir($config['wwwdir']."/tmp")) {
+	   while (false !== ($filename = readdir($tempdir))) {
+	   		if(preg_match("/".$id."_/",$filename)){
+				if(preg_match("/^".$id."_/",$filename)){
+					if($checker->fileOK($temppath.$filename)) {
+						if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
+						$prg->setAudio($temppath.$filename);
+					}
+				
+				}if(preg_match("/^still_".$id."_[12345]\.gif$/",$filename)){
+					$obj_id=$prg->setOtherFile($temppath.$filename);
+					if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
+					$fileInfo = &$repository->getObject($obj_id);
+					$fileInfo->set('public_access', 'f');
+					$fileInfo->update();
+			   }
+			}
+	   }
+	   closedir($tempdir);
+	}
+}
+
+  // content files 
+  $mainContentFiles = $prg->getAssociatedObjects('sotf_media_files', 'main_content DESC, filename');
+  $to = count($mainContentFiles);
+  $flv_found = false; //ADDED BY Martin Schmidt
   for($i=0; $i<$to; $i++) {
 	 if($prg->isLocal()) {
 		// if local, we check if file disappeared in the meantime
-		$path = $prg->getFilePath($audioFiles[$i]);
+		$path = $prg->getFilePath($mainContentFiles[$i]);
 		if(!is_readable($path)) {
 		  debug("DISAPPEARED FILE", $path);
-		  unset($audioFiles[$i]);
+		  unset($mainContentFiles[$i]);
 		  continue;
 		}
 	 }
-    $audioFiles[$i] =  array_merge($audioFiles[$i], sotf_AudioFile::decodeFormatFilename($audioFiles[$i]['format']));
-	$d = getdate($audioFiles[$i]['play_length']);
+    $mainContentFiles[$i] =  array_merge($mainContentFiles[$i], sotf_AudioFile::decodeFormatFilename($mainContentFiles[$i]['format']));
+	
+	
+	//ADDED BY Martin Schmidt
+	//print_r($mainContentFiles[$i]);
+	  if ($prg->isVideoPrg() && $mainContentFiles[$i]['format']=="flv" && $mainContentFiles[$i]['download_access']=='t'){
+	  	$flv_path = sotf_Node::getHomeNodeRootUrl($prg) . '/getFile.php/' . 'fid__' . $mainContentFiles[$i]['id']. '__' . $fname.".flv";
+		$flv_found= true;
+		//$_SESSION['flv_path'] = $flv_path;
+	  }
+	  
+	  $smarty->assign('FLV_PATH', $flv_path);
+	  
+	///////////////////// 
+	
+	$d = getdate($mainContentFiles[$i]['play_length']);
 	$d['hours']--;
-	$audioFiles[$i]['playtime_string'] = ($d['hours'] ? $d['hours'].':' : '') . sprintf('%02d',$d['minutes']) . ':' . sprintf('%02d',$d['seconds']);
+	$mainContentFiles[$i]['playtime_string'] = ($d['hours'] ? $d['hours'].':' : '') . sprintf('%02d',$d['minutes']) . ':' . sprintf('%02d',$d['seconds']);
   }
-  $smarty->assign('AUDIO_FILES', $audioFiles);
+  
+  $smarty->assign('FLV_FOUND', $flv_found);
+  
+  $smarty->assign('AUDIO_FILES', $mainContentFiles);
+  
+  if($prg->isVideoPrg())$smarty->assign('VIDEO_PRG', 'true');
+  
 
   // other files
   $otherFiles = $prg->getAssociatedObjects('sotf_other_files', 'filename');
+  
+  //select stills from other files
+  $stills=array();
+  for($k=count($otherFiles)-1;$k>=0;$k--){
+  	if(preg_match('/^still_'.$id.'_[12345].gif$/', $otherFiles[$k]['filename'])){
+		array_push($stills, $otherFiles[$k]);
+		//unset ($otherFiles[$k]);
+	}
+  }
+  $stills=array_reverse($stills);
+  //
+  
   $smarty->assign('OTHER_FILES', $otherFiles);
+  $smarty->assign('STILLS', $stills);
   
   // links
   $smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));

@@ -124,6 +124,14 @@ class sotf_File
 	{
 		return ($this->type == "audio");
 	} // end func getPath
+	
+	//ADDED BY BUDDHAFLY  06-02-20
+	
+	function isVideo()
+	{
+		return ($this->type == "video");
+	}
+	
 } // end class sotf_File
 
 ?>
