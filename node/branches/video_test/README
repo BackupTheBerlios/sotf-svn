@@ -1,0 +1,91 @@
+
+StreamOnTheFly node software
+-----------------------------
+
+Created for the StreamOnTheFly project (IST-2001-32226)
+Authors: András Micsik, Máté Pataki, Tamás Déri 
+         at MTA SZTAKI DSD, http://dsd.sztaki.hu
+Contact: micsik 'at' sztaki.hu
+
+PREREQUISITES:
+
+- Apache version 1 or 2: http://www.apache.org
+- PHP version >= 4.2: http://www.php.net
+    with extension: pgsql, domxml
+- PEAR (bundled with PHP)
+- PostgreSQL DBMS version >= 7.2: http://www.postgresql.org/
+   (multibyte-encoding support is suggested)
+- SelfAdmin tool from PublicVoiceLab (for user authentication)
+- Smarty template engine version >= 2.5: http://smarty.php.net/
+- icecast streaming server: http://www.icecast.org/
+- tamburine streamer: http://tamburine.dyne.org/
+  - w3c-libwww - http://www.w3c.org/Library (5.4.0)
+  - XMLRPC-C - http://xmlrpc-c.sf.net       (0.9.9)
+- lame mp3 tool: http://lame.sourceforge.net/
+- ogg/vorbis tool (optional) http://www.vorbis.com/
+- SoX sound conversion tool: http://sox.sourceforge.net/
+- getid3 PHP media file parser version 1.6.0: http://getid3.sourceforge.net/
+- ImageMagick image conversion tool: http://www.imagemagick.org/
+- ProFTPd (optional): http://www.proftpd.org
+   (if users want to upload audio files via FTP)
+
+Included with source code:
+- XML-RPC for PHP: http://phpxmlrpc.sourceforge.net/
+- XML and RSS writer by Manuel Lemos: http://www.phpclasses.org/xmlwriter, http://www.phpclasses.org/rsswriter
+
+INSTALLATION
+
+- Check that the PHP scripts in node/www directory can be run by your
+  web server.
+
+- Copy node/www/config.inc.php.template into node/www/config.inc.php ,
+  and edit it according to your local settings. 
+  IMPORTANT: The nodeId is a number between 1 and 999. You should ask
+  the approval for your node id from the node network, in case of node
+  id clash you have to reinstall the database!
+
+- Run node/www/install/install.php from your browser.
+
+- After a successful install login as admin 
+
+- Go to 'Stations' to create the first station
+
+- Go to 'Admin' menu to join the node network
+
+- Run node/www/cron.php periodically for housekeeping
+  You can do this for example with a cron job similar to this:
+  0      *       *       *       *       /usr/bin/wget -q -t 1 -O /dev/null http://<YOUR_NODE_URL>/cron.php
+
+NOTES
+
+On Apache 2 you have to set 'AcceptPathInfo on', otherwise listening
+to streams, viewing images and donwloading files will not work!
+
+After the installation completed you may want to protect the
+node/www/install subdir from unauthorized access.
+
+We strongly suggest to set register_globals off in PHP.
+
+Uploading large audio files to the node via web will not work if you
+don't raise upload_max_filesize and post_max_size in PHP!
+
+User sessions expire after the time defined for PHP, and users have to
+log in again! You can set the session timeout for logged in users in
+php.ini or in Apache via httpd.conf or .htaccess files. See
+session.cookie_lifetime and session.gc_maxlifetime in PHP manual.
+
+It is not recommended to put this directory structure under the root
+directory of the web server (e.g. htdocs), because then anyone might
+be able to download files which you don't want to be publicly
+accessible. Therefore you may create a symbolic link from htdocs for
+the www subdir, thus making accessible only a controlled part of the
+directory structure through the web.
+
+If you are updating the source code from CVS, please be sure that the
+setting 'Check for changed Smarty templates and recompile them' is set
+on the bottom of the admin page.  You can also tune some
+logging/debugging options of the server at the same place.
+
+If you have an older installation, check code/doc/update.sql for
+changes in database structure.
+

@@ -1,0 +1,460 @@
+{literal}
+<script language="javascript">
+function disable(name, value) {
+	eval("document.metadata."+name+"Year.disabled="+value);
+	eval("document.metadata."+name+"Month.disabled="+value);
+	eval("document.metadata."+name+"Day.disabled="+value);
+	if(name == 'broadcast_date') {
+	  eval("document.metadata."+name+"Hour.disabled="+value);
+	  eval("document.metadata."+name+"Minute.disabled="+value);
+        }
+	if (value == '0') {
+	  eval("document.metadata."+name+"_radio0.checked = true");
+	  eval("document.metadata."+name+"_radio1.checked = false");
+	}
+	else {
+	  eval("document.metadata."+name+"_radio0.checked = false");
+	  eval("document.metadata."+name+"_radio1.checked = true");
+	}
+}
+
+function myonload() {
+{/literal}
+disable("temporal_coverage", {if $PRG_DATA.temporal_coverage == ""}1{else}0{/if});
+disable("broadcast_date", {if $PRG_DATA.broadcast_date == ""}1{else}0{/if});
+//disable("production_date", {if $PRG_DATA.production_date == ""}1{else}0{/if});
+disable("expiry_date", {if $PRG_DATA.expiry_date == ""}1{else}0{/if});
+{literal}
+}
+window.onload=myonload;
+</script>
+{/literal}
+<form name="metadata" method="post">
+{if $NEW}
+    <table width="100%">
+      <tr valign="top">
+        <td>
+          <h4>{#New_prog_step1#}</h4>
+          <h3>{#editmeta#}</h3>
+        </td>
+        <td align="right">
+            <input class="action" type="button" name="b1" value="{#goto_step1#}" onClick="redir(this.form, 'editFiles.php?new=1&id={$PRG_ID}')" />
+            <input class="action" type="button" name="finishpublish" value="{#finish_publish#}" onClick="this.form.action='editMeta.php?new=1&id={$PRG_ID}&finishpublish=1';this.form.submit();" />
+            <input class="action" type="button" name="finish" value="{#finish_not_publish#}" onClick="this.form.action='editMeta.php?new=1&id={$PRG_ID}&finish=1';this.form.submit()" />
+        </td>
+      </tr>
+    </table>
+{else}
+    <h3>{#editmeta#}: <a class="goto_object" href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
+    <div align="right">
+      <input class="action" type="button" name="b1" value="{#edit_files#}" onClick="redir(this.form, 'editFiles.php?id={$PRG_ID}')" />
+      <!-- <a class="action" href="editFiles.php?id={$PRG_ID}">{#edit_files#}</a> -->
+    </div>
+{/if}
+
+{if hasPerm($PRG_DATA, 'change') }
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#general_data#}</td>
+    </tr>
+  </table>
+  
+  {* if $ERROR_COUNT... and if $FIELD_ERROR... added by martin schmidt on 05-09-28 *}
+  
+  {if $ERROR_COUNT}<table style="font-weight:bold; color:#FF0000"><tr><td>&nbsp;<br>Data not saved. Some required fields are empty!<br>&nbsp;</td></tr></table>{/if}
+<table class="tabarea" width="100%">
+    <tr> 
+      <td class="tabarea"> 
+          <table width="100%">
+            <tr valign="top" class="list1">
+              <td class="meta" width="20%">{#station#}:</td>
+              <td width="2%">&nbsp;</td>
+              <td width="78%"><a class="goto_object" href="showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a> {if $CHANGE_STATION}
+                  <input class="action" type="button" name="b1" value="{#change_station#}" onClick="popup('changeStation.php?prgid={$PRG_ID}','ChangeStation',120,400,false); return false;" />
+  {/if} </td>
+            </tr>
+            <tr valign="top" class="list2">
+              <td class="meta">{#series#}:</td>
+              <td>*</td>
+              <td>{if $SERIES_DATA}<a class="goto_object" href="showSeries.php/{$SERIES_DATA.id}">{$SERIES_DATA.name}</a>{else}{#not_in_series#}{/if} {if !empty($MY_SERIES)}
+                  <input class="action" type="button" name="b1" value="{#change_series#}" onClick="popup('addToSeries.php?prgid={$PRG_ID}','ChangeSeries',120,400,false); return false;" />
+  {/if} {if $SERIES_DATA}
+  <input class="action" type="button" name="b1" value="{#remove_from_series#}" onClick="redir(this.form, 'editMeta.php?delfromseries=1&id={$PRG_ID}')" />
+  {/if} </td>
+            </tr>
+            <tr valign="top" class="list1">
+			{if $FIELD_ERROR.title}
+              <td class="meta" style="font-weight:bold; color:#FF0000">{#title#}:</td>
+              <td style="font-weight:bold; color:#FF0000">*</td>
+			{else}
+			  <td class="meta">{#title#}:</td>
+              <td>*</td>
+			{/if}
+              <td><input name="title" value="{$PRG_DATA.title|strip}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
+            </tr>
+            <tr valign="top" class="list2">
+              <td class="meta">{#alternative_title#}:</td>
+              <td>&nbsp;</td>
+              <td><input name="alternative_title" value="{$PRG_DATA.alternative_title|strip}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
+            </tr>
+            <tr valign="top" class="list1">
+              <td class="meta">{#episode_title#}:</td>
+              <td>&nbsp;</td>
+              <td><input name="episode_title" value="{$PRG_DATA.episode_title|strip}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
+            </tr>
+            <tr valign="top" class="list2">
+              <td class="meta">{#episode_sequence#}:</td>
+              <td>&nbsp;</td>
+              <td><input name="episode_sequence" value="{if $PRG_DATA.episode_sequence}{$PRG_DATA.episode_sequence}{/if}" size="5" maxlength="5" onChange="if(value != defaultValue) data_changed++;" ></td>
+            </tr>
+            <tr valign="top" class="list1">
+              <td class="meta">{#language#}:</td>
+              <td>*</td>
+              <td><!-- <table>
+                  <tr><td></td> -->
+                  <select name="language1">
+                    
+                  {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG1}
+                
+                  </select>
+                  <select name="language2">
+                    <option value="0">{#no_second_lang#}</option>
+                    
+                  {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG2}
+                
+                  </select>
+                  <select name="language3">
+                    <option value="0">{#no_third_lang#}</option>
+                    
+                  {html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG3}
+                
+                  </select>
+              </td>
+            </tr>		
+            <tr valign="top" class="list2">
+              {if $FIELD_ERROR.abstract}
+              <td class="meta" style="font-weight:bold; color:#FF0000">{#abstract#}:</td>
+              <td style="font-weight:bold; color:#FF0000">*</td>
+			{else}
+			  <td class="meta">{#abstract#}:</td>
+              <td>*</td>
+			{/if}
+              <td><textarea name="abstract" rows="6" cols="50" onChange="if(value != defaultValue) data_changed++;" >{$PRG_DATA.abstract}</textarea>
+              </td>
+            </tr>
+            <tr valign="top" class="list1">
+              {if $FIELD_ERROR.keywords}
+              <td class="meta" style="font-weight:bold; color:#FF0000">{#keywords#}:</td>
+              <td style="font-weight:bold; color:#FF0000">*</td>
+			{else}
+			  <td class="meta">{#keywords#}:</td>
+              <td>*</td>
+			{/if}
+              <td><textarea name="keywords" rows="3" cols="50" onChange="if(value != defaultValue) data_changed++;" >{$PRG_DATA.keywords}</textarea>
+              </td>
+            </tr>
+            <tr valign="top" class="list2">
+            {if $FIELD_ERROR.genre_id}
+              <td class="meta" style="font-weight:bold; color:#FF0000">{#genre#}:</td>
+              <td style="font-weight:bold; color:#FF0000">*</td>
+			{else}
+			  <td class="meta">{#genre#}:</td>
+              <td>*</td>
+			{/if}
+              <td><select name="genre_id">
+                  
+                  {foreach from=$GENRES_LIST item=item}
+                  
+                  <option value="{$item.id}"  {if $item.id eq $PRG_DATA.genre_id} SELECTED {/if} >{$item.name}</option>
+                  
+                  {/foreach}
+                
+                </select>
+              </td>
+            </tr>
+            <tr valign="top" class="list1">
+              <td class="meta">{#temporal_coverage#}:</td>
+              <td>&nbsp;</td>
+              <td><input type="radio" name="temporal_coverage_radio0" value="selected" onclick="javascript:disable('temporal_coverage', 0)">
+  {html_select_date time=$PRG_DATA.temporal_coverage start_year="1900" prefix="temporal_coverage" month_format="%m" field_order="YMD" field_separator="-"} <br>
+  <input type="radio" name="temporal_coverage_radio1" value="unselected" onclick="javascript:disable('temporal_coverage', 1)">
+  {#not_available#} </td>
+            </tr>
+            <tr valign="top" class="list2">
+              <td class="meta">{#spatial_coverage#}:</td>
+              <td>&nbsp;</td>
+              <td><input name="spatial_coverage" value="{$PRG_DATA.spatial_coverage}" size="60" maxlength="255" onChange="if(value != defaultValue) data_changed++;" ></td>
+            </tr>
+            <tr valign="top" class="list1">
+              <td class="meta">{#production_date#}:</td>
+              <td>*</td>
+              <td>{*COMMENT by martin schmidt - production date is required for xbmf creation: <input type="radio" name="production_date_radio0" value="selected" onclick="javascript:disable('production_date', 0)">*}
+  {html_select_date time=$PRG_DATA.production_date start_year="-20" prefix="production_date" month_format="%m" field_order="YMD" field_separator="-"} </td>
+            </tr>
+            <tr valign="top" class="list2">
+              <td class="meta">{#broadcast_date#}:</td>
+              <td>&nbsp;</td>
+              <td><input type="radio" name="broadcast_date_radio0" value="selected" onclick="javascript:disable('broadcast_date', 0)">
+  {html_select_date time=$PRG_DATA.broadcast_date start_year="-20" prefix="broadcast_date" month_format="%m" field_order="YMD" field_separator="-"} {#broadcast_time#} {html_select_time time="$BROADCAST_TIME" display_seconds="0" use_24_hours="1" prefix="broadcast_date" } {*COMMENT by martin schmidt - INVALID PARAMETER: field_separator=":"*} <br>
+                    <input type="radio" name="broadcast_date_radio1" value="unselected" onclick="javascript:disable('broadcast_date', 1)">
+                    {#not_available#} </td>
+            </tr>
+            <tr valign="top" class="list1">
+              <td class="meta">{#expiry_date#}:</td>
+              <td>&nbsp;</td>
+              <td><input type="radio" name="expiry_date_radio0" value="selected" onclick="javascript:disable('expiry_date', 0)" >
+  {html_select_date time=$PRG_DATA.expiry_date end_year="+5" prefix="expiry_date" month_format="%m" field_order="YMD" field_separator="-"} <br>
+  <input type="radio" name="expiry_date_radio1" value="unselected" onclick="javascript:disable('expiry_date', 1)" >
+  {#no_expiry#} </td>
+            </tr>
+          </table>
+          <input type="submit" name="save" value="{#save#}">
+
+      </td>
+    </tr>
+  </table>
+</form>
+
+<p></p>
+  <a name="topics"></a>
+
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#topics#}</td>
+  </tr>
+</table>
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea">
+                  {if $TOPICS}
+                  <table>
+                    {foreach item=item from=$TOPICS}
+                    <tr valign="top">
+                      <td>
+                        {$item.name}
+                      </td>
+                      <td nowrap>
+                        <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form,'editMeta.php?id={$PRG_ID}&deltopic={$item.id}')" />
+                      </td>
+                    </tr>
+                    {/foreach}
+                  </table>
+                  {else}
+                  <p>{#no_topics#}</p>
+                  {/if}
+                  <input class="action" type="button" name="b1" value="{#add_topic#}" onClick="popup('topicTree.php?prgid={$PRG_ID}','TopicPopup',400,400,true)" />
+      </td>
+    </tr>
+</table>
+</form>
+
+<p></p>
+        <a name="roles"></a>
+
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Roles#}</td>
+  </tr>
+</table>
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea">
+        {if $ROLES}
+        <table>
+          <tr class="listhead"><th>{#Role#}</th><th>{#Contact#}</th><th>{#actions#}</th></tr>
+          {cycle name="roles" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$ROLES}
+          <tr class="{cycle name=roles}">
+            <td>
+              {$item.role_name}
+            </td>
+            <td>
+              {$item.contact_data.name}
+            </td>
+            <td>
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRole.php?roleid={$item.id}&objectid={$PRG_ID}','EditRole',280,550,false)" />
+                <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="popup('editContact.php?id={$item.contact_id}','EditContact',500,500,true)" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editMeta.php?delrole=1&roleid={$item.id}&id={$PRG_ID}')" />
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_roles#}</p>
+        {/if}
+        <p>
+            <input class="action" type="button" name="b1" value="{#add_new_role#}" onClick="popup('editRole.php?new=1&objectid={$PRG_ID}','EditRole',280,550,false)" />
+        </p>
+      </td>
+    </tr>
+</table>
+</form>
+
+<p></p>
+        <a name="rights"></a>
+
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Rights#}</td>
+  </tr>
+</table>
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea">
+        {if $RIGHTS}
+        <table>
+          <tr class="listhead"><th>{#start_time#}</th><th>{#stop_time#}</th><th>{#rights_text#}</th><th></th></tr>
+          {cycle name="rights" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$RIGHTS}
+          <tr class="{cycle name=rights}">
+            {if empty($item.start_time) and empty($item.stop_time) }
+               <td colspan="2">{#for_whole_prg#}</td>
+            {else}
+               <td>
+                 {$item.start_time}
+               </td>
+               <td>
+                 {$item.stop_time}
+               </td>
+            {/if}
+            <td>
+              {$item.rights_text}
+            </td>
+            <td nowrap>
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editRight.php?rid={$item.id}&objectid={$PRG_ID}','EditRight',300,500,false)" />
+                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editMeta.php?delright=1&rid={$item.id}&id={$PRG_ID}#rights')" />
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        <p>{#no_rights#}</p>
+        {/if}
+        <p>
+            <input class="action" type="button" name="b1" value="{#add_new_right#}" onClick="popup('editRight.php?new=1&objectid={$PRG_ID}','EditRight',300,500,false)" />
+        </p>
+      </td>
+    </tr>
+</table>
+</form>
+{/if}
+<p></p>
+
+{if hasPerm($PRG_DATA, 'authorize') }
+
+  <a name="perms"></a>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#access_permissions#}</td>
+  </tr>
+</table>
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea"> 
+        {if $PERMISSIONS}
+        <form>
+        <table>
+          {cycle name="perms" values="list1,list2" print=false advance=false}
+          <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr>
+          {foreach item=user key=userid from=$PERMISSIONS}
+          <tr class="{cycle name=perms}">
+            <td>{$user.name}</td>
+            <td>
+              {section name=i loop=$user.permissions}
+              {$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
+              {/section}
+            </td>
+            <td>
+                {if $USERNAME ne $user.name}
+                <input class="action" type="button" name="b1" value="{#change#}" onClick="popup('editPermissions.php?context=station&objectid={$PRG_ID}&objectname={$STATION}&userid={$userid}','Permissions',350,400,false)" />
+                  <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editMeta.php?delperm=1&userid={$userid}&id={$PRG_ID}#perms')" />
+                {/if}
+            </td>
+          </tr>
+          {/foreach}
+          <tr class="{cycle name=perms}">
+            <td colspan="3">{#inherited_perms#}</td>
+          </tr>
+        </table>
+        </form>
+        {else}
+        <p>{#inherited_perms#}</p>
+        {/if}
+        <input type="button" name="addperm" value="{#change_perm#}" onClick="popup('editPermissions.php?context=programme&objectid={$PRG_ID}&objectname={$PRG_TITLE|escape}','Permissions',450,450, false)">
+      </td>
+    </tr>
+</table>
+{/if}
+
+<p></p>
+
+{if hasPerm($PRG_DATA, 'change') }
+
+        <a name="icon"></a>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#icon#}</td>
+  </tr>
+</table>
+<table class="tabarea" width="100%">
+<tr> 
+   <td class="tabarea"> 
+
+        {if $ICON}
+         <img align="left" src="{$CACHE_URL}/{$PRG_ID}.png" border="1" />
+        {else}
+          <table><tr><td>{#no_icon#}</td></tr></table>
+        {/if}
+
+        {if $USERFILES}
+{literal}
+<script language="javascript">
+function getSelected() {
+     return document.userfiles['filename'].options[document.userfiles['filename'].selectedIndex].value;
+}
+</script>
+{/literal}
+
+        <form method="post" name="userfiles">
+          <input type="hidden" name="id" value="{$PRG_ID}">
+          <p>{#userfiles#}:	<select name="filename">{html_options values=$USERFILES output=$USERFILES}</select>
+          <input type="button" name="view" value="{#view#}" onClick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)">
+          <input type="submit" name="seticon" value="{#set_icon#}" onClick="return confirmUnsaved()" >
+          <br \><small>{#userfiles_expl#}</small>
+        </form>
+        {else}
+        <p>{#no_files#}</p>
+        {/if}
+        <small>
+          <form enctype="multipart/form-data" method="post">
+            <input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+            <input type="hidden" name="id" value="{$PRG_ID}" />
+            <input name="userfile" type="file" />
+            <input type="submit" name="uploadicon" value="{#set_icon#}"  onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
+            <br />{#upload_expl#}
+          </form>
+        </small>
+        
+      </td>
+    </tr>
+  </table>
+{/if}
+
+{if $NEW}
+    <table width="100%">
+      <tr valign="top">
+        <td>
+        </td>
+        <td align="right">
+          <form>
+            <input class="action" type="button" name="b1" value="{#goto_step1#}" onClick="redir(this.form, 'editFiles.php?new=1&id={$PRG_ID}')" />
+            <input class="action" type="button" name="finishpublish" value="{#finish_publish#}" onClick="document.metadata.action='editMeta.php?new=1&id={$PRG_ID}&finishpublish=1';document.metadata.submit();" />
+            <input class="action" type="button" name="finish" value="{#finish_not_publish#}" onClick="document.metadata.action='editMeta.php?new=1&id={$PRG_ID}&finish=1';document.metadata.submit()" />
+          </form>
+          </td>
+      </tr>
+    </table>
+{/if}

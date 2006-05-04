@@ -1,0 +1,47 @@
+
+{if $NEW}
+<h3>{#new_right#}</h3>
+{else}
+<h3>{#change_right#}</h3>
+{/if}
+
+<form name="form1" method="POST">
+<input type="hidden" name="objectid" value="{$OBJECT_ID}">
+
+<table class="tabarea">
+<tr> 
+  <td class="tabarea">
+            <table>
+              <tr>
+                <td>{#start_time#}</td>
+                <td>
+                  <input size="6" name="start_time" value="{$START_TIME}" /> {#time_format#}
+                </td>
+                <td rowspan="2">
+                  <input type="checkbox" name="fullprog" {if !$NEW and !$START_TIME and !$STOP_TIME} CHECKED="1" {/if} /> {#for_whole_prg#}
+                </td>
+              </tr>
+              <tr>
+                <td>{#stop_time#}</td>
+                <td>
+                  <input size="6" name="stop_time" value="{$STOP_TIME}" />  {#time_format#}
+                </td>
+              </tr>
+              <tr valign="top">
+                <td>{#rights_text#}</td>
+                <td colspan="2">
+                  <textarea name="rights_text" cols="40" rows="5">{$RIGHTS_TEXT}</textarea>
+                </td>
+              </tr>
+</table>
+
+{if $NEW}
+  <input type="submit" name="save" value="{#Add#}">
+{else}
+  <input type="submit" name="save" value="{#Change#}">
+{/if}
+
+</td>
+</tr>
+</table>
+</form>

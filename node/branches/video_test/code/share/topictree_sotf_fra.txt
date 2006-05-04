@@ -1,0 +1,147 @@
+tree_id=1
+name=SOTF arbre général de matière
+shortname=SOTF général
+description=Une tentative de créer un arbre général de matières pour les radios.
+url=
+
+# End of tree definition
+
+  1 1 Arts, medias, divertissement et loisirs
+  2 2 Nouvelles
+  3 2 Nouveaux médias (Internet, CD, DVD, Mini Disque, etc)
+  4 2 Presse
+  5 2 Radio
+  6 2 Cinéma et télévision
+  7 2 Publicité
+  8 2 Arts de représentation (théâtre, danse, cirque, etc...)
+  9 2 Musique
+ 10 2 Arts en plastique (peinture, sculpture, photographie, bandes dessinées, etc...)
+ 11 2 Architecture et urbainisme
+ 12 2 Littérature (poésie, fiction, essais, etc...)
+ 13 2 Science-fiction et fantaisie
+ 14 2 Activités récréationnelles
+ 15 2 Voyage et tourisme
+ 16 2 Jeux
+ 17 2 Sport
+
+ 18 1 Pratiques humaines et issues sociales
+ 19 2 Femmes
+ 20 2 Hommes
+ 21 2 Jeunes gens
+ 22 2 Gens âgés
+ 23 2 Famille
+ 24 2 Personnes handicapées
+ 25 2 Sexualité
+ 26 2 Drogues
+ 27 2 Pauvreté et famine
+ 28 2 Migration
+ 29 2 Multiculturalisme
+ 30 2 Issues de la communauté (planification de logement, de transport, de secteur, communautés urbaines, communautés rurales)
+ 31 2 Religion, métaphysique
+ 32 2 Racisme
+ 33 2 O.N.G.
+
+ 34 1 Curatif et médecine
+ 35 2 Maladies
+ 36 2 Substances curatives
+ 37 2 Curatif traditionnel
+ 38 2 Recherche médicale
+ 39 2 Médecine alternative
+ 40 2 Premiers soins
+
+ 41 1 Enseignement, apprenant et étudier
+ 42 2 Universités
+ 43 2 Écoles
+ 44 2 Apprendre pour toujours
+ 45 2 Pédagogie
+ 46 2 Éducation spéciale
+ 47 2 e-learning
+ 48 2 Éducation
+ 49 2 Biographies
+
+ 50 1 Sciences et technologies
+ 51 2 Sciences naturelles (physique, chimie, écologie, zoologie, botanique, etc)
+ 52 2 Sciences géologiques (astronomie, géographie, océanographie, climatologie, géologie, etc...)
+ 53 2 Sciences générales (biologie, génétique, anatomie, etc...)
+ 54 2 Sciences sociales (Sociologie, Anthropologie, etc)
+ 55 2 Psychologie et psychiatrie
+ 56 2 Archéologie et paléontologie
+ 57 2 Histoire
+ 58 2 Communications, télécommunication et internet
+ 59 2 Informatique
+
+ 60 1 Issues environnementales, agriculture et technologies relatives
+ 61 2 Agriculture et technologies relatives
+ 62 2 Produits biologiques
+ 63 2 Technologie alimentaire
+ 64 2 Chasse et pêche
+ 65 2 Diversité bio
+ 66 2 Climat
+ 67 2 Population
+ 68 2 Approvisionnement en eau
+ 69 2 Pollution
+ 70 2 Organismes génétiquement modifiés
+
+ 71 1 Justice et gouvernemental
+ 72 2 Coopération internationale
+ 73 2 Géopolitique
+ 74 2 Politique intérieure
+ 75 2 Politique de développement
+ 76 2 Politique sociale (politique d\'emploi, bien-être)
+ 77 2 Systèmes des gouvernements et des états
+ 78 2 Défense
+ 79 2 Persécution politique (prisonniers, réfugiés...)
+ 80 2 Droits de l\'homme (droit d\'asile, liberté de parole)
+ 81 2 Services de police
+ 82 2 Prison
+ 83 2 Crime et délinquance
+ 84 2 Terrorisme
+ 85 2 Droits et licenses
+
+ 86 1 Politiques, systèmes politiques, et guerres
+ 87 2 Anarchisme
+ 88 2 Capitalisme
+ 89 2 Communisme
+ 90 2 Partis politiques
+ 91 2 Systèmes démocratiques
+ 92 2 Fascime et nazisme
+ 93 2 Pacifisme
+ 94 2 Nationalisme
+ 95 2 Systèmes autoritaires
+ 96 2 Groupes révolutionnaires et subversifs (activisme)
+ 97 2 Globalisation
+ 98 2 Guerre civile et révolution
+ 99 2 Guerre
+100 2 Armes
+
+101 1 Affaires
+102 2 Comptabilité
+103 2 Firmes
+104 2 Service à la clientèle
+105 2 Commerce électronique
+106 2 Emploi
+107 2 Gestion
+108 2 Marketing et publicité
+109 2 Services
+110 2 Commerce de gros
+111 2 Syndicats
+
+112 1 Achats et produits de consommation
+113 2 Maison et jardin
+114 2 Produits de beauté
+115 2 Livres
+116 2 Vêtements
+117 2 Ordinateurs
+118 2 Électronique grand public
+119 2 Autres produits
+120 2 Divertissement
+121 2 Fleurs
+122 2 Alimentation
+123 2 Santé
+124 2 Bijoux
+125 2 Animaux de compagnie
+126 2 Récréation
+127 2 Véhicules
+
+
+

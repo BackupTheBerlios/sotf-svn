@@ -1,0 +1,145 @@
+tree_id=1
+name=SOTF general topic tree
+shortname=SOTF general
+description=An attempt to create a general subject tree for radios.
+url=
+
+# End of tree definition
+
+  1 1 Arts, Medias, Entertainment and Leisure 
+  2 2 News 
+  3 2 New Media (Internet, CD, DVD, MiniDisk, etc.) 
+  4 2 Press 
+  5 2 Radio 
+  6 2 Motion Pictures and Television 
+  7 2 Advertising 
+  8 2 Performing Arts (Theater, Dance, Circus, etc.) 
+  9 2 Music 
+ 10 2 Plastic Arts (Painting, Sculpture, Photography, Comics, etc.) 
+ 11 2 Architecture and Urbanism 
+ 12 2 Literature (Poetry, Fiction, Essays, etc.) 
+ 13 2 Science Fiction and Fantasy 
+ 14 2 Recreational Activities 
+ 15 2 Journey and Tourism 
+ 16 2 Games 
+ 17 2 Sport 
+
+ 18 1 Human Practices and Social Issues 
+ 19 2 Women 
+ 20 2 Men 
+ 21 2 Young people 
+ 22 2 Elderly people 
+ 23 2 Family 
+ 24 2 Handicapped persons 
+ 25 2 Sexuality 
+ 26 2 Drugs 
+ 27 2 Poverty and Hunger 
+ 28 2 Migration 
+ 29 2 Multiculturalism 
+ 30 2 Community Issues (Housing, Transportation, Area planning, Urban communities, Rural communities) 
+ 31 2 Religion, Metaphysics 
+ 32 2 Racism 
+ 33 2 N.G.O. 
+
+ 34 1 Healing and Medicine 
+ 35 2 Diseases 
+ 36 2 Healing Substance 
+ 37 2 Traditional healings 
+ 38 2 Medical Research 
+ 39 2 Altenative Medicine 
+ 40 2 First Aid 
+
+ 41 1 Teaching, Learning and Studying 
+ 42 2 Universities 
+ 43 2 Schools 
+ 44 2 Life long learning 
+ 45 2 Pedagogie 
+ 46 2 Special Education 
+ 47 2 e-learning 
+ 48 2 Education 
+ 49 2 Biography
+
+ 50 1 Sciences and Technologies 
+ 51 2 Nature Scienses (Physics, Chemistry, Ecology, Zoology, Botanique, etc.) 
+ 52 2 Earth Sciences (Astronomy, Geography, Oceanography, Climatology, Geology,etc.) 
+ 53 2 Live Sciences (Biology, Genetic, Anatomy, etc.) 
+ 54 2 Social Sciences (Sociology, Anthropology, etc.) 
+ 55 2 Psychology and Psychiatry 
+ 56 2 Archeology and Palentology 
+ 57 2 History 
+ 58 2 Communications, telecommuncation and Internet 
+ 59 2 Computer science 
+
+ 60 1 Environmental Issues, Agriculture and related technologies 
+ 61 2 Agriculture & related technologies 
+ 62 2 Biological Products 
+ 63 2 Food technology 
+ 64 2 Hunting & fishing 
+ 65 2 Bio diversity 
+ 66 2 Climate 
+ 67 2 Population 
+ 68 2 Water supply 
+ 69 2 Pollution 
+ 70 2 GMO-Genetically modified organism 
+
+ 71 1 Justice and Governmental 
+ 72 2 International cooperation 
+ 73 2 Geopolitics 
+ 74 2 Domestic policy 
+ 75 2 Development policies 
+ 76 2 Social policy (Employment policies, Welfare) 
+ 77 2 Systems of governments and states 
+ 78 2 Defense 
+ 79 2 Political persecution (prisoners, refugees, ...) 
+ 80 2 Human rights (Right of asylum, Freedom of speech 
+ 81 2 Police services 
+ 82 2 Prison 
+ 83 2 Crime & delinquency 
+ 84 2 Terrorism 
+ 85 2 Licences and copyright/copyleft 
+
+ 86 1 Politic, politic systems and Wars 
+ 87 2 Anarchism 
+ 88 2 Capitalism 
+ 89 2 Communism 
+ 90 2 Political Parties 
+ 91 2 Democratic systems 
+ 92 2 Fascim and Nazism 
+ 93 2 Pacifism 
+ 94 2 Nationalism 
+ 95 2 Authoritarian systems 
+ 96 2 Revolutionary and subversive groups (activism) 
+ 97 2 Globalization 
+ 98 2 Civil war and revolution 
+ 99 2 War 
+100 2 Weapons 
+
+101 1 Business 
+102 2 Accounting 
+103 2 Companies 
+104 2 Customer Service 
+105 2 E-Commerce 
+106 2 Labor 
+107 2 Management 
+108 2 Marketing and Advertising 
+109 2 Services 
+110 2 Wholesale Trade 
+111 2 Labor unions
+
+112 1 Shopping and consumer products 
+113 2 Home and Garden 
+114 2 Beauty Products 
+115 2 Books 
+116 2 Clothing 
+117 2 Computers 
+118 2 Consumer Electronics 
+119 2 Other Merchandise 
+120 2 Entertainment 
+121 2 Flowers 
+122 2 Food 
+123 2 Health 
+124 2 Schmuck 
+125 2 Pets 
+126 2 Recreation 
+127 2 Vehicles
+

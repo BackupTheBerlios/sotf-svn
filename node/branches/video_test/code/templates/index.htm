@@ -1,0 +1,480 @@
+
+
+<table width="100%" border="0" cellspacing="2" cellpadding="5">
+
+  <tr> 
+
+    <td width="20%" valign="top"> <br>
+
+      <table width="40" border="0" cellspacing="0" cellpadding="2">
+
+        <tr> 
+
+          <td nowrap bgcolor="{#tabBgColor#}"><strong>{#Login_tab#}</strong></td>
+
+        </tr>
+
+      </table>
+
+      <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
+
+        <tr> 
+
+          <td bgcolor="#FFFFFF">
+
+			{if $loggedIn}
+
+        <p>
+
+                  {#logged_in_as#} {$USERNAME}
+
+        <br><a href="register.php">{#Preferences#} 
+
+        <br><a href="logout.php">{#Logout#}</a></p>
+
+			 
+
+			{else}
+
+            <form name="loginform" method="post" action="login.php">
+
+              <table width="100%" border="0" cellspacing="1" cellpadding="1">
+
+                <tr> 
+
+                  <td width="1" nowrap>
+
+                    <div align="right">{#Login#}:</div>
+
+                  </td>
+
+                  <td width="100%">
+
+                    <input type="text" name="userid" style="width: 100%">
+
+                  </td>
+
+                </tr>
+
+                <tr> 
+
+                  <td width="1"> 
+
+                    <div align="right">{#Password#}:</div>
+
+                  </td>
+
+                  <td>
+
+                    <input type="password" name="password" style="width: 100%">
+
+                  </td>
+
+                </tr>
+
+                <tr> 
+
+                  <td colspan="2">
+
+                    <div align="center"> 
+
+                      <input type="submit" name="login" value="{#Login#}">
+
+                      <br>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              </table>
+
+            </form>
+
+            <div align="center">[ <a href="register.php">{#Register#}</a> ]</div>
+	      <div align="center">[ <a href="newPassword.php">{#Forgot#}</a> ]</div> {* added by Martin Schmidt 05-11-22 *}
+
+
+			{/if}
+
+          </td>
+
+        </tr>
+
+      </table>
+
+{if $loggedIn and count($PLAYLIST) gt 0 }
+
+      <br>
+
+      <table width="40" border="0" cellspacing="0" cellpadding="2">
+
+        <tr> 
+
+          <td nowrap bgcolor="{#tabBgColor#}"><strong>{#my_playlist#}</strong></td>
+
+        </tr>
+
+      </table>
+
+      <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
+
+        <tr> 
+
+          <td bgcolor="#FFFFFF">
+
+                  <table>
+
+                    {foreach name=outer item=item from=$PLAYLIST}
+
+                    <tr valign="top">
+
+                      <td>
+
+                        <a href="listen.php/audio.m3u?id={$item.id}"><img src="{$IMAGE_URL}/listen.gif" border="0" alt="{#Listen#}"></a>
+
+                      </td>
+
+                      <td>
+
+                        <a class="playlist" href="get.php?id={$item.id}">{$item.title}</a>
+
+                      </td>
+
+                    </tr>
+
+                    {/foreach}
+
+                  </table>
+
+          </td>
+
+        </tr>
+
+      </table>
+
+{/if}
+
+      <br>
+
+      <table width="40" border="0" cellspacing="0" cellpadding="2">
+
+        <tr> 
+
+          <td nowrap bgcolor="{#tabBgColor#}"><strong>{#statistics#}</strong></td>
+
+        </tr>
+
+      </table>
+
+      <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
+
+        <tr> 
+
+          <td bgcolor="#FFFFFF">
+
+                    {if $numNodes gt 1}{$numNodes} {#nodes#}<br>{/if}
+
+                      {$numStations} {#stations#}
+
+                      <br>{$numProgs} {#progs#}
+
+                      <br>{$files.size_mb} {#mb_of_audio#}
+
+                      <br>{$files.length_hour} {#hours_of_audio#}
+
+                      <br>{$access.l_and_d} {#listens_and_downloads#}
+
+                      <br>{$numUsers} {#users#}
+
+                  </td>
+
+        </tr>
+
+      </table>
+
+      <br>
+
+      <table width="40" border="0" cellspacing="0" cellpadding="2">
+
+        <tr> 
+
+          <td nowrap bgcolor="{#tabBgColor#}"><strong>{#contacts#}</strong></td>
+
+        </tr>
+
+      </table>
+
+      <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
+
+        <tr> 
+
+          <td bgcolor="#FFFFFF">
+
+	    {mailto address="$ADMIN_EMAIL" encode="javascript"}
+
+	    <br />
+
+	    {#contacts_text#}
+
+          </td>
+
+        </tr>
+
+      </table>
+
+    </td>
+
+    <td width="60%" valign="top">
+
+      <table width="100%" height="100%" border="0" cellspacing="0" cellpadding="5">
+
+        <tr valign="top"> 
+
+          <td>
+
+            <p>{#intro#}
+
+            </p>
+
+          </td>
+
+        </tr>
+
+        <tr valign="top"> 
+
+          <td bgcolor="#eeeeee">
+
+              {if $DEF_QUERY}
+
+              <strong>{#Default_query#}</strong>
+
+              {else}
+
+              <strong>{#New_shows#}</strong>
+
+              {/if}
+
+              <table width="100%" border="0" cellspacing="0" cellpadding="2">
+
+                {if count($NEWS) gt 0 }
+
+                {foreach item=item from=$NEWS}
+
+                <tr bgcolor="#FFFFFF" height="1"><td colspan="2"></td></tr>
+
+                <tr valign="top">
+
+                  <td width="5%">
+
+                    {if $item.icon }
+
+                    <img src="{$CACHE_URL}/{$item.icon}">
+
+                    {else}
+
+                    {/if}
+
+                  </td>
+
+                  <td>
+
+                    <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> 
+
+                    {if $item.alternative_title}<br>{$item.alternative_title}{/if}
+
+                    {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
+
+		    <br>{$item.entry_date} {if $item.broadcast_date}({$item.broadcast_date|date_format:"%Y-%m-%d"}){/if}
+
+                    {if $item.abstract}
+
+                        <div class="abstract">{$item.abstract|truncate:300}</div>
+
+                    {/if}
+
+                  </td>
+
+                </tr>
+
+                {/foreach}
+
+                  {if $DEF_QUERY}
+
+                     <tr bgcolor="#FFFFFF" height="1"><td colspan="2"></td></tr>
+
+                     <tr><td colspan="2" align="right">({#total#} {$DEF_QUERY_MAX})</td></tr>
+
+                  {/if}
+
+                {else}
+
+                <tr>
+
+                  <td>
+
+                    {if $DEF_QUERY}
+
+                    {#No_results#}
+
+                    {else}
+
+                    {#No_news#}
+
+                    {/if}
+
+                  </td>
+
+                </tr>
+
+                {/if}
+
+                </tr>
+
+              </table>
+
+           </td>
+
+        </tr>
+
+      </table>
+
+    </td>
+
+    <td width="20%" valign="top"> 
+
+              <!-- <p><strong>{#recent_uploads#}:</strong></p> -->
+
+      <table width="40" border="0" cellspacing="0" cellpadding="2">
+
+        <tr> 
+
+          <td nowrap bgcolor="{#tabBgColor#}"><strong><A href="advsearch.php">{#Search#}</a></strong></td>
+
+        </tr>
+
+      </table>
+
+      <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
+
+        <tr> 
+
+            <form name="searchform" method="get" action="search.php">
+
+              <td bgcolor="#FFFFFF">
+
+                <input type="text" name="pattern" style="width: 100%">
+
+                <select name="language" style="width: 100%">
+
+                  {html_options values=$searchLangs selected="any_language" output=$langNames}
+
+                </select>
+
+                <input type="submit" name="search" value="{#Search#}">
+
+              </td>
+
+              </form>
+
+          </tr>
+
+      </table>
+
+      <br>
+
+      <table width="40" border="0" cellspacing="0" cellpadding="2">
+
+        <tr> 
+
+          <td nowrap bgcolor="{#tabBgColor#}"><strong><a href="stations.php">{#Stations#}</a>:</strong></td>
+
+        </tr>
+
+      </table>
+
+      <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
+
+        <tr> 
+
+            <form name="stationsform" method="get" action="showStation.php">
+
+                <td width="100%" bgcolor="#FFFFFF"> 
+
+                    <select name="id" style="width: 100%">
+
+                       {foreach from=$STATIONS item=station}
+
+                          <option value="{$station.id}">{$station.name}</option>
+
+                       {/foreach}
+
+                    </select>
+
+                    <input type="submit" name="select_station" value="{#Go#}">
+
+                  </td>
+
+            </form>
+
+        </tr>
+
+      </table>
+
+
+
+{if count($TOPICS) gt 2 }
+
+      <br>
+
+      <table width="40" border="0" cellspacing="0" cellpadding="2">
+
+        <tr> 
+
+          <td nowrap bgcolor="{#tabBgColor#}"><strong><a href="topics.php">{#topics#}</a></strong></td>
+
+        </tr>
+
+      </table>
+
+      <table width="100%" border="0" cellpadding="5" cellspacing="1" bgcolor="{#tabBgColor#}">
+
+        <tr> 
+
+            <td width="100%" bgcolor="#FFFFFF"> 
+
+               {#top_topics#}
+
+                  <table>
+
+                    {foreach item=item from=$TOPICS}
+
+                    <tr>
+
+                      <td><a href="topics.php?open={$item.topic_id}">{$item.name}</a></td>
+
+                      <td>({$item.total})</td>
+
+                    </tr>
+
+                    {/foreach}
+
+                  </table>
+
+           </td>
+
+        </tr>
+
+      </table>
+
+{/if}
+
+
+
+    </td>
+
+  </tr>
+
+</table>
+

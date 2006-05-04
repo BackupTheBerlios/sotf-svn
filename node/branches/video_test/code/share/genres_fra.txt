@@ -1,0 +1,22 @@
+1 actualité
+2 annonce / jingle / pub(licité)
+3 annonce
+4 call-in show
+5 enfants / jeunesse
+6 comédie
+7 danse
+8 documentaire
+9 drame
+10 éducation
+11 article
+12 Game show
+13 interview
+15 magazine
+17 music
+18 nouvelles
+19 histoire orale (tradition orale) / récit d'histoire
+20 débat
+21 formation
+22 médias de communauté
+
+

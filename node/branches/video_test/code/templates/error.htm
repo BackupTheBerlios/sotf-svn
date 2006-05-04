@@ -1,0 +1,59 @@
+{config_load file="general.conf"}
+{config_load file="$LANG.conf" section="$ACTION"}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>{#ErrorTitle#}</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<body bgcolor="#D3ECF5" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<table align="center">
+  <tr>
+    <td>
+      <img align="left" src="{$IMAGE_URL}/stop.gif" height="100" width="100">
+    </td>
+    <td>
+ 
+<h3>{#errors_occured#}</h3>
+
+  {foreach from=$ERRORS item=MSG}
+    <p>{$MSG}</p>
+  {/foreach}
+
+</td>
+</tr>
+<tr>
+<td align="center" colspan="2">
+
+<!--
+    {if $POPUP}
+       <FORM ACTION="closeAndRefresh.php">
+    {else}
+       <FORM ACTION="index.php">
+    {/if}
+      <INPUT type="submit" name="ok" value="OK">
+</FORM>
+-->
+
+<p>{#error_exclaim#}</p>
+
+<script>
+  if(history.length > 0)
+       document.writeln("<p><a href=\"javascript:history.back()\">{#error_go_back#}</a></p>");
+</script>
+
+{if $ERROR_URL}
+  <p><a href="{$ERROR_URL}">{#error_go_safe_page#}</a></p>
+{/if}
+
+
+{if $POPUP}
+  <p><a href="{$ROOT_URL}/closeAndRefresh.php">{#error_close#}</a></p>
+{else}
+  <p><a href="{$ROOT_URL}/index.php">{#error_go_home#}</a></p>
+{/if}
+
+</td>
+</tr>
+</table>

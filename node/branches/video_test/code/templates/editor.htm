@@ -1,0 +1,196 @@
+{literal}
+<SCRIPT language="javascript">
+<!--
+function setvalue(name, id, value){
+var popurl="updatedb.php?name="+name+"&id="+id+"&value="+value
+winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
+}
+
+function exportPrg(obj, prg) {
+  type = obj.selectedIndex;
+  if(type==0)
+    return;
+  window.location.href='export.php?id='+prg+'&type='+type;
+}
+
+// -->
+</SCRIPT>
+{/literal}
+
+{if $WILL_EXPIRE }
+  <table width="100%" border="0" cellspacing="0" cellpadding="5">
+    <tr> 
+      <td class="status">
+        {$WILL_EXPIRE}
+      </td>
+    </tr>
+  </table>
+<p></p>
+{/if}
+
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#create_new_prg#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+	<td class="tabarea">
+	  <table width="100%">
+	    <tr valign="top" class="list1">
+	      <td>
+		{#create_new_expl1#}
+	      </td>
+	    </tr>
+	    <tr class="list2">
+	      <td>
+		<a target="ftp" href="{$USERFTPURL}">{#user_ftp_access#}</a>, &nbsp;&nbsp;&nbsp;
+		<a href="javascript:popup('manageFiles.php','ManageFiles',500,500,true)">{#manage_files#}</a>
+	      </td>
+	    </tr>
+	    <tr class="list1">
+	      <td>
+		{#create_new_expl2#}
+	      </td>
+	    </tr>
+	    <tr class="list2">
+	      <td>
+		{if $USER_AUDIO_FILES}
+
+		<form method="post">
+
+		  <!-- {#pending_audio#}: -->
+
+		  <select name="fname">
+		    {html_options values=$USER_AUDIO_FILES|escape output=$USER_AUDIO_FILES selected=$FNAME}
+		  </select>
+
+		  { if count($STATIONS)==1 }
+		  
+		  <input type="hidden" name="station" value="{$STATIONS[0].id}"></input>
+		  
+		  { else }
+		  <select name="station">
+		    {foreach from=$STATIONS item=station}
+		    <option value="{$station.id}" {if $station.id == $SELECTED_STATION}SELECTED=1{/if} >{$station.name}</option>
+		  {/foreach}
+		</select>
+		  {/if}
+		  <input type="submit" name="addprog" value="{#add_programme#}"></input>
+		  <input type="submit" name="refresh" value="{#refresh#}"></input>
+		</form>
+		{/if}
+
+	      </td>
+          </tr>
+        </table>
+
+</td></tr>
+</table>
+
+<p></p>
+
+<form method="get">
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#my_progs#}</td>
+  </tr>
+</table>
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+
+<table width="100%" bgcolor="{#editorBgColor2#}">
+<tr>
+      <td align="center">{#series#}<br>
+        <select name="series" onchange="javascript:this.form.submit();">
+		{html_options options=$mySeriesData selected=$series}
+        </select>
+      </td>
+      <td align="center">{#Filter#}<br>
+        <select name="filter" onchange="javascript:this.form.submit();">
+		{html_options options=$filters selected=$filter}
+        </select>
+      </td>
+      <td align="center">{#sortby#}<br>
+        <select name="sort1">
+		{html_options options=$sortby selected=$sort1}
+        </select>
+        <select name="sort2">
+		{html_options options=$sortby selected=$sort2}
+        </select>
+      </td>
+      <td align="center">
+	<input type="submit" name="{#submit#}" value="{#submit#}">
+      </td>
+      <td align="center">
+		{include file="splitList.htm"}
+      </td>
+</tr></table>
+
+{if count($MYPROGS) > 0}
+<table width="100%">
+<tr class="listhead">
+      <!--<th>{#Flag#}</th>-->
+      <th>{#Title_abs#}</th>
+      <th>{#Station_series#}</th>
+      <th>{#Dates#}</th>
+      <th>{#Stats#}</th>
+      <th>{#Flags#}</th>
+      <th>{#Actions#}</th>
+</tr>
+
+    {cycle values="list1,list2" print=false advance=false}
+    {foreach item=item from=$MYPROGS}
+    <tr class="{cycle}" valign="top">
+      <!--<td>&nbsp;</td>-->
+      <td>
+                <a href="get.php?id={$item.id}"><b>{$item.title}</b></a>
+                <br>{$item.abstract|truncate:200}
+      </td>
+      <td>
+                <a href="showStation.php/{$item.station_id}">{$item.station}</a>
+                {if $item.series_id}
+                <br /><a href="showSeries.php/{$item.series_id}">{$item.series}</a>
+                {/if}
+      </td>
+      <td nowrap>
+		  {#entry_d#}:&nbsp;{$item.entry_date|default:"&nbsp;"}
+		  {if $item.production_date}
+		    <br />{#prod_d#}:&nbsp;{$item.production_date|default:"&nbsp;"}
+		  {/if}
+		  {if $item.broadcast_date}
+		    <br />{#broadcast_d#}:&nbsp;{$item.broadcast_date|default:"&nbsp;"}
+		  {/if}
+                <br/>{#exp_d#}:{$item.expiry_date|default:"&nbsp;"}</td>
+      <td nowrap>
+                {if $item.visits or $item.listens or $item.downloads} 
+                {#visits#}: {$item.visits}
+                <br />{#listens#}: {$item.listens}
+                <br />{#downloads#}: {$item.downloads}
+                {/if}
+                {if $item.rating_value}<br />{#rating#}: {$item.rating_value} ({#by#} {$item.rating_count}){/if}
+      </td>
+      <td align="center" {if $item.published ne 't'}bgcolor="F7DCC3"{/if}>
+         {#Published#} <input type="checkbox" onclick="javascript:setvalue('editorpub', '{$item.id}', this.checked);return true;"{ if $item.published eq 't' } CHECKED="1"{/if} /><br>
+         <select name="flag" onchange="javascript:setvalue('editorflag', '{$item.id}', this.options[this.selectedIndex].value);return true;">{html_options options=$flags selected=$item.flags}</select>
+      </td>
+      <td>
+              <input class="action" type="button" name="b1" value="{#Edit_files#}" onClick="redir(this.form, 'editFiles.php?id={$item.id|escape}&okURL={$OKURL|escape}')" />
+              <input class="action" type="button" name="b2" value="{#Edit_meta#}" onClick="redir(this.form, 'editMeta.php?id={$item.id}')" />
+              <input class="action" type="button" name="b3" value="{#Delete#}" onClick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, 'editor.php?delprog=1&prgid={$item.id}')" />
+                      <select name="export" onchange="javascript:exportPrg(this, '{$item.id}')">
+                        <option selected>{#export#}</option>
+                        <option>XBMF metadata</option>
+                        <option>{#get_xbmf#}</option>
+                      </select>
+      </td>
+    </tr>
+		{/foreach}
+
+</table>
+{/if}
+
+</td></tr>
+</table>
+</form>

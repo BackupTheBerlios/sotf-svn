@@ -1,0 +1,144 @@
+{literal}
+<script>
+
+function toggleAdmin()
+{
+	var elts = document.form1.elements;
+  var on = document.form1['perm_admin'].checked;
+	for (var i = 0; i < elts.length; i++) {
+    var elt = elts[i];
+		if (elt.type == "checkbox" && elt.name != 'perm_admin') {
+        	elt.checked = on;
+		}
+	}
+}
+
+function toggleEnable(yesno)
+{
+	var elts = document.form1.elements;
+	for (var i = 0; i < elts.length; i++) {
+    var elt = elts[i];
+		if (elt.type == "checkbox") {
+        	elt.disable = !yesno;
+		}
+	}
+}
+
+</script>
+{/literal}
+
+<h3>{#change_permissions#}</h3>
+
+{if $CONTEXT eq 'node'}
+<p>{#target#}: {$CONTEXT}</p>
+{else}
+<p>{#target#} {$CONTEXT}: {$OBJECT_NAME}</p>
+{/if}
+
+<form method=GET name="form1">
+<!-- <input type="hidden" name="username" value="{$USER_NAME|escape:"html"}" /> -->
+<!-- <input type="hidden" name="userid" value="{$USER_ID|escape:"html"}" /> -->
+<input type="hidden" name="objectname" value="{$OBJECT_NAME|escape:"html"}" />
+<input type="hidden" name="objectid" value="{$OBJECT_ID|escape:"html"}" />
+<input type="hidden" name="context" value="{$CONTEXT}" />
+
+ {if not $USERS}
+     <nobr>{#find_user#}: <input name="pattern" value="{$PATTERN}" /> <input type="checkbox" name="prefix" /> {#prefix_search#}</nobr>
+ {/if}
+ {if $NO_MATCHES}
+     <div><font color="red">{#no_matches#} </font></div>
+ {/if}
+ {if $TOO_MANY_MATCHES}
+     <div><font color="red">{#too_many_matches#} {$TOO_MANY_MATCHES} </font></div>
+ {/if}
+
+
+{if $USERS}
+
+   <select name="userid">
+   {foreach from=$USERS item=name key=key}
+     <option value="{$key}"  {if $key eq $USER_SELECTED} SELECTED {/if} >{$name}</option>
+   {/foreach}
+  </select>
+
+<input type="submit" name="new" value="{#new_search#}" />
+
+<p></p>
+
+<table class="tabarea">
+<tr> 
+  <td class="tabarea">
+              <table>
+                <tr>
+                  <td>
+                    <input name="perm_admin" type="checkbox" onClick="toggleAdmin()" {if in_array('admin', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#admin#} ({#admin_expl#})
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input name="perm_change" type="checkbox"  {if in_array('change', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#change#} ({#change_expl#})
+                  </td>
+                </tr>
+                {if $CONTEXT eq 'station' or $CONTEXT eq 'node' or $CONTEXT eq 'series' }
+                <tr>
+                  <td>
+                    <input name="perm_create" type="checkbox"  {if in_array('create', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#create#} ({#create_expl#})
+                  </td>
+                </tr>
+                {/if}
+                <tr>
+                  <td>
+                    <input name="perm_delete" type="checkbox"  {if in_array('delete', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#delete#} ({#delete_expl#})
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <input name="perm_authorize" type="checkbox"  {if in_array('authorize', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#authorize#} ({#authorize_expl#})
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+<p>
+{#use_template#}: 
+  <select name="role" onchange="javascript:alert('If you think such feature would be useful, please tell!')" >
+     <option value="owner" onSelect="toggleEnable(1)" >{#owner#}</option>
+     {if $CONTEXT eq 'station' or $CONTEXT eq 'series'}
+       <option value="manager" onSelect="toggleEnable(1)" >{#manager#}</option>
+       <option value="editor" onSelect="toggleEnable(1)" >{#editor#}</option>
+     {/if}
+     <option value="special" onSelect="toggleEnable(0)" SELECTED >{#special_perms#}</option>
+  </select>
+
+</p>
+
+<p>
+<input type="submit" name="save" value="{#save#}" />
+<input type="button" onClick="window.close();" name="cancel" value="{#cancel#}" />
+</p>
+
+
+{/if}
+
+
+</form>
+
+
+
