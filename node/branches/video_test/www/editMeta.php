@@ -3,7 +3,7 @@
 /*  
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: Andrs Micsik, Mt Pataki, Tams Dri 
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
      @internal change "read ID3 Tags from MP3 File and write ID3 Tags from Metadata fields"
  *           by wolfgang csacsinovits and martin schmidt (fh st. poelten)
@@ -12,6 +12,8 @@
  */
 
 require("init.inc.php");
+
+$getID3 = new getID3; //ADDED BY Martin Schmidt
 
 $prgId = sotf_Utils::getParameter('id');
 $new = sotf_Utils::getParameter('new');
@@ -38,14 +40,19 @@ $prg = & new sotf_Programme($prgId);
 
 	   // ---- changed by wolfgang csacsinovits and martin schmidt GET ID3 TAGS and write into Metadata - Fields
   	 
-  	 
+  	 	
+		
   	    $audioFiles = $prg->listAudioFiles('true');
   	    
   	    $file =  $prg->getAudioDir() . '/' . $audioFiles[0] ['filename'];
   	 
 	 	if($new){
-	 
-			$ThisFileInfo = GetAllFileInfo($file, 'mp3', false, false, false) ;
+		
+			$getID3 = new getID3();
+			$ThisFileInfo = $getID3->analyze($file);
+			getid3_lib::CopyTagsToComments($ThisFileInfo);
+			
+			//$ThisFileInfo = GetAllFileInfo($file, 'mp3', false, false, false) ;
 			
 			
 			if (($ThisFileInfo['comments']['title']) != '' ) {
@@ -116,10 +123,10 @@ if($save || $finish || $finishpublish) {
 		    $field_error[$param]=true;
 		  	$error_count++;
 	}	    else $field_error[$param]=false;	    	    
-	if($param=='genre_id' && $value==0) {	    
+	/*if($param=='genre_id' && $value==0) {	    
 		$field_error[$param]=true;	    
 		$error_count++;	    
-	}	    
+	}	 */   
 		if($type[0]=='text') {
       $value = strip_tags($value);
     } elseif($type[0]=='number') {
@@ -153,68 +160,58 @@ if($save || $finish || $finishpublish) {
 		  // check if file is mp3 - file	        
 		  $filename = $file;	        
 		  $extension = substr($filename, strrpos($filename, '.') +1);	        	        
-		  $productiondate = (SafeStripSlashes(sotf_Utils::getParameter('production_date')));	        	        
-		  if($extension=="mp3") {	        	        	        
-		  // TITLE	        
-		  $data['id3v2']['TIT2']['encodingid'] = 0;	        
-		  $data['id3v2']['TIT2']['data']       = SafeStripSlashes(sotf_Utils::getParameter('title'));	        
-		  $data['ape']['title'][] = SafeStripSlashes(sotf_Utils::getParameter('title'));	        	        
-		  $data['id3v1']['TIT2']['encodingid'] = 0;	        $data['id3v1']['TIT2']['data']       = SafeStripSlashes(sotf_Utils::getParameter('title'));	        $data['ape']['title'][] = SafeStripSlashes(sotf_Utils::getParameter('title'));	        $title =  $data['ape']['title'][0];	 	        	        
-		  // STATION	 
-		  
-		  //php4 compatibility hack
-		  $prg->station = $prg->getObject($prg->get('station_id'));	        
-		  if(is_object($prg->station)) {	            
-			  $prg->stationName = $prg->station->get('name');	            
-			  $station_name = $prg->stationName;	        
-		  }	        
-		  else $station_name = "";	        
-		         
-				 
-		  $data['id3v2']['TPE1']['encodingid'] = 0;	        
-		  $data['id3v2']['TPE1']['data']       = SafeStripSlashes($station_name);	        
-		  $data['ape']['artist'][] = SafeStripSlashes($station_name);	        	        
-		  $data['id3v1']['TPE1']['encodingid'] = 0;	        
-		  $data['id3v1']['TPE1']['data']       = SafeStripSlashes($station_name);	        
-		  $data['ape']['artist'][] = SafeStripSlashes($station_name);	        
-		  $artist = $data['ape']['artist'][0];	 	        	        
-		  // YEAR	        
-		  $data['id3v2']['TYER']['encodingid'] = 0;	        
-		  $data['id3v2']['TYER']['data']       = SafeStripSlashes(sotf_Utils::getParameter('production_date' . 'Year'));        
-		  $data['ape']['year'][] = SafeStripSlashes(sotf_Utils::getParameter('production_date' . 'Year'));        	        
-		  $data['id3v1']['TYER']['encodingid'] = 0;	        
-		  $data['id3v1']['TYER']['data']       = SafeStripSlashes(sotf_Utils::getParameter('production_date' . 'Year'));
-		  $data['ape']['year'][] = SafeStripSlashes(sotf_Utils::getParameter('production_date' . 'Year'));
-		  $year = $data['ape']['year'][0];	 	        	        
-		  // GENRE	        
-		  $data['id3v2']['TCON']['encodingid'] = 0;	        
-		  $data['id3v2']['TCON']['data']       = SafeStripSlashes($vocabularies->getGenreName($prg->get('genre_id')));	        
-		  $data['ape']['genre'][] = SafeStripSlashes($vocabularies->getGenreName($prg->get('genre_id')));	        	        
-		  $data['id3v2']['TRCK']['encodingid'] = 0;	        
-		  $data['id3v2']['TRCK']['data']       = SafeStripSlashes(sotf_Utils::getParameter('title'));	        
-		  $data['ape']['track'][] = SafeStripSlashes(sotf_Utils::getParameter('title'));	        	        
-		  $data['id3v1']['TCON']['encodingid'] = 0;	        
-		  $data['id3v1']['TCON']['data']       = SafeStripSlashes($vocabularies->getGenreName($prg->get('genre_id')));	        
-		  $data['ape']['genre'][] = SafeStripSlashes($vocabularies->getGenreName($prg->get('genre_id')));	        
-		  $genre = $data['ape']['genre'][0];	        	        
-		  $data['id3v1']['TRCK']['encodingid'] = 0;	        
-		  $data['id3v1']['TRCK']['data']       = SafeStripSlashes(sotf_Utils::getParameter('title'));	        
-		  $data['ape']['track'][] = SafeStripSlashes(sotf_Utils::getParameter('title'));	        	        
-		  // COMMENT	        
-		  $data['id3v1']['COMM'][0]['encodingid']  = 0;	        
-		  $data['id3v1']['COMM'][0]['language']    = 'eng';	        
-		  $data['id3v1']['COMM'][0]['description'] = '';	        
-		  $data['id3v1']['COMM'][0]['data']        = SafeStripSlashes(sotf_Utils::getParameter('keywords'));	        
-		  $data['ape']['comments'][] = SafeStripSlashes(sotf_Utils::getParameter('keywords'));	        
-		  $comment = $data['ape']['comments'][0];	        	        	        
-		  $data['id3v2']['TALB']['encodingid'] = 0;	        
-		  $data['id3v2']['TALB']['data']       = '*ID3Tags modified by SOTF*';	        
-		  $data['ape']['album'][] = '*ID3Tags modified by SOTF*';	                	 	    
-		  WriteID3v1($file, $title, $artist, '*ID3Tags modified by SOTF*' , $year, $comment, $genre, $title, false );	    
-		  WriteID3v2($file, $data, 3, 0, true, 0, true);	 	        
-		  if (!empty($_POST['VersionToEditAPE'])) {	            
-			  echo 'APE changes'.(WriteAPEtag($EditorFilename, $data['ape'], false) ? '' : ' NOT').' written successfully<HR>';	            
-		  }	                	                    
+		  $productiondate = (getid3_lib::SafeStripSlashes(sotf_Utils::getParameter('production_date')));	        	        
+		  if($extension=="mp3") {	   
+
+			$TaggingFormat = 'UTF-8';
+			
+			require($config['getid3dir'].'/write.php');
+			$tagwriter = new getid3_writetags;
+			$tagwriter->filename       = $file;
+			$tagwriter->tagformats     = array('id3v1', 'id3v2.3', 'ape');
+			$tagwriter->overwrite_tags = true;
+			$tagwriter->tag_encoding   = $TaggingFormat;
+
+			  // TITLE	 
+			  $data['title'][]= getid3_lib::SafeStripSlashes(sotf_Utils::getParameter('title'));	
+			 
+			  // STATION	 
+			  
+			  //php4 compatibility hack
+			  $prg->station = $prg->getObject($prg->get('station_id'));	        
+			  if(is_object($prg->station)) {	            
+				  $prg->stationName = $prg->station->get('name');	            
+				  $station_name = $prg->stationName;	        
+			  }	        
+			  else $station_name = "";	        
+					
+			  $data['artist'][]= getid3_lib::SafeStripSlashes($station_name);	
+			  
+			  //SERIES
+			  $prg->series = $prg->getObject($prg->get('series_id'));	        
+			  if(is_object($prg->series)) {	            
+				  $prg->seriesName = $prg->series->get('name');	            
+				  $series_name = $prg->seriesName;	        
+			  }	        
+			  else $series_name = "";	
+			  
+			  $data['album'][]= getid3_lib::SafeStripSlashes($series_name);
+			  
+			  
+			  // YEAR	     
+			     
+			  $data['year'][]= getid3_lib::SafeStripSlashes(sotf_Utils::getParameter('production_date' . 'Year'));
+		   	        	        
+			  // GENRE
+			  $data['genre'][] = getid3_lib::SafeStripSlashes($vocabularies->getGenreName($prg->get('genre_id')));
+			  	        
+	  
+			  // COMMENT	
+			  $data['comment'][] = ' *ID3Tags modified by StreamOnTheFly*';
+			  
+			  $tagwriter->tag_data = $data;
+			  $tagwriter->WriteTags();
+			                 	                    
 	  }	//for count($audioFiles)        
  }	//foreach params        	   	
 	  //-----------------------------------------------------------------------------------------------------	 	                	  

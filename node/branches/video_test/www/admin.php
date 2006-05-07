@@ -3,7 +3,7 @@
 /*  
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: Andrs Micsik, Mt Pataki, Tams Dri 
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  * Update Topic Tree by Martin Schmidt, FH St. Poelten
  */
