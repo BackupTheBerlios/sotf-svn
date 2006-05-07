@@ -121,10 +121,10 @@ if($save || $finish || $finishpublish) {
 	}
 	else $field_error[$param]=false;
 	
-	if($param=='genre_id' && $value==0) {
+	/*if($param=='genre_id' && $value==0) {
 	$field_error[$param]=true;
 	$error_count++;
-	}
+	}*/
 	
     if($type[0]=='text') {
       $value = strip_tags($value);
