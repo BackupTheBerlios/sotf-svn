@@ -103,7 +103,7 @@ CREATE TABLE "sotf_nodes" (
 "url" varchar(255) NOT NULL,
 "neighbours" varchar(255), -- 
 "last_sync_in" timestamptz,							-- time of last sync 
-"last_sync_out" timestamptz, 							-- time of last sync 
+"last_sync_out" timestamptz 							-- time of last sync 
 -- "video_capable" bool DEFAULT 'f'  --ADDED BY Martin Schmidt
 );
 
