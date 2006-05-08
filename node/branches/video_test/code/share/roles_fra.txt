@@ -22,4 +22,25 @@
 22 créateur
 23 éditeur
 24 contribuant
-
+25 acteur
+26 animateur
+27 directeur artistique
+28 cadreur
+29 caméraman
+30 dubber
+31 graphiste
+32 électricien
+33 maquilleur
+34 photographe
+35 editeur de la post-production
+36 monteur
+37 scénographe
+38 fournisseur
+39 sound designer
+40 sound mixer
+41 effets spéciaux
+42 stunts
+43 sous-titres
+44 cutter
+45 effets visuels
+46 costumier

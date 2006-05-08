@@ -222,5 +222,5 @@ COMMIT;
 
 -- ADDED BY Martin Schmidt
 -- NEW FIELD "video_capable" in sotf_nodes
-ALTER TABLE sotf_nodes ADD COLUMN "video_capable" bool;
-ALTER TABLE sotf_nodes ALTER video_capable SET DEFAULT 'f'::bool;
+-- ALTER TABLE sotf_nodes ADD COLUMN "video_capable" bool;
+-- ALTER TABLE sotf_nodes ALTER video_capable SET DEFAULT 'f'::bool;

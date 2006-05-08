@@ -22,3 +22,25 @@
 22 Alkotó
 23 Kiadó
 24 Közreműködő
+25 Színész
+26 Animátor
+27 Művészeti vezető
+28 Operatőr
+29 Rendező
+30 Szinkronszínész
+31 Grafikai tervező
+32 Világosító
+33 Make-Up
+34 Fényképész
+35 Post-production
+36 Állványozó
+37 Díszlettervező
+38 Díszlet
+39 Hangtervező
+40 Hangkeverő
+41 Különleges effektek
+42 Kaszkadőr
+43 Feliratok
+44 Vágás
+45 Vizuális effektek
+46 Jelmez
