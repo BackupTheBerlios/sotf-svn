@@ -346,9 +346,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   /** static */
-  function getFileStats() {
+  function getFileStats($type='sound') { //added parameter by Martin Schmidt
 	 global $db;
-	 return $db->getRow("SELECT sum(f.filesize) AS filesize, sum(f.play_length) AS play_length FROM sotf_media_files f LEFT JOIN sotf_programmes p ON f.prog_id=p.id WHERE p.id IS NOT NULL ");
+	 return $db->getRow("SELECT sum(f.filesize) AS filesize, sum(f.play_length) AS play_length FROM sotf_media_files f LEFT JOIN sotf_programmes p ON f.prog_id=p.id WHERE p.id IS NOT NULL AND p.type='$type'");
   }
 
   function getRefs() {
@@ -386,10 +386,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	* @method static countAll
 	* @return count of available objects
   */
-  function countAll() {
+  function countAll($type='sound') { //added parameter by Martin Schmidt
 	 global $db;
 
-	 return $db->getOne("SELECT count(*) FROM sotf_programmes WHERE published='t'");
+	 return $db->getOne("SELECT count(*) FROM sotf_programmes WHERE published='t' AND type='$type'");
   }
 
   /** static returns programmes owned/edited by current user */

@@ -342,4 +342,22 @@ function convert_special_chars($str){
 }
 //----------------------------------------------------------------------
 
+
+//ADDED BY Martin Schmidt
+
+  function isUnicolorImage($file){
+  		global $config;
+		$isOneColor = false;
+		$cmd = $config['magickDir'] . "/identify -verbose $file 2>&1 &";	
+		debug("check unicolor command", $cmd);
+		
+		$fp = popen($cmd, 'r');
+        while(!feof($fp))
+          {
+		  	$output = fread($fp, 2096);
+			if (stristr($output, 'Colors: 1 ')) $isOneColor = true;
+          }
+        pclose($fp);
+        return $isOneColor;
+  }
 ?>

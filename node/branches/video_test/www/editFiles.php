@@ -17,6 +17,12 @@ $convertall=sotf_Utils::getParameter('convertall');
 $convertindex=sotf_Utils::getParameter('convertindex');
 $createstills=sotf_Utils::getParameter('createstills');
 
+
+if(!$prg->isLocal()) {
+  raiseError("You can only edit programmes locally!");
+}
+
+
 if($new) {
   $smarty->assign("PAGETITLE", $page->getlocalized("New_prog_step1"));
 } else {
@@ -123,30 +129,9 @@ for ($i=0;$i<count($files);$i++) {
 
 
 
-
-
 if($video){
-	$still_found=false;
-	
-	if ($directory = opendir($prg->getOtherFilesDir())) {
-	   while (false !== ($filename = readdir($directory))) {
-			if(preg_match("/^still_".$id."_[12345]\.gif$/",$filename)){
-				$still_found=true;
-		   }
-	   }
-	   closedir($directory);
-	}
-	
-	if ($tempdir = opendir($config['wwwdir']."/tmp")) {
-	   while (false !== ($filename = readdir($tempdir))) {
-			if(preg_match("/^still_".$id."_[12345]\.gif$/",$filename)){
-				$still_found=true;
-		   }
-	   }
-	   closedir($tempdir);
-	}
-	
-	if(!$still_found && $createstills) {
+	$still_found=sotf_VideoFile::searchForStill($prg);
+	if (!$still_found && $createstills){
 		sotf_VideoFile::createStills($files[0]->path, $files[0]->duration, $id);
 	}
 }
@@ -164,33 +149,9 @@ $checker = $checker->selectType();
 
 //check for recently converted files or transcoding in progress
 if($video && $prgAudiolist->count()){
-	$temppath=$config['wwwdir']."/tmp/";
-	$obj = $repository->getObject($id);
-	if(!$obj) raiseError("object does not exist!");
-	
-	$list_changed=false;
-	
-	if ($tempdir = opendir($config['wwwdir']."/tmp")) {
-	   while (false !== ($filename = readdir($tempdir))) {
-			if(preg_match("/^".$id."_/",$filename)){
-				if($checker->fileOK($temppath.$filename)) {
-					if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
-					$obj->setAudio($temppath.$filename);
-					$list_changed=true;
-				}
-			
-			}if(preg_match("/^still_".$id."_[12345]\.gif$/",$filename)){
-				$obj_id=$prg->setOtherFile($temppath.$filename);
-				//$still=new sotf_NodeObject('sotf_other_files', $obj_id);
-					$fileInfo = &$repository->getObject($obj_id);
-					$fileInfo->set('public_access', 'f');
-					$fileInfo->update();
-				$list_changed=true;
-		   }
-	   }
-	   closedir($tempdir);
-	}
-	
+
+	$list_changed=sotf_VideoFile::scanTranscodingQueue($repository, $prg, $checker);
+		
 	if($list_changed) {
 	  $page->redirectSelf();
 	  exit;

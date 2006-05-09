@@ -68,28 +68,8 @@ if($prg->isVideoPrg()){
   $checker = & new sotf_ContentCheck($prgAudiolist); //todo $prgAudioList MEANT CONTENT
   $checker = $checker->selectType();
 
-	$temppath=$config['wwwdir']."/tmp/";
-	
-	if ($tempdir = opendir($config['wwwdir']."/tmp")) {
-	   while (false !== ($filename = readdir($tempdir))) {
-	   		if(preg_match("/".$id."_/",$filename)){
-				if(preg_match("/^".$id."_/",$filename)){
-					if($checker->fileOK($temppath.$filename)) {
-						if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
-						$prg->setAudio($temppath.$filename);
-					}
-				
-				}if(preg_match("/^still_".$id."_[12345]\.gif$/",$filename)){
-					$obj_id=$prg->setOtherFile($temppath.$filename);
-					if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
-					$fileInfo = &$repository->getObject($obj_id);
-					$fileInfo->set('public_access', 'f');
-					$fileInfo->update();
-			   }
-			}
-	   }
-	   closedir($tempdir);
-	}
+  sotf_VideoFile::scanTranscodingQueue($repository, $prg, $checker);
+
 }
 
   // content files 
@@ -136,12 +116,12 @@ if($prg->isVideoPrg()){
   // other files
   $otherFiles = $prg->getAssociatedObjects('sotf_other_files', 'filename');
   
+  
   //select stills from other files
   $stills=array();
   for($k=count($otherFiles)-1;$k>=0;$k--){
   	if(preg_match('/^still_'.$id.'_[12345].gif$/', $otherFiles[$k]['filename'])){
-		array_push($stills, $otherFiles[$k]);
-		//unset ($otherFiles[$k]);
+			array_push($stills, $otherFiles[$k]);
 	}
   }
   $stills=array_reverse($stills);

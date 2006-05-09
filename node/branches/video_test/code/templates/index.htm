@@ -177,16 +177,22 @@
                     {if $numNodes gt 1}{$numNodes} {#nodes#}<br>{/if}
 
                       {$numStations} {#stations#}
-
-                      <br>{$numProgs} {#progs#}
-
-                      <br>{$files.size_mb} {#mb_of_audio#}
-
-                      <br>{$files.length_hour} {#hours_of_audio#}
-
+                      <br>{$numAllProgs} {#audiovideoProgs#} ({$numAudioProgs} {#audio#}/{$numVideoProgs} {#video#})
+                      <br>{$allFiles.size_mb} {#mb_of_audiovideo#} ({$audioFiles.size_mb} {#audio#}/{$videoFiles.size_mb} {#video#})
+                      <br>{$allFiles.length_hour} {#hours_of_audiovideo#} ({$audioFiles.length_hour} {#audio#}/{$videoFiles.length_hour} {#video#})
+					  
                       <br>{$access.l_and_d} {#listens_and_downloads#}
-
                       <br>{$numUsers} {#users#}
+					  
+					  {*
+					  {if $numNodes gt 1}{$numNodes} {#nodes#}<br>{/if}
+                      {$numStations} {#stations#}
+                      <br>{$numProgs} {#progs#}
+                      <br>{$files.size_mb} {#mb_of_audio#}
+                      <br>{$files.length_hour} {#hours_of_audio#}
+                      <br>{$access.l_and_d} {#listens_and_downloads#}
+                      <br>{$numUsers} {#users#}
+					  *}
 
                   </td>
 

@@ -21,17 +21,31 @@ if($data['numNodes']==0) {
      $data['numNodes']=1;
 }
 $data['numStations'] = sotf_Station::countAll();
-$data['numProgs'] = sotf_Programme::countAll();
-$data['numProgs'] = sotf_Programme::countAll();
+
+$data['numAudioProgs'] = sotf_Programme::countAll('sound'); //MOD BY Martin Schmidt
+$data['numVideoProgs'] = sotf_Programme::countAll('video'); //MOD BY Martin Schmidt
+
 
 $allStats = sotf_Statistics::networkStats();
 $allStats['l_and_d'] = $allStats['listens'] + $allStats['downloads'];
 $data['access'] = $allStats;
 
-$fileStats = sotf_Programme::getFileStats();
-$fileStats['size_mb'] = sprintf('%d', $fileStats['filesize'] / 1024 /1024);
-$fileStats['length_hour'] = sprintf('%d', $fileStats['play_length'] / 60 / 60);
-$data['files'] = $fileStats;
+$audioFileStats = sotf_Programme::getFileStats('sound'); //MOD BY Martin Schmidt
+$audioFileStats['size_mb'] = sprintf('%d', $audioFileStats['filesize'] / 1024 /1024); //MOD BY Martin Schmidt
+$audioFileStats['length_hour'] = sprintf('%d', $audioFileStats['play_length'] / 60 / 60); //MOD BY Martin Schmidt
+
+
+//ADDED BY Martin Schmidt
+$videoFileStats = sotf_Programme::getFileStats('video'); 
+$videoFileStats['size_mb'] = sprintf('%d', $videoFileStats['filesize'] / 1024 /1024);
+$videoFileStats['length_hour'] = sprintf('%d', $videoFileStats['play_length'] / 60 / 60);
+/////////////////////////
+
+$data['audioFiles'] = $audioFileStats;
+$data['videoFiles'] = $videoFileStats;
+$data['allFiles']['size_mb'] = $videoFileStats['size_mb']+$audioFileStats['size_mb'];
+$data['allFiles']['length_hour'] = $videoFileStats['length_hour']+$audioFileStats['length_hour'];
+$data['numAllProgs']=$data['numAudioProgs']+$data['numVideoProgs'];
 
 $data['numUsers'] = sotf_User::countUsers();
 

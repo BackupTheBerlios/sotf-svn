@@ -132,6 +132,10 @@ class sotf_File
 		return ($this->type == "video");
 	}
 	
+	
+	
+
+	
 } // end class sotf_File
 
 ?>

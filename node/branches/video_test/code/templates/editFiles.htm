@@ -123,11 +123,11 @@ else  window.location.href = this.location.href
                  <input class="action" type="button" name="b1" value="{#add_content#}" onClick="popup('addFiles.php?main=1&prgid={$PRG_ID}','AddFiles',500,500,true)" />
               </td>
               <td colspan="8" align="right">
-			  {if !$CONVERTING}
-                {if $MAIN_AUDIO_COUNT gt 0 and $MISSING and $PRG_DATA.type!='video'}
+			  {if !$CONVERTING and $MISSING and $MAIN_AUDIO_COUNT gt 0}
+                {if $PRG_DATA.type!='video'}
                    <input class="action" type="button" name="b2" value="{#convert_all#}" onClick="window.open('convert.php?id={$PRG_ID}&all=1','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=600')" />
                 
-				{else if $MAIN_AUDIO_COUNT gt 0 and $MISSING and $PRG_DATA.type=='video'}
+				{else if $PRG_DATA.type=='video'}
 					<input class="action" type="button" name="b2" value="{#convert_all#}" onClick="javascript:document.location.href='editFiles.php?id={$PRG_ID}&convertall=1&videoconversion=1'" /><br>
 				{/if}
 				
