@@ -18,9 +18,6 @@ $convertindex=sotf_Utils::getParameter('convertindex');
 $createstills=sotf_Utils::getParameter('createstills');
 
 
-if(!$prg->isLocal()) {
-  raiseError("You can only edit programmes locally!");
-}
 
 
 if($new) {
@@ -54,6 +51,11 @@ elseif ($capname == "mfiles")
 }
 
 $prg = & new sotf_Programme($id);
+
+
+if(!$prg->isLocal()) {
+  raiseError("You can only edit programmes locally!");
+}
 
 if($prg->isVideoPrg()) $video=true;
 else $video = false;
