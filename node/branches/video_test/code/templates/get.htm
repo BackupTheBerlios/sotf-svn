@@ -85,44 +85,55 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
   </table>
 
   <table class="tabarea" width="100%" >
-    <tr> 
-	
+    {*<tr> 
+	 
 	{if $FLV_FOUND} 
       <td class="tabarea"> 
-	  {*
+	 
   <OBJECT class="videoplayer" classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000'
         codebase='http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0'
         width='216' height='186' style="padding:0; margin:0">
-        <param name='movie' value="{$ROOT_URL}/videoplayer.swf">
+        <param name='movie' value="{$ROOT_URL}/videoplayer.swf?flvpath={$FLV_PATH}">
 		<param name='bgcolor' value="#EFF4FE">
         <param name='quality' value="high">
        <param name='loop' value="false">
-        <EMBED class="videoplayer" style="padding:0; margin:0" src="{$ROOT_URL}/videoplayer.swf" quality='high' width='216' height='186' bgcolor="#EFF4FE" loop="false" type='application/x-shockwave-flash'
+        <EMBED class="videoplayer" style="padding:0; margin:0" src="{$ROOT_URL}/videoplayer.swf?flvpath={$FLV_PATH}" quality='high' width='216' height='186' bgcolor="#EFF4FE" loop="false" type='application/x-shockwave-flash'
         pluginspage='http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash'>
         </EMBED>
-		  </OBJECT> *}
+		  </OBJECT> 
 		
 	<object type="application/x-shockwave-flash" width="176" height="144" 
     wmode="transparent" data="flvplayer.swf?file={$FLV_PATH}">
   <param name="movie" value="flvplayer.swf?file={$FLV_PATH}" />
   <param name="wmode" value="transparent" />
   </object>
-  
-  	
-
   </td>
   
 {elseif !$FLV_FOUND and $VIDEO_PRG}
 <td class="tabarea"> 
   		Flash-Preview for this programme is not available.
 		</td>
+  {/if}javascript:*}
+  
+  {if $STILLS}<tr><td  class="tabarea">{foreach item=item from=$STILLS}
+  <img style="padding:10px" src='getFile.php/{$item.filename}?id={$PRG_DATA.id}&filename={$item.filename}'>
+  {/foreach}    </td></tr>
   {/if}
   
-  {if $STILLS}<td  class="tabarea">{foreach item=item from=$STILLS}
-  <img style="padding:10px" src='getFile.php/{$item.filename}?id={$PRG_DATA.id}&filename={$item.filename}'>
-  {/foreach}    </td>
-  {/if}
-</tr></table>
+   </tr><td  class="tabarea">{if $FLV_FOUND}
+   <script type="text/javascript">
+	<!--
+	document.write("<div style='padding:10px'>>> <a href='#' onClick=popup('videoplayer.swf?flvpath={$FLV_PATH}','CreateNeighbour',170,191,false)>Flash Preview</a></div>");
+	//-->
+	</script>
+	<noscript>
+	  <div style='padding:10px'>>> <a target='_blank' href='videoplayer.swf?flvpath={$FLV_PATH}'>Flash Preview</a></div> 
+	</noscript>
+
+  {else} Flash Preview is not available for this programme.{/if}
+  </td></tr>
+  
+</table>
 <p></p>
  {/if}
  

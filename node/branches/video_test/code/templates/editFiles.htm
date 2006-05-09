@@ -110,7 +110,7 @@ else  window.location.href = this.location.href
               {if empty($item.filename) and $PRG_DATA.type!='video'}
               <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=180')" />
               {elseif empty($item.filename) and $PRG_DATA.type=='video'}
-			  <input class="action" type="button" name="b1" value="{#convert#}" onClick="javascript:document.location.href='editFiles.php?id={$PRG_ID}&convertindex={$item.index}&videoconversion=1'" />
+			  <input class="action" type="button" name="b_{$item}" id="b_{$item}" value="{#convert#}" onClick="javascript:document.getElementById('b_{$item}').style.visibility='hidden'; document.location.href='editFiles.php?id={$PRG_ID}&convertindex={$item.index}&videoconversion=1'" />
 			   {else}
                 <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
               {/if}
@@ -128,12 +128,12 @@ else  window.location.href = this.location.href
                    <input class="action" type="button" name="b2" value="{#convert_all#}" onClick="window.open('convert.php?id={$PRG_ID}&all=1','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=600')" />
                 
 				{else if $PRG_DATA.type=='video'}
-					<input class="action" type="button" name="b2" value="{#convert_all#}" onClick="javascript:document.location.href='editFiles.php?id={$PRG_ID}&convertall=1&videoconversion=1'" /><br>
+					<input class="action" type="button" name="b2" id="b2" value="{#convert_all#}" onClick="javascript:document.getElementById('b2').style.visibility='hidden'; document.location.href='editFiles.php?id={$PRG_ID}&convertall=1&videoconversion=1'" /><br>
 				{/if}
 				
 			  {/if}
 			  {if $PRG_DATA.type=='video' AND !$STILL_FOUND}
-                   <input class="action" type="button" name="b2" value="Create Stills" onClick="javascript:document.location.href='editFiles.php?id={$PRG_ID}&createstills=1'" />
+                   <input class="action" type="button" name="b3" value="Create Stills" onClick="javascript:document.location.href='editFiles.php?id={$PRG_ID}&createstills=1'" />
 			{/if}
               </td>
           </tr>  

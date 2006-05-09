@@ -68,7 +68,7 @@ if($prg->isVideoPrg()){
   $checker = & new sotf_ContentCheck($prgAudiolist); //todo $prgAudioList MEANT CONTENT
   $checker = $checker->selectType();
 
-  sotf_VideoFile::scanTranscodingQueue($repository, $prg, $checker);
+  sotf_VideoFile::processTranscodingQueue($repository, $prg, $checker);
 
 }
 

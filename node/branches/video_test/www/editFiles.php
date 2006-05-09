@@ -136,6 +136,7 @@ if($video){
 	if (!$still_found && $createstills){
 		sotf_VideoFile::createStills($files[0]->path, $files[0]->duration, $id);
 	}
+	
 }
 
 
@@ -152,7 +153,7 @@ $checker = $checker->selectType();
 //check for recently converted files or transcoding in progress
 if($video && $prgAudiolist->count()){
 
-	$list_changed=sotf_VideoFile::scanTranscodingQueue($repository, $prg, $checker);
+	$list_changed=sotf_VideoFile::processTranscodingQueue($repository, $prg, $checker);
 		
 	if($list_changed) {
 	  $page->redirectSelf();
@@ -182,8 +183,9 @@ if($video && $prgAudiolist->count()){
 			// if conversion in progress calculate percentage
 			$regexp_file="/^".$id . '_.*_' . $checker->getFormatFilename($i)."$/";
 			$source = $prgAudiolist->list[$checker->reqs[$i][1]]->getPath();
+			$temppath = $config['wwwdir']."/tmp/";
 			
-			if ($tempdir = opendir($config['wwwdir']."/tmp")) {
+			if ($tempdir = opendir($temppath)) {
 			   while (false !== ($filename = readdir($tempdir))) {
 					if(preg_match($regexp_file, $filename)){
 						$PRG_AUDIO[$i]['converting']=true;
@@ -223,8 +225,9 @@ if($video && $prgAudiolist->count()){
 // start converting required formats
 if($videoconv && $missing){
 
-	if(!$obj)
-		  raiseError("object does not exist!");
+	$obj = $repository->getObject($id);
+	if(!$obj) raiseError("object does not exist!");
+
 	checkPerm($obj->id, 'change');
 	
 	$checker->console = false;

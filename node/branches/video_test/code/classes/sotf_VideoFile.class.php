@@ -187,8 +187,11 @@ class sotf_VideoFile extends sotf_File
 
 	
 	function searchForStill($prg){
-	
+		
+		$id=$prg->get('id');
+		
 		global $config;
+		$temppath=$config['wwwdir']."/tmp/";
 		
 		$still_found=false;
 		
@@ -200,8 +203,6 @@ class sotf_VideoFile extends sotf_File
 		   }
 		   closedir($directory);
 		}
-		
-		$temppath=$config['wwwdir']."/tmp/";
 		
 		if ($tempdir = opendir($temppath)) {
 		   while (false !== ($filename = readdir($tempdir))) {
@@ -218,47 +219,45 @@ class sotf_VideoFile extends sotf_File
 	}
 	
 	
-	function scanTranscodingQueue($repository, $prg, $checker){
+	function processTranscodingQueue($repository, $prg, $checker){
 	
-	global $config;
+		global $config;
+		
+		$id=$prg->get('id');
+		
+		
+		$temppath=$config['wwwdir']."/tmp/";
+		$list_changed = false;
+		
+		if ($tempdir = opendir($temppath)) {
+		   while (false !== ($filename = readdir($tempdir))) {
+				if(preg_match("/^".$id."_/",$filename)){
+					if($checker->fileOK($temppath.$filename)) {
+						if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
+						$prg->setAudio($temppath.$filename);
+						$list_changed=true;
+					}
+				
+				}if(preg_match("/^still_".$id."_[12345]\.gif$/",$filename)){
+					if(!isUnicolorImage($temppath.$filename)){ 
+						$obj_id=$prg->setOtherFile($temppath.$filename);
+						$fileInfo = &$repository->getObject($obj_id);
+						$fileInfo->set('public_access', 'f');
+						$fileInfo->update();
+						if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
 	
-	$id=$prg->get('id');
-	
-	$obj = $repository->getObject($id);
-	if(!$obj) raiseError("object does not exist!");
-	
-	$temppath=$config['wwwdir']."/tmp/";
-	$list_changed = false;
-	
-	if ($tempdir = opendir($temppath)) {
-	   while (false !== ($filename = readdir($tempdir))) {
-			if(preg_match("/^".$id."_/",$filename)){
-				if($checker->fileOK($temppath.$filename)) {
-					if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
-					$obj->setAudio($temppath.$filename);
+					}
+					else{
+						if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
+						unlink($temppath.$filename);
+					}
 					$list_changed=true;
-				}
-			
-			}if(preg_match("/^still_".$id."_[12345]\.gif$/",$filename)){
-				if(!isUnicolorImage($temppath.$filename)){ 
-					$obj_id=$prg->setOtherFile($temppath.$filename);
-					$fileInfo = &$repository->getObject($obj_id);
-					$fileInfo->set('public_access', 'f');
-					$fileInfo->update();
-					if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
-
-				}
-				else{
-					if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
-					unlink($temppath.$filename);
-				}
-				$list_changed=true;
+			   }
 		   }
-	   }
-	   closedir($tempdir);
-	}
-	
-	return $list_changed;
+		   closedir($tempdir);
+		}
+		
+		return $list_changed;
 	}
 	
 	
