@@ -117,6 +117,9 @@ class sotf_Vocabularies {
     $this->db->query("DELETE FROM sotf_topics_counter");
     $this->db->query("SELECT setval('sotf_topics_counter_id_seq', 1, false)");
     $this->db->query("INSERT INTO sotf_topics_counter (id, topic_id, number, total) SELECT nextval('sotf_topics_counter_id_seq'), t.id, count(p.id), NULL::int FROM sotf_topic_tree_defs t LEFT JOIN sotf_prog_topics p ON t.id = p.topic_id GROUP BY t.id");
+	
+	$this->db->query("UPDATE sotf_topics_counter SET number=0 WHERE topic_id=(SELECT c.topic_id FROM sotf_topics_counter c INNER JOIN sotf_prog_topics p ON c.topic_id = p.topic_id INNER JOIN sotf_programmes pr ON p.prog_id = pr.id WHERE pr.type='video')"); //ADDED BY Martin Schmidt
+	
     // calculate totals including subtopic counts
     $topics = $this->db->getAll("SELECT t.id, supertopic, number FROM sotf_topic_tree_defs t, sotf_topics_counter c WHERE t.id = c.topic_id ");
     for($i=0; $i<count($topics); $i++) {
@@ -225,7 +228,8 @@ class sotf_Vocabularies {
   }
 
   function getProgsForTopic($topicId, $start, $hitsPerPage) {
-	 $sql = "SELECT p.*, s.name as station, se.name as serietitle FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id = se.id, sotf_prog_topics t WHERE p.published = 't' AND p.id = t.prog_id AND t.topic_id = '$topicId'";
+	 //$sql = "SELECT p.*, s.name as station, se.name as serietitle FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id = se.id, sotf_prog_topics t WHERE p.published = 't' AND p.id = t.prog_id AND t.topic_id = '$topicId'";
+	 $sql = "SELECT p.*, s.name as station, se.name as serietitle FROM sotf_programmes p LEFT JOIN sotf_stations s ON p.station_id = s.id LEFT JOIN sotf_series se ON p.series_id = se.id, sotf_prog_topics t WHERE p.published = 't' AND p.id = t.prog_id AND t.topic_id = '$topicId' AND p.type='sound'"; // ADDED BY Martin Schmidt
 	 if(!$start) $start = 0;
 	 $res = $this->db->limitQuery($sql, $start, $hitsPerPage);
 	 if(DB::isError($res))

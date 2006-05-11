@@ -204,3 +204,17 @@ CREATE INDEX "sotf_media_files_f" ON "sotf_media_files"("filename");
 -- 2005-07-04
 -- removed default of now + 56 days for expiry_date in sotf_programmes
 ALTER TABLE sotf_programmes ALTER COLUMN expiry_date DROP DEFAULT;
+
+
+-- 2006-02-18
+-- ADDED BY Martin Schmidt
+-- NEW METADATA COLUMNS FOR VIDEO
+
+BEGIN;
+ALTER TABLE sotf_media_files ADD COLUMN "codec" varchar(40) NULL;
+ALTER TABLE sotf_media_files ADD COLUMN "frame_rate" int NULL;
+ALTER TABLE sotf_media_files ADD COLUMN "lossless" boolean NULL;
+ALTER TABLE sotf_media_files ADD COLUMN "resolution_x" int NULL;
+ALTER TABLE sotf_media_files ADD COLUMN "resolution_y" int NULL;
+ALTER TABLE sotf_media_files ADD COLUMN "pixel_aspect_ratio" float NULL;
+COMMIT;

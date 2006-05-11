@@ -330,7 +330,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   /** static */
   function getFileStats() {
 	 global $db;
-	 return $db->getRow("SELECT sum(f.filesize) AS filesize, sum(f.play_length) AS play_length FROM sotf_media_files f LEFT JOIN sotf_programmes p ON f.prog_id=p.id WHERE p.id IS NOT NULL ");
+	 //return $db->getRow("SELECT sum(f.filesize) AS filesize, sum(f.play_length) AS play_length FROM sotf_media_files f LEFT JOIN sotf_programmes p ON f.prog_id=p.id WHERE p.id IS NOT NULL ");
+	 return $db->getRow("SELECT sum(f.filesize) AS filesize, sum(f.play_length) AS play_length FROM sotf_media_files f LEFT JOIN sotf_programmes p ON f.prog_id=p.id WHERE p.id IS NOT NULL AND p.type='sound'"); //ADDED BY Martin Schmidt
   }
 
   function getRefs() {
@@ -352,7 +353,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function getNewProgrammes($fromDay, $maxItems) {
 	 global $config, $db;
 
-	 $sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE i.station_id = s.id AND i.published='t' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC";
+	 //$sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE i.station_id = s.id AND i.published='t' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC";
+	  $sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE i.station_id = s.id AND i.published='t' AND i.type='sound' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC"; //MODIFIED BY Martin Schmidt
 	 $res =	$db->limitQuery($sql, 0, $maxItems);
 	 if(DB::isError($res))
 		raiseError($res);
@@ -371,7 +373,8 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function countAll() {
 	 global $db;
 
-	 return $db->getOne("SELECT count(*) FROM sotf_programmes WHERE published='t'");
+	 //return $db->getOne("SELECT count(*) FROM sotf_programmes WHERE published='t'");
+	 return $db->getOne("SELECT count(*) FROM sotf_programmes WHERE published='t' AND type='sound'"); //MOD BY Martin Schmidt
   }
 
   /** static returns programmes owned/edited by current user */

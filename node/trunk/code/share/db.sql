@@ -296,6 +296,12 @@ CREATE TABLE "sotf_media_files" (
 "stream_access" bool DEFAULT 't'::bool,	-- if users may view it as a stream
 "download_access" bool DEFAULT 'f'::bool,	-- if users may download it
 "main_content" bool DEFAULT 'f'::bool,		-- if this file is a variation of the main programme audio/video or sg. else
+"codec" varchar(40) DEFAULT NULL,
+"frame_rate" int DEFAULT NULL,
+"lossless" boolean DEFAULT NULL,
+"resolution_x" int DEFAULT NULL,
+"resolution_y" int DEFAULT NULL,
+"pixel_aspect_ratio" float DEFAULT NULL,
 CONSTRAINT "sotf_media_files_u" UNIQUE ("prog_id", "filename"),
 CONSTRAINT "to_progs" FOREIGN KEY("prog_id") REFERENCES sotf_programmes("id") ON DELETE CASCADE
 );

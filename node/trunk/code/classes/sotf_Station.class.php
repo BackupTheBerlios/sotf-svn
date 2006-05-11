@@ -96,7 +96,9 @@ class sotf_Station extends sotf_ComplexNodeObject {
 
 		if(isset($this->numProgrammes))
 			return $this->numProgrammes;
-		$sql = "SELECT COUNT(*) FROM sotf_programmes WHERE station_id = '" . $this->id . "' ";
+		//$sql = "SELECT COUNT(*) FROM sotf_programmes WHERE station_id = '" . $this->id . "' ";
+		$sql = "SELECT COUNT(*) FROM sotf_programmes WHERE station_id = '" . $this->id . "' AND type='sound' "; //MODIFIED BY Martin Schmidt
+		
 		if($onlyPublished)
 			$sql .= " AND published='t'";
 		$count = $db->getOne($sql);
@@ -111,7 +113,8 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	global $db;
 
 		$id = $this->id;
-		$sql = "SELECT * FROM sotf_programmes WHERE station_id = '$id' ";
+		//$sql = "SELECT * FROM sotf_programmes WHERE station_id = '$id' ";
+		$sql = "SELECT * FROM sotf_programmes WHERE station_id = '$id' AND type='sound' "; //MODIFIED BY Martin Schmidt
 		if($onlyPublished)
 			$sql .= " AND published='t' ";
 		$sql .= " ORDER BY entry_date DESC,track ASC";

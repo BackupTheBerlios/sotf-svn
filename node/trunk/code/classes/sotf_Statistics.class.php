@@ -36,7 +36,9 @@ class sotf_Statistics extends sotf_Object {
   /** static */
   function networkStats() {
     global $db;
-    return $db->getRow("SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads FROM sotf_prog_stats");
+	return $db->getRow("SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads FROM sotf_prog_stats s INNER JOIN sotf_programmes p ON s.prog_id=p.id WHERE p.type='sound'"); //MODIFIED BY Martin Schmidt
+
+    //return $db->getRow("SELECT sum(visits) AS visits, sum(listens) AS listens, sum(downloads) AS downloads FROM sotf_prog_stats");
     //, sum(unique_visits) AS unique_visits, sum(unique_listens) AS unique_listens, sum(unique_downloads) AS unique_downloads
   }
 

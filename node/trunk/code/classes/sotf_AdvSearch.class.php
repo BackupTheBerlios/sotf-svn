@@ -284,8 +284,8 @@ class sotf_AdvSearch
 
 
 
-		$query.=") as programmes WHERE published = 't'";
-
+		//$query.=") as programmes WHERE published = 't'";
+		$query.=") as programmes WHERE published = 't' AND type='sound'"; //MODIFIED BY Martin Schmidt
 		
 
 		for($i = 0; $i < $max ;$i++)		//go through all terms
