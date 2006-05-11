@@ -126,6 +126,12 @@ if($prg->isVideoPrg()){
   }
   $stills=array_reverse($stills);
   //
+
+  $noneAccessible = true;
+  for($i=0;$i<count($otherFiles);$i++){
+  	if($otherFiles[$i]['public_access']=='t') $noneAccessible = false;
+  }
+  if($noneAccessible) unset($otherFiles);
   
   $smarty->assign('OTHER_FILES', $otherFiles);
   $smarty->assign('STILLS', $stills);
