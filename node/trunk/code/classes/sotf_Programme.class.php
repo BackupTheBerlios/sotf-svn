@@ -15,7 +15,12 @@ require_once($config['classdir'] . '/Tar.php');
 require_once($config['classdir'] . '/unpackXML.class.php');
 //require_once($config['classdir'] . '/packXML.class.php');
 require_once($config['classdir'] . '/sotf_Statistics.class.php');
-require_once($config['getid3dir'] . "/getid3.putid3.php");
+
+//ADDED BY BUDDHAFLY - 06-02-14
+require_once($config['getid3dir'] . "/getid3.php");
+
+//require_once($config['getid3dir'] . "/getid3.putid3.php");
+
 require_once($config['classdir'] . '/sotf_Metadata.class.php');
 
 class sotf_Programme extends sotf_ComplexNodeObject {
@@ -596,8 +601,30 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   function saveID3($file) {
 	 global $config;
 	 $fileInfo = $file->allInfo;
+	 //----------------- CHANGED BY BUDDHAFLY 06-05-12
 	 $id3 = $fileInfo['id3v1'];
-	 //$id3['comment'] =  substr(substr($config['rootUrl'], 7), 0, 30);
+
+	require_once($config['getid3dir'] . "/write.php");
+	 $tagwriter = new getid3_writetags;
+	 $tagwriter->filename   = $file;
+	 $TagData['comment'][] = "id: " . $this->id;
+	 debug("writing ID3V1", $id3);	
+
+	// write tags
+	if ($tagwriter->WriteTags()) {
+		//echo 'Successfully wrote tags<br>';
+		if (!empty($tagwriter->warnings)) {
+			logError('Wrtiting ID3V1 Tags: There were some warnings:<br>'.implode('<br><br>', $tagwriter->warnings));
+		}
+	} else {
+		logError("Could not change ID3V1 tags in file ". $file->path);
+	}
+	
+	//---------------------------------------------------	
+	
+	
+	/*
+	//$id3['comment'] =  substr(substr($config['rootUrl'], 7), 0, 30);
 	 $id3['comment'] = "id: " . $this->id;
 	 //$id3['album'] =  "id: " . $this->id;
 	 //if(!$id3['title'])
@@ -605,10 +632,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 //if(!$id3['artist'])
 	 //	$id3['artist'] = substr($this->getCreatorNames(), 0, 30);
 	 debug("writing ID3V1", $id3);
-	 //$succ = WriteID3v1($file->path, $id3['title'], $id3['artist'], $id3['album'], $id3['year'], $id3['comment'], $id3['genre'], NULL /*track*/);
-	 $succ = WriteID3v1($file->path, $id3['comment'], NULL /*track*/);
+	 //$succ = WriteID3v1($file->path, $id3['title'], $id3['artist'], $id3['album'], $id3['year'], $id3['comment'], $id3['genre'], NULL /*track*//*);
+	 $succ = WriteID3v1($file->path, $id3['comment'], NULL /*track*//*);
 	 if(!$succ)
 		logError("Could not change ID3V1 tags in file ". $file->path);
+	*/
   }
 
   function deleteFile($fid) {

@@ -60,7 +60,16 @@ class sotf_FileList
 		{
 			if (!$this->pathExist($path))
 			{
-				$audioinfo = GetAllFileInfo($path);
+				//CHANGED BY BUDDHAFLY 06-05-12
+				//echo $path;
+				$getID3 = new getID3();
+				$audioinfo = $getID3->analyze($path);
+				getid3_lib::CopyTagsToComments($audioinfo);
+				
+				//print_r ($fileinfo);
+				
+				//$audioinfo = GetAllFileInfo($path);
+				
 				if (isset($audioinfo["audio"]))
 					$this->list[] = & new sotf_AudioFile($path);
 				else
@@ -101,8 +110,9 @@ class sotf_FileList
 	{
 		$paths = array();
 		for ($i=0;$i<count($this->list);$i++)
-			if (!$this->list[$i]->isAudio())
+			if (!$this->list[$i]->isAudio()){
 				$paths[] = $this->list[$i]->getPath();
+			}
 		for ($i=0;$i<count($paths);$i++)
 			$this->remove($paths[$i]);
 	} // end func removeNotAudio

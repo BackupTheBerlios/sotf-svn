@@ -138,13 +138,19 @@ class sotf_AudioFile extends sotf_File
 
 		parent::$parent($path);		// Call the constructor of the parent class. lk. super()
 
-		$fileinfo = GetAllFileInfo($this->path);
+		// CHANGED BY BUDDHAFLY 06-05-12
+		$getID3 = new getID3();
+		$fileinfo = $getID3->analyze($this->path);
+		getid3_lib::CopyTagsToComments($fileinfo);
+		
+		//$fileinfo = GetAllFileInfo($this->path);
 
     $this->allInfo = $fileInfo;
-
+	
 		//if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg') {
 
     //debug("finfo", $fileinfo);
+	
 
     if (isset($fileinfo['audio'])) {
 

@@ -97,7 +97,7 @@ $config['peardir'] = "C:/Program Files/php422/pear";
 $config['smartydir'] = $config['basedir'] . "/code/Smarty-2.6.9/libs";
 
 // where getid3 files are located
-$config['getid3dir'] = $config['basedir'] . "/code/getid3-1.6.2";
+$config['getid3dir'] = $config['basedir'] . "/code/getid3-1.7.5/getid3";
 
 // where ImageMagick is installed
 $config['magickDir'] = "C:/Program Files/ImageMagick";

@@ -32,7 +32,11 @@ class sotf_Playlist {
 	 } else {
 		// this is a local file
 
-		$mp3info = GetAllFileInfo($item['path']);
+		// CHANGED BY BUDDHAFLY 06-05-12
+		$getID3 = new getID3();
+		$mp3info = $getID3->analyze($item['path']);
+		getid3_lib::CopyTagsToComments($mp3info);
+		//$mp3info = GetAllFileInfo($item['path']);
 		//debug('mp3info', $mp3info);
 		$bitrate = (string) $mp3info['audio']['bitrate'];
 		if(!$bitrate)
