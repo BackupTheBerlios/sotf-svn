@@ -15,6 +15,8 @@
 
 require("init.inc.php");
 
+$getID3 = new getID3; //ADDED BY Martin Schmidt
+
 $prgId = sotf_Utils::getParameter('id');
 $new = sotf_Utils::getParameter('new');
 
