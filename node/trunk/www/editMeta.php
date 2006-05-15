@@ -181,7 +181,7 @@ if($save || $finish || $finishpublish) {
 
 			$TaggingFormat = 'UTF-8';
 			
-			require($config['getid3dir'].'/write.php');
+			require_once($config['getid3dir'].'/write.php');
 			$tagwriter = new getid3_writetags;
 			$tagwriter->filename       = $file;
 			$tagwriter->tagformats     = array('id3v1', 'id3v2.3', 'ape');
