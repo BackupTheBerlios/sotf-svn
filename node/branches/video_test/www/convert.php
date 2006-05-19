@@ -235,54 +235,62 @@ startPage();
 
 $file_errors = 0;
 
-if($all) {
-  $targets = $checker->convertAll($obj->id);
-  if($videoconv){
-	  foreach($targets as $target) {
-		 if(!$checker->fileOK($target)) {
-			$file_errors++;
-			continue;
-		 }
-		 
-		 if($jingle) {
-			$obj->setJingle($target);
-		 } else{
-			$obj->setAudio($target);
-		 }
-	   }
-   }
-   else{
-   foreach($targets as $target) {
-	 if($jingle) {
-		$obj->setJingle($target);
-	 } else {
-		$obj->setAudio($target);
-	 }
-  }
-
-   }
-
-} else {
-  $target = $checker->convert($obj->id, $index);
-  if($videoconv){
-	  if($checker->fileOK($target)){
-		  if($jingle) {
-			 $obj->setJingle($target);
-		  } else{
-			 $obj->setAudio($target);
-		  }
-	   }
-	   else $file_errors++;
-	}
-	else{
-		if($jingle) {
-	 $obj->setJingle($target);
-  } else {
-	 $obj->setAudio($target);
-  }
+if($all) { //convertall
+	$targets = $checker->convertAll($obj->id);
 	
-	}  
-}
+	if($videoconv){//if video
+		foreach($targets as $target) {
+			if(!$checker->fileOK($target)) {
+				$file_errors++;
+				continue;
+			}
+			if($jingle) {
+				$obj->setJingle($target);
+			} 
+			else{
+				$obj->setAudio($target);
+			}
+		}
+	} // if video
+	
+	else{ //if audio
+		foreach($targets as $target) {
+			if($jingle) {
+				$obj->setJingle($target);
+			} 
+			else {
+				$obj->setAudio($target);
+			}
+		}
+	} //if audio
+	
+} //convertall
+
+else { //convert id
+	$target = $checker->convert($obj->id, $index);
+	
+	if($videoconv){ //if video
+		if($checker->fileOK($target)){
+			if($jingle) {
+				$obj->setJingle($target);
+			} 
+			else{
+				$obj->setAudio($target);
+			}
+		}
+		else $file_errors++;
+	} //if video
+	
+	else{ //if audio
+		if($jingle) {
+			$obj->setJingle($target);
+		} 
+		else {
+			$obj->setAudio($target);
+		}
+	}  //if audio
+
+} //convert id
 
 
 endPage($file_errors);

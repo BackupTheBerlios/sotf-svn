@@ -212,12 +212,40 @@ ALTER TABLE sotf_programmes ALTER COLUMN expiry_date DROP DEFAULT;
 
 BEGIN;
 ALTER TABLE sotf_media_files ADD COLUMN "codec" varchar(40) NULL;
-ALTER TABLE sotf_media_files ADD COLUMN "frame_rate" int NULL;
+ALTER TABLE sotf_media_files ADD COLUMN "frame_rate" float NULL;
 ALTER TABLE sotf_media_files ADD COLUMN "lossless" boolean NULL;
-ALTER TABLE sotf_media_files ADD COLUMN "resolution_x" int NULL;
-ALTER TABLE sotf_media_files ADD COLUMN "resolution_y" int NULL;
+ALTER TABLE sotf_media_files ADD COLUMN "resolution_x" float NULL;
+ALTER TABLE sotf_media_files ADD COLUMN "resolution_y" float NULL;
 ALTER TABLE sotf_media_files ADD COLUMN "pixel_aspect_ratio" float NULL;
 COMMIT;
+
+       BEGIN;
+       ALTER TABLE sotf_media_files ADD COLUMN frame_rate_2 float;
+       UPDATE sotf_media_files SET frame_rate_2 = CAST(frame_rate AS float);
+       ALTER TABLE sotf_media_files DROP COLUMN frame_rate;
+	   ALTER TABLE sotf_media_files RENAME COLUMN frame_rate_2 TO frame_rate;
+       COMMIT;
+	   
+	   BEGIN;
+       ALTER TABLE sotf_media_files ADD COLUMN kbps_2 int;
+       UPDATE sotf_media_files SET kbps_2 = CAST(kbps AS int);
+       ALTER TABLE sotf_media_files DROP COLUMN kbps;
+	   ALTER TABLE sotf_media_files RENAME COLUMN kbps_2 TO kbps;
+       COMMIT;
+	   
+	   BEGIN;
+       ALTER TABLE sotf_media_files ADD COLUMN resolution_x_2 float;
+       UPDATE sotf_media_files SET resolution_x_2 = CAST(resolution_x AS float);
+       ALTER TABLE sotf_media_files DROP COLUMN resolution_x;
+	   ALTER TABLE sotf_media_files RENAME COLUMN resolution_x_2 TO resolution_x;
+       COMMIT;
+	   
+	   BEGIN;
+       ALTER TABLE sotf_media_files ADD COLUMN resolution_y_2 float;
+       UPDATE sotf_media_files SET resolution_y_2 = CAST(resolution_y AS float);
+       ALTER TABLE sotf_media_files DROP COLUMN resolution_y;
+	   ALTER TABLE sotf_media_files RENAME COLUMN resolution_y_2 TO resolution_y;
+       COMMIT;
 
 
 -- ADDED BY Martin Schmidt

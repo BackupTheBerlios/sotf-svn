@@ -1,53 +1,10 @@
 <?php
 
 
-function print_r_html($arr, $style = "display: none; margin-left: 10px;")
-{ 
-//print_r($arr);
-//return;
-
-static $i = 0; $i++;
-  echo "\n<div id=\"array_tree_$i\" class=\"array_tree\">\n";
-  foreach($arr as $key => $val)
-  { switch (gettype($val))
-   { case "array":
-       echo "<a onclick=\"document.getElementById('array_tree_element_$i').style.display = ";
-       echo "document.getElementById('array_tree_element_$i";
-       echo "').style.display == 'block' ?";
-       echo "'none' : 'block';\"\n";
-       echo "name=\"array_tree_link_$i\" href=\"#array_tree_link_$i\">".htmlspecialchars($key)."</a><br />\n";
-       echo "<div class=\"array_tree_element_\" id=\"array_tree_element_$i\" style=\"$style\">";
-       echo print_r_html($val);
-       echo "</div>";
-     break;
-     case "integer":
-       echo "<b>".htmlspecialchars($key)."</b> => <i>".htmlspecialchars($val)."</i><br />";
-     break;
-     case "double":
-       echo "<b>".htmlspecialchars($key)."</b> => <i>".htmlspecialchars($val)."</i><br />";
-     break;
-     case "boolean":
-       echo "<b>".htmlspecialchars($key)."</b> => ";
-       if ($val)
-       { echo "true"; }
-       else
-       { echo "false"; }
-       echo  "<br />\n";
-     break;
-     case "string":
-       echo "<b>".htmlspecialchars($key)."</b> => <code>".htmlspecialchars($val)."</code><br />";
-     break;
-     default:
-       echo "<b>".htmlspecialchars($key)."</b> => ".gettype($val)."<br />";
-     break; }
-   echo "\n"; }
-  echo "</div>\n"; }
-
-
 /**
 * This is a class for checking the requested VIDEO formats, and for converting them
 *
-* @author	Tamas Kezdi SZTAKI DSD <tbyte@sztaki.hu>
+* @author	Martin Schmidt <ptmschmidt@fh-stpoelten.ac.at>
 * @package	StreamOnTheFly
 * @version	0.1
 */
@@ -287,12 +244,12 @@ function fileOK($file) {
 			$curframe=$results[1][count($results[1])-1];
 			$timediff= time()-filemtime($tempfile);
 
-			if (empty($results[1]) && is_file($tempfile) && preg_match_all("/\n\[.*@ 0x.*\n/", $buffer, $errors) && $timediff>3){
+			if (empty($results[1]) && is_file($tempfile) && (preg_match_all("/\n\[.*@ 0x.*\n/", $buffer, $errors) || preg_match_all("/\nUnsupported codec/", $buffer, $errors)) && $timediff>3){
 				$returnarray['errors']=$errors[0];
 				logError('conversion failed: '.$tempfile);
 				logError('ffmpeg output: '. $buffer); 
 			}
-			$percentage=round($curframe/$totalframes*100);
+			@$percentage=round($curframe/$totalframes*100);
 			$returnarray['percentage']=$percentage;
 			return $returnarray;
 		}
