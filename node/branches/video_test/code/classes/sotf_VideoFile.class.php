@@ -5,7 +5,7 @@ require_once("sotf_File.class.php");
 
 /**
 * This is a class for handling audio files.
-* MODIFIED FOR HANDLING VIDEO FILES BY BUDDHAFLY
+* MODIFIED FOR HANDLING VIDEO FILES BY Martin Schmidt
 * @author	Tamas Kezdi SZTAKI DSD <tbyte@sztaki.hu>
 * @package	StreamOnTheFly
 * @version	0.1
@@ -96,7 +96,7 @@ class sotf_VideoFile extends sotf_File
 		$getID3 = new getID3();
 		$fileinfo = $getID3->analyze($path);
 		getid3_lib::CopyTagsToComments($fileinfo);
-		//print_r($fileinfo);
+		//print_r_html($fileinfo);
 		//$fileinfo = GetAllFileInfo($this->path);
 		 
    		 $this->allInfo = $fileinfo; //was $fileInfo
@@ -154,8 +154,10 @@ class sotf_VideoFile extends sotf_File
 			
 			if(isset($fileinfo['audio'])){
 			 $audioinfo = $fileinfo['audio'];
-			 $this->samplerate = $audioinfo["sample_rate"];
-			$this->channels = $audioinfo["channels"];
+			 if($audioinfo["sample_rate"])$this->samplerate = $audioinfo["sample_rate"];
+			 else $this->samplerate = 0;
+			 if($audioinfo["channels"]) $this->channels = $audioinfo["channels"];
+			 else $this->channels = 0;
 			}
 			else {
 			$this->samplerate = 0;
@@ -179,11 +181,12 @@ class sotf_VideoFile extends sotf_File
 		for($i=1;$i<=5;$i++){
 			$position = round((($i+($i-1))/10)*$length);
 			$target = $temppath."/still_".$id."_".$i.".gif";
-			$cmd = "nohup nice -n 15 ".$config['ffmpeg']." -i $file -f image2 -img gif -ss $position -t 1 -r 1 -s sqcif -y $target 1>$target.txt 2>&1 &";
+			$cmd = "nohup nice -n 15 ".$config['ffmpeg']." -i $file ".$config['ffmpeg_params_stills']."  -ss $position -y $target 1>$target.txt 2>&1 &";
 			exec($cmd);
 		}
 		
 	}
+
 
 	
 	function searchForStill($prg){
@@ -309,18 +312,5 @@ class sotf_VideoFile extends sotf_File
 
   }
   
- /* function transcode(){
-  
-  $path = $this->path;
-  
-  	exec("ffmpeg -i $path -r 16 -i 100 -s qcif -ar 22050 -ab 48 -ac 1 $flvpath/mov.flv", $output_array);
-	print_r($output_array);
-	exec("ffmpeg -i $path -r 16 -i 100 -s qcif -ar 22050 -ab 48 -ac 1 $flvpath/mov.flv", $output_array);
-	print_r($output_array);
-  	exec("ffmpeg -i $path -r 16 -i 100 -s qcif -ar 22050 -ab 48 -ac 1 $flvpath/mov.flv", $output_array);
-	print_r($output_array);
-	
-  }*/
-
 
 } // end class sotf_AudioFile

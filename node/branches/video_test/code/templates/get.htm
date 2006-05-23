@@ -74,9 +74,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 
     </tr>
   </table>
-  
-  <a href="404">ERROR NOT FOUND</a><br>
-  <a href="b_sorenson.mov">SORENSON MOV</a>
+
   {*ADDED BY Martin Schmidt*}
   
   {if $VIDEO_PRG}
@@ -87,12 +85,11 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
   </table>
 
   <table class="tabarea" width="100%" >
-    {*<tr> 
-	 
-	{if $FLV_FOUND} 
-      <td class="tabarea"> 
-	 
-  <OBJECT class="videoplayer" classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000'
+   
+   <tr><td  class="tabarea">{if $FLV_FOUND}
+   
+
+   <OBJECT class="videoplayer" classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000'
         codebase='http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0'
         width='216' height='186' style="padding:0; margin:0">
         <param name='movie' value="{$ROOT_URL}/videoplayer.swf?flvpath={$FLV_PATH}">
@@ -102,38 +99,18 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
         <EMBED class="videoplayer" style="padding:0; margin:0" src="{$ROOT_URL}/videoplayer.swf?flvpath={$FLV_PATH}" quality='high' width='216' height='186' bgcolor="#EFF4FE" loop="false" type='application/x-shockwave-flash'
         pluginspage='http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash'>
         </EMBED>
-		  </OBJECT> 
-		
-	<object type="application/x-shockwave-flash" width="176" height="144" 
-    wmode="transparent" data="flvplayer.swf?file={$FLV_PATH}">
-  <param name="movie" value="flvplayer.swf?file={$FLV_PATH}" />
-  <param name="wmode" value="transparent" />
-  </object>
-  </td>
-  
-{elseif !$FLV_FOUND and $VIDEO_PRG}
-<td class="tabarea"> 
-  		Flash-Preview for this programme is not available.
-		</td>
-  {/if}javascript:*}
-  
+	</OBJECT> 
+
+
+  {else} <div style='padding:10px'>Flash Preview is not available for this programme.</div>{/if}
+  </td></tr>  
+   
   {if $STILLS}<tr><td  class="tabarea">{foreach item=item from=$STILLS}
   <img style="padding:10px" src='getFile.php/{$item.filename}?id={$PRG_DATA.id}&filename={$item.filename}'>
   {/foreach}    </td></tr>
   {/if}
   
-   </tr><td  class="tabarea">{if $FLV_FOUND}
-   <script type="text/javascript">
-	<!--
-	document.write("<div style='padding:10px'>>> <a href='#' onClick=popup('videoplayer.swf?flvpath={$FLV_PATH}','CreateNeighbour',170,191,false)>Flash Preview</a></div>");
-	//-->
-	</script>
-	<noscript>
-	  <div style='padding:10px'>>> <a target='_blank' href='videoplayer.swf?flvpath={$FLV_PATH}'>Flash Preview</a></div> 
-	</noscript>
-
-  {else} <div style='padding:10px'>Flash Preview is not available for this programme.</div>{/if}
-  </td></tr>
+   
   
 </table>
 <p></p>
@@ -310,13 +287,26 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
     <table>
        {cycle name="audio" values="list1,list2" print=false advance=false}
        {foreach item=item from=$AUDIO_FILES}
-          {if $item.download_access eq 't' or $item.stream_access eq 't' }
+          {if ($item.download_access eq 't' or $item.stream_access eq 't') and $item.format!='flv'}
           <tr class="{cycle name=audio}">
             <td width="5%"></td>
+			{if $item.format=='wmv'}
+			<td width="5%">
+				<a href="{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/wmv.jpg" border="0" alt="Windows Media File" style="background-color:#fff;width:20px;height:20px;padding:2px;border-style:solid;border-width:1px;border-color:#666666"></a>
+			</td>
+			{elseif $item.format=='mov' OR $item.format=='mp4'}
+			<td width="5%">
+				<a href="{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/mp4.jpg" border="0" alt="Quicktime File" style="background-color:#fff;width:20px;height:20px;padding:2px;border-style:solid;border-width:1px;border-color:#666666"></a>
+			</td>
+			{elseif $item.format=='3gp'}
+			<td width="5%">
+				<a href="{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/3gp.jpg" border="0" alt="3GP File" style="background-color:#fff;width:20px;height:20px;padding:2px;border-style:solid;border-width:1px;border-color:#666666"></a>
+			{else if $VIDEO_PRG}<td width="5%"><a href="{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/video.jpg" border="0" alt="Video File" style="background-color:#fff;width:20px;height:20px;padding:2px;border-style:solid;border-width:1px;border-color:#666666"></td>{/if}
+			
             <td>
               {if $item.main_content eq 't' }
 			  	{if $VIDEO_PRG}
-				 Programme video
+				 {#programme_video#}
 				 {else}
                  {#programme_audio#}
 				{/if}

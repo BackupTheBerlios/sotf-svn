@@ -171,7 +171,8 @@ if($video && $prgAudiolist->count()){
 	for ($i=0;$i<count($config[$checker->prefix.'Formats']);$i++) // is either "audioFormats" or "videoFormats"
 	{
 	  $PRG_AUDIO[$i] = array("format" => $checker->getFormatFileName($i),
-							 "index" => $i);
+							 "index" => $i,
+							 "flv" => preg_match("/flv/", $checker->getFormatFileName($i)));
 	  if ($checker->reqs[$i][0]) {
 		$fname = $prgAudiolist->list[$checker->reqs[$i][1]]->name;
 		$PRG_AUDIO[$i] = array_merge($PRG_AUDIO[$i], $mainAudio[$fname]);
@@ -192,7 +193,10 @@ if($video && $prgAudiolist->count()){
 						$totalframes=$checker->getTotalFrames($source, $i);
 						$perc_error = $checker->getPercentageOrError($temppath.$filename, $totalframes);
 						$PRG_AUDIO[$i]['errors']=$perc_error['errors'];
-						if($perc_error['percentage'])$PRG_AUDIO[$i]['percentage']="~ ".$perc_error['percentage']."%";
+						if($perc_error['percentage']){
+							if($perc_error['percentage']>100)$perc_error['percentage']=100;
+							$PRG_AUDIO[$i]['percentage']="~ ".$perc_error['percentage']."%";
+						}
 						if(!empty($perc_error['errors'])) $PRG_AUDIO[$i]['converting'] = false;
 				   }
 			   }
@@ -222,7 +226,7 @@ if($video && $prgAudiolist->count()){
 
 
 
-// start converting required formats
+// start converting required video formats
 if($videoconv && $missing){
 
 	$obj = $repository->getObject($id);

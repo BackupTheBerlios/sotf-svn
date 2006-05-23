@@ -38,7 +38,7 @@ else  window.location.href = this.location.href
     </div>
 {/if}
 </form>
-
+{if $CREATESTILLS}<div style='color:green;font-weight:bold'>{#generating_stills#}<br>&nbsp;</div>{/if}
 <form>
 <table class="tab">
   <tr> 
@@ -72,9 +72,9 @@ else  window.location.href = this.location.href
               {if !empty($item.filename) }
               <a target="link" href="getFile.php/{$item.filename}?audio=1&id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
 			  {elseif !empty($item.errors) }
-			  	<font color="red">converting error</font>
+			  	<font color="red">{#conversion_not_possible#}</font>
 			  {elseif $item.converting}
-			  <font color="green">converting {$item.percentage}</font>
+			  <font color="green">{#converting#} {$item.percentage}</font>
               { else }
               <font color="red">{#missing#}</font>
               {/if}
@@ -101,7 +101,7 @@ else  window.location.href = this.location.href
             </td>
 			{/if}
             <td>
-                {if !empty($item.filename) }
+                {if !empty($item.filename) && $item.flv != true}
               <input type="checkbox" onclick="javascript:setvalue('audiofilesd', '{$item.id}', this.checked);return true;"{ if $item.download_access eq 't' } CHECKED="1" {/if} />
                 {/if}
             </td>
@@ -132,8 +132,8 @@ else  window.location.href = this.location.href
 				{/if}
 				
 			  {/if}
-			  {if $PRG_DATA.type=='video' AND !$STILL_FOUND}
-                   <input class="action" type="button" name="b3" value="Create Stills" onClick="javascript:document.location.href='editFiles.php?id={$PRG_ID}&createstills=1'" />
+			  {if $PRG_DATA.type=='video' AND !$CREATESTILLS AND !$STILL_FOUND}
+                   <input class="action" type="button" name="b3" id="b3" value="{#create_stills#}" onClick="javascript:document.getElementById('b3').style.visibility='hidden';document.location.href='editFiles.php?id={$PRG_ID}&createstills=1'" />
 			{/if}
               </td>
           </tr>  

@@ -307,19 +307,16 @@ $config['preferredStreamingFormat'] = 1;
 //////////////////////////////////////////////////////////////////////////
 
 /**
-* Perl regexp for parse ffmpeg output during transcode.
+* Path to FFmpeg directory
 *
 * @package	StreamOnTheFly
-* @variable	string	$config['lameencRegexp']
+* @variable	array	$config['ffmpeg']
 */
-$config['ffmpegRegexp'] = "/frame=(.*?) q=/";
-$config['ffmpegErrorRegexp']= "/0x404336f0\](.*?)$/";
-
-
 $config['ffmpeg'] = $config['helperdir']."/ffmpeg";
 
+
 /**
-* Required video formats.
+* Required video formats. (FLV format is necessary for preview on get.php!)
 *
 * Array of associative arrays contains information about the video format.
 * @package	StreamOnTheFly
@@ -368,6 +365,17 @@ $config['videoFormats'] = array(
 					);
 
 
+/**
+* FFmpeg parameters used for preview still creation
+*
+* @package	StreamOnTheFly
+* @variable	array	$config['videoFormats']
+*/
+
+$config['ffmpeg_params_stills'] = '-f image2 -img gif -t 1 -r 1 -s sqcif';
+
+
+				
 
 //////////////////////////////////////////////////////////////////////////
 // MISC OPTIONS ------------------------------------------------------
@@ -379,17 +387,82 @@ $config['iconHeight'] = 100;
 
 // MIME types to determine type of uploaded documents
 $config['mimetypes'] = array(
-				'doc'=>'application/msword',
-				'gif'=>'image/gif',
-				'htm'=>'text/html',
-				'html'=>'text/html',
-				'jpg'=>'image/jpeg',
-				'mp3'=>'audio/mp3',
-				'm3u'=>'audio/x-mpeg',
-				'pdf'=>'application/pdf',
-				'ps'=>'application/postscript',
-				'txt'=>'text/plain',
-				'xls'=>'application/vnd.ms-excel'
-				);
+			'doc'	=> 'application/msword',
+			'gif'	=> 'image/gif',
+			'htm'	=> 'text/html',
+			'html'	=> 'text/html',
+			'jpg'	=> 'image/jpeg',
+			'mp3'	=> 'audio/mp3',
+			'm3u'	=> 'audio/x-mpeg',
+			'ogg'	=> 'application/x-ogg',
+			'pdf'	=> 'application/pdf',
+			'png'	=> 'image/png',
+			'ps'	=> 'application/postscript',
+			'flv'   => 'video/x-flv',
+			'avi'   => 'x-msvideo',
+			'mov'   => 'quicktime',
+			'mpg'   => 'mpeg',
+			'mpeg'  => 'mpeg',
+			'mp4'   => 'video/mp4',
+			'3gp'   => 'video/3gpp',
+			'wmv'   => 'video/x-ms-wmv',
+			'txt'	=> 'text/plain',
+			'xls'	=> 'application/vnd.ms-excel');
+		
+		
+			
+//////////////////////////////////////////////////////////////////////////
+// ADVANCED VIDEO OPTIONS ------------------------------------------------
+//////////////////////////////////////////////////////////////////////////			
+
+
+/**
+* Perl regexp for parsing ffmpeg output during transcode.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['ffmpegRegexp']
+*/
+$config['ffmpegRegexp'] = "/frame=(.*?) q=/";
+
+
+/**
+* Perl regexp for parsing ffmpeg errors occuring BEFORE CONVERSION EVEN STARTS.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['ffmpegErrorsBeforeConversion']
+*/
+$config['ffmpegErrorsBeforeConversion']=array(
+											"/\n\[.*@ 0x.*\n/", 
+											"/Unsupported codec/"
+										);
+
+/**
+* Perl regexp for parsing ffmpeg errors occuring DURING THE CONVERSION (frame progress already displayed).
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['ffmpegErrorsDuringConversion']
+*/
+$config['ffmpegErrorsDuringConversion']=array(
+											"/Color spaces other than 420p/"
+										);
+										
+/**
+* String in ffmpeg output when CONVERSION IS FINISHED.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['ffmpegFinishMessage']
+*/
+$config['ffmpegFinishMessage']="muxing overhead";
+
+										
+										
+/**
+* String in ffmpeg output when CONVERSION IS FINISHED, BUT NO USABLE VIDEO HAS BEEN PRODUCED.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['ffmpegEmptyVideo']
+*/
+$config['ffmpegEmptyVideo']="video:0kB";
+
 
 ?>

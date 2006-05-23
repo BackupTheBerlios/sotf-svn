@@ -53,6 +53,8 @@ if(!$prg->isLocal()) {
 
 // TODO check if user have rights to access: 1. prg is published, 2. file has public_access or donwload_access
 
+$pure_filename=$filename;
+
 if($mainAudio)
      $filename =  sotf_Utils::getFileInDir($prg->getAudioDir(), $filename);
 else
@@ -64,29 +66,42 @@ if(!is_readable($filename))
 debug('filename', $filename);
 
 $file = & new sotf_File($filename);
-if ($file->type != "none")
-{
-	header("Content-type: " . $file->mimetype . "\n");
-	header("Content-length: " . filesize($filename) . "\n");   
-	//if($mainAudio) {  //this is somehow needed for iPodder
-	//  header("Accept-Ranges: bytes");
-	//  header('ETag: "' . md5(file_get_contents($filename)) . '"');
-	//} else {
-	  header("Content-transfer-encoding: binary\n"); 
-	  //}
-	// send file
+
+if (preg_match("/image/", $file->mimetype))
+	{
+		header("Content-type: " . $file->mimetype . "\n");
+		header("Content-length: " . filesize($filename) . "\n");   
+		//if($mainAudio) {  //this is somehow needed for iPodder
+		//  header("Accept-Ranges: bytes");
+		//  header('ETag: "' . md5(file_get_contents($filename)) . '"');
+		//} else {
+		  header("Content-transfer-encoding: binary\n"); 
+		  //}
+		// send file
+		
+		// wreutz: added this to get rid of fid_123mf12 filename and save as the real filename of the file
+		header( "Content-Disposition: filename=".basename($filename).";\n" );
+		// wreutz: end
 	
-	// wreutz: added this to get rid of fid_123mf12 filename and save as the real filename of the file
-    header( "Content-Disposition: filename=".basename($filename).";\n" );
-    // wreutz: end
+		readfile($filename);
+		if($file->mimetype!='video/x-flv') $prg->addStat($file->id, "downloads");
 
-	readfile($filename);
+	}
+
+
+else if ($file->type != "none"){
+	if(!is_file($config['wwwdir'].'/tmp/'.$pure_filename)){
+		copy($filename, $config['wwwdir'].'/tmp/'.$pure_filename);
+	}
+	// add this download to statistics
+	if($file->mimetype!='video/x-flv') $prg->addStat($file->id, "downloads");
+
+	$page->redirect('http://' . $_SERVER['HTTP_HOST'] . $config['localPrefix'] . '/tmp/'.$pure_filename);
 }
-else
-  raiseError("download_problem", $filename);
 
-// add this download to statistics
-$prg->addStat($file->id, "downloads");
+else  raiseError("download_problem", $filename);
+
+
 
 
 $page->logRequest();

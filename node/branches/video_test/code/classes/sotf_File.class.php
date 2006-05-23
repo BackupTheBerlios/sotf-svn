@@ -87,6 +87,14 @@ class sotf_File
 			'pdf'	=> 'application/pdf',
 			'png'	=> 'image/png',
 			'ps'	=> 'application/postscript',
+			'flv'   => 'video/x-flv',
+			'avi'   => 'x-msvideo',
+			'mov'   => 'quicktime',
+			'mpg'   => 'mpeg',
+			'mpeg'  => 'mpeg',
+			'mp4'   => 'video/mp4',
+			'3gp'   => 'video/3gpp',
+			'wmv'   => 'video/x-ms-wmv',
 			'txt'	=> 'text/plain',
 			'xls'	=> 'application/vnd.ms-excel');
 		if ($config['mimetypes'][$type])

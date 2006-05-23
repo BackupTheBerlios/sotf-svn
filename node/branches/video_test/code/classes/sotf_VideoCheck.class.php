@@ -81,32 +81,7 @@ class sotf_VideoCheck extends sotf_ContentCheck
 					continue;							// This is not the one we need, get another one
 				}
 
-				
-				/*if($this->list->list[$j]->format!="flv"){
-					if (abs($this->list->list[$j]->average_bitrate - ($config['videoFormats'][$i]['video_bitrate']+$config['videoFormats'][$i]['audio_bitrate'])) > $config['bitrateToleranceVideo']){
-						if($display_arr) print "$i$j wrong bitrate: ".$this->list->list[$j]->average_bitrate.", should be ".($config['videoFormats'][$i]['video_bitrate']+$config['videoFormats'][$i]['audio_bitrate'])."<br>".print_r_html($this->list->list[$j])."<br>&nbsp;<br>";
-						continue;							// This is not the one we need, get another one
-					}
-	
-					else
-	
-					{
-						$this->list->list[$j]->bitrate = $config['videoFormats'][$i]['video_bitrate']+$config['videoFormats'][$i]['audio_bitrate'];
-						$this->list->list[$j]->average_bitrate = $config['videoFormats'][$i]['video_bitrate']+$config['videoFormats'][$i]['audio_bitrate'];
-					}
-	
-					if ($config['videoFormats'][$i]['audio_channels'] != $this->list->list[$j]->channels){
-						if($display_arr) print "$i$j wrong channels: ".$this->list->list[$j]->channels.", should be ".$config['videoFormats'][$i]['audio_channels']."<br>".print_r_html($this->list->list[$j])."<br>&nbsp;<br>";
-						continue;							// This is not the one we need, get another one
-					}
-				}*/
-
-				if ($config['videoFormats'][$i]['audio_samplerate'] != $this->list->list[$j]->samplerate){
-					if($display_arr) print "$i$j wrong samplerate: ".$this->list->list[$j]->samplerate.", should be ".$config['videoFormats'][$i]['audio_samplerate']."<br>".print_r_html($this->list->list[$j])."<br>&nbsp;<br>";
-					continue;							// This is not the one we need, get another one
-				}
-
-				$found = $j;							// All conditions matched, that's what we need, store its position
+				$found = $j;							// That's what we need, store its position
 				break;									// don't need to search for another, leave the loop
 
 			}
@@ -127,7 +102,7 @@ class sotf_VideoCheck extends sotf_ContentCheck
 	*
 	* @param	object	$audiofile	sotf_AudioFile object to be checked
 	* @return	mixed	If the audio file satisfies any requestment returns an integer which is an index of the $config['videoFormats'] global variable. If the file satisfy any requestment returns boolean false
-	* @use	$config['videoFormats'], $config['bitrateTolerance']
+	* @use	$config['videoFormats']
 	*/
 
 	function getRequestIndex($videofile)
@@ -189,6 +164,8 @@ class sotf_VideoCheck extends sotf_ContentCheck
 	
 function fileOK($file) {
 
+	global $config;
+
 	$getID3 = new getID3();
 	$fileinfo = $getID3->analyze($file);
 	getid3_lib::CopyTagsToComments($fileinfo);
@@ -201,7 +178,7 @@ function fileOK($file) {
 		   $buffer .= fgets($handle, 4096);
 		}
 		fclose ($handle);
-		$finished = stristr($buffer,'muxing overhead');
+		$finished = stristr($buffer,$config['ffmpegFinishMessage']) && !stristr($buffer, $config['ffmpegEmptyVideo']);
 
 	}
 	else $finished = false;
@@ -230,6 +207,8 @@ function fileOK($file) {
 	
 	function getPercentageOrError($tempfile, $totalframes){
 	
+		global $config;
+	
 		if(is_file($tempfile.".txt")){
 			$handle = fopen ($tempfile.".txt", "r");
 			$buffer="";
@@ -240,12 +219,29 @@ function fileOK($file) {
 			
 			$returnarray=array();			
 	
-			preg_match_all("/frame=(.{1,9})q=/", $buffer, $results);
+			preg_match_all($config['ffmpegRegexp'], $buffer, $results);
 			$curframe=$results[1][count($results[1])-1];
 			$timediff= time()-filemtime($tempfile);
+			
+			$errors_before=false;
+			$errors_during=false;
+			
+			for($i=0;$i<count($config['ffmpegErrorsBeforeConversion']);$i++){
+				if(preg_match_all($config['ffmpegErrorsBeforeConversion'][$i], $buffer, $errors_1)) {
+					$errors_before=true;
+				}
+			}
+			
+			for($j=0;$j<count($config['ffmpegErrorsDuringConversion']);$j++){
+				if(preg_match_all($config['ffmpegErrorsDuringConversion'][$j], $buffer, $errors_2)) {
+					$errors_during=true;
+				}
+			}
 
-			if (empty($results[1]) && is_file($tempfile) && (preg_match_all("/\n\[.*@ 0x.*\n/", $buffer, $errors) || preg_match_all("/\nUnsupported codec/", $buffer, $errors)) && $timediff>3){
-				$returnarray['errors']=$errors[0];
+			if (is_file($tempfile) && ((empty($results[1]) && $errors_before) || $errors_during) && $timediff>3)
+			{
+				$errors=array_merge($errors_1, $errors_2);
+				$returnarray['errors']=$errors;
 				logError('conversion failed: '.$tempfile);
 				logError('ffmpeg output: '. $buffer); 
 			}
@@ -271,10 +267,9 @@ function fileOK($file) {
 		global $config, $page;
 
         if($this->console) {
-          //echo "<p>"; // . $page->getlocalized('transcoding_video') . "<br />\n";
           flush();
           
-          $output = $this->progressBar($cmd,$config['ffmpegRegexp'], $totalframes, true, $config['ffmpegErrorRegexp']);
+          $output = $this->progressBar($cmd,$config['ffmpegRegexp'], $totalframes, true);
           echo "<br/>\n";
           flush();
 		  return $output;
@@ -321,7 +316,7 @@ function fileOK($file) {
 		$this->getTotalFrames($source, $index);
 
 		
-		$cmd="nohup nice -n 15 ".$config['ffmpeg'].' -i '.$source.' '.$config['videoFormats'][$index]['ffmpeg_params']./*' -minrate '. ($config['videoFormats'][$index]['video_bitrate']) .' -maxrate '. ($config['videoFormats'][$index]['video_bitrate']+$config['bitrateToleranceVideo']) .' -bufsize 4096 '.*/' '.$target." 1>".$target.".txt 2>&1 &";
+		$cmd="nohup nice -n 15 ".$config['ffmpeg'].' -i '.$source.' '.$config['videoFormats'][$index]['ffmpeg_params'].' '.$target." 1>".$target.".txt 2>&1 &";
 		
 		
       if($this->console){
@@ -330,19 +325,6 @@ function fileOK($file) {
 	  }
            $this->transcodeWithFfmpeg($cmd, $totalframes);
 		  
-       /*
-	   $videoFileOK = $this->fileOK($target);
-	   	if(!$videoFileOK) {
-			logError('conversion failed: '.$target);
-			if($output)logError('ffmpeg output: '. $output['data']); 
-			if($this->console){
-				echo "<span style='color:#c00'>[ffmpeg error] Transcoding failed. The error has been logged.</span>";
-				echo "<br>&nbsp;";
-			}
-		}
-		else unlink($target.".txt");
-		*/
-		
 		
       debug('conversion finished', $target);
 

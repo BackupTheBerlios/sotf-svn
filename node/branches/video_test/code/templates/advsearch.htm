@@ -17,6 +17,13 @@
 	<TD colspan='4' ALIGN=center><B>{#combine#}</B></TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
 	</TR>
 	
+	{if !empty($ERROR_FIELDS)}
+	<TR>
+	<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	<TD colspan='4' ALIGN=center>&nbsp;<br><B style="color:red">{if $ERROR_COUNT == 1} {#field_empty#} {else} {#fields_empty#} {/if}</B></TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
+	</TR>
+	{/if}
+	
 	<TR>
 	<TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
 	<TD colspan='4' ALIGN=center>&nbsp;&nbsp;</TD><TD BGCOLOR="{#searchBgColor1#}">&nbsp;&nbsp;</TD>
@@ -32,10 +39,10 @@
 		
 		<TD>&nbsp;&nbsp;<INPUT type="checkbox" name="SQLchosen[]" value="{$SQLquery[i][1]}" {if $SQLquery[i][0] == "AND"} checked {/if}/></TD> {*ADDED BY Martin Schmidt*}
 		 
-		<TD><B>{$SQLqueryfields[i]}</B></TD>
+		<TD><B{if $ERROR_FIELDS[i]=='error'} style="color:red"{/if}>{$SQLqueryfields[i]}</B></TD>
 		{if $SQLquery[i][4] == "string"}
 			<TD><SELECT name="SQLeq[]">{html_options options=$EQstring selected=$SQLquery[i][2]}</SELECT></TD>
-			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30"></TD>
+			<TD><INPUT type="text" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30" ></TD>
 		{elseif $SQLquery[i][4] == "date"}
 			<TD><SELECT name="SQLeq[]" width=13>{html_options options=$EQdate selected=$SQLquery[i][2]}</SELECT></TD>
 			<TD>{html_select_date prefix="SQLstring[]" time=$SQLquery[i][3] start_year="2000" end_year="+0" display_days=true month_format="%m" field_order="YMD" }</TD>

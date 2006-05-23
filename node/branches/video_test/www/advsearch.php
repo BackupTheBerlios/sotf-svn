@@ -113,6 +113,7 @@ if (isset($sort1) AND isset($sort2))
 	}
 
 
+
 $max = count($SQLeq);
 $k = 0;
 for ($i=0; $i < $max; $i++)			//go through all the values on the form
@@ -127,12 +128,16 @@ for ($i=0; $i < $max; $i++)			//go through all the values on the form
 	{
 		$SQLquery[$i][3] = abs($SQLstring[$k]);
 	}
-	else	$SQLquery[$i][3] = $SQLstring[$k];
+	else{
+		$SQLquery[$i][3] = $SQLstring[$k];
+	}
 	$k++;
 }
 
 	
 // ADDED BY Martin Schmidt
+$error_fields=array();
+$error_count=0;
 
 if (!$fromSearchResults){
 	for($j=0;$j<count($SQLquery);$j++){
@@ -140,6 +145,10 @@ if (!$fromSearchResults){
 		for($l=0;$l<count($SQLchosen);$l++){
 			if($SQLchosen) {
 				if($SQLquery[$j][1] == $SQLchosen[$l]){
+					 if($SQLquery[$j][4]=="string" && $SQLquery[$j][3]==""){
+					 	$error_fields[$j]='error';
+						$error_count++;
+					 }
 					 $SQLquery[$j][0]="AND";
 					 $was_chosen=true;
 				}
@@ -148,6 +157,8 @@ if (!$fromSearchResults){
 		if(!$was_chosen) $SQLquery[$j][0]="IGNORE";
 	}
 }
+
+
 
 /////////////////////////////////
 
@@ -169,7 +180,7 @@ elseif (($run or ($run_image=="0")) and $SQLquery!=NULL)			////run query button 
 	}
 	///////////////////////////////////////////////
 	
-	if($minOneField){
+	if($minOneField && empty($error_fields)){
 		//$_SESSION["SQLquery"] = $SQLquery;
 		//$_SESSION["SQLquerySerial"] = $advsearch->Serialize();
 		$SQLquerySerial = $advsearch->Serialize();
@@ -306,6 +317,9 @@ else $smarty->assign("notLoggedIn", true);
 
 $paramcache->setProcessed();						//paramcache, against reload
 //$paramcache->addResult("SQLquerySerial", $advsearch-Serialize());	//save serialized query
+
+$smarty->assign("ERROR_FIELDS", $error_fields);
+$smarty->assign("ERROR_COUNT", $error_count);
 
 $page->send();
 
