@@ -403,5 +403,20 @@ function convert_special_chars($str){
      break; }
    echo "\n"; }
   echo "</div>\n"; }
+  
+  
+function mtime() { 
+
+    list($usec, $sec) = explode(" ",microtime());  
+    return ((float)$usec + (float)$sec);  
+
+}  
+
+function ntime($stime, $etime) { 
+
+    $ntime = $etime-$stime; 
+    return $ntime; 
+
+} 
 
 ?>

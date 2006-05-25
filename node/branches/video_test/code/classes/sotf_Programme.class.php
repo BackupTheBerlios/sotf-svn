@@ -530,12 +530,11 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $srcFile = new sotf_AudioFile($source);
 	 
 	 //ADDED BY BUDDHAFLY 06-02-20
-	 if($srcFile->isVideo()) $srcFile = new sotf_VideoFile($source);
+	 if($srcFile->isVideo()) $srcFile = new sotf_VideoFile($source, $srcFile->allInfo);
 	// if($srcFile->isVideo()) $File = new sotf_VideoFile($filepath);
 	 //--------------------------
 	
 	 $target = $this->getAudioDir() .  '/' . $this->get('track') . '_' . $srcFile->getFormatFilename();
-
 	 if(!$srcFile->isAudio() && !$srcFile->isVideo()){
 		raiseError("$source is neither an audio nor a video file"); // was THIS
 	}

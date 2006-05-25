@@ -95,6 +95,7 @@ $smarty->assign('LINKS', $prg->getAssociatedObjects('sotf_links', 'caption'));
 
 // other files
 $otherFiles = $prg->listOtherFiles();
+
 $smarty->assign('OTHER_FILES', $otherFiles);
 
 // audio files which does not contain the main programme
@@ -145,7 +146,7 @@ if($missing) {
   $page->redirectSelf();
   exit;
 }
-
+	
 
 $checker = & new sotf_ContentCheck($prgAudiolist); //todo $prgAudioList MEANT CONTENT
 $checker = $checker->selectType();
@@ -156,6 +157,7 @@ if($video && $prgAudiolist->count()){
 	$list_changed=sotf_VideoFile::processTranscodingQueue($repository, $prg, $checker);
 		
 	if($list_changed) {
+
 	  $page->redirectSelf();
 	  exit;
 	}

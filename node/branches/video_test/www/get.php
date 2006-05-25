@@ -7,7 +7,10 @@
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
+
+
 require("init.inc.php");
+$starttime=mtime();
 
 //$smarty->assign("OKURL", $_SERVER['PHP_SELF'] . "?id=" . rawurlencode($id));
 $id = sotf_Utils::getParameter('id');
@@ -59,17 +62,16 @@ if($id) {
   $smarty->assign('RIGHTS', $prg->getAssociatedObjects('sotf_rights', 'start_time'));
 
 
+
 //check for recently converted files or transcoding in progress
 
 if($prg->isVideoPrg()){
   $prgAudiolist = & new sotf_FileList();
   $prgAudiolist->getAudioVideoFromDir($prg->getAudioDir());
-  
+	
   $checker = & new sotf_ContentCheck($prgAudiolist); //todo $prgAudioList MEANT CONTENT
   $checker = $checker->selectType();
-
   sotf_VideoFile::processTranscodingQueue($repository, $prg, $checker);
-
 }
 
   // content files 
@@ -169,7 +171,10 @@ if(sotf_Utils::getParameter('popup')) {
   $smarty->assign('POPUP', 1);
   $page->sendPopup();
 } else {
+  //print "GESAMT: ".sprintf("%.05f",ntime($starttime,mtime()))." sec<br>";
   $page->send();
+  
 }
+
 
 ?>

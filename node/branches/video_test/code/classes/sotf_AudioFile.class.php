@@ -74,21 +74,29 @@ class sotf_AudioFile extends sotf_File
 
 	*/
 
-	function sotf_AudioFile($path)
+	function sotf_AudioFile($path, $fileinfo='')
 	{
 		
 		$parent = get_parent_class($this);
 
 		parent::$parent($path);		// Call the constructor of the parent class. lk. super()
 		
-		// CHANGED BY BUDDHAFLY 06-02-14
-		$getID3 = new getID3();
-		$fileinfo = $getID3->analyze($this->path);
-		getid3_lib::CopyTagsToComments($fileinfo);
-		
-		//$fileinfo = GetAllFileInfo($this->path);
 
-    $this->allInfo = $fileinfo; //was $fileInfo
+		
+		if(!$fileinfo && substr($path, strrpos($path, '.') +1)!='flv'){
+			// CHANGED BY BUDDHAFLY 06-02-14
+			$getID3 = new getID3();
+			$fileinfo = $getID3->analyze($this->path);
+			getid3_lib::CopyTagsToComments($fileinfo);
+			
+			//$fileinfo = GetAllFileInfo($this->path);
+		}
+		
+		if($fileinfo) $this->allInfo = $fileinfo; //was $fileInfo
+		
+		if(substr($path, strrpos($path, '.') +1)=='flv'){
+			$fileinfo['video']=true;
+		}
 
 		//if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg') {
 
@@ -168,6 +176,9 @@ class sotf_AudioFile extends sotf_File
   /** static method converts format encoded into filename back to array of format characteristics. */
 
   function decodeFormatFilename($filename) {
+
+   if(preg_match('/flash_preview.flv/', $filename)) return array('format' => 'flv');
+
 
     preg_match('/(\d+)kbps_(\d)chn_(\d+)Hz.(.*)/', $filename, $matches);
 

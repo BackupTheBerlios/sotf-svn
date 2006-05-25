@@ -85,32 +85,37 @@ class sotf_VideoFile extends sotf_File
 	* @param	string	$path	Path of the file
 	*/
 
-	function sotf_VideoFile($path)
+	function sotf_VideoFile($path, $fileinfo='')
 	{
 		
 		$parent = get_parent_class($this);
 
 		parent::$parent($path);		// Call the constructor of the parent class. lk. super()
 		
-		// CHANGED BY BUDDHAFLY 06-02-14
-		$getID3 = new getID3();
-		$fileinfo = $getID3->analyze($path);
-		getid3_lib::CopyTagsToComments($fileinfo);
-		//print_r_html($fileinfo);
-		//$fileinfo = GetAllFileInfo($this->path);
+		if(!$fileinfo && substr($path, strrpos($path, '.') +1)!='flv'){
+			// CHANGED BY BUDDHAFLY 06-02-14
+			$getID3 = new getID3();
+			$fileinfo = $getID3->analyze($path);
+			getid3_lib::CopyTagsToComments($fileinfo);
+			//print_r_html($fileinfo);
+			//$fileinfo = GetAllFileInfo($this->path);
+		}
+		
 		 
-   		 $this->allInfo = $fileinfo; //was $fileInfo
+   		 if($fileinfo) $this->allInfo = $fileinfo; //was $fileInfo
+		 
+		 if(substr($path, strrpos($path, '.') +1)=='flv'){
+			$fileinfo['video']=true;
+		}
 
 		//if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg') {
 
     //debug("finfo", $fileinfo);
 	
 
-    if (isset($fileinfo['video'])) {
+    if (isset($fileinfo['video']) && substr($path, strrpos($path, '.') +1)!='flv') {
 
      	 $videoinfo = $fileinfo['video'];
-		 
-		 
 
 			$this->type = "video";
 
@@ -165,6 +170,18 @@ class sotf_VideoFile extends sotf_File
 			
 			}
 
+		}
+		
+		else if (isset($fileinfo['video'])){
+			$this->type = "video";
+
+			$this->format = "flv";
+			
+			$this->mimetype = "video/x-flv";
+			$this->bitrate = 0;
+			$this->samplerate = 0;
+			$this->channels = 0;
+			
 		}
 
 	} // end func sotf_AudioFile
@@ -277,20 +294,23 @@ class sotf_VideoFile extends sotf_File
 	{
 
 		global $config;
-
-
-
-		$bitrate = $this->bitrate;
-
-		for ($i=0;$i<count($config['videoFormats']);$i++)
-
-			if (abs(($config['videoFormats'][$i]['audio_bitrate']+$config['videoFormats'][$i]['video_bitrate']) - $this->bitrate) < $config['bitrateTolerance'])
-
-				$bitrate = $config['videoFormats'][$i]['audio_bitrate']+$config['videoFormats'][$i]['video_bitrate'];
-				
-		return round($bitrate) . 'kbps_' . $this->channels . 'chn_' . $this->samplerate . 'Hz.'. $this->format;
 		
-		//return round($bitrate) . 'kbps_' . $this->channels . 'chn_' . $this->samplerate . 'Hz_' . convert_special_chars($this->codec) . '.' . $this->format;
+		if($this->format!='flv'){
+
+			$bitrate = $this->bitrate;
+	
+			for ($i=0;$i<count($config['videoFormats']);$i++)
+	
+				if (abs(($config['videoFormats'][$i]['audio_bitrate']+$config['videoFormats'][$i]['video_bitrate']) - $this->bitrate) < $config['bitrateTolerance'])
+	
+					$bitrate = $config['videoFormats'][$i]['audio_bitrate']+$config['videoFormats'][$i]['video_bitrate'];
+					
+			return round($bitrate) . 'kbps_' . $this->channels . 'chn_' . $this->samplerate . 'Hz.'. $this->format;
+		
+		}
+		
+		else return "flash_preview.flv";
+		
 
 	} // end func getFormatFilename
 
@@ -300,6 +320,8 @@ class sotf_VideoFile extends sotf_File
 
   function decodeFormatFilename($filename) {
 
+	if(preg_match('/flash_preview.flv/', $filename)) return array('format' => 'flv');
+	
     preg_match('/(\d+)kbps_(\d)chn_(\d+)Hz.(.*)/', $filename, $matches);
 
     return array('bitrate' => $matches[1],

@@ -63,18 +63,20 @@ class sotf_FileList
 			{
 				//CHANGED BY BUDDHAFLY 06-02-14
 				//echo $path;
-				$getID3 = new getID3();
-				$fileinfo = $getID3->analyze($path);
-				getid3_lib::CopyTagsToComments($fileinfo);
-				
-				//print_r ($fileinfo);
+				if(substr($path, strrpos($path, '.') +1) !='flv'){
+					$getID3 = new getID3();
+					$fileinfo = $getID3->analyze($path);      
+					getid3_lib::CopyTagsToComments($fileinfo);
+					//print_r ($fileinfo);
+				}
+				else $fileinfo["video"] = true;
 				
 				//$audioinfo = GetAllFileInfo($path);
 				if(isset($fileinfo["video"])){
-					$this->list[] = & new sotf_VideoFile($path);
+					$this->list[] = & new sotf_VideoFile($path, $fileinfo);
 				}
 				else if (isset($fileinfo["audio"])){
-					$this->list[] = & new sotf_AudioFile($path);
+					$this->list[] = & new sotf_AudioFile($path, $fileinfo);
 				}
 				else{
 					$this->list[] = & new sotf_File($path);
@@ -158,26 +160,21 @@ class sotf_FileList
 		if (is_dir($path))
 			if ($handle = opendir($path))
 			{
+
+
         while (false !== ($filename = readdir($handle))) {
           if(!$prefix || preg_match("/^$prefix/", $filename))			
 		  
 		  	// START ----- added by buddhafly 05-08-30
 			if(!preg_match('/^\./', $filename) && $filename!='stills'){
-
 				 $extension = substr($filename, strrpos($filename, '.') +1);
-
                		 $restname = substr($filename, 0, (-1*(strlen($extension)+1)));
-               		 
-               		 
-               		$newname = convert_special_chars($restname);
-
+               		$newname = convert_special_chars($restname);			
 				$newname .= "." . $extension;
- 
 				rename($path . '/' . $filename, $path . '/' . $newname);
 				$filename = $newname;
 			}
 			// END ------- added by buddhafly 05-08-30
-			
 			$this->add($path . '/' . $filename);
         }
         closedir($handle); 

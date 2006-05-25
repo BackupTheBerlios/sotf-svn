@@ -84,14 +84,13 @@ if (preg_match("/image/", $file->mimetype))
 		// wreutz: end
 	
 		readfile($filename);
-		if($file->mimetype!='video/x-flv') $prg->addStat($file->id, "downloads");
 
 	}
 
 
 else if ($file->type != "none"){
 	if(!is_file($config['wwwdir'].'/tmp/'.$pure_filename)){
-		copy($filename, $config['wwwdir'].'/tmp/'.$pure_filename);
+		symlink($filename, $config['wwwdir'].'/tmp/'.$pure_filename);
 	}
 	// add this download to statistics
 	if($file->mimetype!='video/x-flv') $prg->addStat($file->id, "downloads");

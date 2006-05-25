@@ -117,16 +117,16 @@ class sotf_VideoCheck extends sotf_ContentCheck
 			if ($config['videoFormats'][$i]['format'] != $videofile->format)
 				continue;								// This is not the one we need, get another one
 
-			//if($videofile->format!="flv"){
+			if($videofile->format!="flv"){
 				if (abs($videofile->average_bitrate - $config['videoFormats'][$i]['video_bitrate']+$videofile->average_bitrate - $config['videoFormats'][$i]['audio_bitrate']) > $config['bitrateToleranceVideo'])
 					continue;							// This is not the one we need, get another one
 	
 				if ($config['videoFormats'][$i]['audio_channels'] != $videofile->channels)
 					continue;								// This is not the one we need, get another one
-			//}
-			if ($config['videoFormats'][$i]['audio_samplerate'] != $videofile->samplerate)
-				continue;								// This is not the one we need, get another one
-
+			
+				if ($config['videoFormats'][$i]['audio_samplerate'] != $videofile->samplerate)
+					continue;								// This is not the one we need, get another one
+			}
 			return $j;									// All conditions matched, that's what we need, return the index
 
 		}
@@ -151,8 +151,12 @@ class sotf_VideoCheck extends sotf_ContentCheck
 	{
 
 		global $config;
-
-		return ($config['videoFormats'][$index]['video_bitrate']+$config['videoFormats'][$index]['audio_bitrate']) . 'kbps_' . $config['videoFormats'][$index]['audio_channels'] . 'chn_' . $config['videoFormats'][$index]['audio_samplerate'] . 'Hz.' . $config['videoFormats'][$index]['format'];
+		
+		if($config['videoFormats'][$index]['format']!='flv'){
+			return ($config['videoFormats'][$index]['video_bitrate']+$config['videoFormats'][$index]['audio_bitrate']) . 'kbps_' . $config['videoFormats'][$index]['audio_channels'] . 'chn_' . $config['videoFormats'][$index]['audio_samplerate'] . 'Hz.' . $config['videoFormats'][$index]['format'];
+		}
+		
+		else return "flash_preview.flv";
 		
 		
 
@@ -166,9 +170,12 @@ function fileOK($file) {
 
 	global $config;
 
-	$getID3 = new getID3();
-	$fileinfo = $getID3->analyze($file);
-	getid3_lib::CopyTagsToComments($fileinfo);
+	if(substr($file, strrpos($file, '.') +1)!='flv'){
+		$getID3 = new getID3();
+		$fileinfo = $getID3->analyze($file);
+		getid3_lib::CopyTagsToComments($fileinfo);
+	}
+	else $fileinfo['video']=true;
 	
 	if(is_file($file.".txt")){
 	
@@ -195,13 +202,14 @@ function fileOK($file) {
 	function getTotalFrames($source, $index){
 		
 		global $config;
-		
-		$getID3 = new getID3();
-		$fileinfo = $getID3->analyze($source);
-		getid3_lib::CopyTagsToComments($fileinfo);
-		
-		$totalframes=round($fileinfo["playtime_seconds"]*$config['videoFormats'][$index]['framerate']);
-		
+		if(substr($source, strrpos($source, '.') +1)!='flv'){
+			$getID3 = new getID3();
+			$fileinfo = $getID3->analyze($source);
+			getid3_lib::CopyTagsToComments($fileinfo);
+			$totalframes=round($fileinfo["playtime_seconds"]*$config['videoFormats'][$index]['framerate']);
+		}
+		else $totalframes=1;
+
 		return $totalframes;
 	}
 	
@@ -245,7 +253,8 @@ function fileOK($file) {
 				logError('conversion failed: '.$tempfile);
 				logError('ffmpeg output: '. $buffer); 
 			}
-			@$percentage=round($curframe/$totalframes*100);
+			$percentage='';
+			if(substr($tempfile, strrpos($file, '.') +1)!='flv') @$percentage=round($curframe/$totalframes*100);
 			$returnarray['percentage']=$percentage;
 			return $returnarray;
 		}
