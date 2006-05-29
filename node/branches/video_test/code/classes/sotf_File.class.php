@@ -108,8 +108,9 @@ class sotf_File
 	*
 	* @return	string	File extension
 	*/
-	function getExtension()
+	function getExtension($path='')
 	{
+		if($path) return substr(strrchr($path, '.'), 1);
 		return substr(strrchr($this->path, '.'), 1);
 	} // end func getExtension
 

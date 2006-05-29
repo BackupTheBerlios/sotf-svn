@@ -56,6 +56,8 @@ class sotf_FileList
 	*/
 	function add($path)
 	{
+		global $config;
+		
 		$path = realpath(trim($path));
 		if (is_file($path))
 		{
@@ -63,7 +65,7 @@ class sotf_FileList
 			{
 				//CHANGED BY BUDDHAFLY 06-02-14
 				//echo $path;
-				if(substr($path, strrpos($path, '.') +1) !='flv'){
+				if(!in_array(sotf_File::getExtension($path),$config['skipGetID3FileTypes'])){
 					$getID3 = new getID3();
 					$fileinfo = $getID3->analyze($path);      
 					getid3_lib::CopyTagsToComments($fileinfo);

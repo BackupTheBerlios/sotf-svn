@@ -117,7 +117,7 @@ class sotf_VideoCheck extends sotf_ContentCheck
 			if ($config['videoFormats'][$i]['format'] != $videofile->format)
 				continue;								// This is not the one we need, get another one
 
-			if($videofile->format!="flv"){
+			if(!in_array(sotf_File::getExtension($path),$config['skipGetID3FileTypes'])){
 				if (abs($videofile->average_bitrate - $config['videoFormats'][$i]['video_bitrate']+$videofile->average_bitrate - $config['videoFormats'][$i]['audio_bitrate']) > $config['bitrateToleranceVideo'])
 					continue;							// This is not the one we need, get another one
 	
@@ -170,7 +170,7 @@ function fileOK($file) {
 
 	global $config;
 
-	if(substr($file, strrpos($file, '.') +1)!='flv'){
+	if(!in_array(sotf_File::getExtension($file),$config['skipGetID3FileTypes'])){
 		$getID3 = new getID3();
 		$fileinfo = $getID3->analyze($file);
 		getid3_lib::CopyTagsToComments($fileinfo);
@@ -202,15 +202,15 @@ function fileOK($file) {
 	function getTotalFrames($source, $index){
 		
 		global $config;
-		if(substr($source, strrpos($source, '.') +1)!='flv'){
+		if(!in_array(sotf_File::getExtension($source),$config['skipGetID3FileTypes'])){
 			$getID3 = new getID3();
 			$fileinfo = $getID3->analyze($source);
 			getid3_lib::CopyTagsToComments($fileinfo);
 			$totalframes=round($fileinfo["playtime_seconds"]*$config['videoFormats'][$index]['framerate']);
+					return $totalframes;
 		}
-		else $totalframes=1;
+		else return 1;
 
-		return $totalframes;
 	}
 	
 	function getPercentageOrError($tempfile, $totalframes){
@@ -254,7 +254,7 @@ function fileOK($file) {
 				logError('ffmpeg output: '. $buffer); 
 			}
 			$percentage='';
-			if(substr($tempfile, strrpos($file, '.') +1)!='flv') @$percentage=round($curframe/$totalframes*100);
+			if(!in_array(sotf_File::getExtension($path),$config['skipGetID3FileTypes'])) @$percentage=round($curframe/$totalframes*100);
 			$returnarray['percentage']=$percentage;
 			return $returnarray;
 		}

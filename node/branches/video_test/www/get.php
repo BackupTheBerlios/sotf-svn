@@ -66,12 +66,7 @@ if($id) {
 //check for recently converted files or transcoding in progress
 
 if($prg->isVideoPrg()){
-  $prgAudiolist = & new sotf_FileList();
-  $prgAudiolist->getAudioVideoFromDir($prg->getAudioDir());
-	
-  $checker = & new sotf_ContentCheck($prgAudiolist); //todo $prgAudioList MEANT CONTENT
-  $checker = $checker->selectType();
-  sotf_VideoFile::processTranscodingQueue($repository, $prg, $checker);
+  sotf_VideoFile::processTranscodingQueue($repository, $prg);
 }
 
   // content files 

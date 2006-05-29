@@ -33,10 +33,15 @@ if(sotf_Utils::getParameter('addprog')) {
   checkPerm($station, 'create');
   
   //ADDED BY BUDDHAFLY
+  if(!in_array(sotf_File::getExtension($user->getUserDir().'/'.$fname),$config['skipGetID3FileTypes'])){
+
 	$getID3 = new getID3();
 	$fileinfo = $getID3->analyze($user->getUserDir().'/'.$fname);
 	getid3_lib::CopyTagsToComments($fileinfo);
-	if (isset ($fileinfo['video'])) $is_video = true;
+  }
+  else $fileinfo['video']=true;
+
+  if (isset ($fileinfo['video'])) $is_video = true;
   //--------------------------------------------
   //logError(print_r($fileinfo, true));
   $newPrg = new sotf_Programme();

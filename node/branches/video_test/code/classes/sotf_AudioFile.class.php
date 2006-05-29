@@ -76,14 +76,13 @@ class sotf_AudioFile extends sotf_File
 
 	function sotf_AudioFile($path, $fileinfo='')
 	{
+		global $config;
 		
 		$parent = get_parent_class($this);
 
 		parent::$parent($path);		// Call the constructor of the parent class. lk. super()
 		
-
-		
-		if(!$fileinfo && substr($path, strrpos($path, '.') +1)!='flv'){
+		if(!in_array(sotf_File::getExtension($this->path),$config['skipGetID3FileTypes'])){
 			// CHANGED BY BUDDHAFLY 06-02-14
 			$getID3 = new getID3();
 			$fileinfo = $getID3->analyze($this->path);
@@ -91,13 +90,10 @@ class sotf_AudioFile extends sotf_File
 			
 			//$fileinfo = GetAllFileInfo($this->path);
 		}
+		else $fileinfo['video']=true;
 		
 		if($fileinfo) $this->allInfo = $fileinfo; //was $fileInfo
 		
-		if(substr($path, strrpos($path, '.') +1)=='flv'){
-			$fileinfo['video']=true;
-		}
-
 		//if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg') {
 
     //debug("finfo", $fileinfo);

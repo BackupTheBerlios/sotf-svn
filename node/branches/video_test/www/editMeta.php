@@ -47,10 +47,13 @@ $prg = & new sotf_Programme($prgId);
   	    $file =  $prg->getAudioDir() . '/' . $audioFiles[0] ['filename'];
   	 
 	 	if($new){
-		
-			$getID3 = new getID3();
-			$ThisFileInfo = $getID3->analyze($file);
-			getid3_lib::CopyTagsToComments($ThisFileInfo);
+			if(!in_array(sotf_File::getExtension($file),$config['skipGetID3FileTypes'])){
+				$getID3 = new getID3();
+				$ThisFileInfo = $getID3->analyze($file);
+				getid3_lib::CopyTagsToComments($ThisFileInfo);
+			}
+			else $fileinfo['video']=true;
+
 			
 			//$ThisFileInfo = GetAllFileInfo($file, 'mp3', false, false, false) ;
 			

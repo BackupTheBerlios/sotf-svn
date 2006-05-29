@@ -87,12 +87,13 @@ class sotf_VideoFile extends sotf_File
 
 	function sotf_VideoFile($path, $fileinfo='')
 	{
+		global $config;
 		
 		$parent = get_parent_class($this);
 
 		parent::$parent($path);		// Call the constructor of the parent class. lk. super()
 		
-		if(!$fileinfo && substr($path, strrpos($path, '.') +1)!='flv'){
+		if(!in_array(sotf_File::getExtension($path),$config['skipGetID3FileTypes'])){
 			// CHANGED BY BUDDHAFLY 06-02-14
 			$getID3 = new getID3();
 			$fileinfo = $getID3->analyze($path);
@@ -100,20 +101,16 @@ class sotf_VideoFile extends sotf_File
 			//print_r_html($fileinfo);
 			//$fileinfo = GetAllFileInfo($this->path);
 		}
-		
+		else $fileinfo['video']=true;
 		 
    		 if($fileinfo) $this->allInfo = $fileinfo; //was $fileInfo
-		 
-		 if(substr($path, strrpos($path, '.') +1)=='flv'){
-			$fileinfo['video']=true;
-		}
 
 		//if ($audioinfo["fileformat"] == 'mp3' || $audioinfo["fileformat"] == 'ogg') {
 
     //debug("finfo", $fileinfo);
 	
 
-    if (isset($fileinfo['video']) && substr($path, strrpos($path, '.') +1)!='flv') {
+    if(!in_array(sotf_File::getExtension($path),$config['skipGetID3FileTypes'])) {
 
      	 $videoinfo = $fileinfo['video'];
 
@@ -174,10 +171,8 @@ class sotf_VideoFile extends sotf_File
 		
 		else if (isset($fileinfo['video'])){
 			$this->type = "video";
-
-			$this->format = "flv";
-			
-			$this->mimetype = "video/x-flv";
+			$this->format = sotf_File::getExtension($path);
+			$this->mimetype = $config['mimetypes']['format'];
 			$this->bitrate = 0;
 			$this->samplerate = 0;
 			$this->channels = 0;
@@ -239,7 +234,7 @@ class sotf_VideoFile extends sotf_File
 	}
 	
 	
-	function processTranscodingQueue($repository, $prg, $checker){
+	function processTranscodingQueue($repository, $prg){
 	
 		global $config;
 		
@@ -252,7 +247,7 @@ class sotf_VideoFile extends sotf_File
 		if ($tempdir = opendir($temppath)) {
 		   while (false !== ($filename = readdir($tempdir))) {
 				if(preg_match("/^".$id."_/",$filename)){
-					if($checker->fileOK($temppath.$filename)) {
+					if(sotf_VideoCheck::fileOK($temppath.$filename)) {
 						if(is_file($temppath.$filename.".txt")) unlink($temppath.$filename.".txt");
 						$prg->setAudio($temppath.$filename);
 						$list_changed=true;

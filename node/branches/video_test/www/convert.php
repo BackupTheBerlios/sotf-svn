@@ -193,10 +193,14 @@ function rmFile($file) {
 }
 
 function fileOK($file) {
+	global $config;
 
-	$getID3 = new getID3();
-	$fileinfo = $getID3->analyze($file);
-	getid3_lib::CopyTagsToComments($fileinfo);
+	if(!in_array(sotf_File::getExtension($file),$config['skipGetID3FileTypes'])){
+		$getID3 = new getID3();
+		$fileinfo = $getID3->analyze($file);
+		getid3_lib::CopyTagsToComments($fileinfo);
+	}
+	else $fileinfo['video']=true;
 	
   if(!is_readable($file) || filesize($file)==0 || !isset($fileinfo['audio'])) {
 	return false;

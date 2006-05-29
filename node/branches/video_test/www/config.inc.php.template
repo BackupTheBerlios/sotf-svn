@@ -301,6 +301,20 @@ $config['audioFormats'] = array(
 $config['preferredStreamingFormat'] = 1;
 
 
+/**
+* Formats for which to skip getID3()
+*
+* Array containing the extensions of files for which NOT to run getID3 on.
+* This must include 'flv' as long as getID3 does not provide a more performant solution for checking flash videos.
+* Notice that no details (as duration, bitrate, etc.) of the converted file will be available to display!
+*
+* @package	StreamOnTheFly
+* @variable	array	$config['skipGetID3FileTypes']
+*/
+
+$config['skipGetID3FileTypes']=array('flv');
+
+
 
 //////////////////////////////////////////////////////////////////////////
 // VIDEO OPTIONS ---------------------------------------------------------
