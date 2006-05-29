@@ -679,10 +679,14 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   // wreutz: changed behaviour to leave ID3 as is in file, only add comment with id
   function saveID3($file) {
 	 global $config;
+	 
+	 if(!in_array(sotf_File::getExtension($this->path),$config['skipGetID3FileTypes'])) return;
+
+	 
 	 $fileInfo = $file->allInfo;
 	 //----------------- CHANGED BY BUDDHAFLY 06-02-19
 	 $id3 = $fileInfo['id3v1'];
-
+	
 	require_once($config['getid3dir'] . "/write.php");
 	 $tagwriter = new getid3_writetags;
 	 $tagwriter->filename   = $file;

@@ -63,15 +63,29 @@ class sotf_FileList
 		{
 			if (!$this->pathExist($path))
 			{
-				//CHANGED BY BUDDHAFLY 06-02-14
-				//echo $path;
-				if(!in_array(sotf_File::getExtension($path),$config['skipGetID3FileTypes'])){
+				$oggaudio=false;
+				$getid3_skipped=false;
+				
+				if(sotf_File::getExtension($path)=='ogg'){
 					$getID3 = new getID3();
-					$fileinfo = $getID3->analyze($path);      
+					$fileinfo = $getID3->analyze($path);
 					getid3_lib::CopyTagsToComments($fileinfo);
-					//print_r ($fileinfo);
+					if(isset($fileinfo['audio']) && !isset($fileinfo['video'])) $oggaudio=true;
+					else $getid3_skipped=true;
+
 				}
-				else $fileinfo["video"] = true;
+				else if(!in_array(sotf_File::getExtension($path),$config['skipGetID3FileTypes'])){
+					// CHANGED BY BUDDHAFLY 06-02-14
+					$getID3 = new getID3();
+					$fileinfo = $getID3->analyze($path);
+					getid3_lib::CopyTagsToComments($fileinfo);
+					
+					//$fileinfo = GetAllFileInfo($this->path);
+				}
+				else $getid3_skipped=true;
+				
+				if(!$oggaudio && $getid3_skipped){$fileinfo['video']=true;}
+
 				
 				//$audioinfo = GetAllFileInfo($path);
 				if(isset($fileinfo["video"])){

@@ -251,6 +251,8 @@ if($videoconv && $missing){
 
 //////////////////////////////////////////////////////////
 
+if(preg_match("/.ogg$/", $audioFiles[0]['format'])) $smarty->assign('IS_OGG', true);
+
 $smarty->assign('CREATESTILLS', $createstills);
 
 $smarty->assign('STILL_FOUND', $still_found);

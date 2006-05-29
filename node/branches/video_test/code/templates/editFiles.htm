@@ -34,11 +34,7 @@ else  window.location.href = this.location.href
 {else}
 <H3>{#Edit_files#}: <a class="goto_object" href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
     <div align="right">
-	  {if $CONVERTING}
-	  <input class="action" type="button" name="b1" value="{#goto_step2#}" onClick="redir(this.form, 'editMeta.php?new=1&id={$PRG_ID}')" />
-	  {else}
       <input class="action" type="button" name="b1" value="{#edit_meta#}" onClick="redir(this.form, 'editMeta.php?id={$PRG_ID}')" />
-	  {/if}
     </div>
 {/if}
 </form>
@@ -136,7 +132,7 @@ else  window.location.href = this.location.href
 				{/if}
 				
 			  {/if}
-			  {if $PRG_DATA.type=='video' AND !$CREATESTILLS AND !$STILL_FOUND}
+			  {if $PRG_DATA.type=='video' AND !$CREATESTILLS AND !$STILL_FOUND AND !$IS_OGG}
                    <input class="action" type="button" name="b3" id="b3" value="{#create_stills#}" onClick="javascript:document.getElementById('b3').style.visibility='hidden';document.location.href='editFiles.php?id={$PRG_ID}&createstills=1'" />
 			{/if}
               </td>
@@ -317,5 +313,5 @@ else  window.location.href = this.location.href
 {/if}
 
 {if $CONVERTING OR $CREATESTILLS}
-		<script type="text/javascript" language="javascript">setTimeout("document.location.href='editFiles.php?id={$PRG_ID}'", 5000);</script>
+		<script type="text/javascript" language="javascript">setTimeout("document.location.href='editFiles.php?new=1&id={$PRG_ID}'", 5000);</script>
 {/if}

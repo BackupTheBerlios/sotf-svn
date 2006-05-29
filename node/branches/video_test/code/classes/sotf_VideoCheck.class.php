@@ -209,7 +209,7 @@ function fileOK($file) {
 			$totalframes=round($fileinfo["playtime_seconds"]*$config['videoFormats'][$index]['framerate']);
 					return $totalframes;
 		}
-		else return 1;
+		else return -1;
 
 	}
 	
@@ -254,7 +254,7 @@ function fileOK($file) {
 				logError('ffmpeg output: '. $buffer); 
 			}
 			$percentage='';
-			if(!in_array(sotf_File::getExtension($path),$config['skipGetID3FileTypes'])) @$percentage=round($curframe/$totalframes*100);
+			if($totalframes!=-1) @$percentage=round($curframe/$totalframes*100);
 			$returnarray['percentage']=$percentage;
 			return $returnarray;
 		}

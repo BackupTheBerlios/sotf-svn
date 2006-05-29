@@ -82,7 +82,17 @@ class sotf_AudioFile extends sotf_File
 
 		parent::$parent($path);		// Call the constructor of the parent class. lk. super()
 		
-		if(!in_array(sotf_File::getExtension($this->path),$config['skipGetID3FileTypes'])){
+		$oggaudio=false;
+		$getid3_skipped=false;
+		
+		if(sotf_File::getExtension($this->path)=='ogg'){
+			$getID3 = new getID3();
+			$fileinfo = $getID3->analyze($this->path);
+			getid3_lib::CopyTagsToComments($fileinfo);
+			if(isset($fileinfo['audio']) && !isset($fileinfo['video'])) $oggaudio=true;
+			else $getid3_skipped=true;
+		}
+		else if(!in_array(sotf_File::getExtension($this->path),$config['skipGetID3FileTypes'])){
 			// CHANGED BY BUDDHAFLY 06-02-14
 			$getID3 = new getID3();
 			$fileinfo = $getID3->analyze($this->path);
@@ -90,7 +100,9 @@ class sotf_AudioFile extends sotf_File
 			
 			//$fileinfo = GetAllFileInfo($this->path);
 		}
-		else $fileinfo['video']=true;
+		else $getid3_skipped=true;
+		
+		if(!$oggaudio && $getid3_skipped) $fileinfo['video']=true;
 		
 		if($fileinfo) $this->allInfo = $fileinfo; //was $fileInfo
 		
