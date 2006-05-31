@@ -300,7 +300,7 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 			</td>
 			{elseif $item.format=='3gp'}
 			<td width="5%">
-				<a href="{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/3gp.jpg" border="0" alt="3GP File" style="background-color:#fff;width:20px;height:20px;padding:2px;border-style:solid;border-width:1px;border-color:#666666"></a>
+				<a href="{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/3gp.jpg" border="0" alt="3GP File" style="background-color:#fff;width:20px;height:20px;padding:2px;border-style:solid;border-width:1px;border-color:#666666"></a></td>
 			{else if $VIDEO_PRG}<td width="5%"><a href="{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}"><img src="{$IMAGE_URL}/video.jpg" border="0" alt="Video File" style="background-color:#fff;width:20px;height:20px;padding:2px;border-style:solid;border-width:1px;border-color:#666666"></td>{/if}
 			
             <td>
@@ -321,11 +321,19 @@ winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
 					<strong>{$item.format}</strong>
 				</td>
 				<td align="right">
+				  {if $item.bitrate} 
 				  {$item.bitrate} kbps 
+				  {else}
+				  n/a
+				  {/if}
 				</td>
 				
 				<td align="right">
-				  {$item.playtime_string}
+				  {if $item.playtime_string != '00:00'} 
+				  {$item.playtime_string} 
+				  {else}
+				  n/a
+				  {/if}
 				</td>
 				<td align="right">
 				  {$item.filesize} {#bytes#}
