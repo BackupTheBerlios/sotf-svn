@@ -116,7 +116,7 @@ class userdb_sadm {
    function userCheckPwd($fields) {
     $query = sprintf("SELECT auth_id, passwd FROM authenticate WHERE username='%s'", $fields['username']);
     $res = $this->userdb->getRow($query);
-    if($res && $res['password'] == $fields['password']) {
+    if($res && $res['passwd'] == $fields['password']) {
       return true;
     } else
       return false;
@@ -125,7 +125,7 @@ class userdb_sadm {
     function getUserPwd($fields){
   	$query = sprintf("SELECT auth_id, passwd FROM authenticate WHERE username='%s'", $fields['username']);
     $res = $this->userdb->getRow($query);
-	return $res['password'];
+	return $res['passwd'];
   }
   
  
