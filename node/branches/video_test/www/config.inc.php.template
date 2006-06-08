@@ -371,11 +371,11 @@ $config['videoFormats'] = array(
 						'format' => '3gp',
 						'size' => '176x144',
 						'framerate' => '14.985',
-						'video_bitrate' => '336',
-						'audio_bitrate' => '64',
-						'audio_channels' => '2',
-						'audio_samplerate' => '22050',
-						'ffmpeg_params'=>'-f 3gp -vcodec mpeg4 -s 176x144 -r 14.985 -b 336 -acodec aac -ac 2 -ar 22050 -ab 64')
+						'video_bitrate' => '144',
+						'audio_bitrate' => '32',
+						'audio_channels' => '1',
+						'audio_samplerate' => '8000',
+						'ffmpeg_params'=>'-f 3gp -vcodec h263 -s 176x144 -r 14.985 -b 144 -acodec amr_nb -ac 1 -ar 8000 -ab 13')
 					);
 
 
