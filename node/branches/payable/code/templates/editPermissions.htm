@@ -71,6 +71,20 @@ function toggleEnable(yesno)
               <table>
                 <tr>
                   <td>
+                    <input name="perm_listen" type="checkbox" {if in_array('listen', $PERMISSIONS) }CHECKED{/if} />
+                  </td>
+                  <td>
+                    {#listen#} ({#listen_expl#})
+                  </td>
+                </tr>
+                <tr height="10">
+                  <td>
+                  </td>
+                  <td>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
                     <input name="perm_admin" type="checkbox" onClick="toggleAdmin()" {if in_array('admin', $PERMISSIONS) }CHECKED{/if} />
                   </td>
                   <td>

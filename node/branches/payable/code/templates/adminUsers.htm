@@ -1,0 +1,56 @@
+
+  <h3>{#admin#}</h3>
+
+<ul class="tabs">
+<li class=""><a href="admin.php">{#Network#}</a></li>
+<li class="sel">{#Users#}</li>
+<li class="last"><a href="adminGroups.php">{#Groups#}</a></li>
+</ul>
+<form>
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#Users#}</td>
+    </tr>
+  </table>
+  <table class="tabarea">
+    <tr> 
+      <td class="tabarea">
+      	<table width="100%">
+      		<tr class="listhead">
+						<td>
+		          {#Search#}: <input name="pattern" value="{$PATTERN}">
+						</td>
+						<td>{include file="splitList.htm"}</td>
+					</tr>
+				</table>
+
+	<table>
+          <tr class="listhead">
+            <th>{#name#}</th>
+            <th>{#email#}</th>
+            <th>{#groups#}</th>
+	    <th></th>
+          </tr>
+          {cycle name="roles" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$USERS}
+          <tr class="{cycle name=roles}">
+            <td>
+            	{$item.username}
+            </td>
+	    <td>
+	    	{$item.email}
+	    </td>
+            <td>
+		{$item.groups}
+            </td>
+            <td nowrap>
+                <input class="action" type="button" name="b1" value="{#edit#}" onClick="popup('editGroup.php?gid={$item.id}','EditGroup',350,400,false)" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'adminGroups.php?del=1&gid={$item.id}')" />
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+      </td>
+    </tr>
+  </table>
+</form>

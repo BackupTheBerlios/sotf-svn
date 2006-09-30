@@ -650,6 +650,8 @@ INSERT INTO "sotf_permissions" ("id", "permission") VALUES('5', 'delete');
 SELECT nextval('sotf_permissions_id_seq');
 INSERT INTO "sotf_permissions" ("id", "permission") VALUES('6', 'authorize');
 SELECT nextval('sotf_permissions_id_seq');
+INSERT INTO "sotf_permissions" ("id", "permission") VALUES('7', 'listen');
+SELECT nextval('sotf_permissions_id_seq');
 
 -- collection of some useful sql statementsm no neeed to run these!
 

@@ -121,8 +121,11 @@ class userdb_node {
   }
   
   /** Counts all registered users */
-  function userDbCount() {
-    return $this->userdb->getOne("SELECT count(*) FROM sotf_users");  
+  function userDbCount($pattern = '') {
+    if($pattern)
+      return $this->userdb->getOne("SELECT count(*) FROM sotf_users WHERE username ~* '$pattern'");
+    else
+      return $this->userdb->getOne("SELECT count(*) FROM sotf_users");  
   }
   
   /** Search for users. */
@@ -138,6 +141,20 @@ class userdb_node {
       $res = $this->userdb->getAssoc($query);
     }
     return $res;
+  }
+
+  function userDbList($start, $hitsPerPage, $pattern) {
+    if($pattern)
+     $where = "WHERE username ~* '$pattern'";
+    $sql = "SELECT * FROM sotf_users $where ORDER BY username";
+    if(!$start) $start = 0;
+    $res = $this->userdb->limitQuery($sql, $start, $hitsPerPage);
+    if(DB::isError($res))
+            raiseError($res);
+    while (DB_OK === $res->fetchInto($item)) {
+            $list[] = $item;
+    }
+    return $list;
   }
   
 }

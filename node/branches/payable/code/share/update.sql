@@ -246,3 +246,26 @@ COMMIT;
        ALTER TABLE sotf_media_files DROP COLUMN resolution_y;
 	   ALTER TABLE sotf_media_files RENAME COLUMN resolution_y_2 TO resolution_y;
        COMMIT;
+
+-- Changes for restricted and payable content
+-- 2006-09-30
+
+INSERT INTO "sotf_permissions" ("id", "permission") VALUES('7', 'listen');
+SELECT nextval('sotf_permissions_id_seq');
+
+CREATE TABLE "sotf_groups" (
+-- user groups for access permissions
+"id" serial PRIMARY KEY,	-- just an id
+"name" varchar(254) NOT NULL,	-- name of group
+"comments" text			-- comments
+);
+CREATE UNIQUE INDEX sotf_group_name ON sotf_groups ("name");
+
+CREATE TABLE "sotf_user_groups" (
+-- stores editor-specific private settings for programmes
+"id" serial PRIMARY KEY,		-- just an id
+"user_id"  int,				-- id of user
+"group_id" int CONSTRAINT "to_groups" REFERENCES sotf_groups(id) ON DELETE CASCADE	-- id of group
+);
+CREATE UNIQUE INDEX sotf_user_groups_uniq ON sotf_user_groups ("user_id", "group_id");
+

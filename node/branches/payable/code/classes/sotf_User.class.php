@@ -262,9 +262,10 @@ class sotf_User {
 	 *****************************************************************/
 	
 	/** Count all users. */
-	function countUsers() {
+	function countUsers($pattern = '') {
 	  $storage = &sotf_User::getStorageObject();
-	  return $storage->userDbCount();
+    $pattern = sotf_Utils::magicQuotes($pattern);
+	  return $storage->userDbCount($pattern);
 	}
 	
 	/** Search for users. */
@@ -278,6 +279,14 @@ class sotf_User {
 	  if(DB::isError($res))
 		 raiseError($res);
 	  return $res;
+	}
+
+	function listUsers($start, $hitsPerPage, $pattern) {
+		global $userdb;
+		$storage = &sotf_User::getStorageObject();
+		$pattern = sotf_Utils::magicQuotes($pattern);
+		$list = $storage->userDbList($start, $hitsPerPage, $pattern);
+    return $list;
 	}
 
 }

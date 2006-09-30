@@ -40,3 +40,5 @@ if($node)
 $smarty->assign('NEI', $nei->getAll());
 
 $page->sendPopup();
+
+?>

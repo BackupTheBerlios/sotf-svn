@@ -56,6 +56,7 @@ if($save) {
 	 } else {
 		if(in_array('admin', $userPerms))
 		  $permissions->delPermission($objectid, $userid, 'admin');
+		$perms['listen'] = sotf_Utils::getParameter('perm_listen');
 		$perms['create'] = sotf_Utils::getParameter('perm_create');
 		$perms['change'] = sotf_Utils::getParameter('perm_change');
 		//$perms['add_prog'] = sotf_Utils::getParameter('perm_add_prog');

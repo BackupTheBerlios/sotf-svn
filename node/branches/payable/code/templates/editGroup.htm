@@ -1,0 +1,31 @@
+
+  <h3>{#edit_group#}</h3>
+  
+<p><font color="red">{$ERROR}</font></p>
+
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        <table width="100%">
+          <tr><td>
+              <form method="post">
+              	<input type="hidden" name="id" value="{$GROUP.id}" />
+                <table>
+                  <tr>
+                    <td nowrap>{#name#}:</td>
+                    <td><input name="name" value="{$GROUP.name}" /></td>
+                  </tr>
+                  <tr>
+                    <td nowrap>{#comments#}:</td>
+                    <td>
+                    <textarea name="comments">{$GROUP.comments}</textarea>
+                    </td>
+                  </tr>
+                </table>
+                <input type="submit" name="save" value="{#save#}">
+              </form>
+            </td></tr>
+        </table>
+  </td>
+</tr>
+</table>

@@ -127,3 +127,33 @@ A {
  FONT-WEIGHT: bold; 
 }
 
+ul.tabs {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  margin-bottom: 10px;
+}
+ul.tabs li a {
+  color: #fff;
+}
+ ul.tabs li a:hover {
+  text-decoration: none;
+  color: #eee;
+}
+ul.tabs li {
+  display: inline;
+  color: #fff;
+  background: #c3c3c3;
+  width: 18em;
+  font-size: 100%;
+  font-weight: bold;
+  margin: 1em 0 0 0;
+  padding: 0 0.5em;
+  border-right: 2px solid #fff;
+}
+ul.tabs li.sel {
+  background: #999;
+}
+ul.tabs li.last {
+  border: none;
+}

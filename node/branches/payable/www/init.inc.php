@@ -113,6 +113,7 @@ require($config['classdir'] . '/sotf_UserPrefs.class.php');
 require($config['classdir'] . '/sotf_Page.class.php');
 require($config['classdir'] . '/sotf_Object.class.php');
 require($config['classdir'] . '/sotf_Vars.class.php');
+require($config['classdir'] . '/sotf_Group.class.php');
 require($config['classdir'] . '/sotf_Permission.class.php');
 require($config['classdir'] . '/sotf_Repository.class.php');
 require($config['classdir'] . '/sotf_Vocabularies.class.php');
