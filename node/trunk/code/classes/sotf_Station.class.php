@@ -170,6 +170,8 @@ class sotf_Station extends sotf_ComplexNodeObject {
 	function countStations($language = 'none') {
 	  global $db;
 	  
+	  if(!$language)
+	  	$language = 'none';
 	  $language = sotf_Utils::magicQuotes($language);
 	  if($language != 'none')
 		 return $db->getOne("SELECT count(*) FROM sotf_stations WHERE language LIKE '%$language%'");
