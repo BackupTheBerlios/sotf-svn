@@ -1,0 +1,99 @@
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea"> 
+        <table width="100%" >
+          <tr><td valign="top" width="5">
+              {if $CONTACT_DATA.icon}
+                <img src="{$CACHE_URL}/{$CONTACT_DATA.id}.png">
+              {/if}
+            </td><td>
+              <table>
+                <tr>
+                  <td>{#name#}:</td>
+                  <td>{$CONTACT_DATA.name}</td>
+                </tr>
+                {if $CONTACT_DATA.alias }
+                <tr>
+                  <td>{#alias#}:</td>
+                  <td>{$CONTACT_DATA.alias}</td>
+                </tr>
+                {/if}
+                {if $CONTACT_DATA.acronym }
+                <tr>
+                  <td>{#acronym#}:</td>
+                  <td>{$CONTACT_DATA.acronym}</td>
+                </tr>
+                {/if}
+                {if $CONTACT_DATA.intro }
+                <tr valign="top">
+                  <td>{#intro#}:</td>
+                  <td>{$CONTACT_DATA.intro}</td>
+                </tr>
+                {/if}
+                {if $CONTACT_DATA.email }
+                <tr>
+                  <td>{#email#}:</td>
+                  <td><a href="{$CONTACT_DATA.email}">{$CONTACT_DATA.email}</a></td>
+                </tr>
+                {/if}
+                {if $CONTACT_DATA.address }
+                <tr>
+                  <td>{#address#}:</td>
+                  <td>{$CONTACT_DATA.address}</td>
+                </tr>
+                {/if}
+                {if $CONTACT_DATA.phone }
+                <tr>
+                  <td>{#phone#}:</td>
+                  <td>{$CONTACT_DATA.phone}</td>
+                </tr>
+                {/if}
+                {if $CONTACT_DATA.cellphone }
+                <tr>
+                  <td>{#cellphone#}:</td>
+                  <td>{$CONTACT_DATA.cellphone}</td>
+                </tr>
+                {/if}
+                {if $CONTACT_DATA.fax }
+                <tr>
+                  <td>{#fax#}:</td>
+                  <td>{$CONTACT_DATA.fax}</td>
+                </tr>
+                {/if}
+                {if $CONTACT_DATA.url }
+                <tr>
+                  <td>{#url#}:</td>
+                  <td><a href="{$CONTACT_DATA.url}">{$CONTACT_DATA.url}</a></td>
+                </tr>
+                {/if}
+                <tr class="list2">
+                  <td colspan="2">
+                    {if $NUMPROGS gt 0}
+                    <a target="progs" href="{$ROOT_URL}/showContactProgs.php/{$CONTACT_ID}">{$PROGS}</a>
+                    {else}
+                    {$PROGS}
+                    {/if}
+                  </td>
+                </tr>
+                <tr class="list2">
+                  <td colspan="2">
+                    {foreach item=item from=$REFS}
+                    {$item.role} {$item.mid} <a target="_blank" href="{$item.url}">{$item.name}</a><br />
+                    {/foreach}
+                  </td>
+                </tr>
+                
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+<form>
+    {if hasPerm($CONTACT_ID,'change') }
+    <input class="action" type="button" name="b1" value="{#edit_contact#}" onClick="redir(this.form, '{$ROOT_URL}/editContact.php?id={$CONTACT_ID}')">
+      {/if}
+    <input class="action" type="button" onClick="window.close()" value="{#close#}">
+</form>

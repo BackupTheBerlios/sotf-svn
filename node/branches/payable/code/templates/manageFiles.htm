@@ -1,0 +1,46 @@
+<h3>{#userfiles#}</h3>
+
+<form method="post">
+<table width="100%" class="tabarea">
+<tr><td class="tabarea">
+    {if $USERFILES}
+          <table>
+            {foreach key=key item=fname from=$USERFILES}
+            <tr>
+              <td>
+                <input value="{$fname|escape}" name="sel_{$key}" type="checkbox"  />
+              </td>
+              <td>
+                <a target="link" href="getUserFile.php/{$fname|escape}?filename={$fname|escape}">{$fname}</a>
+              </td>
+            </tr>
+            {/foreach}    
+          </table>
+          <input type="submit" name="del" value="{#del_selected#}" />
+
+            <div align="right">
+              <input type="submit" name="close" value="{#close#}" />
+            </div>
+
+        {else}
+        {#no_files#}    
+        {/if}
+      </td>
+    </tr>
+  </table>
+        </form>
+
+<p></p>
+
+<table width="100%" class="tabarea">
+    <tr>
+      <td class="tabarea">
+          <form enctype="multipart/form-data" method="post">
+            <input type="hidden" name="stationid" value="{$STATION_ID}" />
+            <input name="userfile" type="file" />
+                <input type="submit" name="upload" value="{#upload_file#}" onClick="return checkIfEmpty(this.form.userfile,'{#select_file#}')" />
+          </form>
+
+      </td>
+    </tr>
+  </table>

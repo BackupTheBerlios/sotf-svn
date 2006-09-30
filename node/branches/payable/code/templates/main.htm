@@ -1,0 +1,352 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+{config_load file="general.conf"}
+
+{config_load file="$LANG.conf" section="$ACTION"}
+
+<html>
+
+<head>
+
+<title>{$PAGETITLE} (SOTF:{$NODE_NAME})</title>
+
+{foreach from=$META_TAGS item=META_TAG}
+
+  {$META_TAG}
+
+{/foreach}
+
+<link href="{$IMAGE_URL}/main.css" rel="stylesheet" type="text/css">
+
+<link rel="shortcut icon" href="{$ROOT_PREFIX}/favicon.gif" >
+
+<link rel="icon" href="{$ROOT_PREFIX}/favicon.gif" >
+
+{literal}
+
+<script>
+
+      var data_changed=0;
+
+      function confirmUnsaved() {
+
+        if(data_changed) {
+
+          return confirm('{/literal}{#confirm_unsaved#}{literal}');
+
+      }else
+
+        return true;
+
+      }
+
+</script>
+
+{/literal}
+
+<script src="{$IMAGE_URL}/base.js"></script>
+
+</head>
+
+<body background="{$IMAGE_URL}/bg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<div align="center"> 
+
+  <table width="{#pageW#}" height="100%" border="0" cellpadding="0" cellspacing="0">
+
+    <tr> 
+
+      <td background="{$IMAGE_URL}/bg_main_LEFT.gif"> 
+
+        <div align="center"><img src="{$IMAGE_URL}/bg_main_LEFT.gif" width="7" height="6"></div>
+
+      </td>
+
+      <td width="{#pageW#}" valign="top" bgcolor="#FFFFFF"> 
+
+        <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
+
+          <!-- fwtable fwsrc="stream1.png" fwbase="top.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="1" -->
+
+          <tr> 
+
+            <td bgcolor="#000000"><img name="top_r1_c1" src="{$IMAGE_URL}/top_r1_c1.gif" width="700" height="17" border="0" alt=""></td>
+
+          </tr>
+
+          <tr> 
+
+            <td>
+
+              <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
+
+                <tr> 
+
+                  <td height="60" bgcolor="#CEDDFC"> 
+
+                    <div align="right"> 
+
+                      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+                        <tr> 
+
+                          <td background="{$IMAGE_URL}/top_r2_c1.gif" class=tablebg> 
+
+                            <table cellSpacing=0 cellPadding=6 width="100%" border=0>
+
+                              <tr> 
+
+                                     <form>
+
+                                <td>
+
+                                  <!--
+
+                                  <script language="Javascript1.2" src="{$IMAGE_URL}/cal.js"></script>
+
+                                  <script language="Javascript1.2">
+
+                                  //setInterval("upclock()",1000);
+
+                                  </script>
+
+                                  //-->
+
+                                  {if $STREAM_DATA}
+
+                                      {#now_playing#}: {if $STREAM_INFO.url}
+
+                                                           <b><a href="{$STREAM_INFO.url}">{$STREAM_INFO.name}</a></b>
+
+                                                       {elseif $STREAM_INFO}
+
+                                                           {$STREAM_INFO.name}
+
+                                                       {else}
+
+                                                           {#unkown_audio#}
+
+                                                       {/if}
+
+                    <input class="action" type="button" name="b1" value="{#reconnect#}" onClick="redir(this.form,'{$ROOT_URL}/listen.php?reconnect=1')" />
+
+                    <input class="action" type="button" name="b1" value="{#stop#}" onClick="redir(this.form,'{$ROOT_URL}/listen.php?stop=1')" />
+
+                                     
+
+                                  {/if}
+
+
+
+                                </td>
+
+                                     </form>
+
+                                  <form>
+
+                                <td>
+
+                                   <input type="hidden" name="okURL" value="{$smarty.server.REQUEST_URI|escape}" />
+
+                                   <select name="uilang" onChange="this.form.submit()">
+
+                                     {foreach item=item from=$UI_LANGS}                 
+
+                                       <option value="{$item[0]}" {if $LANG eq $item[0]}SELECTED="1"{/if} >{$item[1]}</option>
+
+                                     {/foreach}
+
+                                   </select>
+
+                                </td>
+
+                                 </form>
+
+                              </tr>
+
+                            </table>
+
+                          </td>
+
+                          <td width="264"><a href="http://www.streamonthefly.org"><img name="top_r2_c3" src="{$IMAGE_URL}/top_r2_c3.jpg" width="264" height="60" border="0" alt=""></a></td>
+
+                        </tr>
+
+                      </table>
+
+                    </div>
+
+                  </td>
+
+                </tr>
+
+              </table>
+
+            </td>
+
+          </tr>
+
+          <tr> 
+
+            <td width="{#pageW#}" height="18" bgcolor="#FFFFFF"> 
+
+              <table width="100%" border="0" cellspacing="0" cellpadding="2">
+
+                <tr> 
+
+                  <td class="menu">
+
+                    <p><strong>
+
+                      <!-- begin navbar -->
+
+                      <a class="menu" href="{$ROOT_URL}/">{#Home#}</a> 
+
+                      | <a class="menu" href="{$ROOT_URL}/advsearch.php">{#Search#}</a> 
+
+                      | <a class="menu" href="{$ROOT_URL}/stations.php">{#Stations#}</a> 
+
+                      | <a class="menu" href="{$ROOT_URL}/topics.php">{#Topics#}</a> 
+
+                      {if $loggedIn}
+
+                        | <a target="_top" class="menu" href="{$ROOT_URL}/playlist.php">{#Playlist#}</a>
+
+                      {/if}
+
+                      {if $IS_EDITOR} | <a class="menu" href="{$ROOT_URL}/editor.php">{#EditorPage#}</a> {/if} 
+
+                      {if hasPerm('node', 'change', 'authorize') } | <a class="menu" href="{$ROOT_URL}/admin.php">{#AdminPage#}</a> {/if}
+
+                      {if $loggedIn}
+
+                      | <a class="menu" href="{$ROOT_URL}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Personal#} ({$USERNAME})</a>
+
+                      | <a class="menu" href="{$ROOT_URL}/logout.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Logout#}</a>
+
+                      {else}
+
+                      | <a class="menu" href="{$ROOT_URL}/login.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">{#Login#}</a>
+
+                      {/if}
+
+                      | <a target="_blank" class="menu" href="{$ROOT_URL}/help.php?action={$ACTION}&lang={$LANG}">{#Help#}</a>
+
+                      {if $DEBUG}
+
+                      <!--
+
+                      | <a class="menu" href="{$VIEWLOG}">View log</a>
+
+                      | <a target="doc" class="menu" href="/node/code/doc/php/">View doc</a>
+
+                      | <a class="menu" href="debug.php?okURL={$smarty.server.REQUEST_URI|escape}">Debug off</a> -->
+
+                      {/if}
+
+                      <!-- end navbar -->
+
+                  </td>
+
+                </tr>
+
+              </table>
+
+            </td>
+
+          </tr>
+
+          <tr> 
+
+            <td background="{$IMAGE_URL}/top_r4_c2.gif">
+
+              <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
+
+                <tr> 
+
+                  <td><img name="top_r4_c1" src="{$IMAGE_URL}/top_r4_c1.gif" width="2" height="6" border="0" alt=""></td>
+
+                </tr>
+
+              </table>
+
+            </td>
+
+          </tr>
+
+        </table>
+
+        <table width="100%" border="0" cellspacing="0" cellpadding="5">
+
+          <!-- {if $STATUS_MESSAGES}
+
+            {foreach from=$STATUS_MESSAGES item=MSG}
+
+                <tr> 
+
+                  <td class="status">
+
+                      {$MSG}
+
+                  </td>
+
+                </tr>
+
+            {/foreach}
+
+          {/if} -->
+
+          <tr> 
+
+            <td>
+
+              <div align="left"> {include file="$ACTION.htm"} </div>
+
+                <p align="center">
+
+                <hr>
+
+                <font size="-1"> 
+
+                <div style="text-align : center; font-size: 8pt"> 
+
+		{#contact_node_admin#} {mailto address="$ADMIN_EMAIL" encode="javascript"}
+
+                </div>
+
+                </font> 
+
+              </p>
+
+            </td>
+
+          </tr>
+
+        </table>
+
+      </td>
+
+      <td width="7" background="{$IMAGE_URL}/bg_main.gif"><img src="{$IMAGE_URL}/bg_main.gif" width="7" height="6"></td>
+
+    </tr>
+
+  </table>
+
+</div>
+
+</body>
+
+</html>
+
+
+
+<script language="Javascript">
+
+  {if $STATUS_MESSAGES or $ERROR_MESSAGES }
+
+       alert("{foreach from=$ERROR_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}{foreach from=$STATUS_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}");
+
+  {/if}
+
+</script>
+

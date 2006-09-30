@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>StreamOnTheFly Online Help</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<style type="text/css">
+<!--
+body {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-style: normal;
+	line-height: 18px;
+}
+h3 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-style: oblique;
+	line-height: 22px;
+	font-weight: bold;
+}
+h6 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 36px;
+}
+-->
+</style>
+</head>
+
+<body>
+<h6 align="center">StreamOnTheFly Online Help</h6>
+<h3><a name="top" id="top"></a><a href="#1">1) General architecture of SOTF</a><br />
+  &nbsp;&nbsp;&nbsp;<a href="#11">1.1) Node</a><br />
+  &nbsp;&nbsp;&nbsp;<a href="#12">1.2) Station</a><br />
+  &nbsp;&nbsp;&nbsp;<a href="#13">1.3) Metadata</a><br />
+  &nbsp;&nbsp;&nbsp;<a href="#14">1.4) Portals</a><br />
+  <a href="#2">2) Interface Overview</a><br />
+  <a href="#register">3) Registration / Preferences</a><br />
+  <a href="#advsearch">4) The Search Engine</a><br />
+  &nbsp;&nbsp;&nbsp;<a href="#41">4.1) Easy Search</a><br />
+  &nbsp;&nbsp;&nbsp;<a href="#42">4.2) Search for Content of Stations</a><br />
+  &nbsp;&nbsp;&nbsp;<a href="#43">4.3) Search for Topics</a><br />
+  &nbsp;&nbsp;&nbsp;<a href="#44">4.4) Advanced Search Engine</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#441">4.4.1) How queries work</a><br />
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#442">4.4.2) Create a new query</a><br />
+  <a href="#5">5) The Programme Interface</a><br />
+  &nbsp;&nbsp;&nbsp;<a href="#51">5.1) The content of a programme</a><br />
+  &nbsp;&nbsp;&nbsp;<a href="#52">5.2) Feedback and Statistics</a><br />
+  <a href="#playlist">6) My Playlist</a><br />
+  <a href="#7">7) RSS and PODCAST</a><br />
+  <a href="#8">8) Stations in the Network</a><br />
+  <a href="#topicSearch">9) Topics</a><br />
+   <a href="#editor">10) Editor&acute;s Console</a>
+</h3>
+<hr size="1" />
+<p>&nbsp;</p>
+<h1>1<a name="1" id="1"></a>) General architecture of StreamOnTheFly</h1>
+<h2>1.1<a name="11" id="11"></a>) Node</h2>
+<p><a href="#top">[top]</a></p>
+<p>A node is the main service provider in the StreamOnTheFly network. It is basically 
+  a digital library, enhanced by streaming and other radio-centered functionalities. 
+  A node:</p>
+<ul>
+  <li>archives radio shows </li>
+  <li>provides transparent search facilities in the node network 
+    <p></p>
+  </li>
+  <li>provides streaming and remote streaming facilities for listeners </li>
+  <li>collects feedback and statistics on radio shows </li>
+  <li>cooperates with other nodes and portals </li>
+</ul>
+<p>Nodes are transparently organized into a etwork. All nodes have metadata about 
+  all radio shows and stations in the network. Nodes communicate with each other 
+  to keep their local database up-to-date. </p>
+<h2>1.2<a name="stations" id="stations"></a>) Station</h2>
+<p><a href="#top">[top]</a></p>
+<p>A station is archived at a single node, while it is searchable and browseable 
+  by all nodes in the network. Each station has admins and editors. Admins may 
+  change logos and jingles and manage all data, while editors can upload shows 
+  and manage their own data.<br />
+  <a href="#8">more Infos about the stations here</a>
+</p>
+<h2>1.3<a name="13" id="13"></a>) Metadata</h2>
+<p><a href="#top">[top]</a></p>
+<p>For each radio show a set of metadata is required from the editors (title, 
+  keywords, length, etc.). The set of metadata elements is to be agreed within 
+  the radio community. A recommendation for XML-based storage and exchange of 
+  these metadata has also been prepared, see <a href="http://soma-dev.sourceforge.net">SOMA</a> 
+  and <a href="http://sotf.dsd.sztaki.hu/XBMF.pdf">XBMF</a>. </p>
+<h2>1.4<a name="14" id="14"></a>) Portals</h2>
+<p><a href="#top">[top]</a></p>
+<p>Portals are loosely coupled with nodes. A portal can embed radio shows manually 
+  or automatically into its content. Streaming of these shows is done by the node, 
+  and feedback about the show is propagated back to the node. You can try out 
+  all of these tools at our demo <a href="http://sotf.dsd.sztaki.hu/">site</a>. 
+</p>
+<hr size="1" />
+<h1>2<a name="2" id="2"></a>) Interface Overview </h1>
+<p><a href="#top">[top]</a></p>
+<p>The Interface of StreamOnTheFly is devided into four sections. <br />
+  <strong>The Header:</strong> In the top area of the interface, SOTF provides 
+  you with the possibility to change the interface language. This setting does 
+  not change the content language itself. It just changes the wording in the interface. 
+  Right now one can choose between English, French, Hungarian, and German.</p>
+<p><strong>The Main Menu:</strong> Below this section you find the main menu of 
+  SOTF. Depending on your permissions, you get different menu items. (The possible 
+  menu items and their functions are described below.)</p>
+<p><strong>Left Section:</strong> This section is separated into 3 boxes: Login/Personal, 
+  Statistics about the node network, My Playlist (if you created one), and the 
+  contact data of the running node.</p>
+<p><strong>Middle Section:</strong> In this area SOTF shows you the actual content 
+  in a listing. You will see the last 10 entries of content.</p>
+<p><strong>Right Section:</strong> Like the left part, the right area is divided 
+  into boxes: first, you find a shortcut to the complex search engine; in the 
+  second box you can choose between the stations connected to the node network 
+  to get their content only. In the last box, SOTF displays the topic ontology 
+  and shows you a number of programmes related to the topic.</p>
+<p><img src="images/interface_overview1.jpg" width="786" height="407" /></p>
+<p class="abb"><em>Abb.: The SOTF main interface</em></p>
+<hr size="1" />
+<h1>&nbsp;</h1>
+<h1>3<a name="register" id="register"></a>) Registration / Preferences</h1>
+<p><a href="#top">[top]</a></p>
+<p>SOTF offers all users free registration for personalized features in the node 
+  network. To reach the registration interface, click the 'register' link below 
+  the login section (left) in the main interface. You will have to provide some 
+  basic information:</p>
+<table width="100%" border="0">
+  <tr> 
+    <td width="60%"><p><img src="images/registration.jpg" width="465" height="187" /></p>
+      <p class="abb"><em>Abb: Registration Form </em></p></td>
+    <td width="40%" valign="middle">The 'preferences' section is used for authenticated 
+      users to change their personal settings. It offers the same options as the 
+      registration form. Just click the 'Preferences' item in the main menu to 
+      access this interface. </td>
+  </tr>
+</table>
+<hr size="1" />
+<h1>4<a name="advsearch" id="advsearch"></a>) The Search Engine</h1>
+<p><a href="#top">[top]</a></p>
+SOTF provides you with several different searching tools. The search function 
+in the right section of the interface is a very basic version, but there is also 
+a very complex search engine with a graphical interface that allows you to generate 
+SQL statements by which you can search the database for relevant entries. SOTF 
+also allows you to search for topics and stations directly from the main interface. 
+<h2>4.1<a name="41" id="41"></a>) Easy Search</h2>
+<p><a href="#top">[top]</a></p>
+<p>In the right section of the main interface you will find a box marked &#8220;Search&#8221;. 
+  Enter your search keywords here and choose a language to qualify the search 
+  results. Of course you can also leave the language the way it is and search 
+  without restrictions. In the image below you see the results of an easy search 
+  for the keyword 'tabuk':</p>
+<p><img src="images/easy_search_result.jpg" width="802" height="349" /></p>
+<p class="abb"><em>Abb:Easy search results</em></p>
+<p>Inside the search results interface you can redefine your queries by displaying 
+  the keywords you used. The results are displayed in pages with 10 items each. 
+  You can switch between the pages in both directions.</p>
+<h2>4.2<a name="42" id="42"></a>) Search for Content of Stations</h2>
+<a href="#top">[top]</a><br />
+<p>The box marked as &#8220;Stations&#8221; is responsible for the station search 
+  in the SOTF network. Choose a station, and for a result you will get all data 
+  about this station, the provided series, and all programmes related to this 
+  station. As usual, the result items are displayed in pages with 10 items. </p>
+<h2>4.3<a name="43" id="43"></a>) Search for Topics</h2>
+<p><a href="#top">[top]</a></p>
+<p><br />
+  SOTF provides a general ontology to categorise and organise programmes. For 
+  a fast search on topics you can just click on one of the main-topics in the 
+  right section of the main interface. The number in brackets states the amount 
+  of programmes related to one of the chosen sub-topics. If you mouseclick on 
+  one of the main topics listed in this box, you will get an interface with the 
+  sub-topics and the programmes directly related to the main topic. The interface 
+  creates a frameset to display the results and the available topics in one. </p>
+<p>&nbsp;</p>
+<p><img src="images/search_topics.jpg" width="802" height="419" /></p>
+<p class="abb"><em>Abb:Results from Topic Search</em></p>
+<p>In the left section of the interface you see the entire listing of topics currently 
+  available. At the top end of this listing you can choose the topics you want. 
+  Click the [x] to switch back to frameless view. In the right section you see 
+  the main topic you have chosen and all sub-topics related to it. In brackets 
+  you see the number of programmes associated with this sub-topic. Click on an 
+  entry to get a list of relevant programmes. </p>
+<p>&nbsp;</p>
+<h2>4.4<a name="44" id="44"></a>) Advanced Search Engine</h2>
+<p><a href="#top">[top]</a></p>
+<p><br />
+  You access the advanced search engine by a mouseclick on &#8220;search&#8221; 
+  in the main menu. This interface provides you with a way to create a complex 
+  SQL (structured query language) statement to run it against the node network. 
+  You can redefine, store, and manage all the queries you created. </p>
+<p><img src="images/advanced_search.jpg" width="814" height="406" /></p>
+<span class="abb"><em>Abb: Advanced Search Engine</em> </span> 
+<h3>4.4.1<a name="441" id="441"></a>) How queries work</h3>
+<p><a href="#top">[top]</a></p>
+<p>This is the most complex part of the SOTF interface, and it contains a lot 
+  of technical terms. However, it should be easy to go through this page if you 
+  are generally familiar with the terminology, syntax, and basic functions of 
+  SQL.<br />
+  In the first part you see the actual query for this search. You can add and 
+  remove directives using the '+' and the '-' button. The search displayed in 
+  this example would do the following:<br />
+  First, it would collect all programmes related to the genre 'Music'. The next 
+  statement is connected to this result and adds a new clause using 'AND'. There 
+  are two ways to connect the statements: 'AND' and 'OR'. The connector AND would 
+  mean that both clauses needs to be true. OR would mean that any one of the connected 
+  statements needs to be true. Next in the example is the entry date. As you see, 
+  there are two statements under this name without connector. In the SOTF interface, 
+  OR is not displayed! The search would include all items with an entry date &quot;2004-07-17&quot; 
+  or &quot;2004-07-22&quot;. In addition, the abstract of the item needs to contain 
+  the keywords 'interview' and 'tarbuk'. At the end of the query, one would get 
+  a result including all programmes where this query has &quot;true&quot; for 
+  a result.</p>
+<h3>4.4.2<a name="442" id="442"></a>) Create a new query</h3>
+<p><a href="#top">[top]</a></p>
+<br />
+On starting a new query you see 'Your query is empty' in the top section. Below 
+you have three boxes: 
+<table width="100%" border="0">
+  <tr bordercolor="0"> 
+    <td width="33%"><strong>Add term to the query</strong></td>
+    <td width="67%">&nbsp;</td>
+  </tr>
+  <tr bordercolor="0"> 
+    <td><img src="images/create_query_1.jpg" width="254" height="153" /></td>
+    <td valign="top">The first (left) box is used to add a new term to the query 
+      or to create a new query. The terms AND and OR are the logical connectors 
+      between your statements. Choose the field you want to search and add it 
+      to your query using the AND or OR statement.</td>
+  </tr>
+  <tr bordercolor="0"> 
+    <td><strong>Run query</strong></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr bordercolor="0"> 
+    <td><img src="images/create_query_2.jpg" width="337" height="140" /></td>
+    <td valign="top">In the second (middle) box you can set choose two of the 
+      available terms by which to sort the results. Desc stands for &quot;descending&quot;. 
+      The default sorting order is ascending.</td>
+  </tr>
+  <tr bordercolor="0"> 
+    <td><strong>Manage your queries</strong></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr bordercolor="0"> 
+    <td><img src="images/create_query_3.jpg" width="301" height="139" /></td>
+    <td valign="top">In the third (right) box you can manage your queries. You 
+      can save the query by a given name and reload it later. You can set a query 
+      as default to get the results displayed when you return to the node network.</td>
+  </tr>
+</table>
+<h1>&nbsp;</h1>
+<hr size="1" />
+<h1>&nbsp;</h1>
+<h1>5<a name="5" id="5"></a>) The Programme Interface</h1>
+<p><a href="#top">[top]</a></p>
+<p>As we have seen, you can access the programmes by different ways. You can search 
+  using different search engines or you can just click on the programme items 
+  on the start page. In the interface of a programme you get all the meta-information, 
+  some additional data such as images, documents, and links, and the actual content 
+  itself. Here you can also upload the programme to your personal SOTF portal 
+  or add it to your playlist. You can also access feedback and statistics relevant 
+  to the programme. Most of this interface should be self-explanatory. </p>
+<h2>5.1<a name="51" id="51"></a>) The content of a programme</h2>
+<p><a href="#top">[top]</a></p>
+<p><img src="images/programm_content.jpg" width="315" height="128" hspace="6" vspace="6" align="left" /></p>
+<p>This is the content section of a programme. SOTF offers different quality levels 
+  on all programmes (depending on configuration). You can download the files or 
+  directly add them to the playlist of your mp3/ogg player. Depending on the configuration, 
+  the node creates mp3 or/and ogg files. In the listing you see the quality level, 
+  the type, and the duration of the file.</p>
+<p>&nbsp;</p>
+<h2>&nbsp;</h2>
+<p>&nbsp;</p>
+<h2>5.2<a name="52" id="52"></a>) Feedback and Statistics</h2>
+<p><a href="#top">[top]</a></p>
+<p>This is the last part in the programme interface. You see the feedback and 
+  statistics about the files. You can rate this programme, put it into your playlist 
+  and/or upload the programme to your portal.</p>
+<p>&nbsp;</p>
+<p><img src="images/programm_feedback.jpg" width="914" height="243" /></p>
+<p><span class="abb"><em>Abb: Feedbacks and Statistics</em> </span></p>
+<p>&nbsp; </p>
+<hr size="1" />
+<h2>6<a name="playlist" id="playlist"></a>) My Playlist</h2>
+<p><a href="#top">[top]</a></p>
+<p>This feature is very useful for users who want to listen to several audio files 
+  at once. It is only available to registered users. As we have seen in the programme 
+  interface, you can add programmes to your playlist. You get the results in the 
+  left section of the main interface.</p>
+<p>&nbsp;</p>
+<p><img src="images/programm_playlist.jpg" width="956" height="360" /></p>
+<p class="abb"><em>Abb: My Playlist</em></p>
+<p>&nbsp;</p>
+<p>You will find the main information about the programmes in your playlist. The 
+  interface provides you with links to the programme interface. We you click the 
+  speaker symbol on the right, your local mp3 player should play the sound (depending 
+  on your local settings). You can select several items and use the button 'play 
+  selected' to send all the files to your player. Also, you can send the selected 
+  items to your portal (if you have created one). You can change the order of 
+  your playlist items using the 'Change Order' button. It offers you a popup window 
+  in which you can move the items up and down according to your needs.</p>
+<hr size="1" />
+<h1>&nbsp;</h1>
+<h1>7<a name="7" id="7"></a>) RSS and PODCAST</h1>
+<p><a href="#top">[top]</a></p>
+<p>SOTF offers RSS Feeds and PODCAST structures for all content items and lists. 
+  Just click on the link in the top right area of the interface. You can use this 
+  feature to connect the SOTF node with other software such as RSS readers and 
+  applications which are able to use RSS Feeds. <br />
+  A special case of RSS is the PODCAST feature. This makes it possible to connect 
+  SOTF series and programmes to the podcast network. Just click on the respective 
+  links to get the RSS Feeds returned in your browser. You can use this links 
+  for usage in other applications.<br />
+</p>
+<hr size="1" />
+<p>&nbsp; </p>
+<h1>8<a name="8" id="8"></a>) Stations in the Network </h1>
+<p><a href="#top">[top]</a></p>
+<p>The Station is connected to a single node. Since SOTF is a node network, one 
+  can browse and search all content coming from a certain station through all 
+  other nodes in the network. A station has administrators and editors. Administrators 
+  are able to edit metadata, upload logos and administrate all programmes of the 
+  station. The editors are responsible for the programmes and are able to edit/upload 
+  data for programmes. <br />
+  The content of a station generally is structured in programmes and series. A 
+  series (in these terms) is a format for programmes with changing but similar 
+  content, usually broadcast at a specific time each day or week. A series links 
+  individual programmes. (The format is defined by the broadcasting stations themselves 
+  and must therefore not fit this description exactly). The actual programmes 
+  in a series are the broadcastings (including audio files).<br />
+  Click on 'Stations' in the main menu to get a list of all stations connected 
+  to the node network. In the top section of this interface you can change the 
+  order of the displayed stations and set filters on languages. Apart from these 
+  possibilities you find the paging buttons. As usual, SOTF returns you 10 items 
+  per page. You can scroll through the pages using this buttons.<br />
+  In the result list you get a list of series connected to this station together 
+  with some meta-information. The number in brackets states the number of programmes 
+  included. Below the series you get the list of programmes. Again, you get ten 
+  items displayed per page &#8211; please browse through the pages to get a full 
+  overview.<br />
+</p>
+<hr size="1" />
+<p>&nbsp; </p>
+<h1>9<a name="topicSearch" id="topicSearch"></a>) Topics</h1>
+<p><a href="#top">[top]</a></p>
+<p>Click on 'Topics' in the main menu to get a full list of topics and their related 
+  programmes.<br />
+  Topics in SOTF are a sort of ontology to structure programmes by their content. 
+  There are two subject trees available: 'SOTF general topic tree' and 'SOMA metadata 
+  version 1'.</p>
+<p>As we have already seen in the search section of this document, you get a split 
+  interface. In the left section you see the topic tree with all sub-topics and 
+  the number of related programmes. In the right part you get a list of sub-topics. 
+  When you click the sub-topics, SOTF returns you a list of related programmes.<br />
+<a href="#43">how to search for topics </a></p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+
+<hr size="1" />
+<p>&nbsp; </p>
+<h1>10<a name="editor" id="editor"></a>) Editor´s Console</h1>
+<p><a href="#top">[top]</a></p>
+<p>In the Editor&acute;s Console station editors can upload files per FTP or HTTP, and add appropriate metadata. </p>
+<p><strong>UPLOAD VIA FTP:</strong><br />
+  Much faster than HTTP - Upload, but needs an extra client, like SmartFTP (<a href="http://www.smartftp.com" target="_blank">download</a>). Another advantage is the resumability of uploads.</p>
+<p>To access your personal SOTF directory, use the URL of your node and type in your personal access data in the FTP client. </p>
+<p><strong>UPLOAD VIA HTTP:</strong> (use link &quot;Manage your files&quot;) <br />
+Comfortable web interface  for adding and deleting files (no extra software required), but may cause problems when transferring larger files. </p>
+<p><br /> 
+ </p>
+<p><img src="images/create_new_programme.jpg" width="911" height="124" /></p>
+<p><span class="abb"><em>Abb: Create new programme / file upload </em></span></p>
+<p>&nbsp; </p>
+<p>&nbsp;</p>
+
+
+</body>
+</html>

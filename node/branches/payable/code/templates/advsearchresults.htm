@@ -1,0 +1,89 @@
+
+<form method="post" action="advsearchresults.php">
+
+    <table class="tabarea">
+      <tr> 
+        <td class="tabarea"> 
+          <table width="100%">
+            <tr>
+              <td>
+                <p>
+                <b>{#your_query_is#}:</b>
+                  {section name=i loop=$SQLquery}
+                  {if $smarty.section.i.index != 0}
+                     {$HumanReadable[i][0]}
+                  {/if}
+                  {if $SQLquery[i.index_next][0] == "OR"}
+                     {if $SQLquery[i][0] == "AND"}
+                       (
+                     {elseif $smarty.section.i.index == 0}
+                       (
+                     {/if}
+                  {/if}
+                  {$HumanReadable[i][1]} {$HumanReadable[i][2]} <i>{$HumanReadable[i][3]}</i>
+                  {if $SQLquery[i][0] == "OR"}
+                    {if $SQLquery[i.index_next][0] != "OR"}
+                      )
+                    {/if}
+                  {/if}
+                  {/section}
+                  <br />
+                <a href="advsearchresults.php?back=true&SQLquerySerial={$SQLquerySerial}">{#back#}</a>
+                </p>
+              </td>
+              <TD>&nbsp;&nbsp;</TD>
+              <TD ALIGN="right" width="10%">
+              <!-- <INPUT class="action" type="submit" name="back" value="{#back#}"> 
+                  <br /> -->
+		  <a href="{$ROOT_URL}/podcast.php?uiLang={$LANG}&query={$SQLquerySerial}">podcast</a><br />
+              <INPUT class="action" type="button" name="upload_query" value="{#upload_query#}" onclick="javascript:window.open('portal_upload.php?type=query&data={$SQLquerySerial}','','scrollbars=yes,width=640,height=340,left=320,top=200');">
+              </TD>
+            </TR>
+          </TABLE>
+        </td>
+      </tr>
+    </table>
+
+  </FORM>
+
+  <p></p>
+
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#Results#}</td>
+    </tr>
+  </table><table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
+        {if count($result) gt 0 }
+        {include file="splitList.htm"}
+        <table width="100%">
+          {foreach name=outer item=item from=$result}
+          <tr bgcolor="#FFFFFF" height="1"><td colspan="2"></td></tr>
+          <tr valign="top">
+            <td width="5%">
+              {if $item.icon }
+                 <a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$CACHE_URL}/{$item.icon}"></a>
+              {else}
+                 <a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$IMAGE_URL}/noicon.png"></a>
+              {/if}
+            </td>
+            <td>
+              <a href="get.php?id={$item.id}"><b>{$item.title}</b></a>
+              <br />
+                {foreach key=key item=cell from=$item.values}
+                {if $cell != ""}
+                   <i>{$key}:</i> {$cell}<br>
+                {/if}
+                {/foreach}
+              </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        {#No_results#}
+        {/if}
+      </td>
+    </tr>
+  </table>
+

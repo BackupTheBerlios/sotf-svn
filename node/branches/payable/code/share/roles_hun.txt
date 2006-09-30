@@ -1,0 +1,24 @@
+1 Művész
+2 Szerző
+3 Kommentátor
+4 Zeneszerző
+5 Szerzői jog birtokosa
+6 Tudósító
+7 Arculattervező
+8 Igazgató
+9 Szerkesztő
+10 Szponzor
+11 Riportalany
+12 Riporter
+13 Narrátor
+14 Résztvevő
+15 Előadó
+16 Gyártásvezető
+17 Gyártásban közreműködő
+18 Bemondó
+19 Transcriber
+20 Fordító
+21 Egyéb
+22 Alkotó
+23 Kiadó
+24 Közreműködő

@@ -1,0 +1,147 @@
+tree_id=1
+name=SOTF topic tree
+shortname=SOTF
+description=Ein Versuch eines allgemeinen Verzeichnisses für Radios.
+url=
+
+# End of tree definition
+
+
+  1 1 Kunst, Kultur, Medien, Unterhaltung 
+  2 2 Nachrichten 
+  3 2 Neue Medien (Internet, CD, DVD, MiniDisk, etc.) 
+  4 2 Zeitungen und Zeitschriften 
+  5 2 Radio 
+  6 2 Kino und Fernsehen 
+  7 2 Werbung 
+  8 2 Darstellende Kunst (Theater, Tanz, Zirkus, etc.) 
+  9 2 Musik 
+ 10 2 Bildendene Kunst (Malerei, Bildhauerei, Fotografie, Comics, etc.) 
+ 11 2 Architektur und Stadtplanung 
+ 12 2 Literatur (Dichtung, Roman, Essay, etc.) 
+ 13 2 Science Fiction 
+ 14 2 Erholung 
+ 15 2 Reisen und Tourismus 
+ 16 2 Spiel 
+ 17 2 Sport
+
+ 18 1 Gesellschaft 
+ 19 2 Frauen 
+ 20 2 Männer 
+ 21 2 Jugendliche 
+ 22 2 Ältere / Senioren 
+ 23 2 Familie 
+ 24 2 Menschen mit Behinderung 
+ 25 2 Sexualität 
+ 26 2 Drogen 
+ 27 2 Armut und Hunger 
+ 28 2 Migration 
+ 29 2 Multikulturalität 
+ 30 2 soziales Zusammenleben (Wohnbau, Verkehrsmittel, Landschaftsgestaltung, Stadt/Land, ...) 
+ 31 2 Religion, Metaphysik 
+ 32 2 Rassismus 
+ 33 2 N.R.O.
+ 
+ 34 1 Medizin 
+ 35 2 Krankheiten 
+ 36 2 Arzneimittel 
+ 37 2 traditionelle Medizin 
+ 38 2 medizinische Forschung 
+ 39 2 alternative Medizin 
+ 40 2 Erste Hilfe 
+
+ 41 1 Bildung (Lernen, Lehre und Studium) 
+ 42 2 Universität 
+ 43 2 Schule 
+ 44 2 Lebenslanges Lernen 
+ 45 2 Pädagogik 
+ 46 2 besondere Lehrmethoden 
+ 47 2 e-learning 
+ 48 2 Erziehung 
+ 49 2 Biographien 
+
+ 50 1 Forschung und Technologie 
+ 51 2 Naturwissenschaften (Physik, Chemie, Ökologie, Zoologie, Botanik, etc.) 
+ 52 2 Geowissenschaften (Astronomie, Geographie, Klimatologie, Geologie, etc.) 
+ 53 2 Humanwissenschaften (Biologie, Genetik, Anatomie, etc.) 
+ 54 2 Sozialwissenschaften (Soziologie, Anthropologie, etc.) 
+ 55 2 Psychologie 
+ 56 2 Archäologie und Paläontologie 
+ 57 2 Geschichte 
+ 58 2 Kommunikation, Telekommunikation und Internet 
+ 59 2 Informatik 
+
+ 60 1 Umweltthemen, Landwirtschaft 
+ 61 2 Landwirtschaft & landwirtschaftliche Technologien 
+ 62 2 Biologische Produkte 
+ 63 2 Lebensmitteltechnik 
+ 64 2 Jagd und Fischerei 
+ 65 2 Artenvielfalt 
+ 66 2 Klima 
+ 67 2 Bevölkerung 
+ 68 2 Wasserversorgung 
+ 69 2 Umweltverschmutzung 
+ 70 2 Gentechnik 
+
+ 71 1 Rechts- und Regierungsthemen 
+ 72 2 Internationale Zusammenarbeit 
+ 73 2 Weltpolitik 
+ 74 2 Innenpolitik 
+ 75 2 Entwicklungspolitik 
+ 76 2 Sozialpolitik 
+ 77 2 Staats- und Regierungsysteme 
+ 78 2 Verteidigung 
+ 79 2 Politische Verfolgung 
+ 80 2 Menschenrechte 
+ 81 2 Polizei 
+ 82 2 Strafvollzug 
+ 83 2 Kriminalität 
+ 84 2 Terrorismus 
+ 85 2 Lizensen und Rechte 
+
+ 86 1 Politische Systeme und Krieg 
+ 87 2 Anarchismus 
+ 88 2 Kapitalismus 
+ 89 2 Kommunismus 
+ 90 2 Politische Parteien 
+ 91 2 demokratische Systeme 
+ 92 2 Faschismus und Nationalsozialismus 
+ 93 2 Pazifismus 
+ 94 2 Nationalismus 
+ 95 2 autoritäre Systeme 
+ 96 2 Aktivismus 
+ 97 2 Globalisierung 
+ 98 2 Bürgerkrieg und Revolution 
+ 99 2 Krieg 
+100 2 Waffen 
+
+101 1 Wirtschaft 
+102 2 Buchhaltung 
+103 2 Firmen 
+104 2 Kundendienst 
+105 2 E-Commerce 
+106 2 Arbeit 
+107 2 Management 
+108 2 Verkauf und Werbung 
+109 2 Dienstleistungen 
+110 2 Großhandel 
+111 2 Gewerkschaften 
+
+112 1 Verkauf und Verbrauchsgüter 
+113 2 Heim und Garten 
+114 2 Schönheitsprodukte 
+115 2 Bücher 
+116 2 Kleidung 
+117 2 Computer 
+118 2 Unterhaltungselektronik 
+119 2 andere Handelsware 
+120 2 Unterhaltung 
+121 2 Blumen 
+122 2 Nahrungsmittel 
+123 2 Gesundheitsartikel 
+124 2 Schmuck 
+125 2 Haustiere 
+126 2 Freizeitartikel 
+127 2 Fahrzeuge 
+
+

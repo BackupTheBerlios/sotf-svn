@@ -1,0 +1,48 @@
+{config_load file="$LANG.conf" section="rss"}
+  <table>
+    <tr valign="top">
+      <td><i>{#title#}:</i></td><td>{$PRG_DATA.title}</td>
+    </tr><tr valign="top">
+    {if $PRG_DATA.alternative_title}
+      <td><i>{#alternative_title#}:</i></td><td>{$PRG_DATA.alternative_title}</td>
+      </tr><tr valign="top">
+    {/if}
+    {if $PRG_DATA.episode_title}
+      <td><i>{#episode_title#}:</i></td><td>{$PRG_DATA.episode_title}</td>
+      </tr><tr valign="top">
+    {/if}
+    {if $PRG_DATA.episode_sequence}
+      <td><i>{#episode_sequence#}:</i></td><td> {$PRG_DATA.episode_sequence}</td>
+      </tr><tr valign="top">
+    {/if}
+    <td><i>{#language#}:</i></td><td> {$LANGUAGE}</td>
+    </tr><tr valign="top">
+    {if $PRG_DATA.abstract}
+       <td><i>{#abstract#}:</i></td><td> {$PRG_DATA.abstract}</td>
+       </tr><tr valign="top">
+    {/if}
+    {if $PRG_DATA.genre_id}
+       <td><i>{#genre#}:</i></td><td> {$GENRE}</td>
+       </tr><tr valign="top">
+    {/if}
+    {if $PRG_DATA.broadcast_date}
+       <td><i>{#broadcast_date#}:</i></td><td> {$PRG_DATA.broadcast_date}</td>
+       </tr><tr valign="top">
+    {/if}
+    {if $RIGHTS}
+      <td><i>{#Rights#}:</i></td><td>
+          {foreach item=item from=$RIGHTS}
+              <br />&nbsp;&nbsp;<i>
+              {if empty($item.start_time) and empty($item.stop_time) }
+                {#for_whole_prg#}
+              {else}
+                 {$item.start_time} {#sec#} - {$item.stop_time} {#sec#}
+              {/if}
+              :</i> {$item.rights_text}
+          {/foreach}
+      </td>
+      </tr><tr valign="top">
+    {/if}
+    </tr>
+</table>
+
