@@ -22,12 +22,12 @@
     <td>Professional guild in the health field:</td>
     <td>
       <select name="ud_sel_guild">
-	<option value="1">doctor</option>
-        <option value="2">apothecary</option>
-	<option value="3">therapist</option>
-	<option value="4">light/energy worker</option>
-	<option value="5">private</option>
-	<option value="100">other</option>
+	<option value="1" {if $UDATA.guild eq 1}SELECTED{/if} >doctor</option>
+        <option value="2" {if $UDATA.guild eq 2}SELECTED{/if} >apothecary</option>
+	<option value="3" {if $UDATA.guild eq 3}SELECTED{/if} >therapist</option>
+	<option value="4" {if $UDATA.guild eq 4}SELECTED{/if} >light/energy worker</option>
+	<option value="5" {if $UDATA.guild eq 5}SELECTED{/if} >private</option>
+	<option value="100" {if $UDATA.guild eq 100}SELECTED{/if} >other</option>
       </select>
     </td>
   </tr>

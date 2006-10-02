@@ -28,7 +28,7 @@ class sotf_UserData extends sotf_Object {
     $o = new sotf_UserData();
 	 if($o->hasPostData()) {
 		$o->copyPostData();
-	 } else {
+	 } elseif($userid) {
 		$o->set('user_id', $userid);
 		$o->find();
 	 }
