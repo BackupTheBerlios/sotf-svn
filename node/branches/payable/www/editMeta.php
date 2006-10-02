@@ -111,7 +111,8 @@ if($save || $finish || $finishpublish) {
                   'temporal_coverage'=>array('date',0),
                   'production_date'=>array('date',0),
                   'broadcast_date'=>array('date',0),
-                  'expiry_date'=>array('date',0)
+                  'expiry_date'=>array('date',0),
+                  'free_content'=>array('number',0),
                   );
   
  // changed by wolfgang csacsinovits and martin schmidt -> check empty fields, validate input data
@@ -291,12 +292,9 @@ $delperm = sotf_Utils::getParameter('delperm');
 if($delperm) {
   checkPerm($prg, 'authorize');
   $userid = sotf_Utils::getParameter('userid');
-  if(empty($userid) || !is_numeric($userid)) {
-    raiseError("Invalid userid: $userid");
-  }
-  $username = $user->getUsername($userid);
+  $username = getUserOrGroupName($userid);
   if(empty($username)) {
-    raiseError("Invalid userid: $userid");
+    raiseError("Invalid user/group id: $userid");
   }
   $permissions->delPermission($prg->id, $userid);
   $msg = $page->getlocalizedWithParams("deleted_permissions_for", $username);

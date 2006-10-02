@@ -260,6 +260,16 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 $this->update();
   }
 
+  function isPublished() {
+	 return $this->getBool('published');
+  }
+
+  function canListen() {
+	 if($this->getBool('free_content'))
+		return 1;
+	 return hasPerm($this, 'listen');
+  }
+
   /** return URL for this object on this node */
   function getURL() {
 	 global $config;
@@ -354,12 +364,16 @@ class sotf_Programme extends sotf_ComplexNodeObject {
    *   QUERIES
    ************************************************/
 
-  /** get news for index page */
-  function getNewProgrammes($fromDay, $maxItems) {
+  /** get news for index page, mode: 0=all, 1=non-free, 2=free */
+  function getNewProgrammes($fromDay, $maxItems, $mode=0) {
 	 global $config, $db;
 
-	 //$sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE i.station_id = s.id AND i.published='t' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC";
-	  $sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE i.station_id = s.id AND i.published='t' AND i.type='sound' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC"; //MODIFIED BY Martin Schmidt
+	 if($mode==1)
+		$modeSql = "i.free_content='t' AND";
+	 elseif($mode==2)
+		$modeSql = "i.free_content='f' AND";
+	 //$sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE $modeSql i.station_id = s.id AND i.published='t' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC";
+	  $sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE $modeSql i.station_id = s.id AND i.published='t' AND i.type='sound' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC"; //MODIFIED BY Martin Schmidt
 	 $res =	$db->limitQuery($sql, 0, $maxItems);
 	 if(DB::isError($res))
 		raiseError($res);

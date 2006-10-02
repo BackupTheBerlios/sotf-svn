@@ -183,6 +183,25 @@ function hasPermPrivate($mixed, $permName) {
 	return false;
 }
 
+function isGroupId($id) {
+	return $id{0} == 'g';
+}
+
+function getGroupId($id) {
+	if($id{0} == 'g')
+		$id = substr($id, 1);
+	debug("GETg", $id);
+	return $id;
+}
+
+function getUserOrGroupName($id) {
+	global $user;
+	if(isGroupId($id))
+		return sotf_Group::getGroupName($id);
+	else
+		return $user->getUsername($id);
+}
+
 /** wrapper function for move_uploaded_file, because sometimes chmod is needed afterwards. */
 function moveUploadedFile($fieldName, $file) {
 	// check and convert filename

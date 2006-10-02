@@ -114,9 +114,10 @@ require($config['classdir'] . '/sotf_Page.class.php');
 require($config['classdir'] . '/sotf_Object.class.php');
 require($config['classdir'] . '/sotf_Vars.class.php');
 require($config['classdir'] . '/sotf_Group.class.php');
+require($config['classdir'] . '/sotf_Vocabularies.class.php');
 require($config['classdir'] . '/sotf_Permission.class.php');
 require($config['classdir'] . '/sotf_Repository.class.php');
-require($config['classdir'] . '/sotf_Vocabularies.class.php');
+require($config['classdir'] . '/sotf_UserData.class.php');
 require_once($config['classdir'] . '/' . $config['userDbClass'] . '.class.php');
 
 //PEAR::setErrorHandling(PEAR_ERROR_TRIGGER);
@@ -240,6 +241,10 @@ $pathinfoParamExceptions = array('getIcon','getJingle','getUserFile');
 if(!in_array($page->action, $pathinfoParamExceptions)) {
 	sotf_Utils::collectPathinfoParams();
 }
+
+// just for debugging
+$groups = sotf_Group::listGroupsOfUser($user->id);
+debug("GROUPS", $groups);
 
 // permissions object is for managing and asking for permissions
 $permissions = new sotf_Permission;

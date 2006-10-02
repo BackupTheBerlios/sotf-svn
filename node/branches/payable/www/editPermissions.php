@@ -24,18 +24,29 @@ $new = sotf_Utils::getParameter('new');
 if($new) {
   // restart user search
 } elseif($userid) {
-  $username = sotf_User::getUsername($userid);
-  $users[$userid] = $username;
-  $smarty->assign("USERS", $users);
+  if($userid{0} == 'g') {
+	 $gid = substr($userid, 1);
+	 $group = sotf_Group::getById($gid);
+	 $users[$userid] = $group->get('name');
+	 $smarty->assign("USERS", $users);
+  } else {
+	 $username = sotf_User::getUsername($userid);
+	 $users[$userid] = $username;
+	 $smarty->assign("USERS", $users);
+  }
 } elseif($pattern) {
   $smarty->assign("PATTERN", $pattern);
   $users = sotf_User::findUsers($pattern, $prefix);
-  if(count($users) > 50) {
-	 $smarty->assign("TOO_MANY_MATCHES", count($users));
-  } elseif(empty($users)) {
+  debug("USERS", $users);
+  $groups = sotf_Group::findGroups($pattern, $prefix);
+  debug("GROUPS", $groups);
+  if(count($users) + count($groups) > 50) {
+	 $smarty->assign("TOO_MANY_MATCHES", count($users)+count($groups));
+  } elseif(empty($users) and empty($groups)) {
 	 $smarty->assign("NO_MATCHES", 1);
   } else {
 	 $smarty->assign("USERS", $users);
+	 $smarty->assign("GROUPS", $groups);
   }
 }
 

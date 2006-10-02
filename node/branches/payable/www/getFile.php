@@ -48,7 +48,14 @@ if(!$prg->isLocal()) {
   exit;
 }
 
-// TODO check if user have rights to access: 1. prg is published, 2. file has public_access or donwload_access
+if(!$prg->isPublished()) raiseError("not_published_yet");
+
+if($fobj and !$fobj->getBool('download_access')) raiseError("no access");
+
+if(!$prg->canListen()) {
+  $page->redirect('protected.php');
+  exit;
+}
 
 if($mainAudio)
      $filename =  sotf_Utils::getFileInDir($prg->getAudioDir(), $filename);

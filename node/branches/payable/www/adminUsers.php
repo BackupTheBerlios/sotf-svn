@@ -6,7 +6,6 @@
  */
 
 require("init.inc.php");
-$hitsPerPage = 50;
 
 $smarty->assign('PAGETITLE',$page->getlocalized('AdminPage'));
 
@@ -18,18 +17,23 @@ checkPerm('node', 'change');
 
 if(sotf_Utils::getParameter('del')) {
   $uid = sotf_Utils::getParameter('uid');
-  $user = sotf_Group::getById($gid);
-  $group->delete();
-  $page->redirect('adminGroups.php');
+  $user = new sotf_User($uid);
+  debug("Deleting user $uid", $user->username);
+  $user->delete();
+  $page->redirect('adminUsers.php');
   $page->logRequest();
   exit;
 }
 
 $pattern = sotf_Utils::getParameter('pattern');
 $count = sotf_User::countUsers($pattern);
-$limit = $page->splitList($count, $scriptUrl);
+$limit = $page->splitList($count, $scriptUrl . "?pattern=".urlencode($pattern));
 $users = sotf_User::listUsers($limit["from"] , $limit["maxresults"], $pattern);
-$smarty->assign('USERS', $users);
+foreach($users as $user) {
+  $user['groups'] = join(', ',sotf_Group::getGroupNames($user['id']));
+  $ulist[] = $user;
+}
+$smarty->assign('USERS', $ulist);
 $smarty->assign('PATTERN', $pattern);
 
 $page->send();

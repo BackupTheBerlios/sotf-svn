@@ -42,7 +42,7 @@ function toggleEnable(yesno)
 <input type="hidden" name="objectid" value="{$OBJECT_ID|escape:"html"}" />
 <input type="hidden" name="context" value="{$CONTEXT}" />
 
- {if not $USERS}
+ {if not $USERS and not $GROUPS}
      <nobr>{#find_user#}: <input name="pattern" value="{$PATTERN}" /> <input type="checkbox" name="prefix" /> {#prefix_search#}</nobr>
  {/if}
  {if $NO_MATCHES}
@@ -53,11 +53,14 @@ function toggleEnable(yesno)
  {/if}
 
 
-{if $USERS}
+{if $USERS or $GROUPS}
 
    <select name="userid">
    {foreach from=$USERS item=name key=key}
      <option value="{$key}"  {if $key eq $USER_SELECTED} SELECTED {/if} >{$name}</option>
+   {/foreach}
+   {foreach from=$GROUPS item=name key=key}
+     <option value="g{$key}"  {if $key eq $USER_SELECTED} SELECTED {/if} >{$name}</option>
    {/foreach}
   </select>
 

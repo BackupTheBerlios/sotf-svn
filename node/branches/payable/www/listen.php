@@ -55,6 +55,15 @@ if($jingle) {
 	 sotf_Node::redirectToHomeNode($prg, 'listen.php');
 	 exit;
   }
+
+  if(!$prg->isPublished()) raiseError("not_published_yet");
+
+  if($fobj and !$fobj->getBool('stream_access')) raiseError("no access");
+
+  if(!$prg->canListen()) {
+	 $page->redirect('protected.php');
+	 exit;
+  }
   
   $playlist->addProg($prg, $fileid);
 }

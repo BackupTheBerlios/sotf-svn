@@ -4,8 +4,10 @@
 <ul class="tabs">
 <li class=""><a href="admin.php">{#Network#}</a></li>
 <li class="sel">{#Users#}</li>
-<li class="last"><a href="adminGroups.php">{#Groups#}</a></li>
+<li class=""><a href="adminGroups.php">{#Groups#}</a></li>
+<li class="last"><a href="adminStats.php">{#Stats#}</a></li>
 </ul>
+
 <form>
   <table class="tab">
     <tr> 
@@ -44,8 +46,9 @@
 		{$item.groups}
             </td>
             <td nowrap>
-                <input class="action" type="button" name="b1" value="{#edit#}" onClick="popup('editGroup.php?gid={$item.id}','EditGroup',350,400,false)" />
-                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'adminGroups.php?del=1&gid={$item.id}')" />
+                <input class="action" type="button" name="b1" value="{#edit_groups#}" onClick="popup('editUserGroups.php?uid={$item.id}','EditUserGroup',350,400,false)" />
+               <!-- <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form,'adminUsers.php?del=1&uid={$item.id}')" />
+               -->
             </td>
           </tr>
           {/foreach}

@@ -53,7 +53,7 @@ $now = getDate();
 //$dayInThePast = mktime(0,0,0, $now['mon'], $now['mday']-10, $now['year']);
 $dayInThePast = time() - (60*60*24*30); // 30 days back
 $fromDay = date('Y-m-d', $dayInThePast);
-
+#$fromDay = '1970-01-01';
 
 if ($page->loggedIn()) {
 
@@ -93,8 +93,10 @@ if($defQuery) {
 
 } else {
   // get new programmes
-  $smarty->assign('NEWS', sotf_Programme::getNewProgrammes($fromDay, $maxItemsIndexPage));
+  $smarty->assign('NEWS', sotf_Programme::getNewProgrammes($fromDay, $maxItemsIndexPage, 2));
 }
+
+$smarty->assign('PREMIUM', sotf_Programme::getNewProgrammes($fromDay, $maxItemsIndexPage, 1));
 
 // get topics with most content
 $smarty->assign('TOPICS', $vocabularies->getTopTopics(5));

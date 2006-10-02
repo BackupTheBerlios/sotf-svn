@@ -119,6 +119,7 @@ if($filled)
 		 if($error)
 			$smarty->assign('ERRORMSG',$error);
 	  }
+	  sotf_UserData::saveData($user->id);
 	  if(!$error) {
 		 if ($okURL) {
 			$page->redirect($okURL);
@@ -146,6 +147,10 @@ $smarty->assign(array(
 					"OK_URL" => htmlspecialchars($okURL),
 					"REGISTER_URL" => "register.php?okURL=" . urlencode($okURL)
 ));
+
+if($user) {
+  $smarty->assign("UDATA", sotf_UserData::getSmartyData($user->id));
+}
 
 $smarty->assign("if_logged_in", $page->loggedIn());
 

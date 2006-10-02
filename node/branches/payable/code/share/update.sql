@@ -269,3 +269,34 @@ CREATE TABLE "sotf_user_groups" (
 );
 CREATE UNIQUE INDEX sotf_user_groups_uniq ON sotf_user_groups ("user_id", "group_id");
 
+CREATE TABLE "sotf_group_permissions" (
+-- a user group may have a set of permissions on object or globally
+"id" serial PRIMARY KEY, -- just an id
+"group_id" int CONSTRAINT "to_groups" REFERENCES sotf_groups(id) ON DELETE CASCADE, 
+"object_id" varchar(12), 
+-- the object in which group permissions apply (can be object_id or string: node, topictree, etc.)
+"permission_id" int CONSTRAINT "to_permissions" REFERENCES sotf_permissions(id) ON DELETE CASCADE,
+CONSTRAINT "sotf_group_permissions_uniq" UNIQUE ("group_id", "object_id", "permission_id")
+);
+
+ALTER TABLE sotf_programmes ADD COLUMN free_content bool;
+ALTER TABLE sotf_programmes ALTER free_content SET DEFAULT 'f'::bool;
+
+CREATE TABLE "sotf_user_data" (
+-- customizable registration data
+"id" serial PRIMARY KEY, -- just an id
+"user_id" int UNIQUE NOT NULL,
+"company" varchar(255),
+"sector" int,
+"guild" int,
+"contact_person" varchar(255),
+"address" text,
+"phone" varchar(30),
+"fax" varchar(30),
+"mobile" varchar(30),
+"skype" varchar(40),
+"website" varchar(60),
+"nl_health_network" bool DEFAULT 'f'::bool,
+"nl_meri_med" bool DEFAULT 'f'::bool,
+"nl_update" bool DEFAULT 'f'::bool
+);

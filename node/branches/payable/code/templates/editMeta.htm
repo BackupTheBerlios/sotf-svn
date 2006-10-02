@@ -207,6 +207,14 @@ window.onload=myonload;
   <input type="radio" name="expiry_date_radio1" value="unselected" onclick="javascript:disable('expiry_date', 1)" >
   {#no_expiry#} </td>
             </tr>
+            <tr valign="top" class="list2">
+              <td class="meta">{#free_content#}:</td>
+              <td>&nbsp;</td>
+              <td>
+		<input type="radio" name="free_content" value="1" {if $PRG_DATA.free_content eq 't'}checked{/if} > {#Yes#}
+		<input type="radio" name="free_content" value="0" {if $PRG_DATA.free_content eq 'f'}checked{/if} > {#No#}
+	      </td>
+            </tr>
           </table>
           <input type="submit" name="save" value="{#save#}">
 

@@ -15,7 +15,7 @@ class sotf_Playlist {
   var $name;
 
   function add($item) {
-	 global $config;
+	 global $config, $user;
 
 	 if($item['url']) {
 		// this is a remote file
@@ -45,7 +45,8 @@ class sotf_Playlist {
 		
 		if($config['httpStreaming']) {
 		  //$tmpFileName = 'au_' . $item['id'] . '_' . ($item['name'] ? $item['name'] : basename($item['path']));
-		  $tmpFileName = 'au_' . $item['id'] . '_' . basename($item['path']);
+		  //$tmpFileName = 'au_' . $item['id'] . '_' . basename($item['path']);
+		  $tmpFileName = 'au_' . rand(0,9) . $user->id . rand(100000,999999) . '.' . pathinfo($item['path'], PATHINFO_EXTENSION);
 		  $tmpFile = $config['tmpDir'] . "/$tmpFileName";
 		  $file = @readlink($tmpFile);
 		  if($file) {
@@ -92,9 +93,14 @@ class sotf_Playlist {
 		return;
 	 }
 	 
-	 if($prg->get('published') != 't' || $file->get('stream_access') != 't') {
-		raiseError("no_listen_access");
-	 }
+#	 if($prg->get('published') != 't' || $file->get('stream_access') != 't') {
+#		raiseError("no_listen_access");
+#	 }
+	 if(!$prg->isPublished()) raiseError("not_published_yet");
+
+	 if(!$file->getBool('stream_access')) raiseError("no_listen_access");
+
+	 if(!$prg->canListen()) raiseError("no_listen_access");
 
 	 $filepath = $prg->getFilePath($file);
 	 $index = sotf_AudioCheck::getRequestIndex(new sotf_AudioFile($filepath));

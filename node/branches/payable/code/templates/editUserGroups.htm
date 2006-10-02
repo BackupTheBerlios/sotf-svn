@@ -1,0 +1,35 @@
+<h3>{#editUserGroups#}</h3>
+
+<form method="post">
+<input type="hidden" name="uid" value="{$UID}" />
+<table width="100%" class="tabarea">
+<tr><td class="tabarea">
+    {if $GROUPS}
+          <table>
+            {foreach item=item from=$GROUPS}
+            <tr>
+              <td>
+                <input value="1" name="g_{$item.id}" type="checkbox" {if $item.rid}CHECKED{/if} />
+              </td>
+              <td>
+                {$item.name}
+              </td>
+              <td>
+                <em>{$item.comments}</em>
+              </td>
+             </tr>
+            {/foreach}    
+          </table>
+          <input type="submit" name="del" value="{#Save#}" />
+
+            <div align="right">
+              <input type="submit" name="close" value="{#close#}" />
+            </div>
+
+        {else}
+        {#no_groups#}    
+        {/if}
+      </td>
+    </tr>
+  </table>
+        </form>
