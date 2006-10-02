@@ -59,7 +59,7 @@ CREATE TABLE "sotf_user_history" (
 "user_id" int, -- cannot reference to sadm.authenticate(auth_id)
 "action" varchar(30), -- type of action the user did with object
 "object_id" varchar(12),
-"when" timestamptz
+"action_date" timestamptz
 );
 
 CREATE TABLE "sotf_node_objects" (

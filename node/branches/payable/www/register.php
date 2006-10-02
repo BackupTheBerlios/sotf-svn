@@ -148,9 +148,8 @@ $smarty->assign(array(
 					"REGISTER_URL" => "register.php?okURL=" . urlencode($okURL)
 ));
 
-if($user) {
-  $smarty->assign("UDATA", sotf_UserData::getSmartyData($user->id));
-}
+if($user) $userid = $user->id;
+$smarty->assign("UDATA", sotf_UserData::getSmartyData($userid));
 
 $smarty->assign("if_logged_in", $page->loggedIn());
 

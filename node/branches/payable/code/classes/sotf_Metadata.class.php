@@ -87,7 +87,7 @@ function getUsername($user_id) {
    	 $this->writeMetaTag('dcterms:Replaces', 'DEFAULT', $lang);
 	 
 	 //NEW: getting the right path to the get.php - file
-	require('config.inc.php');
+	 //require('config.inc.php');
 	$this->writeMetaTag('dc:identifier', 'http://' . $_SERVER['HTTP_HOST'] . $config['localPrefix'] . '/get.php/' . $prg->get('id'));
 	$this->writeMetaTag('dc:coverage', 'DEFAULT', $lang);
 	//-----------------------------------------------------

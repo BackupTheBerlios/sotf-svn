@@ -19,22 +19,41 @@ class sotf_UserData extends sotf_Object {
     $o = new sotf_UserData();
     $o->set('user_id', $userid);
     $o->find();
-    foreach($_POST as $name => $value) {
-      if(preg_match('/^ud_(\w+?)_(.*)$/', $name, $mm)) {
-	$type = $mm[1];
-	$field = $mm[2];
-	$o->set($field, $value);
-      }
-    }
+	 $o->copyPostData();
     $o->save();
   }
 
   /** static */
   function getSmartyData($userid) {
     $o = new sotf_UserData();
-    $o->set('user_id', $userid);
-    $o->find();
-    return $o->getAll();
+	 if($o->hasPostData()) {
+		$o->copyPostData();
+	 } else {
+		$o->set('user_id', $userid);
+		$o->find();
+	 }
+	 return $o->getAll();
+  }
+
+  function hasPostData() {
+	 global $_POST;
+	 foreach($_POST as $name => $value) {
+      if(preg_match('/^ud_(\w+?)_(.*)$/', $name)) 
+		  return true;
+	 }
+	 return false;
+  }
+
+  /** private */
+  function copyPostData() {
+    global $_POST;
+    foreach($_POST as $name => $value) {
+      if(preg_match('/^ud_(\w+?)_(.*)$/', $name, $mm)) {
+		  $type = $mm[1];
+		  $field = $mm[2];
+		  $this->set($field, $value);
+      }
+    }
   }
 
 }

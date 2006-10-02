@@ -335,7 +335,16 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 ************************************************/
 
   function addStat($fileId, $type) {
-		sotf_Statistics::addStat($this, $fileId, $type);
+	 global $db,$user;
+	 sotf_Statistics::addStat($this, $fileId, $type);
+	 if($user) {
+		$hist = new sotf_Object('sotf_user_history');
+		$hist->set('user_id', $user->id);
+		$hist->set('object_id', $this->id);
+		$hist->set('action', $type);
+		$hist->set('action_date', $db->getTimestampTz());
+		$hist->create();
+	 }
   }
 
   function getStats() {

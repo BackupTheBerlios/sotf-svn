@@ -8,17 +8,76 @@
     <td>Industry sector:</td>
     <td>
       <select name="ud_sel_sector">
-	<option value="1">health/medicine</option>
-        <option value="2">nature/agriculture</option>
-	<option value="3">economy/renewables</option>
+	<option value="1" {if $UDATA.sector eq 1}SELECTED{/if} >health/medicine</option>
+        <option value="2" {if $UDATA.sector eq 2}SELECTED{/if} >nature/agriculture</option>
+	<option value="3" {if $UDATA.sector eq 3}SELECTED{/if} >economy/renewables</option>
+	<option value="4" {if $UDATA.sector eq 4}SELECTED{/if} >science/research</option>
+	<option value="5" {if $UDATA.sector eq 5}SELECTED{/if} >art/culture</option>
+	<option value="6" {if $UDATA.sector eq 6}SELECTED{/if} >education/upbringing</option>
+	<option value="100" {if $UDATA.sector eq 100}SELECTED{/if} >other</option>
       </select>
     </td>
   </tr>
   <tr>
+    <td>Professional guild in the health field:</td>
+    <td>
+      <select name="ud_sel_guild">
+	<option value="1">doctor</option>
+        <option value="2">apothecary</option>
+	<option value="3">therapist</option>
+	<option value="4">light/energy worker</option>
+	<option value="5">private</option>
+	<option value="100">other</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Contact person:</td>
+    <td><input name="ud_text_contact_person" value="{$UDATA.contact_person}"></td>
+  </tr>
+  <tr>
+    <td>Address:</td>
+    <td><input name="ud_text_address" value="{$UDATA.address}"></td>
+  </tr>
+  <tr>
+    <td>Phone:</td>
+    <td><input name="ud_text_phone" value="{$UDATA.phone}"></td>
+  </tr>
+  <tr>
+    <td>Fax:</td>
+    <td><input name="ud_text_fax" value="{$UDATA.fax}"></td>
+  </tr>
+  <tr>
+    <td>Mobile:</td>
+    <td><input name="ud_text_mobile" value="{$UDATA.mobile}"></td>
+  </tr>
+  <tr>
+    <td>Skype:</td>
+    <td><input name="ud_text_skype" value="{$UDATA.skype}"></td>
+  </tr>
+  <tr>
+    <td>Website:</td>
+    <td><input name="ud_text_website" value="{$UDATA.website}"></td>
+  </tr>
+  <tr>
     <td>Health Network Newsletter:</td>
     <td>
-      <input type="radio" name="ud_bool_nl_health_network" value="t"> yes
-      <input type="radio" name="ud_bool_nl_health_network" value="f"> no
+      <input type="radio" name="ud_bool_nl_health_network" value="t" {if $UDATA.nl_health_network eq 't'}CHECKED{/if}> yes
+      <input type="radio" name="ud_bool_nl_health_network" value="f" {if $UDATA.nl_health_network eq 'f'}CHECKED{/if}> no
+    </td>
+  </tr>
+  <tr>
+    <td>Meri Med Newsletter:</td>
+    <td>
+      <input type="radio" name="ud_bool_nl_meri_med" value="t" {if $UDATA.nl_meri_med eq 't'}CHECKED{/if} > yes
+      <input type="radio" name="ud_bool_nl_meri_med" value="f" {if $UDATA.nl_meri_med eq 'f'}CHECKED{/if} > no
+    </td>
+  </tr>
+  <tr>
+    <td>Monthly Update Newsletter:</td>
+    <td>
+      <input type="radio" name="ud_bool_nl_update" value="t" {if $UDATA.nl_update eq 't'}CHECKED{/if} > yes
+      <input type="radio" name="ud_bool_nl_update" value="f" {if $UDATA.nl_update eq 'f'}CHECKED{/if} > no
     </td>
   </tr>
 </table>

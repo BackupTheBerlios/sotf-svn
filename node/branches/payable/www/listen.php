@@ -61,7 +61,7 @@ if($jingle) {
   if($fobj and !$fobj->getBool('stream_access')) raiseError("no access");
 
   if(!$prg->canListen()) {
-	 $page->redirect('protected.php');
+	 $page->redirect($config['localPrefix'].'/protected.php');
 	 exit;
   }
   

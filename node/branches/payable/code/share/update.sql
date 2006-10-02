@@ -282,6 +282,8 @@ CONSTRAINT "sotf_group_permissions_uniq" UNIQUE ("group_id", "object_id", "permi
 ALTER TABLE sotf_programmes ADD COLUMN free_content bool;
 ALTER TABLE sotf_programmes ALTER free_content SET DEFAULT 'f'::bool;
 
+ALTER TABLE sotf_user_history RENAME COLUMN "when" TO action_date;
+
 CREATE TABLE "sotf_user_data" (
 -- customizable registration data
 "id" serial PRIMARY KEY, -- just an id
