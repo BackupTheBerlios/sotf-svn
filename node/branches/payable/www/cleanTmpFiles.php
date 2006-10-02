@@ -4,7 +4,6 @@
  */
 
 require("init.inc.php");
-
 checkAdminAccess();
 excludeRobots();
 
@@ -12,12 +11,15 @@ excludeRobots();
  to clean premium links.
 */
 
+// How many hours we want to keep a temp. playlist or symlink?
+$hoursToKeep = 4;
+
 function line($msg) { // just for screen output (testing)
   echo "<br>$msg\n";
 }
 
 debug("cleaning", "tmpDir");
-$clearTime = time() - 8*60*60;
+$clearTime = time() - $hoursToKeep*60*60;
 $dir = dir($config['tmpDir']);
 while($entry = $dir->read()) {
   if ($entry == "." || $entry == "..")
