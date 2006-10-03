@@ -378,9 +378,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 global $config, $db;
 
 	 if($mode==1)
-		$modeSql = "i.free_content='t' AND";
-	 elseif($mode==2)
 		$modeSql = "i.free_content='f' AND";
+	 elseif($mode==2)
+		$modeSql = "i.free_content='t' AND";
 	 //$sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE $modeSql i.station_id = s.id AND i.published='t' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC";
 	  $sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE $modeSql i.station_id = s.id AND i.published='t' AND i.type='sound' AND i.entry_date >= '$fromDay' ORDER BY i.entry_date DESC"; //MODIFIED BY Martin Schmidt
 	 $res =	$db->limitQuery($sql, 0, $maxItems);
