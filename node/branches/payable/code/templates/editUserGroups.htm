@@ -12,7 +12,7 @@
                 <input value="1" name="g_{$item.id}" type="checkbox" {if $item.rid}CHECKED{/if} />
               </td>
               <td>
-                {$item.name}
+                <a href="javascript:popup('showGroup.php?id={$item.id}','Group',350,400,false)">{$item.name}</a>
               </td>
               <td>
                 <em>{$item.comments}</em>

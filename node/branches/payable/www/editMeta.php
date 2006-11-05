@@ -112,9 +112,19 @@ if($save || $finish || $finishpublish) {
                   'production_date'=>array('date',0),
                   'broadcast_date'=>array('date',0),
                   'expiry_date'=>array('date',0),
-                  'free_content'=>array('number',0),
                   );
-  
+
+  $contentType = sotf_Utils::getParameter('content_type');
+  if($contentType=='promoted') {
+	 $prg->set('free_content', 'true');
+	 $prg->set('promoted', 'true');
+  } elseif($contentType=='protected') {
+	 $prg->set('free_content', 'false');
+	 $prg->set('promoted', 'false');
+  } else {
+	 $prg->set('free_content', 'true');
+	 $prg->set('promoted', 'false');
+  }
  // changed by wolfgang csacsinovits and martin schmidt -> check empty fields, validate input data
   $field_error = array();
   $error_count = 0;

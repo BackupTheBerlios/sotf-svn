@@ -4,12 +4,7 @@
 {if $TTREE_UPD_MESS}{$TTREE_UPD_MESS}<br>&nbsp;<br>{/if}
 {if hasPerm('node', 'change') }
 
-<ul class="tabs">
-<li class="sel">{#Network#}</li>
-<li class=""><a href="adminUsers.php">{#Users#}</a></li>
-<li class=""><a href="adminGroups.php">{#Groups#}</a></li>
-<li class="last"><a href="adminStats.php">{#Stats#}</a></li>
-</ul>
+{include file="adminMenu.htm" sel="1"}
 
 <a name="network"></a>
   <table class="tab">

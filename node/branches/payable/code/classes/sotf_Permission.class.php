@@ -206,6 +206,14 @@ class sotf_Permission {
 	 return $retval;
   }
 
+  function listObjectsInGroup($gid, $perm='listen') {
+	 global $db;
+	 $retval = $db->getCol("SELECT u.object_id FROM sotf_group_permissions u, sotf_permissions p WHERE p.permission='$perm' AND p.id = u.permission_id AND u.group_id='$gid'");
+	 if(DB::isError($retval))
+		raiseError($retval);
+	 return $retval;
+  }
+
   /** private */
   function sortUsersByName($a, $b) {
 	 return strcasecmp($a['name'], $b['name']);

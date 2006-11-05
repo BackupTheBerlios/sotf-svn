@@ -243,8 +243,41 @@
         </tr>
 
         <tr valign="top"> 
+	  <td class="promotedList">
+	    <strong>{#Promoted_shows#}</strong>
+	    {if count($PROMOTED) gt 0 }
+	    <table width="100%" border="0" cellspacing="0" cellpadding="2">
+	      {foreach item=item from=$PROMOTED}
+	      <tr bgcolor="#FFFFFF" height="1"><td colspan="2"></td></tr>
+	      <tr valign="top">
+		<td width="5%">
+		  {if $item.icon }
+		  <img src="{$CACHE_URL}/{$item.icon}">
+		  {else}
+		  {/if}
+		</td>
+		<td>
+                    <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> 
+		  {if $item.alternative_title}<br>{$item.alternative_title}{/if}
+		  {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
+		  <br>{$item.entry_date} {if $item.broadcast_date}({$item.broadcast_date|date_format:"%Y-%m-%d"}){/if}
+		  {if $item.abstract}
+		  <div class="abstract">{$item.abstract|truncate:300}</div>
+		  {/if}
+		</td>
+	      </tr>
+	      {/foreach}
+	    </table>
+	    {else}
+		{#No_news#}
+	    {/if}
+	  </td>
+	</tr>
+	    <tr valign="top" height="5"><td></td></tr>
+	    <tr valign="top"> 
 
-	  <td bgcolor="#eeeeee">
+        <tr valign="top"> 
+	  <td class="premiumList">
 	    <strong>{#Premium_shows#}</strong>
 	    {if count($PREMIUM) gt 0 }
 	    <table width="100%" border="0" cellspacing="0" cellpadding="2">

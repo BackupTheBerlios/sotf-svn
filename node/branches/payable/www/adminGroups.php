@@ -25,6 +25,9 @@ if(sotf_Utils::getParameter('del')) {
 }
 
 $groups = sotf_Group::listAll();
+while(list($i,$item)=each($groups)) {
+  $groups[$i]['income'] = $groups[$i]['price']*$groups[$i]['count'];
+}
 $smarty->assign('GROUPS',$groups);
 
 $page->send();

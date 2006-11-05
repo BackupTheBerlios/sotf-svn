@@ -93,10 +93,17 @@ if($defQuery) {
 
 } else {
   // get new programmes
-  $smarty->assign('NEWS', sotf_Programme::getNewProgrammes($fromDay, $maxItemsIndexPage, 2));
+  if(nodeConfig('payableMode'))
+	 $mode = 'free';
+  else
+	 $mode = 'all';
+  $smarty->assign('NEWS', sotf_Programme::getNewProgrammes($fromDay, $maxItemsIndexPage, $mode));
 }
 
-$smarty->assign('PREMIUM', sotf_Programme::getNewProgrammes($fromDay, $maxItemsIndexPage, 1));
+if(nodeConfig('payableMode')) {
+  $smarty->assign('PREMIUM', sotf_Programme::getNewProgrammes($fromDay, $maxItemsIndexPage, 'premium'));
+  $smarty->assign('PROMOTED', sotf_Programme::getNewProgrammes($fromDay, 3, 'promoted'));
+}
 
 // get topics with most content
 $smarty->assign('TOPICS', $vocabularies->getTopTopics(5));

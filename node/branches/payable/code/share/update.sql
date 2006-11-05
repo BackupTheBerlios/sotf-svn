@@ -302,3 +302,13 @@ CREATE TABLE "sotf_user_data" (
 "nl_meri_med" bool DEFAULT 'f'::bool,
 "nl_update" bool DEFAULT 'f'::bool
 );
+
+-- Further changes for restricted and payable content
+-- 2006-11-05
+
+ALTER TABLE sotf_programmes ADD COLUMN promoted bool;
+ALTER TABLE sotf_programmes ALTER promoted SET DEFAULT 'f'::bool;
+
+ALTER TABLE sotf_groups ADD COLUMN price float;
+ALTER TABLE sotf_groups ALTER price SET DEFAULT 0;
+

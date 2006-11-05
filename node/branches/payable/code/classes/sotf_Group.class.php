@@ -29,7 +29,7 @@ class sotf_Group extends sotf_Object {
   function listAll($withCounts=1) {
     global $db;
     if($withCounts)
-      $sql = "SELECT g.*, count(u.id) as count FROM sotf_groups g LEFT JOIN sotf_user_groups u ON g.id=u.group_id GROUP BY g.name, g.id, g.comments ORDER BY g.name";
+      $sql = "SELECT g.*, count(u.id) as count FROM sotf_groups g LEFT JOIN sotf_user_groups u ON g.id=u.group_id GROUP BY g.name, g.id, g.comments, g.price ORDER BY g.name";
     else
       $sql = "SELECT * FROM sotf_groups g";
     $res = $db->getAll($sql);
@@ -107,6 +107,50 @@ class sotf_Group extends sotf_Object {
       if($o->exists())
         $o->delete();
     }
+  }
+
+  function listObjectsOfGroup() {
+	 global $repository, $permissions;
+	 $retval = $permissions->listObjectsInGroup($this->id);
+	 return $retval;
+  }
+
+  /** Static */
+  function listGroupIdsOfObject($id, $perm='listen') {
+    global $repository, $permissions;
+	 if(!$id)
+		return array();
+	 $obj = & $repository->getObject($id);
+	 $perms = $permissions->listGroupsAndPermissions($id);
+	 $groups = array();
+	 //debug("PERMS", $perms);
+	 foreach($perms as $row) {
+		if($row['perm']==$perm) {
+		  $groups[] = substr($row['id'], 1);
+		}
+	 }
+	 $fields = $obj->getAll();
+	 // propagate query upwards
+	 if($fields['series_id']) {
+		$groups = array_merge($groups, sotf_Group::listGroupIdsOfObject($fields['series_id'], $perm));
+	 } elseif($fields['station_id']) {
+		$groups = array_merge($groups, sotf_Group::listGroupIdsOfObject($fields['station_id'], $perm));
+	 }
+	 $groups = array_unique($groups);
+	 //debug("GROUP IDS", $groups);
+	 return $groups;
+  }
+
+  function listGroupsOfObject($id, $perm='listen') {
+	 $groups = sotf_Group::listGroupIdsOfObject($id, $perm);
+	 $retval = array();
+	 foreach($groups as $gid) {
+		$group = sotf_Group::getById($gid);
+		$retval[$group->get('name')] = $group->getAll();
+	 }
+	 asort($retval);
+	 //debug("GROUPS", $retval);
+    return $retval;
   }
 
   function listGroupsOfUser($uid) {

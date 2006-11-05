@@ -1,0 +1,33 @@
+
+  <h3>{#adminUserStats#}</h3>
+
+    <table class="tabarea">
+      <tr> 
+	<td class="tabarea">
+	  <p>{#User_name#} {$USER->name}</br>
+	  {#Contact#} {$UDATA.contact_person} </p>
+	  <table>
+	    <tr class="listhead">
+	      <th>{#Program#}</th>
+	      <th>{#Groups#}</th>
+	    </tr>
+	    {cycle name="roles" values="list1,list2" print=false advance=false}
+	    {foreach item=item from=$PROGS}
+	    <tr class="{cycle name=roles}" valign="top">
+	      <td>
+            	<a target="prog" href="get.php/{$item.id}">{$item.title}</a>
+	      </td>
+	      <td>
+		{foreach item=group from=$item.groups}
+		<div><a href="javascript:popup('showGroup.php?id={$group.id}','Group',350,400,false)">{$group.name}</div>
+		{/foreach}
+	      </td>
+	    </tr>
+	    {/foreach}
+	  </table>
+        <p>
+
+        </p>
+      </td>
+    </tr>
+  </table>

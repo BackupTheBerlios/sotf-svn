@@ -1,0 +1,54 @@
+
+  <h3>{#admin#}</h3>
+
+{include file="adminMenu.htm" sel="4"}
+
+    <table class="tab">
+      <tr> 
+	<td nowrap class="tab">{#Top_shows#}</td>
+      </tr>
+    </table>
+    <table class="tabarea">
+      <tr> 
+	<td class="tabarea">
+	  <p>{#Top_expl#}</p>
+	  <table>
+	    <tr class="listhead">
+	      <td colspan="5">
+		{include file="splitList.htm"}
+	      </td>
+	    </tr>
+	    <tr class="listhead">
+	      <th>{#Program#}</th>
+	      <th>{#Station#}</th>
+	      <th>{#Group#}</th>
+	      <th>{#listenNum#}</th>
+	      <th></th>
+	    </tr>
+	    {cycle name="roles" values="list1,list2" print=false advance=false}
+	    {foreach item=item from=$TOPLIST}
+	    <tr class="{cycle name=roles}" valign="top">
+	      <td>
+            	<a href="get.php/{$item.id}">{$item.title}</a>
+	      </td>
+	    <td>
+	    	<a href="showStation.php/{$item.station_id}">{$item.station_name}</a>
+	    </td>
+	    <td>
+		{foreach item=group from=$item.groups}
+		<div>{$group.name}</div>
+		{/foreach}
+	    </td>
+            <td align="center">
+		{$item.count}
+            </td>
+	    <td><a href="javascript:popup('adminProgStats.php?id={$item.id}','ProgStats',350,400,false)">{#details#}</a></td>
+          </tr>
+          {/foreach}
+        </table>
+        <p>
+
+        </p>
+      </td>
+    </tr>
+  </table>

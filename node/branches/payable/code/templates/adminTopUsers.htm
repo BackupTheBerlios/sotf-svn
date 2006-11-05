@@ -1,16 +1,11 @@
 
   <h3>{#admin#}</h3>
 
-<ul class="tabs">
-<li class=""><a href="admin.php">{#Network#}</a></li>
-<li class=""><a href="adminUsers.php">{#Users#}</a></li>
-<li class=""><a href="adminGroups.php">{#Groups#}</a></li>
-<li class="sel last">{#Stats#}</li>
-</ul>
+{include file="adminMenu.htm" sel="5"}
 
     <table class="tab">
       <tr> 
-	<td nowrap class="tab">{#Top_shows#}</td>
+	<td nowrap class="tab">{#Top_users#}</td>
       </tr>
     </table>
     <table class="tabarea">
@@ -18,27 +13,38 @@
 	<td class="tabarea">
 	  <table>
 	    <tr class="listhead">
-	      <td colspan="3">
+	      <td colspan="5">
 		{include file="splitList.htm"}
 	      </td>
 	    </tr>
 	    <tr class="listhead">
-	      <th>{#Program#}</th>
-	      <th>{#Station#}</th>
+	      <th>{#User#}</th>
+	      <th>{#Contact#}</th>
+	      <th>{#Groups#}</th>
 	      <th>{#listenNum#}</th>
+	      <th></th>
 	    </tr>
 	    {cycle name="roles" values="list1,list2" print=false advance=false}
 	    {foreach item=item from=$TOPLIST}
 	    <tr class="{cycle name=roles}">
 	      <td>
-            	<a href="get.php/{$item.id}">{$item.title}</a>
+            	{$item.username}
+	      </td>
+	      <td>
+		{$item.contact_person}
 	      </td>
 	    <td>
-	    	<a href="showStation.php/{$item.station_id}">{$item.station_name}</a>
+		{foreach item=group from=$item.groups}
+		<div>{$group}</div>
+		{/foreach}
 	    </td>
-            <td>
+            <td align="center">
 		{$item.count}
             </td>
+	    <td>
+	      <a href="javascript:popup('adminUserStats.php?id={$item.id}','UserStats',350,400,false)" >{#details#}</a>
+	    </td>
+
           </tr>
           {/foreach}
         </table>

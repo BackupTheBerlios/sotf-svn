@@ -34,6 +34,8 @@ listen/download without permission. You can give your bank account here :-)
 registration. The corresponding SQL table sotf_user_data has to be changed
 accordingly.
 
+Both pages are monolingual, currently Smarty-based localizations are not used there.
+
 Then you can start it:
 
 - create groups under Admin/Groups

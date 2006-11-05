@@ -64,6 +64,10 @@ $config['nodeName'] = "XYZ";
 // whether imported files are published by default
 $config['publishXbmf'] = false;
 
+// whether some programmes are restricted/payable
+//$config['payableMode'] = true;
+//$config['currency'] = 'EUR';
+
 // regexp determining the IP addresses (or hostnames if web server does hostname lookup)
 // from which admin tasks (such as cron.php) can be run
 //$config['adminDomain'] = '^10\.0\.0\.';

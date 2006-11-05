@@ -1,0 +1,36 @@
+
+  <h3>{#adminProgStats#}</h3>
+
+    <table class="tabarea">
+      <tr> 
+	<td class="tabarea">
+	  <p>{#Prog_title#} {$PRG.title}</p>
+	  <table>
+	    <tr class="listhead">
+	      <th>{#User#}</th>
+	      <th>{#Contact#}</th>
+	      <th>{#Groups#}</th>
+	    </tr>
+	    {cycle name="roles" values="list1,list2" print=false advance=false}
+	    {foreach item=item from=$USERS}
+	    <tr class="{cycle name=roles}" valign="top">
+	      <td>
+            	{$item.username}
+	      </td>
+	      <td>
+	    	{$item.contact_person}
+	      </td>
+	      <td>
+		{foreach item=group from=$item.groups}
+		<div>{$group}</div>
+		{/foreach}
+	      </td>
+	    </tr>
+	    {/foreach}
+	  </table>
+        <p>
+
+        </p>
+      </td>
+    </tr>
+  </table>

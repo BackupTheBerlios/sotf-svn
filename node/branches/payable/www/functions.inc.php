@@ -202,6 +202,11 @@ function getUserOrGroupName($id) {
 		return $user->getUsername($id);
 }
 
+function nodeConfig($name) {
+	global $config;
+	return $config[$name];
+}
+
 /** wrapper function for move_uploaded_file, because sometimes chmod is needed afterwards. */
 function moveUploadedFile($fieldName, $file) {
 	// check and convert filename

@@ -31,6 +31,15 @@ if($id) {
 
   $page->setTitle($prg->get('title'));
 
+  $subPage = 'getNormalContent';
+  if(!$prg->getBool('free_content')) {
+	 $subPage = 'getProtectedContent';
+  } elseif($prg->getBool('promoted')) {
+	 $subPage = 'getPromotedContent';
+  }
+    
+  $smarty->assign("SUBPAGE", $subPage);
+
   // general data
   $prgData = $prg->getAll();
   $prgData['icon'] = sotf_Blob::cacheIcon($id);
@@ -102,6 +111,13 @@ if($id) {
   $myRating = $rating->getMyRating($id);
   debug("r", $myRating);
   $smarty->assign('MY_RATING', $myRating);
+
+  if(nodeConfig('payableMode')) {
+	 $smarty->assign('CURRENCY', $config['currency']);
+	 if(!$prg->isFree()) {
+		$smarty->assign('LISTEN_GROUPS', sotf_Group::listGroupsOfObject($id, 'listen'));
+	 }
+  }
 
   if ($page->loggedIn()) {
     // is in my playlist?

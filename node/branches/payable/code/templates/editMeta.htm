@@ -208,11 +208,12 @@ window.onload=myonload;
   {#no_expiry#} </td>
             </tr>
             <tr valign="top" class="list2">
-              <td class="meta">{#free_content#}:</td>
+              <td class="meta">{#content_type#}:</td>
               <td>&nbsp;</td>
               <td>
-		<input type="radio" name="free_content" value="1" {if $PRG_DATA.free_content eq 't'}checked{/if} > {#Yes#}
-		<input type="radio" name="free_content" value="0" {if $PRG_DATA.free_content eq 'f'}checked{/if} > {#No#}
+		<input type="radio" name="content_type" value="free" {if $PRG_DATA.free_content eq 't'}checked{/if} > {#Free#}
+		<input type="radio" name="content_type" value="promoted" {if $PRG_DATA.promoted eq 't'}checked{/if} > {#Promoted#}
+		<input type="radio" name="content_type" value="protected" {if $PRG_DATA.free_content eq 'f' && $PRG_DATA.promoted eq 'f'}checked{/if} > {#Protected#}
 	      </td>
             </tr>
           </table>

@@ -157,3 +157,11 @@ ul.tabs li.sel {
 ul.tabs li.last {
   border: none;
 }
+
+.promotedList { 
+  background: #ddcccc;
+}
+
+.premiumList {
+  background: #ccddcc;
+}

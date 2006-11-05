@@ -327,8 +327,9 @@ class sotf_Vocabularies {
 				$roots[] = $parentId;
 				$parentId = $prevId;
 			}
-			if($level > $l) {
-		  $parentId = array_pop($roots);
+			while($level > $l) {
+				$parentId = array_pop($roots);
+				$level--;
 			}
 			$level = $l;
 			debug("", "LEVEL: $level, PARENT: $parentId, ROOTS: " . join(",", $roots));

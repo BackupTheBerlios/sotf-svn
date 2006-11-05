@@ -1,12 +1,7 @@
 
   <h3>{#admin#}</h3>
 
-<ul class="tabs">
-<li class=""><a href="admin.php">{#Network#}</a></li>
-<li class=""><a href="adminUsers.php">{#Users#}</a></li>
-<li class="sel">{#Groups#}</li>
-<li class="last"><a href="adminStats.php">{#Stats#}</a></li>
-</ul>
+{include file="adminMenu.htm" sel="3"}
 
   <table class="tab">
     <tr> 
@@ -19,7 +14,9 @@
 	<table>
           <tr class="listhead">
             <th>{#name#}</th>
+            <th>{#price#}</th>
             <th>{#count#}</th>
+            <th>{#income#}</th>
             <th>{#comments#}</th>
 	    <th></th>
           </tr>
@@ -27,10 +24,16 @@
           {foreach item=item from=$GROUPS}
           <tr class="{cycle name=roles}">
             <td>
-            	{$item.name}
+            	<a href="javascript:popup('showGroup.php?id={$item.id}','Group',350,400,false)">{$item.name}</a>
             </td>
 	    <td>
+	    	{$item.price}
+	    </td>
+	    <td>
 	    	{$item.count}
+	    </td>
+	    <td>
+	    	{$item.income}
 	    </td>
             <td>
 		{$item.comments}

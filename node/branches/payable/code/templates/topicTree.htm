@@ -35,9 +35,13 @@
             <td>
               
               {section name=i loop=$TREE}
-
+	        
               {if $TREE[i].level gt $TREE[i.index_prev].level}<ul compact>{/if}
-              {if $TREE[i].level lt $TREE[i.index_prev].level}</ul>{/if}
+              {if $TREE[i].level lt $TREE[i.index_prev].level}
+		{section name=level loop=$TREE[i.index_prev].level-$TREE[i].level}
+	          </ul>
+	        {/section}
+	      {/if}
               <li>
                 <nobr><a name="{$TREE[i].id}"></a>
                   {if $ADD_MODE}

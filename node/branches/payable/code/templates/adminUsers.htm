@@ -1,12 +1,7 @@
 
   <h3>{#admin#}</h3>
 
-<ul class="tabs">
-<li class=""><a href="admin.php">{#Network#}</a></li>
-<li class="sel">{#Users#}</li>
-<li class=""><a href="adminGroups.php">{#Groups#}</a></li>
-<li class="last"><a href="adminStats.php">{#Stats#}</a></li>
-</ul>
+{include file="adminMenu.htm" sel="2"}
 
 <form>
   <table class="tab">
@@ -37,7 +32,7 @@
           {foreach item=item from=$USERS}
           <tr class="{cycle name=roles}">
             <td>
-            	{$item.username}
+            	<a href="javascript:popup('adminShowUser.php?id={$item.id}','User',450,400,true)">{$item.username}</a>
             </td>
 	    <td>
 	    	{$item.email}
@@ -47,6 +42,7 @@
             </td>
             <td nowrap>
                 <input class="action" type="button" name="b1" value="{#edit_groups#}" onClick="popup('editUserGroups.php?uid={$item.id}','EditUserGroup',350,400,false)" />
+                <input class="action" type="button" name="b1" value="{#listen_stats#}" onClick="popup('adminUserStats.php?id={$item.id}','UserStat',350,400,false)" />
                <!-- <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form,'adminUsers.php?del=1&uid={$item.id}')" />
                -->
             </td>

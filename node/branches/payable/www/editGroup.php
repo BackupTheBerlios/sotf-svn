@@ -27,6 +27,7 @@ if(sotf_Utils::getParameter('save')) {
   $oldName = $group->get('name');
   $group->setWithTextParam('name', 'name');
   $group->setWithTextParam('comments', 'comments');
+  $group->setWithParam('price', 'price');
   $name = $group->get('name');
   if(!$name)
     $error = "error_name_missing";
