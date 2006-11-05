@@ -223,6 +223,7 @@ CREATE TABLE "sotf_programmes" (
 "temporal_coverage" date,										-- dc.coverage.temporal
 "published" bool DEFAULT 'f'::bool,                             -- unpublished items are not searchable nor browsable
 "free_content" bool DEFAULT 't'::bool,				-- listen permissions can be defined for non free content 
+"promoted" bool DEFAULT 'f'::bool,				-- programs promoted on index page
 CONSTRAINT "to_stations" FOREIGN KEY("station_id") REFERENCES sotf_stations("id") ON DELETE CASCADE,
 CONSTRAINT "to_series" FOREIGN KEY("series_id") REFERENCES sotf_series("id") ON DELETE CASCADE --??
 );
@@ -673,6 +674,7 @@ CREATE TABLE "sotf_groups" (
 -- user groups for access permissions
 "id" serial PRIMARY KEY,	-- just an id
 "name" varchar(254) NOT NULL,	-- name of group
+"price" float DEFAULT 0,	-- price of membership
 "comments" text			-- comments
 );
 CREATE UNIQUE INDEX sotf_group_name ON sotf_groups ("name");
