@@ -207,7 +207,7 @@ elseif($seriesId) { //***************** SERIES *********************************
 	 writeTag($rss, "description",$series->get('description'));
 	 // TODO: editor e-mail
 	 // TODO copyright
-	 writeTag($rss, "webMaster", $config['adminEmail']);
+	 // (anti-spam commando) writeTag($rss, "webMaster", $config['adminEmail']);
 	 //writeTag($rss, "pubDate", getW3CDate());
 
 	 // get and cache series icon
@@ -249,7 +249,7 @@ elseif($seriesId) { //***************** SERIES *********************************
   writeTag($rss, "language", $station->get2LetterLanguageCode());
   writeTag($rss, "description", $station->get('description'));
   // TODO: editor e-mail
-  writeTag($rss, "webMaster", $config['adminEmail']);
+  // (anti-spam commando) writeTag($rss, "webMaster", $config['adminEmail']);
   //writeTag($rss, "pubDate", getW3CDate());
 
   // get and cache station icon
