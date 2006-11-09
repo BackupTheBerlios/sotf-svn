@@ -17,6 +17,9 @@ checkPerm('node', 'change');
 
 $progId = sotf_Utils::getParameter('id');
 $prog = &$repository->getObject($progId);
+if(!$prog)
+  raiseError("no_such_object", $id);
+
 $smarty->assign("PRG", $prog->getAll());
 
 $actionsToCount = "'listens','downloads'";

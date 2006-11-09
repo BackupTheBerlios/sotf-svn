@@ -15,13 +15,13 @@ $page->forceLogin();
 
 checkPerm('node', 'change');
 
-$count = sotf_Programme::countAll();
-
-$limit = $page->splitList($count, $scriptUrl);
-
 $actionsToCount = "'listens','downloads'";
 
 $sql = "SELECT u.id, u.username, d.contact_person, count(distinct h.object_id) as count FROM sotf_users u LEFT JOIN sotf_user_data d ON d.user_id=u.id, sotf_user_history h WHERE u.id=h.user_id AND h.action IN ($actionsToCount) GROUP BY u.id, u.username, d.contact_person ORDER BY count DESC";
+
+$count = $db->getOne("SELECT COUNT(*) FROM ($sql) s");
+$limit = $page->splitList($count, $scriptUrl);
+
 $res =	$db->limitQuery($sql, $limit["from"] , $limit["maxresults"]);
 if(DB::isError($res))
   raiseError($res);
