@@ -273,6 +273,9 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   function canListen() {
+	 //global $config;
+	 //if(!$config['payableMode'])
+	 //	return 1;
 	 if($this->getBool('free_content'))
 		return 1;
 	 return hasPerm($this, 'listen');

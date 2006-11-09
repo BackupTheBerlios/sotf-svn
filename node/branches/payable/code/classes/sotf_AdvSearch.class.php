@@ -1112,7 +1112,7 @@ class sotf_AdvSearch
 
 			//find word at the most common places
 
-			$serial = str_replace("XXX", $word[$i], "production_date|Bstation|AAND|Bperson|Bcontains|BXXX|Bstring|AOR|Btitle|Bcontains|BXXX|Bstring|AOR|Bkeywords|Bcontains|BXXX|Bstring|AOR|Babstract|Bcontains|BXXX|Bstring|AOR|Bspatial_coverage|Bcontains|BXXX|Bstring");
+			$serial = str_replace("XXX", $word[$i], "entry_date|Bstation|AAND|Bperson|Bcontains|BXXX|Bstring|AOR|Btitle|Bcontains|BXXX|Bstring|AOR|Bkeywords|Bcontains|BXXX|Bstring|AOR|Babstract|Bcontains|BXXX|Bstring|AOR|Bspatial_coverage|Bcontains|BXXX|Bstring");
 
 			if ($language) $serial .= "|AAND|Blanguage|Bis|B".$language."|Blang";		//if language given add to search options
 
@@ -1123,7 +1123,7 @@ class sotf_AdvSearch
 			$query = $this->GetSQLCommand();	//get desrialized query
 
 			$query = "SELECT id FROM (".$query.") as a";
-
+			//debug("QUERY", $query);
 			$result = $db->getAll($query);
 
 			$maxk = count($result);				//count words
