@@ -1,8 +1,13 @@
 
 With this branch you can:
 
-- Define who can listen/download content on high and low levels
+- Define who can listen/download content on high and low levels (premium-payable and promoted/sponsored content)
 - Create user groups and assign permissions to them
+- Use user groups with assigned premium-payable content to offer payable programme channels and online trainings
+- Add partners with links and promotions to the new partner site (Rev. 595)
+- View detailed user statistics from every site/listener/download (Rev. 595): 
+  --> for this you need to install the open source online counter "chCounter 3.1.1" (GPL licenced) 
+      (C) 2006 by Christoph Bachner, webmaster@christoph-bachner.net
 - And some more...
 
 Install:

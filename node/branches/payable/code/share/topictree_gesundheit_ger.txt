@@ -1,0 +1,364 @@
+tree_id=3
+name=Radio Gesundheit topic tree
+shortname=Gesundheit
+description=Ein detailiertes Themen-Verzeichnis von Radio Gesundheit
+url=
+
+# End of tree definition
+
+  1 1 Kunst, Kultur, Medien, Unterhaltung
+
+  2 2  Medien
+  3 3   Nachrichten
+  4 3   Neue Medien (Internet, CD, DVD, Mini Disk, etc.)
+  5 3   Zeitungen, Zeitschriften
+  6 3   Radio
+  7 3   Fernsehen
+  8 3   Werbung und Öffentlichkeitsarbeit
+  9 3   Nachrichten Ausland
+ 10 2  Unterhaltung
+ 11 3   Kino (Dokumentation, Spielfilm)
+ 12 3   Science Fiction
+ 13 3   Krimis
+ 14 3   Comics
+ 15 3   Cartoons
+ 16 3   Spiel
+ 17 2  Kunst
+ 18 3   Darstellende Kunst (Theater, Tanz, Zirkus, etc.)
+ 19 3   Bildende Kunst (Malerein, Bildhauerei, Fotografie, etc.)
+ 20 2  Kultur
+ 21 3   Architektur und Stadtplanung
+ 22 3   Literatur (Dichtung, Roman, Essay, etc.)
+ 23 3   Musik (Alle Bereiche - einschließlich Oper, Klassische Konzerte, etc.)
+ 24 3   Erholung
+ 25 3   Reisen und Tourismus
+
+ 26 1 Gesellschaft
+
+ 27 2  Gruppen
+ 28 3   Frauen
+ 29 3   Männer
+ 30 3   Jugendliche
+ 31 3   Ältere / Senioren
+ 32 3   Familie
+ 33 3   Singles
+ 34 3   Menschen mit Behinderung
+ 35 3   Randgruppen
+ 36 3   Kulturell-kreative
+ 37 3   Queer (Schwule, Lesben, Bisexuelle, Intersexuelle, Transgender, u.v.a.)
+ 38 2  Themen
+ 39 3   Körperarbeit
+ 40 3   Sexualität
+ 41 3   Drogen
+ 42 3   Armut
+ 43 3   Migration
+ 44 3   Multikulturalität
+ 45 3   Feminismus
+ 46 3   soziales Zusammenleben (Wohnen, Verkehr, Raumplanung, städtisches & ländliches Zusammenleben)
+ 47 3   Folklore
+ 48 3   Religion, Metaphysik
+ 49 3   Rassimus
+ 50 3   Sexismus
+
+ 51 1 Gesundheit
+
+ 52 2  Erfahrungsberichte
+ 53 2  Forschung
+ 54 3   Naturforschung
+ 55 3   Medizinische Forschung
+ 56 3   Biotechnologie
+ 57 2  Methoden
+ 58 3   Alternativmedizin
+ 59 3   Ganzheitsmedizin
+ 60 3   Komplementärmedizin
+ 61 3   Medizin
+ 62 3   Sonstige Methoden
+ 63 2  Personen und Institutionen
+ 64 3   Apotheken
+ 65 3   Ärzte
+ 66 3   Berater
+ 67 3   Hilfesteller
+ 68 3   Institute
+ 69 3   Kliniken
+ 70 3   Therapeuten
+ 71 2  Produkte
+ 72 3   Medizinische Produkte
+ 73 3   Nahrungsergänzungsmittel
+ 74 2  Themen
+ 75 3   Allergien
+ 76 3   Bewegung
+ 77 3   Entspannung / Stressmanagement
+ 78 3   Ernährung
+ 79 3   Gelenke, Wirbelsäule
+ 80 3   Herz-Kreislauf
+ 81 3   Seele und Psyche
+ 82 3   Spiritualität
+ 83 2  Weiterbildung
+ 84 3   Ausbildungen
+ 85 3   Seminare
+ 86 3   Vorträge
+
+ 87 1 Lernen, Lehre und Studium
+
+ 88 2  Einrichtungen und Lehrende
+ 89 3   Universität / Fachhochschule
+ 90 3   Schule
+ 91 3   Weiterbildungsinstitute
+ 92 3   Lehrende (LehrerInnen, ProfessorInnen, DozentInnen)
+ 93 3   Trainer und Lernbegleiter
+ 94 2  Lehrmethoden
+ 95 3   Kurse, Trainings, Seminare
+ 96 3   Fernlehre
+ 97 3   Besondere Lehrmethoden
+ 98 3   e-learning
+ 99 3   Vorlesung
+100 3   Nachhilfe
+101 2  Themen
+102 3   Erziehung
+103 3   Pädagogik
+104 3   Lese- und Schreibkompetenz
+105 3   Biographie
+106 3   Lebenslanges Lernen
+
+107 1 Wissenschaft, Forschung und Technologie
+
+108 2  Naturforschung (Ethologie, Umweltforschung, Botanik, etc.)
+109 2  Geowissenschaften (Astronomie, Geographie, Meereskunde, Klimaforschung, Geologie,etc.)
+110 2  Naturwissenschaften (Physik, Chemie, etc.)
+111 2  Humanwissenschaften (Biologie, Medizin, Genetik, Anatomie, etc.)
+112 2  Sozialwissenschaften (Soziologie, Anthropologie, etc.)
+113 2  Geisteswissenschaften (Philosophie, Ethik, Anthroposophie, etc.)
+114 2  Parawissenschaft (Psi, Übersinnliches, Transzendenz, etc.)
+115 2  Psychologie und Bewusstseinsforschung
+116 2  Archeologie und Palentologie
+117 2  Geschichte
+118 2  Kommunikation, Telekommunikation und Internet
+119 2  Energie, Nuklearenergie und Erneuerbare Energiequellen
+120 2  Informatik
+
+121 1 Natur und Umwelt, Landwirtschaft
+
+122 2  Umwelterhaltung, biologische Ansätze
+123 3   Biologische Rohstoffe
+124 3   Biologische Produkte
+125 3   Biologischer Kreislauf
+126 3   Wasservitalisierung
+127 3   Reinigung von Wasser, Luft, etc.
+128 3   Wasserversorgung
+129 2  Naturnahe Berufe und Technologien
+130 3   Jagd und Fischerei
+131 3   Viehzucht
+132 3   Forstwirtschaft
+133 3   Landwirtschaft & landwirtschaftliche Technologien
+134 3   Lebensmitteltechnik
+135 2  Allgemeine Themen
+136 3   Klima und Wetter
+137 3   Bevölkerung
+138 3   Artenvielfalt
+139 2  Umweltrisiken
+140 3   Bedrohte Arten
+141 3   Klimawandel, Erwärmung
+142 3   Umweltverschmutzung
+143 3   Hungersnot
+144 3   Genmanipuliertes Leben
+
+145 1 Politik, Rechts- und Regierungssystem
+
+146 2  Politische Bereiche nach Sachgebieten
+147 3   Weltpolitik
+148 3   Innenpolitik
+149 3   Entwicklungspolitik
+150 3   Sozialpolitik
+151 3   Verteidigungspolitik
+152 3   Arbeitsmarktpolitik
+153 3   Außenpolitik
+154 3   Bildungspolitik
+155 3   Energiepolitik
+156 3   Finanzpolitik
+157 3   Geschlechterpolitik
+158 3   Gesundheitspolitik
+159 3   Kulturpolitik
+160 3   Umweltpolitik
+161 3   Verkehrspolitik
+162 3   Wirtschaftspolitik
+163 2  Allgemeine Themen
+164 3   Gewerkschaften
+165 3   Arbeit
+166 3   Polizei
+167 3   Strafvollzug
+168 3   Lizenzen und Rechte
+169 3   Wahlen
+170 3   Globalisierung
+171 2  Frieden, Humanitäres, Diplomatie
+172 3   Diplomatie
+173 3   Frieden
+174 3   NGO / NRO
+175 3   Krisenprävention
+176 3   Menschenrechte
+177 3   Internationale Zusammenarbeit
+178 3   Humanitäre Hilfe
+179 2  Krisen, Konflikte, Risiken
+180 3   Kriminalität
+181 3   Terrorismus
+182 3   Krieg und Waffen
+183 3   Aufstand, Bürgerkrieg, Revolution
+184 3   Politische Verfolgung
+185 2  Politische Parteien
+186 3   Sozialdemokraten
+187 3   Liberale
+188 3   Grüne
+189 3   Christlich-soziale
+190 3   Kommunisten
+191 3   Freiheitliche
+192 2  Politische Systeme und Ideologien
+193 3   Pazifismus
+194 3   Sozialismus
+195 3   Nationalismus
+196 3   Demokratische Systeme
+197 3   Authoritäre Systeme
+198 3   Revolutionäre Gruppen
+199 3   Anarchismus
+200 3   Kapitalismus
+201 3   Kommunismus
+202 3   Faschismus und Nationalsozialismus
+
+203 1 Sport
+
+204 2  Breitensport
+205 3   Baseball
+206 3   Basketball
+207 3   Billiard
+208 3   Bowling
+209 3   Cricket
+210 3   Croquet
+211 3   Radfahren
+212 3   Fischen
+213 3   Fußball
+214 3   Turnen
+215 3   Handball
+216 3   Hockey
+217 3   Reiten
+218 3   Golf
+219 3   Jagd
+220 3   Gaelic (Rugby-Variante)
+221 3   Goalball (Torball-Variante)
+222 3   Informelle Sportarten
+223 3   Jai Alai (Squash-Variante)
+224 3   Kabbadi (Fangspiel-Variante)
+225 3   Korfball (Basketball-Variante)
+226 3   Korbball
+227 3   Lacrosse (Hockey-Variante)
+228 3   Rodeo
+229 3   Holzhacken
+230 3   Racquetball (Squash-Variante)
+231 3   Hüpfseilspringen
+232 3   Handball
+233 3   Tennis
+234 3   Laufen
+235 3   Rounders (Baseball-Variante)
+236 3   Sepak Takraw (Volleyball-Variante)
+237 3   Skateboard
+238 3   Eislauf
+239 3   Tischtennis
+240 3   Tchoukball (Handball-Variante)
+241 3   Softball
+242 3   Squash
+243 3   Volleyball
+244 3   Walking
+245 3   Badminton
+246 3   Fechten
+247 3   Wrestling
+248 2  Leistungssport
+249 3   Bogenschießen
+250 3   Boxen
+251 3   Dressurreiten
+252 3   Dikuswurf
+253 3   Motorsport
+254 3   Hindernislauf
+255 3   Orientierungslauf
+256 3   Leichtathletik
+257 3   Kraftsport
+258 3   Schießen
+259 2  Funsport
+260 3   Airsoft (Militär-Schusspiel)
+261 3   Boomerang
+262 3   Schlachtenbummler
+263 3   Darts
+264 3   Paintball (Militär-Schusspiel)
+265 3   Paddleball (Geschicklichkeitsspiel)
+266 3   Petanque (Boule- bzw. Boccia-Variante)
+267 3   Boccia
+268 2  Passivsport
+269 3   Tierwettkämpfe
+270 3   Greyhound Racing (Hunderennen)
+271 2  Extremsport
+272 2  Wassersport
+273 2  Wintersport
+
+274 1 Wirtschaft
+
+275 2  Unternehmensformen
+276 3   Genossenschaften
+277 3   Gesellschaft m.b.H.
+278 3   Kommanditgesellschaft
+279 3   Offene Handelsgesellschaft
+280 3   Offene Erwerbsgesellschaft
+281 3   Aktiengesellschaften
+282 2  Unternehmensgrößen
+283 3   Große Unternehmen
+284 3   KMU's
+285 3   Einzelunternehmer, Kleinstunternehmer
+286 2  Unternehmensbereiche
+287 3   Finanzen, Buchhaltung, etc.
+288 3   Kundendienst
+289 3   E-Commerce
+290 3   Aus- und Weiterbildung
+291 3   Management
+292 3   Verkauf, Marketing und Werbung
+293 3   IT
+294 3   Logistik
+295 3   Personal
+296 3   Einkauf
+297 2  Allgemeine Wirtschaftsthemen
+298 3   Internationaler Handel, Export
+299 3   Investionen
+300 3   Finanzdienstleistungen
+301 3   Beschäftigung
+302 3   Arbeiter und Angestellte
+
+303 1 Verkauf und Verbrauchsgüter
+
+304 2  Konsumgüter
+305 3   Antiquitäten
+306 3   Schönheitsprodukte
+307 3   Bücher
+308 3   Spielsachen
+309 3   Kleidung
+310 3   Unterhaltungselektronik
+311 3   Kunsthandwerk
+312 3   Bestattung
+313 3   Unterhaltung
+314 3   traditionelle und regionale Produkte
+315 3   Blumen
+316 3   Nahrungsmittel
+317 3   Möbel
+318 3   Allgemeine Handelsware
+319 3   Geschenkartikel
+320 3   Gesundheitsartikel
+321 3   Urlaub
+322 3   Heim und Garten
+323 3   Schmuck
+324 3   Musik
+325 3   Haustiere
+326 3   Photographie
+327 3   Magazine
+328 3   Erholung
+329 3   Rauchwaren
+330 3   Kinderspielzeug
+331 3   Reisen
+332 3   Heiratsanzeigen
+333 2  Produktionsgüter
+334 3   Computer
+335 3   Büroartikel
+336 3   Werkzeug
+337 3   Fahrzeuge
