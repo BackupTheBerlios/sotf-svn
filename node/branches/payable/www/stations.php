@@ -1,9 +1,9 @@
-<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/*  
+/*
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ * Authors: András Micsik, Máté Pataki, Tamás Déri
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
@@ -20,9 +20,9 @@ if($changeMode) {
   $mode = sotf_Utils::getParameter('mode');
   $language = sotf_Utils::getParameter('language');
   if(!setcookie('sortMode', $mode))
-	 debug("could not set cookie for sort");
+         debug("could not set cookie for sort");
   if(!setcookie('filterLang', $language))
-	 debug("could not set cookie for filter");
+         debug("could not set cookie for filter");
 } else {
   $mode = $_COOKIE['sortMode'];
   $language = $_COOKIE['filterLang'];
@@ -31,9 +31,9 @@ if($changeMode) {
 if ($delete) {
   $station = sotf_Utils::getParameter('station');
   if(!hasPerm('node','delete') && !hasPerm($station,'admin')) {
-	 $permTransl = $page->getlocalized('perm_delete');
-	 $msg = $page->getlocalizedWithParams('no_permission', $permTransl);
-	 raiseError($msg);
+         $permTransl = $page->getlocalized('perm_delete');
+         $msg = $page->getlocalizedWithParams('no_permission', $permTransl);
+         raiseError($msg);
   }
   $st = & $repository->getObject($station);
   $st->delete();
@@ -50,9 +50,9 @@ $limit = $page->splitList($count, $scriptUrl);
 $stations = sotf_Station::listStations($limit["from"] , $limit["maxresults"], $mode, $language);
 
 for($i=0; $i<count($stations); $i++) {
-	
+
   $sprops = $stations[$i]->getAllWithIcon();
-  
+
   $sprops['numProgs'] = $stations[$i]->numProgrammes();
   $sprops['isLocal'] = $stations[$i]->isLocal();
   $sprops['languages'] = $stations[$i]->getLanguagesLocalized();
@@ -70,6 +70,14 @@ $smarty->assign('LANGUAGE', $language);
 
 $smarty->assign('STATION_LANGS', sotf_Station::listStationLanguages());
 
+
+// online counter for statistics
+if ($config['counterMode']) {
+   $chCounter_status = 'active';
+   $chCounter_visible = 0;
+   $chCounter_page_title = 'Station anzeigen - stations.php';
+   include($config['counterURL']);
+}
 
 $page->send();
 

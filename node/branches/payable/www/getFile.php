@@ -1,9 +1,9 @@
-<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/*  
+/*
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ * Authors: András Micsik, Máté Pataki, Tamás Déri
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
@@ -18,10 +18,10 @@ $mainAudio = sotf_Utils::getParameter('audio');
 
 if(empty($fid)) {
   if(empty($id)) {
-	 raiseError("Missing parameters!", 'id');
+         raiseError("Missing parameters!", 'id');
   }
   if(empty($filename)) {
-	 raiseError("Missing parameters!", 'filename');
+         raiseError("Missing parameters!", 'filename');
   }
 }
 
@@ -31,7 +31,7 @@ if($fid) {
   debug ("fid", $fid);
   $fobj = &$repository->getObject($fid);
   if(!$fobj)
-	 raiseError("no_such_object", $fid);
+         raiseError("no_such_object", $fid);
   $prg = $repository->getObject($fobj->get('prog_id'));
   $mainAudio = $fobj->get('main_content') == 't';
   $filename = $fobj->get('filename');
@@ -70,21 +70,21 @@ debug('filename', $filename);
 $file = & new sotf_File($filename);
 if ($file->type != "none")
 {
-	header("Content-type: " . $file->mimetype . "\n");
-	header("Content-length: " . filesize($filename) . "\n");   
-	//if($mainAudio) {  //this is somehow needed for iPodder
-	//  header("Accept-Ranges: bytes");
-	//  header('ETag: "' . md5(file_get_contents($filename)) . '"');
-	//} else {
-	  header("Content-transfer-encoding: binary\n"); 
-	  //}
-	// send file
-	
-	// wreutz: added this to get rid of fid_123mf12 filename and save as the real filename of the file
+        header("Content-type: " . $file->mimetype . "\n");
+        header("Content-length: " . filesize($filename) . "\n");
+        //if($mainAudio) {  //this is somehow needed for iPodder
+        //  header("Accept-Ranges: bytes");
+        //  header('ETag: "' . md5(file_get_contents($filename)) . '"');
+        //} else {
+          header("Content-transfer-encoding: binary\n");
+          //}
+        // send file
+
+        // wreutz: added this to get rid of fid_123mf12 filename and save as the real filename of the file
     header( "Content-Disposition: filename=".basename($filename).";\n" );
     // wreutz: end
 
-	readfile($filename);
+        readfile($filename);
 }
 else
   raiseError("download_problem", $filename);
@@ -92,6 +92,14 @@ else
 // add this download to statistics
 $prg->addStat($file->id, "downloads");
 
+
+// online counter for statistics
+if ($config['counterMode']) {
+   $chCounter_status = 'active';
+   $chCounter_visible = 0;
+   $chCounter_page_title = 'Progamm Download - getFile.php';
+   include($config['counterURL']);
+}
 
 $page->logRequest();
 

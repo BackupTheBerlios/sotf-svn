@@ -1,9 +1,9 @@
-<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/*  
+/*
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ * Authors: András Micsik, Máté Pataki, Tamás Déri
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
@@ -76,10 +76,10 @@ if($defQuery) {
 
     $advsearch->Deserialize($defQuery);
     $query = $advsearch->GetSQLCommand();
-  
+
     debug("query", $query);
     //get the number of results
-    $max = $db->getOne("SELECT count(*) FROM ( $query ) as foo ");       
+    $max = $db->getOne("SELECT count(*) FROM ( $query ) as foo ");
     $smarty->assign("DEF_QUERY_MAX", $max);
 
     $res = $db->limitQuery($query, 0, $maxItemsIndexPage);
@@ -94,9 +94,9 @@ if($defQuery) {
 } else {
   // get new programmes
   if(nodeConfig('payableMode'))
-	 $mode = 'free';
+         $mode = 'free';
   else
-	 $mode = 'all';
+         $mode = 'all';
   $smarty->assign('NEWS', sotf_Programme::getNewProgrammes($fromDay, $maxItemsIndexPage, $mode));
 }
 
@@ -107,6 +107,15 @@ if(nodeConfig('payableMode')) {
 
 // get topics with most content
 $smarty->assign('TOPICS', $vocabularies->getTopTopics(5));
+
+
+// online counter for statistics
+if ($config['counterMode']) {
+   $chCounter_status = 'active';
+   $chCounter_visible = 0;
+   $chCounter_page_title = 'Hauptseite - index.php';
+   include($config['counterURL']);
+}
 
 $db->commit();
 

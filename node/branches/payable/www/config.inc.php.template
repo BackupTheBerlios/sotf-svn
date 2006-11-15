@@ -1,11 +1,11 @@
-<?php  // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+<?php  // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/*  
+/*
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ * Authors: András Micsik, Máté Pataki, Tamás Déri
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
- * 
+ *
  *  Copy this file into config.inc.php and edit to reflect your site settings.
  *
  */
@@ -68,6 +68,10 @@ $config['publishXbmf'] = false;
 //$config['payableMode'] = true;
 //$config['currency'] = 'EUR';
 
+// online Counter chCounter 3.1.1 (GPL licenced) for detailled webstatistics - webmaster@christoph-bachner.net
+//$config['counterMode'] = true;
+//$config['counterURL'] = "../../webstatistics/counter.php";
+
 // regexp determining the IP addresses (or hostnames if web server does hostname lookup)
 // from which admin tasks (such as cron.php) can be run
 //$config['adminDomain'] = '^10\.0\.0\.';
@@ -115,7 +119,7 @@ $config['xmlrpcdir'] = $config['basedir'] . "/code/xmlrpc";
 // path to PHP scripts and images
 $config['wwwdir'] = $config['basedir'] . "/www";
 
-// The URL prefix for code/www subdir 
+// The URL prefix for code/www subdir
 // i.e. http://<your-host>/$config['localPrefix'] will open the home page of the node
 $config['localPrefix'] = "/node/www";
 
@@ -123,7 +127,7 @@ $config['localPrefix'] = "/node/www";
 // STREAMING --------------------------------------------
 //////////////////////////////////////////////////////////////////////////
 
-// In StreamOnTheFly node network finally we agreed to use HTTP streaming, so please set this to true 
+// In StreamOnTheFly node network finally we agreed to use HTTP streaming, so please set this to true
 // Other configs in this section thus are meaningless.
 $config['httpStreaming'] = true;
 
@@ -136,14 +140,14 @@ $config['tamburineURL'] = '';
 // this is an alternative way for streaming with tamburine
 // works only on Unix
 // Example: /usr/local/bin/tbrcmd
-$config['tamburineCMD'] = ''; 
+$config['tamburineCMD'] = '';
 
 // Parameters for connection to icecast streaming server
 $config['iceServer'] = "your.host.name";
 $config['icePort'] = "8000";
 $config['encoderPassword'] = "hackme";
 
-// The command to start streaming: 
+// The command to start streaming:
 $config['streamCmd'] = "/usr/bin/perl " . $config['basedir'] . "/code/contrib/iceplay -b __BITRATE__ -s " . $config['iceServer'] . " -P " . $config['icePort'] . " -p " . $config['encoderPassword'] . " -l __PLAYLIST__ -n __NAME__ >>" . $config['basedir'] . "/logs/play.log 2>&1 &";
 // __XX__ style tokens are replaced with the actual value
 // __PLAYLIST__ = file containing playlist
@@ -173,11 +177,11 @@ $config['debug'] = true;
 
 // selectable languages for user interface
 $config['outputLanguages'] = array(
-								           array("eng", "in English"),
-											  array("ger", "Deutsch"),
-											  array("hun", "magyarul"),
-											  array("fra", "en Francais"),
-											);
+                                                                           array("eng", "in English"),
+                                                                                          array("ger", "Deutsch"),
+                                                                                          array("hun", "magyarul"),
+                                                                                          array("fra", "en Francais"),
+                                                                                        );
 
 // default language if user's language cannot be determined
 $config['defaultLanguage'] = "eng";
@@ -192,8 +196,8 @@ $config['languages'] = array("eng", "deu", "hun", "dut", "fra", "ita", "esl", "c
 /**
 * Specifies a directory where converters can be found.
 *
-* @package	StreamOnTheFly
-* @variable	string	$config['helperdir']
+* @package        StreamOnTheFly
+* @variable        string        $config['helperdir']
 */
 $config['helperdir'] = "C:\sotf\helpers";
 
@@ -201,8 +205,8 @@ $config['helperdir'] = "C:\sotf\helpers";
 * Path of LAME.
 *
 * LAME can encode and decode MP3 files.
-* @package	StreamOnTheFly
-* @variable	string	$config['lame']
+* @package        StreamOnTheFly
+* @variable        string        $config['lame']
 */
 $config['lame'] = $config['helperdir']."/lame";
 
@@ -210,8 +214,8 @@ $config['lame'] = $config['helperdir']."/lame";
 * Path of SoX.
 *
 * SoX is able to generate a stereo PCM data array from a mono one.
-* @package	StreamOnTheFly
-* @variable	string	$config['sox']
+* @package        StreamOnTheFly
+* @variable        string        $config['sox']
 */
 $config['sox'] = $config['helperdir']."/sox";
 
@@ -219,8 +223,8 @@ $config['sox'] = $config['helperdir']."/sox";
 * Path of oggenc.
 *
 * oggenc can encode Ogg Vorbis audio streams.
-* @package	StreamOnTheFly
-* @variable	string	$config['oggenc']
+* @package        StreamOnTheFly
+* @variable        string        $config['oggenc']
 */
 $config['oggenc'] = $config['helperdir']."/oggenc";
 
@@ -228,40 +232,40 @@ $config['oggenc'] = $config['helperdir']."/oggenc";
 * Path of oggdec.
 *
 * oggdec can decode Ogg Vorbis audio streams.
-* @package	StreamOnTheFly
-* @variable	string	$config['oggdec']
+* @package        StreamOnTheFly
+* @variable        string        $config['oggdec']
 */
 $config['oggdec'] = $config['helperdir']."/oggdec";
 
 /**
 * Progress bar character.
 *
-* @package	StreamOnTheFly
-* @variable	string	$config['progressBarChar']
+* @package        StreamOnTheFly
+* @variable        string        $config['progressBarChar']
 */
 $config['progressBarChar'] = '|';
 
 /**
 * Length of progress bar.
 *
-* @package	StreamOnTheFly
-* @variable	string	$config['progressBarLength']
+* @package        StreamOnTheFly
+* @variable        string        $config['progressBarLength']
 */
 $config['progressBarLength'] = 100;
 
 /**
 * Perl regexp for parse oggenc output.
 *
-* @package	StreamOnTheFly
-* @variable	string	$config['oggencRegexp']
+* @package        StreamOnTheFly
+* @variable        string        $config['oggencRegexp']
 */
 $config['oggencRegexp'] = "/^\t\[(...)\..%\].*$/";
 
 /**
 * Perl regexp for parse lame output during encode.
 *
-* @package	StreamOnTheFly
-* @variable	string	$config['lameencRegexp']
+* @package        StreamOnTheFly
+* @variable        string        $config['lameencRegexp']
 */
 $config['lameencRegexp'] = "/^.{6}?\/.{7}?\((..)%\)\|.*$/";
 
@@ -270,8 +274,8 @@ $config['lameencRegexp'] = "/^.{6}?\/.{7}?\((..)%\)\|.*$/";
 *
 * Specifies how much can differ the current avarage bitrate
 * from one of the predefined values for variable bitrate streams.
-* @package	StreamOnTheFly
-* @variable	float	$config['bitrateTolerance']
+* @package        StreamOnTheFly
+* @variable        float        $config['bitrateTolerance']
 */
 $config['bitrateTolerance'] = 10;
 
@@ -280,26 +284,26 @@ $config['bitrateTolerance'] = 10;
 * Required formats.
 *
 * Array of associative arrays contains information about the audio format.
-* @package	StreamOnTheFly
-* @variable	array	$config['audioFormats']
+* @package        StreamOnTheFly
+* @variable        array        $config['audioFormats']
 */
 $config['audioFormats'] = array(
-					array(
-						'format' => 'mp3',
-						'bitrate' => '24',
-						'channels' => '1',
-						'samplerate' => '22050'),
-					array(
-						'format' => 'mp3',
-						'bitrate' => '128',
-						'channels' => '2',
-						'samplerate' => '44100'),
-					array(
-						'format' => 'ogg',
-						'bitrate' => '64',
-						'channels' => '2',
-						'samplerate' => '22050'),
-				);
+                                        array(
+                                                'format' => 'mp3',
+                                                'bitrate' => '24',
+                                                'channels' => '1',
+                                                'samplerate' => '22050'),
+                                        array(
+                                                'format' => 'mp3',
+                                                'bitrate' => '128',
+                                                'channels' => '2',
+                                                'samplerate' => '44100'),
+                                        array(
+                                                'format' => 'ogg',
+                                                'bitrate' => '64',
+                                                'channels' => '2',
+                                                'samplerate' => '22050'),
+                                );
 
 // index of the preferred streaming format from the list above
 $config['preferredStreamingFormat'] = 1;
@@ -314,17 +318,17 @@ $config['iconHeight'] = 100;
 
 // MIME types to determine type of uploaded documents
 $config['mimetypes'] = array(
-				'doc'=>'application/msword',
-				'gif'=>'image/gif',
-				'htm'=>'text/html',
-				'html'=>'text/html',
-				'jpg'=>'image/jpeg',
-				'mp3'=>'audio/mp3',
-				'm3u'=>'audio/x-mpeg',
-				'pdf'=>'application/pdf',
-				'ps'=>'application/postscript',
-				'txt'=>'text/plain',
-				'xls'=>'application/vnd.ms-excel'
-				);
+                                'doc'=>'application/msword',
+                                'gif'=>'image/gif',
+                                'htm'=>'text/html',
+                                'html'=>'text/html',
+                                'jpg'=>'image/jpeg',
+                                'mp3'=>'audio/mp3',
+                                'm3u'=>'audio/x-mpeg',
+                                'pdf'=>'application/pdf',
+                                'ps'=>'application/postscript',
+                                'txt'=>'text/plain',
+                                'xls'=>'application/vnd.ms-excel'
+                                );
 
 ?>

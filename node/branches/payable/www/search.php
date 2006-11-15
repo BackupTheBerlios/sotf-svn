@@ -1,9 +1,9 @@
-<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/*  
+/*
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ * Authors: András Micsik, Máté Pataki, Tamás Déri
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
@@ -18,13 +18,13 @@ $station = sotf_Utils::getSQLSafeParameter('station');
 if($pattern) {
   //  debug("language", $language);
   //  if(strpos($pattern, '?') || strpos($pattern, '*') || strpos($pattern, '+')) {
-  //	 $invalidPattern = 1;
+  //         $invalidPattern = 1;
   //}
   $pattern = str_replace(array('?','*','+'), array(), $pattern);
 
   if ($language == "any_language") $language = false;
 
-  $advsearch = new sotf_AdvSearch();						//create new search object object with this array
+  $advsearch = new sotf_AdvSearch();                                                //create new search object object with this array
 
   $total = $advsearch->simpleSearch($pattern, $language, $station);
   $limit = $page->splitList($total, "?pattern=" . urlencode($pattern) . "&language=$language");
@@ -49,6 +49,14 @@ for($i=0; $i<count($searchLangs); $i++) {
 
 $smarty->assign('searchLangs', $searchLangs);
 $smarty->assign('langNames', $langNames);
+
+// online counter for statistics
+if ($config['counterMode']) {
+   $chCounter_status = 'active';
+   $chCounter_visible = 0;
+   $chCounter_page_title = 'Einfache Suche - search.php';
+   include($config['counterURL']);
+}
 
 $page->send();
 

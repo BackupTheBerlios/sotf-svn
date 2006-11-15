@@ -50,51 +50,51 @@
 
 <body background="{$IMAGE_URL}/bg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 
-<div align="center"> 
+<div align="center">
 
   <table width="{#pageW#}" height="100%" border="0" cellpadding="0" cellspacing="0">
 
-    <tr> 
+    <tr>
 
-      <td background="{$IMAGE_URL}/bg_main_LEFT.gif"> 
+      <td background="{$IMAGE_URL}/bg_main_LEFT.gif">
 
         <div align="center"><img src="{$IMAGE_URL}/bg_main_LEFT.gif" width="7" height="6"></div>
 
       </td>
 
-      <td width="{#pageW#}" valign="top" bgcolor="#FFFFFF"> 
+      <td width="{#pageW#}" valign="top" bgcolor="#FFFFFF">
 
         <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
 
           <!-- fwtable fwsrc="stream1.png" fwbase="top.gif" fwstyle="Dreamweaver" fwdocid = "742308039" fwnested="1" -->
 
-          <tr> 
+          <tr>
 
             <td bgcolor="#000000"><img name="top_r1_c1" src="{$IMAGE_URL}/top_r1_c1.gif" width="700" height="17" border="0" alt=""></td>
 
           </tr>
 
-          <tr> 
+          <tr>
 
             <td>
 
               <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
 
-                <tr> 
+                <tr>
 
-                  <td height="60" bgcolor="#CEDDFC"> 
+                  <td height="60" bgcolor="#CEDDFC">
 
-                    <div align="right"> 
+                    <div align="right">
 
                       <table width="100%" border="0" cellspacing="0" cellpadding="0">
 
-                        <tr> 
+                        <tr>
 
-                          <td background="{$IMAGE_URL}/top_r2_c1.gif" class=tablebg> 
+                          <td background="{$IMAGE_URL}/top_r2_c1.gif" class=tablebg>
 
                             <table cellSpacing=0 cellPadding=6 width="100%" border=0>
 
-                              <tr> 
+                              <tr>
 
                                      <form>
 
@@ -132,7 +132,7 @@
 
                     <input class="action" type="button" name="b1" value="{#stop#}" onClick="redir(this.form,'{$ROOT_URL}/listen.php?stop=1')" />
 
-                                     
+
 
                                   {/if}
 
@@ -150,7 +150,7 @@
 
                                    <select name="uilang" onChange="this.form.submit()">
 
-                                     {foreach item=item from=$UI_LANGS}                 
+                                     {foreach item=item from=$UI_LANGS}
 
                                        <option value="{$item[0]}" {if $LANG eq $item[0]}SELECTED="1"{/if} >{$item[1]}</option>
 
@@ -186,13 +186,13 @@
 
           </tr>
 
-          <tr> 
+          <tr>
 
-            <td width="{#pageW#}" height="18" bgcolor="#FFFFFF"> 
+            <td width="{#pageW#}" height="18" bgcolor="#FFFFFF">
 
               <table width="100%" border="0" cellspacing="0" cellpadding="2">
 
-                <tr> 
+                <tr>
 
                   <td class="menu">
 
@@ -200,13 +200,15 @@
 
                       <!-- begin navbar -->
 
-                      <a class="menu" href="{$ROOT_URL}/">{#Home#}</a> 
+                      <a class="menu" href="{$ROOT_URL}/">{#Home#}</a>
 
-                      | <a class="menu" href="{$ROOT_URL}/advsearch.php">{#Search#}</a> 
+                      | <a class="menu" href="{$ROOT_URL}/advsearch.php">{#Search#}</a>
 
-                      | <a class="menu" href="{$ROOT_URL}/stations.php">{#Stations#}</a> 
+                      | <a class="menu" href="{$ROOT_URL}/stations.php">{#Stations#}</a>
 
-                      | <a class="menu" href="{$ROOT_URL}/topics.php">{#Topics#}</a> 
+                      | <a class="menu" href="{$ROOT_URL}/topics.php">{#Topics#}</a>
+
+                      | <a class="menu" href="{$ROOT_URL}/partner.php">{#Partner#}</a>                      
 
                       {if $loggedIn}
 
@@ -214,7 +216,7 @@
 
                       {/if}
 
-                      {if $IS_EDITOR} | <a class="menu" href="{$ROOT_URL}/editor.php">{#EditorPage#}</a> {/if} 
+                      {if $IS_EDITOR} | <a class="menu" href="{$ROOT_URL}/editor.php">{#EditorPage#}</a> {/if}
 
                       {if hasPerm('node', 'change', 'authorize') } | <a class="menu" href="{$ROOT_URL}/admin.php">{#AdminPage#}</a> {/if}
 
@@ -256,13 +258,13 @@
 
           </tr>
 
-          <tr> 
+          <tr>
 
             <td background="{$IMAGE_URL}/top_r4_c2.gif">
 
               <table border="0" cellpadding="0" cellspacing="0" width="{#pageW#}">
 
-                <tr> 
+                <tr>
 
                   <td><img name="top_r4_c1" src="{$IMAGE_URL}/top_r4_c1.gif" width="2" height="6" border="0" alt=""></td>
 
@@ -282,7 +284,7 @@
 
             {foreach from=$STATUS_MESSAGES item=MSG}
 
-                <tr> 
+                <tr>
 
                   <td class="status">
 
@@ -296,7 +298,7 @@
 
           {/if} -->
 
-          <tr> 
+          <tr>
 
             <td>
 
@@ -306,15 +308,15 @@
 
                 <hr>
 
-                <font size="-1"> 
+                <font size="-1">
 
-                <div style="text-align : center; font-size: 8pt"> 
+                <div style="text-align : center; font-size: 8pt">
 
-		{#contact_node_admin#} {mailto address="$ADMIN_EMAIL" encode="javascript"}
+                {#contact_node_admin#} {mailto address="$ADMIN_EMAIL" encode="javascript"}
 
                 </div>
 
-                </font> 
+                </font>
 
               </p>
 
@@ -349,4 +351,3 @@
   {/if}
 
 </script>
-

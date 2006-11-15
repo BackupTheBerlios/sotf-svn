@@ -1,9 +1,9 @@
-<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/*  
+/*
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ * Authors: András Micsik, Máté Pataki, Tamás Déri
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
@@ -15,29 +15,29 @@ $okURL = sotf_Utils::getParameter('okURL');
 
 if($username && $password)
 {
-	$errorMsg = sotf_User::login($username, $password);
-	if(!$errorMsg)
-	{
-		if ($okURL)
-		{
-			$page->redirect($okURL);
-		}
-		else
-		{
-			$page->redirect('index.php');
-		}
-		exit;
-	}
+        $errorMsg = sotf_User::login($username, $password);
+        if(!$errorMsg)
+        {
+                if ($okURL)
+                {
+                        $page->redirect($okURL);
+                }
+                else
+                {
+                        $page->redirect('index.php');
+                }
+                exit;
+        }
 }
 else
 {
-	if($page->loggedIn())
-	{
-		$errorMsg = $page->getlocalized("relogin");
-		$username = $userid;
-	}
-	elseif($username || $password)
-		$errorMsg = $page->getlocalized("missing_parameters");
+        if($page->loggedIn())
+        {
+                $errorMsg = $page->getlocalized("relogin");
+                $username = $userid;
+        }
+        elseif($username || $password)
+                $errorMsg = $page->getlocalized("missing_parameters");
 }
 
 $smarty->assign(
@@ -49,7 +49,16 @@ $smarty->assign(
                 );
 
 excludeRobots();
-                      
+
+
+// online counter for statistics
+if ($config['counterMode']) {
+   $chCounter_status = 'active';
+   $chCounter_visible = 0;
+   $chCounter_page_title = 'Anmelden - login.php';
+   include($config['counterURL']);
+}
+
 $page->send();
 
 ?>

@@ -1,9 +1,9 @@
-<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/*  
+/*
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ * Authors: András Micsik, Máté Pataki, Tamás Déri
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
@@ -18,8 +18,8 @@ if(strpos($contactId, '@') !== FALSE) {
   $contact->set('email', $contactId);
   $contact->find();
   if($contact->exists()) {
-	 $foundByEmail = 1;
-	 $contactId = $contact->id;
+         $foundByEmail = 1;
+         $contactId = $contact->id;
   }
 }
 
@@ -45,14 +45,14 @@ while(list(,$row)=each($refs)) {
   $role = $row['role_id'];
   if($repository->getTable($id) != 'sotf_programmes') {
     $obj = $repository->getObject($id);
-	 if(!$obj) {
-		logError("DB integrity error: role $role for $id which does not exist");
-		continue;
-	 }
+         if(!$obj) {
+                logError("DB integrity error: role $role for $id which does not exist");
+                continue;
+         }
     $class = get_class($obj);
     $data = array();
     $data['role'] = $vocabularies->getRoleName($role);
-	 $data['name'] = $obj->get('name');
+         $data['name'] = $obj->get('name');
     if($class == 'sotf_station') {
       $data['url'] = $config['rootUrl'] . "/showStation.php/$id";
       $data['mid'] = $page->getlocalized('of_station');
@@ -71,6 +71,15 @@ while(list(,$row)=each($refs)) {
   }
 }
 $smarty->assign('REFS',$ins);
+
+
+// online counter for statistics
+if ($config['counterMode']) {
+   $chCounter_status = 'active';
+   $chCounter_visible = 0;
+   $chCounter_page_title = 'Kontaktseiten - showContact.php';
+   include($config['counterURL']);
+}
 
 $page->sendPopup();
 

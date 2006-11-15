@@ -1,9 +1,9 @@
-<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*-
 
-/*  
+/*
  * $Id$
  * Created for the StreamOnTheFly project (IST-2001-32226)
- * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ * Authors: András Micsik, Máté Pataki, Tamás Déri
  *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
  */
 
@@ -37,23 +37,23 @@ if($jingle) {
   // play the jingle of station/series
   $obj = $repository->getObject($id);
   if(!$obj)
-	 raiseError("no_such_object", $id);
+         raiseError("no_such_object", $id);
   if(!$obj->isLocal()) {
-	 // have to send user to home node of this programme
-	 sotf_Node::redirectToHomeNode($obj, 'listen.php');
-	 exit;
+         // have to send user to home node of this programme
+         sotf_Node::redirectToHomeNode($obj, 'listen.php');
+         exit;
   }
   $playlist->addJingle($obj);
 } else {
-  // add normal programme 
+  // add normal programme
   $prg = $repository->getObject($id);
   if(!$prg)
-	 raiseError("no_such_object", $id);
+         raiseError("no_such_object", $id);
 
   if(!$prg->isLocal()) {
-	 // have to send user to home node of this programme
-	 sotf_Node::redirectToHomeNode($prg, 'listen.php');
-	 exit;
+         // have to send user to home node of this programme
+         sotf_Node::redirectToHomeNode($prg, 'listen.php');
+         exit;
   }
 
   if(!$prg->isPublished()) raiseError("not_published_yet");
@@ -61,18 +61,25 @@ if($jingle) {
   if($fobj and !$fobj->getBool('stream_access')) raiseError("no access");
 
   if(!$prg->canListen()) {
-	 $page->redirect($config['localPrefix'].'/protected.php');
-	 exit;
+         $page->redirect($config['localPrefix'].'/protected.php');
+         exit;
   }
-  
+
   $playlist->addProg($prg, $fileid);
 }
-  
+
 $playlist->startStreaming();
 
 // must start stream before! otherwise we don't know stream url
 $playlist->sendRemotePlaylist();
 
 $page->logRequest();
+
+if ($config['counterMode']) {
+   $chCounter_status = 'active';
+   $chCounter_visible = 0;
+   $chCounter_page_title = 'Programm abspielend - listen.php';
+   include($config['counterURL']);
+}
 
 ?>
