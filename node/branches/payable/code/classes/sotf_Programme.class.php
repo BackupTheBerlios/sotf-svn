@@ -384,6 +384,20 @@ class sotf_Programme extends sotf_ComplexNodeObject {
    *   QUERIES
    ************************************************/
 
+  function getPromotedProgrammes() {
+	 global $config, $db;
+	 $sql = "SELECT i.* FROM sotf_programmes i, sotf_stations s WHERE i.free_content='t' AND i.promoted='t' AND i.station_id = s.id AND i.published='t' AND i.type='sound' ORDER BY i.title";
+	 $res =	$db->query($sql);
+	 if(DB::isError($res))
+		raiseError($res);
+	 $results = null;
+	 while (DB_OK === $res->fetchInto($row)) {
+		$row['icon'] = sotf_Blob::cacheIcon2($row);
+		$results[] = $row;
+	 }
+	 return $results;
+  }
+
   /** get news for index page, mode can be: all, free, promoted, premium */
   function getNewProgrammes($fromDay, $maxItems, $mode='all') {
 	 global $config, $db;

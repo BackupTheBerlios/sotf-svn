@@ -165,3 +165,7 @@ ul.tabs li.last {
 .premiumList {
   background: #ccddcc;
 }
+
+.progType { 
+  font-size: 80%;
+}

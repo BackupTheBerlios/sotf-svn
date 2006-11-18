@@ -101,8 +101,10 @@ if($defQuery) {
 }
 
 if(nodeConfig('payableMode')) {
-  $smarty->assign('PREMIUM', sotf_Programme::getNewProgrammes($fromDay, $maxItemsIndexPage, 'premium'));
-  $smarty->assign('PROMOTED', sotf_Programme::getNewProgrammes($fromDay, 3, 'promoted'));
+  $fromDayPremium = date('Y-m-d', time() - (60*60*24*90));
+  $maxItemsPremium = 7;
+  $smarty->assign('PREMIUM', sotf_Programme::getNewProgrammes($fromDayPremium, $maxItemsPremium, 'premium'));
+  $smarty->assign('PROMOTED', sotf_Programme::getPromotedProgrammes());
 }
 
 // get topics with most content

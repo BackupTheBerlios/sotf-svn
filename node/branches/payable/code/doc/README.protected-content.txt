@@ -17,6 +17,10 @@ svn+ssh://svn.berlios.de/svnroot/repos/sotf/node/branches/payable
 
 - you have to merge back your config file and any local changes from the previous setup
 
+- two new entries need to be added to the config file node/www/config.inc.php:
+  $config['payableMode'] = true;
+  $config['currency'] = 'EUR';
+
 - then you have to run the relevant entries at the end of code/share/update.sql on your
 database
 
