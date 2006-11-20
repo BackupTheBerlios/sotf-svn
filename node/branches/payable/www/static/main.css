@@ -1,38 +1,38 @@
-BODY { 
+BODY {
   FONT-SIZE: 13px;
 }
 
 .status {
-	background-color: #FFAAAA; FONT-WEIGHT: bold; FONT-SIZE: 13px; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
+        background-color: #FFAAAA; FONT-WEIGHT: bold; FONT-SIZE: 13px; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
 }
 
 .menu {
-	FONT-WEIGHT: bold; FONT-SIZE: 13px; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
+        FONT-WEIGHT: bold; FONT-SIZE: 13px; TEXT-TRANSFORM: uppercase; FONT-FAMILY: Tahoma, Verdana, Arial; LETTER-SPACING: 1pt; FONT-VARIANT: normal
 }
 
 A.menu:link {
-	COLOR: #000000; TEXT-DECORATION: none
+        COLOR: #000000; TEXT-DECORATION: none
 }
 A.menu:active {
-	COLOR: #000000; TEXT-DECORATION: none
+        COLOR: #000000; TEXT-DECORATION: none
 }
 A.menu:visited {
-	COLOR: #000000; TEXT-DECORATION: none
+        COLOR: #000000; TEXT-DECORATION: none
 }
 A.menu:hover {
-	COLOR: #ff0000; TEXT-DECORATION: underline
+        COLOR: #ff0000; TEXT-DECORATION: underline
 }
 .date {
-	FONT-WEIGHT: bold; FONT-SIZE: 17px; COLOR: #666666; FONT-FAMILY: Tahoma, Verdana, Arial
+        FONT-WEIGHT: bold; FONT-SIZE: 17px; COLOR: #666666; FONT-FAMILY: Tahoma, Verdana, Arial
 }
 .date2 {
-	FONT-WEIGHT: bold; FONT-SIZE: 13px; COLOR: #666666; FONT-FAMILY: Arial, Helvetica, sans-serif
+        FONT-WEIGHT: bold; FONT-SIZE: 13px; COLOR: #666666; FONT-FAMILY: Arial, Helvetica, sans-serif
 }
 TD {
-	FONT-SIZE: 13px; FONT-FAMILY: Tahoma, Verdana, Arial
+        FONT-SIZE: 13px; FONT-FAMILY: Tahoma, Verdana, Arial
 }
 TH {
-	FONT-SIZE: 13px; FONT-FAMILY: Tahoma, Verdana, Arial
+        FONT-SIZE: 13px; FONT-FAMILY: Tahoma, Verdana, Arial
 }
 .tablebg     { background-image: url(top_r2_c1.gif);
                background-position: right }
@@ -62,7 +62,7 @@ TD.tab {
 }
 
 TABLE.title {
-  
+
 }
 TD.title2 {
   background-color: #F7DCC3;
@@ -91,7 +91,7 @@ A.action {
 }
 
 A.goto_object {
-  FONT-WEIGHT: bold; FONT-SIZE: 16px; 
+  FONT-WEIGHT: bold; FONT-SIZE: 16px;
 }
 
 A.playlist {
@@ -104,7 +104,7 @@ A.topicitem {
 }
 
 INPUT.action {
-  
+
 }
 
 INPUT {
@@ -120,11 +120,11 @@ A {
 }
 
 .abstract {
-  font-style: italic 
+  font-style: italic
 }
 
 .meta {
- FONT-WEIGHT: bold; 
+ FONT-WEIGHT: bold;
 }
 
 ul.tabs {
@@ -158,14 +158,10 @@ ul.tabs li.last {
   border: none;
 }
 
-.promotedList { 
+.promotedList {
   background: #ddcccc;
 }
 
 .premiumList {
   background: #ccddcc;
-}
-
-.progType { 
-  font-size: 80%;
 }

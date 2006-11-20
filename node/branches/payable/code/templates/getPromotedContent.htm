@@ -10,8 +10,8 @@
           {if $UNPUBLISHED}
           <table><tr><td bgcolor="#FF0000"><b><font color="#FFFFFF">{#unpublished_warning#}</font></b></td></tr></table>
           {/if}
-          <font size="-1">{#prog#}:</font>
-          <br>{$PRG_DATA.title} <div class="progType">{#Promoted_show#}</div>
+          <font size="-1">{#Promoted_show#}:</font>
+          <br>{$PRG_DATA.title}
         </td>
         <td class="title2">
           <a href="#general">{#Metadata#}</a>{if $ROLES}, <a href="#roles">{#Roles#}</a>{/if}{if $RIGHTS}, <a href="#rights">{#Rights#}</a>{/if},
@@ -55,13 +55,13 @@
   </table>
 
   <table class="tab">
-    <tr> 
+    <tr>
       <td nowrap class="tab">{#Metadata#}</td>
     </tr>
   </table>
   <table class="tabarea" width="100%" >
-    <tr> 
-      <td class="tabarea"> 
+    <tr>
+      <td class="tabarea">
         <a name="general"></a>
         <table width="100%">
             <tr valign="top"><td class="meta" nowrap width="10%">{#station#}:</td><td><a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a></td></tr>
@@ -126,20 +126,20 @@
             <tr valign="top"><td class="meta" nowrap>{#expiry_date#}:</td><td>{$PRG_DATA.expiry_date}</td></tr>
             {/if}
           </table>
-		</td> 
-	</tr>
+                </td>
+        </tr>
 </table>
 
 {if $ROLES}
 <p></p>
 
 <table class="tab">
-  <tr> 
+  <tr>
     <td nowrap class="tab">{#Roles#}</td>
   </tr>
 </table>
 <table class="tabarea" width="100%" >
-<tr> 
+<tr>
   <td class="tabarea">
         <a name="roles"></a>
         <table>
@@ -173,12 +173,12 @@
 <p></p>
 
 <table class="tab">
-  <tr> 
+  <tr>
     <td nowrap class="tab">{#Rights#}</td>
   </tr>
 </table>
 <table class="tabarea" width="100%" >
-<tr> 
+<tr>
   <td class="tabarea">
         <a name="rights"></a>
         <table>
@@ -206,13 +206,13 @@
 <p></p>
 <form>
 <table class="tab">
-  <tr> 
+  <tr>
     <td nowrap class="tab">{#Content#}</td>
   </tr>
 </table>
 <table class="tabarea" width="100%" >
-<tr> 
-  <td class="tabarea"> 
+<tr>
+  <td class="tabarea">
    {if $AUDIO_FILES }
         <div class="subheader">{#audio_file_list#}</div>
         <a name="mfiles"></a>
@@ -225,14 +225,14 @@
             <td>
               {if $item.main_content eq 't' }
                  {#programme_audio#}
-              {elseif $item.caption} 
+              {elseif $item.caption}
                  {$item.caption}
               {else}
                  {$item.filename}
               {/if}
             </td>
             <td align="right">
-              {$item.bitrate} kbps 
+              {$item.bitrate} kbps
             </td>
             <td>
                 {$item.format}
@@ -253,7 +253,7 @@
             </td>
           </tr>
           {/if}
-          {/foreach}    
+          {/foreach}
     </table>
    {/if}
    {if $OTHER_FILES }
@@ -268,7 +268,7 @@
             <td>
               {if $item.caption}
                 {$item.caption}
-              {else} 
+              {else}
                 {$item.filename}
               {/if}
             </td>
@@ -283,7 +283,7 @@
             </td>
           </tr>
           {/if}
-          {/foreach}    
+          {/foreach}
         </table>
    {/if}
    {if !$AUDIO_FILES and !$OTHER_FILES }
@@ -296,14 +296,14 @@
 
 <p></p>
 
-{if $LINKS } 
+{if $LINKS }
   <table class="tab">
-    <tr> 
+    <tr>
       <td nowrap class="tab">{#Links#}</td>
     </tr>
   </table>
   <table class="tabarea" width="100%" >
-    <tr> 
+    <tr>
       <td class="tabarea">
         <a name="links"></a>
         <table>
@@ -313,7 +313,7 @@
               <a target="link" href="{$item.url}">{if $item.caption}{$item.caption}{else}{$item.url}{/if}</a>
             </td>
           </tr>
-          {/foreach}    
+          {/foreach}
         </table>
       </td>
     </tr>
@@ -323,12 +323,12 @@
 <p></p>
 
   <table class="tab">
-    <tr> 
+    <tr>
       <td nowrap class="tab">{#Statistics#}</td>
     </tr>
   </table>
   <table class="tabarea" width="100%" >
-    <tr> 
+    <tr>
       <td class="tabarea">
         <p>{#stats_may_be_old#}: {$STATS.last_change}</p>
         <table width="100%">
@@ -340,10 +340,10 @@
                   <th></th>
                   <th>{#Visits#}</th>
                   <th>{#Listens#}</th>
-                  <th>{#Downloads#}</th> 
-                  <th>{#Rating#}</th> 
-                  <th></th> 
-                  <th></th> 
+                  <th>{#Downloads#}</th>
+                  <th>{#Rating#}</th>
+                  <th></th>
+                  <th></th>
                 </tr>
                 <tr>
                   <td>{#Nodes#}</td>
@@ -351,18 +351,18 @@
                   <td align="center">{$STATS.listens} ({$STATS.unique_listens})</td>
                   <td align="center">{$STATS.downloads} ({$STATS.unique_downloads})</td>
                   <td>{if $RATING}{$RATING.rating_value} ({#by#} {$RATING.rating_count}){else}-{/if}</td>
-                  <td></td> 
-                  <td></td> 
+                  <td></td>
+                  <td></td>
                 </tr>
                 {if $REFS}
                  <tr class="listhead">
                    <th>{#Portals#}</th>
                    <th>{#Visits_p#}</th>
                    <th>{#Listens_p#}</th>
-                   <th>{#Comments#}</th> 
-                   <th>{#Rating#}</th> 
-                   <th>{#From#}</th> 
-                   <th>{#Until#}</th> 
+                   <th>{#Comments#}</th>
+                   <th>{#Rating#}</th>
+                   <th>{#From#}</th>
+                   <th>{#Until#}</th>
                  </tr>
                  {foreach item=item from=$REFS}
                    <tr>
@@ -395,10 +395,10 @@
                     <option value="4" {if $MY_RATING==4}SELECTED=1{/if} >****</option>
                     <option value="5" {if $MY_RATING==5}SELECTED=1{/if} >*****</option>
                   </select>
-                  <input type="button" name="rate" value="{if $MY_RATING}{#change_rating#}{else}{#rate_it#}{/if}"   
+                  <input type="button" name="rate" value="{if $MY_RATING}{#change_rating#}{else}{#rate_it#}{/if}"
                          onclick="javascript:setvalue('rating', '{$ID}', this.form.rating.options[this.form.rating.selectedIndex].value);this.value='{#change_rating#}';return true;"
                          />
-                  
+
                 </form>
 
             </td>
