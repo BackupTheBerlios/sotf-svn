@@ -29,9 +29,22 @@ setup:
 a view 'ftp_auth' is created for authentication within proftpd (or any other ftpd).
 Check for proper home directory fields!
 
-If you use Self-admin tool (SADM), it provides sql-based authentication for
-proftpd. By default, the view ftp_auth does this. However, if you find
-the this view is empty, or its contents are improper, you can tweak
+If you use the node itself for user authentication, create a view like this:
+
+CREATE VIEW "ftp_auth" AS SELECT 
+	sotf_users.username, 
+	'www-data' AS groupname, 
+	33000 AS uid, 
+	33 AS gid, 
+	sotf_users.password AS passwd, 
+	'__PATH_TO_USER_DIRS__' || '/' || sotf_users.username AS homedir, 
+	0 AS count, 
+	'/bin/sh' AS shell 
+	FROM sotf_users;
+
+replace in the definition above uid, gid and groupname with the ones used by Apache, and replace __PATH_TO_USER_DIRS__ with the full path to the node/users directory. Then execute.
+
+If you use the very obsolete Self-admin tool (SADM), it provides sql-based authentication for proftpd. By default, the view ftp_auth does this. However, if you find the this view is empty, or its contents are improper, you can tweak
 ftp_auth like this (remember to change <path-to-user-dirs> to the real
 path!):
 

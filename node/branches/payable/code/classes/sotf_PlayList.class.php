@@ -124,7 +124,7 @@ class sotf_Playlist {
 
 	 // add program file
 	 $filepath = $prg->getFilePath($file);
-	 $this->add(array('id' => $prg->id, 'path' => $filepath, 'name' => urlencode($prg->get('title')) ));
+	 $this->add(array('id' => $prg->id, 'path' => $filepath, 'name' => urlencode($prg->get('title')), 'length' => $prg->get('length') ));
 	 
 	 // temp: set title
 	 $title = $prg->get("title");
@@ -192,10 +192,15 @@ class sotf_Playlist {
 	 $fp = fopen($tmpfile,'wb');
 	 if(!$fp)
 		raiseError("Could not write to playlist file: $tmpfile");
-
+	 fwrite($fp, "#EXTM3U\n");
 	 debug('AUDIO_FILES', $this->audioFiles);
     reset($this->audioFiles);
     while(list(,$audioFile) = each($this->audioFiles)) {
+		$l=1;
+		if($audioFile['length'])
+		  $l = $audioFile['length'];
+		$name = urldecode($audioFile['name']);
+		fwrite($fp, "#EXTINF:$l,$name\n");
 		if($config['httpStreaming']) {
 		  fwrite($fp, $audioFile['url'] . "\n");
 		} else {
