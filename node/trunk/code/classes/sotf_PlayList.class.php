@@ -70,7 +70,7 @@ class sotf_Playlist {
   function addJingle($obj) {
 	 $jfile = $obj->getJingle();
 	 if($jfile)
-		$this->add(array('id' => $obj->id, 'path' => $jfile, 'jingle' => 1, 'name' => 'jingle'));
+		$this->add(array('id' => $obj->id, 'path' => $jfile, 'jingle' => 1, 'name' => '_jingle'));
 	 else
 		raiseError("error while playing jingle");
   }
@@ -106,19 +106,19 @@ class sotf_Playlist {
 	 $station = $prg->getStation();
 	 $jfile = $station->getJingle($index);
 	 if($jfile)
-		$this->add(array('id' => $station->id, 'path' => $jfile, 'jingle' => 1, 'name' => 'station_jingle'));
+		$this->add(array('id' => $station->id, 'path' => $jfile, 'jingle' => 1, 'name' => '_station_jingle'));
 
 	 // add jingle for series (if exists)
 	 $series = $prg->getSeries();
 	 if($series) {
 		$jfile = $series->getJingle($index);
 		if($jfile)
-		  $this->add(array('id' => $series->id, 'path' => $jfile, 'jingle' => 1, 'name' => 'series_jingle'));
+		  $this->add(array('id' => $series->id, 'path' => $jfile, 'jingle' => 1, 'name' => '_series_jingle'));
 	 }
 
 	 // add program file
 	 $filepath = $prg->getFilePath($file);
-	 $this->add(array('id' => $prg->id, 'path' => $filepath, 'name' => urlencode($prg->get('title')) ));
+	 $this->add(array('id' => $prg->id, 'path' => $filepath, 'name' => urlencode($prg->get('title')), 'length' => $prg->get('length') ));
 	 
 	 // temp: set title
 	 $title = $prg->get("title");
@@ -186,11 +186,16 @@ class sotf_Playlist {
 	 $fp = fopen($tmpfile,'wb');
 	 if(!$fp)
 		raiseError("Could not write to playlist file: $tmpfile");
-
+    fwrite($fp, "#EXTM3U\n");
 	 debug('AUDIO_FILES', $this->audioFiles);
     reset($this->audioFiles);
     while(list(,$audioFile) = each($this->audioFiles)) {
-		if($config['httpStreaming']) {
+      $l=1;
+      if($audioFile['length'])
+        $l = $audioFile['length'];
+      $name = urldecode($audioFile['name']);
+      fwrite($fp, "#EXTINF:$l,$name\n");
+ 		if($config['httpStreaming']) {
 		  fwrite($fp, $audioFile['url'] . "\n");
 		} else {
 		  fwrite($fp, $audioFile['path'] . "\n");
