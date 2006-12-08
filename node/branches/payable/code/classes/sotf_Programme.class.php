@@ -529,12 +529,23 @@ class sotf_Programme extends sotf_ComplexNodeObject {
   }
 
   function selectFileToListen() {
-	 // TODO: write this better
+	 global $config;
 	 $files = $this->listAudioFiles();
+	 // get preferred format
+	 $pref = $config['audioFormats'][$config['preferredStreamingFormat']];
+	 $prefString = $pref['bitrate'].'kbps_'.$pref['channels'].'chn_'.$pref['samplerate'].'Hz.'.$pref['format'];
+	 debug('PREF FORMAT', $prefString);
+	 foreach($files as $f) {
+		//if($f['kbps']==$pref['bitrate'] and $f['mime_type']==$pref['format']
+		if($f['format']==$prefString) {
+		  debug("PREF format", "found");
+		  return $f['id'];
+		}
+	 }
+	 // select lowest bitrate free to stream
 	 usort($files, array('sotf_Programme', 'sortFilesByBitRate'));
 	 //debug("MFILES", $files);
 	 //reset($files);
-	 // return lowest bitrate free to stream
 	 while(list(,$f) = each($files)) {
 		if($f['stream_access']=='t')
 		  return $f['id'];
