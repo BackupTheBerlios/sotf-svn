@@ -71,7 +71,7 @@ class sotf_Playlist {
   function addJingle($obj) {
 	 $jfile = $obj->getJingle();
 	 if($jfile)
-		$this->add(array('id' => $obj->id, 'path' => $jfile, 'jingle' => 1, 'name' => 'jingle'));
+		$this->add(array('id' => $obj->id, 'path' => $jfile, 'jingle' => 1, 'name' => '_jingle'));
 	 else
 		raiseError("error while playing jingle");
   }
@@ -112,14 +112,14 @@ class sotf_Playlist {
 	 $station = $prg->getStation();
 	 $jfile = $station->getJingle($index);
 	 if($jfile)
-		$this->add(array('id' => $station->id, 'path' => $jfile, 'jingle' => 1, 'name' => 'station_jingle'));
+		$this->add(array('id' => $station->id, 'path' => $jfile, 'jingle' => 1, 'name' => '_station_jingle'));
 
 	 // add jingle for series (if exists)
 	 $series = $prg->getSeries();
 	 if($series) {
 		$jfile = $series->getJingle($index);
 		if($jfile)
-		  $this->add(array('id' => $series->id, 'path' => $jfile, 'jingle' => 1, 'name' => 'series_jingle'));
+		  $this->add(array('id' => $series->id, 'path' => $jfile, 'jingle' => 1, 'name' => '_series_jingle'));
 	 }
 
 	 // add program file

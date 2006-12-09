@@ -534,11 +534,16 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 // get preferred format
 	 $pref = $config['audioFormats'][$config['preferredStreamingFormat']];
 	 $prefString = $pref['bitrate'].'kbps_'.$pref['channels'].'chn_'.$pref['samplerate'].'Hz.'.$pref['format'];
-	 debug('PREF FORMAT', $prefString);
+	 debug('FORMAT wanted', $prefString);
 	 foreach($files as $f) {
-		//if($f['kbps']==$pref['bitrate'] and $f['mime_type']==$pref['format']
-		if($f['format']==$prefString) {
-		  debug("PREF format", "found");
+		if($f['format']==$prefString and $f['stream_access']=='t') {
+		  debug("PREF format", $f['format']);
+		  return $f['id'];
+		}
+	 }
+	 foreach($files as $f) {
+		if($f['kbps']==$pref['bitrate'] and strpos($f['mime_type'],$pref['format']) !== false and $f['stream_access']=='t') {
+		  debug("QUASI PREF format", $f['format']);
 		  return $f['id'];
 		}
 	 }
@@ -547,8 +552,10 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 //debug("MFILES", $files);
 	 //reset($files);
 	 while(list(,$f) = each($files)) {
-		if($f['stream_access']=='t')
+		if($f['stream_access']=='t') {
+		  debug("LOWEST streamable", $f['format']);
 		  return $f['id'];
+		}
 	 }
 	 return '';
   }

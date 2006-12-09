@@ -29,10 +29,13 @@ if($del) {
   reset ($_POST);
   while(list($g,$val) = each($_POST)) {
     debug("P", "$g - $val");
-    if(substr($g, 0, 2) == 'g_') {
-      $g = substr($g, 2);
+    if(substr($g, 0, 2) == 'g_' && $val==1) {
+      $g = (int)substr($g, 2);
       sotf_Group::setGroup($uid, $g, 1);
+		debug("TYPE", gettype($g));
+		debug("ADD $g", $uGroups[$g]);
       unset($uGroups[$g]);
+		debug("after REMOVING $g", $uGroups);
     }
   }
   // remove unchecked items

@@ -83,6 +83,7 @@ class sotf_Group extends sotf_Object {
     global $db;
     $uid = sotf_Utils::magicQuotes($uid);
     $list = $db->getCol("SELECT g.name FROM sotf_groups g, sotf_user_groups u WHERE g.id=u.group_id AND u.user_id='$uid'");
+	 natcasesort($list);
     return $list;
   }
 
