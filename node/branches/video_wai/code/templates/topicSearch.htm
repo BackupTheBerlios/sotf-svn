@@ -1,0 +1,270 @@
+
+
+  <form>
+
+    <table class="title" cellspacing="0" cellpadding="5" width="100%">
+
+      <tr valign="bottom">
+
+        <td class="topic_titlehead" width="20%">
+
+          {#topic_search#}
+
+        </td>
+
+        <td class="topic_title2">
+
+          {foreach item=item from=$SUPERTOPICS}
+
+              <a href="topicSearch.php?ID={$item.id}">{$item.name}</a> /
+
+          {/foreach}
+
+          {$NAME}
+
+        </td>
+
+        <td class="title2" width="10%" align="right" valign="bottom">
+
+        </td>
+
+      </tr>
+
+      <tr>
+
+        <td colspan="3" class="titlehead" height="5">
+
+        </td>
+
+      </tr>
+
+    </table>
+
+  </form>
+
+
+
+{if count($SUPERTOPICS) eq 0 }
+
+<p></p>
+
+
+
+  <table class="tab">
+
+    <tr> 
+
+      <td nowrap class="tab">{#topic_tree#}</td>
+
+    </tr>
+
+  </table>
+
+  <table class="tabarea">
+
+    <tr> 
+
+      <td class="tabarea"> 
+
+        <a name="treeinfo"></a>
+
+
+
+        <p>{#selected_tree#}: {$TREE.topic_name}</p>
+
+        <p><i>{$TREE.description}</i></p>
+
+
+
+        <p><a href="{$TREE.url}">{$TREE.url}</a></p>
+
+
+
+          <form>
+
+            {#other_trees#}: 
+
+            <select name="tree">
+
+              {foreach from=$TREES item=item}
+
+              <option value="{$item.tree_id}">{if $item.topic_name}{$item.topic_name}{else}{$item.name}{/if}</option>
+
+              {/foreach}
+
+            </select>
+
+            <input type="submit" name="select_tree" value="{#change_tree#}">
+
+          </form>
+
+
+
+
+
+      </td>
+
+    </tr>
+
+  </table>
+
+
+
+{/if}
+
+
+
+{if count($SUBTOPICS) gt 0 }
+
+
+
+<p></p>
+
+
+
+  <table class="tab">
+
+    <tr> 
+
+      <td nowrap class="tab">{#subtopics#}</td>
+
+    </tr>
+
+  </table>
+
+  <table class="tabarea">
+
+    <tr> 
+
+      <td class="tabarea"> 
+
+        <a name="subtopics"></a>
+
+
+
+        <table width="100%">
+
+          {foreach item=item from=$SUBTOPICS}
+
+          <tr valign="top" class="list2" >
+
+            <td>
+
+              <a href="topicSearch.php?ID={$item.id}">{$item.name}</a> ({$item.total})
+
+            </td>
+
+          </tr>
+
+          {/foreach}
+
+        </table>
+
+
+
+      </td>
+
+    </tr>
+
+  </table>
+
+
+
+{/if}
+
+
+
+{if count($SUPERTOPICS) gt 0 }
+
+
+
+<p></p>
+
+
+
+
+
+  <table class="tabarea">
+
+    <tr> 
+
+      <td class="tabarea"> 
+
+
+
+       <a name="progs"></a>
+
+
+
+       {if count($result) gt 0}        
+
+        <table width="100%">
+
+          <tr class="listhead">
+
+            <td colspan="3" align="center">
+
+		{include file="splitList.htm"}
+
+            </td>
+
+          </tr>
+
+          {cycle name="progs" values="list1,list2" print=false advance=false}
+
+          {foreach item=item from=$result}
+
+          <tr valign="top" class="{cycle name="progs"}" >
+
+            <td width="1%">
+
+              {if $item.icon }
+
+                 <img src="{$CACHE_URL}/{$item.icon}">
+
+              {else}
+
+                 <img src="{$IMAGE_URL}/noicon.png">
+
+              {/if}
+
+            </td>
+
+            <td width="98%">
+
+              <a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a> ({$item.broadcast_date|default:$item.entry_date})
+
+              {if $item.alternative_title}<br>{$item.alternative_title}{/if}
+
+              {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
+
+              {if $item.abstract}
+
+                  <div class="abstract">{$item.abstract|truncate:300}</div>
+
+              {/if}
+
+            </td>
+
+          </tr>
+
+          {/foreach}
+
+        </table>
+
+       {else}
+
+        <p>{#no_progs#}</p>
+
+       {/if}
+
+      </td>
+
+    </tr>
+
+  </table>
+
+
+
+{/if}
+

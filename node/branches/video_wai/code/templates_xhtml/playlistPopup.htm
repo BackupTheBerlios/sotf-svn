@@ -1,0 +1,33 @@
+<div id="playlistPopup_container">
+	<script language="javascript" src="{$IMAGE_URL}/playlist.js" type="text/javascript"></script>
+	
+	<form name="taskform" method="POST" action="playlistPopup.php?close=true">
+		<div id="playlist_order">
+			<input type="hidden" name="lista" value="-" />
+			<select multiple="1" name="list" size="{$count}" class="dropdown">
+				{html_options options=$programmes}
+				<option value="x">_________________________________________________</option>
+			</select>
+		</div>
+		
+		<div id="playlist_navi">
+			<ul>
+				<li><a href="#" onclick="moveTop()"><img src="{$IMAGE_URL}/up2.gif" alt="{#top#}" /></a></li>
+				
+				<li><a href="#" onclick="moveUp()"><img src="{$IMAGE_URL}/up.gif" alt="{#up#}" /></a></li>
+				
+				<li><a href="#" onclick="moveDown()"><img src="{$IMAGE_URL}/down.gif" alt="{#down#}" /></a></li>
+				
+				<li><a href="#" onclick="moveBottom()"><img src="{$IMAGE_URL}/down2.gif" alt="{#buttom#}" /></a></li>
+			</ul>
+		</div>
+		
+		<div id="playlist_save">
+			<input type="submit" name="save" class="button" value="{#save#}" onclick="selectAllItemsIn(document.taskform.list)"/>
+		</div>
+	</form>
+	
+	<script language="javascript" type="text/javascript">
+		generate();
+	</script>
+</div>

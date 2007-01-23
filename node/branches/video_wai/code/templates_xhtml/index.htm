@@ -1,0 +1,79 @@
+<div class="index_container">
+	<div id="introduction">
+		{#intro#}
+	</div>
+	
+	<div id="new_programmes">
+		{if $DEF_QUERY} 
+			<h3>{#Default_query#}</h3> 
+		{else} 
+			<h3>{#New_shows#}</h3> 
+		{/if} 
+		
+		{if count($NEWS) gt 0 } 
+			<ul id="programme" class="listbox">
+				{foreach item=item from=$NEWS} 
+					<li>
+						<div class="programme_header listbox_head">
+							<h4><a class="goto_object" href="get.php?id={$item.id}">{$item.title}</a></h4>
+							{if $item.alternative_title}
+								<h5>{$item.alternative_title}</h5>
+							{/if} 
+						</div>
+						<div class="programme_smalldetails listbox_body">
+						
+							<div class="programme_icon listbox_icon">
+								{if $item.icon }
+									<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$CACHE_URL}/{$item.icon}" alt="Programm Icon" width="70"  /></a> 
+								{else}
+									<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$IMAGE_URL}/noicon_small.gif" alt="No Icon" width="70" /></a>
+								{/if}
+							</div>
+							
+							<div class="programme_textdetails listbox_details">
+								{if $item.episode_title}
+									<div class="programme_abstract_episode">
+										<span class="identifier">Episode {$item.episode_sequence}: </span>{$item.episode_title}
+									</div>
+								{/if} 
+								
+								{if $item.abstract}
+									<div class="programme_abstract_text">
+										<span class="identifier">{#abstract#}: </span>{$item.abstract|truncate:300}
+									</div>
+								{/if}
+							</div>
+							
+							<div class="progamme_smalldetails_footer listbox_footer">
+								<div class="programme_date">
+									{if $item.broadcast_date}
+										<span class="identifier">{#broadcast_date#}: </span>
+										<span>{if $LANG eq "eng"}{$item.broadcast_date|date_format:"%Y-%m-%d"} 
+										{else} {$item.broadcast_date|date_format:"%d.%m.%Y"}{/if}</span>
+									{/if}										
+									{if $item.entry_date}
+										<span class="identifier">{#entry_date#}: </span>
+										<span>{if $LANG eq "eng"}{$item.entry_date} {else}{$item.entry_date|date_format:"%d.%m.%Y"}{/if}</span>
+									{/if} 
+								</div>
+								<div class="programme_abstract_link">
+									<a class="goto_object" href="get.php?id={$item.id}">{#further_details#}...</a> 
+								</div>
+							</div>
+						</div>
+					</li>	
+				{/foreach} 
+			</ul>
+			
+			{if $DEF_QUERY}
+				({#total#} {$DEF_QUERY_MAX})
+			{/if} 
+				{else} 
+					{if $DEF_QUERY} 
+						{#No_results#} 
+					{else} 
+						{#No_news#} 
+					{/if} 
+		{/if}
+	</div>
+</div>

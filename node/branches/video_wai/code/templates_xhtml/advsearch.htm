@@ -1,0 +1,121 @@
+<div id="advsearch_container">
+	<h3>{#Advanced_search#}</h3>
+	<div id="advsearch_description">{#combine#}</div>
+	<form method="post" action="advsearch.php">
+		<input type="hidden" name="SQLquerySerial" value="{$SQLquerySerial}" />
+		<input type="image" src="{$IMAGE_URL}/transp.gif" name="image" />
+		<div id="advsearch_fields">
+			{if !empty($ERROR_FIELDS)}
+				<div id="advsearch_error error">
+					{if $ERROR_COUNT == 1} {#field_empty#} {else} {#fields_empty#} {/if}
+				</div>
+			{/if}
+			
+			{section name=i loop=$SQLquery}
+				<!--[if !IE]>{* commented out by Martin Schmidt{if $smarty.section.i.index != 0}
+				{if $SQLquery[i][0] == "AND"}
+								 <tr>
+									<td bgcolor="{#searchbgcolor1#}">&nbsp;&nbsp;</td>
+									<td colspan=4 bgcolor="#FFFFFF" align=center>{#AND#}</td>
+									<td bgcolor="{#searchbgcolor1#}">&nbsp;&nbsp;</td>
+								</tr>
+							{/if}
+				{/if}*}<![endif]-->
+				{cycle values="list1,list2" print=false advance=false}
+				
+				<div class="advsearch_field {cycle}">
+					<input type="checkbox" class="checkbox" name="SQLchosen[]" value="{$SQLquery[i][1]}" {if $SQLquery[i][0] == "AND"} checked="checked" {/if}/>
+					<span {if $ERROR_FIELDS[i]=='error'} class="error"{/if}>{$SQLqueryfields[i]}</span>
+					{if $SQLquery[i][4] == "string"}
+						<select name="SQLeq[]" class="dropdown">{html_options options=$EQstring selected=$SQLquery[i][2]}</select>
+						<input type="text" class="textfield" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30"/>
+					{elseif $SQLquery[i][4] == "date"}
+						<select name="SQLeq[]" class="dropdown">{html_options options=$EQdate selected=$SQLquery[i][2]}</select>
+						{html_select_date prefix="SQLstring[]" time=$SQLquery[i][3] start_year="2000" 
+							end_year="+0" display_days=true month_format="%m" field_order="YMD" }
+					{elseif $SQLquery[i][4] == "lang"}
+						<select name="SQLeq[]" class="dropdown">{html_options options=$EQlang selected=$SQLquery[i][2]}</select>
+						<select name="SQLstring[]" class="dropdown">{html_options options=$Languages selected=$SQLquery[i][3]}</select>
+					{elseif $SQLquery[i][4] == "station"}
+						<select name="SQLeq[]" class="dropdown">{html_options options=$EQlang selected=$SQLquery[i][2]}</select>
+						<select name="SQLstring[]" class="dropdown">{html_options options=$Stations selected=$SQLquery[i][3]}</select>
+					{elseif $SQLquery[i][4] == "genre"}
+						<select name="SQLeq[]" class="dropdown">{html_options options=$EQlang selected=$SQLquery[i][2]}</select>
+						<select name="SQLstring[]" class="dropdown">{html_options options=$Genres selected=$SQLquery[i][3]}</select>
+					{elseif $SQLquery[i][4] == "length"}
+						<select name="SQLeq[]" class="dropdown">{html_options options=$EQlength selected=$SQLquery[i][2]}</select>
+						<input type="text" class="textfield" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" maxlength="5" /> {#seconds#}
+					{elseif $SQLquery[i][4] == "rating"}
+						<select name="SQLeq[]" class="dropdown">{html_options options=$EQnumber selected=$SQLquery[i][2]}</select>
+						<select name="SQLstring[]" class="dropdown">{html_options options=$Ratings selected=$SQLquery[i][3]}</select>
+					{elseif $SQLquery[i][4] == "number"}
+						<select name="SQLeq[]" class="dropdown">{html_options options=$EQnumber selected=$SQLquery[i][2]}</select>
+						<input type="text" class="textfield" name="SQLstring[]" value="{$SQLquery[i][3]}" size="5" maxlength="5" />
+					{elseif $SQLquery[i][4] == "topic"}
+						<select name="SQLeq[]" class="dropdown">{html_options options=$EQtopic selected=$SQLquery[i][2]}</select>
+						<input type="text" class="textfield" name="SQLstring[]" value="{$SQLquery[i][3]}" size="30" />
+					{* added by Martin Schmidt *}
+					{elseif $SQLquery[i][4] == "contenttype"}
+						<select name="SQLeq[]" class="dropdown">{html_options options=$EQcontenttype selected=$SQLquery[i][2]}</select>
+						<select name="SQLstring[]" class="dropdown">{html_options options=$ContentTypes selected=$SQLquery[i][3]}</select>
+					{/if}
+				</div>
+			{/section}
+			
+			<div id="advsearch_sortby1">
+				{#sort1#}
+				<select name="sort1" class="dropdown"{if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort1}</select>
+				<input type="checkbox" class="checkbox" name="dir1"{if $dir1} checked="checked"{/if}{if $SQLquery == ""} disabled="true"{/if} /> {#desc#}
+			</div>
+			
+			<div id="advsearch_sortby2">
+				{#sort2#}
+				<select name="sort2" class="dropdown" {if $SQLquery == ""} disabled="true"{/if}>{html_options options=$OrderFields selected=$sort2}</select>
+				<input type="checkbox" class="checkbox" name="dir2" {if $dir2} checked="checked"{/if}{if $SQLquery == ""} disabled="true"{/if}/> {#desc#}
+			</div>
+			
+			<div id="advsearch_buttons">
+				<input type="submit" name="run" class="button" value="{#run#}"{if $SQLquery == ""} disabled="true"{/if} />
+				<input type="submit" name="new" class="button" value="{#new_search#}" />
+			</div>
+</div>
+			{if $notLoggedIn == false}
+				
+				<div id="advsearch_manage">
+				<h4 class="cathead">{#manage_queries#}</h4>
+					<div id="advsearch_manage_content">
+						<div id="advsearch_manage_dropdown">
+							<select name="loadfrom" class="dropdown" {if $saved == ""}disabled="true"{/if}>{html_options options=$saved}</select>
+						</div>
+						<div id="advsearch_manage_actions">
+							<input type="submit" name="load" class="button" value="{#load#}" {if $saved == ""}disabled="true"{/if} />
+							<input type="submit" name="default" class="button" value="{#default#}" {if $saved == ""}disabled="true"{/if} />
+							<input type="submit" name="deleteq" class="button" value="{#deleteq#}" {if $saved == ""}disabled="true"{/if} />
+						</div>
+						<div id="advsearch_manage_savesearch">
+							<input type="text" name="saveas" class="textfield" value="" maxlength=15{if $SQLquery == ""} disabled="true"{/if} />
+							<input type="submit" name="save" class="button" value="{#save#}"{if $SQLquery == ""} disabled="true"{/if} /> 
+						</div>
+					</div>
+				</div>
+			{/if}
+		
+	</form>		
+				 
+	{if $upload_query}
+		<script language="javascript" type="text/javascript">
+			<!--
+			function my_onload()
+			{literal}{{/literal}
+				{if $upload_query != "http://"}
+				//alert("OK");
+				window.open('{$upload_query}?type=query&data={$SQLquerySerial}','','scrollbars=yes,width=640,height=340,left=320,top=200');
+				{else}
+				alert("{#URL_missing#}");
+				{/if}
+			{literal}}{/literal}
+			document.body.onload = my_onload;
+			// -->
+		</script> 
+	{/if}
+</div>

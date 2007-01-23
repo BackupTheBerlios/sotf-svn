@@ -1,0 +1,146 @@
+<div id="topic_container">
+	<h3>{#topic_search#}</h3>
+	<div id="topic_breadcrumb">
+		{foreach item=item from=$SUPERTOPICS} 
+			<a href="topicSearch.php?ID={$item.id}">{$item.name}</a> /
+		{/foreach}
+		<!--<span id="topic_breadcrumb_selected">{$NAME}</span>--> <!--removed by KT-->
+	</div>
+	
+	
+	{if count($SUPERTOPICS) eq 0 }
+		<div id="topic_tree_selection">
+			<!--<h4>{#topic_tree#}</h4>--> <!--removed by KT-->
+			
+			<div id="topic_tree_info"> 
+				<div id="topic_tree_selected" class="line">
+					<span class="identifier">{#selected_tree#}: </span><span class="topic_tree_value value">{$TREE.topic_name}</span>
+					<div id="topic_tree_description">{$TREE.description}</div>
+				</div>
+				
+				<!--<p><a href="{$TREE.url}">{$TREE.url}</a></p> -->
+				<form id="topic_tree_selector" action="">
+					<div id="topics_othertrees">{#other_trees#}:
+					<select name="tree" class="dropdown">
+						{foreach from=$TREES item=item}			  
+							<option value="{$item.tree_id}">{if $item.topic_name}{$item.topic_name}{else}{$item.name}{/if}</option>
+						{/foreach}
+					</select>
+					</div>
+					<div id="topic_tree_selector_submit">
+						<input type="submit" class="button" name="select_tree" value="{#change_tree#}" />
+					</div>
+				</form>
+			</div>
+		</div>
+	{/if}
+	
+	
+	{if count($SUPERTOPICS) gt 0 }
+		<div id="topic_subtopics">
+			 
+			<h4>{#subtopics#}</h4>
+			
+			<ul class="topic_subtopic_topiclist">
+				{foreach item=item from=$SUBTOPICS} 
+					<li><a href="topicSearch.php?ID={$item.id}">{$item.name}</a> ({$item.total}) </li>
+				{/foreach}
+			</ul>
+		</div>
+	{/if}
+	
+
+
+	{if count($SUPERTOPICS) eq 0}
+	<ul id="topics_list">
+	
+		{section name=i loop=$ALLTOPICS}
+			{if $ALLTOPICS[i].level gt $ALLTOPICS[i.index_prev].level}<div class="more_info">&raquo; <a onclick="toggleInfo(this);">show more...</a></div><div class="additional_info" name="additional_info" style="display:none;"><ul compact="compact">{/if}
+			{if $ALLTOPICS[i].level lt $ALLTOPICS[i.index_prev].level}</ul></div>{/if}
+			<li>
+				<a name="{$ALLTOPICS[i].id}"></a>
+				
+						<a class="topicitem" href="topicSearch.php?ID={$ALLTOPICS[i].id}">
+						{if $ALLTOPICS[i].topic_name != ""}{$ALLTOPICS[i].topic_name}{else}{$ALLTOPICS[i].name}{/if}
+						({if $ALLTOPICS[i].total}{$ALLTOPICS[i].total}{else}{$ALLTOPICS[i].number}{/if})
+						</a>
+				</li>
+		{/section}
+		</ul></div>
+	</ul>
+	{/if}		
+
+			
+	<!-- end mh -->
+	
+	{if count($SUPERTOPICS) gt 0 }
+		{if count($result) gt 0} 
+			<div id="topic_supertopics">
+				{if $rp_count gt 10}
+					<div class="navigation_buttons"> {include file="splitList.htm"} </div>
+				{/if}
+				<div class="more_info">&raquo; <a onclick="toggleAllInfo(this, 'listbox_body');">show all details...</a></div>
+				{cycle name="progs" values="list1,list2" print=false advance=false}
+				<ul id="topics_supertopics_list" class="listbox">
+					{foreach item=item from=$result}
+					
+					<li class="topic_supertopic_item">
+						
+						<div class="listbox_head">
+						<h4>
+						<div class="listbox_head_heading">
+							<a class="pulldown" onclick="toggleInfoDirect(this, 'listbox_body');"><img src="{$IMAGE_URL}/pulldown.gif" name="{$IMAGE_URL}/pullup.gif"/></a>
+							<a href="get.php?id={$item.id}">{$item.title}</a>
+						</div>
+							</h4>
+						{if $item.alternative_title}
+								<h5 class="topic_supertopic_alttitle">{$item.alternative_title}</h5>
+							{/if}
+							</div>
+						
+						<div class="listbox_body" name="additional_info" style="display:none">
+							<div class="topics_supertopic_icon listbox_icon"> {if $item.icon } <img src="{$CACHE_URL}/{$item.icon}" alt="icon"/> {else} <img src="{$IMAGE_URL}/noicon.gif" alt="icon"/> {/if}
+							</div>
+							
+							<div class="topic_supertopic_details listbox_details">
+							{if $item.episode_title}
+									<div class="topic_supertopic_episode"><span class="identifier">Episode {$item.episode_sequence}:</span> {$item.episode_title}</div>
+								{/if}
+						
+								{if $item.abstract}
+									<div class="topic_supertopic_abstract">{$item.abstract|truncate:300}</div>
+								{/if} 
+								</div>
+								<div class="listbox_footer">
+									<div class="programme_date">
+										{if $item.broadcast_date}
+										<div>
+											<span class="identifier">{#broadcast_date#}: </span>
+											<span>{if $LANG eq "eng"}{$item.broadcast_date|default|date_format:"%Y-%m-%d"} 
+												{else} {$item.broadcast_date|date_format:"%d.%m.%Y"}{/if}
+											</span>
+										</div>
+										{/if}
+										{if $item.entry_date}
+										<div>
+											<span class="identifier">{#entry_date#}: </span>
+											<span>{if $LANG eq "eng"}{$item.entry_date} {else}{$item.entry_date|date_format:"%d.%m.%Y"}{/if}</span>
+										</div>
+										{/if}
+									</div>
+									<div class="programme_abstract_link">
+										<a class="goto_object" href="get.php?id={$item.id}">{#further_details#}...</a> 
+									</div>
+								</div>
+							</div>
+						</li>
+						
+					{/foreach}
+				</ul>
+			</div>
+			{else}
+			
+				<div class="topic_supertopics_none">{#no_progs#}</div>
+		{/if}
+	{/if}
+</div>

@@ -1,0 +1,270 @@
+<div id="editor_container">
+	{literal}
+		<script language="javascript" type="text/javascript">
+			<!-- 
+				function setvalue(name, id, value){
+					var popurl="updatedb.php?name="+name+"&id="+id+"&value="+value
+					winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
+				}
+				
+				function exportPrg(obj, prg) {
+					type = obj.selectedIndex;
+					if(type==0) return;
+					window.location.href='export.php?id='+prg+'&type='+type;
+				}
+			// -->
+		</script>
+	{/literal}
+	
+	
+	<h3>{#EditorPage#}</h3>
+	<div class="block">
+		<h4 class="cathead">{#create_new_prg#}</h4>
+		<div class="content">
+			<div id="editor_create_new_explanation1">{#create_new_expl1#}</div>
+			<div id="editor_create_links">
+				<ul>
+					<li><a target="ftp" href="{$USERFTPURL}">{#user_ftp_access#}</a></li>
+					<li><a href="javascript:popup('manageFiles.php','ManageFiles',500,650,true)">{#manage_files#}</a></li>
+				</ul>
+			</div>	
+			<div id="editor_create_new_explanation2">{#create_new_expl2#}</div>
+			 
+			{if $USER_AUDIO_FILES}
+				<div id="editor_useraudio_form">
+					<form method="post" action="">
+						<!-- {#pending_audio#}: -->
+						<select name="fname" class="dropdown">
+							{html_options values=$USER_AUDIO_FILES|escape output=$USER_AUDIO_FILES selected=$FNAME}
+						</select>
+						
+						{ if count($STATIONS_EDITOR)==1 }
+							<input type="hidden" name="station" value="{$STATIONS_EDITOR[0].id}"></input>
+						{ else }
+						<select name="station" class="dropdown">
+							{foreach from=$STATIONS_EDITOR item=station}
+								<option value="{$station.id}" {if $station.id == $SELECTED_STATION}SELECTED=1{/if} >
+									{$station.name}
+								</option>
+							{/foreach}
+						</select>
+						{/if}
+						<div id="editor_useraudio_form_submit">
+							<input type="submit" name="addprog" class="button" value="{#add_programme#}"/>
+							<input type="submit" name="refresh" class="button" value="{#refresh#}"/>
+						</div>
+					</form>
+				</div>
+			{/if}
+		</div>
+	</div>
+	
+	{if $WILL_EXPIRE }
+		<div id="editor_expire" class="block">
+			<img src="{$IMAGE_URL}/warning.gif" alt="warning" /> {$WILL_EXPIRE}
+		</div>
+	{/if}
+	
+	<div id="editor_myprogs_form" class="block">
+		<h4 class="cathead">{#my_progs#}</h4>
+		<div class="content">
+		<form method="get" action="">
+			<div id="editor_myprogs_mask">
+				<div id="editor_myprogs_selectseries" class="line">
+					<span class="identifier">{#series#}: </span>
+					<span class="value">
+						<select name="series" class="dropdown" onchange="javascript:this.form.submit();">
+							{html_options options=$mySeriesData selected=$series}
+						</select>
+					</span>
+				</div>
+				
+				<div id="editor_myprogs_selectfilter" class="line">
+					<span class="identifier">{#Filter#}: </span>
+					<span class="value">
+						<select name="filter" class="dropdown" onchange="javascript:this.form.submit();">
+							{html_options options=$filters selected=$filter}
+						</select>
+					</span>
+				</div>
+				
+				<div id="editor_myprogs_selectsort" class="line">
+					<span class="identifier">{#sortby#}: </span>
+					<span class="value">
+						<select name="sort1" class="dropdown">{html_options options=$sortby selected=$sort1}</select>
+						<select name="sort2" class="dropdown">{html_options options=$sortby selected=$sort2}</select>
+					</span>
+				</div>
+				
+				<div id="editor_myprogs_submit" class="line">
+					<input type="submit" class="button" name="{#submit#}" value="{#submit#}" />
+				</div>
+				{if $rp_count gt 10}
+				<div id="editor_splitlist">{include file="splitList.htm"}</div>
+				{/if}
+			</div>
+			
+			<div class="more_info">&raquo; <a onclick="toggleAllInfo(this, 'programme_smalldetails listbox_body');">show all details...</a></div>
+
+			{if count($MYPROGS) > 0}
+				<ul class="listbox">
+					{cycle values="list1,list2" print=false advance=false}
+					{foreach item=item from=$MYPROGS}
+						<li>
+							<div class="programme_header listbox_head">
+								
+								<h4>
+								<div class="listbox_head_heading">
+									<a class="pulldown" onclick="toggleInfoDirect(this, 'programme_smalldetails listbox_body');"><img src="{$IMAGE_URL}/pulldown.gif" name="{$IMAGE_URL}/pullup.gif"/></a>
+									<a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">{$item.title}</a>
+								</div>
+								
+								<ul class="listbox_head_buttons">
+									
+										<li>
+											<button type="button" name="b1" class="edit" value="{#Edit_files#}" title="{#Edit_files#}"
+												onclick="redir(this.form, 'editFiles.php?id={$item.id|escape}&okURL={$OKURL|escape}')" >
+												<img src="{$IMAGE_URL}/editfiles.gif" alt="{#Edit_files#}" />
+											</button>
+										</li>
+									
+									
+										<li>
+											<button type="button" name="b1" class="edit" value="{#Edit_meta#}" title="{#Edit_meta#}"
+												onclick="redir(this.form, 'editMeta.php?id={$item.id}')"> 
+												<img src="{$IMAGE_URL}/edit.gif" alt="{#Edit_meta#}"  />
+											</button>
+										</li>
+										
+										<li>
+											<button type="button" name="b1" class="delete" value="{#Delete#}" title="{#Delete#}"
+												onclick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, 'editor.php?delprog=1&prgid={$item.id}')"> 
+												<img src="{$IMAGE_URL}/delete.gif" alt="{#Delete#}"  />											
+											</button>
+										</li>
+									
+								</ul>
+					
+								</h4>
+								{if $item.alternative_title}
+									<h5>{$item.alternative_title}</h5>
+								{/if} 
+							
+							</div>
+							<div class="programme_smalldetails listbox_body"  name="additional_info" style="display:none">
+							
+								<div class="programme_icon listbox_icon">
+									{if $item.icon}
+										<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$CACHE_URL}/{$item.icon}" alt="Logo Programm"/></a>
+									{else}
+										<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$IMAGE_URL}/noicon.gif" alt="noIcon" /></a>
+									{/if}
+								</div>
+								
+								<div class="programme_textdetails listbox_details">
+									{if $item.episode_title}
+										<div class="programme_abstract_episode">{$item.episode_sequence}.: {$item.episode_title}</div>
+									{/if} 
+									
+									{if $item.abstract}
+										<div class="programme_abstract_text">
+											<div class="editor_myprogs_item_station line">
+												<span class="identifier">{#Station#}: </span>
+												<span class="value"><a href="showStation.php/{$item.station_id}">{$item.station}</a></span>
+											</div>
+											<div class="editor_myprogs_item_series line">
+												<span class="identifier">{#series#}: </span>
+												<span class="value"><a href="showSeries.php/{$item.series_id}">{$item.series}</a></span>
+											</div>
+											<div class="editor_myprogs_item_entrydate line">
+												<span class="identifier">{#entry_d#}: </span>
+												<span class="value">
+													{if $LANG eq "eng"}{$item.entry_date|date_format:"%Y-%m-%d"|default:"-"}
+													{else}{$item.entry_date|date_format:"%d.%m.%Y"|default:"-"}{/if}
+												</span>
+											</div>
+											<div class="editor_myprogs_item_productiondate line">
+												<span class="identifier">{#prod_d#}: </span>
+												<span class="value">
+													{if $LANG eq "eng"}{$item.production_date|date_format:"%Y-%m-%d"|default:"-"}
+													{else}{$item.production_date|date_format:"%d.%m.%Y"|default:"-"}{/if}
+												</span>
+											</div>
+											<div class="editor_myprogs_item_broadcastdate line">
+												<span class="identifier">{#broadcast_d#}: </span>
+												<span class="value">
+													{if $LANG eq "eng"}{$item.broadcast_date|date_format:"%Y-%m-%d"|default:"-"}
+													{else} {$item.broadcast_date|date_format:"%d.%m.%Y"|default:"-"}{/if}
+												</span>
+											</div>
+											<div class="editor_myprogs_item_expirydate line">
+												<span class="identifier">{#exp_d#}: </span>
+												<span class="value">
+													{if $LANG eq "eng"}{$item.expiry_date|date_format:"%Y-%m-%d"|default:"-"}
+													{else}{$item.expire_date|date_format:"%d.%m.%Y"|default:"-"}{/if}</span>
+											</div>
+											<div class="editor_myprogs_item_abstract line">
+												<span class="identifier">{#abstract#}: </span><span class="value">{$item.abstract|truncate:200}</span>
+											</div>
+											
+											{if $item.visits or $item.listens or $item.downloads} 
+												<div class="editor_myprogs_item_visits line">
+													<span class="identifier">{#visits#}: </span><span class="value">{$item.visits}</span>
+												</div>
+												<div class="editor_myprogs_item_listens line">
+													<span class="identifier">{#listens#}: </span><span class="value">{$item.listens}</span>
+												</div>
+												<div class="editor_myprogs_item_downloads line">
+													<span class="identifier">{#downloads#}: </span><span class="value">{$item.downloads}</span>
+												</div>
+											{/if}
+											{if $item.rating_value}
+												<div class="editor_myprogs_item_rating line">
+													<span class="identifier">{#rating#}: </span>
+													<span class="value">{$item.rating_value} ({#by#} {$item.rating_count})</span>
+												</div>
+											{/if}
+											<div {if $item.published ne 't'} class="editor_myprogs_published line" {else}class="editor_myprogs_published_check line" {/if}>
+												<span class="identifier">{#Published#}: </span>
+												<span class="value">
+													<input type="checkbox" onclick="javascript:setvalue('editorpub', '{$item.id}', 
+														this.checked);return true;"{ if $item.published eq 't' } checked="checked"{/if} />
+												</span>
+											</div>
+										</div>
+									{/if}
+								</div>
+								
+								<div class="progamme_smalldetails_footer listbox_footer">
+								
+									{if $item.broadcast_date}
+										<div class="programme_date">{$item.entry_date}.: ({$item.broadcast_date|date_format:"%Y-%m-%d"})</div>
+									{/if} 
+									<div class="programme_abstract_link">
+										<a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">more...</a> <!-- smarty variable notwendig -->
+									</div>
+								</div>
+								
+							</div>		
+							<div class="editor_myprogs_published_editorflag">
+										<select name="flag" class="dropdown" 
+											onchange="javascript:setvalue('editorflag', '{$item.id}', this.options[this.selectedIndex].value);return true;">		
+											{html_options options=$flags selected=$item.flags}
+										</select>
+										<select name="export" class="dropdown" onchange="javascript:exportPrg(this, '{$item.id}')">
+											<option selected="selected">{#export#}</option>
+											<option>XBMF metadata</option>
+											<option>{#get_xbmf#}</option>
+										</select>
+										{if $item.published eq 'f'}
+											<div class="unpublished">{#unpublished#}</div>
+										{/if}
+							</div>							
+						</li>
+					{/foreach}
+				</ul>
+			{/if}
+		</form>
+		</div>
+	</div>
+</div>

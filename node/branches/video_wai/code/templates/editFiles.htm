@@ -1,0 +1,317 @@
+{literal}
+<SCRIPT language="javascript">
+<!--
+function setvalue(name, id, value){
+var popurl="updatedb.php?name="+name+"&id="+id+"&value="+value
+winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
+}
+
+function setcaption(name, id, value){
+var str = prompt('Caption: ', value);
+url = this.location.href;
+if (url.indexOf('#') > 0) url = url.substring(0, url.indexOf('#'));
+if(str) window.location.href = url+"&capname="+name+"&capid="+id+"&capvalue="+str+"&capurl="+escape(url)
+else  window.location.href = this.location.href
+}
+// -->
+</SCRIPT>
+{/literal}
+
+
+<form>
+{if $NEW}
+  <table width="100%">
+    <tr valign="top">
+      <td>
+        <h4>{#New_prog_step1#}</h4>
+        <h3>{#Edit_files#}</h3>
+      </td>
+      <td align="right">
+        <input class="action" type="button" name="b1" value="{#goto_step2#}" onClick="redir(this.form, 'editMeta.php?new=1&id={$PRG_ID}')" />
+      </td>
+    </tr>
+  </table>
+{else}
+<H3>{#Edit_files#}: <a class="goto_object" href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
+    <div align="right">
+      <input class="action" type="button" name="b1" value="{#edit_meta#}" onClick="redir(this.form, 'editMeta.php?id={$PRG_ID}')" />
+    </div>
+{/if}
+</form>
+{if $CREATESTILLS}<div style='color:green;font-weight:bold'>{#generating_stills#}<br>&nbsp;</div>{/if}
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">
+	{#Prg_files#} 
+
+	</td>
+  </tr>
+</table>
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea"> 
+
+    <table>
+       <tr class="listhead">
+          <th>{#filename#}</th>
+          <th>{#format#}</th>
+          <th>{#filesize#}</th>
+          <th>{#last_modified#}</th>
+          <th>{#play_length#}</th>
+		  {if !$VIDEO}
+          <th>{#stream_access#}</th>
+		  {/if}
+          <th>{#download_access#}</th>
+          <th></th>
+       </tr>
+       {cycle name="prg" values="list1,list2" print=false advance=false}
+       {foreach item=item from=$PRG_AUDIO}
+          <tr class="{cycle name=prg}">
+            <td>
+              {if !empty($item.filename) }
+              <a target="link" href="getFile.php/{$item.filename}?audio=1&id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
+			  {elseif !empty($item.errors) }
+			  	<font color="red">{#conversion_not_possible#}</font>
+			  {elseif $item.converting}
+			  <font color="green">{#converting#} {$item.percentage}</font>
+              { else }
+              <font color="red">{#missing#}</font>
+              {/if}
+            </td>
+            <td>
+              {$item.format}
+            </td>
+            <td>
+              {$item.filesize}
+            </td>
+            <td>
+              {$item.last_modified}
+            </td>
+            <td>
+              { if $item.play_length }
+              {$item.play_length} {#sec#}
+              {/if}
+            </td>
+			{if !$VIDEO}
+            <td>
+                {if !empty($item.filename) }
+                <input type="checkbox" onclick="javascript:setvalue('audiofilesa', '{$item.id}', this.checked);return true;"{ if $item.stream_access eq 't' } CHECKED="1" {/if} />
+                {/if}
+            </td>
+			{/if}
+            <td>
+                {if !empty($item.filename) && $item.flv != true}
+              <input type="checkbox" onclick="javascript:setvalue('audiofilesd', '{$item.id}', this.checked);return true;"{ if $item.download_access eq 't' } CHECKED="1" {/if} />
+                {/if}
+            </td>
+            <td nowrap>
+			{if !$item.converting and empty($item.errors)}
+              {if empty($item.filename) and $PRG_DATA.type!='video'}
+              <input class="action" type="button" name="b1" value="{#convert#}" onClick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=180')" />
+              {elseif empty($item.filename) and $PRG_DATA.type=='video'}
+			  <input class="action" type="button" name="b_{$item}" id="b_{$item}" value="{#convert#}" onClick="javascript:document.getElementById('b_{$item}').style.visibility='hidden'; document.location.href='editFiles.php?id={$PRG_ID}&convertindex={$item.index}&videoconversion=1'" />
+			   {else}
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
+              {/if}
+			 {/if}
+            </td>
+          </tr>
+          {/foreach}    
+          <tr>
+              <td colspan="4" align="left">
+                 <input class="action" type="button" name="b1" value="{#add_content#}" onClick="popup('addFiles.php?main=1&prgid={$PRG_ID}','AddFiles',500,500,true)" />
+              </td>
+              <td colspan="8" align="right">
+			  {if !$CONVERTING and $MISSING and $MAIN_AUDIO_COUNT gt 0}
+                {if $PRG_DATA.type!='video'}
+                   <input class="action" type="button" name="b2" value="{#convert_all#}" onClick="window.open('convert.php?id={$PRG_ID}&all=1','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=600')" />
+                
+				{else if $PRG_DATA.type=='video'}
+					<input class="action" type="button" name="b2" id="b2" value="{#convert_all#}" onClick="javascript:document.getElementById('b2').style.visibility='hidden'; document.location.href='editFiles.php?id={$PRG_ID}&convertall=1&videoconversion=1'" /><br>
+				{/if}
+				
+			  {/if}
+			  {if $PRG_DATA.type=='video' AND !$CREATESTILLS AND !$STILL_FOUND AND !$IS_OGG}
+                   <input class="action" type="button" name="b3" id="b3" value="{#create_stills#}" onClick="javascript:document.getElementById('b3').style.visibility='hidden';document.location.href='editFiles.php?id={$PRG_ID}&createstills=1'" />
+			{/if}
+              </td>
+          </tr>  
+    </table>
+ 
+ </td>
+</tr>
+</table>
+</form>
+
+
+<p></p>
+
+	<a name="mfiles"></a>
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Files#}</td>
+  </tr>
+</table>
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea"> 
+   {if $AUDIO_FILES }
+        <div class="subheader">{#audio_file_list#}</div>
+    <table>
+       <tr class="listhead">
+          <th>{#filename#}</th>
+          <th>{#caption#}</th>
+          <th>{#filesize#}</th>
+          <th>{#last_modified#}</th>
+          <th>{#play_length#}</th>
+          <th>{#format#}</th>
+          <th>{#stream_access#}</th>
+          <th>{#download_access#}</th>
+       </tr>
+       {cycle name="audio" values="list1,list2" print=false advance=false}
+       {foreach item=item from=$AUDIO_FILES}
+          <tr class="{cycle name=audio}">
+            <td>
+              <a target="link" href="getFile.php/{$item.filename}?id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
+            </td>
+            <td>
+              {$item.caption}
+            </td>
+            <td>
+              {$item.filesize}
+            </td>
+            <td>
+              {$item.last_modified}
+            </td>
+            <td>
+              {$item.play_length} {#sec#}
+            </td>
+            <td>
+              {$item.format}
+            </td>
+            <td>
+              <input type="checkbox" onclick="javascript:setvalue('audiofilesa', '{$item.id}', this.checked);return true;"{ if $item.stream_access eq 't' } CHECKED="1" {/if} />
+            </td>
+            <td>
+              <input type="checkbox" onclick="javascript:setvalue('audiofilesd', '{$item.id}', this.checked);return true;"{ if $item.download_access eq 't' } CHECKED="1" {/if} />
+            </td>
+            <td nowrap>
+              <input class="action" type="button" name="b1" value="{#change_caption#}" onClick="setcaption('mfiles', '{$item.id}', '{$item.caption}')" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
+            </td>
+          </tr>
+          {/foreach}    
+    </table>
+   {/if}
+	<a name="ofiles"></a>
+   {if $OTHER_FILES }
+        <div class="subheader">{#other_file_list#}</div>
+        <table>
+       <tr class="listhead">
+          <th>{#filename#}</th>
+          <th>{#caption#}</th>
+          <th>{#filesize#}</th>
+          <th>{#last_modified#}</th>
+          <th>{#mime_type#}</th>
+          <th>{#public_access#}</th>
+       </tr>
+       {cycle name=other values="list1,list2" print=false advance=false}
+       {foreach item=item from=$OTHER_FILES}
+          <tr class="{cycle name=other}">
+            <td>
+              <a target="link" href="getFile.php/{$item.filename}?id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
+            </td>
+            <td>
+              {$item.caption}
+            </td>
+            <td>
+              {$item.filesize}
+            </td>
+            <td>
+              {$item.last_modified}
+            </td>
+            <td>
+              {$item.mime_type}
+            </td>
+            <td>
+              <input type="checkbox" onclick="javascript:setvalue('otherfiles', '{$item.id}', this.checked);return true;" { if $item.public_access eq 't' } CHECKED="1" {/if} />
+            </td>
+            <td nowrap>
+                <input class="action" type="button" name="b1" value="{#change_caption#}" onClick="setcaption('ofiles', '{$item.id}', '{$item.caption}')" />
+                <input class="action" type="button" name="b1" value="{#delete#}" onClick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
+            </td>
+          </tr>
+          {/foreach}    
+    </table>
+   {/if}
+   {if !$AUDIO_FILES and !$OTHER_FILES }
+        <p>{#no_files#}</p>
+   {/if}
+          <input class="action" type="button" name="b1" value="{#add_files#}" onClick="popup('addFiles.php?prgid={$PRG_ID}','AddFiles',500,500,true)" />
+ 
+  </td>
+</tr>
+</table>
+</form>
+
+<p></p>
+	<a name="links"></a>
+
+<form>
+<table class="tab">
+  <tr> 
+    <td nowrap class="tab">{#Links#}</td>
+  </tr>
+</table>
+<table class="tabarea"  width="100%">
+<tr> 
+  <td class="tabarea">
+   {if $LINKS } 
+    <table>
+       <tr class="listhead">
+          <th>{#url#}</th>
+          <th>{#caption#}</th>
+          <th>{#public#}</th>
+          <th>{#actions#}</th>
+       </tr>
+       {cycle name="links" values="list1,list2" print=false advance=false}
+       {foreach item=item from=$LINKS}
+          <tr class="{cycle name="links"}">
+            <td>
+              <a target="link" href="{$item.url}">{$item.url}</a>
+            </td>
+            <td>
+              {$item.caption}
+            </td>
+            <td>
+              <input type="checkbox" onclick="javascript:setvalue('links', '{$item.id}', this.checked);return true;"{ if $item.public_access eq 't' } CHECKED="1"{/if} />
+            </td>
+            <td nowrap>
+                <input class="action" type="button" name="i1" value="{#change#}" onClick="popup('editLink.php?linkid={$item.id}&prgid={$PRG_ID}','EditLink',250,500,false)" />
+                  <input class="action" type="button" name="i2" value="{#delete#}" onClick="redir(this.form,'editFiles.php?dellink=1&linkid={$item.id}&id={$PRG_ID}')" />
+
+            </td>
+          </tr>
+          {/foreach}    
+     </table>
+    {else}
+                <p>{#no_links#}</p>
+    {/if}
+          <input class="action" type="button" name="i3" value="{#add_link#}" onClick="popup('editLink.php?new=1&prgid={$PRG_ID}','EditLink',250,500,false)" />
+  </td>
+</tr>
+</table>
+
+</form>
+
+{if $NEW}
+  <div align="right">
+    <input class="action" type="button" name="b1" value="{#goto_step2#}" onClick="redir(this.form, 'editMeta.php?new=1&id={$PRG_ID}')" />
+  </div>
+{/if}
+
+{if $CONVERTING OR $CREATESTILLS}
+		<script type="text/javascript" language="javascript">setTimeout("document.location.href='editFiles.php?new=1&id={$PRG_ID}'", 5000);</script>
+{/if}

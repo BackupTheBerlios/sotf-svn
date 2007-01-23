@@ -1,0 +1,71 @@
+
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+            <form name="searchform" method="get" action="search.php">
+              <table width="100%" border="0" cellspacing="0" cellpadding="2">
+                <tr> 
+                  <td width="60%"> 
+                    <input type="text" name="pattern" value="{$PATTERN}" style="width: 100%">
+                  </td>
+                  <td width="20%"> 
+                    <select name="language" style="width: 100%">
+                        {html_options values=$searchLangs selected=$LANGUAGE output=$langNames}
+                    </select>
+					
+                  </td>				
+				  <td width="1"> {*ADDED BY Martin Schmidt *}
+
+                  <input type="checkbox" {if $AUDIO}checked{/if} name="audio" value="1"> Audio
+				<input type="checkbox" {if $VIDEO}checked{/if} name="video" value="1"> Video
+                    <input type="submit" name="search" value="{#Search#}">  </td>
+                </tr>
+
+                <tr>
+                    <td colspan=3 ><font size=2><A href="advsearch.php">{#advSearch#}</a></font></td>
+                    </tr>
+              </table>
+            </form>
+      </td>
+    </tr>
+  </table>
+
+  <p></p>
+
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#Results#}</td>
+    </tr>
+  </table><table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
+        {if count($RESULTS) gt 0 }
+        {include file="splitList.htm"}
+        <table width="100%">
+          {foreach item=item from=$RESULTS}
+          <tr bgcolor="#FFFFFF" height="1"><td colspan="2"></td></tr>
+          <tr valign="top">
+            <td width="5%">
+              {if $item.icon }
+                 <a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$CACHE_URL}/{$item.icon}"></a>
+              {else}
+                 <a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$IMAGE_URL}/noicon.png"></a>
+              {/if}
+            </td>
+            <td>
+              <a href="get.php?id={$item.id}"><b>{$item.title}</b></a> ({$item.broadcast_date|default:$item.entry_date})
+              {if $item.alternative_title}<br />{$item.alternative_title}{/if}
+              {if $item.episode_title}<br />{$item.episode_sequence}.: {$item.episode_title}{/if}
+              {if $item.abstract}
+              <br />{$item.abstract|truncate:300}
+                {/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+        {else}
+        {#No_results#}
+        {/if}
+      </td>
+    </tr>
+  </table>

@@ -1,0 +1,26 @@
+<div id="editneighbour_container">
+	<h4>{#edit_neighbour#}</h4>
+	
+	<div class="editneighbour_properties block">
+			<form method="post" action="editNeighbour.php">
+				<div id="editneighbour_node" class="line">
+					<span class="identifier">{#neighbour#}:</span><span class="value">{$NODE.name} ({$NODE.node_id})</span>
+				</div>
+				<div id="editneighbour_usein" class="line">
+					<span class="identifier">
+						<input type="checkbox" class="checkbox" name="use_in" value="1" {if $NEI.accept_incoming eq 't'}checked="1"{/if} />
+					</span>
+					<span class="value">{#use_in#}</span>
+				</div>
+				<div id="editneighbour_useout" class="line">
+					<span class="identifier">
+						<input type="checkbox" class="checkbox" name="use_out" value="1" {if $NEI.use_for_outgoing eq 't'}checked="1"{/if} />
+					</span>						
+					<span class="value">{#use_out#}</span>
+				</div>
+				<div id="editneighbour_submit" class="line">
+					<input type="submit" name="save" class="button" value="{#save#}" />
+				</div>
+			</form>
+	</div>
+</div>

@@ -1,0 +1,206 @@
+<div id="showseries_container">
+        
+	<form action=""> 
+	<div class="header">
+  		
+		<div class="title">
+			<h3>
+				  <span>{#series#}: </span><span>{$SERIES_DATA.name}</span>
+			</h3>
+			
+		</div>
+			{if $STATION_DATA.icon}
+				<div class="smallogo">
+					<div class="logo">
+						<div class="img_caption"> {#station#}:</div>
+						{strip}
+							<a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">
+								<img src="{$CACHE_URL}/{$STATION_DATA.id}.png" alt="{#station#}: {$STATION_DATA.name}" />
+							</a>
+						{/strip}
+						<div class="img_caption_name">{$STATION_DATA.name}</div>
+					</div>
+				</div>
+			{/if}
+	
+			{if $SERIES_DATA and $SERIES_DATA.icon}
+				<div class="biglogo">
+					{strip}
+						<a href="{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}">
+							<img src="{$CACHE_URL}/{$SERIES_DATA.id}.png" alt="{#series#}: {$SERIES_DATA.name}" />
+						</a>
+					{/strip}
+				</div>
+			{/if}
+					
+			<div id="showseries_title_links" class="quicklinks">
+				  <ul>
+				  <li class="rss_link">
+					<ul>
+						{if $JINGLE}
+						<li><a href="{$ROOT_URL}/listen.php?id={$SERIES_DATA.id}&jingle=1">{#jingle#}</a></li>
+						{/if}
+						<li><a href="{$HOME_URL}/podcast.php?series={$SERIES_DATA.id}"><img src="{$IMAGE_URL}/podcast_logo.gif" alt="Vodcast" /></a></li>
+						<li><a href="{$ROOT_URL}/rss.php?series={$SERIES_DATA.id}&uiLang={$LANG}"><img src='{$IMAGE_URL}/rss.gif' alt="RSS-Logo"/></a></li>
+					</ul>
+				</li>
+			
+				  	<li>&raquo; <a href="#general">{#general#}</a></li>
+				  {if $PROGS}
+					<li>&raquo; <a href="#progs">{#programmes#}</a></li>
+				  {/if}
+				  </ul>
+			</div>
+			
+			
+			<div id="showseries_title_admin" class="editbuttons">
+				{if hasPerm($SERIES_DATA,'change') }
+					<input class="button" type="button" name="b1" value="{#edit_series#}" 
+						onclick="popup('{$ROOT_URL}/editSeries.php?seriesid={$SERIES_DATA.id}','EditSeries',550,550,true)" />
+				{/if}
+				{if hasPerm($SERIES_DATA, 'create')}
+					<input class="button" type="button" name="b1" value="{#add_prg#}" 
+						onclick="redir(this.form, '{$ROOT_URL}/editor.php?stationid={$SERIES_DATA.station_id}')" />
+				{/if}
+			</div>
+			
+		</div>
+	
+		<div id="showSeries_data" class="block"> 
+			<h4 class="cathead">{#general#}</h4>
+			<div class="content">
+	
+			<a name="general"></a>
+			{if $SERIES_DATA.description }
+			   	<div id="showSeries_data_description">{$SERIES_DATA.description}</div>
+			{/if}
+	
+			{if $SERIES_DATA.url}
+				<div id="showSeries_data_url">&raquo; <a href="{$SERIES_DATA.url}" target="_blank">{$SERIES_DATA.url}</a></div>	
+			{/if}
+			</div>
+		</div>
+     
+	       
+		{if $ROLES}
+			<div id="showseries_roles"  class="block">  
+				<h4 class="cathead">{#persons_involved#}</h4>
+				<div class="content">
+				{foreach item=item from=$ROLES}
+					<div class="showseries_role">
+						<span class="showseries_role_contact">
+							<a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',470,550,true)">{$item.contact_data.name}</a>
+							{if $item.contact_data.url}
+								(<a href="{$item.contact_data.url}" target="_blank">{$item.contact_data.url})</a>
+								{elseif $item.contact_data.email}
+									(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
+							{/if}
+						</span>
+						<span>({$item.role_name})</span>
+					</div>
+				{/foreach}
+				
+		  	</div>      
+		</div>
+		{/if}
+		
+
+		
+
+		{if $PROGS}
+	  		<div id="showseries_programmes" class="block">
+      			<h4 class="cathead">{#programmes#}</h4>
+      			<a name="progs"></a>
+				<div class="content">
+				{if $rp_count gt 10}
+					<div id="showseries_splitList">
+						{include file="splitList.htm"}
+					</div>
+				{/if}
+		<div class="more_info">&raquo; <a onclick="toggleAllInfo(this, 'programme_smalldetails listbox_body');">show all details...</a></div>
+          
+			  	{cycle name="progs" values="list1,list2" print=false advance=false}
+				<ul id="programme" class="listbox">
+					{foreach item=item from=$PROGS}
+						<li>
+							<div class="programme_header listbox_head">
+								<h4>
+									<ul class="listbox_head_buttons">
+										{if hasPerm($item, 'delete')}
+											<li class="station_mod_delete">
+												<button type="image" name="b1" src="{$IMAGE_URL}/delete.gif" class="delete" value="{#delete_prog#}" title="{#delete#}"
+													onclick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, '{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}?delprog=1&prgid={$item.id}')" />
+													<img src="{$IMAGE_URL}/delete.gif" alt="{#delete#}" name="{#delete_prog#}"/>
+												</button>
+											</li>
+										{/if}
+										{if hasPerm($item, 'change', 'authorize')}
+											<li class="station_mod_edit">
+												<button type="button" name="b1" class="edit" value="{#edit#}" title="{#edit_prog#}" onclick="redir(this.form, '{$ROOT_URL}/editMeta.php?id={$item.id}')">
+													<img src="{$IMAGE_URL}/edit.gif" alt="{#edit_prog#}" />
+												</button>
+											</li>
+										{/if}
+									</ul>
+									<div class="listbox_head_heading {if !hasPerm($item, 'delete') or !hasPerm($item, 'change', 'authorize')}listbox_loggedout{/if} ">
+										<a class="pulldown" onclick="toggleInfoDirect(this, 'programme_smalldetails listbox_body');"><img src="{$IMAGE_URL}/pulldown.gif" name="{$IMAGE_URL}/pullup.gif"/></a>
+										<a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">{$item.title}</a>
+									</div>
+								</h4>
+								{if $item.alternative_title}
+									<h5>{$item.alternative_title}</h5>
+								{/if} 
+							</div>							
+
+							<div class="programme_smalldetails listbox_body" name="additional_info" style="display:none">
+							
+								<div class="programme_icon listbox_icon">
+									{if $item.icon }
+										<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$CACHE_URL}/{$item.id}.png" alt="Logo Programm"/></a>
+										{else}
+											<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$IMAGE_URL}/noicon.gif" alt="noIcon" /></a>
+									{/if}
+								</div>
+								
+								<div class="programme_textdetails listbox_details">
+									{if $item.episode_title}
+										<div class="programme_abstract_episode">
+											<span class="identifier">Episode {$item.episode_sequence}: </span>{$item.episode_title}
+										</div>
+									{/if} 
+									
+									{if $item.abstract}
+										<div class="programme_abstract_text">
+											{$item.abstract|truncate:300}
+										</div>
+									{/if}
+								</div>
+								
+								<div class="progamme_smalldetails_footer listbox_footer">
+									<div class="programme_date">
+										{if $item.broadcast_date}
+											<span class="identifier">{#broadcast_date#}: </span>
+											<span>{if $LANG eq "eng"}{$item.broadcast_date|date_format:"%Y-%m-%d"}</span>
+											{else} <span>{$item.broadcast_date|date_format:"%d.%m.%Y"}</span>
+										{/if}
+										
+										{/if}										
+										{if $item.entry_date}
+											<span class="identifier">{#entry_date#}: </span>
+											<span>{if $LANG eq "eng"}{$item.entry_date} 
+											{else}{$item.entry_date|date_format:"%d.%m.%Y"}{/if}</span>
+										{/if}
+									</div>										
+									<div class="programme_abstract_link">
+										<a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">more...</a> <!-- smarty variable notwendig -->
+									</div>
+								</div>
+							</div>				
+						</li>
+					{/foreach}
+				</ul>
+			</div>
+			</div>
+  		{/if}
+ 	</form>
+</div>

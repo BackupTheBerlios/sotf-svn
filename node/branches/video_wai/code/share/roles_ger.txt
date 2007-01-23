@@ -1,0 +1,46 @@
+1 Artist
+2 Autor
+3 Kommentator
+4 Komponist
+5 Inhaber eines Urheberrechts
+6 Korrespondent
+7 Gestalter/in
+8 Direktor
+9 Redakteur/in
+10 Finanzier
+11 Interviewgast
+12 Interviewer
+13 Erzähler
+14 Komparse
+15 Darsteller
+16 Produzent
+17 Produktionspersonal
+18 Sprecher/in
+19 Transkribient/in
+20 Übersetzer/in
+21 Andere
+22 Verfasser oder Urheber
+23 Verleger bzw. Herausgeber
+24 Weitere beteiligten Personen und Körperschaften
+25 Schauspieler
+26 Trickfilmzeichner
+27 Künstlericher Leiter
+28 Schwenker
+29 Kameramann
+30 Dubber
+31 Graphiker
+32 Beleuchter
+33 Maskenbildner
+34 Fotograf
+35 Post-Production Editor
+36 Monteur
+37 Bühnenbildner
+38 Ausstatter
+39 Sound Designer
+40 Sound Mixer
+41 Special Effects
+42 Stunts
+43 Untertitel
+44 Schnitt
+45 Visual Effects
+46 Kostüme

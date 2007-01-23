@@ -1,0 +1,72 @@
+{config_load file="general.conf"}
+{config_load file="$LANG.conf" section="$ACTION"}
+  <html>
+    <head>
+      <title>{$PAGETITLE} (SOTF:{$NODE_NAME})</title>
+        <link href="{$IMAGE_URL}/main.css" rel="stylesheet" type="text/css">
+          <script src="{$IMAGE_URL}/base.js"></script>
+    </head>
+    <body background="{$IMAGE_URL}/bg.gif" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+      <div align="center"> 
+        
+           
+            <div> 
+              <div align="center"><img src="{$IMAGE_URL}/bg_main_LEFT.gif" width="7" height="6"></div>
+            <div>
+            <div align="right"> 
+              
+                </div> 
+                  <div>
+                  </div>
+                <br/>
+                 
+                  <div>
+                    
+                      </div> 
+                        <div> 
+                          <div align="right"> 
+                            
+                               
+                                <div> 
+                                </div>
+                              <br/>
+                            </div>
+                        </div>
+                      <br/>
+                    
+                <br/>
+                 
+                  <div> 
+                    
+                      </div> 
+                        <div class="menu">
+                          
+                        </div>
+                      <br/>
+                    
+                <br/>
+                 
+                  <div>
+                    
+                      </div> 
+                        <div><img name="top_r4_c1" src="{$IMAGE_URL}/top_r4_c1.gif" width="2" height="6" border="0" alt=""></div>
+                      <br/>
+                    
+                <br/>
+              
+                 
+                  </div>
+                    <div align="left"> {include file="$ACTION.htm"} </div>
+                  </div>
+                <br/>
+              
+          <br/>
+        </div>
+    </body>
+  </html>
+  
+  <script language="Javascript">
+    {if $STATUS_MESSAGES or $ERROR_MESSAGES }
+    alert("{foreach from=$ERROR_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}{foreach from=$STATUS_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}");
+    {/if}
+  </script>

@@ -1,0 +1,30 @@
+
+  <h3>{#edit_neighbour#}</h3>
+  
+<table class="tabarea">
+<tr> 
+  <td class="tabarea"> 
+        <table width="100%">
+          <tr><td>
+              <form method="post">
+                <table>
+                  <tr>
+                    <td nowrap>{#neighbour#}:</td>
+                    <td>{$NODE.name} ({$NODE.node_id})</td>
+                  </tr>
+                  <tr>
+                    <td nowrap>{#use_in#}:</td>
+                    <td><input type="checkbox" name="use_in" value="1" {if $NEI.accept_incoming eq 't'}checked="1"{/if} /></td>
+                  </tr>
+                  <tr>
+                    <td nowrap>{#use_out#}:</td>
+                    <td><input type="checkbox" name="use_out" value="1" {if $NEI.use_for_outgoing eq 't'}checked="1"{/if} /></td>
+                  </tr>
+                </table>
+                <input type="submit" name="save" value="{#save#}">
+              </form>
+            </td></tr>
+        </table>
+  </td>
+</tr>
+</table>

@@ -1,0 +1,25 @@
+<div id="createstation_container">
+	<h3>{#create_station#}</h3>
+
+	<form name="createstation" method="post" action="createStation.php">
+		<div id="createstation_details">
+			<div>
+				<div id="createstation_stationname" class="line">
+					<span id="createstation_stationname_identifier" class="identifier">{#station_name#}:</span>
+					<input name="station" class="textfield" {if $STATION} value="{$STATION}"{/if} />
+				</div>
+				<div id="createstation_description" class="line">
+					<span id="createstation_description_identifier" class="identifier">{#description#}:</span>
+					<div><textarea name="desc" class="textarea">{$DESC}</textarea></div>
+				</div>
+				<div id="createstation_stationmanager" class="line">
+					<span id="createstation_stationmanager_identifier" class="identifier">{#station_manager#}:</span>
+					<div><input name="username" class="textfield" value="{$MANAGER}" /> ({#optional#})</div>
+				</div>
+			</div>
+			<div id="createstation_submit" class="line">
+				<input type="submit" name="new" class="button" value="{#create#}" />
+			</div>
+		</div>
+	</form>
+</div>

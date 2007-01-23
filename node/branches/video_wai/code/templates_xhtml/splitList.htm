@@ -1,0 +1,37 @@
+<div id="splitlist_container">
+	{if $anchor}
+		<a name="{$anchor}"></a>
+	{/if}
+
+	<div id="splitlist">
+			{if $rp_count != 0}
+				<div id="splitlist_counter">
+					<span id="splitlist_rpfrom">{$rp_from} </span>
+					<span id="splitlist_to">{#to#} </span>
+					<span id="splitlist_rpto">{$rp_to} </span>
+					<span id="splitlist_of">{#of#} </span>
+					<span id="splitlist_rpcount">{$rp_count}</span>
+				</div>
+			{else}
+				{#no_results#}
+			{/if}
+		
+			{if $rp_first_url}<a href="{$rp_first_url}">{/if}
+			<img src="{$IMAGE_URL}/left2.gif" alt="{#first#}" />
+			{if $rp_first_url}</a>{/if}
+			<img src="{$IMAGE_URL}/transp.gif" width="6" alt="transperent"/>
+			{if $rp_prev_url}<a href="{$rp_prev_url}">{/if}
+			<img src="{$IMAGE_URL}/left.gif" alt="{#prev#}" />
+			{if $rp_prev_url}</a>{/if}
+			<img src="{$IMAGE_URL}/transp.gif" width="6" alt="transperent"/>
+			<a href="{$rp_refresh_url}"><img src="{$IMAGE_URL}/reload.gif" alt="{#refresh#}" /></a>
+			<img src="{$IMAGE_URL}/transp.gif" width="6" alt="transperent"/>
+			{if $rp_next_url}<a href="{$rp_next_url}">{/if}
+			<img src="{$IMAGE_URL}/right.gif" alt="{#next#}" />
+			{if $rp_next_url}</a>{/if}
+			<img src="{$IMAGE_URL}/transp.gif" width="6" alt="transperent"/>
+			{if $rp_last_url}<a href="{$rp_last_url}">{/if}
+			<img src="{$IMAGE_URL}/right2.gif" alt="{#last#}" />
+			{if $rp_last_url}</a>{/if}
+	</div>
+</div>

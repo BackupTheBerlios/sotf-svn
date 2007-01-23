@@ -1,0 +1,84 @@
+<script language="javascript" src="{$IMAGE_URL}/playlist.js"></script>
+
+<div align="center">
+
+<form name="taskform" method="POST" action="playlistPopup.php?close=true">
+
+<table border="0">
+
+	<tr valign="bottom">
+
+	<td align="right" valign="middle">
+
+		<table border="0">
+
+			<tr>
+
+			<td>
+
+				<INPUT type="hidden" name="lista" value="-">
+
+				<select multiple="1" name="list" size="{$count}">
+
+				{html_options options=$programmes}
+
+				<option value="x">_________________________________________________</option>
+
+				</select>
+
+			</td>
+
+			</tr>
+
+		</table>
+
+	</td>
+
+	<td  align="left" valign="middle">
+
+		<table  border="0">
+
+		<tr><td>
+
+			<a href="#" onClick="moveTop()"><IMG src="{$IMAGE_URL}/up2.gif" alt="{#top#}" border="0"></a>
+
+		</td></tr>
+
+		<tr><td>
+
+			<a href="#" onClick="moveUp()"><IMG src="{$IMAGE_URL}/up.gif" alt="{#up#}" border="0"></a>
+
+		</td></tr>
+
+		<tr><td>
+
+			<a href="#" onClick="moveDown()"><IMG src="{$IMAGE_URL}/down.gif" alt="{#down#}" border="0"></a>
+
+		</td></tr>
+
+		<tr><td>
+
+			<a href="#" onClick="moveBottom()"><IMG src="{$IMAGE_URL}/down2.gif" alt="{#buttom#}" border="0"></a>
+
+		</td></tr>
+
+		</table>
+
+	</td>
+
+	</tr>
+
+</table>
+
+<input type="submit" name="save" value="{#save#}" onclick="selectAllItemsIn(document.taskform.list)"/>
+
+</form>
+
+</div>
+
+<script language="javascript">
+
+generate();
+
+</script>
+

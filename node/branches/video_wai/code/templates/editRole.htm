@@ -1,0 +1,100 @@
+
+<h3>
+{if $ROLE_ID}
+{#change_role#}
+{else}
+{#new_role#}
+{/if}
+</h3>
+
+<form name="form1" method="POST">
+
+<input type="hidden" name="roleid" value="{$ROLE_ID}">
+<input type="hidden" name="objectid" value="{$OBJECT_ID}">
+<input type="hidden" name="scope" value="{$SCOPE}">
+<input type="hidden" name="pattern" value="{$PATTERN}">
+
+{if $SCOPE eq 6}
+<p>{#contact_search_for#} '{$PATTERN}'</p>
+{/if}
+
+{if count($CONTACTS) gt 0 }
+
+  <select name="contact">
+   {foreach from=$CONTACTS item=name key=key}
+     <option value="{$key}"  {if $key eq $CONTACT_SELECTED} SELECTED {/if} >{$name}</option>
+   {/foreach}
+  </select>
+  <select name="role">
+   {foreach from=$ROLE_LIST item=role}
+     <option value="{$role.id}"  {if $role.id eq $ROLE_SELECTED} SELECTED {/if} >{$role.name}</option>
+   {/foreach}
+  </select>
+
+  {if $ROLE_ID}
+    <input type="submit" name="save" value="{#Change#}">
+  {else}
+    <input type="submit" name="save" value="{#Add#}">
+  {/if}
+
+{else}
+   {#no_contacts_found#}
+{/if}
+</form>
+<form>
+<input type="hidden" name="scope_change" value="1">
+<input type="hidden" name="roleid" value="{$ROLE_ID}">
+<input type="hidden" name="objectid" value="{$OBJECT_ID}">
+<input type="hidden" name="scope" value="{$SCOPE}">
+<input type="hidden" name="pattern" value="{$PATTERN}">
+      <table>
+        <tr>
+          <td class="tab" colspan="3">
+            {#how_to_select_contact#}
+          </td>
+        </tr>
+        <tr valign="top">
+          <td>
+              {#select_scope#}
+          </td>
+          <td>
+             <nobr><input type="radio" name="newscope" value="1" {if $SCOPE eq 1}CHECKED{/if} > {#my_scope#}</nobr>
+             <!-- <br /><input type="radio" name="newscope" value="2" {if $SCOPE eq 2}CHECKED{/if}> {#series_scope#}</nobr> -->
+             <br /><nobr><input type="radio" name="newscope" value="3" {if $SCOPE eq 3}CHECKED{/if}> {#station_scope#}</nobr>
+             <br /><nobr><input type="radio" name="newscope" value="4" {if $SCOPE eq 4}CHECKED{/if}> {#local_scope#}</nobr>
+             <!-- <br /><nobr><input type="radio" name="newscope" value="5" {if $SCOPE eq 5}CHECKED{/if}> {#all_scope#}</nobr> -->
+          </td>
+          <td>
+            <input type="submit" name="change" value="{#change_scope#}">
+          </td>
+        </tr>
+        <tr>
+          <td class="tab" colspan="3">
+          </td>
+        </tr>
+        <tr  valign="top">
+          <td>
+              {#search_contact#}
+          </td>
+          <td>
+            <input name="newpattern" value="{$PATTERN}"> 
+          </td>
+          <td>
+          <input type="submit" name="search" value="{#search#}">
+          </td>
+        </tr>
+        <tr>
+          <td class="tab" colspan="3">
+          </td>
+        </tr>
+        <tr  valign="top">
+          <td colspan="2">
+            {#create_new_if_needed#}
+          </td>
+          <td>
+            <input type="button" onClick="javascript:popup('createContact.php?stationid={$STATION_ID}','CreateContact',500,500,true)" value="{#Create_new#}" >
+          </td>
+        </tr>
+</table>
+
+</form>

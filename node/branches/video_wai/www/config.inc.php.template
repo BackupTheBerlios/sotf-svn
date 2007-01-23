@@ -1,0 +1,490 @@
+<?php  // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id: config.inc.php.template 581 2006-06-08 11:32:07Z buddhafly $
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ * 
+ *  Copy this file into config.inc.php and edit to reflect your site settings.
+ *
+ */
+
+//////////////////////////////////////////////////////////////////////////
+// SQL SETUP --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// the sql connection parameters for the node database
+$config['nodeDbUser'] = 'user';
+$config['nodeDbHost'] = 'localhost';
+$config['nodeDbPort'] = '5432';
+$config['nodeDbPasswd'] = '';
+$config['nodeDbName'] = 'node';
+
+// set this to false if you will use a separate database for user management
+$config['selfUserDb'] = true;
+
+// by default we don't use external database for user management
+$config['userDbClass'] = 'userdb_node';
+// uncomment this if you use the Self Admin Toolkit (SADM) for user management
+//$config['userDbClass'] = 'userdb_sadm';
+// uncomment this if you use Typo3 for user management
+//$config['userDbClass'] = 'userdb_typo3';
+
+// the sql connection parameters for the user database
+// only fill in if you specified selfUserDb = false!!
+$config['userDbType'] = 'pgsql';              //pgsql or mysql
+$config['userDbUser'] = 'user';
+$config['userDbHost'] = 'localhost';
+$config['userDbPort'] = '5432';
+$config['userDbPasswd'] = '';
+$config['userDbName'] = 'sadm';
+
+//////////////////////////////////////////////////////////////////////////
+// MAIL --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// e-mails sent by the code will have this address as From:
+$config['mailFromAddress'] = "nobody@nowhere.com";
+
+// e-mail for node administrator
+$config['adminEmail'] = "nobody@nowhere.com";
+
+//////////////////////////////////////////////////////////////////////////
+// NODE SETUP --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// id (between 1-999) of this node in the node network: you should negotiate this with others in the network
+// otherwise choose a random number (later connecting to node network is impossible if this id is in use there)
+$config['nodeId'] = "";
+
+// the short name of this node in the network, example: HU5, AT3
+$config['nodeName'] = "XYZ";
+
+// whether imported files are published by default
+$config['publishXbmf'] = false;
+
+// regexp determining the IP addresses (or hostnames if web server does hostname lookup)
+// from which admin tasks (such as cron.php) can be run
+//$config['adminDomain'] = '^10\.0\.0\.';
+
+//////////////////////////////////////////////////////////////////////////
+// FILE LOCATIONS  --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// complete filesystem path for this software package
+$config['basedir'] = "/var/www/sotf/node";
+
+// the directory where stations and radio shows will be archived
+$config['repositoryDir'] = $config['basedir'] . "/repository";
+
+// the directory where stations and radio shows will be archived
+$config['musicDir'] = $config['basedir'] . "/music";
+
+// the directory under which users have FTP or other access to send files to
+$config['userDirs'] = $config['basedir'] . "/users";
+
+// the FTP URL for user directories (defined above), with a trailing slash
+$config['userFTP'] = "ftp://foo.foo.org:8989/";
+
+// the directory where incoming programmes (XBMF) arrive from stations
+$config['xbmfInDir'] = $config['basedir'] . "/incoming";
+
+// where PEAR files are located
+$config['peardir'] = "/usr/share/php";
+
+// where Smarty files are located
+$config['smartydir'] = $config['basedir'] . "/code/Smarty-2.6.9/libs";
+
+// where getid3 files are located
+$config['getid3dir'] = $config['basedir'] . "/code/getid3-1.7.5/getid3";
+
+// where ImageMagick is installed
+$config['magickDir'] = "/usr/bin";
+
+// Path to the class files
+$config['classdir'] = $config['basedir'] . "/code/classes";
+
+// Path to XML-RPC libraries
+$config['xmlrpcdir'] = $config['basedir'] . "/code/xmlrpc";
+
+// path to PHP scripts and images
+$config['wwwdir'] = $config['basedir'] . "/www";
+
+// The URL prefix for code/www subdir 
+// i.e. http://<your-host>/$config['localPrefix'] will open the home page of the node
+$config['localPrefix'] = "/node/www";
+
+//////////////////////////////////////////////////////////////////////////
+// STREAMING --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// In StreamOnTheFly node network finally we agreed to use HTTP streaming, so please set this to true 
+// Other configs in this section thus are meaningless.
+$config['httpStreaming'] = true;
+
+// If you have tamburine installed, the URL for its XML-RPC front-end is needed
+// If you don't have tamburine, you can set up streaming with the
+// remaining set of parameters in this section.
+// Example: http://your.host.name:8080/RPC2
+$config['tamburineURL'] = '';
+
+// this is an alternative way for streaming with tamburine
+// works only on Unix
+// Example: /usr/local/bin/tbrcmd
+$config['tamburineCMD'] = ''; 
+
+// Parameters for connection to icecast streaming server
+$config['iceServer'] = "your.host.name";
+$config['icePort'] = "8000";
+$config['encoderPassword'] = "hackme";
+
+// The command to start streaming: 
+$config['streamCmd'] = "/usr/bin/perl " . $config['basedir'] . "/code/contrib/iceplay -b __BITRATE__ -s " . $config['iceServer'] . " -P " . $config['icePort'] . " -p " . $config['encoderPassword'] . " -l __PLAYLIST__ -n __NAME__ >>" . $config['basedir'] . "/logs/play.log 2>&1 &";
+// __XX__ style tokens are replaced with the actual value
+// __PLAYLIST__ = file containing playlist
+// __NAME__ = name of stream (mount point)
+// __BITRATE__ = bitrate (e.g. 128000 or 24000)
+// __KILOBITRATE__ = bitrate/1000 (e.g. 128, 24)
+
+// The server will not start more streams than this
+$config['maxNumberOfStreams'] = 30;
+
+//////////////////////////////////////////////////////////////////////////
+// DEBUGGING, LOGGING & ERROR HANDLING -----------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// If this is set, the node will send an email about each error to $config['adminEmail']
+$config['sendMailAboutErrors'] = true;
+
+// Everything will be logged here. You can configure logging on the admin screen
+$config['logFile'] = $config['basedir'] . '/logs/log';
+
+// Temp. solution for debugging right after install, later you may switch this off
+$config['debug'] = false;
+
+//////////////////////////////////////////////////////////////////////////
+// LANGUAGE SETUP  --------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// selectable languages for user interface
+$config['outputLanguages'] = array(
+								           array("eng", "in English"),
+											  array("ger", "Deutsch"),
+											  array("hun", "magyarul"),
+											  array("fra", "en Francais"),
+											);
+
+// default language if user's language cannot be determined
+$config['defaultLanguage'] = "eng";
+
+// languages appearing in language select boxes
+$config['languages'] = array("eng", "deu", "hun", "dut", "fra", "ita", "esl", "ces", "slo", "pol", "rum", "rom");
+
+//////////////////////////////////////////////////////////////////////////
+// AUDIO OPTIONS ------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+/**
+* Specifies a directory where converters can be found.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['helperdir']
+*/
+$config['helperdir'] = "/usr/bin";
+
+/**
+* Path of LAME.
+*
+* LAME can encode and decode MP3 files.
+* @package	StreamOnTheFly
+* @variable	string	$config['lame']
+*/
+$config['lame'] = $config['helperdir']."/lame";
+
+/**
+* Path of SoX.
+*
+* SoX is able to generate a stereo PCM data array from a mono one.
+* @package	StreamOnTheFly
+* @variable	string	$config['sox']
+*/
+$config['sox'] = $config['helperdir']."/sox";
+
+/**
+* Path of oggenc.
+*
+* oggenc can encode Ogg Vorbis audio streams.
+* @package	StreamOnTheFly
+* @variable	string	$config['oggenc']
+*/
+$config['oggenc'] = $config['helperdir']."/oggenc";
+
+/**
+* Path of oggdec.
+*
+* oggdec can decode Ogg Vorbis audio streams.
+* @package	StreamOnTheFly
+* @variable	string	$config['oggdec']
+*/
+$config['oggdec'] = $config['helperdir']."/oggdec";
+
+/**
+* Progress bar character.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['progressBarChar']
+*/
+$config['progressBarChar'] = '|';
+
+/**
+* Length of progress bar.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['progressBarLength']
+*/
+$config['progressBarLength'] = 100;
+
+/**
+* Perl regexp for parse oggenc output.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['oggencRegexp']
+*/
+$config['oggencRegexp'] = "/^\t\[(...)\..%\].*$/";
+
+/**
+* Perl regexp for parse lame output during encode.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['lameencRegexp']
+*/
+$config['lameencRegexp'] = "/^.{6}?\/.{7}?\((..)%\)\|.*$/";
+
+/**
+* Bitrate tolerance.
+*
+* Specifies how much can differ the current avarage bitrate
+* from one of the predefined values for variable bitrate streams.
+* @package	StreamOnTheFly
+* @variable	float	$config['bitrateTolerance']
+*/
+$config['bitrateTolerance'] = 10;
+
+
+/**
+* Required formats.
+*
+* Array of associative arrays contains information about the audio format.
+* @package	StreamOnTheFly
+* @variable	array	$config['audioFormats']
+*/
+$config['audioFormats'] = array(
+					array(
+						'format' => 'mp3',
+						'bitrate' => '24',
+						'channels' => '1',
+						'samplerate' => '22050'),
+					array(
+						'format' => 'mp3',
+						'bitrate' => '128',
+						'channels' => '2',
+						'samplerate' => '44100'),
+					array(
+						'format' => 'ogg',
+						'bitrate' => '64',
+						'channels' => '2',
+						'samplerate' => '22050'),
+				);
+
+// index of the preferred streaming format from the list above
+$config['preferredStreamingFormat'] = 1;
+
+
+/**
+* Formats for which to skip getID3()
+*
+* Array containing the extensions of files for which NOT to run getID3 on.
+* This must include 'flv' as long as getID3 does not provide a more performant solution for checking flash videos.
+* Notice that no details (as duration, bitrate, etc.) of the converted file will be available to display!
+*
+* @package	StreamOnTheFly
+* @variable	array	$config['skipGetID3FileTypes']
+*/
+
+$config['skipGetID3FileTypes']=array('ogg');
+
+
+
+//////////////////////////////////////////////////////////////////////////
+// VIDEO OPTIONS ---------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+/**
+* Path to FFmpeg directory
+*
+* @package	StreamOnTheFly
+* @variable	array	$config['ffmpeg']
+*/
+$config['ffmpeg'] = $config['helperdir']."/ffmpeg";
+
+
+/**
+* Path to flvtool2 directory
+*
+* @package	StreamOnTheFly
+* @variable	array	$config['flvtool2']
+*/
+$config['flvtool2'] = $config['helperdir']."/flvtool2";
+
+/**
+* Required video formats. (FLV format is necessary for preview on get.php!)
+*
+* Array of associative arrays contains information about the video format.
+* @package	StreamOnTheFly
+* @variable	array	$config['videoFormats']
+*/
+
+$config['videoFormats'] = array(
+					array(
+						'format' => 'flv',
+						'size' => '176x144',
+						'framerate' => '15',
+						'video_bitrate' => '336',
+						'audio_bitrate' => '64',
+						'audio_channels' => '2',
+						'audio_samplerate' => '22050',
+						'ffmpeg_params'=>'-f flv -vcodec flv -s qcif -r 15 -b 336 -bt 16 -ac 2 -ar 22050 -ab 64'),
+					
+					array(
+						'format' => 'wmv',
+						'size' => '320x240',
+						'framerate' => '25',
+						'video_bitrate' => '672',
+						'audio_bitrate' => '96',
+						'audio_channels' => '2',
+						'audio_samplerate' => '22050',
+						'ffmpeg_params'=>'-vcodec wmv2 -s 320x240 -r 25 -b 672 -acodec mp3 -ac 2 -ar 22050 -ab 96'),
+					array(
+						'format' => 'mp4',
+						'size' => '320x240',
+						'framerate' => '25',
+						'video_bitrate' => '672',
+						'audio_bitrate' => '96',
+						'audio_channels' => '2',
+						'audio_samplerate' => '22050',
+						'ffmpeg_params'=> '-b 672 -maxrate 900 -vcodec xvid -qmin 3 -qmax 5 -bufsize 4096 -g 300 -s 320x240 -acodec aac -ab 96 -ac 2 -ar 22050'),
+						
+					array(
+						'format' => '3gp',
+						'size' => '176x144',
+						'framerate' => '14.985',
+						'video_bitrate' => '144',
+						'audio_bitrate' => '32',
+						'audio_channels' => '1',
+						'audio_samplerate' => '8000',
+						'ffmpeg_params'=>'-f 3gp -vcodec h263 -s 176x144 -r 14.985 -b 144 -acodec amr_nb -ac 1 -ar 8000 -ab 13')
+					);
+
+
+/**
+* FFmpeg parameters used for preview still creation
+*
+* @package	StreamOnTheFly
+* @variable	array	$config['videoFormats']
+*/
+
+$config['ffmpeg_params_stills'] = '-f image2 -img gif -t 1 -r 1 -s sqcif';
+
+
+				
+
+//////////////////////////////////////////////////////////////////////////
+// MISC OPTIONS ------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
+
+// width and height of programme/station/series/contact icons
+$config['iconWidth'] = 100;
+$config['iconHeight'] = 100;
+
+// MIME types to determine type of uploaded documents
+$config['mimetypes'] = array(
+			'doc'	=> 'application/msword',
+			'gif'	=> 'image/gif',
+			'htm'	=> 'text/html',
+			'html'	=> 'text/html',
+			'jpg'	=> 'image/jpeg',
+			'mp3'	=> 'audio/mp3',
+			'm3u'	=> 'audio/x-mpeg',
+			'ogg'	=> 'application/x-ogg',
+			'pdf'	=> 'application/pdf',
+			'png'	=> 'image/png',
+			'ps'	=> 'application/postscript',
+			'flv'   => 'video/x-flv',
+			'avi'   => 'x-msvideo',
+			'mov'   => 'quicktime',
+			'mpg'   => 'mpeg',
+			'mpeg'  => 'mpeg',
+			'mp4'   => 'video/mp4',
+			'3gp'   => 'video/3gpp',
+			'wmv'   => 'video/x-ms-wmv',
+			'txt'	=> 'text/plain',
+			'xls'	=> 'application/vnd.ms-excel');
+		
+		
+			
+//////////////////////////////////////////////////////////////////////////
+// ADVANCED VIDEO OPTIONS ------------------------------------------------
+//////////////////////////////////////////////////////////////////////////			
+
+
+/**
+* Perl regexp for parsing ffmpeg output during transcode.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['ffmpegRegexp']
+*/
+$config['ffmpegRegexp'] = "/frame=(.*?) q=/";
+
+
+/**
+* Perl regexp for parsing ffmpeg errors occuring BEFORE CONVERSION EVEN STARTS.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['ffmpegErrorsBeforeConversion']
+*/
+$config['ffmpegErrorsBeforeConversion']=array(
+											"/\n\[.*@ 0x.*\n/", 
+											"/Unsupported codec/"
+										);
+
+/**
+* Perl regexp for parsing ffmpeg errors occuring DURING THE CONVERSION (frame progress already displayed).
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['ffmpegErrorsDuringConversion']
+*/
+$config['ffmpegErrorsDuringConversion']=array(
+											"/Color spaces other than 420p/"
+										);
+										
+/**
+* String in ffmpeg output when CONVERSION IS FINISHED.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['ffmpegFinishMessage']
+*/
+$config['ffmpegFinishMessage']="muxing overhead";
+
+										
+										
+/**
+* String in ffmpeg output when CONVERSION IS FINISHED, BUT NO USABLE VIDEO HAS BEEN PRODUCED.
+*
+* @package	StreamOnTheFly
+* @variable	string	$config['ffmpegEmptyVideo']
+*/
+$config['ffmpegEmptyVideo']="video:0kB";
+
+
+?>

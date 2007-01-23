@@ -1,0 +1,109 @@
+<div id="showContact_container">
+	
+	{if $CONTACT_DATA.icon}
+		<div id="showContact_icon">
+			<img src="{$CACHE_URL}/{$CONTACT_DATA.id}.png" alt="Icon"/>
+		</div>
+	{/if}
+		  
+	<div class="showContact_row line">
+		<span class="identifier">{#name#}:</span>
+		<span class="value">{$CONTACT_DATA.name}</span>
+	</div>
+	
+	{if $CONTACT_DATA.alias }
+	<div class="showContact_row line">
+		<span class="identifier">{#alias#}:</span>
+		<span class="value">{$CONTACT_DATA.alias}</span>
+	</div>
+	{/if}
+	
+	{if $CONTACT_DATA.acronym }
+	<div class="showContact_row line">
+		<span class="identifier">{#acronym#}:</span>
+		<span class="value">{$CONTACT_DATA.acronym}</span>
+    </div>
+	{/if}
+	
+	{if $CONTACT_DATA.intro }
+	<div class="showContact_row line">
+		<span class="identifier">{#intro#}:</span>
+		<span class="value">{$CONTACT_DATA.intro}</span>
+	</div>
+	{/if}
+	
+	{if $CONTACT_DATA.email }
+	<div class="showContact_row line">
+		<span class="identifier">{#email#}:</span>
+		<span class="value"><a href="mailto:{$CONTACT_DATA.email}">{$CONTACT_DATA.email}</a></span>
+	</div>
+	{/if}
+	
+	{if $CONTACT_DATA.address }
+	<div class="showContact_row line">
+		<span class="identifier">{#address#}:</span>
+		<span class="value">{$CONTACT_DATA.address}</span>
+	</div>
+	{/if}
+	
+	{if $CONTACT_DATA.phone }
+	<div class="showContact_row line">
+		<span class="identifier">{#phone#}:</span>
+		<span class="value">{$CONTACT_DATA.phone}</span>
+	</div>
+	{/if}
+	
+	{if $CONTACT_DATA.cellphone }
+	<div class="showContact_row line">
+		<span class="identifier">{#cellphone#}:</span>
+		<span class="value">{$CONTACT_DATA.cellphone}</span>
+	</div>
+	{/if}
+	
+	{if $CONTACT_DATA.fax }
+	<div class="showContact_row line">
+		<span class="identifier">{#fax#}:</span>
+		<span class="value">{$CONTACT_DATA.fax}</span>
+	</div>
+	{/if}
+	
+	{if $CONTACT_DATA.url }
+	<div class="showContact_row line">
+		<span class="identifier">{#url#}:</span>
+		<span class="value"><a href="{$CONTACT_DATA.url}" target="_blank">{$CONTACT_DATA.url}</a></span>
+	</div>
+	{/if}
+	
+	  
+	{if $NUMPROGS gt 0}
+		<div id="showContact_proglink" class="line">
+			<a target="_top" href="javascript:to_old_win('{$ROOT_URL}/showContactProgs.php/{$CONTACT_ID}')">{$PROGS}</a> 
+		</div>
+		{else}
+		<div id="showContact_proglink" class="line">
+			<span>{$PROGS}</span>
+		</div>                 
+	{/if}
+	  
+	<div id="showContact_refs" class="line">
+		<ul>
+		{foreach item=item from=$REFS}
+			<li>
+				<span>{$item.role}</span> 
+				<span>{$item.mid} </span>
+				<a href="javascript:to_old_win('{$item.url}')">{$item.name}</a>
+			</li>
+		{/foreach}
+	</div>
+			
+	<form action="">
+		{if hasPerm($CONTACT_ID,'change') }
+			<div id="showContact_change">
+				<input class="button" type="button" name="b1" value="{#edit_contact#}" onclick="redir(this.form, '{$ROOT_URL}/editContact.php?id={$CONTACT_ID}')" />
+			</div>
+		{/if}
+		<div id="showContact_close">
+			<input class="button" type="button" onclick="window.close()" value="{#close#}" />
+		</div>
+	</form>
+</div>

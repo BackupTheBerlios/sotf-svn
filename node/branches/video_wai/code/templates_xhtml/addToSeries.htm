@@ -1,0 +1,12 @@
+<div id="addtoseries_container">
+	<h3>{#addtoseries#}</h3>
+	
+	<form name="addtoseries" method="post" action="">
+		<select name="series_id" class="dropdown">
+			{foreach from=$MY_SERIES item=item}
+				<option value="{$item.id}"  {if $item.id eq $PRG_SERIES} selected{/if} >{$item.name}</option>
+		  	{/foreach}
+		</select>
+		<input type="submit" name="save" value="{#Add#}" />
+	</form>
+</div>

@@ -1,0 +1,139 @@
+<div id="editpermissions_container">
+	{literal}
+		<script type="text/javascript">
+			function toggleAdmin()
+			{
+				var elts = document.form1.elements;
+			  var on = document.form1['perm_admin'].checked;
+				for (var i = 0; i < elts.length; i++) {
+				var elt = elts[i];
+					if (elt.type == "checkbox" && elt.name != 'perm_admin') {
+						elt.checked = on;
+					}
+				}
+			}
+			
+			function toggleEnable(yesno)
+			{
+				var elts = document.form1.elements;
+				for (var i = 0; i < elts.length; i++) {
+				var elt = elts[i];
+					if (elt.type == "checkbox") {
+						elt.disable = !yesno;
+					}
+				}
+			}
+		</script>
+	{/literal}
+	
+	<div id="editPermissions">
+		<h3>{#change_permissions#}</h3>
+		
+		{if $CONTEXT eq 'node'}
+			<div id="editpermissions_target">
+				<div id="editPermissions_target" class="line">
+					<span class="identifier">{#target#}: </span><span class="value">{$CONTEXT}</span>
+				</div>
+			</div>
+			{else}
+				<div id="editPermissions_target" class="line">
+					<span class="identifier">{#target#}: </span><span class="value">{$CONTEXT}: {$OBJECT_NAME}</span>
+				</div>
+			</div>
+		{/if}
+		
+		
+		<div id="editpermissions_form">
+			<form method="GET" name="form1" action="editPermissions.php">
+				<!-- <input type="hidden" name="username" value="{$USER_NAME|escape:"html"}" /> -->
+				<!-- <input type="hidden" name="userid" value="{$USER_ID|escape:"html"}" /> -->
+				<input type="hidden" name="objectname" value="{$OBJECT_NAME|escape:"html"}" />
+				<input type="hidden" name="objectid" value="{$OBJECT_ID|escape:"html"}" />
+				<input type="hidden" name="context" value="{$CONTEXT}" />
+				
+				{if not $USERS}
+					<!-- diese Zeile ohne Zeilenumbruch -->
+					<div id="editpermissions_finduser" class="line">
+						{#find_user#}: <input name="pattern" value="{$PATTERN}" /> <input type="checkbox" name="prefix" /> {#prefix_search#}
+						<input type="submit" class="button" name="search" value="Search" />
+					</div> 
+				{/if}
+				{if $NO_MATCHES}
+					<div id="editpermissions_nomatches" class="line">{#no_matches#}</div>
+				{/if}
+				{if $TOO_MANY_MATCHES}
+					<div id="editpermissions_toomanymatches" class="line">{#too_many_matches#} {$TOO_MANY_MATCHES}</div>
+				{/if}
+				
+				<div id="editpermissions_userpermissions">
+					{if $USERS}
+						<div class="line">
+							<select name="userid" class="dropdown">
+								{foreach from=$USERS item=name key=key}
+									<option value="{$key}"  {if $key eq $USER_SELECTED} selected="selected"{/if} >{$name}</option>
+								{/foreach}
+							</select>
+							<input type="submit" name="new" class="button" value="{#new_search#}" />
+						</div>
+		
+						<div id="editpermissions_userpermissions_permadmin" class="line">
+							<span class="identifier">
+								<input name="perm_admin" type="checkbox" class="checkbox" 
+									onclick="toggleAdmin()" {if in_array('admin', $PERMISSIONS) } checked="checked"{/if} />
+								{#admin#}
+							</span> 
+							<span class="value">{#admin_expl#}</span>
+						</div>
+						<div id="editpermissions_userpermissions_permchange" class="line">
+							<span class="identifier">
+								<input name="perm_change" type="checkbox" class="checkbox" {if in_array('change', $PERMISSIONS) }checked="checked"{/if} />
+									{#change#}
+							</span> 
+							<span class="value">{#change_expl#}</span>
+						</div>
+						{if $CONTEXT eq 'station' or $CONTEXT eq 'node' or $CONTEXT eq 'series' }
+							<div id="editpermissions_userpermissions_permcreate" class="line">
+								<span class="identifier">
+									<input name="perm_create" type="checkbox" class="checkbox" {if in_array('create', $PERMISSIONS) }checked="checked"{/if} />
+									{#create#}
+								</span> 
+								<span class="value">{#create_expl#}</span>
+							</div>
+						{/if}
+						<div id="editpermissions_userpermissions_permdelete" class="line">
+							<span class="identifier">
+								<input name="perm_delete" type="checkbox" class="checkbox" {if in_array('delete', $PERMISSIONS) }checked="checked"{/if} />
+								{#delete#}
+							</span> 
+							<span class="value">{#delete_expl#}</span>
+						</div>
+						<div id="editPermissions_userpermissions_permauthorize" class="line">
+							<span class="identifier">
+								<input name="perm_authorize" type="checkbox" class="checkbox"  {if in_array('authorize', $PERMISSIONS) }checked="checked"{/if} />
+									{#authorize#}
+							</span> 
+							<span class="value">{#authorize_expl#}</span>
+						</div>
+						<div id="editpermissions_userpermissions_usetemplate" class="line"> 
+							<span class="identifier">{#use_template#}: </span>
+							<span class="value">
+								<select name="role" class="dropdown" onchange="javascript:alert('If you think such feature would be useful, please tell!')" >
+									<option value="owner" onselect="toggleEnable(1)" >{#owner#}</option>
+									{if $CONTEXT eq 'station' or $CONTEXT eq 'series'}
+										<option value="manager" onselect="toggleEnable(1)" >{#manager#}</option>
+										<option value="editor" onselect="toggleEnable(1)" >{#editor#}</option>
+									{/if}
+									<option value="special" onselect="toggleEnable(0)" selected="selected">{#special_perms#}</option>
+								</select>
+							</span>
+						</div>
+						<div id="editpermissions_userpermissions_formbuttons" class="line">
+							<input type="submit" class="button" name="save" value="{#save#}" />
+							<input type="button" class="button" onclick="window.close();" name="cancel" value="{#cancel#}" />
+						</div>
+					{/if}
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

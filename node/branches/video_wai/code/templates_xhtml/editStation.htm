@@ -1,0 +1,357 @@
+<div id="editstation_container">
+	<h3>{#edit_station#}</h3>
+	
+	{if hasPerm($STATION_DATA, 'change') }
+		
+		<div class="editstation_generaldata block"> 
+			<h4>{#general_data#}</h4>
+			<div class="content">
+			<form method="post" action="">
+				<div>
+					<div id="editstation_generaldata_stationname" class="line">
+						<span class="identifier">{#station_name#}: </span><span class="value"><a href="showStation.php/{$STATION_ID}">{$STATION}</a></span>
+					</div>
+					<div id="editStation_generaldata_languagesmenu" class="line">
+						<span class="identifier">{#languages#}:</span>
+						<ul id="editstation_generaldata_languageslist" class="value">            
+							<li>
+								<select name="language1" class="dropdown">
+									<option value="0">{#no_lang#}</option>
+									{html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG1}
+								</select>
+							</li>
+							<li>
+								<select name="language2" class="dropdown">
+									<option value="0">{#no_second_lang#}</option>
+									{html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG2}
+								</select>
+							</li>
+							<li>
+								<select name="language3" class="dropdown">
+									<option value="0">{#no_third_lang#}</option>
+									{html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG3}
+								</select>
+							</li>
+						</ul>
+					</div>
+					<div id="editstation_generaldata_url" class="line">
+						<span class="identifier">{#url#}:</span>
+						<span class="value">
+							<input name="url" class="textfield" onchange="if(value != defaultValue) data_changed++;" value="{$STATION_DATA.url|default:"http://"}" size="50" />
+						</span>
+					</div>
+					<div id="editstation_generaldata_description" class="line">
+						<span class="identifier">{#description#}:</span>
+						<span class="value">
+							<textarea class="textarea" onchange="if(value != defaultValue) data_changed++;" cols="50" rows="10" name="desc">{$STATION_DATA.description}</textarea>
+						</span>
+					</div>
+				</div>
+				<div id="editstation_generaldata_submit">
+					<input type="submit" class="button" name="save" value="{#save#}" />
+				</div>
+			</form>
+			</div>
+		</div>
+		
+		<form action="">
+			
+			<div class="editstation_roles block"> 
+			<h4>{#Roles#}</h4>
+			<div class="content">
+				{if $ROLES}
+					<table id="editstation_rolestable">
+						<tr id="editstation_rolestable_header">
+							<th>{#Role#}</th>
+							<th>{#Contact#}</th>
+							<th>{#actions#}</th>
+						</tr>
+						{cycle name="roles" values="list1,list2" print=false advance=false}
+						{foreach item=item from=$ROLES}
+							<tr class="editstation_rolestable_item {cycle name=roles}">
+								<td>{$item.role_name}</td>
+								<td>{$item.contact_data.name}</td>
+								<td>
+									<input class="button" type="button" name="b1" value="{#change#}" 
+										onclick="popup('editRole.php?roleid={$item.id}&objectid={$STATION_ID}','EditRole',450,550,false)">
+									{if $item.change_contact }
+										<input class="button" type="button" name="b1" value="{#edit_contact#}" 
+											onclick="popup('editContact.php?id={$item.contact_id}','EditContact',700,500,true)" />
+									{/if}
+									<button class="button" type="button" name="b1" title="{#delete#}" value="{#delete#}" 
+										onclick="redir(this.form, 'editStation.php?delrole=1&roleid={$item.id}&stationid={$STATION_ID}')">
+										<img src="{$IMAGE_URL}/delete.gif" alt="delete" />
+									</button>
+								</td>
+							</tr>
+							<!-- ohne Tabelle
+							<div class="{cycle name=roles}">
+								<div class="editstation_roles_roleitem">
+									<span class="editstation_identifier identifier">{#Role#} :</span>
+								</div>
+								<div class="editstation_roles_rolecontact">
+									<span class="editstation_identifier identifier">{#Contact#}: </span>
+								</div>
+								<div class="editstation_roles_rolebuttons">
+									<input class="action" type="button" name="b1" value="{#change#}" 
+										onClick="popup('editRole.php?roleid={$item.id}&objectid={$STATION_ID}','EditRole',300,550,false)" />
+									{if $item.change_contact }
+										<input class="action" type="button" name="b1" value="{#edit_contact#}" 
+											onClick="popup('editContact.php?id={$item.contact_id}','EditContact',500,500,true)" />
+									{/if}
+									<input class="action" type="button" name="b1" value="{#delete#}" 
+										onClick="redir(this.form, 'editStation.php?delrole=1&roleid={$item.id}&stationid={$STATION_ID}')" />
+								</div>
+							</div>
+							-->
+						{/foreach}
+					</table>
+					{else}
+						<div id="editstation_noroles">{#no_roles#}</div>
+				{/if}
+				<div id="editstation_roles_addnewrole">
+					<button class="button" type="button" name="b1" title="{#add_new_role#}" 
+						onclick="popup('editRole.php?new=1&objectid={$STATION_ID}','EditRole',400,550,false)">
+						<img src="{$IMAGE_URL}/add.gif" alt="add" />
+					</button>
+				</div>
+
+		
+		
+		{else}
+			<div id="editstation_stationlink">
+				<span class="identifier">{#station_name#}:</span><span class="value"><a href="showStation.php/{$STATION_ID}">{$STATION}</a></span>
+			</div>
+	{/if}
+	</div>
+	</div>
+	</form>
+	
+	{if hasPerm($STATION_DATA, 'authorize') }
+		<a name="perms"></a>
+		
+		<form action="">
+			<div id="editstation_permissions" class="block"> 
+			<h4>{#access_permissions#}</h4>
+			<div class="content">
+			
+				{if $PERMISSIONS}
+					<div id="editstation_permissionstable" class="line">
+						<table id="editstation_permissions">
+						<tr id="editstation_permissions_header">
+							<th>{#username#}</th>
+							<th>{#permissions#}</th>
+							<th>{#actions#}</th>
+						</tr>
+						{cycle name="perms" values="list1,list2" print=false advance=false}
+						{foreach item=user key=userid from=$PERMISSIONS}
+							<tr class="editstation_permissions_item {cycle name=perms}">
+								<td>{$user.name}</td>
+								<td>
+									{section name=i loop=$user.permissions}
+										{$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
+									{/section}
+								</td>
+								<td>
+									{if $USERNAME ne $user.name}
+										<button class="button" type="button" name="b1" value="{#change#}" title="{#change#}" 
+											onclick="popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&userid={$userid}','Permissions',470,570,false)">
+											<img src="{$IMAGE_URL}/edit.gif" alt="edit" />
+										</button>
+										<button class="button" type="button" name="b1" value="{#delete#}" title="{#delete#}" 
+											onclick="redir(this.form, 'editStation.php?delperm=1&userid={$userid}&stationid={$STATION_ID}')">
+											<img src="{$IMAGE_URL}/delete.gif" alt="delete" />
+										</button>       
+									{/if}
+								</td>
+							</tr>
+							<!-- ohne Tabelle
+							<div class="{cycle name=perms}">
+								<div class="editstation_permissions_username">
+									<span class="editstation_identifier identifier">{#username#}: </span><span class="editStation_text">{$user.name}</span>
+								</div>
+								<div class="editstation_permissions_permissionitem">
+									<span class="editstation_identifier identifier">{#permissions#}: </span>
+									<div class="editstation_permissions_permissiontext">
+										{section name=i loop=$user.permissions}
+											{$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
+										{/section}
+									</div>
+								</div>
+								<div>{#actions#}</div> 
+								<div class="editstation_permissions_username">
+									{if $USERNAME ne $user.name}
+										<input class="action" type="button" name="b1" value="{#change#}" 
+											onClick="popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}&userid={$userid}','Permissions',350,400,false)" />
+										<input class="action" type="button" name="b1" value="{#delete#}" 
+											onClick="redir(this.form, 'editStation.php?delperm=1&userid={$userid}&stationid={$STATION_ID}')" />              
+									{/if}
+								</div>
+							</div>
+							-->
+						{/foreach}
+						</table>
+						<div id="editstation_inheritedperms">
+							{#inherited_perms#}
+						</div>
+					</div>
+					{else}
+						<div id="editstation_inheritedperms">{#inherited_perms#}</div>
+				{/if}
+				<div id="editstation_permissions_change_button">
+					<input type="button" name="addperm" class="button" value="{#change_perm#}" 
+						onclick="popup('editPermissions.php?context=station&objectid={$STATION_ID}&objectname={$STATION}','Permissions',470,570, false)" />
+				</div>
+			</div>
+			</div>
+		</form>
+	{/if}
+	
+	{if hasPerm($STATION_DATA, 'change') }
+		<a name="series"></a>
+		
+		<div id="editstation_series" class="block"> 
+		<h4>{#series#}</h4>
+		<form action="">
+			<div class="content">
+				{if $SERIES}
+					<div id="editstation_series_items">
+						{cycle name="perms" values="list1,list2" print=false advance=false}
+						{foreach item=item from=$SERIES}
+							<div class="{cycle name=perms}">
+								<div class="editstation_series_title line">
+									<span class="identifier">{#series_title#}: </span><span class="value"><a href="showSeries.php/{$item.id}">{$item.name}</a></span>
+								</div>
+								<div class="editstation_series_actions line">
+									<span class="identifier">{#actions#}: </span>
+									<span class="value">
+									
+									{if hasPerm($item, 'change') }
+										
+											<input class="button" type="button" name="b1" value="{#change#}" 
+												onclick="popup('editSeries.php?seriesid={$item.id}','EditSeries',550,550,true)" />
+										
+									{/if}
+									{if hasPerm($STATION_DATA, 'delete') or hasPerm($item, 'admin') }
+										
+											<input class="button" type="button" name="b1" value="{#delete#}" 
+												onclick="redir(this.form, 'editStation.php?delseries=1&seriesid={$item.id}&stationid={$STATION_ID}')" />
+										
+									{/if}
+								
+									</span>
+								</div>
+							</div>
+						{/foreach}
+					</div>
+					{else}
+						<div id="editstation_noseries">{#no_series#}</div>
+				{/if}
+				<div id="editstation_series_createbutton">
+					<input class="button" type="button" name="b1" value="{#add_series#}" 
+						onclick="popup('createSeries.php?stationid={$STATION_ID}','EditSeries',550,550,true)" />
+				</div>
+			</div>
+		</form>
+		</div>
+		
+		<a name="icon"></a>
+		<div class="editstation_iconsandjingles block">
+			<h4>{#icons_and_jingles#}</h4>
+			<div class="content">
+				<form action="">
+					<div id="editstation_icon">
+						{if $ICON}
+							<span class="identifier">{#icon#}: </span><span class="value"><img src="{$CACHE_URL}/{$STATION_ID}.png" alt="Logo"/></span>
+						{else}
+							<div id="editstation_icons_noicon"><span class="identifier">{#icon#}: </span>{#no_icon#}</div>
+						{/if}
+					</div>
+					<div class="line"><span class="identifier">{#jingle_list#}:</span></div>
+					<div id="editstation_iconsandjingles_jinglestable" class="line">   
+						<table id="editstation_jinglestable">
+							<tr id="editstation_jinglestable_header">
+								<th>{#filename#}</th>
+								<th>{#format#}</th>
+								<th>{#bitrate#}</th>
+								<th>{#channels#}</th>
+								<th>{#samplerate#}</th>
+								<th>{#actions#}</th>
+							</tr>
+						{cycle name="jingle" values="list1,list2" print=false advance=false}
+						{foreach item=item from=$JINGLE}
+							<tr class="editstation_jinglestable_item {cycle name=jingle}">
+								<td>
+									{if $item.filename}
+										<img src="{$IMAGE_URL}/listen.gif" alt="listen" />
+										<!--<a href="getJingle.php/{$STATION}_jingle.mp3?id={$STATION_ID}&file={$item.filename}">{#exists#}</a>-->
+										{else}
+											<span class="editstation_error error">{#missing#}</span>
+									{/if}
+								</td>
+								<td>{$item.format}</td>
+								<td>{$item.bitrate} kbps</td>
+								<td>{$item.channels}</td>
+								<td>{$item.samplerate} Hz</td>
+								<td>
+									{if empty($item.filename) }
+										{if $HAS_JINGLE}
+											<input class="button" type="button" name="b1" value="{#convert#}" 
+												onclick="window.open('convert.php?jingle=1&id={$STATION_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=80')" />
+										{/if}
+										{else}
+											<input class="button" type="button" name="b1" value="{#delete#}" 
+												onclick="redir(this.form, 'editStation.php?deljingle=1&filename={$item.filename}&index={$item.index}&stationid={$STATION_ID}')" />
+									{/if}
+								</td>
+							</tr>
+						{/foreach}
+						</table>
+					</div>
+				</form>
+			</div>	
+			
+			{if $USERFILES}
+				{literal}
+					<script language="javascript" type="text/javascript">
+						function getSelected() {
+							return document.userfiles['filename'].options[document.userfiles['filename'].selectedIndex].value;
+						}
+					</script>
+				{/literal}
+				
+				<div id="editstation_userfiles" class="block">
+					<h4>{#userfiles#}</h4>
+					<div class="content">
+						<div id="editstation_userfiles_explanation" class="line">{#userfiles_expl#}</div>
+						<form method="post" name="userfiles" action="">
+							<input type="hidden" name="okURL" value="{$OKURL}" />
+							<input type="hidden" name="stationid" value="{$STATION_ID}" />
+							<select name="filename" id="filename" class="dropdown value">{html_options values=$USERFILES output=$USERFILES}</select>
+							<input type="button" name="view" class="button" value="{#view#}" 
+								onclick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)" />
+							<input type="submit" name="seticon" class="button" value="{#set_icon#}" onclick="return confirmUnsaved()" />
+							<input type="submit" name="setjingle" class="button" value="{#set_jingle#}" onclick="return confirmUnsaved()" />
+						</form>
+					</div>
+				</div>
+				{else}
+					<div class="block">
+						<h4>{#userfiles#}</h4>
+						<div class="content">{#no_files#}</div>
+					</div>
+			{/if}
+			<div id="editstation_uploadfiles" class="content">
+				<form enctype="multipart/form-data" method="post" action="">
+					<div id="editstation_uploadfiles_explanation">{#upload_expl#}</div>
+					<input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+					<input type="hidden" name="stationid" value="{$STATION_ID}" />
+					<input name="userfile" type="file" class="upload" />
+					<input type="submit" name="uploadicon" class="button" value="{#set_icon#}"  onclick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
+					<input type="submit" name="uploadjingle" class="button" value="{#set_jingle#}"  onclick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
+					
+				</form>
+			</div>
+		</div>
+	{/if}
+</div>

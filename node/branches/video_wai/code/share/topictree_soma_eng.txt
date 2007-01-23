@@ -1,0 +1,124 @@
+tree_id=2
+name=SOMA Metadata version 1
+shortname=SOMA
+description=The Shared Online Media Archive initiative gave a topic tree for its metadata definition. It is provided as an alternative topic tree here.
+url=http://soma-dev.sourceforge.net/
+
+# End of tree definition
+
+  1  1 development
+  2  2 agriculture
+  3  2 aid
+  4  2 capacity building
+  5  2 children
+  6  2 cities
+  7  2 community / local groups
+  8  2 education
+  9  2 emergency relief
+ 10  2 energy
+ 11  2 fisheries
+ 12  2 food
+ 13  2 gender
+ 14  2 intermediate technology
+ 15  2 international cooperation
+ 16  2 labour / work
+ 17  2 land
+ 18  2 men
+ 19  2 migration
+ 20  2 old age / retirement
+ 21  2 population
+ 22  2 poverty
+ 23  2 refugees
+ 24  2 shelter/housing
+ 25  2 social exclusion
+ 26  2 tourism
+ 27  2 transport
+ 28  2 volunteering
+ 29  2 water/sanitation
+ 30  2 women
+ 31  2 youth
+
+ 32  1 economy
+ 33  2 business
+ 34  2 consumption / consumerism
+ 35  2 corporations
+ 36  2 credit / investment
+ 37  2 debt
+ 38  2 finance
+ 39  2 microcredit
+ 40  2 social enterprise
+ 41  2 trade
+
+ 42  1 environment
+ 43  2 animals
+ 44  2 atmosphere
+ 45  2 biodiversity
+ 46  2 climate change
+ 47  2 conservation
+ 48  2 environmental activism
+ 49  2 forests
+ 50  2 genetics
+ 51  2 nuclear issues
+ 52  2 oceans
+ 53  2 pollution
+ 54  2 renewable energy
+ 55  2 rivers
+ 56  2 rural life
+ 57  2 soils
+
+ 58  1 health
+ 59  2 aids
+ 60  2 disease / treatment
+ 61  2 infant mortality
+ 62  2 malaria
+ 63  2 narcotics
+ 64  2 nutrition / malnutrition
+
+ 65  1 human rights
+ 66  2 civil rights / civil liberties
+ 67  2 disability
+ 68  2 indigenous rights
+ 69  2 race politics
+ 70  2 religion
+ 71  2 sexuality
+ 72  2 social exclusion
+
+ 73  1 information & media
+ 74  2 art
+ 75  2 communications
+ 76  2 culture
+ 77  2 film
+ 78  2 freedom of expression
+ 79  2 internet
+ 80  2 knowledge
+ 81  2 media
+ 82  2 radio
+ 83  2 science
+ 84  2 sport
+ 85  2 television
+
+ 86  1 politics
+ 87  2 activism / protest
+ 88  2 civil society
+ 89  2 class issues
+ 90  2 codes of conduct
+ 91  2 democracy
+ 92  2 ethics / value systems
+ 93  2 geopolitics
+ 94  2 globalisation
+ 95  2 governance
+ 96  2 justice / crime
+ 97  2 law
+ 98  2 transparency / corruption
+ 99  2 unionism / trade unions
+100  2 United Nations
+
+101  1 war & peace
+102  2 arms/military
+103  2 conflict
+104  2 conflict resolution
+105  2 landmines
+106  2 nuclear issues
+107  2 peace
+108  2 security
+109  2 terrorism

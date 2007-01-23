@@ -1,0 +1,14 @@
+<div id="changestation_container">
+	<h3>{#changeStation#}</h3>
+	
+	<form name="changestation" method="POST" action="changeStation.php">
+		<select name="station_id" class="dropdown">
+			{foreach from=$MY_STATIONS item=item}
+				<option value="{$item.id}"  {if $item.id eq $PRG_STATION} selected{/if} >{$item.name}</option>
+		  	{/foreach}
+		</select>
+		<div id="changestation_form_submit">
+			<input type="submit" name="save" class="button" value="{#Add#}" />
+		</div>
+	</form>
+</div>

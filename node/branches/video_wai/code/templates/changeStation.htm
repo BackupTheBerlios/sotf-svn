@@ -1,0 +1,14 @@
+
+<h3>{#changeStation#}</h3>
+
+<form name="form1" method="POST">
+
+    <select name="station_id">
+      {foreach from=$MY_STATIONS item=item}
+        <option value="{$item.id}"  {if $item.id eq $PRG_STATION} SELECTED {/if} >{$item.name}</option>
+      {/foreach}
+    </select>
+
+<input type="submit" name="save" value="{#Add#}">
+
+</form>

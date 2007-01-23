@@ -1,0 +1,64 @@
+<div id="showcontactprogs_container">
+	<h3>{#contributions#} </h3>
+	<h3><a href="javascript:popup('{$ROOT_URL}/showContact.php?id={$CONTACT_ID}','ShowContact',400,400)">{$CONTACT_NAME}</a></h3>
+
+	<div class="showcontactprogs_results"> 
+		{if $rp_count gt 10}
+			<div id="showcontactprogs_splitlist">
+				{include file="splitList.htm"}
+			</div>
+		{/if}
+        
+		<ul id="programme" class="listbox">
+        {cycle name="progs" values="list1,list2" print=false advance=false}
+        {foreach item=item from=$PROGS}
+			<li>
+				<div class="programme_header listbox_head">
+					<h4><a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">{$item.title}</a></h4>
+					{if $item.alternative_title}
+						<h5>{$item.alternative_title}</h5>
+					{/if} 
+				</div>
+				<div class="programme_smalldetails listbox_body">
+				
+					<div class="programme_icon listbox_icon">
+						{if $item.icon }
+							<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$CACHE_URL}/{$item.icon}" alt="icon"/></a>
+						{else}
+							<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$IMAGE_URL}/noicon.png" alt="noIcon"/></a>
+						{/if}
+					</div>
+					
+					<div class="programme_textdetails listbox_details">
+						{if $item.episode_title}
+							<div class="programme_abstract_episode"><span class="identifier">Episode {$item.episode_sequence}: </span>{$item.episode_title}</div>
+						{/if} 
+										
+						{if $item.abstract}
+							<div class="programme_abstract_text">
+								{$item.abstract|truncate:300}
+							</div>
+						{/if}
+					</div>
+					
+					<div class="progamme_smalldetails_footer listbox_footer">
+					
+						{if $item.broadcast_date}
+							<div class="programme_date">
+								<span class="identifier">{#entry_date#}: </span>
+								<span>{if $LANG eq "eng"}{$item.entry_date} {else}{$item.entry_date|date_format:"%d.%m.%Y"}{/if}</span>
+								<span class="identifier">{#broadcast_date#}: </span>
+								<span>{if $LANG eq "eng"}{$item.broadcast_date|date_format:"%Y-%m-%d"} 
+								{else} {$item.broadcast_date|date_format:"%d.%m.%Y"}{/if}</span>
+							</div>
+						{/if} 
+						<div class="programme_abstract_link">
+							<a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">{#further_details#}...</a>
+						</div>
+					</div>
+				</div>
+			</li>
+		{/foreach}
+		</ul>
+	</div>
+</div>

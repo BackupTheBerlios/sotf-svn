@@ -1,0 +1,9 @@
+<div id="createContact_container">
+	<h3>{#create_contact#}</h3>
+	
+	<form name="createContact" method="POST" action="createContact.php">
+		<input type="hidden" name="stationid" value="{$STATION_ID}" />
+		<input name="name" class="textfield" value="{$NAME}" /> 
+		<input type="submit" name="create" class="button" value="{#Create#}" />
+	</form>
+</div>

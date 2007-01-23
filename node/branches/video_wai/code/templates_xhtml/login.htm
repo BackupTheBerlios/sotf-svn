@@ -1,0 +1,36 @@
+<div id="login_container">
+	<h3>{#Login#}</h3>
+	<div class="login_prompt_message">{#please_login#}</div>
+	
+	<div id="login_form">
+		<form method="post" action="{$ROOT_URL}/login.php">
+			<input type="hidden" name="filled" value="1" />
+			<input type="hidden" name="okURL" value="{$OK_URL}" />
+			<div class="login_error_msg error"> 
+				{$ERRORMSG}
+			</div>
+			<div id="login_user"> 
+				<label for="login_input_user" class="identifier">{#Username#}</label>
+				<span class="value">
+					<input type="text" name="userid" class="textfield" value="{$USERID}" id="login_input_user" />
+				</span>
+			</div>
+			<div id="login_pass"> 
+				<label for="login_input_pass" class="identifier">{#Password#}</label>
+				<span class="value">
+					<input type="password" name="password" class="textfield" id="login_input_pass" />
+				</span>
+			</div>
+			<div id="login_submit"> 
+				<input type="submit" class="button" value="{#Login#}" />
+			</div>
+		</form>
+		
+		<div id="login_register">
+			<ul>
+				<li><a href="register.php">{#Register#}</a></li>
+				<li>{#forgot_password#}</li>
+			</ul>
+		</div>
+	</div>
+</div>

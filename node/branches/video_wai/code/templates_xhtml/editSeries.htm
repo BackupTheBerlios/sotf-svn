@@ -1,0 +1,256 @@
+<div id="editseries_container">
+	<h3>{#edit_series#}</h3>
+	
+	{if hasPerm($SERIES_DATA, 'change') }
+		<h4>{#general_data#}</h4>
+		<div id="editseries_generaldata_form">
+			<form method="post" name="editseries_generaldata_form" action="">
+				<div id="editseries_generaldata_form_name" class="line">
+					<label for="seriesname" class="identifier">{#title#}:</label>
+					<div class="value">
+						<input name="name" id="seriesname" class="textfield" value="{$SERIES_DATA.name}" onchange="if(value != defaultValue) data_changed++;" />
+					</div>
+				</div>
+				<div id="editseries_generaldata_form_languages" class="line">
+					<label for="language1" class="identifier">{#languages#}:</label>
+					<div class="value">                
+						<select name="language1" id="language1" class="dropdown">
+							<option value="0">{#no_lang#}</option>
+							{html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG1}
+						</select>
+						<select name="language2" class="dropdown">
+							<option value="0">{#no_second_lang#}</option>
+							{html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG2}
+						</select>
+						<select name="language3" class="dropdown">
+							<option value="0">{#no_third_lang#}</option>
+							{html_options values=$LANG_CODES output=$LANG_NAMES selected=$PRG_LANG3}
+						</select>
+					</div>
+				</div>
+				<div id="editseries_generaldata_form_url" class="line">
+					<label for="url" class="identifier">{#url#}:</label>
+					<div class="value">
+						<input name="url" id="url" class="textfield" onchange="if(value != defaultValue) data_changed++;" value="{$SERIES_DATA.url|default:"http://"}" size="50" />
+					</div>
+				</div>
+				<div id="editseries_generaldata_form_description" class="line">
+					<label for="description" class="identifier">{#description#}:</label>
+					<div class="value">
+						<textarea name="description" cols="50" rows="10" class="textarea" id="description" onchange="if(value != defaultValue) data_changed++;" >{$SERIES_DATA.description}</textarea>
+					</div>
+				</div>
+				<div id="editseries_generaldata_submit" class="line">
+					<input type="submit" name="save" class="button" value="{#save#}" />
+					<input type="submit" name="finish" value="{#finish#}" class="button"/>
+				</div>
+			</form>
+		</div>
+
+		<a name="roles"></a>
+		<div class="block">
+			<form action="">
+				<h4>{#Roles#}</h4>
+				
+				<div class="content"> 
+					{if $ROLES}
+						<table id="editseries_roletable">
+							<tr>
+								<th>{#Role#}</th>
+								<th>{#Contact#}</th>
+								<th>{#actions#}</th>
+							</tr>
+							{cycle name="roles" values="list1,list2" print=false advance=false}
+							{foreach item=item from=$ROLES}
+								<tr class="{cycle name=roles}">
+									<td>{$item.role_name}</td>
+									<td>{$item.contact_data.name}</td>
+									<td>
+										<input class="button" type="button" name="b1" value="{#change#}" 
+											onclick="popup('editRole.php?roleid={$item.id}&objectid={$SERIES_ID}','EditRole',450,550,false)" />
+										{if $item.change_contact }
+											<input class="button" type="button" name="b1" value="{#edit_contact#}" 
+												onclick="popup('editContact.php?id={$item.contact_id}','EditContact',500,500,true)" />
+										{/if}
+										<input class="button" type="button" name="b1" value="{#delete#}" 
+											onclick="redir(this.form, 'editSeries.php?delrole=1&roleid={$item.id}&seriesid={$SERIES_ID}')" />
+									</td>
+								</tr>
+							{/foreach}
+						</table>
+						{else}
+							<div id="editseries_roles_noroles">{#no_roles#}</div>
+					{/if}
+					<div id="editseries_addnewrole_submit">
+						<input class="button" type="button" name="b1" value="{#add_new_role#}" onclick="popup('editRole.php?new=1&objectid={$SERIES_ID}','EditRole',450,550,false)" />
+					</div>
+				</div>
+			</form>
+		</div>
+	{/if}
+	
+	
+	{if hasPerm($SERIES_DATA, 'authorize') }
+		<div class="block">
+			<a name="perms"></a>
+			<h4>{#access_permissions#}</h4>
+			<div id="editseries_permissions" class="content"> 
+				{if $PERMISSIONS}
+					<form action="">
+						<div>
+							<table id="editseries_permissionstable">
+								<tr>
+									<th>{#username#}</th>
+									<th>{#permissions#}</th>
+									<th>{#actions#}</th>
+								</tr>
+								{cycle name="roles" values="list1,list2" print=false advance=false}
+								{foreach item=user key=userid from=$PERMISSIONS}
+									<tr class="{cycle name=roles}">
+										<td>{$user.name}</td>
+										<td>
+											{section name=i loop=$user.permissions}
+												{$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
+											{/section}
+										</td>
+										<td>
+											{if $USERNAME ne $user.name}
+												<input class="button" type="button" name="b1" value="{#change#}" 
+													onclick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES}&userid={$userid}','Permissions',450,550,false)" />
+												<input class="button" type="button" name="b1" value="{#delete#}" 
+													onclick="redir(this.form, 'editSeries.php?delperm=1&userid={$userid}&seriesid={$SERIES_ID}')" />
+											{/if}
+										</td>
+									</tr>
+								{/foreach}
+							</table>
+							<div class="{cycle name=perms}">
+								<div id="editseries_permissions_inherited">{#inherited_perms#}</div>
+							</div>
+						</div>
+					</form>
+					{else}
+						<div>{#inherited_perms#}</div>
+				{/if}
+				<div id="editseries_changeperms_button">
+					<input type="button" name="addperm" class="button" value="{#change_perm#}" 
+						onclick="popup('editPermissions.php?context=series&objectid={$SERIES_ID}&objectname={$SERIES|escape}','Permissions',450,550, false)" />
+				</div>
+			</div>
+		</div>
+	{/if}
+	
+	
+	{if hasPerm($SERIES_DATA, 'change') }
+		<div class="block">
+		<a name="icon"></a>
+			<h4>{#icons_and_jingles#}</h4>
+		
+			<div class="editSeries_seriesdata content"> 
+			<form action="">
+				<div id="editSeries_seriesdataicon" class="block">
+					{if $ICON}
+						<img src="{$CACHE_URL}/{$SERIES_ID}.png" alt="logo"/>
+						{else}
+							<div>{#no_icon#}</div>
+					{/if}
+				</div>
+		</div>
+	
+		<div id="editSeries_seriesdata_details" class="block">   
+			<h4>{#jingle_list#}</h4>
+			<div class="content">
+				{cycle values="list1,list2" print=false advance=false}
+				<table id="editseries_jingletable">
+					<tr>
+						<th>{#exists#}</th>
+						<th>{#format#}</th>
+						<th>{#bitrate#}</th>
+						<th>{#channels#}</th>
+						<th>{#samplerate#}</th>
+						<th>{#actions#}</th>
+					</tr>
+					{cycle name="roles" values="list1,list2" print=false advance=false}
+					{foreach item=item from=$JINGLE}
+						<tr class="{cycle name=roles}">
+							<td>
+								{if $item.filename}
+									<a href="getJingle.php/{$SERIES_DATA.name}_jingle.mp3?id={$SERIES_ID}&file={$item.filename}">
+										<img src="{$IMAGE_URL}/listen.gif" alt="listen" /><!--{#exists#}--></a>
+									{else}
+										<span class="editSeries_seriesdata_error error">{#missing#}</span>
+								{/if}
+							</td>
+							<td>{$item.format}</td>
+							<td>{$item.bitrate}</td>
+							<td>{$item.channels}</td>
+							<td>{$item.samplerate}</td>
+							<td>										
+								{if empty($item.filename) }
+									<div>
+									{if $HAS_JINGLE}
+										<input class="button" type="button" name="b1" value="{#convert#}" 
+											onclick="window.open('convert.php?jingle=1&id={$SERIES_ID}&index={$item.index}','mp3progress','menubar=no, status=no, toolbar=no, width=350, height=80')" />
+									{/if}
+									{else}
+										<button class="button" type="button" name="b1" value="{#delete#}" 
+											onclick="redir(this.form, 'editSeries.php?deljingle=1&filename={$item.filename}&index={$item.index}&seriesid={$SERIES_ID}')">
+											<img src="{$IMAGE_URL}/delete.gif" alt="delete" />
+										</button>
+									</div>
+								{/if}
+							</td>
+						</tr>
+					{/foreach}
+				</table>
+			</div>
+		</div>
+		</form>
+			
+		<div class="block">
+			<h4>{#userfiles#}</h4>
+			{if $USERFILES}
+				{literal}
+					<script language="javascript" type="text/javascript">
+						function getSelected() {
+							return document.userfiles['filename'].options[document.userfiles['filename'].selectedIndex].value;
+						}
+					</script>
+				{/literal}
+				<div class="content">
+					<div id="editseries_userfiles">
+						<form method="post" name="userfiles" action="">
+							<input type="hidden" name="okURL" value="{$OKURL}" />
+							<input type="hidden" name="seriesid" value="{$SERIES_ID}" />
+							
+							<select name="filename" id="filename">{html_options values=$USERFILES output=$USERFILES}</select>
+							<input type="button" name="view" class="button" value="{#view#}" 
+								onclick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)" />
+							<input type="submit" name="seticon" class="button" value="{#set_icon#}" onclick="return confirmUnsaved()" />
+							<input type="submit" name="setjingle" class="button" value="{#set_jingle#}" onclick="return confirmUnsaved()" />
+							<div id="editseries_userfiles_explanation">{#userfiles_expl#}</div>
+						</form>
+					</div>
+				{else}
+					<div id="editseries_userfiles" class="line">{#no_files#}</div>
+			{/if}
+			
+			<form enctype="multipart/form-data" method="post" action="">
+				<input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+				<input type="hidden" name="seriesid" value="{$SERIES_ID}" />
+				<input name="userfile" type="file" class="upload"/>
+				<input type="submit" name="uploadicon" class="button" value="{#set_icon#}" onclick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
+				<input type="submit" name="uploadjingle" class="button" value="{#set_jingle#}" onclick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()" />
+				<div id="editSeries_upload_explanation">{#upload_expl#}</div>
+			</form>
+			</div>
+	{/if}
+	<div id="editseries_buttons">
+		<div class="content">
+			<form method="post" action="">
+				<input type="submit" name="finish2" class="button" value="{#finish#}" />
+				<input type="button" class="button" onclick="self.close()" name="finish3" value="{#close#}" />
+			</form>
+		</div>
+	</div>
+</div>

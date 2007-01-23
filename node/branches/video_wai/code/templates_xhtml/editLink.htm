@@ -1,0 +1,26 @@
+<div id="editlink_container">
+	<h3>{#edit_link#}</h3>
+
+	<div class="editlink_form">
+		<form method="post" action="">
+			<input type="hidden" name="linkid" value="{$LINK_ID}" />
+			<div id="editlink_url" class="line">
+				<span class="identifier">{#url#}: </span>
+				<span class="value"><input name="url" maxlength="255" class="textfield" value="{$LINK_DATA.url|default:"http://"}" /></span>
+			</div>
+			<div id="editlink_caption" class="line">
+				<span class="identifier">{#caption#}:</span>
+				<span class="value"><input name="caption" maxlength="255" class="textfield" value="{$LINK_DATA.caption}" /></span>
+			</div>
+			<div id="editlink_public_access" class="line">
+				<span class="identifier">{#public_access#}:</span>
+				<span class="value"><input type="checkbox" name="public_access" {if $LINK_DATA.public_access eq 't' or $LINK_DATA.public_access eq 'true'} checked="1" {/if} /></span>
+			</div>
+		
+			<div id="editlink_submit" class="line">
+				<input type="submit" name="save" class="button" value="{#save#}" />
+			</div>
+		
+		</form>
+	</div>
+</div>

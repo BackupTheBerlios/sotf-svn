@@ -1,0 +1,96 @@
+<div id="register_container">
+	
+	<h3>{if $loggedIn}{#Personal#}{else}{#Register#}{/if}</h3>
+	
+	<form method="post" action="register.php">
+		<input type="hidden" name="okURL" value="{$OK_URL}" />
+		<input type="hidden" name="filled" value="1" />
+		
+		<div id="register_tab">
+			{if $ERRORMSG}
+				<div id="register_error" class="error">{$ERRORMSG}</div>
+			{/if}
+			
+			<div id="register_username" class="line">
+				<label for="username" class="identifier">{#Username#}: </label><span class="value">{$USER_FIELD}</span>
+				{if $INVALID_USERNAME} 
+					<div class="error">{#invalid_username#}</div>
+				{/if}
+				{if $USERNAME_RESERVED} 
+					<div class="error">{#username_in_use#}</div>
+				{/if}
+			</div>
+			
+			
+			<div id="register_password">
+				{*added by Martin Schmidt 11-05-21*}
+				{if $if_logged_in}
+					<div id="register_password_old" class="line">
+						<label for="password_old" class="identifier">{#old_password#}: </label>
+						<span class="value"><input type="password" name="password_old" id="password_old" class="textfield" value="" /></span>
+						<span class="required">*</span>
+						{if $PASSWORD_MISMATCH_OLD} 
+							<div><span class="error">{#password_mismatch#}</span></div>
+						{/if}
+						{if $PASSWORD_EMPTY} 
+							<div><span class="error">{#password_empty#}</span></div>
+						{/if}
+					</div>
+					<div id="register_password_new" class="line">
+						<label for="password" class="identifier">{#new_password#}:</label>
+					{else}
+					<div id="register_password_first" class="line">
+						<label for="password" class="identifier">{#Password#}:</label>
+				{/if}
+					<span class="value"><input type="password" id="password" name="password" class="textfield" value="" /></span>
+					{if !$if_logged_in}
+						<span class="required">*</span>
+					{/if}
+					</div> 
+				{if $PASSWORD_SHORT} 
+					<div><span class="error">{#password_too_short#}</span></div>
+				{/if}
+			</div>
+				
+			<div id="register_password_confirm" class="line">
+						<label for="passwordconfirm" class="identifier">{#Password_confirm#}: </label>
+						<span class="value"><input type="password" name="password2" class="textfield" id="passwordconfirm" value="" /></span>
+						{if !$if_logged_in}<span class="required">*</span>{/if} 
+						{if $PASSWORD_MISMATCH} 
+							<span class="error">{#password_mismatch#}</span>
+						{/if}
+					</div>
+				
+		</div>
+			<!--
+			<TR>
+			<TD>{#Realname#}:</TD>
+			<TD><INPUT size="40" type="text" name="realname" value="{$REALNAME}"></TD>
+			</TR>
+			-->
+			
+		<div id="register_language" class="line">
+			<label for="language" class="identifier">{#Language#}:</label>
+			<span class="value"><select name="language" id="language" class="dropdown">
+				{foreach item=item from=$LANGUAGES}                 
+					<option value="{$item[0]}" {if $LANGUAGE eq $item[0]}selected="selected"{/if} >{$item[1]}</option>
+				{/foreach}
+			</select></span>
+		</div>
+		
+		<div id="register_email" class="line">
+			<label for="email" class="identifier">{#Email#}:</label>
+			<span class="value"><input type="text" name="email" id="email" class="textfield" value="{$EMAIL}" /></span>
+			*
+			  {if $BAD_EMAIL}
+				 <span class="error">{#bad_email#}</span>
+				  {elseif $EMAIL_MISSING}
+					 <span class="error">{#email_missing#}</span>
+			  {/if}
+		</div>
+		
+		<div id="register_save">
+			<input type="submit" name="save" class="button" value="{$SUBMIT_TEXT}" />
+		</div>
+	</form>
+</div>

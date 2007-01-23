@@ -1,0 +1,100 @@
+
+<!--
+	<div id="search_searchform_simple"> 
+	<form name="searchform" method="get" action="search.php">
+		<input class="textfield" type="text" name="pattern" value="{$PATTERN}">
+		<select class="dropdown" name="language">
+			{html_options values=$searchLangs selected=$LANGUAGE output=$langNames}
+		</select>
+		
+		<input class="checkbox" type="checkbox" {if $AUDIO}checked{/if} name="audio" value="1"> Audio
+		<input class="checkbox" type="checkbox" {if $VIDEO}checked{/if} name="video" value="1"> Video
+	
+		<input type="submit" name="search" value="{#Search#}"> 
+		
+		<A href="advsearch.php" class="search_searchform_link">{#advSearch#}</a>
+	</form>
+</div>
+-->
+
+
+<div id="search_results">
+	<h4>{#Results#} for: {$PATTERN}</h4>
+	<A href="advsearch.php" class="search_searchform_link">{#advSearch#}</a>
+	<div>
+		{if $rp_count gt 10}
+			<div id="splitlist">
+				{include file="splitList.htm"}
+			</div>
+		{/if}
+		
+		{if $rp_count gt 0}
+			<div class="more_info">&raquo; <a onclick="toggleAllInfo(this, 'listbox_body');">show all details...</a></div>
+		{/if}
+
+	<ul id="search_results_list" class="listbox">
+		{if count($RESULTS) gt 0 }
+	
+			
+			{foreach item=item from=$RESULTS}
+				<li>	
+					
+					<div class="programme_header listbox_head">
+						<h4>
+							<div class="listbox_head_heading">
+															
+								<a class="pulldown" onclick="toggleInfoDirect(this, 'listbox_body');"><img src="{$IMAGE_URL}/pulldown.gif" name="{$IMAGE_URL}/pullup.gif"/></a>
+								<a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">{$item.title}</a>
+								
+							</div>
+								
+						{if $item.alternative_title}
+							<h5>{$item.alternative_title}</h5>
+						{/if} 
+						
+						</h4>
+						
+						
+						
+					</div>
+					
+					
+					
+					
+					<div class="listbox_body" name="additional_info"  style="display:none">
+						<div class="search_result_link listbox_icon">
+							{if $item.icon }
+							<a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$CACHE_URL}/{$item.icon}"></a>
+							{else}
+							<a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$IMAGE_URL}/noicon.gif"></a>
+							{/if}
+						</div>
+
+						<div class="search_result_details listbox_details">
+							{if $item.episode_title}
+								<div class="search_result_episode"><span class="identifier">{#episode_sequence#} {$item.episode_sequence}:</span> {$item.episode_title}</div>
+							{/if}
+							{if $item.abstract}
+								<div class="search_result_abstract">{$item.abstract|truncate:300}</div>
+							{/if}
+						</div>
+						
+						<div class="progamme_smalldetails_footer listbox_footer">
+						
+							{if $item.entry_date}
+								<div class="programme_date"><span class="identifier">{#entry_date#}:</span> {if $LANG eq "eng"}{$item.entry_date|date_format:"%Y-%m-%d"} 
+										{else} {$item.entry_date|date_format:"%d.%m.%Y"}{/if}</div>
+							{/if} 
+							<div class="programme_abstract_link">
+								<a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">more...</a> <!-- smarty variable notwendig -->
+							</div>
+						</div>						
+					</div>
+				</li>
+			{/foreach}
+			{else}
+				<li>{#No_results#}</li>
+			{/if}
+	</ul>
+	</div>
+</div>

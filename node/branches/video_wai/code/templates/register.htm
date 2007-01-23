@@ -1,0 +1,99 @@
+
+<h3>{if $loggedIn}{#Personal#}{else}{#Register#}{/if}</h3>
+
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea"> 
+
+        <FORM method="post" action="register.php">
+          <INPUT type="hidden" name="okURL" value="{$OK_URL}">
+          <INPUT type="hidden" name="filled" value="1">
+          <TABLE>
+          {if $ERRORMSG}
+                <TR>
+                  <TD COLSPAN="2">
+                    <font color="red">{$ERRORMSG}</font>
+                  </TD>
+                </TR>
+	    {/if}
+                <TR>
+                  <TD>{#Username#}:</TD>
+                  <TD>
+                    {$USER_FIELD}
+					{if $INVALID_USERNAME} <font color="red">{#invalid_username#}</font>{/if}
+					{if $USERNAME_RESERVED} <font color="red">{#username_in_use#}</font>{/if}
+					
+					
+                  </TD>
+                </TR>
+                
+	    {*added by Martin Schmidt 11-05-21*}
+	    {if $if_logged_in}
+		  <TR>
+                  <TD>{#old_password#}:</TD>
+                  <TD><INPUT type="password" name="password_old" value=""> (*) 
+				  {if $PASSWORD_MISMATCH_OLD} <font color="red">{#password_mismatch#}</font>{/if}
+				  {if $PASSWORD_EMPTY} <font color="red">{#password_empty#}</font>{/if}
+
+                  </TD>
+                </TR>
+				
+				
+				<TR>
+                  <TD>{#new_password#}:</TD>
+	    {else}
+				<TR>
+                  <TD>{#Password#}:</TD>
+		{/if} 
+	    {*---------------------------*}
+
+
+                
+                  <TD><INPUT type="password" name="password" value=""> {if !$if_logged_in}(*){/if} {if $PASSWORD_SHORT} <font color="red">{#password_too_short#}</font>{/if}
+                  </TD>
+                </TR>
+                
+                <TR>
+                  <TD>{#Password_confirm#}:</TD>
+                  <TD><INPUT type="password" name="password2" value=""> {if !$if_logged_in}(*){/if} {if $PASSWORD_MISMATCH} <font color="red">{#password_mismatch#}</font>{/if}
+                  </TD>
+                </TR>
+                
+<!--
+                <TR>
+                  <TD>{#Realname#}:</TD>
+                  <TD><INPUT size="40" type="text" name="realname" value="{$REALNAME}"></TD>
+                </TR>
+-->
+                
+                <TR>
+                  <TD>{#Language#}:</TD>
+                  <TD>
+                                   <select name="language">
+                                     {foreach item=item from=$LANGUAGES}                 
+                                       <option value="{$item[0]}" {if $LANGUAGE eq $item[0]}SELECTED="1"{/if} >{$item[1]}</option>
+                                     {/foreach}
+                                   </select>
+
+                  </TD>
+                </TR>
+                
+                <TR>
+                  <TD>{#Email#}:</TD>
+                  <TD><INPUT size="40" type="text" name="email" value="{$EMAIL}"> (*) 
+				  {if $BAD_EMAIL}
+				 	 <font color="red">{#bad_email#}</font>
+				  {elseif $EMAIL_MISSING}
+				     <font color="red">{#email_missing#}</font>
+				  {/if}
+				  </TD>
+                </TR>
+                
+              </TABLE>
+
+              <INPUT type="submit" name="save" value="{$SUBMIT_TEXT}">
+        </FORM>
+      </td>
+    </tr>
+  </table>
+

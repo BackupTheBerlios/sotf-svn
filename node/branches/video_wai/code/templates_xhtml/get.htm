@@ -1,0 +1,580 @@
+<div id="get_container">
+	{literal}
+		<script language="javascript" type="text/javascript">
+		<!--
+			function setvalue(name, id, value){
+				var popurl="{/literal}{$ROOT_URL}{literal}/updatedb.php?name="+name+"&id="+id+"&value="+value
+				winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
+			} 
+		-->
+		</script>
+	{/literal}
+	
+	{if $UNPUBLISHED}
+		<div class="unpublished">{#unpublished_warning#}</div>
+	{/if}
+	
+	{if not $ID}
+		<div id="get_form1">
+			<form action="{$ROOT_URL}/get.php">
+				{if $POPUP}
+					<input type="hidden" name="popup" value="1" />
+				{/if}
+				<h4>{#please_enter#}</h4>
+				<input type="text" class="textfield" name="id" size="60" value="{$ID}" />
+			</form>
+		</div>
+	{else}
+			<form action="">
+				<div id="get_programme_header" class="header">
+						<div id="get_programme_title" class="title">
+							
+							<!-- <span class="get_programme_identifier">{#prog#}: </span><span class="get_programme_value">{$PRG_DATA.title}</span> -->
+							<h3>{$PRG_DATA.title}</h3>
+					
+						</div>
+							<div class="get_showSeries_icon smallogo">
+								{if $SERIES_DATA and $SERIES_DATA.icon}
+									<div class="logo">
+											<div class="img_caption">{#series#}:</div>
+									{strip}
+										<a href="{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}">
+											<img src="{$CACHE_URL}/{$SERIES_DATA.id}.png" alt="{#series#}: {$SERIES_DATA.name}" />
+										</a>
+									{/strip}
+									
+									<div class="img_caption_name">{$SERIES_DATA.name}</div>
+								</div>
+							{/if}
+							{if $STATION_DATA.icon}
+							<div class="logo">
+								<div class="img_caption">{#station#}:</div>
+									{strip}
+										<a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">
+											<img src="{$CACHE_URL}/{$STATION_DATA.id}.png" alt="{#station#}: {$STATION_DATA.name}" />
+										</a>
+									{/strip}
+									
+									<div class="img_caption_name">{$STATION_DATA.name}</div>
+									</div>
+								{/if}
+							</div>
+							
+						
+							{if $PRG_DATA.icon}
+								<div class="get_programme_icon biglogo">
+									<img src="{$CACHE_URL}/{$ID}.png" />
+									<!--<div class="img_caption">{$PRG_DATA.title}</div>-->
+								</div>
+							{/if}
+							
+						
+						
+							
+						<div id="get_quicklinks" class="quicklinks">
+							
+							<ul>
+							<li class="rss_link">
+				  				<a href="{$ROOT_URL}/rss.php?id={$ID}&uiLang={$LANG}"><img class="rss_image" src='{$IMAGE_URL}/rss.gif' alt="RSS-Logo"/></a>
+							</li>
+								<li>&raquo; <a href="#general">{#Metadata#}</a></li>
+								{if $ROLES}<li>&raquo; <a href="#roles">{#Roles#}</a></li>{/if}
+								{if $RIGHTS}<li>&raquo; <a href="#rights">{#Rights#}</a></li>{/if}
+								<li>&raquo; <a href="#mfiles">{#Content#}</a></li>
+								{if $LINKS }<li>&raquo; <a href="#links">{#Links#}</a></li>{/if}
+								<li>&raquo; <a href="#stats">{#Statistics#}</a></li>
+							</ul>
+						</div>
+				
+				
+				
+				{if hasPerm($ID,'change') }
+					<div id="get_editMedium" class="editbuttons">
+						<input class="button" type="button" name="b1" value="{#edit_meta#}" onclick="redir(this.form,'{$ROOT_URL}/editMeta.php?id={$ID}')" />
+						<input class="button" type="button" name="b1" value="{#edit_files#}" onclick="redir(this.form,'{$ROOT_URL}/editFiles.php?id={$ID}')" />
+						<input class="button" type="button" name="b1" value="{#perm_delete#}" 
+							onclick="if( deleteConfirm( '{#delete_prog_confirm#}' ) ) redir(this.form, '{$ROOT_URL}/showSeries.php/{$PRG_DATA.series_id}?delprog=1&prgid={$ID}')" />
+					
+					</div>
+				{/if}
+				
+			</div>
+			</form>
+		
+						
+	
+		{*ADDED BY Martin Schmidt*}
+	
+		{if $VIDEO_PRG}
+			<div class="get_preview_video block">
+				<h4>{#video_preview#}</h4>
+				<div class="content">
+				{if $FLV_FOUND}
+					<div class="get_flvpreview">
+						<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="240" height="200" id="videoplayer">
+							
+							  <param name="allowScriptAccess" value="always" />
+							  <param name='movie' value="{$ROOT_URL}/videoplayer.swf?flvpath={$FLV_PATH}&skinpath={$ROOT_URL}/flashPlayerSkin.swf" />
+							  <param name="quality" value="high" />
+							  <param name="bgcolor" value="#ffffff" />
+							 <embed src="{$ROOT_URL}/videoplayer.swf?flvpath={$FLV_PATH}&skinpath={$ROOT_URL}/flashPlayerSkin.swf" quality="high" bgcolor="#ffffff" width="240" height="200"  name="videoplayer" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+						</object>
+						
+					</div>
+					{else} 
+						<div class="get_flvpreview_error error">
+							<div id="get_flvpreview_error_caption">Flash Preview is not available for this programme.</div>
+						</div>
+				{/if}
+				
+				{if $STILLS}
+					<div class="get_stills">
+						{foreach item=item from=$STILLS}
+							<img src="{$ROOT_URL}/getFile.php/{$item.filename}?id={$PRG_DATA.id}&filename={$item.filename}"/>
+						{/foreach}
+					</div>
+				{/if}
+			</div>
+			</div>
+		{/if}
+		
+				<!--{if !$VIDEO_PRG}
+			<div class="get_preview_video block">
+				<h4>{#video_preview#}</h4>
+				<div class="content">
+				
+						<div class="get_flvpreview">
+						<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="300" height="200" id="videoplayer">
+							
+							  <param name="allowScriptAccess" value="always" />
+							  <param name='movie' value="{$ROOT_URL}/mp3player.swf?mp3path={$mp3_PATH}" />
+							  <param name="quality" value="high" />
+							  <param name="bgcolor" value="#ffffff" />
+
+							 <embed src="{$ROOT_URL}/mp3player.swf?mp3path={$mp3_PATH}" quality="high" bgcolor="#ffffff"  width="300" height="200"  name="videoplayer" allowScriptAccess="always" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" />
+						</object>
+						
+								
+					</div>
+				</div>
+			</div>
+		{/if}-->
+		
+		
+		<div id="get_metadata" class="block">
+		<a name="general"></a>
+			<h4>{#Metadata#}</h4>
+			
+			<div id="get_metadata_content" class="content">
+				<div class="get_meta_stationlink line">
+					<span class="identifier">{#station#}:</span>
+					<span class="value"><a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a></span>
+				</div>
+				{if $SERIES_DATA}
+				<div class="get_meta_serieslink line">
+					<span class="identifier">{#series#}:</span>
+					<span class="value"><a href="{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}">{$SERIES_DATA.name}</a></span>
+				</div>
+				{/if}
+				<div id="get_meta_programme_title" class="line">
+					<span class="identifier">{#title#}:</span>
+					<span class="value">{$PRG_DATA.title}</span>
+				</div>
+				{if $PRG_DATA.alternative_title}
+				<div id="get_meta_alttitle" class="line">
+					<span class="identifier">{#alternative_title#}:</span>
+					<span class="value">{$PRG_DATA.alternative_title}</span>
+				</div>
+				{/if}
+				{if $PRG_DATA.episode_title}
+				<div id="get_meta_episodetitle" class="line">
+					<span class="identifier">{#episode_title#}:</span>
+					<span class="value">{$PRG_DATA.episode_title}</span>
+				</div>
+				{/if}
+				{if $PRG_DATA.episode_sequence}
+				<div id="get_meta_episodeseq" class="line">
+					<span class="identifier">{#episode_sequence#}:</span>
+					<span class="value">{$PRG_DATA.episode_sequence}</span>
+				</div>
+				{/if}
+				<div id="get_meta_language" class="line">
+					<span class="identifier">{#language#}:</span>
+					<span class="value">{$LANGUAGE}</span>
+				</div>
+				{if $PRG_DATA.abstract}
+				<div id="get_meta_abstract" class="line">
+					<span class="identifier">{#abstract#}:</span>
+					<span class="value">{$PRG_DATA.abstract}</span>
+				</div>
+				{/if}
+				{if $PRG_DATA.keywords}
+				<div id="get_meta_keywords" class="line">
+					<span class="identifier">{#keywords#}:</span>
+					<span class="value">{$PRG_DATA.keywords}</span>
+				</div>
+				{/if}
+				{if $PRG_DATA.genre_id}
+				<div id="get_meta_genre" class="line">
+					<span class="identifier">{#genre#}:</span>
+					<span class="value">{$GENRE}</span>
+				</div>
+				{/if}
+				{if $TOPICS}
+				<div id="get_meta_topics" class="line">
+					<span class="identifier">{#topics#}:</span>
+					<ul id="get_meta_topiclist" class="value">
+					{foreach item=item from=$TOPICS}
+						<li>
+							{$item.name}
+						</li>
+					{/foreach}
+					</ul>
+				</div>
+				{/if}
+				{if $PRG_DATA.temporal_coverage}
+				<div id="get_meta_tempcov" class="line">
+					<span class="identifier">{#temporal_coverage#}:</span>
+					<span class="value">{if $LANG eq "eng"}{$PRG_DATA.temporal_coverage}{else}{$PRG_DATA.temporal_coverage|date_format:"%d.%m.%Y"}{/if}</span>
+				</div>
+				{/if}
+				{if $PRG_DATA.spatial_coverage}
+				<div id="get_meta_spatcov" class="line">
+					<span class="identifier">{#spatial_coverage#}:</span>
+					<span class="value">{$PRG_DATA.spatial_coverage}</span>
+				</div>
+				{/if}
+				{if $PRG_DATA.production_date}
+				<div id="get_meta_proddate" class="line">
+					<span class="identifier">{#production_date#}:</span>
+					<span class="value">{if $LANG eq "eng"}{$PRG_DATA.production_date}{else}{$PRG_DATA.production_date|date_format:"%d.%m.%Y"}{/if}</span>
+				</div>
+				{/if}
+				{if $PRG_DATA.broadcast_date}
+				<div id="get_meta_broaddate" class="line">
+					<span class="identifier">{#broadcast_date#}:</span>
+					<span class="value">{if $LANG eq "eng"}{$PRG_DATA.broadcast_date|date_format:"%Y-%m-%d"} {else}{$PRG_DATA.broadcast_date|date_format:"%d.%m.%Y"}{/if}</span>
+				</div>
+				{/if}
+				{if $PRG_DATA.entry_date}
+				<div id="get_meta_entrydate" class="line">
+					<span class="identifier">{#entry_date#}:</span>
+					<span class="value">{if $LANG eq "eng"}{$PRG_DATA.entry_date} {else}{$PRG_DATA.entry_date|date_format:"%d.%m.%Y"}{/if}</span>
+				</div>
+				{/if}
+				{if $PRG_DATA.modify_date}
+				<div id="get_meta_moddate" class="line">
+					<span class="identifier">{#modify_date#}:</span>
+					<span class="value">{if $LANG eq "eng"}{$PRG_DATA.modify_date}{else}{$PRG_DATA.modify_date|date_format:"%d.%m.%Y"}{/if}</span>
+				</div>
+				{/if}
+				{if $PRG_DATA.expiry_date}
+				<div id="get_meta_expdate" class="line">
+					<span class="identifier">{#expiry_date#}:</span>
+					<span class="value">{if $LANG eq "eng"}{$PRG_DATA.expiry_date}{else}{$PRG_DATA.expiry_date|date_format:"%d.%m.%Y"}{/if}</span>
+				</div>
+				{/if}
+			</div>
+			</div>
+		
+		
+		{if $ROLES}
+			<div id="get_roles" class="block">
+				<h4>{#Roles#}</h4>
+				<a name="roles"></a>
+				<div class="content">
+				{foreach item=item from=$ROLES}
+					<div class="line">
+						<div class="identifier">
+							{$item.role_name}:
+						</div>
+						<div class="value">
+							<a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',400,500,true)">{$item.contact_data.name}</a>
+							<!-- herausgenommen, da im Popup selber (siehe Zeile drüber) ohnehin URL und Mailadresse des Kontakts stehen
+							{if $item.contact_data.url}
+								(<a href="{$item.contact_data.url}" target="_blank">{$item.contact_data.url}</a>)
+							{/if}
+							{if $item.contact_data.email}
+								(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email}</a>)
+							{/if}
+							-->
+						</div>
+						{if $item.contact_data.icon }
+							<div class="value">
+								{strip}
+									<a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',400,400,true)">
+										<img src="{$CACHE_URL}/{$item.contact_data.id}.png" />
+									</a>
+								{/strip}
+							</div>
+						{/if}
+					</div>
+				{/foreach}
+			</div>
+			</div>
+		{/if}
+	
+	{if $RIGHTS}
+		<div id="get_rights" class="block">
+			<h4>{#Rights#}</h4>
+			<a name="rights"></a>
+			<div class="content">	
+			{cycle name="rights" values="list1,list2" print=false advance=false}
+				{foreach item=item from=$RIGHTS}
+					<div class="get_rights_item">
+						{if empty($item.start_time) and empty($item.stop_time) }
+							{$item.rights_text} ({#for_whole_prg#})
+						{else}
+							{$item.rights_text} ({$item.start_time} {#sec#} - {$item.stop_time} {#sec#})
+						{/if}
+					</div>
+				{/foreach}
+		</div>
+		</div>
+	{/if}
+	
+	<div id="get_content"  class="block">
+		<h4>{#Content#}</h4>
+		<a name="mfiles"></a>
+		<div class="content">
+		{if $AUDIO_FILES }
+			<h5 class="get_content_subhead">
+				{if $VIDEO_PRG}
+					{#video_file_list#}
+				{else}
+					{#audio_file_list#}
+				{/if}
+			</h5>
+		   {cycle name="audio" values="list1,list2" print=false advance=false}
+		   {foreach item=item from=$AUDIO_FILES}
+				{if ($item.download_access eq 't' or $item.stream_access eq 't') and $item.format!='flv'}
+					<div class="{cycle name=audio} get_filelist">
+						<div class="get_content_icon">
+						{if $item.format=='wmv'}
+							<div class="get_contentitem_wmv">
+								<img src="{$IMAGE_URL}/wmv.gif" alt="Windows Media File" class="get_item_pic" /></a>
+								<span>PDA</span>
+							</div>
+							{elseif $item.format == 'mpg' OR $item.format == 'avi'}
+								<div class="get_contentitem_mpg">
+									<img src="{$IMAGE_URL}/wmv.gif" alt="Windows Media File" class="get_item_pic" /></a>
+									<span>Video</span>
+								</div>
+							{elseif $item.format=='mp4'}
+								<div class="get_contentitem_mp4">
+									<img src="{$IMAGE_URL}/ipod.gif" alt="Ipod File" class="get_item_pic" /></a>
+									<span>Ipod</span>
+								</div>
+							{elseif $item.format=='mov'}
+								<div class="get_contentitem_mp4">
+									<img src="{$IMAGE_URL}/mp4.gif" alt="Quicktime File" class="get_item_pic" /></a>
+									<span>Quicktime</span>
+								</div>
+							{elseif $item.format=='3gp'}
+								<div class="get_contentitem_3gp">
+									<img src="{$IMAGE_URL}/3gp.gif" alt="3GP File" class="get_item_pic" /></a>
+									<span>Video-Mobile</span>
+								</div>
+							{else if $VIDEO_PRG}
+								<div class="get_contentitem_video">
+									<img src="{$IMAGE_URL}/audio.gif" alt="Audio File" class="get_item_pic" /></a>
+									<span>Audio</span>
+								</div>
+						{/if}
+						</div>
+						<!--<div class="get_programme_type">
+							{if $item.main_content eq 't' }
+								{if $VIDEO_PRG}
+									<span>Video</span>
+									{#programme_video#}
+								{else}
+									<span>Audio</span>
+									{#programme_audio#}
+								{/if}
+								{elseif $item.caption} 
+									{$item.caption}
+								{else}
+									{$item.filename}
+							{/if}
+						</div>-->
+						{if $item.stream_access eq 't' }
+							<div class="get_content_streamlink">
+								<a href="{$ROOT_URL}/listen.php/id__{$ID}/fileid__{$item.id}/audio.m3u">
+								<img src="{$IMAGE_URL}/listen.gif" alt="{#Listen#}" class="get_listenpic" /></a>
+							</div>
+						{/if}
+		
+						{if $item.download_access eq 't'}
+							<div class="get_content_downloadlink">
+								<a href="{$ROOT_URL}/getFile.php/{$item.filename}?{if $item.main_content eq 't' }audio=1&{/if}id={$ID}&filename={$item.filename}">
+								<img src="{$IMAGE_URL}/download.gif" alt="{#Download#}" class="get_downloadpic" /></a>
+							</div>
+						{/if}
+						
+						<div class="get_content_properties">
+							{if $VIDEO_PRG}
+								<span class="get_content_format">{$item.format} |</span>
+								<span class="get_content_bitrate">
+									{if $item.bitrate} 
+										{$item.bitrate}kbps  |</span>
+										{else}
+											n/a |</span>
+									{/if}
+								<span class="get_content_playtime">
+									{if $item.playtime_string != '00:00'} 
+										{$item.playtime_string} |
+									{else}
+										n/a |
+									{/if}
+								</span>
+								<span class="get_content_filesize">{math equation="x/y" x=$item.filesize y=1048576 format="%.2f"} M{#bytes#}</span>
+								{else}
+									<span class="get_content_format">{$item.format} |</span>
+									<span class="get_content_bitrate">{$item.bitrate}kbps |</span>
+									<span class="get_content_playtime">{$item.playtime_string} |</span>
+									<span class="get_content_filesize">{math equation="x/y" x=$item.filesize y=1048576 format="%.2f"} M{#bytes#}</span>
+							{/if}
+						</div>
+					</div>
+				{/if}
+			{/foreach}    
+		{/if}
+		
+		
+		{if $OTHER_FILES }
+			<div id="get_others">
+				<a name="ofiles"></a>
+				<h5 class="get_content_subhead">{#other_file_list#}</h5>
+				{cycle name=other values="list1,list2" print=false advance=false}
+				{foreach item=item from=$OTHER_FILES}
+					{if $item.public_access eq 't' }
+						<div class="get_filelist {cycle name=other}">
+							<div class="get_content_icon">
+								{if $item.mime_type eq 'image/gif' or $item.mime_type eq 'image/jpeg'}
+									<img src="{$IMAGE_URL}/image.gif" alt="{#Download#}" class="get_downloadpic" />
+									{else}
+										<img src="{$IMAGE_URL}/document.gif" alt="{#Download#}" class="get_downloadpic" />
+								{/if}
+								{if $item.caption}
+									<span>{$item.caption}</span>
+									{else} 
+										<span>{$item.filename}</span>
+								{/if}
+							</div>
+							<div class="get_content_properties">
+								<span class="get_content_format">{$item.mime_type} |</span>
+								<span>{math equation="x/y" x=$item.filesize y=1024 format="%.2f"} K{#bytes#}</span>
+								{if $item.public_access eq 't' }
+									<a target="link" href="{$ROOT_URL}/getFile.php/{$item.filename}?id={$ID}&filename={$item.filename}">
+									<img src="{$IMAGE_URL}/download.gif" alt="{#Download#}" class="get_downloadpic" /></a>
+								{/if}
+							</div>
+						</div>
+					{/if}
+				{/foreach}  
+			</div>  
+		{/if}
+		
+	
+		{if !$AUDIO_FILES and !$OTHER_FILES }
+			<div id="get_nofiles">{#no_files#}</div>
+		{/if}
+		</div>
+	</div>
+	
+	{if $LINKS } 
+		<div id="get_links" class="block">
+			<h4>{#Links#}</h4>
+			<a name="links"></a>
+			<div class="content">
+			{foreach item=item from=$LINKS}
+				<div class="get_link_item">
+				  <a target="link" href="{$item.url}">
+				  {if $item.caption}{$item.caption}
+				  {else}{$item.url}{/if}</a>
+				</div>
+			{/foreach}    
+		</div>
+		</div>
+	{/if}
+	 
+	<div id="get_statistics" class="block">   
+		<h4>{#Statistics#}</h4>
+		<a name="stats"></a>
+		<div class="content">
+		<div>{#stats_may_be_old#}: {if $LANG eq "eng"}{$STATS.last_change|date_format:"%Y-%m-%d"}{else}{$STATS.last_change|date_format:"%d.%m.%Y"}{/if}</div>
+		<div id="get_statistics_onlinestats">
+			<div id="get_stats_visits" class="line">
+				<span class="identifier">{#Visits#}: </span><span class="value">{$STATS.visits} ({$STATS.unique_visits})</span>
+			</div>
+			<div id="get_stats_listens" class="line">
+				<span class="identifier">{#Listens#}: </span><span class="value">{$STATS.listens} ({$STATS.unique_listens})</span>
+			</div>
+			<div id="get_stats_downloads" class="line">
+				<span class="identifier">{#Downloads#}: </span><span class="value">{$STATS.downloads} ({$STATS.unique_downloads})</span>
+			</div>
+			<div id="get_stats_rating" class="line">
+				<span class="identifier">{#Rating#}: </span><span class="value">{if $RATING}{$RATING.rating_value} ({#by#} {$RATING.rating_count}){else}-{/if}</span>
+			</div>
+		</div>
+		{if $REFS}
+			{foreach item=item from=$REFS}
+				<div id="get_stats_refportal" class="line">
+				 	<span class="identifiert">{#Portals#}: </span><span class="value"><a target="_blank" href="{$item.url}">{$item.portal_name}</a></span>
+				</div>
+				<div id="get_stats_refvisits" class="line">
+					<span class="identifier">{#Visits_p#}: </span><span class="value">{$item.visits}</span>
+				</div>
+				<div id="get_stats_reflistens" class="line">
+					<span class="identifier">{#Listens_p#}: </span><span class="value">{$item.listens}</span>
+				</div>
+				<div id="get_stats_refcomments" class="line">
+					<span class="identifier">{#Comments#}: </span><span class="value">{$item.comments}</span>
+				</div>
+				<div id="get_stats_refrating" class="line">
+					<span class="identifier">{#Rating#}: </span><span class="value">{if $item.rating} {$item.rating} ({#by#} {$item.raters}){else}-{/if}</span>
+				</div>
+				<div id="get_stats_reffrom" class="line">
+					<span class="identifier" class="line">{#From#}: </span><span class="value">{$item.start_date}</span>
+				</div>
+				<div id="get_stats_refuntil" class="line">
+					<span class="identifier">{#Until#}: </span><span class="value">{$item.end_date}</span>
+				</div>
+			{/foreach}
+		{/if}
+	
+	
+	{if $loggedIn}
+		<div id="get_translocate">
+			<form method="post" action="{$ROOT_URL}/get.php?id={$ID}">
+				{if !$VIDEO_PRG}
+					<div id="get_translocate_intoplaylist">
+						<input class="button" type="button" name="put_into_playlist" value="{#put_into_playlist#}" 
+							onclick="javascript:setvalue('addplaylist', '{$ID}', 'add');this.disabled='true';return true;" {if $inplaylist}disabled="true"{/if} />
+					</div>
+				{/if}
+				<div id="get_translocate_uploadtoportal">
+					<input type="button" class="button" value="{#upload_to_portal#}" 
+						onclick="javascript:window.open('{$ROOT_URL}/portal_upload.php?type=prg&data={$ID}','','scrollbars=yes,width=640,height=340,left=320,top=200');" />
+				</div>
+			</form>
+		</div>
+	{/if}
+		<div id="get_myrating">
+			<form action="">
+				<input type="hidden" name="id" value="{$ID}" />
+				<select name="rating" class="dropdown">
+					<option value="1" {if $MY_RATING==1}SELECTED=1{/if} >*</option>
+					<option value="2" {if $MY_RATING==2}SELECTED=1{/if} >* *</option>
+					<option value="3" {if $MY_RATING==3}SELECTED=1{/if} >* * *</option>
+					<option value="4" {if $MY_RATING==4}SELECTED=1{/if} >* * * *</option>
+					<option value="5" {if $MY_RATING==5}SELECTED=1{/if} >* * * * *</option>
+				</select>
+				<input type="button" name="rate" class="button" value="{if $MY_RATING}{#change_rating#}{else}{#rate_it#}{/if}"   
+					onclick="javascript:setvalue('rating', '{$ID}', this.form.rating.options[this.form.rating.selectedIndex].value);this.value='{#change_rating#}';return true;"/>
+			</form>
+		</div>
+	{/if}
+</div>
+	</div>
+	</div>

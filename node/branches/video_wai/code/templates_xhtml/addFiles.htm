@@ -1,0 +1,56 @@
+<div id="addfiles_container">
+	<h3>{#add_files#}</h3>
+	<h4>{#userfiles#}</h4>
+	
+	<div class="addfiles_userfiles">
+		{if $USERFILES}
+			<form method="post" action="{$ROOT_URL}/addFiles.php">
+				<input type="hidden" name="prgid" value="{$PRG_ID}" />
+				<input type="hidden" name="main" value="{$MAIN}" />
+				<div class="addfiles_file_list">
+					<ul id="addfiles_filelist">
+						{foreach key=key item=fname from=$USERFILES}				
+							<li>
+								<div class="block">
+									<span class="addfiles_checkbox"><input value="{$fname|escape}" name="sel_{$key}" type="checkbox" class="checkbox" /></span>
+									<a class="addfiles_filelink" target="link" href="getUserFile.php/{$fname|escape}?filename={$fname|escape}">{$fname}</a>
+								</div>
+							</li>				
+						{/foreach}
+					</ul>
+				</div>    
+		
+				<div id="addfiles_submit">
+					<input type="submit" name="add" class="button" value="{#add_selected#}" />
+				</div>
+				<div id="addfiles_actionscheckboxes">
+					<ul id="addfiles_userfiles_actionslist">
+						<li><input type="radio" name="copy" value="1" class="radiob" />{#copy_files#}</li>
+						<li><input type="radio" name="copy" value="0" class="radiob" checked="checked"/>{#move_files#}</li>
+					</ul>
+				</div>
+				<!-- <input type="submit" name="del" value="{#del_selected#}"> -->
+				<div id="addfiles_explanation">
+					{#userfiles_expl#}
+				</div>
+			</form>
+			{else}
+				<span id="addfiles_no_files">{#no_files#}</span>
+		{/if}
+	</div>
+	
+	<h4>{#direct_upload#}</h4>
+	<div class="addfiles_upload">
+		<form enctype="multipart/form-data" method="post"  action="{$ROOT_URL}/addFiles.php?prgid={$PRG_ID}">
+			<input type="hidden" name="stationid" value="{$STATION_ID}" />
+			<ul id="addfiles_userfiles_actionslist">
+				<li><input type="file" name="userfile" class="upload" /></li>
+				<li><input type="submit" name="upload" class="button" value="{#upload_file#}" onclick="return checkIfEmpty(this.form.userfile,'{#select_file#}')" /></li>
+			</ul>
+			<div id="addfiles_explanation" class="block">
+				<span id="addfiles_uploadexplanation">{#upload_expl#}</span>
+			</div>
+		</form>
+		<div>{#user_dir_ftp_access#}: <a target="ftp" href="{$USERFTPURL}">{$USERFTPURL}</a></div>
+	</div>
+</div>

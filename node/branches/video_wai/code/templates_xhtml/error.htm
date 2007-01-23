@@ -1,0 +1,48 @@
+<div id="error_container">
+	<h3>{#errors_occured#}</h3>
+
+	<div id="error_stop">
+		<img align="left" src="{$IMAGE_URL}/stop.gif"/>
+	</div>
+
+	<div id="error_notes">
+		<div id="error_items">		
+			{foreach from=$ERRORS item=MSG}
+				<div class="error_item error">- {$MSG}</div>
+			{/foreach}
+		</div>
+				
+		<!--
+			{if $POPUP}
+				<FORM ACTION="closeAndRefresh.php">
+			{else}
+				<FORM ACTION="index.php">
+			{/if}
+				<INPUT type="submit" name="ok" value="OK">
+			</FORM>
+		-->
+		
+		<div id="error_exclaim">{#error_exclaim#}</div>
+		
+		<script>
+			if(history.length > 0)
+			document.writeln("<p><a href=\"javascript:history.back()\">{#error_go_back#}</a></p>");
+		</script>
+		
+		{if $ERROR_URL}
+			<div id="error_gosafe">
+				<a href="{$ERROR_URL}">{#error_go_safe_page#}</a>
+			</div>
+		{/if}
+
+		{if $POPUP}
+			<div id="error_close">
+				<a href="{$ROOT_URL}/closeAndRefresh.php">{#error_close#}</a>
+			</div>
+		{else}
+			<div id="error_gohome">
+				<a href="{$ROOT_URL}/index.php">{#error_go_home#}</a>
+			</div>
+		{/if}
+	</div>
+</div>

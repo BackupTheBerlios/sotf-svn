@@ -1,0 +1,37 @@
+<div id="manageFiles_container">
+	<h3>{#userfiles#}</h3>
+
+	<div id="manageFiles_myFiles">
+		<form method="post" action="{$ROOT_URL}/manageFiles.php">
+			<div id="manageFiles_closeWindow">
+				<input type="submit" name="close" class="button" value="{#close#}" />
+			</div>
+			{if $USERFILES}
+				{foreach key=key item=fname from=$USERFILES}
+					<div class="manageFiles_element">
+						<span class="manageFiles_Checkbox">
+							<input value="{$fname|escape}" class="checkbox" name="sel_{$key}" type="checkbox"  />
+						</span>
+						<span class="manageFiles_Filelink">
+							<a target="link" href="getUserFile.php/{$fname|escape}?filename={$fname|escape}">{$fname}</a>
+						</span>
+					</div>
+				{/foreach}    
+				<div id="manageFiles_deleteselected">
+					<input type="submit" name="del" class="button" value="{#del_selected#}" />
+				</div>
+		
+				{else}
+					{#no_files#}    
+			{/if}
+		</form>
+	</div>
+	
+	<div id="manageFiles_uploadFile">
+		<form enctype="multipart/form-data" method="post" action="{$ROOT_URL}/manageFiles.php">
+			<input type="hidden" name="stationid" value="{$STATION_ID}" />
+			<input name="userfile" class="upload" type="file" />
+			<input type="submit" name="upload" class="button" value="{#upload_file#}" onclick="return checkIfEmpty(this.form.userfile,'{#select_file#}')" />
+		</form>
+	</div>
+</div>

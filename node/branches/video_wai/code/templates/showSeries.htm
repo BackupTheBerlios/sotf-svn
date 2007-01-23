@@ -1,0 +1,149 @@
+
+  <form>
+    <table class="title" cellspacing="0" cellpadding="5" width="100%">
+      <tr valign="bottom">
+        <td class="titlehead" width="20%">
+          <font size="-1">{#series#}:</font>
+          <br>{$SERIES_DATA.name}
+        </td>
+        <td class="title2">
+          <a href="#general">{#general#}</a>{if $PROGS}, <a href="#progs">{#programmes#}</a>{/if}
+        </td>
+        <td class="title2" width="10%" align="right" valign="bottom">
+          {if $JINGLE}<a href="{$ROOT_URL}/listen.php?id={$SERIES_DATA.id}&jingle=1">{#jingle#}</a>, {/if}
+          <a href="{$HOME_URL}/podcast.php?series={$SERIES_DATA.id}">Pod-/Vodcast</a> | 
+          <a href="{$ROOT_URL}/rss.php?series={$SERIES_DATA.id}&uiLang={$LANG}"><img border='0' style="vertical-align:bottom" src='{$IMAGE_URL}/rss.gif'/></a><br />
+          {if hasPerm($SERIES_DATA,'change') }
+          <input class="action" type="button" name="b1" value="{#edit_series#}" onClick="popup('{$ROOT_URL}/editSeries.php?seriesid={$SERIES_DATA.id}','EditSeries',550,550,true)">
+            {/if}
+          {if hasPerm($SERIES_DATA, 'create')}
+            <input class="action" type="button" name="b1" value="{#add_prg#}" onClick="redir(this.form, '{$ROOT_URL}/editor.php?&stationid={$SERIES_DATA.station_id}')" />
+          {/if}
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" class="titlehead" height="5">
+        </td>
+      </tr>
+    </table>
+  </form>
+
+<p></p>
+
+<table class="tabarea" width="100%">
+<tr> 
+  <td class="tabarea"> 
+        <table width="100%">
+          <tr valign="top">
+            <td width="5">
+              {if $SERIES_DATA.icon}
+              <img src="{$CACHE_URL}/{$SERIES_ID}.png">
+                {/if}
+            </td>
+            <td>
+
+              <a name="general"></a>
+              {if $SERIES_DATA.description }
+              <p>{$SERIES_DATA.description}</p>
+              {/if}
+
+		{if $SERIES_DATA.url}
+		<p><a href="{$SERIES_DATA.url}">{$SERIES_DATA.url}</a></p>
+		{/if}
+
+              {if $ROLES}
+              <h4>{#persons_involved#}</h4>
+              <table>
+                {foreach item=item from=$ROLES}
+                <tr valign="top">
+                  <td>
+                    {$item.role_name}
+                  </td>
+                  <td>
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',400,400,true)">{$item.contact_data.name}</a>
+                    {if $item.contact_data.url}<br>(<a href="{$item.contact_data.url}">{$item.contact_data.url})</a>
+                    {elseif $item.contact_data.email}<br>(<a href="mailto:{$item.contact_data.email}">{$item.contact_data.email})</a>
+                    {/if}
+                  </td>
+                  <td>
+                    {if $item.contact_data.icon }{strip}
+                    <a href="javascript:popup('{$ROOT_URL}/showContact.php/{$item.contact_data.id}','ShowContact',400,400,true)">
+                      <img hheight="50%" border="0" src="{$CACHE_URL}/{$item.contact_data.id}.png">
+                    </a>{/strip}
+                    {/if}
+                  </td>
+                </tr>
+                {/foreach}
+              </table>
+              {/if}
+
+            </td>
+            <td width="5">
+              {if $STATION_DATA.icon}
+              <a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}"><img border="0" src="{$CACHE_URL}/{$STATION_DATA.id}.png"></a><br />
+                {/if}
+              <a href="{$ROOT_URL}/showStation.php/{$STATION_DATA.id}">{$STATION_DATA.name}</a>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+</table>
+
+{if $PROGS}
+  <p></p>
+
+  <table class="tab">
+    <tr> 
+      <td nowrap class="tab">{#programmes#}</td>
+    </tr>
+  </table>
+  <table class="tabarea">
+    <tr> 
+      <td class="tabarea"> 
+
+        <a name="progs"></a>
+
+        
+        <table width="100%">
+          <tr>
+            <td colspan="2" align="center">
+		{include file="splitList.htm"}
+            </td>
+          </tr>
+          {cycle name="progs" values="list1,list2" print=false advance=false}
+          {foreach item=item from=$PROGS}
+          <tr valign="top" class="{cycle name="progs"}">
+            <td width="1%">
+              {if $item.icon }
+                 <a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$CACHE_URL}/{$item.id}.png"></a>
+              {else}
+                 <a href="{$ROOT_URL}/get.php/{$item.id}"><img border="0" src="{$IMAGE_URL}/noicon.png"></a>
+              {/if}
+            </td>
+            <td width="98%">
+              <a class="goto_object" href="{$ROOT_URL}/get.php/{$item.id}">{$item.title}</a> ({$item.broadcast_date|default:$item.entry_date})
+              {if $item.alternative_title}<br>{$item.alternative_title}{/if}
+              {if $item.episode_title}<br>{$item.episode_sequence}.: {$item.episode_title}{/if}
+              {if $item.abstract}
+                  <div class="abstract">{$item.abstract|truncate:300}</div>
+              {/if}
+            </td>
+            <td width="1%" valign="bottom">
+              {if hasPerm($item, 'change', 'authorize')}
+              <input class="action" type="button" name="b1" value="{#edit_prog#}" onClick="redir(this.form, '{$ROOT_URL}/editMeta.php?id={$item.id}')" />
+                  {/if}
+              {if hasPerm($item,'delete')}
+              <input class="action" type="button" name="b1" value="{#delete_prog#}" onClick="if(deleteConfirm('{#delete_prog_confirm#}'))redir(this.form, '{$ROOT_URL}/showSeries.php/{$SERIES_DATA.id}?delprog=1&prgid={$item.id}')" />
+                {/if}
+            </td>
+          </tr>
+          {/foreach}
+        </table>
+
+      </td>
+    </tr>
+  </table>
+
+
+{/if}

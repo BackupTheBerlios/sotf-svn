@@ -1,0 +1,40 @@
+<?php // -*- tab-width: 3; indent-tabs-mode: 1; -*- 
+
+/*  
+ * $Id: changeStation.php 353 2004-02-27 17:53:15Z micsik $
+ * Created for the StreamOnTheFly project (IST-2001-32226)
+ * Authors: András Micsik, Máté Pataki, Tamás Déri 
+ *          at MTA SZTAKI DSD, http://dsd.sztaki.hu
+ */
+
+require("init.inc.php");
+
+$smarty->assign("PAGETITLE", $page->getlocalized("changeStation"));
+
+$page->popup = true;
+$page->forceLogin();
+
+$prgId = sotf_Utils::getParameter('prgid');
+
+$prg = & new sotf_Programme($prgId);
+
+checkPerm($prgId, 'change');
+
+$save = sotf_Utils::getParameter('save');
+if($save) {
+  $newStationId = sotf_Utils::getParameter('station_id');
+  $prg->changeStation($newStationId);
+  $page->redirect("closeAndRefresh.php");
+}
+
+$smarty->assign('PRG_ID', $prgId);
+$smarty->assign('PRG_TITLE', $prg->get('title'));
+$smarty->assign('PRG_STATION', $prg->get('station_id'));
+
+$smarty->assign('MY_STATIONS', $permissions->listStationsForEditor(false));
+
+// generate output
+
+$page->sendPopup();
+
+?>

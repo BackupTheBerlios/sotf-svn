@@ -1,0 +1,292 @@
+<div id="admin_container">
+	<h3>{#admin#}</h3>
+	
+	{if $TTREE_UPD_MESS}
+		<div id="admin_tree_message">{$TTREE_UPD_MESS}</div>
+	{/if}
+	
+	{if hasPerm('node', 'change') }
+		<a name="network"></a>
+		<div id="admin_nodenetwork" class="block">
+			<h4 class="cathead">{#Node_network#}</h4>
+			<div class="content">
+			<div id="admin_nodedetails">
+				<form action="{$ROOT_URL}/admin.php">
+					<div class="line"><span class="admin_nodedetails_identifier identifier">{#node_id#}:</span><span id="admin_nodedetails_nodeid_value" class="value">{$LOCAL_NODE.node_id}</span></div>
+					<div class="line"><span class="admin_nodedetails_identifier identifier">{#node_name#}:</span><span id="admin_nodedetails_nodename_value" class="value">{$LOCAL_NODE.name}</span></div>
+					<div class="line"><span class="admin_nodedetails_identifier identifier">{#node_desc#}:</span></div>
+					<div id="admin_nodedetails_descr" class="value">
+						<textarea onchange="if(value != defaultValue) data_changed++;" cols="50" rows="3" name="desc" class="textarea">{$LOCAL_NODE.description}</textarea>
+					</div>
+					<input type="submit" name="save" class="button" value="{#save#}" />
+				</form>
+			</div>
+			{if $NODES}
+				<form  action="{$ROOT_URL}/admin.php">
+					<div id="admin_nodescontainer">		
+						{cycle name="roles" values="list1,list2" print=false advance=false}
+						{foreach item=item from=$NODES}
+							<div class="admin_nodes_item {cycle name=roles}">
+							<div class="admin_nodes_item_text">
+							
+								<div class="admin_nodeitem_pendingurl line">
+									<span class="identifier">{#node#}</span>
+									<span class="value">
+									{if $item.neighbour.pending_url}
+										<a href="{$item.neighbour.pending_url}">{#pending#}: {$item.node_id}</a>
+									{else}
+										<a href="{$item.url}">{$item.node_id} ({$item.name})</a>
+									{/if}
+									</span>
+								<div class="line">{$item.description}</div>	
+								</div>
+								
+								
+								<div class="admin_nodeitem_neighbours line">
+									<span class="admin_identifier identifier">Neighbours:</span>
+									<ul class="value">
+									{foreach item=neighbor from=$item.neighbours}
+										
+										<li>{$neighbor}</li>
+										
+									{/foreach}
+									</ul>
+								</div>
+								
+								<div {if $item.pending_objects gt 1000} class="admin_nodeitem_warnpending line" {else} class="admin_nodeitem_pending line"{/if} >
+									<span class="admin_identifier identifier">Objects waiting on my node:</span>
+									<span class="value">
+									{if $item.neighbour}
+										{$item.pending_objects}
+									{else}--
+									{/if}
+									</span>
+								</div>
+								
+								<div {if $item.pending_forwards gt 1000} class="admin_nodeitem_warnforwards line" {else} class="admin_nodeitem_forwards line"{/if} >
+									<span class="admin_identifier identifier">Forwards waiting on my node:</span>
+									<span class="value">{$item.pending_forwards}</span>
+								</div>
+								
+								<div class="admin_nodeitem_lastsyncin line">
+									<span class="admin_identifier identifier">{#last_sync_in#}:</span>
+									<span class="value">
+									{if $item.neighbour}
+										{if $LANG eq "eng"}{$item.neighbour.last_sync_in|date_format:"%Y-%m-%d @ %H:%M"}
+										{else}{$item.neighbour.last_sync_in|date_format:"%d.%m.%Y @ %H:%M"}{/if}
+									{else}
+										{if $LANG eq "eng"}{$item.last_sync_in|date_format:"%Y-%m-%d @ %H:%M"}
+										{else}{$item.last_sync_in|date_format:"%d.%m.%Y @ %H:%M"}{/if}
+									{/if}
+									</span>
+								</div>
+								
+								<div class="admin_nodeitem_lastsyncout line">
+									<span class="admin_identifier identifier">{#last_sync_out#}: </span>
+									<span class="value">
+									{if $item.neighbour}
+										{if $LANG eq "eng"}{$item.neighbour.last_sync_out|date_format:"%Y-%m-%d @ %H:%M"}
+										{else}{$item.neighbour.last_sync_out|date_format:"%d.%m.%Y @ %H:%M"}{/if}
+									{else}
+										{if $LANG eq "eng"}{$item.last_sync_out|date_format:"%Y-%m-%d @ %H:%M"}
+										{else}{$item.last_sync_out|date_format:"%d.%m.%Y @ %H:%M"}{/if}
+									{/if}
+									</span>
+								</div>
+								
+								<div class="admin_nodeitem_status line">
+									<span class="admin_identifier identifier">{#err_succ#}:</span>
+									<span class="value">
+									{if $item.neighbour}
+										{$item.neighbour.success}/{$item.neighbour.errors}
+									{else}--
+									{/if}
+									</span>
+								</div>
+								
+								<div class="admin_nodeitem_acceptin line">
+									<span class="admin_identifier identifier">{#accept_incoming#}:</span>
+									<span class="value">
+									{if not $item.neighbour}--
+									{elseif $item.neighbour.accept_incoming eq 't'}{#Yes#}
+									{else}{#No#}
+									{/if}
+									</span>
+								</div>
+								
+								<div class="admin_nodeitem_useout line">
+									<span class="admin_identifier identifier">{#use_for_outgoing#}</span>
+									<span class="value">
+									{if not $item.neighbour}--
+									{elseif $item.neighbour.use_for_outgoing eq 't'}{#Yes#}
+									{else}{#No#}#
+									{/if}
+									</span>
+								</div>
+								</div>
+								<div class="admin_nodeitem_changeneighbour" >
+									{if $item.neighbour}
+										<input class="action button" type="button" name="b1" value="{#sync#}" 
+											onclick="redir(this.form, 'admin.php?sync=1&nodeid={$item.node_id}')" />
+										<input class="action button" type="button" name="b1" value="{#change#}" 
+											onclick="popup('editNeighbour.php?nodeid={$item.node_id}','EditNeighbour',350,400,false)" />
+										<input class="action button" type="button" name="b1" value="{#delete#}" 
+											onclick="redir(this.form, 'admin.php?delneighbour=1&nodeid={$item.node_id}')" />
+										<!-- <a href="admin.php?sync=1&full=1&nodeid={$item.node_id}">{#full_sync#}</a> {#full_sync_expl#} -->
+									{else}
+										<input class="action button" type="button" name="b1" value="Add as neighbour" 
+											onclick="popup('createNeighbour.php?node_id={$item.node_id}','CreateNeighbour',400,400,false)" />
+									{/if}
+								</div>
+							</div>
+						{/foreach}
+					</div>
+				{else}
+					<div id="admin_standalonenode">{#standalone_node#}</div>
+			{/if}
+			<div id="admin_createneighbour_button">
+				<input class="action button" type="button" name="b1" value="{#add_neighbour#}" 
+					onclick="popup('createNeighbour.php','CreateNeighbour',400,400,false)" />
+			</div>
+			</form>
+		</div>
+		</div>
+	{/if}
+	
+	{if hasPerm('node', 'authorize') }
+		<a name="perms"></a>
+		<div id="admin_node_authorizations" class="block"> 
+			<h4 class="cathead">{#access_permissions#}</h4>
+			<div class="content">
+			{if $PERMISSIONS}
+				<form action="{$ROOT_URL}/admin.php">
+					<div id="admin_node_permissions">
+						{cycle name="perms" values="list1,list2" print=false advance=false}
+						<!-- <span id="admin_identifier identifier">{#username#}:</span> -->
+						<table id="admin_node_permission_table">
+							<tr>
+								<th>{#username#}</th>
+								<th>{#permissions#}</th>
+								<th>{#actions#}</th>
+							</tr>
+						
+						{foreach item=user key=userid from=$PERMISSIONS}
+						{cycle name="perms" values="list2,list1" print=false}
+							<tr  class="{cycle name=perms}">
+								<td>{$user.name}</td>
+								<td>
+									{section name=i loop=$user.permissions}
+										{$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
+									{/section}
+								</td>
+								<td>
+									{if $USERNAME ne $user.name}
+										<input class="action button" type="button" name="b1" value="{#change#}" 
+											onclick="popup('editPermissions.php?context=node&objectid=node&objectname={#node#}&userid={$userid}','Permissions',450,550,false)" />
+										<input class="action button" type="button" name="b1" value="{#delete#}" 
+											onclick="redir(this.form, 'admin.php?delperm=1&userid={$userid}')" />
+									{/if}
+								</td>
+							</tr>
+							<!-- ohne tabelle
+							<div class="{cycle name=perms}">
+								<div class="admin_node_permissions_usernames">{$user.name}</div>
+								<div class="admin_node_permissions_text">{#permissions#}</div>
+								<div class="admin_node_permissions_list">
+									{section name=i loop=$user.permissions}
+										{$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
+									{/section}
+								</div>
+								<div class="admin_node_permissions_actions">
+									<span class="admin_identifier identifier">{#actions#}:</span>
+									{if $USERNAME ne $user.name}
+										<input class="action" type="button" name="b1" value="{#change#}" 
+											onclick="popup('editPermissions.php?context=node&objectid=node&objectname={#node#}&userid={$userid}','Permissions',350,400,false)" />
+										<input class="action" type="button" name="b1" value="{#delete#}" 
+											onclick="redir(this.form, 'admin.php?delperm=1&userid={$userid}')" />
+									{/if}
+								</div>
+							</div>
+							-->
+						{/foreach}
+						</table>
+					</div>
+				</form>
+			{else}
+				<div>{#no_users#}</div>
+			{/if}
+			<div id="admin_changepermissions_button">
+				<input type="button" name="addperm" class="button" value="{#change_perm#}" 
+				onclick="popup('editPermissions.php?context=node&objectid=node&objectname={#node#}','Permissions',450,550, false)" />
+			</div>
+		</div>
+		</div>
+	{/if}
+	
+	{if hasPerm('node', 'change') }
+		<a name="xbmf"></a>
+		<div class="admin_node_xbmf block">
+			<h4 class="cathead">{#arrived_xbmf#}</h4>
+			<div class="content">
+			{if $XBMF}
+				<form action="{$ROOT_URL}/admin.php">
+					<div>
+					  	<!-- <tr class="listhead"><th>{#username#}</th><th>{#permissions#}</th><th>{#actions#}</th></tr> -->
+					  	{cycle name="perms" values="list1,list2" print=false advance=false}
+					  	{foreach item=xbmf from=$XBMF}
+							<div class="{cycle name=perms}">
+								<span class="admin_xbmf">{$xbmf}</span>
+								<div>
+								<input class="action" type="button" class="button" name="b1" value="{#import#}" 
+									onclick="popup('admin.php?import_xbmf={$xbmf|escape}','XBMF',350,400,true)" />
+								</div>
+						  	</div>
+					  	{/foreach}
+					</div>
+				</form>
+				{else}
+					<div id="admin_noxbmf">-</div>
+			{/if}
+			</div>
+		</div>
+		
+		<div class="admin_Debugging block">
+			<h4 class="cathead">{#debug_log#}</h4>
+			<div class="content">
+			<form method="post" action="{$ROOT_URL}/admin.php">
+				<div id="admin_debug_form">
+					<div id="admin_debug_form_debug">
+						<input type="checkbox" name="debug" class="checkbox" {if $VARS.debug}checked="checked"{/if} />
+						<span class="cbidentifier">{#debug_expl#}</span>
+					</div>
+					<div id="admin_debug_form_debugsql">
+						<input type="checkbox" name="debug_sql" class="checkbox" {if $VARS.debug_sql}checked="checked"{/if} />
+						<span class="cbidentifier">{#debug_sql_expl#}</span>
+					</div>
+					<div id="admin_debug_form_debugsmarty">
+						<input type="checkbox" name="debug_smarty" class="checkbox" {if $VARS.debug_smarty}checked="checked"{/if} />
+						<span class="cbidentifier">{#debug_smarty_expl#}</span>
+					</div>
+					<div id="admin_debug_form_debugsmarty_compilecheck">
+						<input type="checkbox" name="smarty_compile_check" class="checkbox" {if $VARS.smarty_compile_check}checked="checked"{/if} />
+						<span class="cbidentifier">{#compile_check_expl#}</span>
+					</div>
+				</div>
+				<div id="admin_savedebug_button">
+					<input type="submit" name="save_debug" class="button" value="{#save#}" />
+				</div>
+			</form>
+		
+		
+		<ul id="admin_linklist">
+			<li><a target="log" href="log.php#end">{#view_log#}</a></li>
+			<li><a target="config" href="viewConfig.php">{#view_config#}</a> | <a href="phpinfo.php">phpinfo()</a></li>
+			<li><a href="admin.php?retemplate=1">{#recompile_templates#}</a></li>
+			<li><a href="admin.php?updatetopictree=1">Update topic tree</a></li>
+			<li><a href="admin.php?updatetopics=1">{#update_topic_counts#}</a></li>
+			<li><a href="admin.php?updatecvs=1">{#update_from_cvs#}</a></li>
+		</ul>
+		</div>
+		</div>
+	{/if}
+</div>

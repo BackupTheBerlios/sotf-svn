@@ -1,0 +1,46 @@
+1 Artist
+2 Author
+3 Commentator
+4 Composer
+5 Copyright holder
+6 Correspondent
+7 Designer
+8 Director
+9 Editor
+10 Funder / Sponsor
+11 Interviewee
+12 Interviewer
+13 Narrator
+14 Participant
+15 Performer
+16 Producer
+17 Production Personnel
+18 Speaker
+19 Transcriber
+20 Translator
+21 Other
+22 Creator
+23 Publisher
+24 Contributor
+25 Actor
+26 Animator
+27 Art Director
+28 Camera Operator
+29 Director of Photography
+30 Dubber
+31 Graphic Designer
+32 Lighting Technician
+33 Make-Up Artist
+34 Photographer
+35 Post-Production Editor
+36 Rigger
+37 Set Designer
+38 Set Dresser
+39 Sound Designer
+40 Sound Mixer
+41 Special Effects
+42 Stunts
+43 Subtitles
+44 Visual Editor
+45 Visual Effects
+46 Wardrobe

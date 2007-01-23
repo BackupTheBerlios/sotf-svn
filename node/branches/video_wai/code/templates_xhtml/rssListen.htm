@@ -1,0 +1,16 @@
+{config_load file="$LANG.conf" section="rss"}
+
+<br clear="all" />
+
+{foreach item=item from=$AUDIO_FILES}
+  {if $item.main_content eq 't' and $item.stream_access eq 't' }
+    <br /><a target="_blank" href="{$ROOT_URL}/listen.php/audio.m3u?id={$ID}&fileid={$item.id}"><img width="12" height="12" src="{$IMAGE_URL}/listen.gif" border="0"> {#listen_as#} {$item.bitrate} kbps {$item.format}</a> ({$item.playtime_string})
+  {/if}
+{/foreach}
+
+{foreach item=item from=$AUDIO_FILES}
+  {if $item.main_content eq 't' and $item.download_access eq 't' }
+    <br /><a target="_blank" href="{$ROOT_URL}/getFile.php/{$item.filename}?audio=1&id={$ID}&filename={$item.filename}"><img width="12" height="12" src="{$IMAGE_URL}/download.gif" border="0"> {#download_as#} {$item.bitrate} kbps 
+           {$item.format}</a> ({$item.playtime_string})
+  {/if}
+{/foreach}

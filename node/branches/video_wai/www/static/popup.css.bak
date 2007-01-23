@@ -1,0 +1,116 @@
+/* CSS Document */
+body{
+	font-family:Verdana, Arial, Helvetica, sans-serif; 
+	font-size:small;
+	margin:0px;
+	padding:0px;
+	background:#D4E2EF url(popup_leftbar_content.gif) top left repeat-y;
+	overflow:hidden;
+	
+	}
+/*Font-Size Hack*/
+*html body{
+	font-size:x-small; /* für IE5/Win */
+	f\ont-size:x-small; /*für andere IE-Versionen */
+}
+	
+img {border: none;}
+div, p, td, th, img, h1, h2, h3, h4, h5, span, a, li, ul, form, input{margin:0px; padding:0px;}
+
+a{
+	color:#555555;
+}
+a:hover{
+	color:#000000;
+	text-decoration:underline;
+}
+
+.identifier {
+	font-weight:bolder;
+}
+.textfield{
+	font-size:1em;
+	margin: 3px 0px;
+	padding:0px;
+	width: 111px;
+	background:#FFFFFF;
+}
+.textfield:focus{
+	background: #FFFFFF;
+}
+.dropdown{
+	font-size:1em;
+	margin: 3px 0px;
+	padding:0px;
+	width: 115px;
+	background:#D9ECFF;
+	}
+.dropdown:focus{
+	background:#FFFFFF;
+}
+.checkbox {
+	vertical-align:middle;
+
+}
+.button{
+	font-size:1em;
+	margin: 5px 0px;
+	padding: 2px 0px;
+	background-color:#C4E0E7;
+}
+#1F3F78 
+	#D4E2EF 
+		background:url(popup_rightbar_content.gif) top right repeat-y;
+			background:#1F3F78 url(popup_leftbar_head.gif) left top no-repeat;
+			background:#3774B5 url(popup_rightbar_head.gif) right top no-repeat;	
+			{include file="$ACTION.htm"}
+			
+			
+.popup_leftbox{
+	background:url(popup_leftbar_bottom.gif) bottom left no-repeat;
+	height:100%;
+
+}
+.popup_rightbox{
+	background:url(popup_border_right.gif) top right repeat-y;
+	height:100%;
+
+}
+.popup_bottombox{
+	background:url(popup_border_bottom.gif) bottom repeat-x;
+	height:100%;
+
+}
+.popup_main{
+	background:url(popup_rightbar_bottom.gif) bottom right no-repeat ;	
+	height:100%;
+
+}
+.popup_main h1{
+	background:#1F3F78 url(popup_leftbar_head.gif) left top no-repeat;
+	padding-left:35px;
+	font-size:1.1em;
+	height:41px;
+	color:white;
+
+}
+.popup_main strong{
+	background:#3774B5 url(popup_rightbar_head.gif) right top no-repeat;	
+	font-weight:bolder;
+	color:#AAC5E0;
+	display:block;
+	position:relative;
+	top:11px;
+	height:30px;
+	line-height:30px;
+}
+.popup_content{
+	float:left;
+	position:relative;
+	left:40px;
+	top:5px;
+	height:85%;
+	width:85%;
+	overflow:auto;
+
+}

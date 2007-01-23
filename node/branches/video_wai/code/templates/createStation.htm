@@ -1,0 +1,26 @@
+
+	<h3>{#create_station#}</h3>
+
+	<form name="form1" method="post">
+    <table class="tabarea" width="100%">
+      <tr> 
+        <td class="tabarea"> 
+          <table>
+            <tr>
+              <td>{#station_name#}:</td>
+              <td><input size="32" maxlength="32" name="station"{if $STATION} value="{$STATION}"{/if}></td>
+            </tr>
+            <tr>
+              <td>{#description#}:</td>
+              <td><textarea rows="5" cols="60" name="desc">{$DESC}</textarea></td>
+            </tr>
+            <tr>
+              <td>{#station_manager#}:</td>
+              <td><input size="32" name="username" value="{$MANAGER}"> ({#optional#})</td>
+            </tr>
+          </table>
+          <input type="submit" name="new" value="{#create#}">
+        </td>
+      </tr>
+    </table>
+	</form>

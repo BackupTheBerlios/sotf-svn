@@ -1,0 +1,115 @@
+<div id="stations_container">
+	<div id="stations_head">
+	<h3>{#stations#}</h3>
+	
+	<form action=""> <!-- action added by CP -->
+	
+		<div id="station_edit">
+			<!-- <strong>{#admin_tasks#}</strong> -->
+		  	{if hasPerm('node', 'create') }
+				<input class="action button" type="button" name="b1" value="{#create_station#}" onclick="redir(this.form, '{$ROOT_URL}/createStation.php')" />
+		  	{/if}
+		</div>
+		
+		<div id="stations_sort_mode">
+			<select name="mode" class="dropdown">
+				<option value="newest" {if $MODE eq 'newest'} selected="selected" {/if}>{#newest_first#}</option>
+				<option value="name" {if $MODE eq 'name'} selected="selected" {/if}>{#by_name#}</option>
+			</select>
+			<select name="language" class="dropdown">
+				<option value="none" {if $LANGUAGE eq 'none'} selected="selected" {/if} >{#any_language#}</option>
+				{foreach key=langCode item=langName from=$STATION_LANGS}
+					<option value="{$langCode}" {if $LANGUAGE eq $langCode} selected="selected" {/if} >{$langName}</option>
+				{/foreach}
+			</select>
+			<div>
+				<input type="submit" name="change_mode" class="button" value="{#change_mode#}"/>
+			</div>
+		</div>
+		{if $rp_count gt 10}	
+			<div class="navigation_buttons">{include file="splitList.htm"}</div>
+		{/if}
+		
+		<div id="station_list">
+			<div class="more_info">&raquo; <a onclick="toggleAllInfo(this, 'station_ov_details listbox_body');">show all details...</a></div>
+			{cycle values="list1,list2" print=false advance=false}
+			{if count($STATIONS) gt 0 }
+				<ul class="listbox">
+					{section name=station loop=$STATIONS }
+						<li>
+							<div class="station_header listbox_head">
+								<h4>
+									<div class="listbox_head_heading">
+										<a class="pulldown" onclick="toggleInfoDirect(this, 'station_ov_details listbox_body');"><img src="{$IMAGE_URL}/pulldown.gif" name="{$IMAGE_URL}/pullup.gif" alt="pulldown"/></a>
+										<a class="goto_object" href="{$ROOT_URL}/showStation.php/{$STATIONS[station].id}">{$STATIONS[station].name}</a>
+										<span class="programmes_count">({$STATIONS[station].numProgs})</span>
+									</div>
+									{if ($STATIONS[station].isLocal and hasPerm($STATIONS[station], 'delete')) or 
+										($STATIONS[station].isLocal and hasPerm($STATIONS[station], 'change')) or
+										($STATIONS[station].isLocal and hasPerm($STATIONS[station], 'create'))}
+											<ul class="listbox_head_buttons">
+												{if $STATIONS[station].isLocal and hasPerm($STATIONS[station], 'delete') }
+													<li class="station_mod_delete">
+														<button type="image" name="b1" src="{$IMAGE_URL}/delete.gif" class="delete" value="{#delete#}" title="{#delete#}"
+															onclick="if(deleteConfirm('{#delete_station_confirm#}'))redir(this.form, '{$ROOT_URL}/stations.php?delete=1&station={$STATIONS[station].id}')" />
+															<img src="{$IMAGE_URL}/delete.gif" alt="{#delete#}" name="{#delete#}"/>
+														</button>
+													</li>
+												{/if}
+												{if $STATIONS[station].isLocal and hasPerm($STATIONS[station], 'change') }
+													<li class="station_mod_edit">
+														<button type="button" name="b1" class="edit" value="{#edit#}" title="{#edit#}"
+															onclick="redir(this.form, '{$ROOT_URL}/editStation.php?stationid={$STATIONS[station].id}')"> 
+															<img src="{$IMAGE_URL}/edit.gif" alt="{#edit#}"  />
+														</button>
+													</li>
+												{/if}
+												{if $STATIONS[station].isLocal and hasPerm($STATIONS[station], 'create') }
+													<li class="station_mod_addprog">
+														<button type="image" name="b1" src="{$IMAGE_URL}/add.gif" class="add" value="{#add_prg#}" alt="{#add_prg#}" title="{#add_prg#}"
+															onclick="redir(this.form, '{$ROOT_URL}/editor.php?stationid={$STATIONS[station].id}')">
+															<img src="{$IMAGE_URL}/add.gif" alt="{#add_prg#}" />
+														</button>
+													</li>
+												{/if}
+											</ul>
+									{/if}
+								</h4>
+							</div>
+							<div class="station_ov_details listbox_body" name="additional_info" style="display:none">	
+							
+								<div class="station_ov_icon listbox_icon">
+									{if $STATIONS[station].icon }
+										<a href="{$ROOT_URL}/showStation.php/{$STATIONS[station].id}">
+										<img alt="{$STATIONS[station].name} {#logo#}" src="{$CACHE_URL}/{$STATIONS[station].id}.png" /></a>
+										{else} <img src="{$IMAGE_URL}/noicon.gif" alt="no Icon" />
+									{/if}
+								</div>
+							
+								<div class="station_textdetails listbox_details">
+									{if $STATIONS[station].managers}
+										<div class="station_ov_managers">
+											{#managed_by#} {foreach from=$STATIONS[station].managers item=manager}{$manager.name} {/foreach}
+										</div>
+									{/if}
+									{if $STATIONS[station].languages}
+										<div class="station_ov_languages">
+											{#languages#} {$STATIONS[station].languages}
+										</div>
+									{/if}
+									{if !empty($STATIONS[station].description)}
+										<div class="station_ov_description">{$STATIONS[station].description}</div>
+									{/if}
+								</div>
+								<div class="station_ov_footer listbox_footer"></div>
+							</div>
+						</li>
+					{/section}
+				</ul>
+			</div>
+			{else}
+				<div class="station_none">{#no_station#}</div>
+		{/if}
+		
+	</form></div>
+</div>

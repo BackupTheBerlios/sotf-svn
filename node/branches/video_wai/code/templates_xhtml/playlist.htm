@@ -1,0 +1,118 @@
+<div id="playlist_container">
+	{literal}
+		<script language="javascript">
+			function selectAll(formObj, isInverse){
+				for (var i=0;i < formObj.length;i++){
+					fldObj = formObj.elements[i];
+					if (fldObj.type == 'checkbox'){ 
+						if(isInverse)
+						fldObj.checked = (fldObj.checked) ? false : true;
+						else fldObj.checked = true; 
+					}
+				}
+			}
+		</script>
+	{/literal}
+	
+	<h3>{#Playlist#}</h3>
+	{if $count == 0}
+		<h4>{#empty#}</h4>
+	{else}
+			<div class="more_info">&raquo; <a onclick="toggleAllInfo(this, 'programme_smalldetails listbox_body');">show all details...</a></div>
+
+		<form name="taskform" method="POST" action="playlist.php">
+		<ul id="playlist_items" class="listbox">
+		{cycle name="progs" values="list1,list2" print=false advance=false}
+		{foreach name=outer item=item from=$result}
+			<li>
+				<div class="programme_header listbox_head">
+					<h4>
+						<div class="listbox_head_heading">	
+							<a class="pulldown" onclick="toggleInfoDirect(this, 'programme_smalldetails listbox_body');"><img src="{$IMAGE_URL}/pulldown.gif" name="{$IMAGE_URL}/pullup.gif"/></a>
+							<a href="listen.php/audio.m3u?id={$item.id}"><img src="{$IMAGE_URL}/listen.gif" alt="{#Listen#}" /></a>
+							<a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">{$item.title|truncate:50}</a>
+						</div>
+						<span class="listbox_head_buttons">
+							<input type="checkbox" class="checkbox" value="{$item.id}" name="checkbox[]" />
+						</span>
+						</h4>
+						{if $item.alternative_title}
+							<h5>{$item.alternative_title}</h5>
+						{/if} 
+					
+				</div>							
+				<div class="programme_smalldetails listbox_body" name="additional_info" style="display:none">
+				
+					<div class="programme_icon listbox_icon">
+						{if $item.icon }
+							<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$CACHE_URL}/{$item.id}.png" alt="Logo Programm"/></a>
+							{else}
+								<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$IMAGE_URL}/noicon.gif" alt="noIcon" /></a>
+						{/if}
+					</div>
+					
+					<div class="programme_textdetails listbox_details">
+						{if $item.episode_title}
+							<div class="programme_abstract_episode"><span class="identifier">Episode {$item.episode_sequence}:</span> {$item.episode_title}</div>
+						{/if} 
+						
+						{if $item.abstract}
+							<div class="programme_abstract_text">
+								{$item.abstract|truncate:300}
+							</div>
+						{/if}
+					</div>
+					
+					<div class="progamme_smalldetails_footer listbox_footer">
+						<div class="programme_date">
+							{if $item.broadcast_date}
+								<span class="identifier">{#broadcast_date#}: </span>
+								<span>{if $LANG eq "eng"}{$item.broadcast_date|date_format:"%Y-%m-%d"} 
+								{else} {$item.broadcast_date|date_format:"%d.%m.%Y"}{/if}</span>
+							{/if}										
+							{if $item.entry_date}
+								<span class="identifier">{#entry_date#}: </span>
+								<span>{if $LANG eq "eng"}{$item.entry_date} {else}{$item.entry_date|date_format:"%d.%m.%Y"}{/if}</span>
+							{/if} 
+						</div>
+						<div class="programme_abstract_link">
+							<a class="goto_object" href="get.php?id={$item.id}">{#further_details#}...</a> 
+						</div>
+					</div>
+					
+				</div>	
+			</li>
+		{/foreach}
+		</ul>
+		
+		<div id="playlist_buttons">
+			<div id="playlist_buttons_select">		
+				<span id="button_select_all">
+					<input type="button" name="select_all" class="button" value="{#select_all#}" 
+						onclick="javascript:selectAll(this.form, 0)" />
+				</span>
+				<span id="button_invert_selection">
+					<input type="button" name="invert_selection" class="button" value="{#invert_selection#}" 
+						onclick="javascript:selectAll(this.form, 1)" />
+				</span>
+				<span id="button_play_selected"><input type="submit" name="play_selected" class="button" value="{#play_selected#}" /></span>
+				<span id="button_delete_selected"><input type="submit" name="delete_selected" class="button" value="{#delete_selected#}" /></span>
+			</div>
+			<div id="playlist_buttons_other">
+				<span id="button_change_order">
+					<input type="button" name="change_order" class="button" value="{#change_order#}" 
+						onclick="javascript:popup('playlistPopup.php', 'playlistOrder', 300, 400, true);return true;" />
+				</span>
+				<span id="button_send_selected">
+					<input type="button" name="send_selected" class="button" value="{#send_selected#}"
+						{literal}
+							onclick="javascript: ids = ''; for(i=0;i< this.form.elements.length;i++) 
+							{ if (this.form.elements[i].checked==true) ids = ids + '|' + this.form.elements[i].value}; 	
+							window.open('portal_upload.php?type=prglist&data='+ids,'','scrollbars=yes,width=640,height=340,left=320,top=200');"
+						{/literal}/>
+				</span>
+			</div>
+		</div>
+		</form>
+	{/if}
+</div>

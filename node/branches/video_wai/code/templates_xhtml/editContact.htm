@@ -1,0 +1,193 @@
+<div id="editcontact_container">
+	<div class="block">
+	<h3>{#edit_contact#}</h3>
+	
+
+		<h4>{#general_data#}</h4>
+		<div class="content">
+			<div class="editcontact_form_contactdetails"> 
+				<form method="post" action="editContact.php">
+					<input type="hidden" name="id" value="{$CONTACT_ID}" />
+					<div id="editcontact_form_inputfields">
+						<div id="editcontact_name" class="line">
+							<label for="editcontact_contactname" class="identifier">{#name#}: </label>
+							<span class="value">{$CONTACT_DATA.name}</span>
+						</div>
+						<div id="editcontact_alias" class="line">
+							<label for="alias" class="identifier">{#alias#}: </label>
+							<span class="value">
+								<input name="alias" id="alias" maxlength="100" class="textfield" value="{$CONTACT_DATA.alias}" onchange="if(value != defaultValue) data_changed++;" />
+							</span>
+						</div>
+						<div id="editcontact_acronym" class="line">
+							<label for="acronym" class="identifier">{#acronym#}: </label>
+							<span class="value">
+								<input name="acronym" id="acronym" maxlength="30" class="textfield" value="{$CONTACT_DATA.acronym}" onchange="if(value != defaultValue) data_changed++;" />
+							</span>
+						</div>
+						<div id="editcontact_intro" class="line">
+							<label for="intro" class="identifier">{#intro#}: </label>
+							<span class="value"> <!-- cols="50" rows="10" -->
+								<textarea name="intro" id="intro" class="textarea" onchange="if(value != defaultValue) data_changed++;" >{$CONTACT_DATA.intro}</textarea>
+							</span>
+						</div>
+						<div id="editcontact_email" class="line">
+							<label for="email" class="identifier">{#email#}: </label>
+							<span class="value">
+								<input name="email" id="email" maxlength="100" class="textfield" value="{$CONTACT_DATA.email}" onchange="if(value != defaultValue) data_changed++;" />
+							</span>
+						</div>
+						<div id="editcontact_address" class="line">
+							<label for="address" class="identifier">{#address#}: </label>
+							<span class="value">
+								<input name="address" id="address" maxlength="255" class="textfield" value="{$CONTACT_DATA.address}" onchange="if(value != defaultValue) data_changed++;" />
+							</span>
+						</div>
+						<div id="editcontact_phone" class="line">
+							<label for="phone" class="identifier">{#phone#}: </label>
+							<span class="value">
+								<input name="phone" id="phone" maxlength="50" class="textfield" value="{$CONTACT_DATA.phone}" onchange="if(value != defaultValue) data_changed++;" />
+							</span>
+						</div>
+						<div id="editcontact_cellphone" class="line">
+							<label for="cellphone" class="identifier">{#cellphone#}: </label>
+							<span class="value">
+								<input name="cellphone" id="cellphone" maxlength="50" class="textfield" value="{$CONTACT_DATA.cellphone}" onchange="if(value != defaultValue) data_changed++;" />
+							</span>
+						</div>
+						<div id="editcontact_fax" class="line">
+							<label for="fax" class="identifier">{#fax#}: </label>
+							<span class="value">
+								<input name="fax" id="fax" maxlength="50" class="textfield" value="{$CONTACT_DATA.fax}" onchange="if(value != defaultValue) data_changed++;" />
+							</span>
+						</div>
+						<div id="editcontact_url" class="line">
+							<label for="url" class="identifier">{#url#}: </label>
+							<span class="value">
+								<input name="url" id="url" maxlength="255" class="textfield" value="{$CONTACT_DATA.url|default:"http://"}" onchange="if(value != defaultValue) data_changed++;" />
+							</span>
+						</div>
+					</div>
+					<div id="editcontact_submitform" class="line">
+						<input type="submit" class="button" name="save" value="{#save#}" />
+						<input type="submit" class="button" name="finish1" value="{#finish#}"/>
+						{if hasPerm($CONTACT_ID,'delete')}
+							<input type="button" class="button" name="b1" value="{#delete_contact#}" 
+								onclick="if(deleteConfirm('{#delete_contact_confirm#}'))redir(this.form, 'editContact.php?id={$CONTACT_ID}&delete=1')" />
+						{/if}
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	{if hasPerm($CONTACT_DATA, 'authorize') }
+		<div class="block">
+		<a name="perms"></a>
+		<h4>{#access_permissions#}</h4>
+		<div id="editcontact_permissionstable" class="content"> 
+			
+			
+			{if $PERMISSIONS}
+				<form action="">
+					<div id="editcontact_permissions">
+						<table id="editcontact_permissions_table">
+							<tr>
+								<th>{#username#}</th>
+								<th>{#permissions#}</th>
+								<th>{#actions#}</th>
+							</tr>
+						{cycle name="perms" values="list1,list2" print=false advance=false}
+						{foreach item=user key=userid from=$PERMISSIONS}
+							<tr class="{cycle name=perms}">
+								<td>{$user.name}</td>
+								<td>
+									{section name=i loop=$user.permissions}
+										{$user.permissions[i]}{if ! $smarty.section.i.last}, {/if}
+									{/section}
+								</td>
+								<td>
+									{if $USERNAME ne $user.name}
+										<input class="button" type="button" name="b1" value="{#change#}" 
+											onclick="popup('editPermissions.php?context=contact&objectid={$CONTACT_ID}&objectname={$CONTACT_DATA.name|escape}&userid={$userid}','Permissions',470,550,false)" />
+										<input class="button" type="button" name="b1" value="{#delete#}" 
+											onclick="redir(this.form, 'editContact.php?delperm=1&userid={$userid}&id={$CONTACT_ID}')" />
+									{/if}
+								</td>
+							</tr>
+						{/foreach}
+						</table>
+						<div class="line">
+							<p>{#inherited_perms#}</p>
+						</div>
+					</div>
+				
+				</form>
+				{else}
+					<div id="editcontact_inheritedpermissions" class="line">{#inherited_perms#}</div>
+			{/if}
+			<div id="editcontact_changepermissions_button" class="line">
+				<input type="button" class="button" name="addperm" value="{#change_perm#}" 
+					onclick="popup('editPermissions.php?context=contact&objectid={$CONTACT_ID}&objectname={$CONTACT_DATA.name|escape}','Permissions',450,550, false)" />
+			</div>
+		</div>
+			</div>
+		
+	{/if}
+
+
+	<div class="editcontact_icon block">
+		<a name="icon"></a>
+		<h4>{#icon#}</h4>
+		
+	<div class="content">
+		{if $ICON}
+			<div id="editcontact_iconpic">
+				<img src="{$CACHE_URL}/{$CONTACT_ID}.png" />
+			</div>
+			{else}
+				<div id="editcontact_noicon">{#no_icon#}</div>
+		{/if}
+	
+		{if $USERFILES}
+			<form method="post" name="userfiles" action="editContact.php">
+				{literal}
+					<script language="javascript" type="text/javascript">
+						function getSelected() {
+							return document.userfiles['filename'].options[document.userfiles['filename'].selectedIndex].value;
+						}
+					</script>
+				{/literal}
+				<div class="line">
+					<input type="hidden" name="id" value="{$CONTACT_ID}" />
+					<label for="filename" class="editcontact_identifier identifier">{#userfiles#}: </label>
+					<div class="line">
+						<select name="filename" id="filename" class="dropdown">{html_options values=$USERFILES output=$USERFILES}</select>
+						<input type="button" name="view" class="button" value="{#view#}" 
+							onclick="var file=getSelected(); popup('getUserFile.php/'+escape(file)+'?filename='+escape(file),'UserFile',400,400,false)" />
+						<input type="submit" name="seticon" class="button" value="{#set_icon#}" onclick="return confirmUnsaved()" />
+					</div>
+				</div>
+				<div id="editcontact_userfiles_explanation" class="line">{#userfiles_expl#}</div>
+			</form>
+			{else}
+				<div id="editcontact_icon_nofile">{#no_files#}</div>
+		{/if}
+		<div id="editcontact_icon_form" class="line">
+			<form enctype="multipart/form-data" method="post" action="editContact.php">
+				<input type="hidden" name="MAX_FILE_SIZE" value="15000000" />
+				<input name="userfile" class="upload" type="file" />
+				<input type="submit" name="uploadicon" class="button" value="{#set_icon#}" onclick="return checkIfEmpty(this.form.userfile,'{#select_file#}') && confirmUnsaved()"  />
+				<div id="editcontact_icon_uploadexplanation" class="line">{#upload_expl#}</div>
+			</form>
+		</div>
+		</div>
+		</div>
+	<!--
+	<form method="post">
+	<input type="hidden" name="id" value="{$CONTACT_ID}">
+	<input type="submit" name="finish2" value="{#finish#}">
+	</form>
+	-->
+
+</div>

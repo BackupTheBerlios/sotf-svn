@@ -1,0 +1,145 @@
+tree_id=1
+name=SOTF témafa
+shortname=SOTF témák
+description=Kísérlet egy rádióknak szóló általános téma klasszifikáció megalkotására.
+url=
+
+# End of tree definition
+
+  1 1 Muvészet, média, szórakozás
+  2 2 Hírek
+  3 2 Új média (Internet, CD, DVD, Mini Disk, stb.)
+  4 2 Sajtó
+  5 2 Rádió
+  6 2 Filmek és televízió
+  7 2 Hirdetés
+  8 2 Eloadómuvészet (színház, tánc, cirkusz, stb.)
+  9 2 Zene
+ 10 2 Képzomuvészet (festés, szobrászat, fotó, stb.)
+ 11 2 Építészet és urbanizáció
+ 12 2 Irodalom
+ 13 2 Fantasztikus irodalom
+ 14 2 Kikapcsolódás, aktív pihenés
+ 15 2 Utazás és turizmus
+ 16 2 Játékok
+ 17 2 Sport
+
+ 18 1 Emberi tényezok, szociális ügyek
+ 19 2 Nok
+ 20 2 Férfiak
+ 21 2 Fiatalok
+ 22 2 Idosek
+ 23 2 Család
+ 24 2 Hátrányos helyzetuek
+ 25 2 Szexualitás
+ 26 2 Kábítószer
+ 27 2 Szegénység és éhezés
+ 28 2 Kivándorlás
+ 29 2 Multiculturalism (?)
+ 30 2 Közösségek (lakás, közlekedés, településtervezés, stb.)
+ 31 2 Vallás, metafizika
+ 32 2 Rasszizmus, fajgyulölet
+ 33 2 Civil szervezetek
+
+ 34 1 Egészség, gyógyítás
+ 35 2 Betegségek
+ 36 2 Gyógyszerek
+ 37 2 Hagyományos gyógymódok
+ 38 2 Orvosi kutatás
+ 39 2 Alternatív gyógymódok
+ 40 2 Elsosegély
+
+ 41 1 Oktatás, tanítás, tanulás
+ 42 2 Egyetemek
+ 43 2 Iskolák
+ 44 2 Élethosszig tartó tanulás
+ 45 2 Pedagógia
+ 46 2 Különleges oktatás
+ 47 2 e-learning
+ 48 2 Oktatás
+ 49 2 Életrajzok
+
+ 50 1 Tudomány és technológia
+ 51 2 Tudományok (fizika, kémia, ökológia, állattan, botanika, stb.)
+ 52 2 Földtudományok (csillagászat, földrajz, geológia, stb.)
+ 53 2 Élettudományok (biológia, genetika, anatómia, stb.)
+ 54 2 Társadalomtudományok (szociológia, antropológia, stb.)
+ 55 2 Pszichológia és pszichiátria
+ 56 2 Régészet, oslénytan
+ 57 2 Történelem
+ 58 2 Kommunikáció, telekommunikáció és Internet
+ 59 2 Számítógéptudomány
+
+ 60 1 Környezet, környezetvédelem, mezogazdaság
+ 61 2 Mezogazdaság, mezogazdasági technológiák
+ 62 2 Biológiai eroforrások
+ 63 2 Élelmiszergyártási technológiák
+ 64 2 Vadászat és halászat
+ 65 2 Biodiverzitás
+ 66 2 Klíma
+ 67 2 Népesség
+ 68 2 Vízgazdálkodás
+ 69 2 Szennyezés
+ 70 2 Genetikailag módosított organizmusok, táplálék
+
+ 71 1 Állam és igazságügy
+ 72 2 Nemzetközi együttmuködés
+ 73 2 Geopolitika
+ 74 2 Belpolitika
+ 75 2 Fejlesztési irányelvek
+ 76 2 Szociális politika (munkavállalás, jólét)
+ 77 2 Államszervezetek, kormányzat
+ 78 2 Védelem
+ 79 2 Politika üldözés (rabok, menekültek)
+ 80 2 Emberi jogok (menedékjog, szólásszabadság)
+ 81 2 Rendorség
+ 82 2 Börtönök
+ 83 2 Bunözés
+ 84 2 Terrorizmus
+ 85 2 Licencek és szerzoi jogok
+
+ 86 1 Politika, politikai rendszerek, háborúk
+ 87 2 Anarchizmus
+ 88 2 Kapitalizmus
+ 89 2 Kommunizmus
+ 90 2 Politikai pártok
+ 91 2 Demokratikus rendszerek
+ 92 2 Fasizmus, nácizmus
+ 93 2 Pacifizmus
+ 94 2 Nacionalizmus
+ 95 2 Tekintélyuralmi rendszerek
+ 96 2 Forradalmi és felforgató csoportok (aktivizmus)
+ 97 2 Globalizáció
+ 98 2 Polgárháború és forradalom
+ 99 2 Háború
+100 2 Fegyverek
+
+101 1 Üzlet
+102 2 Könyvelés
+103 2 Vállalatok
+104 2 Ügyfélkapcsolatok
+105 2 e-kereskedelem
+106 2 Munka
+107 2 Menedzsment
+108 2 Marketing és reklámozás
+109 2 Szolgáltatások
+110 2 Nagykereskedelem
+111 2 Szakszervezetek
+
+112 1 Vásárlás és termékek
+113 2 Otthon és kert
+114 2 Szépségipari termékek
+115 2 Könyvek
+116 2 Ruházat
+117 2 Számítógép
+118 2 Szórakoztató elektronika
+119 2 Egyéb termékek
+120 2 Szórakoztatás
+121 2 Virágok
+122 2 Élelmiszer
+123 2 Egészség
+124 2 Ékszerek
+125 2 Állatok
+126 2 Szabadido
+127 2 Jármuvek
+

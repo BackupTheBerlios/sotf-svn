@@ -1,0 +1,40 @@
+<div id="createneighbour_container">
+	<h3>{#create_neighbour#}</h3>
+	  
+	{if not $URL and count($NODES) gt 0}
+		<div class="block">
+			<h4>{#create_from_nodes#}</h4>
+			<div class="content">
+				<form method="post" action="createNeighbour.php">
+					<select name="node_id" class="dropdown">
+						{foreach item=item from=$NODES}
+							<option value="{$item.node_id}">{$item.name}</option>
+						{/foreach}
+					</select>
+					<input type="submit" name="create_from_node" class="button" value="{#create#}" />
+				</form>
+			</div>
+		</div>
+	{/if}
+	
+	<div class="block">
+		<h4>{#create_new_node#}</h4>
+		<div class="content" id="createneighbour_newnodeform">
+			<form method="post" action="createNeighbour.php">
+				<div class="line">
+					<label for="nodeid" class="identifier">{#id#}:</label>
+					<span class="value"><input name="node_id" value="{$NID}" id="nodeid" class="textfield" /></span>
+				</div>
+				
+				<div class="line">			
+					<label for="url" class="identifier">{#url#}:</label>
+					<span class="value"><input name="url" value="{$URL}" id="url" class="textfield" /></span>
+				</div>
+				
+				<div id="createneighbour_newnodeform_submit">
+					<input type="submit" name="create_new_node" class="button" value="{#create#}"/>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

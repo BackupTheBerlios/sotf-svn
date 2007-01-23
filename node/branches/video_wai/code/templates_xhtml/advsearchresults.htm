@@ -1,0 +1,145 @@
+<div class="advsearchresults_container">
+	<div id="advsearchresults_head">
+		<h3>{#Results#}</h3>
+			<div id="advsearchresults_cast">
+				<a href="{$ROOT_URL}/podcast.php?uiLang={$LANG}&query={$SQLquerySerial}">
+				<img alt="rss-feed" src='{$IMAGE_URL}/rss.gif'/>
+				<img src="{$IMAGE_URL}/podcast_logo.gif" alt="Podcast" />
+				</a>
+				{* mod by Martin Schmidt *}
+			</div>
+		<form method="post" action="advsearchresults.php">
+			<div id="advsearchresults_myquery">
+				<span class="identifier">{#your_query_is#}: </span>
+				<span id="advsearch_readable" class="value">
+				{* ADDED BY Martin Schmidt *}
+					{section name=i loop=$SQLquery}
+					
+					{if $HumanReadable[i][0] != "IGNORE"}
+					  {if $smarty.section.i.index != 0 && $smarty.section.i.index!=$FirstNonIgnore}
+						 <span>{$HumanReadable[i][0]}</span>
+					  {/if}
+					  
+					  {if $SQLquery[i.index_next][0] == "OR"}
+						 {if $SQLquery[i][0] == "AND"}
+						   <span>(</span>
+						 {elseif $smarty.section.i.index == 0}
+						   <span>(</span>
+						 {/if}
+					  {/if}
+					  
+					  <span>{$HumanReadable[i][1]} </span>
+					  <span>{$HumanReadable[i][2]} </span>
+					  <span class="advsearchresults_myquery_option">{$HumanReadable[i][3]}</span>
+					  
+					  {if $SQLquery[i][0] == "OR"}
+						{if $SQLquery[i.index_next][0] != "OR"}
+						  <span>)</span>
+						{/if}
+					  {/if}
+					
+					{/if}
+					{/section}			
+					{***************************}
+				</span>
+			</div>
+			
+			<div id="advsearch_buttons">
+				<span id="advsearchresults_change">
+					<input class="action button" type="submit" name="back" value="{#back#}" />
+				</span>
+				
+				<span id="advsearchresults_send">
+					<input class="action button" type="button" name="upload_query" value="{#upload_query#}" 
+						onclick="javascript:window.open('portal_upload.php?type=query&data={$SQLquerySerial}','','scrollbars=yes,width=640,height=340,left=320,top=200');" />
+				</span>
+			</div>
+		</form>
+	</div>
+	
+	<div id="advsearchresults_results">
+		<h4>{#Results#}</h4>
+		<div class="content">
+		{if count($result) gt 0 }
+			{if $rp_count gt 10}
+				<div id="advsearchresults_splitList">
+					{include file="splitList.htm"}
+				</div>
+			{/if}
+			
+			<div class="more_info">&raquo; <a onclick="toggleAllInfo(this, 'listbox_body');">show all details...</a></div>
+			
+			<ul id="advsearchresults_resultlist" class="listbox">
+				{foreach name=outer item=item from=$result}
+					<li>
+					
+						<div class="programme_header listbox_head">
+							<h4>
+								<div class="listbox_head_heading">							
+									<a class="pulldown" onclick="toggleInfoDirect(this, 'listbox_body');"><img src="{$IMAGE_URL}/pulldown.gif" name="{$IMAGE_URL}/pullup.gif"/></a>
+									<a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">{$item.title}</a> 
+								</div>
+								
+							
+							</h4>
+							{if $item.values.alternative_title}
+									<h5>{$item.values.alternative_title}</h5>
+								{/if} 	
+						</div>
+						
+						<div class="listbox_body" name="additional_info" style="display:none">
+						
+							<div class="programme_icon listbox_icon">
+								{if $item.icon }
+									<a href="{$ROOT_URL}/get.php/{$item.id}"><img 
+src="{$CACHE_URL}/{$item.icon}" alt="Logo Programm"/></a>
+									{else}
+										<a href="{$ROOT_URL}/get.php/{$item.id}"><img src="{$IMAGE_URL}/noicon.gif" alt="noIcon" /></a>
+								{/if}
+							</div>
+							
+							<div class="programme_textdetails listbox_details">
+								{if $item.values.episode_title}
+									<div class="programme_abstract_episode"><span class="identifier">Episode {$item.values.episode_sequence}.: </span>{$item.values.episode_title}</div>
+								{/if} 
+								
+								{if $item.values.abstract}
+									<div class="programme_abstract_text">
+										{$item.values.abstract|truncate:300}
+									</div>
+								{/if}
+							</div>
+							
+							<div class="progamme_smalldetails_footer listbox_footer">
+							
+								<!--{if $item.values.broadcast_date}
+									<div class="programme_date">{if $LANG eq "eng"}{$item.values.broadcast_date|date_format:"%Y-%m-%d"} 
+										{else} {$item.values.broadcast_date|date_format:"%d.%m.%Y"}{/if}</div>
+								{/if} -->
+									<div class="programme_date">
+									{if $item.values.broadcast_date}
+										<span class="identifier">{#broadcast_date#}: </span>
+										<span>{if $LANG eq "eng"}{$item.values.broadcast_date|date_format:"%Y-%m-%d"} 
+										{else} {$item.values.broadcast_date|date_format:"%d.%m.%Y"}{/if}</span>
+									{/if}										
+									{if $item.values.entry_date}
+										<span class="identifier">{#entry_date#}: </span>
+										<span>{if $LANG eq "eng"}{$item.values.entry_date} {else}{$item.values.entry_date|date_format:"%d.%m.%Y"}{/if}</span>
+									{/if} 
+								</div>			
+								<div class="programme_abstract_link">
+									<a class="goto_object" href="{$ROOT_URL}/get.php?id={$item.id}">more...</a> <!-- smarty variable notwendig -->
+								</div>
+							</div>
+						</div>							
+					</li>
+				{/foreach}
+			</ul>
+			{else}
+				<div id="advsearchresults_noresults">
+					{#No_results#}
+				</div>
+		{/if}
+		</div>
+	</div>
+</div>

@@ -1,0 +1,25 @@
+{config_load file="$LANG.conf" section="topics"}
+
+<HTML> 
+
+<HEAD> 
+
+   <TITLE>{#topics_title#}</TITLE>
+
+   <link rel="shortcut icon" href="{$ROOT_URL}/favicon.ico" />
+
+</HEAD> 
+
+
+
+<FRAMESET COLS="20%, *"> 
+
+    <FRAME SRC="topicTree.php{if $openTree}?open={$openTree}#{$openTree}{/if}" name="tree"> 
+
+    <FRAME SRC="topicSearch.php{if $openTree}?ID={$openTree}{/if}" name="search"> 
+
+</FRAMESET> 
+
+
+
+</HTML>

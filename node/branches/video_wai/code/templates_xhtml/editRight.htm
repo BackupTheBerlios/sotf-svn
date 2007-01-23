@@ -1,0 +1,87 @@
+<div id="editright_container">
+		{literal}
+		<script type="text/javascript" language="javascript">
+			
+			function checkTheBox()
+			{
+				var theCheckbox = true;
+				theCheckbox = document.getElementsByName("fullprog")[0].checked;
+				
+				if(theCheckbox)
+				{
+					document.getElementById('stoptime').disabled = true;
+					document.getElementById('stoptime').style.backgroundColor = "#dddddd";
+					document.getElementById('starttime').disabled = true;
+					document.getElementById('starttime').style.backgroundColor = "#dddddd";
+				}
+			
+			}
+			
+			
+			
+			function change()
+			{
+				if (document.getElementById('stoptime').disabled)
+				{
+					document.getElementById('stoptime').disabled = false;
+					document.getElementById('stoptime').style.backgroundColor = "#D9ECFF";
+					
+					document.getElementById('starttime').disabled = false;
+					document.getElementById('starttime').style.backgroundColor = "#D9ECFF";
+				}
+				else
+				{
+					document.getElementById('stoptime').disabled = true;
+					document.getElementById('stoptime').style.backgroundColor = "#dddddd";
+					
+					document.getElementById('starttime').disabled = true;
+					document.getElementById('starttime').style.backgroundColor = "#dddddd";
+				}	
+			}
+		</script>
+	{/literal}
+
+	{if $NEW}
+		<h3>{#new_right#}</h3>
+	{else}
+		<h3>{#change_right#}</h3>
+	{/if}
+	
+	<div id="editright_form">
+		<form name="editRight" method="POST" action="editRight.php">
+			<input type="hidden" name="objectid" value="{$OBJECT_ID}" />
+		
+			<div id="edittight_starttime" class="line">	
+				<div class="line">
+					<input type="checkbox" name="fullprog" id="fullprog"{if !$NEW and !$START_TIME and !$STOP_TIME} checked="checked"{/if} 
+						onclick="javascript:change();"/> {#for_whole_prg#}
+				</div>
+				<label for="starttime" class="identifier">{#start_time#}</label>
+				<span class="value"><input size="6" name="start_time" id="starttime" class="textfield" value="{$START_TIME}" /> {#time_format#}</span>
+			</div>
+			<div id="editright_stoptime" class="line">
+				<label for="stoptime" class="identifier">{#stop_time#}</label>
+				<span class="value"><input size="6" name="stop_time" id="stoptime" class="textfield" value="{$STOP_TIME}" />  {#time_format#}</span>
+			</div>
+			<div id="editright_righttext" class="line">
+				<label for="righttext" class="identifier">{#rights_text#}</label>
+				<span class="value"><textarea name="rights_text" class="textarea" id="righttext" cols="40" rows="5">{$RIGHTS_TEXT}</textarea></span>
+	
+				{if $NEW}
+					<div id="editright_addbutton" class="line">
+						<input type="submit" name="save" class="button" value="{#Add#}" />
+					</div>
+				{else}
+					<div id="editright_changebutton" class="line">
+						<input type="submit" name="save" class="button" value="{#Change#}" />
+					</div>
+				{/if}
+	
+			</div>
+		</form>	
+	</div>
+</div>
+
+<script type="text/javascript">
+	checkTheBox();
+</script>

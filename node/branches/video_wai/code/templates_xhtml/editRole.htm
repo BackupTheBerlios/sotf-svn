@@ -1,0 +1,92 @@
+<div id="editrole_container">
+	<h3>
+		{if $ROLE_ID}
+			{#change_role#}
+		{else}
+			{#new_role#}
+		{/if}
+	</h3>
+	<div id="editrole_form1">
+		<form name="editrole1" method="POST" action="editRole.php">
+			<input type="hidden" name="roleid" value="{$ROLE_ID}" />
+			<input type="hidden" name="objectid" value="{$OBJECT_ID}" />
+			<input type="hidden" name="scope" value="{$SCOPE}" />
+			<input type="hidden" name="pattern" value="{$PATTERN}" />
+			
+			{if $SCOPE eq 6}
+				<div id="editrole_contactsearchfor">{#contact_search_for#} '{$PATTERN}'</div>
+			{/if}
+			
+			{if count($CONTACTS) gt 0 }
+				<div id="editrole_contacts">
+					<span id="editrole_contacts_names">
+						<select name="contact" class="dropdown">
+							{foreach from=$CONTACTS item=name key=key}
+								<option value="{$key}"  {if $key eq $CONTACT_SELECTED} selected="selected"{/if} >{$name}</option>
+							{/foreach}
+						</select>
+					</span>
+					<span id="editrole_contacts_role">
+						<select name="role" class="dropdown">
+							{foreach from=$ROLE_LIST item=role}
+								<option value="{$role.id}"  {if $role.id eq $ROLE_SELECTED} selected="selected"{/if} >{$role.name}</option>
+							{/foreach}
+						</select>
+					</span>
+					
+					{if $ROLE_ID}
+						<span id="editrole_contacts_change">
+							<input type="submit" class="button" name="save" value="{#Change#}" />
+						</span>
+						{else}
+							<span id="editrole_contacts_add">
+								<input type="submit" class="button" name="save" value="{#Add#}" />
+							</span>
+					{/if}
+				</div>
+				{else}
+					<div id="editrole_contacts_nocontacts" class="error">
+						{#no_contacts_found#}
+					</div>
+			{/if}
+		</form>
+	</div>
+	<div id="editrole_form2">
+		<h4>{#how_to_select_contact#}</h4>
+		
+		<form name="editrole2" action="editRole.php">
+			<input type="hidden" name="scope_change" value="1" />
+			<input type="hidden" name="roleid" value="{$ROLE_ID}" />
+			<input type="hidden" name="objectid" value="{$OBJECT_ID}" />
+			<input type="hidden" name="scope" value="{$SCOPE}" />
+			<input type="hidden" name="pattern" value="{$PATTERN}" />
+			
+			
+			
+			<div id="editrole_changescope">
+				<div id="editrole_changescope_text">{#select_scope#}</div>
+				<div id="editrole_changescope_forminput">
+					<div id="editrole_changescope_forminput_myscope"><input type="radio" name="newscope" class="radiob" value="1" {if $SCOPE eq 1}checked="checked"{/if} /> {#my_scope#}</div>
+					<!-- <br /><input type="radio" name="newscope" value="2" {if $SCOPE eq 2}CHECKED{/if}> {#series_scope#}</nobr> -->
+					<div id="editrole_changescope_forminput_stationscope"><input type="radio" name="newscope" class="radiob" value="3" {if $SCOPE eq 3}checked="checked"{/if}/> {#station_scope#}</div>
+					<div id="editrole_changescope_forminput_localscope"><input type="radio" name="newscope" class="radiob" value="4" {if $SCOPE eq 4}checked="checked"{/if}/> {#local_scope#}</div>
+					<!-- <br /><nobr><input type="radio" name="newscope" value="5" {if $SCOPE eq 5}CHECKED{/if}> {#all_scope#}</nobr> -->
+				</div>
+				<div id="editrole_changescope_submit">
+					<input type="submit" name="change" class="button" value="{#change_scope#}"/>
+				</div>
+			</div>
+			<div id="editrole_Contact">
+				<h4 id="editrole_contact_text">{#search_contact#}</h4>
+				<div id="editrole_contactsearch_input"><input name="newpattern" class="textfield" value="{$PATTERN}" /></div>
+				<div id="editrole_contact_submit">
+					<input type="submit" name="search" class="button" value="{#search#}"/>
+				</div>
+			</div>
+			<div>
+				<div id="editrole_newContact">{#create_new_if_needed#}</div>
+				<input type="button" class="button" onclick="javascript:popup('createContact.php?stationid={$STATION_ID}','CreateContact',500,500,true)" value="{#Create_new#}" />
+			</div>
+		</form>
+	</div>
+</div>

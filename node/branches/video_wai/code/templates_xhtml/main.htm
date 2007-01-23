@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+{config_load file="general.conf"}
+{config_load file="$LANG.conf" section="$ACTION"}
+{config_load file="$LANG.conf" section="sidebar"}  <!-- added by mh after editing eng.conf (section sidebar created) -->
+
+<head>
+	<title>{$PAGETITLE} (SOTF:{$NODE_NAME}) rev.060816mh</title>
+	{foreach from=$META_TAGS item=META_TAG}
+		{$META_TAG}
+	{/foreach}
+		
+	
+	<link href="{$IMAGE_URL}/main_xhtml.css" rel="stylesheet" type="text/css"/> 
+	<link rel="shortcut icon" href="{$ROOT_PREFIX}/favicon.gif"/>
+	<link rel="icon" href="{$ROOT_PREFIX}/favicon.gif"/>
+	{literal}
+	
+	<script type="text/javascript">
+		var data_changed=0;
+		function confirmUnsaved() {
+			if(data_changed) {
+				return confirm('{/literal}{#confirm_unsaved#}{literal}');
+			}
+			else return true;
+		}
+		
+		//inserted by mh060817
+		function popUpHelp(url) {
+			 fenster=window.open(url, "{#Help#}", "width=800,height=500,resizable=yes,scrollbars=yes");
+			 fenster.focus();
+			 return false;
+		}
+	</script>
+	{/literal}
+	<script type="text/javascript" src="{$IMAGE_URL}/base.js"></script>
+</head>
+	
+	<body>
+	<div id="container_main">	
+		<div id="site_header">
+		<!--HEADER RECODED start-->
+			<div id="logo">
+				<a href="{$ROOT_URL}/">&nbsp;</a>
+			</div>
+			<h1><a href="{$ROOT_URL}/">StreamOnTheFly - Node 884</a></h1>
+			<div id="lang_select">
+				<form action="" name="lang_select_form">
+				<input type="hidden" name="okURL" value="{$smarty.server.REQUEST_URI|escape}" />
+				<input type="hidden" name="uilang" value="" />
+				<ul>
+				{foreach item=item from=$UI_LANGS}
+					<li {if $LANG eq $item[0]}class="activeLang"{/if} id="{$item[0]}">
+						<a href="javascript:document.lang_select_form.uilang.value='{$item[0]}';document.lang_select_form.submit();" 
+							class="{if $LANG eq $item[0]}selected{/if}">
+							<img alt="{$item[1]}" title="{$item[1]}" src="{$IMAGE_URL}/language_{$item[0]}.gif"  />
+						</a></li>
+				{/foreach}	
+				</ul>
+				</form>
+			</div>
+		<!-- HEADER RECODED end -->
+		</div>
+		
+		<div id="main_site_menu">
+		<!-- MENU RECODED start: classdef for selected links missing -->
+			<ul>
+				<li {if $ACTION eq "index"}id="activelink"{/if} ><a href="{$ROOT_URL}/">{#Home#}</a></li>
+				<li {if $ACTION eq "advsearch"}id="activelink"{/if} ><a href="{$ROOT_URL}/advsearch.php">{#Search#}</a></li>
+				<li {if $ACTION eq "stations"}id="activelink"{/if} ><a href="{$ROOT_URL}/stations.php">{#Stations#}</a></li>
+				<li {if $ACTION eq "topicSearch"}id="activelink"{/if} ><a href="{$ROOT_URL}/topicSearch.php">{#Topics#}</a></li> <!--changed from topics.php to topicSearch.php -->
+				<li {if $ACTION eq "help"}id="activelink"{/if} ><a href="javascript:popup('{$ROOT_URL}/help.php?uiLang={$LANG}#{$ACTION}','Help',600,900,true)">{#Help#}</a></li> <!--changed by Klaus Temper-->
+
+			</ul>
+		<!-- MENU RECODED end -->
+		</div>
+		
+		<div id="site_main">
+			
+<!-- ####### columns ######### -->
+						
+				<div id="left_column">
+							
+							<div class="box" {if $loggedIn}id="loggedin"{else}id="login"{/if}> 
+								<h4>{#Login_tab#}</h4>
+								{if $loggedIn}
+									<div id="login_userdetail">{#logged_in_as#} 
+										<span id="login_username">{$USERNAME}</span>
+										<ul>
+											{if $IS_EDITOR}
+											<li><a href="{$ROOT_URL}/editor.php">&raquo; {#EditorPage#}</a></li> 
+											{/if} 
+											<li><a href="{$ROOT_URL}/playlist.php">&raquo; {#Playlist#}</a></li>
+											<li><a href="{$ROOT_URL}/register.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">&raquo; {#Personal#} ({$USERNAME})</a></li>
+											<li>
+												<a href="{$ROOT_URL}/logout.php?okURL={$smarty.server.REQUEST_URI|escape:"url"}">
+												<img src="{$IMAGE_URL}/logoutdoor.gif" alt="logout" /> {#Logout#}</a></li>
+											{if hasPerm('node', 'change', 'authorize') }
+											<li><b><a href="{$ROOT_URL}/admin.php">&raquo; {#AdminPage#}</a></b></li>
+											{/if}
+										</ul>
+									</div>
+								{else}
+									<div id="login_form_small">
+										<form name="loginform" method="post" action="{$ROOT_URL}/login.php">
+											<div id="login_name">
+												<label for="login_form_login" class="login_label">{#Login#}:</label>
+												<input type="text" name="userid" id="login_form_login" class="textfield" />
+											</div>
+												
+											<div id="login_pass">
+												<label for="login_form_password" class="login_label">{#Password#}:</label>
+												<input type="password" name="password" id="login_form_password" class="textfield"/>
+											</div>
+											<div id="login_submit">
+												<input type="submit" name="login" class="button" value="{#Login#}"/>
+											</div>
+										</form>
+									</div>
+									<div id="login_register_small">
+										<ul>
+											<li><a href="register.php">{#Register#}</a></li>
+											<li><a href="newPassword.php">{#Forgot#}</a></li>
+										</ul>
+									</div>
+								{/if} 
+							</div>
+							
+							{if $loggedIn} 
+								<div class="box" id="playlist"> 
+									<form method="post" action="playlist.php">
+									<h4><a href="{$ROOT_URL}/playlist.php">{#my_playlist#}</a></h4>
+									{if count($PLAYLIST) gt 0 }
+										<ul>
+										{foreach name=outer item=item from=$PLAYLIST} 
+											{if $smarty.foreach.outer.index < 5}
+											<li>
+												<input type="hidden" value="{$item.id}" name="checkbox[]" />
+												<div class="main_playlist_icon">
+													<a href="listen.php/audio.m3u?id={$item.id}">
+													<img src="{$IMAGE_URL}/playbutton.gif" border="0" alt="{#Listen#}" /></a>
+												</div>
+												<div class="main_playlist_title">
+													<a class="playlist" href="{$ROOT_URL}/get.php?id={$item.id}">{$item.title} 
+												 	({math equation="x / y" x=$item.length y=60 format="%.0f"}:{math equation="x % y" x=$item.length y=60 format="%02d"})</a>
+												</div>
+											</li>
+											{/if}
+										{/foreach} 
+										</ul>
+										<a href="{$ROOT_URL}/playlist.php">{$PLAYLIST_COUNT} Elemente total ...</a>
+									<input type="submit" name="play_selected" class="button" value="Play all" />
+									{else}
+										<div class="no_playlist_items">- no items</div> <!-- smarty variable nescessary! -->
+									{/if}
+									
+										
+										
+									</form>
+								</div>
+							{/if}
+						
+							
+							
+							<div class="box" id="statistics">
+								<h4>{#statistics#}</h4>
+								<ul>
+									{if $numNodes gt 1}
+										<li><strong>{$numNodes}</strong> {#nodes#}</li>
+									{/if} 
+									<li><strong>{$numAllProgs}</strong> {#audiovideoProgs#} ({$numAudioProgs} {#audio#}/{$numVideoProgs} {#video#})</li>
+									<li><strong>{$allFiles.size_mb}</strong> {#mb_of_audiovideo#} ({$audioFiles.size_mb} {#audio#}/{$videoFiles.size_mb} {#video#})</li>
+									<li><strong>{$allFiles.length_hour}</strong> {#hours_of_audiovideo#} ({$audioFiles.length_hour} {#audio#}/{$videoFiles.length_hour} {#video#})</li>
+									<li><strong>{$access.l_and_d}</strong> {#listens_and_downloads#}</li>
+									<li><strong>{$numUsers}</strong> {#users#}</li>
+								</ul>
+							</div>
+							
+							<div class="box" id="contacts">
+								<h4>{#contacts#}</h4>
+								<ul>
+									<li>{mailto address="$ADMIN_EMAIL" text="Admin e-mail" encode="javascript"}</li> <!--$ADMIN_EMAIL_SHORT added in init.inc.php by Klaus Temper  -->
+									<li>{#contacts_text#}</li> <!-- links in lang.conf file also need to be in list form !! -->
+								</ul>
+							</div>
+						
+						</div>		
+						
+						<!-- ####### main ########## -->
+				
+				
+				<div id="right_column">
+							<div class="box" id="search">
+								<h4><a href="{$ROOT_URL}/advsearch.php">{#Search#}</a></h4>
+								<form name="searchform" method="get" action="{$ROOT_PREFIX}/search.php">
+								<ul>
+									<li><input type="text" name="pattern" class="textfield" value="{$PATTERN}"/></li>
+									<li>
+										<select name="language" class="dropdown">
+											{html_options values=$searchLangs selected="any_language" output=$langNames}
+										</select>
+									</li>
+									
+									<li><input type="checkbox" checked="checked" class="checkbox" name="audio" value="1" /> Audio</li>
+									<li><input type="checkbox" checked="checked" class="checkbox" name="video" value="1" /> Video</li>
+									<li><input type="submit" name="search" class="button" value="{#Search#}" /></li>
+								</ul>
+								</form>
+							</div>
+							
+							<div class="box" id="stations">
+								<h4><a href="{$ROOT_URL}/stations.php">{#Stations#}</a></h4>
+								<form name="stationsform" method="get" action="{$ROOT_PREFIX}/showStation.php">
+									<select name="id" class="dropdown">
+									{foreach from=$STATIONS item=station}
+										<option value="{$station.id}">{$station.name}</option>
+									{/foreach}
+									</select>
+									<input type="submit" class="button" name="select_station" value="{#Go#}" />
+								</form>
+							</div>
+						
+							{if count($TOPICS) gt 2 } 
+								<div class="box" id="topics">
+										<h4><a href="{$ROOT_PREFIX}/topicSearch.php">{#topics#}</a></h4>
+										{#top_topics#} 
+										<ul>
+										{foreach item=item from=$TOPICS}
+											<li><a href="{$ROOT_PREFIX}/topicSearch.php?ID={$item.topic_id}">{$item.name}</a> ({$item.total})</li>
+										{/foreach} 
+										</ul>
+								</div>
+							{/if} 
+						
+						</div>
+						
+				<div id="middle_column">					
+					{include file="$ACTION.htm"}
+				</div>
+
+		<!-- ####### footer ########## -->
+		<div id="site_footer"> 
+			{#contact_node_admin#} {mailto address="$ADMIN_EMAIL" encode="javascript"}
+		</div>
+		</div>
+
+	</div>
+	<script type="text/javascript" language="javascript">
+		{if $STATUS_MESSAGES or $ERROR_MESSAGES }
+			alert("{foreach from=$ERROR_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}{foreach from=$STATUS_MESSAGES item=MSG}{$MSG|escape:"html"}\n{/foreach}");
+		{/if}
+	</script>
+	</body>
+</html>
+

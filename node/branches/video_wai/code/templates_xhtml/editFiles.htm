@@ -1,0 +1,344 @@
+<div id="editfiles_container">
+	{literal}
+		<script language="javascript" type="text/javascript">
+			<!--
+			function setvalue(name, id, value){
+				var popurl="updatedb.php?name="+name+"&id="+id+"&value="+value
+				winpops=window.open(popurl,"","width=100,height=100,left=320,top=200")
+			}
+				
+			function setcaption(name, id, value){
+				var str = prompt('Caption: ', value);
+				url = this.location.href;
+				if (url.indexOf('#') > 0) url = url.substring(0, url.indexOf('#'));
+				if(str) window.location.href = url+"&capname="+name+"&capid="+id+"&capvalue="+str+"&capurl="+escape(url)
+				else  window.location.href = this.location.href
+			}
+			// -->
+		</script>
+	{/literal}
+	
+	{if $NEW}
+		<form action="">
+			<div id="editfiles_newfile">
+				<div id="editfiles_newfile_header">
+					<h4>{#New_prog_step1#}</h4>
+					<h3>{#Edit_files#}</h3>
+				</div>
+				<div id="editfiles_newfile_gotostep2">
+					<input class="button" type="button" name="b1" value="{#goto_step2#}" onclick="redir(this.form, 'editMeta.php?new=1&id={$PRG_ID}')" />
+				</div>
+			</div>
+			{else}
+				<div id="editfiles_oldfile">
+					<h3>{#Edit_files#}: <a class="goto_object" href="get.php?id={$PRG_DATA.id}">{$PRG_DATA.title}</a></h3>
+					<div id="editfiles_newfile_editmeta">
+						<input class="button" type="button" name="b1" value="{#edit_meta#}" onclick="redir(this.form, 'editMeta.php?id={$PRG_ID}')" />
+					</div>
+				</div>
+		
+	{/if}
+	{if $CREATESTILLS}
+		<div id="editfiles_createstills">{#generating_stills#}</div>
+	{/if}
+	 
+	<div id="editfiles_programfiles" class="block"> 
+		<h4>{#Prg_files#}</h4>
+		<div class="content">
+			<form action="">
+				{cycle name="prg" values="list1,list2" print=false advance=false}
+				{foreach item=item from=$PRG_AUDIO}
+					<div class="editfiles_programfiles_itemcontent">
+						<div class="editfiles_programfiles_item {cycle name=prg}">
+							<div class="editfiles_programfiles_filename line">
+								<span class="identifier">{#filename#}: </span>
+								{if !empty($item.filename) }
+									<span class="value">
+										<a target="link" href="getFile.php/{$item.filename}?audio=1&id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
+									</span>
+									{elseif !empty($item.errors) }
+										<span class="editfiles_programfiles_conversionnotpossible value error">{#conversion_not_possible#}</span>
+									{elseif $item.converting}
+										<span class="editfiles_programfiles_percentage convert value">{#converting#} {$item.percentage}</span>
+									{ else }
+										<span class="editfiles_programfiles_missing error value">
+											{$PRG_AUDIO.format} {#missing#}&nbsp;
+											{if !$item.converting and empty($item.errors)}
+												{if empty($item.filename) and $PRG_DATA.type!='video'}
+													<a href="" onclick="window.open('convert.php?id={$PRG_ID}&index={$item.index}','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=180')" >
+													[{#convert#}]
+													</a>
+												{elseif empty($item.filename) and $PRG_DATA.type=='video'}
+													<a href="editFiles.php?id={$PRG_ID}&convertindex={$item.index}&videoconversion=1&new={$NEW}" >
+													[{#convert#}]
+													</a>
+												{else}
+													<div>
+														<button class="button" title="{#delete#}" type="button" name="b1" value="{#delete#}" onclick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')">
+															<img src="{$IMAGE_URL}/delete.gif" alt="{#delete#}" />
+														</button>
+													</div>
+												{/if}
+											{/if}
+										</span>
+								{/if}
+							</div>
+							<div class="editfiles_programfiles_data">
+								<div class="editfiles_programfiles_format line">
+									<label for="format" class="identifier">{#format#}: </label><span class="value" id="format">{$item.format}</span>
+								</div>
+								{if !empty($item.filename)}
+									<div class="editfiles_programfiles_filesize line">
+										<label for="filesize" class="identifier">{#filesize#}: </label>
+										<span class="value" id="filesize">
+											{if $item.filesize}{math equation="x/y" x=$item.filesize y=1048576 format="%.2f"} MB
+											{else} {#playlength_not_available#}
+											{/if}
+										</span>
+									</div>
+									<div class="editfiles_programfiles_lastmodified line">
+										<label for="lastmodified" class="identifier">{#last_modified#}: </label>
+										<span class="value">
+											{if $item.last_modified}
+												{if $LANG eq "eng"} {$item.last_modified|date_format:"%Y-%m-%d - %H:%M"}
+												{else}{$item.last_modified|date_format:"%d.%m.%Y - %H:%M"}{/if}
+											{else}
+												{#playlength_not_available#}
+											{/if}
+										</span>
+									</div>
+									<div class="editfiles_programfiles_playlength line">
+										<label for="playlength" class="identifier">{#play_length#}: </label>
+										{ if $item.play_length }
+											<span class="value" id="playlength">{$item.play_length} {#sec#}</span>
+											{else}
+												<span class="value" id="playlength">{#playlength_not_available#}</span>
+										{/if}
+									</div>
+									{if !$VIDEO}
+										{if !empty($item.filename) }
+											<div class="editfiles_programfiles_streamaccess line">
+												<label for="streamaccess" class="identifier">{#stream_access#}: </label>
+												<span class="value"><input type="checkbox" id="streamaccess" 
+													onclick="javascript:setvalue('audiofilesa', '{$item.id}', this.checked);return true;"{ if $item.stream_access eq 't' } checked="checked" {/if} /></span>
+											</div>
+										{/if}
+									{/if}
+									{if !empty($item.filename) && $item.flv != true}
+										<div class="editfiles_programfiles_downloadaccess line">
+											<label for="downloadaccess" class="identifier">{#download_access#}: </label>
+											<span class="value"><input type="checkbox" id="downloadaccess" 
+												onclick="javascript:setvalue('audiofilesd', '{$item.id}', this.checked);return true;"{ if $item.download_access eq 't' } checked="checked" {/if} /></span>
+										</div>
+									{/if}
+								{/if}
+							</div>
+					
+							{if !$item.converting and empty($item.errors) and !empty($item.filename)}
+								<div class="editfiles_programfiles_buttons">
+									<div>
+										<button class="button" title="{#delete#}" type="button" name="b1" value="{#delete#}" 
+											onclick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')">
+											<img src="{$IMAGE_URL}/delete.gif" alt="{#delete#}" />
+										</button>
+									</div>
+								</div>
+							{/if}
+						</div>
+					</div>
+				{/foreach}    
+				<div id="editfiles_programfiles_addcontent">
+					<!--<div id="editfiles_programfiles_addfile">
+						<button class="button" title="{#add_content#}" type="button" name="b1" value="{#add_content#}" onclick="popup('addFiles.php?main=1&prgid={$PRG_ID}','AddFiles',500,500,true)"><img src="{$IMAGE_URL}/add.gif" alt="{#add#}" /></button>
+					</div>-->
+					<div id="editfiles_programfiles_convert"> 
+						{if !$CONVERTING and $MISSING and $MAIN_AUDIO_COUNT gt 0}
+							{if $PRG_DATA.type!='video'}
+								<input class="button" type="button" name="b2" value="{#convert_all#}" 
+									onclick="window.open('convert.php?id={$PRG_ID}&all=1','convert_progress','menubar=no, status=no, toolbar=no, width=350, height=600')" />
+								{else if $PRG_DATA.type=='video'}
+									<input class="button" type="button" name="b2" id="b2" value="{#convert_all#}" 
+										onclick="javascript:document.getElementById('b2').style.visibility='hidden'; document.location.href='editFiles.php?id={$PRG_ID}&convertall=1&videoconversion=1&new={$NEW}'" />
+							{/if}
+						{/if}
+						{if $PRG_DATA.type=='video' AND !$CREATESTILLS AND !$STILL_FOUND AND !$IS_OGG}
+							<input class="button" type="button" name="b3" id="b3" value="{#create_stills#}" 
+								onclick="javascript:document.getElementById('b3').style.visibility='hidden';document.location.href='editFiles.php?id={$PRG_ID}&createstills=1&new={$NEW}'" />
+						{/if}
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<a name="mfiles"></a>
+	<div id="editfiles_fileoverview" class="block">
+		<form>
+			<h4>{#Files#}</h4>
+			<div class="content">
+			{if $AUDIO_FILES }
+				<h5>{#audio_file_list#}:</h5>
+				{cycle name="audio" values="list1,list2" print=false advance=false}
+				{foreach item=item from=$AUDIO_FILES}
+					<div class="editfiles_programfiles_item {cycle name=audio}">
+						
+						<div class="editfiles_fileoverview_filename line">
+							<label class="identifier" for="conn_filename">{#filename#}: </label>
+							<span class="value" id="conn_filename"><a target="link" href="getFile.php/{$item.filename}?id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a></span>
+						</div>
+						
+						<div class="editfiles_programfiles_data">
+						
+							<div class="editfiles_fileoverview_caption line">
+								<label class="identifier" for="conn_caption">{#caption#}: </label>
+								<span class="value">{if $item.caption} ($item.caption) {else} - {/if}</span>
+							</div>
+							<div class="editfiles_fileoverview_filesize line">
+								<label class="identifier">{#filesize#}: </label><span class="value">{math equation="x/y" x=$item.filesize y=1048576 format="%.2f"} MB</span>
+							</div>
+							<div class="editfiles_fileoverview_lastmodified line">
+								<label class="identifier">{#last_modified#}: </label>
+								<span class="value">
+									{if $LANG eq "eng"} {$item.last_modified|date_format:"%Y-%m-%d - %H:%M"}
+									{else}{$item.last_modified|date_format:"%d.%m.%Y - %H:%M"}{/if}
+								</span>
+							</div>
+							<div class="editfiles_fileoverview_length line">
+								<label class="identifier">{#play_length#}: </label><span class="value">{$item.play_length} {#sec#}</span>
+							</div>
+							<div class="editfiles_fileoverview_format line">
+								<label class="identifier">{#format#}: </label><span class="value">{$item.format}</span>
+							</div>
+							<div class="editfiles_fileoverview_streamaccess line">
+								<label class="identifier">{#stream_access#}: </label>
+								<span class="value">
+									<input type="checkbox" onclick="javascript:setvalue('audiofilesa', '{$item.id}', this.checked);return true;"{ if $item.stream_access eq 't' } checked="1" {/if} />		</span>
+							</div>
+							<div class="editfiles_fileoverview_downloadaccess line">
+								<label class="identifier">{#download_access#}: </label>
+								<span class="value">
+									<input type="checkbox" onclick="javascript:setvalue('audiofilesd', '{$item.id}', this.checked);return true;"{ if $item.download_access eq 't' } checked="1" {/if} />
+								</span>
+							</div>
+						</div>
+						
+						<div class="editfiles_programfiles_buttons">
+							<input class="button" type="button" name="b1" value="{#change_caption#}" onclick="setcaption('mfiles', '{$item.id}', '{$item.caption}')" />
+							<input class="button" type="button" name="b1" value="{#delete#}" onclick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')" />
+						</div>
+					</div>	
+				{/foreach}    
+			{/if}
+			
+			
+			<a name="ofiles"></a>
+			{if $OTHER_FILES }
+				<div>{#other_file_list#}</div>
+				{cycle name="other" values="list1,list2" print=false advance=false}
+				{foreach item=item from=$OTHER_FILES}
+					<div class="editfiles_programfiles_item {cycle name=other}">
+						
+						<div class="editfiles_otherfiles_filename line">
+							<span class="identifier">{#filename#}: </span>
+							<span class="value">
+								<a target="link" href="getFile.php/{$item.filename}?id={$PRG_ID}&filename={$item.filename}">{$item.filename}</a>
+							</span>
+						</div>
+						
+						<div class="editfiles_programfiles_data">
+							<div class="editfiles_otherfiles_caption line">
+								<span class="identifier">{#caption#}: </span><span class="value">{if $item.caption} ($item.caption) {else} - {/if}</span>
+							</div>
+							<div class="editfiles_otherfiles_filesize line">
+								<span class="identifier">{#filesize#}: </span><span class="value">{math equation="x/y" x=$item.filesize y=1024 format="%.2f"} KB</span>
+							</div>
+							<div class="editfiles_otherfiles_modified line">
+								<span class="identifier">{#last_modified#}: </span>
+								<span class="value">
+									{if $LANG eq "eng"} {$item.last_modified|date_format:"%Y-%m-%d - %H:%M"}
+									{else}{$item.last_modified|date_format:"%d.%m.%Y - %H:%M"}{/if}
+								</span>
+							</div>
+							<div class="editfiles_otherfiles_mimetype line">
+								<span class="identifier">{#mime_type#}: </span><span class="value">{$item.mime_type}</span>
+							</div>
+							<div class="editfiles_otherfiles_access line">
+								 <span class="identifier">{#public_access#}: </span>
+								 <span class="value"><input type="checkbox" onclick="javascript:setvalue('otherfiles', '{$item.id}', this.checked);return true;" { if $item.public_access eq 't' } checked="1" {/if} /></span>
+							</div>
+						</div>
+						
+						<div class="editfiles_programfiles_buttons">
+							 <input class="button" type="button" name="b1" value="{#change_caption#}" onclick="setcaption('ofiles', '{$item.id}', '{$item.caption}')" />
+							 <button class="button" type="button" name="b1" value="{#delete#}" onclick="redir(this.form, 'editFiles.php?delfile={$item.id}&id={$PRG_ID}')">
+								 <img src="{$IMAGE_URL}/delete.gif" alt="delete" />
+							 </button>
+						</div>
+					</div>
+				{/foreach}    
+		   	{/if}
+		   
+		   	{if !$AUDIO_FILES and !$OTHER_FILES }
+				<p>{#no_files#}</p>
+		   	{/if}
+		   
+		   	<div id="editfiles_addfiles_submit">
+				<button class="button" title="{#add_files#}" type="button" name="b1" value="{#add_files#}" onclick="popup('addFiles.php?prgid={$PRG_ID}','AddFiles',500,500,true)"><img src="{$IMAGE_URL}/add.gif" alt="{#add#}" /></button>
+			</div>
+		</div>
+		</form>
+		
+	</div>
+		
+	<a name="links"></a>
+	<div class="editfiles_links block">
+		<form>
+			<h4>{#Links#}</h4>
+			<div class="content">
+			{if $LINKS } 
+				{cycle name="links" values="list1,list2" print=false advance=false}
+				{foreach item=item from=$LINKS}
+					<div class="editfiles_links_item {cycle name="links"}">
+						<div class="editfiles_links_url line">
+							<span class="identifier">{#url#}: </span><span class="value"><a target="link" href="{$item.url}">{$item.url}</a></span>
+						</div>
+						<div class="editfiles_links_caption line">
+							<span class="identifier">{#caption#}: </span><span class="value">{if $item.caption} {$item.caption} {else} - {/if}</span>
+						</div>
+						<div class="editfiles_links_public line">
+							<span class="identifier">{#public#}: </span>
+							<span class="value">
+								<input type="checkbox" class="checkbox" onclick="javascript:setvalue('links', '{$item.id}', this.checked);return true;"{ if $item.public_access eq 't' } checked="checked"{/if} />
+							</span>
+						</div>
+						<div class="editfiles_links_actions line">
+							<span class="identifier">{#actions#}: </span>
+							<span id="editfiles_links_actions_buttons">
+								<input class="button" type="button" name="i1" value="{#change#}" 
+									onclick="popup('editLink.php?linkid={$item.id}&prgid={$PRG_ID}','EditLink',250,500,false)" />
+								<input class="button" type="button" name="i2" value="{#delete#}" 
+									onclick="redir(this.form,'editFiles.php?dellink=1&linkid={$item.id}&id={$PRG_ID}')" />
+							</span>
+						</div>
+					</div>
+				{/foreach}    
+				{else}
+					<div id="editfiles_links_nolinks">{#no_links#}</div>
+			{/if}
+			<div id="editfiles_links_submit">
+				<button class="button" title="{#add_link#}" type="button" name="i3" value="{#add_link#}" onclick="popup('editLink.php?new=1&prgid={$PRG_ID}','EditLink',250,500,false)"><img src="{$IMAGE_URL}/add.gif" alt="{#add#}" /></button>
+			</div>
+		</div>
+		</form>
+	</div>
+	
+		
+	{if $NEW}
+		<div id="editfiles_gotostep2">
+			<input class="button" type="button" name="b1" value="{#goto_step2#}" onclick="redir(this.form, 'editMeta.php?new=1&id={$PRG_ID}')" />
+		</div>
+	{/if}
+		
+	{if $CONVERTING OR $CREATESTILLS}
+		<script type="text/javascript" language="javascript">setTimeout("document.location.href='editFiles.php?new={$NEW}&id={$PRG_ID}'", 5000);</script>
+	{/if}
+</div>
