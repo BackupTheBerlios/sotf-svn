@@ -36,7 +36,7 @@ class sotf_Permission {
       }
 		$groups = sotf_Group::listGroupsOfUser($userid);
 		foreach($groups as $gid=>$gname) {
-		  $permtable = $db->getAll("SELECT sotf_group_permissions.object_id, sotf_permissions.permission FROM sotf_group_permissions, sotf_permissions WHERE sotf_group_permissions.group_id = '$gid' AND sotf_user_permissions.permission_id = sotf_permissions.id");
+		  $permtable = $db->getAll("SELECT sotf_group_permissions.object_id, sotf_permissions.permission FROM sotf_group_permissions, sotf_permissions WHERE sotf_group_permissions.group_id = '$gid' AND sotf_group_permissions.permission_id = sotf_permissions.id");
 		  // append to associative array containing the permissions for all objects
 		  while(list(,$row) = each($permtable)) {
 			 $permissions[$row["object_id"]][] = $row["permission"];	// object permission
