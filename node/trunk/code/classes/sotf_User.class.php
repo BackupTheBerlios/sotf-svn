@@ -202,7 +202,8 @@ class sotf_User {
 	  global $config;
 	  if(substr($config['userFTP'], -1) != '/')
 		 $config['userFTP'] = $config['userFTP'] . '/';
-	  $userFtpUrl = str_replace('ftp://', "ftp://".$this->name."@" , $config['userFTP'] . $this->name);
+	  //$userFtpUrl = str_replace('ftp://', "ftp://".$this->name."@" , $config['userFTP'] . $this->name);
+	  $userFtpUrl = str_replace('ftp://', "ftp://".$this->name."@" , $config['userFTP']);
 	  return $userFtpUrl;
 	}
 	
