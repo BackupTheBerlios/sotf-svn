@@ -217,10 +217,12 @@ function putEvents($params) {
   $events = xmlrpc_decoder($params->getParam(0));
   foreach($events as $event) {
     debug("PORTAL EVENT", $event);
-    $progId = $event['prog_id'];
+    $progId = stripslashes($event['prog_id']);
     if($progId) {
       if($repository->looksLikeId($progId))
 	$prg = &$repository->getObject($progId);
+      else
+	$prg = NULL;
       if(!$prg) {
 	debug("Invalid prog_id arrived in portal event", $progId);
 	continue;
