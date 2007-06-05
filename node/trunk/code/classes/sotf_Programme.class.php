@@ -470,22 +470,26 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 	 return $objects;
   }
 
-  function selectFileToListen() {
+  function sortFilesByBitRate($a, $b) {
+    $a = $a['kbps'];
+    $b = $b['kbps'];
+    if ($a == $b)
+      return 0;
+    return ($a < $b) ? -1 : 1;
+  }
 
-	 // TODO: write this better
-	 $files = $this->listAudioFiles();
-	 // if lowest bitrate is free, select that
-	 while(list(,$f) = each($files)) {
-		if(preg_match("/^24kbps/", $f['format']) && $f['stream_access']=='t')
-		  return $f['id'];
-	 }
-	 reset($files);
-	 // return first free to stream
-	 while(list(,$f) = each($files)) {
-		if($f['stream_access']=='t')
-		  return $f['id'];
-	 }
-	 return '';
+  function selectFileToListen() {
+    // TODO: write this better
+    $files = $this->listAudioFiles();
+    usort($files, array('sotf_Programme', 'sortFilesByBitRate'));
+    //debug("MFILES", $files);
+    //reset($files);
+    // return lowest bitrate free to stream
+    while(list(,$f) = each($files)) {
+      if($f['stream_access']=='t')
+        return $f['id'];
+    }
+    return '';
   }
 
   function setAudio($filename, $copy=false) {
