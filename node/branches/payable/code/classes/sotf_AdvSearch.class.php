@@ -24,7 +24,7 @@ class sotf_AdvSearch
 
   var $SQLFields = array('station','production_date','language','person','title','seriestitle','topic','length','rating','genre_id','keywords','abstract','seriesdescription','entry_date','expiry_date','modify_date','broadcast_date','spatial_coverage','temporal_coverage');
 
-	
+
 
 	function sotf_AdvSearch($array = "")			//constuctor with a starting query
 
@@ -268,7 +268,7 @@ class sotf_AdvSearch
 
 		$query.=" LEFT JOIN sotf_prog_rating ON sotf_programmes.id = sotf_prog_rating.id";
 
-		
+
 
 		if ($topic)		// added the topics as left join for performance reasons
 
@@ -286,7 +286,7 @@ class sotf_AdvSearch
 
 		//$query.=") as programmes WHERE published = 't'";
 		$query.=") as programmes WHERE published = 't' AND type='sound'"; //MODIFIED BY Martin Schmidt
-		
+
 
 		for($i = 0; $i < $max ;$i++)		//go through all terms
 
@@ -298,7 +298,7 @@ class sotf_AdvSearch
 
 			else $query .= " AND";
 
-			
+
 
 			//set begining of round bracket
 
@@ -394,7 +394,7 @@ class sotf_AdvSearch
 
 
 
-				$query .= " id $not in (SELECT sotf_object_roles.object_id as id FROM sotf_object_roles WHERE sotf_object_roles.contact_id = sotf_contacts.id AND";
+				$query .= " id $not in (SELECT sotf_object_roles.object_id as id FROM sotf_object_roles, sotf_contacts WHERE sotf_object_roles.contact_id = sotf_contacts.id AND";
 
 				$query .= " ( coalesce(sotf_contacts.name,'')";
 
@@ -438,7 +438,7 @@ class sotf_AdvSearch
 
 		}
 
-		$query = $query." ORDER BY ".$this->sort1.", ".$this->sort2;			//ISBN, TITLE 
+		$query = $query." ORDER BY ".$this->sort1.", ".$this->sort2;			//ISBN, TITLE
 
 		//print($query);
 
@@ -664,7 +664,7 @@ class sotf_AdvSearch
 
 			$max = count($this->SQLquery);
 
-			$output1 = array_slice($this->SQLquery, 0, $where+1);   
+			$output1 = array_slice($this->SQLquery, 0, $where+1);
 
 			if ($where < $max) $output2 = array_slice($this->SQLquery, $where+1);
 
@@ -680,7 +680,7 @@ class sotf_AdvSearch
 
 	}
 
-	
+
 
 	function DelRow($where)		//set the sort order
 
@@ -720,7 +720,7 @@ class sotf_AdvSearch
 
 	}
 
-	
+
 
 	function setDir($dir1 = false, $dir2 = false)					//gives back if the current sort order direction 1 is DESC or not
 
@@ -868,7 +868,7 @@ class sotf_AdvSearch
 
 		$SQLfiels['temporal_coverage'] = $page->getlocalized("temporal_coverage");
 
-		
+
 
 		asort($SQLfiels);
 
