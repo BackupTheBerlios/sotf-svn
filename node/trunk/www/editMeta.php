@@ -86,7 +86,7 @@ if(!$prg->isLocal()) {
   raiseError("You can only edit programmes locally!");
 }
 
-checkPerm($prg, 'change', 'authorize');
+checkPerm($prgId, 'change', 'authorize');
 
 if(sotf_Utils::getParameter('delfromseries')) {
   checkPerm($prg, 'change');

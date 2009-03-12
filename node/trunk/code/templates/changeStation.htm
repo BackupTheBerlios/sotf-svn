@@ -3,6 +3,7 @@
 
 <form name="form1" method="POST">
 
+    <input type="hidden" name="prgid" value="{$PRG_ID}">
     <select name="station_id">
       {foreach from=$MY_STATIONS item=item}
         <option value="{$item.id}"  {if $item.id eq $PRG_STATION} SELECTED {/if} >{$item.name}</option>
