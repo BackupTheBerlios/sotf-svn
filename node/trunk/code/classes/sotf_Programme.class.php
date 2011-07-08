@@ -610,7 +610,7 @@ class sotf_Programme extends sotf_ComplexNodeObject {
 
 	require_once($config['getid3dir'] . "/write.php");
 	 $tagwriter = new getid3_writetags;
-	 $tagwriter->filename   = $file;
+	 $tagwriter->filename   = $file->path;
 	 $TagData['comment'][] = "id: " . $this->id;
 	 debug("writing ID3V1", $id3);	
 
